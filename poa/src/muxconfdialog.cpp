@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.18 2003/09/29 18:59:12 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.19 2003/09/29 20:48:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -361,7 +361,7 @@ void MuxConfDialog::updateModel() {
             }
             else {
                 // new pin
-                model_->addOutput(currPin);
+                model_->addOutput(currPin->clone());
             }
         }
 
@@ -394,78 +394,55 @@ void MuxConfDialog::updateModel() {
 
                 MuxPin *origPin = muxItem->origData();
                 MuxPin *currPin = muxItem->data();
+                MuxPin *newPin;
 
                 if (origPin != 0) {
                     // use original MuxPin and change its mux mappings
                     // to the current model
                     QPtrList<MuxMapping> *origMappings = origPin->mappings();
                     for (unsigned i = 0; i < origMappings->count(); i++) {
+                        MuxMapping *mapping = origMappings->at(i);
                         origMappings->remove(i);
+                        delete mapping;
                     }
                     model_->addMuxPin(origPin, true);
-
-                    QListViewItem *child = muxItem->firstChild();
-                    while (child != 0) {
-
-                        MuxMappingListViewItem *mapItem =
-                            (MuxMappingListViewItem *)child;
-
-                        if (mapItem->data()->muxPin() == currPin) {
-
-                            MuxMapping *origMapping = mapItem->origData();
-                            MuxMapping *currMapping = mapItem->data();
-
-                            // determine correct output pin
-                            PinModel *output = model_->outputForName(
-                                    currMapping->output()->name());
-
-                            if (origMapping != 0) {
-                                // found an existing mapping, so copying
-                                // all current values, note resetting
-                                // output's bits isn't be done, because this
-                                // is a postcondition for this->addMapping
-
-                                origMapping->setBegin(currMapping->begin());
-                                origMapping->setEnd(currMapping->end());
-                                origMapping->setOutput(output);
-
-                                model_->addMuxMapping(origMapping);
-                            }
-                            else {
-                                MuxMapping *newMapping =
-                                    currMapping->clone(origPin, output);
-                                model_->addMuxMapping(newMapping);
-                                mapItem->setOrigMapping(newMapping);
-                            }
-                        }
-                        child = child->nextSibling();
+                    QPtrList<MuxMapping> *currMappings = currPin->mappings();
+                    for (unsigned i = 0; i < currMappings->count(); i++) {
+                        MuxMapping *mapping = currMappings->at(i);
+                        PinModel *output =
+                            model_->outputForName(mapping->output()->name());
+                        MuxMapping *newMapping =
+                            mapping->clone(origPin, output);
+                        model_->addMuxMapping(newMapping);
                     }
+                    newPin = origPin;
                 }
                 else {
                     // It's a new MuxPin, just add a cloned one
                     MuxPin *muxPin = currPin->clone();
                     model_->addMuxPin(muxPin);
                     muxItem->setOrigData(muxPin);
-
-                    // Update listView MuxMapping items
-                    QListViewItem *child = muxItem->firstChild();
-                    while (child != 0) {
-
-                        MuxMappingListViewItem *mapItem =
-                            (MuxMappingListViewItem *)child;
-
-                        if (mapItem->data()->muxPin() == currPin) {
-
-                            MuxMapping *currMapping = mapItem->data();
-
-                            // reset origin info
-                            mapItem->setOrigMapping(
-                                muxPin->findEqual(currMapping));
-                        }
-
-                        child = child->nextSibling();
-                    }
+                    newPin = muxPin;
                 }
+                // Update listView MuxMapping items
+                QListViewItem *child = muxItem->firstChild();
+                while (child != 0) {
+
+                    MuxMappingListViewItem *mapItem =
+                        (MuxMappingListViewItem *)child;
+
+                    if (mapItem->data()->muxPin() == currPin) {
+
+                        MuxMapping *currMapping = mapItem->data();
+
+                        // reset origin info
+                        mapItem->setOrigMapping(
+                                newPin->findEqual(currMapping));
+                    }
+
+                    child = child->nextSibling();
+                }
+
             }
         }
         // Notify model about update, so the view will be

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.42 2004/01/17 17:35:39 squig Exp $
+ * $Id: blockmodel.cpp,v 1.43 2004/01/18 13:50:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -131,6 +131,16 @@ void BlockModel::deletePin(PinModel *pin)
     delete pin;
 }
 
+PinModel *BlockModel::findPinById(unsigned id)
+{
+    QMap<uint, PinModel *>::const_iterator it = pinById_.find(id);
+    return (it != pinById_.end()) ? *it : 0;
+}
+
+unsigned int BlockModel::offset() const
+{
+    return offset_;
+}
 
 QValueList<PinModel*> BlockModel::pins() const
 {
@@ -140,12 +150,6 @@ QValueList<PinModel*> BlockModel::pins() const
 unsigned int BlockModel::runtime() const
 {
     return runtime_;
-}
-
-PinModel *BlockModel::findPinById(unsigned id)
-{
-    QMap<uint, PinModel *>::const_iterator it = pinById_.find(id);
-    return (it != pinById_.end()) ? *it : 0;
 }
 
 QDomElement BlockModel::serialize(QDomDocument *document)
@@ -244,11 +248,6 @@ void BlockModel::setOffset(const unsigned int offset)
 void BlockModel::setRuntime(const unsigned int runtime)
 {
     runtime_ = runtime;
-}
-
-unsigned int BlockModel::offset() const
-{
-    return offset_;
 }
 
 QString BlockModel::tip()

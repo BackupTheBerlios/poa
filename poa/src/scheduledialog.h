@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.14 2004/01/11 17:37:15 kilgus Exp $
+ * $Id: scheduledialog.h,v 1.15 2004/01/18 13:50:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@
 #include <qwmatrix.h>
 #include <qspinbox.h>
 
+#include "blockgraph.h"
 #include "blocktree.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
@@ -86,6 +87,8 @@ private:
     QPtrList<BlockTree> inputBlocks;
     QPtrList<BlockTree> blocks_;
     QMap<BlockModel*, BlockTree*> blocksToTree_;
+
+    QPtrList<BlockNode> graph_;
 
     void buildBranch(BlockTree *bt);
     void buildTree();

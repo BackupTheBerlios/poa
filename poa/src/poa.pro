@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.72 2004/01/15 14:47:18 kilgus Exp $
+# $Id: poa.pro,v 1.73 2004/01/18 13:50:48 squig Exp $
 #
 ###############################################################################
 
@@ -48,6 +48,7 @@ include(poa.local)
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
 HEADERS += blockconfdialog.h 
+HEADERS += blockgraph.h
 HEADERS += blockmodel.h
 HEADERS += blocktree.h
 HEADERS += blockview.h
@@ -97,6 +98,7 @@ SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
 SOURCES += blockconfdialog.cpp
 SOURCES += blockmodel.cpp
+SOURCES += blockgraph.cpp
 SOURCES += blocktree.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp

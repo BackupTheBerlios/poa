@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.49 2004/01/17 17:59:40 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.50 2004/01/18 13:50:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -136,7 +136,7 @@ void BlockConfDialog::initBlockWidget()
     blockLayout->addWidget(new QLabel(tr("Name"), blockGroupBox), 1, 0);
     blockLayout->addMultiCellWidget(blockNameLineEdit, 1, 1, 1, 2);
     blockLayout->addWidget(new QLabel(tr("Description"), blockGroupBox), 2, 0);
-    blockLayout->addMultiCellWidget(blockDescrLineEdit, 2, 1, 2, 2);
+    blockLayout->addMultiCellWidget(blockDescrLineEdit, 2, 2, 1, 2);
     blockLayout->addWidget(new QLabel(tr("Offset"), blockGroupBox), 3, 0);
     blockLayout->addWidget(offsetSpinBox, 3, 1);
     blockLayout->addWidget(new QLabel(tr("Clock"), blockGroupBox), 4, 0);

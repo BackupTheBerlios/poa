@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.4 2003/09/24 15:44:28 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.5 2003/09/24 16:24:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -50,6 +50,8 @@ MuxMappingListViewItem::MuxMappingListViewItem(QListViewItem *parent,
     setOpen(false);
     clone_ = clone;
     origin_ = origin;
+
+    update();
 }
 
 MuxMappingListViewItem::~MuxMappingListViewItem() {
@@ -75,29 +77,31 @@ void MuxMappingListViewItem::update() {
 ///////////////////////////////////////////////////////////////////////////////
 
 MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
-                                 PinModel *clone, PinModel *origin)
+                                 MuxPin *clone, MuxPin *origin)
     : QListViewItem(parent, after)
 {
     setOpen(true);
     clone_ = clone;
     origin_ = origin;
+
+    update();
 }
 
 MuxListViewItem::~MuxListViewItem() {
     delete clone_;
 }
 
-PinModel *MuxListViewItem::data() const {
+MuxPin *MuxListViewItem::data() const {
     return clone_;
 }
 
-PinModel *MuxListViewItem::origData() const {
+MuxPin *MuxListViewItem::origData() const {
     return origin_;
 }
 
 void MuxListViewItem::update() {
     if (clone_ != 0) {
-        setText(0, clone_->name());
+        setText(0, clone_->model()->name());
     }
 }
 
@@ -296,7 +300,24 @@ void MuxConfDialog::mappingSelectionChanged() {
 
 void MuxConfDialog::addIoOrMapping() {
 
+    unsigned bits = 32;
+    unsigned id = mappingListView->childCount() + 1;
+    PinModel::PinType type;
+    QString name;
 
+    if (model_->muxType() == MuxModel::MUX) {
+        type = PinModel::INPUT;
+        name = "Input";
+    }
+    else {
+        type = PinModel::OUTPUT;
+        name = "Output";
+    }
 
+    MuxPin *pin =
+        new MuxPin(new PinModel(model_, id,
+                   QString("%1 %2").arg(name).arg(id),
+                   0, bits, type));
 
+    new MuxListViewItem(mappingListView, 0, pin, 0);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.4 2003/09/24 15:44:28 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.5 2003/09/24 16:24:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,7 @@
 #include <qlistview.h>
 #include <qptrlist.h>
 
-class PinModel;
+class MuxPin;
 class MuxMapping;
 class MuxModel;
 
@@ -90,10 +90,10 @@ class MuxListViewItem : public QListViewItem
 public:
 
     /**
-     * Creates a IO list view item for the given abstract model
+     * Creates a IO list view item for the given MuxModel.
      */
     MuxListViewItem(QListView *parent, QListViewItem *after,
-                    PinModel *clone = 0, PinModel *origin = 0);
+                    MuxPin *clone = 0, MuxPin* origin = 0);
 
     /**
      * Default destructor
@@ -101,23 +101,24 @@ public:
     ~MuxListViewItem();
 
     /**
-     * Returns the PinModel, represented by this view item
+     * Returns the MuxPin, represented by this view item.
      */
-    PinModel *data() const;
+    MuxPin *data() const;
 
     /**
-     * Returns the origin PinModel, represented by this view item
+     * Returns the origin MuxPin, represented by this view item.
      */
-    PinModel *origData() const;
+    MuxPin *origData() const;
 
     /**
-     * Updates the view with current contents of the pin model.
+     * Updates the view with current contents of the <code>clone_</code> 
+     * MuxPin.
      */
     void update();
 
 private:
-    PinModel *clone_;
-    PinModel *origin_;
+    MuxPin *clone_;
+    MuxPin *origin_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -170,7 +171,7 @@ private:
     MuxModel *model_;
 
     QPtrList<MuxMapping> deletedMappings_;
-    QPtrList<PinModel> deletedPins_;
+    QPtrList<MuxPin> deletedPins_;
 
 private slots:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.10 2003/09/24 15:44:28 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.11 2003/09/24 16:24:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -154,11 +154,8 @@ MuxModel::~MuxModel()
 
 MuxPin *MuxModel::addPin()
 {
-    unsigned id;
-    unsigned bits;
-
-    bits = 32;
-    id = muxPins_.count() + 1;
+    unsigned bits = 32;
+    unsigned id = muxPins_.count() + 1;
     PinModel::PinType type = (type_ == MUX) ? PinModel::INPUT : PinModel::OUTPUT;
 
     MuxPin *pin = new MuxPin(new PinModel(

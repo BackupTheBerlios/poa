@@ -18,12 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.h,v 1.1 2004/01/27 16:44:53 squig Exp $
+ * $Id: printmanager.h,v 1.2 2004/02/05 13:53:07 kilgus Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_PRINTMANAGER_H
 #define POA_PRINTMANAGER_H
+
+#include <qstring.h> 
 
 class QCanvas;
 
@@ -34,7 +36,7 @@ class PrintManager
 {
 
 public:
-    PrintManager(QCanvas *canvas);
+    PrintManager(QCanvas *canvas, QString title);
     ~PrintManager();
 
     /**
@@ -44,6 +46,7 @@ public:
 
 private:
     QCanvas *canvas_;
+	QString title_;
 
 };
 

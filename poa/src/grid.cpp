@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.cpp,v 1.8 2004/01/12 02:37:27 keulsn Exp $
+ * $Id: grid.cpp,v 1.9 2004/01/28 10:36:13 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#include <math.h>
+#include <cmath>
 
 #include "grid.h"
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.68 2004/01/26 19:17:18 vanto Exp $
+ * $Id: blockview.cpp,v 1.69 2004/01/28 10:36:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 #include <qpainter.h>
 #include <qvaluelist.h>
 
-#include <math.h> // why don't we use cmath?
+#include <cmath>
 
 #include "blockview.h"
 

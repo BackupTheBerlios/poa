@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.47 2004/01/28 10:14:08 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.48 2004/01/28 10:36:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -40,7 +40,7 @@
 #include <qsplitter.h>
 #include <qtable.h>
 #include <qwmatrix.h>
-#include <math.h>
+#include <cmath>
 #include <qtoolbutton.h>
 
 #include "scheduledialog.h"

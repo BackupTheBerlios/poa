@@ -91,6 +91,7 @@
         <directory>${basedir}/src/java/gcover/output</directory>
         <includes>
           <include>*.css</include>
+          <include>index.html</include>
         </includes>
         <targetPath>gcover/output</targetPath>
       </resource>

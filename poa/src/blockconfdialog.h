@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.9 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.10 2003/09/17 15:03:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -123,6 +123,7 @@ public:
     QSpinBox *blockClockSpinBox;
     QSpinBox *offsetSpinBox;
     QSpinBox *runtimeSpinBox;
+    QSpinBox *cpuIdSpinBox;
 
     QLineEdit *blockNameLineEdit;
     QLineEdit *blockDescrLineEdit;
@@ -256,6 +257,11 @@ private slots:
      * offset setting is enabled.
      */
     void toggleManualOffset();
+
+    /**
+     * Invokes compiler on the current cpuModel.
+     */
+    void compile();
 
     /**
      * Disables/enables runtime spin box, if the manual

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.7 2003/09/17 14:38:27 garbeam Exp $
+ * $Id: codemanager.h,v 1.8 2003/09/17 15:03:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -58,6 +58,12 @@ public:
      */
     QString sourcePath(CpuModel *model);
 
+    /**
+     * Executes the compiler and returns it's return code.
+     */
+    int compile(CpuModel *model);
+
+
 protected:
     CodeManager();
     ~CodeManager();
@@ -96,6 +102,7 @@ private:
      */
     bool removeDir(QDir *subDir);
 
+
 public slots:
     /**
      * Saves the source template into a structure as follows:
@@ -105,11 +112,6 @@ public slots:
      *  inc/
      */
     void save(CpuModel *model);
-
-    /**
-     * Executes the compiler and returns it's return code.
-     */
-    int compile(CpuModel *model);
 
 };
 

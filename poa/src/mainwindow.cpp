@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.44 2003/09/16 16:03:32 squig Exp $
+ * $Id: mainwindow.cpp,v 1.45 2003/09/17 15:03:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -586,15 +586,12 @@ void MainWindow::openBlockConf()
             if (INSTANCEOF(model, BlockModel)) {
                 BlockConfDialog *dialog =
                     new BlockConfDialog((BlockModel *)model);
-                dialog->show();
+                dialog->exec();
 
-
-                // destray dialog
+                delete dialog;
             }
         }
     }
-    // future: use exec() instead of show and
-    //         determine exit code
 }
 
 void MainWindow::openProject(QString filename)

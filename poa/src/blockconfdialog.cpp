@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.23 2003/09/17 13:08:29 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.24 2003/09/17 15:03:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -184,19 +184,25 @@ void BlockConfDialog::initBlockWidget()
     blockGroupBox->setTitle(tr(model_->type()));
 
     QGridLayout *blockLayout =
-        new QGridLayout(blockGroupBox, 3, 3, WIDGET_SPACING);
+        new QGridLayout(blockGroupBox, 4, 3, 3 * WIDGET_SPACING);
+
+    if (INSTANCEOF(model_, CpuModel)) {
+        cpuIdSpinBox = new QSpinBox(blockGroupBox, "cpuIdSpinBox");
+        blockLayout->addWidget(new QLabel(tr("id"), blockGroupBox), 0, 0);
+        blockLayout->addWidget(cpuIdSpinBox, 0, 1);
+    }
 
     blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
     blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
     blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
 
-    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 0, 0);
-    blockLayout->addWidget(blockNameLineEdit, 0, 1);
-    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 1, 0);
-    blockLayout->addWidget(blockDescrLineEdit, 1, 1);
-    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 2, 0);
-    blockLayout->addWidget(blockClockSpinBox, 2, 1);
-    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 2, 2);
+    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 1, 0);
+    blockLayout->addWidget(blockNameLineEdit, 1, 1);
+    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 2, 0);
+    blockLayout->addWidget(blockDescrLineEdit, 2, 1);
+    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 3, 0);
+    blockLayout->addWidget(blockClockSpinBox, 3, 1);
+    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 3, 2);
 
     rightLayout->addWidget(blockGroupBox);
 }
@@ -210,7 +216,7 @@ void BlockConfDialog::initOffsetWidget()
     offsetButtonGroup->setTitle(tr("offset"));
 
     QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3,
-                                                WIDGET_SPACING);
+                                                3 * WIDGET_SPACING);
 
     offsetAutoCalcRadioButton =
         new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
@@ -247,7 +253,7 @@ void BlockConfDialog::initRuntimeWidget()
         runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
 
         QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3,
-                                                     WIDGET_SPACING);
+                                                     3 * WIDGET_SPACING);
         runtimeAutoCalcRadioButton =
             new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
         runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
@@ -288,7 +294,6 @@ void BlockConfDialog::initRuntimeWidget()
 
 void BlockConfDialog::initCompileEditButtonWidget()
 {
-    CodeManager *codeManager = CodeManager::instance();
 
     // edit/compile button widget
     QWidget *compileEditButtonsWidget = new QWidget(rightWidget);
@@ -303,8 +308,7 @@ void BlockConfDialog::initCompileEditButtonWidget()
     compilePushButton =
         new QPushButton(compileEditButtonsWidget, "compilePushButton");
     compilePushButton->setText(tr("Co&mpile"));
-    connect(compilePushButton, SIGNAL(clicked()),
-            codeManager, SLOT(compile(model_)));
+    connect(compilePushButton, SIGNAL(clicked()), this, SLOT(compile()));
 
 
     compileEditButtonsLayout->addWidget(editCodePushButton);
@@ -454,6 +458,7 @@ void BlockConfDialog::syncModel() {
 
         if (INSTANCEOF(model_, CpuModel)) {
             CpuModel *cpuModel = (CpuModel *)model_;
+            cpuIdSpinBox->setValue(cpuModel->cpuId());
             offsetAutoCalcRadioButton->setChecked(cpuModel->autoOffset());
             offsetRadioButton->setChecked(!cpuModel->autoOffset());
             runtimeAutoCalcRadioButton->setChecked(cpuModel->autoExecTime());
@@ -477,6 +482,7 @@ void BlockConfDialog::updateModel() {
 
         if (INSTANCEOF(model_, CpuModel)) {
             CpuModel *cpuModel = (CpuModel *)model_;
+            cpuModel->setCpuId(cpuIdSpinBox->value());
             cpuModel->setAutoOffset(offsetAutoCalcRadioButton->isChecked());
             cpuModel->setAutoExecTime(runtimeAutoCalcRadioButton->isChecked());
             cpuModel->setOffset(offsetSpinBox->value());
@@ -659,4 +665,16 @@ void BlockConfDialog::ok()
 {
     updateModel();
     accept();
+}
+
+void BlockConfDialog::compile()
+{
+    if (INSTANCEOF(model_, CpuModel)) {
+        CpuModel *model = (CpuModel *)model_;
+        // Note: This additional slot is needed, because the
+        // clicked() signal of QPushButton is not able to
+        // emit the current <code>model_</code>.
+        CodeManager *codeManager = CodeManager::instance();
+        codeManager->compile(model);
+    }
 }

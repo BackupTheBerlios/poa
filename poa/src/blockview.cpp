@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.21 2003/09/04 15:20:06 squig Exp $
+ * $Id: blockview.cpp,v 1.22 2003/09/07 11:32:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -146,8 +146,8 @@ QPopupMenu *BlockView::popupMenu()
 {
     QPopupMenu *pm = new QPopupMenu();
     pm->insertItem("Configure...");
+    pm->insertItem("Edit Source...");
     pm->insertSeparator();
-    pm->insertItem("Edit Sourcecode...");
     return pm;
 }
 

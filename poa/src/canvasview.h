@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.17 2003/09/03 14:57:43 keulsn Exp $
+ * $Id: canvasview.h,v 1.18 2003/09/07 11:32:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -116,6 +116,11 @@ protected:
      */
     QPoint toCanvas(QPoint pos);
 
+	/**
+	 * Returns a list of the selected items.
+	 */
+	QCanvasItemList selectedItems();
+
 private:
     /** The project this view belongs to */
     Project *project_;
@@ -134,6 +139,7 @@ private:
      * The currently selected canvas item
      */
     QCanvasItem *selectedItem_;
+
 };
 
 #endif // CANVASVIEW_H

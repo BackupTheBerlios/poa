@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.21 2003/09/03 14:57:43 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.22 2003/09/07 11:32:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -75,6 +75,13 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
         if (!l.isEmpty()) {
             // first item is top item
             QCanvasItem *topItem = l.first();
+
+// 			QCanvasItemList list = selectedItems();
+// 			for (QCanvasItemList::iterator current = list.begin();
+// 				 current != list.end(); ++current) {
+// 				(*current)->setSelected(false);
+// 			}
+// 			topItem->setSelected(true);
 
             // item selection
             if (selectedItem_) {

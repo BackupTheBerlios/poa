@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.14 2003/09/04 14:33:32 keulsn Exp $
+ * $Id: gridcanvas.h,v 1.15 2003/09/07 11:32:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -76,6 +76,7 @@ private:
      * an equal z value
      */
     unsigned currentZ_;
+
 };
 
 #endif // POA_GRIDCANVAS_H

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.10 2003/06/17 23:06:24 squig Exp $
+%% $Id: anforderungen.tex,v 1.11 2003/06/22 20:13:45 squig Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -66,8 +66,8 @@ aufgeworfenen Begriffe wird in den folgenden Abschnitten eingegangen.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CPLD Layouts
 \subsection{CPLD Layouts}
-Ein CPLD Layout spiegelt ein virtuelles Abbild der realen Konfiguration
-(Vernetzung der CPLD-Funktionsblöcke) eines CPLD Hardware-Bausteins wider.
+Ein CPLD Layout ist ein virtuelles Abbild der realen Konfiguration
+(Vernetzung der CPLD-Funktionsblöcke) eines CPLD Hardware-Bausteins.
 Dabei besteht die virtuelle Abbildung aus Funktionsblöcken (CPUs, Cores,
 E/A-Blöcke) und Signalleitungen.\par
 Im zu entwickelnden System soll ein CPLD Layout rasterisiert dargestellt
@@ -92,14 +92,14 @@ Systemaufruf automatisch geladen werden.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Funktionsblock
 \subsection{Funktionsblock}
-Ein Funktionsblock spiegelt ein virtuelles Abbild eines CPU-, Core- oder
-E/A-Bausteins auf einem CPLD wieder. Dabei sollen an allen genannten
-Funktionsblöcken die Ein- und Ausgänge mit Signalleitungen verbunden
-werden können.\par
-Speziell bei CPU-Blöcken soll überdies die Anzahl der Ein- und Ausgänge,
-die Benennung der E/As, das Einstellen eines Zeitoffsets, das Setzen
-einer logischen Taktrate konfigurierbar sein und der auf dem jeweiligen
-CPU-Block auszuführende Sourcecode editierbar sein.
+Ein Funktionsblock ist ein virtuelles Abbild eines CPU-, Core- oder
+E/A-Bausteins auf einem CPLD. Dabei sollen an allen Funktionsblöcken
+die Ein- und Ausgänge mit Signalleitungen verbunden werden können.
+\par
+Speziell bei CPU-Blöcken soll überdies die Anzahl der Ein- und
+Ausgänge, die Benennung der E/As, das Einstellen eines Zeitoffsets,
+das Setzen einer logischen Taktrate konfigurierbar sein und der auf
+dem jeweiligen CPU-Block auszuführende Sourcecode editierbar sein.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Rahmencodegenerierung
@@ -134,7 +134,7 @@ können. Hierzu wird zur Laufzeitermittlung ein Laufzeitermittlungsprogramm
 für CPLD-CPU-Block Object-Code verwendet, das vom Kunden zu liefern
 ist. Sollte diese Software keine hinreichend genaue Laufzeitermittlung
 ermöglichen werden alternative Möglichkeiten geprüft. Sollte das zu
-keinem Ergeniss führen, kann die Optimierungsfunktionalität nicht
+keinem Ergebniss führen, kann die Optimierungsfunktionalität nicht
 garantiert werden.
 
 

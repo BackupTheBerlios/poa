@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.1 2003/08/22 13:58:45 keulsn Exp $
+ * $Id: blockview.cpp,v 1.2 2003/08/22 16:58:42 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,13 +26,25 @@
 #include "blockview.h"
 
 
-//static const int BlockView::RTTI_ = 1000;
-
-
 BlockView::BlockView(BlockModel *model, QCanvas *canvas):
-    QCanvasRectangle::QCanvasRectangle(QRect(0, 0, 15, 60), canvas)
+    QCanvasRectangle::QCanvasRectangle(canvas)
 {
-    blockModel_ = model;
+    model_ = model;
+    
+    unsigned height = 10;
+    if (model != 0) {
+	// name
+	height += BlockView::DEFAULT_FONT_HEIGHT;
+	
+	// pins
+	unsigned numberOfPins = 0;
+	numberOfPins = max (model->getInputPins()->size(),
+			    model->getOutputPins()->size());
+	numberOfPins += model->getEpisodicPins()->size();
+	height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
+    }
+    
+    setSize(BlockView::DEFAULT_WIDTH, height);
 }
 
 
@@ -43,23 +55,25 @@ BlockView::~BlockView()
 
 BlockModel *BlockView::getModel()
 {
-    return blockModel_;
+    return model_;
 }
 
 
 void BlockView::setModel(BlockModel *model)
 {
-    blockModel_ = model;
+    model_ = model;
+    // FIX: update views
 }
 
 
 int BlockView::rtti() const
 {
-    return RTTI_;
+    return BlockView::RTTI;
 }
 
 
 void BlockView::drawShape(QPainter &p)
 {
     p.fillRect((int) x(), (int) y(), width(), height(), brush());
+    p.drawText(rect(), Qt::AlignHCenter, model_->getName());
 }

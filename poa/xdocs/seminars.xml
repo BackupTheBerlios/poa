@@ -2,26 +2,26 @@
 
   <document>
 
-	<properties>
-	  <title>Seminars</title>
-	</properties>
+    <properties>
+      <title>Seminars</title>
+    </properties>
 
-	<body>
+    <body>
 
-	  <section name="Seminar">
+      <section name="Seminars">
 
         <table>
           <tr>
             <th colspan="2">Dates and Topics</th>
           </tr>
           <tr>
-            <td>26.06.03</td><td>CPLD (Tammo van Lessen)</td>
+            <td>26.06.03</td><td>CPLD (Tammo van Lessen) <a href="ftp://ftp.berlios.de/pub/poa/seminar/programmierbare_logik.pdf">Presentation</a></td>
           </tr>
           <tr>
             <td>26.06.03</td><td>Regelungstechnik (Necati Aydin)</td>
           </tr>
           <tr>
-            <td>03.07.03</td><td>QT (Anselm Garbe) <a href="ftp://ftp.berlios.de/pub/poa/seminar/qt-seminar.pdf">Paper</a></td>
+            <td>03.07.03</td><td>QT (Anselm Garbe) <a href="ftp://ftp.berlios.de/pub/poa/seminar/qt-seminar.pdf">Presentation</a></td>
           </tr>
           <tr>
             <td>03.07.03</td><td>Agile (Software) Prozesse (Steffen Pingel)</td>
@@ -37,8 +37,8 @@
           </tr>
         </table>
 
-	  </section>
-	  
-	</body>
+      </section>
+
+    </body>
   </document>
   

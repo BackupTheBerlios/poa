@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.4 2003/08/21 20:29:20 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.5 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -31,9 +31,7 @@
 #include <qlineedit.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qsettings.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
+#include <qspinbox.h>
 
 /*****************************************************************************
  * Constructs the dialog.
@@ -48,6 +46,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 	setOkButton();
 	setHelpButton();
 
+	this->addTab(createGeneralTab(), tr("General"));
 	this->addTab(createPathTab(), tr("Paths"));
 	setup();
 
@@ -62,6 +61,21 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 SettingsDialog::~SettingsDialog()
 {
     // no need to delete child widgets, Qt does it all for us
+}
+
+/*****************************************************************************
+ * Returns the general tab.
+ */
+QWidget *SettingsDialog::createGeneralTab()
+{
+	QWidget *tab = new QWidget(this);
+	QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
+
+	grid->addWidget(new QLabel(tr("Grid Size"), tab), 0, 0);
+	gridSizeSpinBox_ = new QSpinBox(1, 100, 1, tab);
+	grid->addWidget(gridSizeSpinBox_, 0, 1);
+
+	return tab;
 }
 
 /*****************************************************************************
@@ -105,11 +119,14 @@ QWidget *SettingsDialog::createPathTab()
 }
 
 /*****************************************************************************
- * Reads and sets the default settings from QSettings.
+ * Reads and sets the default settings from Settings.
  */
 void SettingsDialog::setup()
 {
-     Settings* s = Settings::instance();
+	Settings* s = Settings::instance();
+	
+	// general tab
+	gridSizeSpinBox_->setValue(s->gridSize());
 
 	// path tab
 	editorLineEdit->setText(s->get("Editor"));
@@ -119,11 +136,16 @@ void SettingsDialog::setup()
 }
 
 /*****************************************************************************
- * Stores the settings to QSettings.
+ * Stores the settings to Settings.
  */
 void SettingsDialog::applySettings()
 {
 	Settings* s = Settings::instance();
+
+	// general tab
+	s->setGridSize(gridSizeSpinBox_->value());
+
+	// path tab
 	s->set("Editor", editorLineEdit->text());
 	s->set("Compiler", compilerLineEdit->text());
 	s->set("Template Path", cTemplateLineEdit->text());

@@ -18,14 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.8 2003/08/22 17:39:04 squig Exp $
+ * $Id: canvasview.cpp,v 1.9 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
 
 #include "abstractmodel.h"
+#include "abstractview.h"
 #include "cpumodel.h"
-#include "document.h"
+#include "project.h"
 #include "mainwindow.h"
 #include "modelfactory.h"
 
@@ -35,18 +36,20 @@
 #include <qpoint.h>
 #include <qwmatrix.h>
 #include <qpainter.h>
+#include <qpopupmenu.h>
 #include <qstatusbar.h>
 
 /*****************************************************************************
  * Constructs the view.
  */
-CanvasView::CanvasView(Document *document, QCanvas *canvas, QWidget *parent,
+CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
                        const char* name, WFlags fl)
-    : QCanvasView(canvas, parent, name, fl), document_(document)
+    : QCanvasView(canvas, parent, name, fl), project_(project),
+      movingItem_(0)
 {
     setAcceptDrops(TRUE);
 
-    connect(document, SIGNAL(modelAdded(AbstractModel *, int, int)),
+    connect(project, SIGNAL(modelAdded(AbstractModel *, int, int)),
             this, SLOT(modelAdded(AbstractModel *, int, int)));
 }
 
@@ -62,22 +65,33 @@ void CanvasView::contentsMousePressEvent(QMouseEvent* e)
 {
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
-    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
-        // first item is top item
-        movingItem = *it;
-        movingStartPoint = p;
-        return;
+    if (e->button() == LeftButton) {
+        if (!l.isEmpty()) {
+            // first item is top item
+            movingItem_ = l.first();
+            movingStartPoint_ = p;
+        }
+        else {
+            movingItem_ = 0;
+        }
     }
-    movingItem = 0;
+    else if (e->button() == RightButton) {
+        if (!l.isEmpty()) {
+            QPopupMenu *menu = ((AbstractView *)l.first())->popupMenu();
+            if (menu) {
+                menu->exec(e->pos());
+            }
+        }
+    }
 }
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
 {
-    if (movingItem) {
+    if (movingItem_) {
         QPoint p = inverseWorldMatrix().map(e->pos());
-        movingItem->moveBy(p.x() - movingStartPoint.x(),
-                           p.y() - movingStartPoint.y());
-        movingStartPoint = p;
+        movingItem_->moveBy(p.x() - movingStartPoint_.x(),
+                            p.y() - movingStartPoint_.y());
+        movingStartPoint_ = p;
         canvas()->update();
     }
 
@@ -98,17 +112,22 @@ void CanvasView::dropEvent(QDropEvent *e)
         QDomDocument doc;
         if (doc.setContent(QString(data))) {
             QPoint pos = toCanvas(e->pos());
-            ModelFactory::generate(doc, document_, pos.x(), pos.y());
+            QValueList<AbstractModel *> l = ModelFactory::generate(doc);
+            for (QValueList<AbstractModel *>::Iterator it = l.begin();
+                 it != l.end(); ++it) {
+                project_->add(*it, pos.x(), pos.y());
+            }
         }
     }
 }
 
 void CanvasView::modelAdded(AbstractModel *item, int x, int y)
 {
-    QCanvasItem *i = item->createView(canvas());
-    i->moveBy(x, y);
-    i->show();
-
+    QCanvasItemList l = item->createView(canvas());
+    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
+        (*it)->moveBy(x, y);
+        (*it)->show();
+    }
     canvas()->update();
 }
 

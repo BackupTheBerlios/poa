@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.9 2003/08/22 18:03:52 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.10 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
 #include "gridcanvas.h"
 
-#include "document.h"
+#include "project.h"
 #include "settings.h"
 
 #include <qcanvas.h>
@@ -33,8 +33,8 @@
 #include <qrect.h>
 #include <qsize.h>
 
-GridCanvas::GridCanvas(Document *document)
-    : document_(document)
+GridCanvas::GridCanvas(Project *project)
+    : project_(project)
 {
     setGridSize(Settings::instance()->gridSize());
     setDoubleBuffering(TRUE);
@@ -43,9 +43,9 @@ GridCanvas::GridCanvas(Document *document)
             this, SLOT(setGridSize(int)));
 }
 
-Document *GridCanvas::document()
+Project *GridCanvas::project()
 {
-    return document_;
+    return project_;
 }
 
 void GridCanvas::setGridSize(int gridSize)

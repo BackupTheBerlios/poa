@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.2 2003/08/22 17:39:04 squig Exp $
+ * $Id: blockmodel.cpp,v 1.3 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "blockmodel.h"
@@ -27,19 +27,9 @@
 
 #include <qcanvas.h>
 
-
-BlockModel::BlockModel()
+BlockModel::BlockModel(QString name, QString description)
+    : AbstractModel(name, description)
 {
-    name_ = QString("Block");
-    episodicPins_ = new PinVector();
-    inputPins_ = new PinVector();
-    outputPins_ = new PinVector();
-}
-
-
-BlockModel::BlockModel(QString &name)
-{
-    name_ = name;
     episodicPins_ = new PinVector();
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
@@ -72,11 +62,6 @@ PinVector *BlockModel::getOutputPins()
 }
 
 
-void BlockModel::setName(QString &name)
-{
-    name_ = name;
-}
-
 
 void BlockModel::setClock(unsigned long clock)
 {
@@ -95,7 +80,7 @@ void BlockModel::setAutoOffset(bool autoOffset)
 }
 
 
-void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor = 0)
+void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor)
 {
     int size = episodicPins_->size();
     int i = 0;
@@ -123,13 +108,9 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
     // FIX: update views
 }
 
-
-QString BlockModel::getName()
+QCanvasItemList BlockModel::createView(QCanvas *canvas)
 {
-    return name_;
-}
-
-QCanvasItem *BlockModel::createView(QCanvas *canvas)
-{
-    return new BlockView(this, canvas);
+    QCanvasItemList list;
+    list.append(new BlockView(this, canvas));
+    return list;
 }

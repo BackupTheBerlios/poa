@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.6 2003/08/22 16:50:51 squig Exp $
+ * $Id: gridcanvas.h,v 1.7 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,7 @@
 
 #include <qcanvas.h>
 #include <qpixmap.h>
-class Document;
+class Project;
 
 /*****************************************************************************
  * Defines the grid canvas.
@@ -38,15 +38,15 @@ class GridCanvas : public QCanvas {
     Q_OBJECT
 
 public:
-    GridCanvas(Document *document);
+    GridCanvas(Project *project);
 
-    Document *document();
+    Project *project();
 
 public slots:
     void setGridSize(int gridSize);
 
 private:
-    Document *document_;
+    Project *project_;
 
 };
 

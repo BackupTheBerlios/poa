@@ -18,24 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.3 2003/08/22 13:31:37 keulsn Exp $
+ * $Id: cpuview.h,v 1.4 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_CPUVIEW_H
 #define POA_CPUVIEW_H
 
+#include "abstractview.h"
 #include "cpumodel.h"
 #include "inputblockview.h"
 #include "outputblockview.h"
 
+#include <qvariant.h>
 #include <qcanvas.h>
 
 /*****************************************************************************
  * Definition of a cpu view.
  * @author garbeam
  */
-class CpuView: /*public BlockView,*/ public QCanvasRectangle
+class CpuView: public AbstractView, public QCanvasRectangle
 {
 
 private:
@@ -44,7 +46,8 @@ private:
 
 public:
 
-	CpuView(QCanvas* canvas) : QCanvasRectangle(10, 10, 100, 100, canvas) {};
+    CpuView(QCanvas* canvas) : QCanvasRectangle(10, 10, 100, 100, canvas) {};
+
 
     CpuModel *getModel();
     void setModel(CpuModel *cpuModel);

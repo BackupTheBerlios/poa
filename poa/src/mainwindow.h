@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.11 2003/08/21 20:12:53 garbeam Exp $
+ * $Id: mainwindow.h,v 1.12 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,14 +26,14 @@
 #define MAINWINDOW_H
 
 #include "mdiwindow.h"
+class Project;
 
 #include <qvariant.h>
 #include <qmainwindow.h>
 #include <qworkspace.h>
-
-class QVBoxLayout; 
-class QHBoxLayout; 
-class QGridLayout; 
+class QVBoxLayout;
+class QHBoxLayout;
+class QGridLayout;
 class QAction;
 class QActionGroup;
 class QComboBox;
@@ -41,7 +41,7 @@ class QToolBar;
 class QPopupMenu;
 
 class MainWindow : public QMainWindow
-{ 
+{
     Q_OBJECT
 
 public:
@@ -49,15 +49,23 @@ public:
                WFlags fl = WType_TopLevel);
     ~MainWindow();
 
+
+    bool closeAll();
+
+protected:
+    void closeEvent(QCloseEvent *);
+
+private:
+    void connectActions();
+    void initializeActions();
+    void initializeMenu();
+    void initializeToolbars();
+    void zoomStepwise(int step);
+
+    QWorkspace* ws;
+    Project *project_;
+
     QComboBox *zoomComboBox;
-    QMenuBar *menubar;
-    QPopupMenu *fileMenu;
-    QPopupMenu *editMenu;
-    QPopupMenu *toolsMenu;
-    QPopupMenu *drawMenu;
-    QPopupMenu *settingsMenu;
-    QPopupMenu *windowMenu;
-    QPopupMenu *helpMenu;
     QToolBar *commonToolBar;
     QToolBar *utilToolBar;
     QToolBar *drawToolBar;
@@ -85,13 +93,6 @@ public:
     QAction *cascadeAction;
     QAction *tileAction;
 
-protected:
-    void closeEvent(QCloseEvent *);
-
-private:
-    QWorkspace* ws;
-    void zoomStepwise(int step);
-
 public slots:
     virtual void fileNew();
     virtual void fileOpen();
@@ -112,7 +113,6 @@ public slots:
     virtual void zoomNormal();
 
 private slots:
-    MdiWindow* newDoc();
     void closeWindow();
     void tileHorizontal();
 

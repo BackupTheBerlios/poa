@@ -18,24 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.4 2003/08/22 16:58:42 keulsn Exp $
+ * $Id: blockview.h,v 1.5 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_BLOCKVIEW_H
 #define POA_BLOCKVIEW_H
 
-#include <qbrush.h>
 #include <qcanvas.h>
-#include <qpainter.h>
 
+#include "abstractview.h"
 #include "blockmodel.h"
 
 /*****************************************************************************
  * Definition of a block view.
  * @author garbeam
  */
-class BlockView: public QCanvasRectangle
+class BlockView: public AbstractView, public QCanvasRectangle
 {
 
  public:

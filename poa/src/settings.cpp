@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.5 2003/08/22 16:50:51 squig Exp $
+ * $Id: settings.cpp,v 1.6 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -27,7 +27,7 @@
 /*****************************************************************************
  * A common prefix used for all setting keys.
  */
-const char *Settings::prefix = "/POA/POA/";
+const char *Settings::PREFIX = "/POA/POA/";
 
 /*****************************************************************************
  * The singleton instance.
@@ -36,12 +36,6 @@ Settings* Settings::instance_ = 0;
 
 Settings::Settings()
 {
-    QSettings settings;
-    settings.insertSearchPath(QSettings::Windows, "/POA");
-
-    setDefault(&settings, "Grid Size", "10");
-    setDefault(&settings, "MainWindow/Height", "480");
-    setDefault(&settings, "MainWindow/Width", "640");
 }
 
 Settings::~Settings()
@@ -57,23 +51,23 @@ Settings *Settings::instance()
     return instance_;
 }
 
-QString Settings::get(const QString &key)
+QString Settings::get(const QString &key, QString defaultValue)
 {
     QSettings settings;
-    return settings.readEntry(prefix + key);
+    return settings.readEntry(PREFIX + key, defaultValue);
 }
 
-bool Settings::getBool(const QString &key)
+bool Settings::getBool(const QString &key, bool defaultValue)
 {
     QSettings settings;
-    return settings.readBoolEntry(prefix + key);
+    return settings.readBoolEntry(PREFIX + key, defaultValue);
 }
 
 
-int Settings::getNum(const QString &key)
+int Settings::getNum(const QString &key, int defaultValue)
 {
     QSettings settings;
-    return settings.readNumEntry(prefix + key);
+    return settings.readNumEntry(PREFIX + key, defaultValue);
 }
 
 
@@ -82,7 +76,7 @@ bool Settings::set(const QString &key, const QString &value)
     QString oldValue = get(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(prefix + key, value);
+        settings.writeEntry(PREFIX + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -94,7 +88,7 @@ bool Settings::set(const QString &key, bool value)
     bool oldValue = getBool(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(prefix + key, value);
+        settings.writeEntry(PREFIX + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -106,27 +100,27 @@ bool Settings::set(const QString &key, int value)
     int oldValue = getNum(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(prefix + key, value);
+        settings.writeEntry(PREFIX + key, value);
         emit settingChanged(key);
         return TRUE;
     }
     return FALSE;
 }
 
-void Settings::setDefault(QSettings* settings, const QString &key,
-                          const QString &value)
-{
-    bool success;
-    settings->readEntry(prefix + key, QString::null, &success);
-    if (!success) {
-        // key does not exists
-        settings->writeEntry(prefix + key, value);
-    }
-}
+//  void Settings::setDefault(QSettings* settings, const QString &key,
+//                            const QString &value)
+//  {
+//      bool success;
+//      settings->readEntry(PREFIX + key, QString::null, &success);
+//      if (!success) {
+//          // key does not exists
+//          settings->writeEntry(PREFIX + key, value);
+//      }
+//  }
 
 int Settings::gridSize()
 {
-    return getNum("Grid Size");
+    return getNum("Grid Size", 10);
 }
 
 void Settings::setGridSize(int gridSize)
@@ -138,7 +132,7 @@ void Settings::setGridSize(int gridSize)
 
 bool Settings::snapToGrid()
 {
-    return getBool("Snap To Grid");
+    return getBool("Snap To Grid", TRUE);
 }
 
 void Settings::setSnapToGrid(bool snapToGrid)

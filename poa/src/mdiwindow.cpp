@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.14 2003/08/22 16:50:51 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.15 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,7 @@ MdiWindow::MdiWindow(GridCanvas* canvas, QWidget* parent,
 {
     zoomLevel_ = 1.0;
 
-    view_ = new CanvasView(canvas->document(), canvas, this);
+    view_ = new CanvasView(canvas->project(), canvas, this);
     setCentralWidget(view_);
 }
 

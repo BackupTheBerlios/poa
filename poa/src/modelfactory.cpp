@@ -18,13 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.2 2003/08/22 17:39:04 squig Exp $
+ * $Id: modelfactory.cpp,v 1.3 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
 #include "cpumodel.h"
-#include "document.h"
 
 #include <qdom.h>
 
@@ -33,14 +32,18 @@
  *
  * @author Steffen Pingel
  */
-void ModelFactory::generate(const QDomNode &node, Document *document,
-                            int x, int y)
+QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
 {
+    QValueList<AbstractModel *> l;
+
     QDomNodeList children = node.childNodes();
     for (uint i = 0; i < children.length(); i++) {
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "cpu") {
-            document->add(new CpuModel(&item.toElement()), x, y);
+            QDomElement element = item.toElement();
+            l.append(new CpuModel(element));
         }
     }
+
+    return l;
 }

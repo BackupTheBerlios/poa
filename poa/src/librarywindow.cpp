@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.5 2003/08/22 15:06:11 squig Exp $
+ * $Id: librarywindow.cpp,v 1.6 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -79,7 +79,12 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    new LibraryListViewItem(cpuListViewItem, new CpuModel("NIOS32", 0, TRUE));
+    new LibraryListViewItem(cpuListViewItem,
+                            new CpuModel(0, TRUE, "NIOS32",
+                                         "NIOS 32-Bit Cpu"));
+    new LibraryListViewItem(cpuListViewItem,
+                            new CpuModel(0, TRUE, "NIOS16",
+                                         "NIOS 16-Bit Cpu"));
 }
 
 /*****************************************************************************
@@ -98,8 +103,8 @@ void LibraryWindow::setOrientation(Qt::Orientation orientation)
     splitter->setOrientation(orientation);
 }
 
-LibraryListView::LibraryListView(QWidget *parent = 0, const char *name = 0,
-                                 WFlags f = 0)
+LibraryListView::LibraryListView(QWidget *parent, const char *name,
+                                 WFlags f)
     : QListView(parent, name, f)
 {
 }

@@ -18,14 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.7 2003/08/22 17:39:04 squig Exp $
+ * $Id: canvasview.h,v 1.8 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
 #define CANVASVIEW_H
 
 class AbstractModel;
-class Document;
+class Project;
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -44,7 +44,7 @@ class CanvasView : public QCanvasView
     Q_OBJECT
 
 public:
-    CanvasView(Document *document, QCanvas *canvas, QWidget *parent = 0,
+    CanvasView(Project *project, QCanvas *canvas, QWidget *parent = 0,
                const char* name = 0, WFlags fl = 0);
     ~CanvasView();
 
@@ -58,9 +58,9 @@ public slots:
     void modelAdded(AbstractModel *item, int x, int y);
 
 private:
-    Document *document_;
-    QCanvasItem * movingItem;
-    QPoint movingStartPoint;
+    Project *project_;
+    QCanvasItem *movingItem_;
+    QPoint movingStartPoint_;
 };
 
 #endif // CANVASVIEW_H

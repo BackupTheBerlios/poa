@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.6 2003/08/22 16:50:51 squig Exp $
+ * $Id: settings.h,v 1.7 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -30,23 +30,23 @@
 
 /*****************************************************************************
  * Provides the user settings.
- * 
+ *
  * Makes use of the singleton pattern.
  *
  * @author Steffen Pingel
  */
 class Settings : public QObject
-{ 
+{
     Q_OBJECT
-    
+
 public:
-    static const char* prefix;
+    static const char* PREFIX;
 
     static Settings *instance();
 
-    QString get(const QString &key);
-    bool getBool(const QString &key);
-    int getNum(const QString &key);
+    QString get(const QString &key, QString defaultValue = QString::null);
+    bool getBool(const QString &key, bool defaultValue = FALSE);
+    int getNum(const QString &key, int defaultValue = 0);
 
     bool set(const QString &key, const QString &value);
     bool set(const QString &key, bool value);
@@ -62,16 +62,13 @@ signals:
     void settingChanged(const QString &key);
     void snapToGridChanged(bool snapToGrid);
     void gridSizeChanged(int gridSize);
-   
+
 private :
     Settings();
     Settings(const Settings &);
     ~Settings();
 
     static Settings* instance_;
-
-    void setDefault(QSettings* settings, const QString &key, 
-                    const QString &value);
 };
 
 #endif // SETTINGS_H

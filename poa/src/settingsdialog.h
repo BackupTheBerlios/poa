@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.3 2003/08/21 20:29:20 squig Exp $
+ * $Id: settingsdialog.h,v 1.4 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -29,6 +29,7 @@
 
 class QLineEdit;
 class QPushButton;
+class QSpinBox;
 
 /*****************************************************************************
  * Provides the settings dialog.
@@ -50,6 +51,7 @@ public:
     QLineEdit* cTemplateLineEdit;
     QLineEdit* downloadLineEdit;
     QLineEdit* editorLineEdit;
+	QSpinBox* gridSizeSpinBox_;
 
 public slots:
 	void applySettings();
@@ -59,6 +61,7 @@ public slots:
 	void chooseDownloadTool();
 
 private :
+	QWidget *createGeneralTab();
 	QWidget *createPathTab();
     void setup(); 
 };

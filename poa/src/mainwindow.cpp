@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.31 2003/08/22 17:39:04 squig Exp $
+ * $Id: mainwindow.cpp,v 1.32 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,10 +27,11 @@
 #include "aboutdialog.h"
 #include "cpuview.h"
 #include "blockview.h"
-#include "document.h"
+#include "project.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "moduleconfdialog.h"
+#include "project.h"
 #include "settings.h"
 #include "settingsdialog.h"
 
@@ -54,29 +55,15 @@
 
 
 /**
- * Constructs a MainWindow which is a child of 'parent', with the
- * name 'name' and widget flags set to 'f'.
+ * Constructs the main window.
+ *
+ * The main window is only instanciated once.
  */
-MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
-    : QMainWindow( parent, name, fl )
+MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
+    : QMainWindow(parent, name, fl), project_(0)
 {
     // load toolbar icons/items
-    QPixmap image_compile(ICON_PATH + "compile.png");
-    QPixmap image_configure(ICON_PATH + "configure.png");
-    QPixmap image_contents(ICON_PATH + "contents.png");
-    QPixmap image_download(ICON_PATH + "dowload.png");
-    QPixmap image_editcopy(ICON_PATH + "editcopy.png");
-    QPixmap image_editcut(ICON_PATH + "editcut.png");
-    QPixmap image_editdelete(ICON_PATH + "editdelete.png");
-    QPixmap image_editpaste(ICON_PATH + "editpaste.png");
-    QPixmap image_filenew(ICON_PATH + "filenew.png");
-    QPixmap image_fileopen(ICON_PATH + "fileopen.png");
-    QPixmap image_filesave(ICON_PATH + "filesave.png");
-    QPixmap image_help(ICON_PATH + "help.png");
-    QPixmap image_line(ICON_PATH + "line.xpm");
-    QPixmap image_zoomin(ICON_PATH + "zoomin.png");
-    QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
-    QPixmap image_zoomout(ICON_PATH + "zoomout.png");
+
 
     // initialize main window
     if (!name) {
@@ -84,7 +71,8 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     }
     setCaption(tr("POA"));
 
-    Settings * s = Settings::instance();
+    // restore window settings
+    Settings *s = Settings::instance();
     move(s->getNum("MainWindow/X"), s->getNum("MainWindow/Y"));
     resize(s->getNum("MainWindow/Width"),s->getNum("MainWindow/Height"));
 
@@ -95,100 +83,101 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     LibraryWindow* lw = new LibraryWindow(QDockWindow::InDock, this);
     moveDockWindow(lw, Qt::DockLeft);
 
-    // set up mdi workspace
+    // initialize mdi workspace
     QVBox* vb = new QVBox(this);
     vb->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     ws = new QWorkspace(vb);
     ws->setScrollBarsEnabled(TRUE);
     setCentralWidget(vb);
 
-    /////////////////////////////////////////////////////////////////
-    // actions
-    fileNewAction =
-        new QAction("New layout", image_filenew, "&New layout",
-                    QKeySequence("Ctrl+N"), this, "fileNewAction");
+    initializeActions();
+    initializeToolbars();
+    initializeMenu();
 
-    fileOpenAction =
-        new QAction("Open layout...", image_fileopen, "&Open layout",
-                    QKeySequence("Ctrl+O"), this, "fileOpenAction");
+    connectActions();
+}
 
+void MainWindow::initializeActions()
+{
+    QPixmap image_configure(ICON_PATH + "configure.png");
+    QPixmap image_contents(ICON_PATH + "contents.png");
+    QPixmap image_download(ICON_PATH + "dowload.png");
+    QPixmap image_editcopy(ICON_PATH + "editcopy.png");
+    QPixmap image_editcut(ICON_PATH + "editcut.png");
+    QPixmap image_editdelete(ICON_PATH + "editdelete.png");
+    QPixmap image_editpaste(ICON_PATH + "editpaste.png");
+    QPixmap image_filesave(ICON_PATH + "filesave.png");
+    QPixmap image_help(ICON_PATH + "help.png");
+    QPixmap image_line(ICON_PATH + "line.xpm");
+    QPixmap image_zoomin(ICON_PATH + "zoomin.png");
+    QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
+    QPixmap image_zoomout(ICON_PATH + "zoomout.png");
+
+    fileNewAction = new QAction
+        (tr("New"), QPixmap(ICON_PATH + "filenew.png"),
+         tr("&New"), QKeySequence("Ctrl+N"), this, "fileNewAction");
+    fileOpenAction = new QAction
+        (tr("Open..."), QPixmap(ICON_PATH + "fileopen.png"),
+         tr("&Open..."), QKeySequence("Ctrl+O"), this,
+         "fileOpenAction");
     fileSaveAction =
         new QAction("Save", image_filesave, "&Save",
                     QKeySequence("Ctrl+S"), this, "fileSaveAction");
-
     fileSaveAsAction =
-        new QAction("Save As", "Save &As", 0, this, "fileSaveAsAction");
-
+        new QAction("Save As...", "Save &As...", 0, this, "fileSaveAsAction");
     fileExitAction =
         new QAction("Exit", "E&xit", 0, this, "fileExitAction");
-
     editCutAction =
         new QAction("Cut", image_editcut, "C&ut",
                     QKeySequence("Ctrl+X"), this, "editCutAction");
-
     editCopyAction =
         new QAction("Copy", image_editcopy, "&Copy",
                     QKeySequence("Ctrl+C"), this, "editCopyAction");
-
     editPasteAction =
         new QAction("Paste", image_editpaste, "&Paste",
                     QKeySequence("Ctrl+V"), this, "editPasteAction" );
-
     helpContentsAction =
         new QAction("Contents", image_contents, "&Contents...",
                     QKeySequence("F1"), this, "helpContentsAction");
-
     helpAboutAction =
         new QAction("About", image_help, "&About...", 0,
                     this, "helpAboutAction" );
-
     openModuleConfAction =
         new QAction("Module configuration", image_configure,
                     "&Module configuration", 0, this,
                     "openModuleConfAction");
-
     drawLineAction =
         new QAction("Draw line", image_line, "&Draw line",
                     QKeySequence("Ctrl+L"), this, "drawLineAction");
-
     zoomInAction =
         new QAction("Zoom in", image_zoomin, "Zoom &in",
                     QKeySequence("Ctrl++"), this, "zoomInAction");
-
     zoomOutAction =
         new QAction("Zoom out", image_zoomout, "Zoom &out",
                     QKeySequence("Ctrl+-"), this, "zoomOutAction");
-
     zoomNormalAction =
         new QAction("Zoom normal", image_zoomnormal, "Zoom &normal",
                     QKeySequence("Ctrl+="), this, "zoomNormalAction");
-
     invokeCompilerAction =
-        new QAction("Compile", image_compile, "&Compile",
+        new QAction("Compile", QPixmap(ICON_PATH + "compile.png"), "&Compile",
                     QKeySequence("F8"), this, "invokeCompilerAction");
-
     invokeDownloadAction =
         new QAction("Download", image_download, "&Download",
                     QKeySequence("F7"), this, "invokeDownloadAction");
-
     openSettingsAction =
         new QAction("Configure POA", "Configure &POA...", 0,
                     this, "openSettingsAction");
-
     tileHorizontalAction =
-        new QAction("Tile horizontal", "Tile &horizontal", 0,
+        new QAction("Tile Horizontal", "Tile &Horizontal", 0,
                     this, "tileHorizontalAction");
-
     tileAction =
         new QAction("Tile", "&Tile", 0, this, "tileAction");
-
     cascadeAction =
         new QAction("Cascade", "&Cascade", 0, this, "cascadeAction");
+}
 
-    /////////////////////////////////////////////////////////////////
-    // toolbars
-    //
-
+void MainWindow::initializeToolbars()
+{
     // common
     commonToolBar = new QToolBar(tr("common toolbar"), this, DockTop);
     fileNewAction->addTo(commonToolBar);
@@ -223,12 +212,20 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     zoomInAction->addTo(drawToolBar);
     zoomNormalAction->addTo(drawToolBar);
     zoomOutAction->addTo(drawToolBar);
+}
 
-    /////////////////////////////////////////////////////////////////
-    // menus
+void MainWindow::initializeMenu()
+{
+    QPopupMenu *fileMenu;
+    QPopupMenu *editMenu;
+    QPopupMenu *toolsMenu;
+    QPopupMenu *drawMenu;
+    QPopupMenu *settingsMenu;
+    QPopupMenu *windowMenu;
+    QPopupMenu *helpMenu;
 
-    menubar = new QMenuBar(this, "menubar");
     fileMenu = new QPopupMenu(this);
+    menuBar()->insertItem(trUtf8("&Project"), fileMenu);
     fileNewAction->addTo(fileMenu);
     fileOpenAction->addTo(fileMenu);
     fileMenu->insertSeparator();
@@ -236,18 +233,17 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     fileSaveAsAction->addTo(fileMenu);
     fileMenu->insertSeparator();
     fileExitAction->addTo(fileMenu );
-    menubar->insertItem(trUtf8("&File"), fileMenu);
 
     // edit
     editMenu = new QPopupMenu(this);
+    menuBar()->insertItem(trUtf8("&Edit"), editMenu);
     editCutAction->addTo(editMenu);
     editCopyAction->addTo(editMenu);
     editPasteAction->addTo(editMenu);
-    menubar->insertItem(trUtf8("&Edit"), editMenu);
 
     // tools
     toolsMenu = new QPopupMenu(this);
-    menubar->insertItem(trUtf8("&Tools"), toolsMenu);
+    menuBar()->insertItem(tr("&Tools"), toolsMenu);
     openModuleConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
     invokeCompilerAction->addTo(toolsMenu);
@@ -255,7 +251,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     // draw
     drawMenu = new QPopupMenu(this);
-    menubar->insertItem(trUtf8("&Draw"), drawMenu);
+    menuBar()->insertItem(trUtf8("&Draw"), drawMenu);
     drawLineAction->addTo(drawMenu);
     drawMenu->insertSeparator();
     zoomInAction->addTo(drawMenu);
@@ -264,26 +260,27 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     // settings
     settingsMenu = new QPopupMenu(this);
-    menubar->insertItem(tr("&Settings"), settingsMenu);
+    menuBar()->insertItem(tr("&Settings"), settingsMenu);
     openSettingsAction->addTo(settingsMenu);
 
     // window
     windowMenu = new QPopupMenu(this);
-    menubar->insertItem(tr("&Window"), windowMenu);
+    //menuBar()->insertItem(tr("&Window"), windowMenu);
     tileAction->addTo(windowMenu);
     tileHorizontalAction->addTo(windowMenu);
     cascadeAction->addTo(windowMenu);
 
     // help
     helpMenu = new QPopupMenu(this);
+    menuBar()->insertItem(trUtf8("&Help"), helpMenu );
     helpContentsAction->addTo(helpMenu);
     helpMenu->insertSeparator();
     helpAboutAction->addTo(helpMenu);
-    menubar->insertItem(trUtf8("&Help"), helpMenu );
+}
 
-    /////////////////////////////////////////////////////////////////
-    // signals and slots connections
-    connect(fileNewAction, SIGNAL(activated()), this, SLOT(newDoc()));
+void MainWindow::connectActions()
+{
+    connect(fileNewAction, SIGNAL(activated()), this, SLOT(fileNew()));
     connect(fileOpenAction, SIGNAL(activated()), this, SLOT(fileOpen()));
     connect(fileSaveAction, SIGNAL(activated()), this, SLOT(fileSave()));
     connect(fileSaveAsAction, SIGNAL(activated()), this, SLOT(fileSaveAs()));
@@ -352,17 +349,25 @@ void MainWindow::tileHorizontal()
     }
 }
 
-void MainWindow::closeEvent(QCloseEvent *e)
+bool MainWindow::closeAll()
 {
     QWidgetList windows = ws->windowList();
-    if ( windows.count() ) {
-        for ( int i = 0; i < int(windows.count()); ++i ) {
-            QWidget *window = windows.at( i );
-            if ( !window->close() ) {
-                e->ignore();
-                return;
-            }
+    QWidgetListIt it(windows);
+    QWidget *window;
+    while ((window = it.current()) != 0 ) {
+        ++it;
+        if (!window->close()) {
+            return FALSE;
         }
+    }
+    return TRUE;
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    if (!closeAll()) {
+        e->ignore();
+        return;
     }
 
     // save settings
@@ -378,7 +383,31 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::fileNew()
 {
-    qWarning( "MainWindow::fileNew(): Not implemented yet!" );
+    // close current project
+    if (!closeAll()) {
+        return;
+    }
+    if (project_) {
+        delete project_;
+    }
+
+    project_ = new Project();
+
+    GridCanvas *canvas = new GridCanvas(project_);
+
+    MdiWindow* w = new MdiWindow(canvas, ws, 0, WDestructiveClose);
+    w->setCaption(tr("Unnamed Layout"));
+    w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
+    w->resize(w->sizeHint());
+    w->showMaximized();
+
+    // show the very first window in maximized mode
+//      if (ws->windowList().isEmpty()) {
+//          w->showMaximized();
+//      }
+//      else {
+//          w->show();
+//      }
 }
 
 void MainWindow::fileOpen()
@@ -439,45 +468,6 @@ void MainWindow::openSettings()
 {
     SettingsDialog *dialog = new SettingsDialog();
     dialog->show();
-}
-
-MdiWindow* MainWindow::newDoc()
-{
-    Document *doc = new Document();
-    GridCanvas *canvas = new GridCanvas(doc);
-
-    MdiWindow* w = new MdiWindow(canvas, ws, 0, WDestructiveClose);
-    w->setCaption("unnamed layout");
-    w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
-    w->resize(w->sizeHint());
-    // show the very first window in maximized mode
-    if (ws->windowList().isEmpty()) {
-        w->showMaximized();
-    } else {
-        w->show();
-    }
-
-    // FIX: remove: create dummy items
-    /*    QCanvasPolygonalItem *i
-        = new QCanvasRectangle( 255%doc->width(),255%doc->height(),
-                                doc->width()/5,doc->width()/5,doc);
-    int z = 255%256;
-    i->setBrush( QColor(z,z,z) );
-    i->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );
-    i->setZ(z);
-    i->show();*/
-
-    // FIX: remove: another one
-//     BlockView *view = new BlockView(new BlockModel(QString("Test")), canvas);
-//     int z = 255%256;
-//     view->setBrush( QColor(z,0,z) );
-//     view->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );
-//     view->setZ(z);
-//     view->show();
-
-    canvas->update();
-
-    return w;
 }
 
 void MainWindow::windowActivated(QWidget* w)

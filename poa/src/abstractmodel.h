@@ -18,39 +18,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.2 2003/08/22 17:39:04 squig Exp $
+ * $Id: abstractmodel.h,v 1.3 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
-
-
 #ifndef ABSTRACTMODEL_H
 #define ABSTRACTMODEL_H
 
 #include <qobject.h>
-class QCanvasItem;
 class QDomDocument;
 class QDomElement;
 class QCanvas;
+class QCanvasItemList;
 
 /*****************************************************************************
- * Base class for items in the module library.
+ * Base class for all model classes.
  *
  * @author keulsn
  * @author Steffen Pingel
  */
 class AbstractModel : public QObject
 {
-
 public:
-    /*************************************************************************
-     * Returns a description of the item.
-     */
-    virtual QCString description() = 0;
+    AbstractModel(QString name = QString::null,
+                  QString description = QString::null);
 
-    /*************************************************************************
-     * Returns the name of the item.
-     */
-    virtual QCString name() = 0;
+    virtual QString description() const;
+    virtual QString name() const;
+    virtual void setDescription(const QString &description);
+    virtual void setName(const QString &name);
 
     /*************************************************************************
      * Returns an XML representation of this instance.
@@ -60,8 +55,11 @@ public:
     /*************************************************************************
      * Creates the corresponding view object.
      */
-    virtual QCanvasItem *createView(QCanvas *canvas) = 0;
+    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
 
+private:
+    QString name_;
+    QString description_;
 };
 
 #endif

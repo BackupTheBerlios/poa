@@ -18,16 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.2 2003/08/22 17:39:04 squig Exp $
+ * $Id: modelfactory.h,v 1.3 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
 #define MODELFACTORY_H
 
-class Document;
-class ModuleLibraryItem;
+class AbstractModel;
 
+#include <qvaluelist.h>
 class QDomNode;
+
+/*  class AbstractModelList : public QValueList<AbstractModel *> { */
+/*  }; */
 
 /*****************************************************************************
  * Generates model objects from xml data.
@@ -37,8 +40,7 @@ class QDomNode;
 class ModelFactory
 {
 public:
-    static void generate(const QDomNode &node, Document *document,
-                         int x, int y);
+    static QValueList<AbstractModel *> generate(const QDomNode &node);
 };
 
 #endif // MODELFACTORY_H

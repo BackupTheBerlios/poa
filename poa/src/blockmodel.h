@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.5 2003/08/22 17:39:04 squig Exp $
+ * $Id: blockmodel.h,v 1.6 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,8 +44,8 @@ class BlockModel: public AbstractModel
 {
 public:
 
-    BlockModel();
-    BlockModel(QString &name);
+    BlockModel(QString name = QString::null,
+               QString description = QString::null);
     virtual ~BlockModel();
 
     /*************************************************************************
@@ -71,7 +71,6 @@ public:
     PinVector *getInputPins();
     PinVector *getOutputPins();
 
-    void setName(QString &name);
     void setClock(unsigned long clock);
     void setOffset(unsigned long offset);
     void setAutoOffset(bool autoOffset);
@@ -79,13 +78,10 @@ public:
     void addEpisodicPin(PinModel *pin, PinModel *successor = 0);
     void removeEpisodicPin(PinModel *pin);
 
-    QString getName ();
-
-    QCanvasItem *createView(QCanvas *canvas);
+    QCanvasItemList createView(QCanvas *canvas);
 
 private:
 
-    QString name_;
     PinVector *episodicPins_;
     PinVector *outputPins_;
     PinVector *inputPins_;

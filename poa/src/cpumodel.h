@@ -18,16 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.7 2003/08/22 17:39:04 squig Exp $
+ * $Id: cpumodel.h,v 1.8 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
-#include "codemanager.h"
 #include "blockmodel.h"
 
-#include <qcstring.h> // includes QByteArray
 #include <qdom.h>
 
 /*****************************************************************************
@@ -41,19 +39,15 @@ class CpuModel: public BlockModel
 {
 
  public:
-    CpuModel(const QString &name, unsigned short id, bool autoExecTime);
-    CpuModel(QDomElement *cpuElement);
+    CpuModel(unsigned short id, bool autoExecTime, QString name,
+             QString description);
+    CpuModel(QDomElement cpuElement);
 
-    // Returns XML representation of this instance,
-    QCString name() { return "NIOS32"; };
-    QCString description() { return "NIOS32 CPU"; };
     QDomElement serialize(QDomDocument *document);
 
  private:
 
-    QString name_;
     unsigned short id_;
-    CodeManager *code_;
     bool autoExecTime_;
 
 };

@@ -18,46 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.16 2003/08/22 15:06:11 squig Exp $
+ * $Id: main.cpp,v 1.17 2003/08/22 22:47:49 squig Exp $
  *
  *****************************************************************************/
-
-// NOTE:
-//   The following model-/view-headers are included temporary to
-//   check, if everything compiles.
-//   Later this won't be needed anymore.
-//
-#include "blockmodel.h"
-#include "blockview.h"
-#include "codemanager.h"
-#include "connector.h"
-#include "connectormodel.h"
-#include "connectorview.h"
-#include "coremodel.h"
-//#include "coreview.h"
-#include "cpumodel.h"
-//#include "cpuview.h"
-#include "inputblockmodel.h"
-//#include "inputblockview.h"
-#include "layoutmanager.h"
-#include "mainwindow.h"
-#include "moduleconfdialog.h"
-//#include "modulelibraryitem.h"
-#include "muxmodel.h"
-//#include "muxview.h"
-#include "outputblockmodel.h"
-//#include "outputblockview.h"
-#include "pinmodel.h"
-#include "pinvector.h"
-//#include "pinview.h"
-#include "viewmap.h"
-// END of temporary inclusions
-//
 
 // find a good place for constants, maybe consts.h?
 #define VERSION "POA-current"
 
 #include "mainwindow.h"
+
 #include <qapplication.h>
 #include <iostream.h>
 #include <qdom.h>
@@ -68,29 +37,6 @@
  */
 int main (int argc, char *argv[])
 {
-//     CpuModel model("CPU 1", 1, TRUE);
-
-//     QDomDocument doc;
-//     doc.appendChild(model.serialize(&doc));
-//     QByteArray xml = doc.toCString();
-//     cout << xml << "\n";
-//
-//    QDomDocument *doc = new QDomDocument("cpu");
-//    QString msg;
-//    int line;
-//    int col;
-//    QString foo(xml);
-//    doc->setContent(foo, &msg, &line, &col);
-//    CpuModel model2(doc);
-//
-//    cout << "---\n";
-//    cout << msg << line << ":" << col << "\n";
-//
-//    cout << "---\n";
-//
-//    xml = model2.serialize();
-//    cout << xml << "\n";
-//
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);

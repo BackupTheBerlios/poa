@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.31 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockmodel.h,v 1.32 2003/11/26 16:02:58 vanto Exp $
  *
  *****************************************************************************/
 
@@ -191,6 +191,8 @@ protected:
     bool hasInputPins_;
     bool hasOutputPins_;
     bool hasRuntime_;
+
+    QMap<uint, PinModel *> *idMap;
 
 signals:
     /**

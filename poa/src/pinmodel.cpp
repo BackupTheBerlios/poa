@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.25 2003/09/30 21:54:18 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.26 2003/11/26 16:02:58 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,7 @@
 
 #include "blockview.h"
 
-PinModel::PinModel(AbstractModel *parent, unsigned id, const QString &name,
+PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
                    unsigned address, unsigned bits, PinType type)
 {
     Q_ASSERT(name != 0);
@@ -44,7 +44,7 @@ PinModel::PinModel(AbstractModel *parent, unsigned id, const QString &name,
 }
 
 
-PinModel::PinModel(AbstractModel *parent, const QString &name)
+PinModel::PinModel(BlockModel *parent, const QString &name)
 {
     name_ = name;
     parent_ = parent;
@@ -55,7 +55,7 @@ PinModel::PinModel(AbstractModel *parent, const QString &name)
     bits_ = 32;
 }
 
-PinModel::PinModel(AbstractModel *parent, QDomElement pinElem)
+PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
 {
     parent_ = parent;
     connected_ = 0;
@@ -74,12 +74,12 @@ PinModel::~PinModel()
     emit(deleted());
 }
 
-AbstractModel *PinModel::parent()
+BlockModel *PinModel::parent()
 {
     return parent_;
 }
 
-void PinModel::setParent(AbstractModel *parent) {
+void PinModel::setParent(BlockModel *parent) {
     parent_ = parent;
 }
 

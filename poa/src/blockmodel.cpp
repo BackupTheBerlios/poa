@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.31 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.32 2003/11/26 16:02:58 vanto Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,8 @@ BlockModel::BlockModel(QString type, QString description)
     execTime_ = 0;
     currentPinId_ = 0;
     name_ = type;
+
+    idMap = new QMap<uint, PinModel*>;
 }
 
 BlockModel::BlockModel(QDomElement element)
@@ -72,6 +74,8 @@ BlockModel::~BlockModel()
         delete pin;
     }
     outputPins_.clear();
+
+    delete idMap;
 
     emit deleted();
 }

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.56 2003/11/26 14:31:32 garbeam Exp $
+# $Id: poa.pro,v 1.57 2003/11/26 16:02:58 vanto Exp $
 #
 ###############################################################################
 
@@ -43,6 +43,7 @@ include(poa.local)
 # source files
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
+HEADERS += blockconfdialog.h 
 HEADERS += blockmodel.h
 HEADERS += blockview.h
 HEADERS += canvasview.h
@@ -52,33 +53,33 @@ HEADERS += connectaction.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
 HEADERS += cpumodel.h
+HEADERS += deployprojectwizard.h
 HEADERS += grid.h
+HEADERS += gridcanvas.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
 HEADERS += modelfactory.h
-HEADERS += blockconfdialog.h 
 HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
-HEADERS += settingsdialog.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
+HEADERS += poa.h
 HEADERS += processdialog.h
 HEADERS += project.h
-HEADERS += poa.h
 HEADERS += reachedpoint.h
 HEADERS += serializable.h
 HEADERS += settings.h
-HEADERS += gridcanvas.h
+HEADERS += settingsdialog.h
 HEADERS += tooltipable.h
 HEADERS += util.h
-HEADERS += deployprojectwizard.h
 
 SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
+SOURCES += blockconfdialog.cpp
 SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
@@ -88,13 +89,13 @@ SOURCES += connectaction.cpp
 SOURCES += connectorviewlist.cpp
 SOURCES += connectorviewsegment.cpp
 SOURCES += cpumodel.cpp
+SOURCES += deployprojectwizard.cpp
 SOURCES += grid.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp
 SOURCES += main.cpp
 SOURCES += mainwindow.cpp
 SOURCES += mdiwindow.cpp
-SOURCES += blockconfdialog.cpp
 SOURCES += modelfactory.cpp
 SOURCES += moveaction.cpp
 SOURCES += muxconfdialog.cpp
@@ -108,5 +109,4 @@ SOURCES += reachedpoint.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp
-SOURCES += deployprojectwizard.cpp
 

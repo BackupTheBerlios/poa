@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.17 2003/11/24 16:37:41 squig Exp $
+ * $Id: modelfactory.cpp,v 1.18 2003/11/26 16:02:58 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -67,6 +67,9 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
     return l;
 }
 
+/**
+ * virginizes the model.
+ */
 void ModelFactory::clearProperties(AbstractModel* model)
 {
     model->setDescription(QString::null);

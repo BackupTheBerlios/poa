@@ -1,3 +1,7 @@
+2003-09-19  Tammo van Lessen  <vanto@users.sourceforge.net>
+
+	* mainwindow.cpp (editRemove): Cut and Remove for Blocks
+
 2003-09-18  Tammo van Lessen  <vanto@users.sourceforge.net>
 
 	* canvasview.cpp (dropEvent): Open BlockConfDialog on DropEvent

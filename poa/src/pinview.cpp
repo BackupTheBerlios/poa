@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.18 2003/09/18 16:32:39 garbeam Exp $
+ * $Id: pinview.cpp,v 1.19 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,6 +38,7 @@ PinView::PinView(PinModel *model, BlockView *block,
 : QCanvasRectangle(block->canvas())
 {
     model_ = model;
+    block_ = block;
     connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
     dockPosition_ = dockPosition;
     setZ(block->z());
@@ -56,7 +57,7 @@ PinView::PinView(PinModel *model, BlockView *block,
 
 PinView::~PinView()
 {
-    emit deleted(this);
+    block_->deletePinView(this);
 }
 
 AbstractModel *PinView::model()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.23 2003/09/16 16:03:31 squig Exp $
+ * $Id: blockmodel.cpp,v 1.24 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,9 +47,25 @@ BlockModel::BlockModel(QString type, QString description)
 
 BlockModel::~BlockModel()
 {
+
+    PinVector::iterator it;
+
+    for(it = episodicPins_->begin(); it != episodicPins_->end(); ++it ) {
+        delete (*it);
+    }
     delete episodicPins_;
+
+    for(it = inputPins_->begin(); it != inputPins_->end(); ++it ) {
+        delete (*it);
+    }
     delete inputPins_;
+
+    for(it = outputPins_->begin(); it != outputPins_->end(); ++it ) {
+        delete (*it);
+    }
     delete outputPins_;
+
+    emit deleted();
 }
 
 

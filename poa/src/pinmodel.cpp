@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.18 2003/09/18 14:54:32 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.19 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -161,8 +161,6 @@ PinView *PinModel::createView(BlockView *block,
 {
     PinView *view = new PinView(this, block, dockPosition);
     view->show();
-    connect(view, SIGNAL(deleted(PinView *)), block,
-            SLOT(deletePinView(PinView *)));
     return view;
 }
 

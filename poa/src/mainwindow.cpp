@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.50 2003/09/18 17:35:06 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.51 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -152,6 +152,9 @@ void MainWindow::initializeActions()
     editPasteAction =
         new QAction("Paste", image_editpaste, "&Paste",
                     QKeySequence("Ctrl+V"), this, "editPasteAction" );
+    editRemoveAction =
+        new QAction("Remove", image_editdelete, "&Remove",
+                    QKeySequence("Del"), this, "removeAction" );
     helpContentsAction =
         new QAction("Contents", image_contents, "&Contents...",
                     QKeySequence("F1"), this, "helpContentsAction");
@@ -208,6 +211,8 @@ void MainWindow::initializeToolbars()
     editCutAction->addTo(commonToolBar);
     editCopyAction->addTo(commonToolBar);
     editPasteAction->addTo(commonToolBar);
+    commonToolBar->addSeparator();
+    editRemoveAction->addTo(commonToolBar);
 
     // utility
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
@@ -311,6 +316,7 @@ void MainWindow::connectActions()
     connect(editCutAction, SIGNAL(activated()), this, SLOT(editCut()));
     connect(editCopyAction, SIGNAL(activated()), this, SLOT(editCopy()));
     connect(editPasteAction, SIGNAL(activated()), this, SLOT(editPaste()));
+    connect(editRemoveAction, SIGNAL(activated()), this, SLOT(editRemove()));
     connect(QApplication::clipboard(), SIGNAL(dataChanged()),
             this, SLOT(checkClipboardContent()));
     connect(helpContentsAction, SIGNAL(activated()),
@@ -435,6 +441,11 @@ QAction *MainWindow::blockConfAction()
     return openBlockConfAction;
 }
 
+QAction *MainWindow::removeAction()
+{
+    return editRemoveAction;
+}
+
 void MainWindow::fileNew()
 {
     QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
@@ -524,11 +535,7 @@ void MainWindow::fileExit()
 void MainWindow::editCut()
 {
     editCopy();
-    CanvasView *view = activeView();
-    if (view != 0) {
-        QCanvasItemList items = view->selectedItems();
-        // FIX: delete items
-    }
+    editRemove();
 }
 
 void MainWindow::editCopy()
@@ -574,6 +581,28 @@ void MainWindow::editPaste()
                 }
             }
         }
+    }
+}
+
+void MainWindow::editRemove()
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        if (!items.isEmpty()) {
+            for (QCanvasItemList::iterator current = items.begin();
+                 current != items.end(); ++current) {
+                AbstractView *item = dynamic_cast<AbstractView *>(*current);
+                if (item != 0 && item->model() != 0) {
+                    if (INSTANCEOF(item, BlockView)) {
+                        project_->removeBlock(item->model());
+                    }
+                    else Q_ASSERT("Irgensoeinanderesding removed");
+                    //else if (INSTANCEOF(item, Connector
+                }
+            }
+        }
+        view->canvas()->update();
     }
 }
 
@@ -633,10 +662,8 @@ void MainWindow::openProject(QString path)
         w->showMaximized();
 
         // connect to signals
-        connect(view, SIGNAL(selectionChanged(bool)), editCutAction,
-                SLOT(setEnabled(bool)));
-        connect(view, SIGNAL(selectionChanged(bool)), editCopyAction,
-                SLOT(setEnabled(bool)));
+        connect(view, SIGNAL(selectionChanged(QCanvasItem *)), this,
+                SLOT(selectionChanged(QCanvasItem *)));
     }
     else {
         QMessageBox::warning
@@ -702,7 +729,25 @@ void MainWindow::windowActivated(QWidget* w)
         editCutAction->setEnabled(false);
         editCopyAction->setEnabled(false);
         editPasteAction->setEnabled(false);
+        editRemoveAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
+    }
+}
+
+void MainWindow::selectionChanged(QCanvasItem *item)
+{
+    if (INSTANCEOF(item, BlockView)) {
+        editCutAction->setEnabled(true);
+        editCopyAction->setEnabled(true);
+        editRemoveAction->setEnabled(true);
+    }
+    else if (INSTANCEOF(item, ConnectorView)) {
+        //TODO
+    }
+    else {
+        editCutAction->setEnabled(false);
+        editCopyAction->setEnabled(false);
+        editRemoveAction->setEnabled(false);
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.20 2003/09/18 14:24:36 vanto Exp $
+ * $Id: project.h,v 1.21 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -57,10 +57,16 @@ public:
     ~Project();
 
     /**
-     * Adds a block model to the project
+     * Adds a block model to the project.
      * @param item the AbstractModel
      */
     void addBlock(AbstractModel *item);
+
+    /*
+     * Removes a block model from the project.
+     * @param item the AbstractModel
+     */
+    void removeBlock(AbstractModel *item);
 
     /**
      * Creates the item's corresponding view object on all canvases.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.32 2003/09/19 15:09:28 squig Exp $
+ * $Id: blockview.cpp,v 1.33 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,7 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     connect(model_, SIGNAL(pinAdded(PinModel *)),
             this, SLOT(addPin(PinModel *)));
     connect(model_, SIGNAL(updated()), this, SLOT(updateView()));
+    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
 
     // create pin views
     addPins(*model->inputPins());
@@ -367,4 +368,9 @@ void BlockView::updateView()
 void BlockView::deletePinView(PinView *pin)
 {
     pinList(pin)->remove(pin);
+}
+
+void BlockView::deleteView()
+{
+    delete this;
 }

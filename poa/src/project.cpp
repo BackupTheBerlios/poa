@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.22 2003/09/18 17:43:57 vanto Exp $
+ * $Id: project.cpp,v 1.23 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -112,6 +112,12 @@ void Project::addBlock(AbstractModel *item)
     }
 
     blocks_.append(item);
+}
+
+void Project::removeBlock(AbstractModel *item)
+{
+    blocks_.remove(item);
+    delete item;
 }
 
 void Project::createConnectorViews(PinView *source, PinView *target)

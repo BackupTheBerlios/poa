@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.15 2003/09/18 08:41:21 garbeam Exp $
+ * $Id: pinview.h,v 1.16 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -116,6 +116,7 @@ private:
 
     DockPosition dockPosition_;
     PinModel *model_;
+    BlockView *block_;
 
 
 public slots:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.20 2003/09/17 16:20:43 vanto Exp $
+ * $Id: mainwindow.h,v 1.21 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@ class Project;
 #include <qvariant.h>
 #include <qmainwindow.h>
 #include <qworkspace.h>
+class QCanvasItem;
 class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
@@ -95,6 +96,11 @@ public:
     QAction *pasteAction();
 
     /**
+     * Returns the remove action.
+     */
+    QAction *removeAction();
+
+    /**
      * Returns the show grid action.
      */
     QAction *showGridAction();
@@ -109,6 +115,7 @@ public slots:
     virtual void editCut();
     virtual void editCopy();
     virtual void editPaste();
+    virtual void editRemove();
     virtual void helpContents();
     virtual void helpAbout();
     virtual void openBlockConf();
@@ -150,6 +157,7 @@ private:
     QAction *editCutAction;
     QAction *editCopyAction;
     QAction *editPasteAction;
+    QAction *editRemoveAction;
     QAction *helpContentsAction;
     QAction *helpAboutAction;
     QAction *settingsShowGridAction_;
@@ -170,7 +178,7 @@ private slots:
     void closeWindow();
     void tileHorizontal();
     void updateRecentProjectsMenu();
-
+    void selectionChanged(QCanvasItem *);
 };
 
 #endif // MAINWINDOW_H

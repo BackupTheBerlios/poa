@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.35 2003/09/18 17:43:57 vanto Exp $
+ * $Id: canvasview.cpp,v 1.36 2003/09/19 15:16:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -64,6 +64,8 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
 
     backgroundPopupMenu = new QPopupMenu();
     MainWindow::instance()->showGridAction()->addTo(backgroundPopupMenu);
+    backgroundPopupMenu->insertSeparator();
+    MainWindow::instance()->pasteAction()->addTo(backgroundPopupMenu);
 
     blockViewPopupMenu = new QPopupMenu();
     MainWindow::instance()->blockConfAction()->addTo(blockViewPopupMenu);
@@ -71,6 +73,8 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     MainWindow::instance()->cutAction()->addTo(blockViewPopupMenu);
     MainWindow::instance()->copyAction()->addTo(blockViewPopupMenu);
     MainWindow::instance()->pasteAction()->addTo(blockViewPopupMenu);
+    blockViewPopupMenu->insertSeparator();
+    MainWindow::instance()->removeAction()->addTo(blockViewPopupMenu);
 
     pinViewPopupMenu = new QPopupMenu();
 }
@@ -259,7 +263,7 @@ void CanvasView::selectItem(QCanvasItem *item)
 {
     deselectAll();
     item->setSelected(true);
-    emit(selectionChanged(true));
+    emit(selectionChanged(item));
 }
 
 QCanvasItemList CanvasView::selectedItems()

@@ -58,7 +58,7 @@ import org.apache.ecs.xhtml.tr;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.11 2004/01/14 15:33:15 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.12 2004/01/14 18:38:26 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -321,7 +321,8 @@ public class XHTMLOutputter implements Outputter {
 		
 		public int compare(Object o1, Object o2) 
 		{
-			return (int)((((FileInfo)o1).getCoverage()- ((FileInfo)o2).getCoverage()) * 100.0);
+			double diff = ((FileInfo)o1).getCoverage() - ((FileInfo)o2).getCoverage();
+			return (int)(diff * 1000.0);
 		}
 
 	}

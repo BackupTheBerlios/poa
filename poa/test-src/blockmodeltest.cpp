@@ -20,7 +20,10 @@ class BlockModelTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testOffset);
     CPPUNIT_TEST(testPinSetter);
     CPPUNIT_TEST(testSerialize);
+    CPPUNIT_TEST(testSerializeWithoutPins);
+    CPPUNIT_TEST(testTooltip);
     CPPUNIT_TEST(testType);
+    CPPUNIT_TEST(testUpdatePerformed);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -171,12 +174,49 @@ public:
         CPPUNIT_ASSERT(block2.pins().count() == 3);
     }
 
+    void testSerializeWithoutPins()
+    {
+        block->deletePin(inputPin);
+
+        QDomDocument document;
+        QDomElement element = block->serialize(&document);
+
+        BlockModel block2(element);
+        CPPUNIT_ASSERT(block2.pins().count() == 0);
+    }
+
+    void testTooltip()
+    {
+        block->setClock(111);
+        block->setOffset(222);
+        block->setExecTime(333);
+
+        QString tip = block->tip();
+        CPPUNIT_ASSERT(tip.contains("111"));
+        CPPUNIT_ASSERT(tip.contains("222"));
+        CPPUNIT_ASSERT(tip.contains("333"));
+
+        CPPUNIT_ASSERT(tip.contains(block->name()));
+        CPPUNIT_ASSERT(tip.contains(block->type()));
+        CPPUNIT_ASSERT(tip.contains(block->description()));
+
+        block->setHasRuntime(false);
+        tip = block->tip();
+        CPPUNIT_ASSERT(!tip.contains("333"));
+    }
+
     void testType()
     {
         CPPUNIT_ASSERT(block->type() == "Type");
 
         block->setType("MyType");
         CPPUNIT_ASSERT(block->type() == "MyType");
+    }
+
+    void testUpdatePerformed()
+    {
+        // fake test case, just for coverage of abstractmodel.cpp
+        block->updatePerformed();
     }
 
 };

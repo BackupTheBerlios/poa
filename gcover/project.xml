@@ -25,11 +25,14 @@
   <inceptionYear>2004</inceptionYear>
   <package>gcover</package>
   <description>
-    HTML reporting for gcov output.
+    GCover was developed to visualize the output of gcov in a html
+    frameset in order to integrate it easily with maven. GCover is
+    written in Java. See <a href="../gcover/index.html">here</a> for a
+    sample output.
   </description>
   <!-- a short description of what the project does -->
   <shortDescription>
-    HTML reporting for gcov output.             
+    Code coverage report generator for gcov
   </shortDescription>
 
   <!-- the project home page -->

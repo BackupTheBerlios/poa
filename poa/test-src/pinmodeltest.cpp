@@ -129,6 +129,9 @@ public:
 
         inputPin->setPosition(1);
         CPPUNIT_ASSERT(inputPin->position() == 1);
+
+        inputPin->setPosition(1);
+        CPPUNIT_ASSERT(inputPin->position() == 1);
     }
 
     void testSerialize()

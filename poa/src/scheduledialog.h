@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.27 2004/02/06 14:32:29 vanto Exp $
+ * $Id: scheduledialog.h,v 1.28 2004/02/12 19:07:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -46,6 +46,14 @@ class QPushButton;
 class QTable;
 class QSlider;
 class QSplitter;
+
+typedef struct {
+	int width, height;
+	int x, y;
+    int nameWidth;
+    double pixPerNs;
+    QCanvas *canvas;
+} DrawProperties;
 
 /**
  * Scheduling Dialog.
@@ -83,8 +91,6 @@ private:
     QSlider *zoomSlider;
     double zoom_;
 
-    double pixPerNs_;
-
     Project *project_;
     bool modified_;
 
@@ -101,17 +107,17 @@ private:
     /**
      * Draws one row in the graph.
      */
-    void drawTimings(BlockNode* node);
+    void drawTimings(DrawProperties *p, BlockNode* node);
 
     /**
      * Draws the ruler.
      */
-    void drawRuler();
+    void drawRuler(DrawProperties *p);
 
     /**
      * Calculates the position of the given block at the given time.
      */
-    QRect calcBlockPosition(BlockNode *node, int time);
+    QRect calcBlockPosition(DrawProperties *p, BlockNode *node, int time);
 
     /**
      * Clears all graph widget canvases.
@@ -176,6 +182,11 @@ private slots:
      * Invokes the auto scheduler
      */
     void autoSchedule();
+
+    /**
+     * Print table and graph
+     */
+	void print();
 
     /**
      * Highlightes the same row in the graph widget as in the table.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.55 2004/02/09 01:29:49 keulsn Exp $
+ * $Id: scheduledialog.cpp,v 1.56 2004/02/12 19:07:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -54,9 +54,13 @@
 #include "poa.h"
 #include "project.h"
 #include "util.h"
+#include "printmanager.h"
 
 const int CANVAS_WIDTH = 800;       // Canvas width
-const int X_ORIGIN = 50;            // Blocks start at this origin
+const int PRINT_CANVAS_WIDTH = 700; // Same for printer
+const int PRINT_ITEM_HEIGHT = 20;   // Table item height
+const int PRINT_NAME_WIDTH = 100;   // Width of name space left of graph
+const int PRINT_SPACING = 5;        // Space e.g. between lines and text
 const int BOX_HEIGHT = 12;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
@@ -82,7 +86,6 @@ ScheduleDialog::ScheduleDialog(GridCanvas *canvas, Project* pro, QWidget* parent
     graph_ = 0;
     modified_ = false;
     zoom_ = 1.0;
-    pixPerNs_ = 1.0;
 
     initLayout();
 }
@@ -153,9 +156,8 @@ void ScheduleDialog::initTimingWidget()
     blocks_ = graph_->blocks();
 
     // remove all MuxModel nodes from list
-    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
-         it != blocks_.end(); ++it) {
-
+    QValueList<BlockNode*>::Iterator it;
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
         if (INSTANCEOF((*it)->model(), MuxModel)) {
             it = blocks_.remove(it);
         }
@@ -175,10 +177,8 @@ void ScheduleDialog::initTimingWidget()
     connect(timingTable, SIGNAL(valueChanged(int, int)),
             this, SLOT(modelChanged(int,int)));
 
-    for (QValueList<BlockNode*>::Iterator it2 = blocks_.begin();
-         it2 != blocks_.end(); ++it2) {
-
-        fillTimingTable(*it2);
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
+        fillTimingTable(*it);
     }
 
     topLayout->addWidget(timingTable);
@@ -205,8 +205,7 @@ void ScheduleDialog::initTimingWidget()
 
 void ScheduleDialog::initGraphWidget()
 {
-    // determine canvas size
-    int height =  RULER_HEIGHT + blocks_.count() * (BOX_HEIGHT + BOX_YSPACING);
+    int height = RULER_HEIGHT + blocks_.count() * (BOX_HEIGHT + BOX_YSPACING);
 
     labelCanvas = new QCanvas();
     labelCanvas->setBackgroundColor(lightGray);
@@ -231,23 +230,29 @@ void ScheduleDialog::initGraphWidget()
 
 void ScheduleDialog::initCanvas()
 {
+    DrawProperties p;
+
+    p.canvas = canvas;
+    p.nameWidth = 0;        // name labels are on other canvas
+    p.x = WIDGET_SPACING;
+    p.y = 0;
+    p.width = canvas->width();
+    p.height = canvas->height();
+
     // calculate pix per ns (find block with highest clock to draw it
     // BLOCKS_PER_CANVAS times.
     unsigned int max_clock = 0;
-    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
-         it != blocks_.end(); ++it) {
-
+    QValueList<BlockNode*>::Iterator it;
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
         max_clock = QMAX(max_clock, (*it)->clock());
     }
-    pixPerNs_ = (max_clock > 0)
-        ? (double)CANVAS_WIDTH / (max_clock * BLOCKS_PER_CANVAS)
+    p.pixPerNs = (max_clock > 0)
+        ? (double)p.width / (max_clock * BLOCKS_PER_CANVAS)
         : 1.0;
 
-    drawRuler();
-    for (QValueList<BlockNode*>::Iterator it2 = blocks_.begin();
-         it2 != blocks_.end(); ++it2) {
-
-        drawTimings(*it2);
+    drawRuler(&p);
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
+        drawTimings(&p, *it);
     }
 
     // create highlighter
@@ -281,37 +286,37 @@ void ScheduleDialog::clearCanvas()
     }
 }
 
-void ScheduleDialog::drawRuler()
+void ScheduleDialog::drawRuler(DrawProperties *p)
 {
     // draw ruler
     QFont font = QApplication::font();
     font.setPointSize(font.pointSize() - 2);
 
-    int x = WIDGET_SPACING;
+    int x = p->x + p->nameWidth;
     int currNs = 0;
 
-    double nsPer100 = RULER_INTERVAL * (1.0 / (pixPerNs_ * zoom_));
+    double nsPer100 = RULER_INTERVAL * (1.0 / (p->pixPerNs * zoom_));
     int rulerTick = (((int)nsPer100 / RULER_SNAP)+1) * RULER_SNAP;
 
-    while (x < canvas->width()) {
-        x += (int)(pixPerNs_ * zoom_ * rulerTick);
+    while (x < p->width) {
+        x += (int)(p->pixPerNs * zoom_ * rulerTick);
         currNs += rulerTick;
 
         // draw short line
-        QCanvasLine *tick = new QCanvasLine(canvas);
-        tick->setPoints(x, 0, x, 10);
+        QCanvasLine *tick = new QCanvasLine(p->canvas);
+        tick->setPoints(x, p->y, x, p->y + 10);
         tick->setPen(gray);
         tick->show();
 
         // draw long line
-        tick = new QCanvasLine(canvas);
-        tick->setPoints(x, 10, x, canvas->height());
+        tick = new QCanvasLine(p->canvas);
+        tick->setPoints(x, p->y + 10, x, p->y + p->height);
         tick->setPen(lightGray);
         tick->show();
 
         QCanvasText *text = new QCanvasText(formatTimeProperly(currNs),
-                                            canvas);
-        text->move(x + WIDGET_SPACING / 2, 1);
+                                            p->canvas);
+        text->move(x + WIDGET_SPACING / 2, p->y + 1);
         text->setColor(gray);
 
         text->setFont(font);
@@ -321,39 +326,47 @@ void ScheduleDialog::drawRuler()
     }
 }
 
-void ScheduleDialog::drawTimings(BlockNode* node)
+void ScheduleDialog::drawTimings(DrawProperties *p, BlockNode* node)
 {
-    // draw labels
-    QCanvasText* text = new QCanvasText(node->model()->name(), labelCanvas);
     int line = blocks_.findIndex(node);
-    int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
-    text->move(WIDGET_SPACING, y);
-    text->show();
+    int y = p->y + line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
+    // if nameWidth is set the name should be drawn within the graph canvas
+    if (p->nameWidth == 0) {
+        // draw labels
+        QCanvasText* text = new QCanvasText(node->model()->name(), labelCanvas);
+        text->move(WIDGET_SPACING, y);
+        text->show();
 
-    // resize canvas if label doesn't fit.
-    if ((int)(text->boundingRect().width() + 2 * WIDGET_SPACING)
-        > labelCanvas->width()) {
-
-        labelCanvas->resize(text->boundingRect().width()
-                            + (2 * WIDGET_SPACING), labelCanvas->height());
-        labelCanvasView->setFixedWidth(labelCanvas->width() + 4);
+        // resize canvas if label doesn't fit.
+        if ((int)(text->boundingRect().width() + 2 * WIDGET_SPACING)
+            > labelCanvas->width()) 
+        {    
+            labelCanvas->resize(text->boundingRect().width()
+                                + (2 * WIDGET_SPACING), labelCanvas->height());
+            labelCanvasView->setFixedWidth(labelCanvas->width() + 4);
+        }
+    } else {
+        // draw labels
+        QCanvasText* text = new QCanvasText(node->model()->name(), p->canvas);
+        text->move(p->x, y);
+        text->show();
     }
 
     // check if block is configured correctly
     if (node->clock() <= 0) {
         // draw info and skip
-        QCanvasRectangle *box = new QCanvasRectangle(canvas);
-        box->setSize(canvas->width(),
-                     BOX_HEIGHT + BOX_YSPACING);
+        QCanvasRectangle *box = new QCanvasRectangle(p->canvas);
+        box->setSize(p->width - p->nameWidth, BOX_HEIGHT + BOX_YSPACING);
         box->setBrush(white);
         box->setPen(lightGray);
-        box->move(0, RULER_HEIGHT - BOX_YSPACING
+        box->move(p->x + p->nameWidth, RULER_HEIGHT - BOX_YSPACING
                   / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
         box->setZ(2);
         box->show();
 
-        QCanvasText *text = new QCanvasText(tr("Missing clock value."), canvas);
-        text->move(WIDGET_SPACING, y);
+        QCanvasText *text = new QCanvasText(tr("Missing clock value."), 
+            p->canvas);
+        text->move(p->x + p->nameWidth, y);
         text->setColor(black);
         text->setZ(3);
         text->show();
@@ -362,11 +375,11 @@ void ScheduleDialog::drawTimings(BlockNode* node)
 
     // draw blocks
     int t = node->offset();
-    double X = t * pixPerNs_;
-    while (X < canvas->width()) {
+    double X = t * p->pixPerNs;
+    while (X < p->width - p->nameWidth) {
         // draw block
-        QRect thisBlock = calcBlockPosition(node, t);
-        QCanvasRectangle* box = new FancyRectangle(thisBlock, canvas);
+        QRect thisBlock = calcBlockPosition(p, node, t);
+        QCanvasRectangle* box = new FancyRectangle(thisBlock, p->canvas);
         //        box->setBrush(QBrush(white));
         box->setBrush(QBrush(colormanager_->color(node->model())));
         box->setZ(2);
@@ -389,40 +402,40 @@ void ScheduleDialog::drawTimings(BlockNode* node)
             }
 
             // check if this block is the next source for the target block
-            if (t + (2 * node->runtime()) + node->clock() < targetTime  ) {
+            if (t + (2 * node->runtime()) + node->clock() < targetTime) {
                 continue;
             }
 
             // calculate position of the target block
-            QRect targetBlock = calcBlockPosition(target, targetTime);
+            QRect targetBlock = calcBlockPosition(p, target, targetTime);
 
             // draw a line with arrowhead between this block and the next
             // target block.
-            QCanvasLine *line = new ArrowLine(canvas);
+            QCanvasLine *line = new ArrowLine(p->canvas);
             line->setPoints(thisBlock.right(),
                             thisBlock.y() + thisBlock.height(),
                             targetBlock.x(),
                             targetBlock.y());
             line->setZ(1);
             line->show();
-
         }
 
         t += node->clock();
-        X = rint(t * pixPerNs_);
+        X = rint(t * p->pixPerNs);
     }
 
     return;
 }
 
-QRect ScheduleDialog::calcBlockPosition(BlockNode *node, int time)
+QRect ScheduleDialog::calcBlockPosition(DrawProperties *p, 
+    BlockNode *node, int time)
 {
     int line = blocks_.findIndex(node);
     Q_ASSERT(line != -1);
 
-    int x = (int)(WIDGET_SPACING + rint(time * pixPerNs_ * zoom_));
-    int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
-    int w = (int)QMAX(5, rint(node->runtime() * pixPerNs_ * zoom_));
+    int x = p->x + p->nameWidth + (int)(rint(time * p->pixPerNs * zoom_));
+    int y = p->y + line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
+    int w = (int)QMAX(5, rint(node->runtime() * p->pixPerNs * zoom_));
     int h = BOX_HEIGHT;
 
     return QRect(x, y, w, h);
@@ -443,6 +456,11 @@ void ScheduleDialog::initBottomWidget()
     autoPushButton->setText(tr("A&uto"));
     connect(autoPushButton, SIGNAL(clicked()), this, SLOT(autoSchedule()));
 
+    // print button
+    QPushButton *printPushButton = new QPushButton(bottomWidget);
+    printPushButton->setText(tr("&Print"));
+    connect(printPushButton, SIGNAL(clicked()), this, SLOT(print()));
+
     // apply button
     QPushButton *applyPushButton = new QPushButton(bottomWidget);
     applyPushButton->setText(tr("&Apply"));
@@ -460,11 +478,11 @@ void ScheduleDialog::initBottomWidget()
     connect(zoomSlider, SIGNAL(valueChanged(int)),
             SLOT(zoomChanged(int)));
 
-
     bottomLayout->addWidget(zoomSlider);
 
     bottomLayout->addWidget(okPushButton);
     bottomLayout->addWidget(autoPushButton);
+    bottomLayout->addWidget(printPushButton);
     bottomLayout->addWidget(applyPushButton);
     bottomLayout->addWidget(cancelPushButton);
 }
@@ -491,6 +509,103 @@ void ScheduleDialog::autoSchedule()
     PathChooserDialog *dialog = new PathChooserDialog(graph_);
 
     /*int result = */dialog->exec();
+}
+
+void ScheduleDialog::print()
+{
+    int tableHeight = (blocks_.count() + 1) * PRINT_ITEM_HEIGHT;
+    QCanvas *printCanvas = 
+        new QCanvas(PRINT_CANVAS_WIDTH, tableHeight + canvas->height());
+
+    // first draw timing table
+    int y = 0;
+    Q_ASSERT(timingTable->numCols() == 6);
+    int xOfs[6] = {0,       // x offsets of the columns
+                   PRINT_CANVAS_WIDTH * 1/20,
+                   PRINT_CANVAS_WIDTH * 4/10, 
+                   PRINT_CANVAS_WIDTH * 6/10, 
+                   PRINT_CANVAS_WIDTH * 8/10,
+                   PRINT_CANVAS_WIDTH};
+
+    QCanvasLine *line = new QCanvasLine(printCanvas);
+    line->setPoints(xOfs[0], y, xOfs[5], y);
+    line->setPen(gray);
+    line->show();        
+
+    // print header and vertical lines
+    for (int i = 0; i < 6; i++) {
+        if (i > 0) {
+            QCanvasText* text = new QCanvasText(
+                timingTable->horizontalHeader()->label(i - 1), printCanvas);
+            text->move(xOfs[i] + PRINT_SPACING, y + PRINT_SPACING);
+            text->show();
+        }
+
+        line = new QCanvasLine(printCanvas);
+        line->setPoints(xOfs[i], y, xOfs[i], y + tableHeight);
+        line->setPen(gray);
+        line->show();        
+    }
+    y += PRINT_ITEM_HEIGHT;
+
+    // now print contents
+    int row = 0;
+    QValueList<BlockNode*>::Iterator it;
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
+        // number
+        QCanvasText* text;
+        text = new QCanvasText(QString::number(row + 1), printCanvas);
+        text->move(xOfs[0] + PRINT_SPACING, y + PRINT_SPACING);
+        text->show();
+
+        // other contents
+        for (int i = 1; i < 6; i++) {
+            text = new QCanvasText(timingTable->text(row, i - 1), printCanvas);
+            text->move(xOfs[i] + PRINT_SPACING, y + PRINT_SPACING);
+            text->show();
+        }
+
+        // horizontal line
+        line = new QCanvasLine(printCanvas);
+        line->setPoints(xOfs[0], y, xOfs[5], y);
+        line->setPen(gray);
+        line->show();
+
+        y += PRINT_ITEM_HEIGHT;
+        row++;
+    }
+
+    line = new QCanvasLine(printCanvas);
+    line->setPoints(xOfs[0], y, xOfs[5], y);
+    line->setPen(gray);
+    line->show();
+    y += PRINT_ITEM_HEIGHT;
+
+    // properties for the graph    
+    DrawProperties p;
+    p.nameWidth = PRINT_NAME_WIDTH;
+    p.x = 0;
+    p.y = y;
+    p.width = PRINT_CANVAS_WIDTH;
+    p.height = canvas->height();
+    p.canvas = printCanvas;
+
+    // now draw graph
+    unsigned int max_clock = 0;
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
+        max_clock = QMAX(max_clock, (*it)->clock());
+    }
+    p.pixPerNs = (max_clock > 0)
+        ? (double)canvas->width() / (max_clock * BLOCKS_PER_CANVAS)
+        : 1.0;
+    drawRuler(&p);
+    for (it = blocks_.begin(); it != blocks_.end(); ++it) {
+        drawTimings(&p, *it);
+    }
+
+    // finally print canvas
+    PrintManager printer(printCanvas, project_->name());
+    printer.print();
 }
 
 void ScheduleDialog::updateHighlighter(int row, int)

@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.10 2004/05/30 09:06:03 keulsn Exp $
+%% $Id: abschlussbericht.tex,v 1.11 2004/06/05 21:33:13 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.10 $
-\RCSdef $Date: 2004/05/30 09:06:03 $
+\RCSdef $Revision: 1.11 $
+\RCSdef $Date: 2004/06/05 21:33:13 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -29,7 +29,7 @@
 
 \begin{itemize}
 
-\item Version 1.0 (xx.05.2004)
+\item Version 1.0 (17.06.2004)
 
   Diese Version wurde dem Auftraggeber vorgelegt.
 
@@ -45,7 +45,18 @@
 
 \section{Zweck des Dokuments}
 
-\section{Projektziele}
+Dieses Dokument beschreibt das Projekt ``Programmierumbgebung Offener
+Antrieb'' (POA), das von Anfang Mai 2003 bis Ende April 2004 an der
+Universität Stuttgart am Institut für Steuerungstechnik der
+Werkzeugmaschinen und Fertigungseinrichtungen durchgeführt wurde. Das
+Projekt wurde von sieben Softwaretechnik Studenten Necati Aydin,
+Anselm Garbe, Stefan Hauser, Steffen Keul, Marcel Kilgus, Steffen
+Pingel und Tammo van Lessen im Rahmen eines Studienprojekts B
+ausgeführt. Im Folgenden wird ein Überblick über die erzielten
+Ergebnisse, den Projektverlauf und die persönlichen Eindrücke der
+Teilnehmer gegeben.
+ 
+\section{Projekthintergrund}
 
 Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen
 gemacht.  Viele dieser Entwicklungen beinhalten neue Kinematiken, wie
@@ -75,39 +86,21 @@ Funktion des Bausteins seinen Bed"urfnissen anzupassen.
 
 Um die Offenheit f"ur jeden Anwender nutzbar zu machen, wird f"ur das CPLD eine
 Architektur festgelegt, die es erm"oglicht, einzelne Funktionalit"aten in Form
-von Bl"ocken zu implementieren. Diese Bl"ocke k"onnen aus fest programmierten
-Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Block kann
-auf die Signale aller anderen Bl"ocke zugreifen und stellt seine eigenen
-Ausgangssignale allen anderen Bl"ocken zur Verf"ugung.
+von Bl"ocken zu implementieren. Diese Bl"ocke k"onnen aus festprogrammierten
+Schaltungen (Cores) oder freiprogrammierbaren CPUs bestehen. Die
+Signale können über ein freiprogrammierbares Netzwerk verbunden
+werden. 
 
-POA bietet eine anwenderfreundliche Programmierumgebung f"ur das Netzwerk
-von CPUs und Cores, in dem ein bereits auf dem CPLD vorhandenes
-Netzwerk konfiguriert werden kann.
+Diese komplexe Netzwerke auf einer von der Hardware abstrahierten
+Ebene für den Anwender einfach programmierbar zu machen ist die
+Kernanforderung des POA Projekts. 
 
 \section{Anforderungen}
 
-\section{Entwicklungsphilosophie}
+Aus dem im vorherigen Abschnitt skizierten Projekthintergrund ergaben
+sich folgende Anforderungen im Detail, deren Umsetzung auch in einem
+Angebotsdokument verbindlich mit dem Auftraggeber vereinbart wurden:
 
-- GPL
-- Transparenz
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Projektergebnisse}
-
-\section{Programmierumgebung Offener Antrieb}
-Aus der genannten Aufgabenstellung resultierte POA, die ``Programmierumgebung 
-Offener Antrieb''. POA ist eine Applikation mit grafischer Oberfl"ache, in der 
-Funktionsbl"ocke (sowohl Cores als auch CPUs) auf einer Arbeitsfl"ache platziert 
-und miteinander verbunden werden k"onnen. 
-
-POA hilft nach der Erstellung des Netzwerkes bei der Pr"ufung der Konsistenz, bei 
-der Optimierung der zeitlichen Offsets der einzelnen Bl"ocke, bei der Programmierung 
-der CPUs sowie bei der "Ubertragung der "ubersetzten Codes auf die CPUs.
-
-\includegraphics[width=15cm]{bspprojekt1}
-
-\subsection{Merkmale}
-Im einzelnen bietet POA im Wesentlichen folgende Funktionalit"aten:
 \begin{itemize}
 \item Darstellung und Manipulation rasterisierter CPLD Layouts
 \item Verwaltung und Bearbeitung einer CPLD-Blockbibliothek zur CPLD-Layout
@@ -120,13 +113,93 @@ Im einzelnen bietet POA im Wesentlichen folgende Funktionalit"aten:
 \item Zusammenarbeit mit externen Programmen
 \end{itemize}
 
+Diese Anforderungen wurden im Laufe des Projekts vollständig
+implementiert. Darüberhinaus wurden folgende zusätzliche Anforderungen
+umgesetzt: 
+
+\begin{itemize}
+\item Automatisches Routing von Verbindungen zwischen Blöcken
+\item Drucken von Netzwerken
+\item Vergrössern und verkleinern der Netzwerk ansicht
+\item Automatische Signal-Laufzeitoptimierung
+\item Öffnen mehrerer Projekte zur gleichen Zeit mit
+  Datenaustauschmöglichkeiten über die Zwischenablage
+\item Anzeige der Taktfrequzenzen mittels Einfärbung der Blöcke
+\item Lauffähigkeit unter Microsoft Windows und Linux
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Projektergebnisse}
+
+\section{Programmierumgebung Offener Antrieb}
+
+Aus den genannten Anforderungen resultierte die ``Programmierumgebung
+Offener Antrieb'', kurz POA. POA ist eine Applikation mit grafischer
+Oberfl"ache basierend auf der QT Bibliothek von Trolltech. Die
+Bedienung erfolgt intuitiv mit Drag-and-Drop. Aus der Bibliothek auf
+der linken Seite können vorgefertigt konfigurierte Blöcke auf die
+Arbeitsoberfläche gezogen werden und in einem Dialog konfiguriert
+werden. 
+
+\includegraphics[width=15cm]{bspprojekt1}
+
+Einstellbar sind Parameter wie die Taktrate, Laufzeit und die Anzahl
+der Pins über die andere Blöcke vernetzt werden können. CPUs bieten
+außerdem die Möglichkeit über den Aufruf eines externen Editors
+Quellcode zu Hinterlegen, der auf der CPU ausgeführt wird, nachdem der
+Download des Projekts auf den CPLD erfolgt ist. Wenn mehrere Blöcke
+auf der Arbeitsoberfläche plaziert wurden, können diese mit der Maus
+an ihren Pins verbunden werden.
+
+Sobald ein Projekt fertig gestellt ist, kann die Laufzeit eines oder
+mehrerer Signale nach einer priorisierten Liste optimiert werden. Ein
+Signal entspricht der Berechnung eines Ausgangswertes aus einem
+Eingangswert. Eingangswerte werden durch Eingangsblöcke representiert
+und der Signalweg durch die Verbindung von Blöcken festgelegt. Durch
+Berechnung eines optimalen Offsets für die Taktung eines Blocks kann
+nun erreicht werden, dass ein bestimmtes Signal in kürzest möglicher
+Zeit das Netzwerk durchläuft.
+
+Nach der Optimierung der Signallaufzeiten kann das Projekt auf einen
+CPLD übertragen werden. Bisher ist nur der Download des kompilierten
+Quellcodes einer einzelnen CPU möglich, da hardwareseitig bisher keine
+Unterstützung für mehrere CPUs vorgesehen ist.  
+
+Vor der Übertragung wird das Projekt auf Konsistenz geprüft
+
+Eine Vollständige Beschreibung von POA befindet sich im Handbuch.
+
+\subsection{Technische Umsetzung}
+
+Die Architektur von POA lässt sich in stark zusammenhängende Module
+aufteilen, die eine gerine Kopplung aufweisen. Der POA Entwurf wurde
+nach folgenden Kritieren optimiert:
+
+\begin{itemize}
+\item Leichte Erweiterbarkeit
+\item Hohe Änderbarkeit
+\end{itemize}
+
+Erreicht wurden diese Eigenschafen in erster Linie durch ein einfaches
+Design. Es wurden nur die notwendigen Klassen implementiert, keine
+Technologie auf Vorrat angelegt. Soweit möglich wurden Entwurfsmuster
+verwendet, um das einfache Verständnis des Quellcodes zu erhöhen. Es
+wurden unter anderen das Model-View-Controller, Strategie und das
+Singletonmuster benutzt.
+
 \section{Dokumente}
+
+Während des Projekts
 
 \subsection{Angebot}
 \subsection{Handbuch}
 \subsection{Interne Dokumente}
 
 Entwurf, Spezifikation
+
+\section{Weitere Ergenisse}
+
+- GCover
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektorganisation}
@@ -181,6 +254,12 @@ Verfassen der Dokumente.
 
 Die Rolle der Entwickler wurde von allen Teilnehmern belegt.
 
+\section{Entwicklungsphilosophie}
+
+- GPL
+- Transparenz
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektablauf}
 
@@ -209,9 +288,13 @@ würden. Deswegen wurde zu Beginn jeder Iteration
 MAYNARD:  It reads, 'Here may be found the last words of Joseph
     of Aramathea.  He who is valiant and pure of spirit may find
     the Holy Grail in the Castle of uuggggggh'.
+
 ARTHUR:  What?
+
 MAYNARD: '... the Castle of uuggggggh'.
+
 BEDEMIR:  What is that?
+
 MAYNARD:  He must have died while carving it.
 
 [Monthy Python and the Holy Grail]
@@ -855,6 +938,10 @@ aufbereitet. Gcover ist als Teilprojekt von POA entstanden und
 orientiert sich an anderen Werkzeugen zur Messung der Testüberdeckung,
 von denen allerdings kein kostenloses zur Auswertung der gcov Asugabe
 zur Verfügung stand. 
+
+FIX:
+- Reviews
+- Seminarthema
 
 \subsection{Fazit}
 

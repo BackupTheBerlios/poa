@@ -5,20 +5,18 @@
 
 #if CPPUNIT_NEED_DLL_DECL
 #pragma warning( push )
-#pragma warning( disable: 4251 )  // X needs to have dll-interface to be used by clients of class Z
+#pragma warning( disable: 4251 4660 )  // X needs to have dll-interface to be used by clients of class Z
 #endif
 
-#include <cppunit/TestSucessListener.h>
-#include <deque>
+#include <cppunit/TestSuccessListener.h>
+#include <cppunit/portability/CppUnitDeque.h>
 
 
-namespace CppUnit
-{
-
+CPPUNIT_NS_BEGIN
 
 #if CPPUNIT_NEED_DLL_DECL
-  template class CPPUNIT_API std::deque<TestFailure *>;
-  template class CPPUNIT_API std::deque<Test *>;
+//  template class CPPUNIT_API std::deque<TestFailure *>;
+//  template class CPPUNIT_API std::deque<Test *>;
 #endif
 
 
@@ -35,11 +33,11 @@ namespace CppUnit
  * by the framework.
  * \see TestListener, TestFailure.
  */
-class CPPUNIT_API TestResultCollector : public TestSucessListener
+class CPPUNIT_API TestResultCollector : public TestSuccessListener
 {
 public:
-  typedef std::deque<TestFailure *> TestFailures;
-  typedef std::deque<Test *> Tests;
+  typedef CppUnitDeque<TestFailure *> TestFailures;
+  typedef CppUnitDeque<Test *> Tests;
 
 
   /*! Constructs a TestResultCollector object.
@@ -77,8 +75,7 @@ private:
 
 
 
-} //  namespace CppUnit
-
+CPPUNIT_NS_END
 
 #if CPPUNIT_NEED_DLL_DECL
 #pragma warning( pop )

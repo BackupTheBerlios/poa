@@ -6,107 +6,76 @@
 #include <cppunit/Asserter.h>
 
 
-namespace CppUnit {
-
-  /*! \brief Traits used by CPPUNIT_ASSERT_EQUAL().
-   *
-   * Here is an example of specialization of that traits:
-   *
-   * \code
-   * template<>
-   * struct assertion_traits<std::string>   // specialization for the std::string type
-   * {
-   *   static bool equal( const std::string& x, const std::string& y )
-   *   {
-   *     return x == y;
-   *   }
-   * 
-   *   static std::string toString( const std::string& x )
-   *   {
-   *     std::string text = '"' + x + '"';    // adds quote around the string to see whitespace
-   *     OStringStream ost;
-   *     ost << text;
-   *     return ost.str();
-   *   }
-   * };
-   * \endcode
-   */
-  template <class T>
-  struct assertion_traits 
-  {  
-      static bool equal( const T& x, const T& y )
-      {
-          return x == y;
-      }
-
-      static std::string toString( const T& x )
-      {
-          OStringStream ost;
-          ost << x;
-          return ost.str();
-      }
-  };
+CPPUNIT_NS_BEGIN
 
 
-  namespace TestAssert
+/*! \brief Traits used by CPPUNIT_ASSERT_EQUAL().
+ *
+ * Here is an example of specialization of that traits:
+ *
+ * \code
+ * template<>
+ * struct assertion_traits<std::string>   // specialization for the std::string type
+ * {
+ *   static bool equal( const std::string& x, const std::string& y )
+ *   {
+ *     return x == y;
+ *   }
+ * 
+ *   static std::string toString( const std::string& x )
+ *   {
+ *     std::string text = '"' + x + '"';    // adds quote around the string to see whitespace
+ *     OStringStream ost;
+ *     ost << text;
+ *     return ost.str();
+ *   }
+ * };
+ * \endcode
+ */
+template <class T>
+struct assertion_traits 
+{  
+    static bool equal( const T& x, const T& y )
+    {
+        return x == y;
+    }
+
+    static std::string toString( const T& x )
+    {
+        OStringStream ost;
+        ost << x;
+        return ost.str();
+    }
+};
+
+
+/*! \brief (Implementation) Asserts that two objects of the same type are equals.
+ * Use CPPUNIT_ASSERT_EQUAL instead of this function.
+ * \sa assertion_traits, Asserter::failNotEqual().
+ */
+template <class T>
+void assertEquals( const T& expected,
+                   const T& actual,
+                   SourceLine sourceLine,
+                   const std::string &message )
+{
+  if ( !assertion_traits<T>::equal(expected,actual) ) // lazy toString conversion...
   {
-#ifdef CPPUNIT_ENABLE_SOURCELINE_DEPRECATED
-    void CPPUNIT_API assertImplementation( bool         condition, 
-                                           std::string  conditionExpression = "",
-                                           long lineNumber,
-                                           std::string  fileName );
-
-    void CPPUNIT_API assertNotEqualImplementation( std::string expected,
-                                                   std::string actual,
-                                                   long lineNumber,
-                                                   std::string fileName );
-      
-
-    template <class T>
-    void assertEquals( const T& expected,
-                       const T& actual,
-                       long lineNumber,
-                       std::string fileName )
-    {
-      if ( !assertion_traits<T>::equal(expected,actual) ) // lazy toString conversion...
-      {
-        assertNotEqualImplementation( assertion_traits<T>::toString(expected),
-                                      assertion_traits<T>::toString(actual),
-                                      lineNumber, 
-                                      fileName );
-      }
-    }
-
-    void CPPUNIT_API assertEquals( double expected, 
-                                   double actual, 
-                                   double delta, 
-                                   long lineNumber,
-                                   std::string fileName );
-
-#else   //                  using SourceLine
-
-    template <class T>
-    void assertEquals( const T& expected,
-                       const T& actual,
-                       SourceLine sourceLine,
-                       const std::string &message ="" )
-    {
-      if ( !assertion_traits<T>::equal(expected,actual) ) // lazy toString conversion...
-      {
-        Asserter::failNotEqual( assertion_traits<T>::toString(expected),
-                                assertion_traits<T>::toString(actual),
-                                sourceLine,
-                                message );
-      }
-    }
-
-    void CPPUNIT_API assertDoubleEquals( double expected,
-                                         double actual,
-                                         double delta,
-                                         SourceLine sourceLine );
-
-#endif
+    Asserter::failNotEqual( assertion_traits<T>::toString(expected),
+                            assertion_traits<T>::toString(actual),
+                            sourceLine,
+                            message );
   }
+}
+
+/*! \brief (Implementation) Asserts that two double are equals given a tolerance.
+ * Use CPPUNIT_ASSERT_DOUBLES_EQUAL instead of this function.
+ * \sa Asserter::failNotEqual().
+ */
+void CPPUNIT_API assertDoubleEquals( double expected,
+                                     double actual,
+                                     double delta,
+                                     SourceLine sourceLine );
 
 
 /* A set of macros which allow us to get the line number
@@ -118,15 +87,16 @@ namespace CppUnit {
 /** Assertions that a condition is \c true.
  * \ingroup Assertions
  */
-#define CPPUNIT_ASSERT(condition)                          \
-  ( ::CppUnit::Asserter::failIf( !(condition),             \
-                                 (#condition),             \
+#define CPPUNIT_ASSERT(condition)                                                 \
+  ( CPPUNIT_NS::Asserter::failIf( !(condition),                                   \
+                                 CPPUNIT_NS::Message( "assertion failed",         \
+                                                      "Expression: " #condition), \
                                  CPPUNIT_SOURCELINE() ) )
 #else
-#define CPPUNIT_ASSERT(condition)                          \
-  ( ::CppUnit::Asserter::failIf( !(condition),             \
-                                 "",                       \
-                                 CPPUNIT_SOURCELINE() ) )
+#define CPPUNIT_ASSERT(condition)                                            \
+  ( CPPUNIT_NS::Asserter::failIf( !(condition),                              \
+                                  CPPUNIT_NS::Message( "assertion failed" ), \
+                                  CPPUNIT_SOURCELINE() ) )
 #endif
 
 /** Assertion with a user specified message.
@@ -137,24 +107,25 @@ namespace CppUnit {
  *                  test failed.
  */
 #define CPPUNIT_ASSERT_MESSAGE(message,condition)          \
-  ( ::CppUnit::Asserter::failIf( !(condition),             \
-                                 (message),                \
-                                 CPPUNIT_SOURCELINE() ) )
+  ( CPPUNIT_NS::Asserter::failIf( !(condition),            \
+                                  (message),               \
+                                  CPPUNIT_SOURCELINE() ) )
 
 /** Fails with the specified message.
  * \ingroup Assertions
  * \param message Message reported in diagnostic.
  */
-#define CPPUNIT_FAIL( message )                            \
-  ( ::CppUnit::Asserter::fail( message,                    \
-                               CPPUNIT_SOURCELINE() ) )
+#define CPPUNIT_FAIL( message )                                         \
+  ( CPPUNIT_NS::Asserter::fail( CPPUNIT_NS::Message( "forced failure",  \
+                                                     message ),         \
+                                CPPUNIT_SOURCELINE() ) )
 
 #ifdef CPPUNIT_ENABLE_SOURCELINE_DEPRECATED
 /// Generalized macro for primitive value comparisons
-#define CPPUNIT_ASSERT_EQUAL(expected,actual)                    \
-  ( ::CppUnit::TestAssert::assertEquals( (expected),             \
-                                         (actual),               \
-                                         __LINE__, __FILE__ ) )
+#define CPPUNIT_ASSERT_EQUAL(expected,actual)                     \
+  ( CPPUNIT_NS::assertEquals( (expected),             \
+                              (actual),               \
+                              __LINE__, __FILE__ ) )
 #else
 /** Asserts that two values are equals.
  * \ingroup Assertions
@@ -172,10 +143,11 @@ namespace CppUnit {
  * The last two requirements (serialization and comparison) can be
  * removed by specializing the CppUnit::assertion_traits.
  */
-#define CPPUNIT_ASSERT_EQUAL(expected,actual)                     \
-  ( ::CppUnit::TestAssert::assertEquals( (expected),              \
-                                         (actual),                \
-                                         CPPUNIT_SOURCELINE() ) )
+#define CPPUNIT_ASSERT_EQUAL(expected,actual)          \
+  ( CPPUNIT_NS::assertEquals( (expected),              \
+                              (actual),                \
+                              CPPUNIT_SOURCELINE(),    \
+                              "" ) )
 
 /** Asserts that two values are equals, provides additional messafe on failure.
  * \ingroup Assertions
@@ -195,21 +167,21 @@ namespace CppUnit {
  * The last two requirements (serialization and comparison) can be
  * removed by specializing the CppUnit::assertion_traits.
  */
-#define CPPUNIT_ASSERT_EQUAL_MESSAGE(message,expected,actual)     \
-  ( ::CppUnit::TestAssert::assertEquals( (expected),              \
-                                         (actual),                \
-                                         CPPUNIT_SOURCELINE(),    \
-                                         (message) ) )
+#define CPPUNIT_ASSERT_EQUAL_MESSAGE(message,expected,actual)      \
+  ( CPPUNIT_NS::assertEquals( (expected),              \
+                              (actual),                \
+                              CPPUNIT_SOURCELINE(),    \
+                              (message) ) )
 #endif
 
 /*! \brief Macro for primitive value comparisons
  * \ingroup Assertions
  */
-#define CPPUNIT_ASSERT_DOUBLES_EQUAL(expected,actual,delta)       \
-  ( ::CppUnit::TestAssert::assertDoubleEquals( (expected),        \
-                                               (actual),          \
-                                               (delta),           \
-                                               CPPUNIT_SOURCELINE() ) )
+#define CPPUNIT_ASSERT_DOUBLES_EQUAL(expected,actual,delta)        \
+  ( CPPUNIT_NS::assertDoubleEquals( (expected),        \
+                                    (actual),          \
+                                    (delta),           \
+                                    CPPUNIT_SOURCELINE() ) )
 
 // Backwards compatibility
 
@@ -224,6 +196,6 @@ namespace CppUnit {
 #endif
 
 
-} // namespace CppUnit
+CPPUNIT_NS_END
 
 #endif  // CPPUNIT_TESTASSERT_H

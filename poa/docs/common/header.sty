@@ -64,6 +64,11 @@
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0.2pt}
 
+% RCS/CVS stuff
+
+\def\RCSdef $#1${\typeout{RCS keyword string: $#1$}\RCS@def#1: {} :.}
+\def\RCS@def#1: #2 :#3.{\expandafter\def\csname RCS#1\endcsname{#2}}
+
 % Header
 
 \chead{}
@@ -75,3 +80,6 @@
 \cfoot{}
 \fancyfoot[LE,RO]{\thepage{}}
 \fancyfoot[LO,RE]{\version}
+
+% Font setting
+\renewcommand{\familydefault}{\sfdefault}

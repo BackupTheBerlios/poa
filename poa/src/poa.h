@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.5 2003/09/10 18:01:35 squig Exp $
+ * $Id: poa.h,v 1.6 2003/09/12 14:53:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,5 +32,6 @@
  */
 #define INSTANCEOF(ptr,class) (((ptr) != 0) && (dynamic_cast<class*>((ptr)) != 0))
 static const uint MAX_RECENT_PROJECTS = 5;
+static const uint WIDGET_SPACING = 5;
 
 #endif // POA_POA_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.cpp,v 1.5 2003/09/12 10:55:17 garbeam Exp $
+ * $Id: pinvector.cpp,v 1.6 2003/09/12 14:53:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -58,12 +58,11 @@ PinModel *PinVector::findById(const unsigned id) {
 }
 
 void PinVector::removeAllPins() {
-    if (!empty()) {
-        PinPointerVector::iterator it = begin();
-        while (it != end()) {
-            PinModel *pin = (*it);
-            it = erase(it);
-            delete pin;
-        }
+    PinVector::iterator it = begin();
+
+    while (it != end()) {
+        PinModel *pin = (*it);
+        it = erase(it);
+        delete pin;
     }
 }

@@ -8,44 +8,43 @@
   <id>gcover</id>
   
   <!-- a short but descriptive name for the project -->
-  <name>gcov coverage</name>
+  <name>gcover</name>
   
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-dev -->
-  <currentVersion>1.0</currentVersion>
+  <currentVersion>0.2</currentVersion>
   
   <!-- details about the organization that 'owns' the project -->
   <organization>
-    <name>Apache Software Foundation</name>
-    <url>http://www.apache.org/</url>
-    <logo>http://maven.apache.org/images/jakarta-logo-blue.gif</logo>
+    <name>POA Team, University of Stuttgart</name>
+    <url>http://poa.berlios.de/gcover-project/</url>
+    <logo></logo>
   </organization>
   
   <!-- the year the project started -->
-  <inceptionYear>2003</inceptionYear>
+  <inceptionYear>2004</inceptionYear>
   <package>gcover</package>
   <description>
-    A collection of example projects showing how to use maven in different
-    situations   
+    HTML reporting for gcov output.
   </description>
   <!-- a short description of what the project does -->
   <shortDescription>
-    How to use maven in different situations
+    HTML reporting for gcov output.             
   </shortDescription>
 
   <!-- the project home page -->
-  <url>http://maven.apache.org/reference/plugins/examples/</url>
-  <issueTrackingUrl>http://nagoya.apache.org/scarab/servlet/scarab/</issueTrackingUrl>
-  <siteAddress>jakarta.apache.org</siteAddress>
-  <siteDirectory>/www/maven.apache.org/reference/plugins/examples/</siteDirectory>
-  <distributionDirectory>/www/maven.apache.org/builds/</distributionDirectory>
+  <url>http://poa.berlios.de/gcover-project/</url>
+  <issueTrackingUrl>http://test.klintox.net:8080/jira/secure/Dashboard.jspa</issueTrackingUrl>
+  <siteAddress>shell.berlios.de</siteAddress>
+  <siteDirectory>/home/groups/poa/htdocs/gcover-project</siteDirectory>
+  <distributionDirectory>/home/groups/poa/htdocs/gcover-project/builds</distributionDirectory>
 
   <!-- the version control repository and http url for online access
        the connection element has the form:
        scm:<system>:<system specific connection string> -->
   <repository>
-    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:maven/src/plugins-build/examples</connection>
-    <url>http://cvs.apache.org/viewcvs/maven/src/plugins-build/examples/</url>
+    <connection>scm:cvs:pserver:anonymous@cvs.berlios.de:/cvsroot/poa:gcover</connection>
+    <url>http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/gcover/</url>
   </repository>
 
   <!-- any mailing lists for the project -->
@@ -57,6 +56,13 @@
       <name>Tammo van Lessen</name>
       <id>vanto</id>
       <email>vanto@users.berlios.de</email>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Steffen Pingel</name>
+      <id>squig</id>
       <roles>
         <role>Java Developer</role>
       </roles>
@@ -99,6 +105,21 @@
     </resources>
   </build>
 
+  <reports>
+    <report>maven-changes-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-clover-plugin</report>
+    <report>maven-developer-activity-plugin</report>
+    <report>maven-file-activity-plugin</report>
+    <report>maven-javadoc-plugin</report>
+<!--	<report>maven-jcoverage-plugin</report> -->
+    <report>maven-jdepend-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <report>maven-jxr-plugin</report>
+    <report>maven-license-plugin</report>
+    <report>maven-pmd-plugin</report>
+	<report>maven-statcvs-plugin</report>
+  </reports>  
 
 </project>
 

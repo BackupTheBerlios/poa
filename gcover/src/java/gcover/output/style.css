@@ -73,3 +73,16 @@ background: #f0c8c8;
 border-right: #dcdcdc 1px solid;
 padding-right: 3px;
 }
+
+span.keyword {
+    color: #0000ff;
+}
+
+span.comment {
+    color: #008080;
+    font-style: italic;
+}
+
+span.string {
+    color: #000000;
+}

@@ -57,7 +57,7 @@ import org.apache.ecs.xhtml.tr;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.9 2004/01/11 16:01:34 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.10 2004/01/12 13:45:59 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -205,7 +205,8 @@ public class XHTMLOutputter implements Outputter {
 				: "covered"
 				: "notinstrumented";
 
-			td srcLine = new td(new span().addElement(new pre(li.getSourceLine())));
+			td srcLine = new td(new span()
+				.addElement(new pre(JavaToHtml.syntaxHighlight(li.getSourceLine()))));
 			if (li.isInstrumented() && li.getExecCount() == 0) {
 				srcLine.setClass("uncovered");
 			}

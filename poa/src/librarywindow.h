@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.11 2004/01/21 16:07:51 squig Exp $
+ * $Id: librarywindow.h,v 1.12 2004/01/21 17:51:49 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -141,14 +141,36 @@ public:
     void add(AbstractModel *model);
 
     /**
-     * Reads models from file and adds them to the library.
+     * Adds a few default items to the library. Invoked when the
+     * library could not be restored from disk. Resets the modified flag.
+     */
+    void addDefaultItems();
+
+    /**
+     * Returns the default filename of the library.
+     */
+    QString defaultFilename();
+
+    /**
+     * Returns true, if library was modified since last open(QFile) call.
+     */
+    bool isModified() const;
+
+    /**
+     * Reads models from file and adds them to the library. Resets the
+     * modified flag.
      */
     void open(QFile *file);
 
     /**
-     * Saves all library items to file.
+     * Saves all library items to file. Resets the modified flag.
      */
     void save(QFile *file);
+
+    /**
+     * Saves the library to defaultFilename() if modified() is true.
+     */
+    void save();
 
     /**
      * Returns a list of item types that are currently in the library.
@@ -163,12 +185,6 @@ private :
     QDict<QListViewItem> typeItemByType;
     bool modified_;
     QPopupMenu *popupMenu_;
-
-    /**
-     * Adds a few default items to the library. Invoked when the
-     * library could not be restored from disk.
-     */
-    void addDefaultItems();
 
     /**
      * Returns the root item for type. If no item does exist for type,
@@ -205,6 +221,12 @@ private slots:
      * the currently selected item.
      */
     void renameSelected();
+
+    /**
+     * Invoked when the library selection changes. Disables the change
+     * type menu item in popup for non LibraryListViewItem objects.
+     */
+    void selectionChanged(QListViewItem *item);
 
     /**
      * Sets the description

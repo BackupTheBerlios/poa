@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.91 2004/01/21 17:20:56 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.92 2004/01/21 17:51:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -487,6 +487,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
         e->ignore();
         return;
     }
+
+    libraryWindow_->save();
 
     // save settings
     Settings *s = Settings::instance();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.35 2004/01/21 17:20:56 vanto Exp $
+ * $Id: librarywindow.cpp,v 1.36 2004/01/21 17:51:49 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -85,6 +85,8 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
     connect(modelListView_,
             SIGNAL(contextMenuRequested(QListViewItem *, const QPoint &, int)),
             this, SLOT(showPopup(QListViewItem *, const QPoint &, int)));
+    connect(modelListView_, SIGNAL(selectionChanged(QListViewItem *)),
+            this, SLOT(selectionChanged(QListViewItem *)));
 
     // load items
     initialize();
@@ -100,7 +102,6 @@ void LibraryWindow::add(AbstractModel *model)
     new LibraryListViewItem(getTypeItem(model->type()), model);
     model->setPartOfLibrary(true);
     modified_ = true;
-
 }
 
 void LibraryWindow::addDefaultItems()
@@ -149,6 +150,8 @@ void LibraryWindow::addDefaultItems()
     muxModel->addMuxMapping(new MuxMapping(in1, out1, 0, 32, 0, 32));
     muxModel->addMuxMapping(new MuxMapping(in2, out1, 0, 32, 32, 64));
     add(muxModel);
+
+    modified_ = false;
 }
 
 void LibraryWindow::changeTypeOfSelected()
@@ -169,6 +172,12 @@ void LibraryWindow::changeTypeOfSelected()
     }
 }
 
+QString LibraryWindow::defaultFilename()
+{
+    return Settings::instance()->confPath() + "/library.xml";
+}
+
+
 QListViewItem *LibraryWindow::getTypeItem(const QString &type)
 {
     QListViewItem *item = typeItemByType.find(type);
@@ -183,17 +192,18 @@ QListViewItem *LibraryWindow::getTypeItem(const QString &type)
 void LibraryWindow::initialize()
 {
     // read library file
-    QString filename = Util::findResource("library.xml");
-    if (!filename.isNull()) {
-        QFile file(filename);
-        if (file.exists()) {
-            open(&file);
-        }
+    QFile file(defaultFilename());
+    if (file.exists()) {
+        open(&file);
     }
+    else {
+        addDefaultItems();
+    }
+}
 
-    addDefaultItems();
-
-    modified_ = false;
+bool LibraryWindow::isModified() const
+{
+    return modified_;
 }
 
 void LibraryWindow::renameTypeItem(QListViewItem *parent, const QString &oldName,
@@ -237,6 +247,7 @@ void LibraryWindow::open(QFile *file)
             }
         }
         file->close();
+        modified_ = false;
     }
 }
 
@@ -261,11 +272,55 @@ void LibraryWindow::showPopup(QListViewItem *, const QPoint &pos, int)
     popupMenu_->exec(pos);
 }
 
+void LibraryWindow::save()
+{
+    if (isModified()) {
+        QFile file(defaultFilename());
+        save(&file);
+    }
+}
+
 void LibraryWindow::save(QFile *file)
 {
     if (file->open(IO_WriteOnly)) {
+        QDomDocument document;
+        QDomElement proj = document.createElement("project");
+        document.appendChild(proj);
+        QDomElement mlist = document.createElement("model");
+        proj.appendChild(mlist);
+        QDomElement blist = document.createElement("blocks");
+        mlist.appendChild(blist);
+
+        QListViewItem *item = modelListView_->firstChild();
+        while (item != 0) {
+            QListViewItem *child = item->firstChild();
+            while (child != 0) {
+                LibraryListViewItem *libraryItem
+                    = dynamic_cast<LibraryListViewItem*>(child);
+                if (libraryItem != 0) {
+                    QDomElement mElem = libraryItem->data().serialize(&document);
+                    blist.appendChild(mElem);
+                }
+                child = child->nextSibling();
+            }
+            item = item->nextSibling();
+        }
+
+        QTextStream out(file);
+        document.save(out, 2);
         file->close();
+
+        modified_ = false;
     }
+    else {
+        qWarning(QString("Could not save library to %1").arg(file->name()));
+    }
+}
+
+void LibraryWindow::selectionChanged(QListViewItem *item)
+{
+    // enable change type menu only for library items
+    popupMenu_->setItemEnabled(1, INSTANCEOF(item,LibraryListViewItem));
 }
 
 void LibraryWindow::setDescription(QListViewItem* item)

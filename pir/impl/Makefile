@@ -1,13 +1,13 @@
 CC=g++ -c
 LINK=g++
-INCLUDE_PATH=-I/home/garbeam/local/include/opencv
+INCLUDE_PATH=-I/home/garbeam/local/include/opencv -I/usr/include/gtk-2.0
 LIBRARY_PATH=-L/home/garbeam/local/lib
 
 ifeq ($(shell test -e Makefile.local && echo ja || echo nein),ja)
   include Makefile.local
 endif
 
-all      : test marcel motion
+all      : test marcel motion manual
 
 clean    : 
 	rm -f test.o test marcel.o marcel motion.o motion steffen.o steffen
@@ -30,9 +30,9 @@ motion.o  : motion.c
 motion    : motion.o
 	$(LINK) -g -o motion motion.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
 
-steffen.o : steffen.c
-	$(CC) steffen.c $(INCLUDE_PATH)
+manual.o : manual.c
+	$(CC) manual.c $(INCLUDE_PATH)
 
-steffen   : steffen.o
-	$(LINK) -o steffen steffen.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
+manual   : manual.o
+	$(LINK) -o manual manual.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
 

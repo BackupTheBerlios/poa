@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.103 2004/01/26 19:17:18 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.104 2004/01/27 16:39:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,6 +44,7 @@
 #include "muxconfdialog.h"
 #include "muxmodel.h"
 #include "poa.h"
+#include "printmanager.h"
 #include "project.h"
 #include "project.h"
 #include "removeable.h"
@@ -67,10 +68,7 @@
 #include <qlayout.h>
 #include <qmenubar.h>
 #include <qmessagebox.h>
-#include <qpainter.h>
-#include <qpaintdevicemetrics.h>
 #include <qpixmap.h>
-#include <qprinter.h>
 #include <qpopupmenu.h>
 #include <qtoolbar.h>
 #include <qtooltip.h>
@@ -706,51 +704,8 @@ void MainWindow::fileOpen()
 void MainWindow::filePrint()
 {
     if (activeView() != 0) {
-        QPrinter printer;
-        if (printer.setup(this)) {
-            // disable grid for printing
-            bool oldValue = Settings::instance()->showGrid();
-            Settings::instance()->setShowGrid(false);
-
-            QCanvas *canvas = activeView()->canvas();
-
-
-            QPainter painter(&printer);
-            QPaintDeviceMetrics metrics(&printer);
-            int pageWidth = metrics.width();
-            int pageHeight = metrics.height();
-
-            int y = 0;
-            while (y < canvas->height()) {
-                int x = 0;
-                while (x < canvas->width()) {
-                    QRect rect(x, y, pageWidth, pageHeight);
-
-                    QCanvasItemList items = canvas->collisions(rect);
-                    if (items.empty()) {
-                        x += pageWidth;
-                        painter.translate(-pageWidth, 0);
-                        continue;
-                    }
-
-                    if (!(x == 0 && y == 0)) {
-                        printer.newPage();
-                    }
-
-                    canvas->drawArea(rect, &painter, false);
-
-                    x += pageWidth;
-                    painter.translate(-pageWidth, 0);
-                }
-                y += pageHeight;
-                painter.resetXForm();
-                painter.translate(0, -y);
-            }
-            painter.end();
-
-            // restore grid setting
-            Settings::instance()->setShowGrid(oldValue);
-        }
+        PrintManager printer(activeView()->canvas());
+        printer.print();
     }
 }
 

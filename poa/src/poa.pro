@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.77 2004/01/22 18:11:07 vanto Exp $
+# $Id: poa.pro,v 1.78 2004/01/27 16:39:56 squig Exp $
 #
 ###############################################################################
 
@@ -83,6 +83,7 @@ HEADERS += pinview.h
 HEADERS += pixmapbutton.h
 HEADERS += poa.h
 HEADERS += poaexception.h
+HEADERS += printmanager.h
 HEADERS += priorityqueue.h
 HEADERS += problemmanager.h
 HEADERS += processdialog.h
@@ -132,6 +133,7 @@ SOURCES += pinview.cpp
 SOURCES += pixmapbutton.cpp
 SOURCES += poa.cpp
 SOURCES += poaexception.cpp
+SOURCES += printmanager.cpp
 SOURCES += priorityqueue.cpp
 SOURCES += problemmanager.cpp
 SOURCES += processdialog.cpp

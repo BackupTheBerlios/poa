@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.5 2004/01/09 16:56:24 squig Exp $
+ * $Id: dijkstrarouter.h,v 1.6 2004/01/12 02:37:27 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include <qpoint.h>
 
 #include "connectorrouter.h"
+#include "grid.h"
 #include "poa.h"
 #include "priorityqueue.h"
 
@@ -54,9 +55,10 @@ public:
 
 protected:
     virtual QValueList<QPoint> *routeOne(QPoint from,
-                     LineDirection fromDir,
-                     QPoint to,
-                     LineDirection toDir);
+					 LineDirection fromDir,
+					 QPoint to,
+					 LineDirection toDir,
+					 QCanvas *canvas);
 };
 
 
@@ -106,38 +108,58 @@ private:
 };
 
 
+class Weighting
+{
+public:
+    /**
+     * @param from In canvas-coordinates
+     * @param to   In canvas-coordinates
+     */
+    Weighting(QPoint from, QPoint to, QCanvas *canvas);
+    virtual ~Weighting();
+
+    /**
+     * Returns the covered rect in grid-coordinates
+     */
+    QRect rect() const;
+    unsigned weight(QPoint from, QPoint to);
+    unsigned weightAt(QPoint at);
+
+    QPoint gridPoint(QPoint point) const;
+    QPoint move(QPoint gridPoint, LineDirection dir, int distance) const;
+    QPoint translate(QPoint gridPoint) const;
+
+private:
+    QPoint origin_;
+    unsigned **weighting_;
+    QRect rect_;
+    Grid grid_;
+    static const int fringe_;
+};
+
 
 class PossiblePoint : public PriorityItem
 {
 public:
 
     PossiblePoint(Node node);
-    PossiblePoint(PossiblePoint *prev, Node node);
+    PossiblePoint(PossiblePoint *prev, Node node, unsigned weight);
 
     virtual bool higherPriority(const PriorityItem *other) const;
 
     Node node() const;
-
     LineDirection direction() const;
-
     QPoint point() const;
-
     unsigned weight() const;
-
-    void reach(PossiblePoint *prev);
-
     PossiblePoint *prev() const;
 
-    unsigned lineWeight(QPoint from, QPoint to) const;
+    void reach(PossiblePoint *prev, unsigned newWeight);
 
-    static QCanvas *canvas_;
+    static unsigned calcWeight(PossiblePoint *prev,
+			       QPoint next,
+			       Weighting *weighting);
 
 private:
-
-    void updateWeight();
-
-    unsigned calcWeight(PossiblePoint *prev) const;
-
 
     Node node_;
     PossiblePoint *prev_;

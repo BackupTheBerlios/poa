@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.cpp,v 1.7 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: grid.cpp,v 1.8 2004/01/12 02:37:27 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -89,7 +89,7 @@ Grid::~Grid()
 }
 
 
-QPoint Grid::closestGridPoint(QPoint point)
+QPoint Grid::closestGridPoint(QPoint point) const
 {
     // offset + n * gridSize - point = min
     int x = (int) rint(((double) point.x() - offsetX_) / gridSizeX_);
@@ -99,7 +99,7 @@ QPoint Grid::closestGridPoint(QPoint point)
 }
 
 
-QPoint Grid::move(QPoint point, int x, int y)
+QPoint Grid::move(QPoint point, int x, int y) const
 {
     double dx = ((double) x) * gridSizeX_;
     double dy = ((double) y) * gridSizeY_;
@@ -108,7 +108,7 @@ QPoint Grid::move(QPoint point, int x, int y)
 }
 
 
-QPoint Grid::move(QPoint point, LineDirection dir, int distance)
+QPoint Grid::move(QPoint point, LineDirection dir, int distance) const
 {
     switch(dir) {
     case LEFT:
@@ -126,7 +126,7 @@ QPoint Grid::move(QPoint point, LineDirection dir, int distance)
 }
 
 
-void Grid::getGridDistance(QPoint start, QPoint end, int &x, int &y)
+void Grid::getGridDistance(QPoint start, QPoint end, int &x, int &y) const
 {
     double dx = (double) end.x() - start.x();
     double dy = (double) end.y() - start.y();

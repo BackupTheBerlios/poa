@@ -18,10 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.h,v 1.3 2003/09/18 14:21:04 keulsn Exp $
+ * $Id: grid.h,v 1.4 2004/01/12 02:37:27 keulsn Exp $
  *
  *****************************************************************************/
 
+
+#ifndef POA__GRID_H
+#define POA__GRID_H
 
 #include <qpoint.h>
 
@@ -61,20 +64,20 @@ public:
     /**
      * Returns a grid point with minimal distance to <code>point</code>
      */
-    QPoint closestGridPoint(QPoint point);
+    QPoint closestGridPoint(QPoint point) const;
 
     /**
      * Returns the grid point reached by moving <code>point</code> by
      * <code>x</code> times grid size horizontally and <code>y</code> times
      * grid size vertically.
      */
-    QPoint move(QPoint point, int x, int y);
-
+    QPoint move(QPoint point, int x, int y) const;
+    
     /**
      * Returns the grid point reached by moving <code>point</code> by
      * <code>distance</code> times grid size in direction <code>dir</code>
      */
-    QPoint move(QPoint point, LineDirection dir, int distance);
+    QPoint move(QPoint point, LineDirection dir, int distance) const;
 
     /**
      * Calculates the number of grid steps between two grid points.
@@ -86,9 +89,12 @@ public:
      * param y Reference to an integer variable. The number of vertical steps
      *       will be saved in <code>y</code>
      */
-    void getGridDistance(QPoint start, QPoint end, int &x, int &y);
+    void getGridDistance(QPoint start, QPoint end, int &x, int &y) const;
 
 private:
     double offsetX_, offsetY_;
     double gridSizeX_, gridSizeY_;
 };
+
+
+#endif // POA__GRID_H

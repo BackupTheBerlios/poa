@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.26 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: gridcanvas.cpp,v 1.27 2003/12/16 12:23:48 keulsn Exp $
  *
  *****************************************************************************/
 
 #include "connectorviewlist.h"
+#include "dijkstrarouter.h"
 #include "directrouter.h"
 #include "gridcanvas.h"
 #include "project.h"
@@ -37,7 +38,7 @@
 GridCanvas::GridCanvas(QString name)
 {
     currentZ_ = 0;
-    router_ = new DirectRouter();
+    router_ = new DijkstraRouter();
 
     setName(name);
     setDoubleBuffering(TRUE);

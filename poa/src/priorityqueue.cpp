@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.2 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: priorityqueue.cpp,v 1.3 2003/12/16 12:23:48 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -58,23 +58,25 @@ void PriorityQueue::insert(PriorityItem *item)
 	// insert directly before head
 	oldLeft = head_->left();
 	oldRight = head_->right();
-	
-	PriorityItem *tmp = head_;
+	PriorityItem *newChild = head_;
+
 	head_ = item;
-	item = tmp;
-	
 	head_->parent_ = 0;
+	
+	// swap former head and item
+	item = newChild;
+	
 	if (oldLeft == 0) {
 	    head_->setRight(oldRight);
-	    head_->setLeft(item);
-	    item->setLeft(0);
-	    item->setRight(0);
+	    head_->setLeft(newChild);
+	    newChild->setLeft(0);
+	    newChild->setRight(0);
 	}
 	else if (oldRight == 0) {
 	    head_->setLeft(oldLeft);
-	    head_->setRight(item);
-	    item->setLeft(0);
-	    item->setRight(0);
+	    head_->setRight(newChild);
+	    newChild->setLeft(0);
+	    newChild->setRight(0);
 	}
 	else {
 	    if (oldRight->size() > oldLeft->size()) {
@@ -151,7 +153,19 @@ void PriorityQueue::insert(PriorityItem *item)
 	    item = smaller;
 	    oldLeft = item->left();
 	    oldRight = item->right();
-	    if (oldLeft != 0 && oldRight != 0) {
+	    if (oldRight == 0) {
+		// item's right subtree is empty --> move left up and break
+		item->setLeft(0);
+		oldParent->setLeft(oldLeft);
+		break;
+	    }
+	    else if (oldLeft == 0) {
+		// item's left subtree is empty --> move right up and break
+		item->setRight(0);
+		oldParent->setLeft(oldRight);
+		break;
+	    }
+	    else {
 		if (oldRight->size() > oldLeft->size()) {
 		    larger = oldRight;
 		    smaller = oldLeft;
@@ -160,9 +174,6 @@ void PriorityQueue::insert(PriorityItem *item)
 		    larger = oldLeft;
 		    smaller = oldRight;
 		}
-	    }
-	    else {
-		break;
 	    }
 	}
     }
@@ -195,12 +206,15 @@ void PriorityQueue::clear()
 	else {
 	    // no children --> remove
 	    PriorityItem *parent = current->parent();
-	    if (parent->left() == current) {
-		parent->setLeft(0);
-	    }
-	    else {
-		Q_ASSERT(parent->right() == current);
-		parent->setRight(0);
+	    if (parent != 0) {
+		if (parent->left() == current) {
+		    parent->setLeft(0);
+		}
+		else {
+		    Q_ASSERT(parent->right() == current);
+		    parent->setRight(0);
+		}
+		current->parent_ = 0;
 	    }
 	    current->size_ = 0;
 
@@ -211,12 +225,12 @@ void PriorityQueue::clear()
 
 PriorityItem *PriorityQueue::head()
 {
-    Q_ASSERT(head_ != 0);
     return head_;
 }
 
 PriorityItem *PriorityQueue::removeHead()
 {
+    Q_ASSERT(head_ != 0);
     PriorityItem *oldHead = head_;
     if (head_ != 0) {
 	head_ = head_->removeFromQueue();
@@ -231,6 +245,7 @@ bool PriorityQueue::isEmpty() const
 
 unsigned PriorityQueue::size() const
 {
+    Q_ASSERT(head_ != 0);
     return head_->size();
 }
 
@@ -254,7 +269,7 @@ PriorityItem *PriorityItem::maxPriority(PriorityItem *first,
     if (first == 0) {
 	return second;
     }
-    else if (second == 0 || second->higherPriority(first)) {
+    else if (second == 0 || !second->higherPriority(first)) {
 	return first;
     }
     else {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.cpp,v 1.3 2004/02/06 14:32:29 vanto Exp $
+ * $Id: printmanager.cpp,v 1.4 2004/02/06 14:33:20 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,6 +51,7 @@ PrintManager::~PrintManager()
 void PrintManager::print()
 {
     QPrinter printer;
+    // doesnt work in GS-Pool
     //printer.setOptionEnabled(QPrinter::PrintSelection, false);
     //printer.setOptionEnabled(QPrinter::PrintPageRange, false);
 

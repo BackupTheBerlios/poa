@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.2 2003/08/20 16:09:42 squig Exp $
+ * $Id: settings.cpp,v 1.3 2003/08/21 15:59:57 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -28,6 +28,7 @@ const char *Settings::prefix = "/POA/POA/";
 
 Settings::Settings()
 {
+	QSettings settings;
 	settings.insertSearchPath(QSettings::Windows, "/POA");
 }
 
@@ -46,17 +47,16 @@ Settings *Settings::instance()
 
 QString Settings::get(const QString &key)
 {
+	QSettings settings;
 	return settings.readEntry(prefix + key);
 }
 
 void Settings::set(const QString &key, const QString &value)
 {
-	settings.writeEntry(prefix + key, value);
-	emit settingChanged(key);
-}
-
-void Settings::write()
-{
-	delete instance_;
-	instance_ = 0;
+	QString oldValue = get(key);
+	if (oldValue != value) {
+		QSettings settings;
+		settings.writeEntry(prefix + key, value);
+		emit settingChanged(key);
+	}
 }

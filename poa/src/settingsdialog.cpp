@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.2 2003/08/21 13:07:43 papier Exp $
+ * $Id: settingsdialog.cpp,v 1.3 2003/08/21 15:59:57 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -41,7 +41,6 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 							   WFlags fl)
 	: QTabDialog(parent, name, modal, fl)
 {
-    resize(400, 400); 
     setCaption(tr("Settingss"));
 	setApplyButton();
 	setCancelButton();
@@ -50,55 +49,9 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 
 	this->addTab(createPathTab(), tr("Paths"));
 
+    resize(sizeHint());//resize(400, 400); 
+
 	connect(this, SIGNAL(applyButtonPressed()), this, SLOT(applySettings()));
-//     compilerPushButton = new QPushButton( this, "compilerPushButton" );
-//     compilerPushButton->setGeometry( QRect( 420, 60, 20, 22 ) ); 
-//     compilerPushButton->setText( trUtf8( "..." ) );
-
-//     editorPushButton = new QPushButton( this, "editorPushButton" );
-//     editorPushButton->setGeometry( QRect( 420, 20, 20, 22 ) ); 
-//     editorPushButton->setText( trUtf8( "..." ) );
-
-//     compilerLineEdit = new QLineEdit( this, "compilerLineEdit" );
-//     compilerLineEdit->setGeometry( QRect( 160, 60, 250, 22 ) ); 
-
-//     cTemplateLineEdit = new QLineEdit( this, "cTemplateLineEdit" );
-//     cTemplateLineEdit->setGeometry( QRect( 160, 100, 250, 22 ) ); 
-
-//     downloadLineEdit = new QLineEdit( this, "downloadLineEdit" );
-//     downloadLineEdit->setGeometry( QRect( 160, 140, 250, 22 ) ); 
-
-//     editorLineEdit = new QLineEdit( this, "editorLineEdit" );
-//     editorLineEdit->setGeometry( QRect( 160, 20, 250, 22 ) ); 
-
-//     editorTextLabel = new QLabel( this, "editorTextLabel" );
-//     editorTextLabel->setGeometry( QRect( 20, 20, 90, 20 ) ); 
-//     editorTextLabel->setText( trUtf8( "external editor" ) );
-
-//     externalCompilerTextLabel = new QLabel( this, "externalCompilerTextLabel" );
-//     externalCompilerTextLabel->setGeometry( QRect( 20, 60, 100, 20 ) ); 
-//     externalCompilerTextLabel->setText( trUtf8( "external compiler" ) );
-
-//     externalDownloadTextLabel = new QLabel( this, "externalDownloadTextLabel" );
-//     externalDownloadTextLabel->setGeometry( QRect( 20, 140, 130, 20 ) ); 
-//     externalDownloadTextLabel->setText( trUtf8( "external download tool" ) );
-
-//     cTemplateTextLabel = new QLabel( this, "cTemplateTextLabel" );
-//     cTemplateTextLabel->setGeometry( QRect( 20, 100, 133, 20 ) ); 
-//     cTemplateTextLabel->setText( trUtf8( "C source template path" ) );
-
-//     okPushButton = new QPushButton( this, "okPushButton" );
-//     okPushButton->setGeometry( QRect( 250, 182, 91, 30 ) ); 
-//     okPushButton->setText( trUtf8( "&OK" ) );
-//     okPushButton->setDefault( TRUE );
-
-//     cancelPushButton = new QPushButton( this, "cancelPushButton" );
-//     cancelPushButton->setGeometry( QRect( 350, 182, 91, 30 ) ); 
-//     cancelPushButton->setText( trUtf8( "&Cancel" ) );
-
-//     helpPushButton = new QPushButton( this, "helpPushButton" );
-//     helpPushButton->setGeometry( QRect( 20, 182, 91, 30 ) ); 
-//     helpPushButton->setText( trUtf8( "&Help" ) );
 }
 
 /*****************************************************************************
@@ -157,7 +110,6 @@ void SettingsDialog::applySettings()
 	s->set("Compiler", compilerLineEdit->text());
 	s->set("Template Path", cTemplateLineEdit->text());
 	s->set("Download Tool", downloadLineEdit->text());
-	s->write();
 }
 
 void SettingsDialog::chooseExternalEditor()

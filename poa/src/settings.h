@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.2 2003/08/21 14:24:41 garbeam Exp $
+ * $Id: settings.h,v 1.3 2003/08/21 15:59:57 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -42,23 +42,28 @@ class Settings : QObject
 public:
     static Settings *instance();
 
+/* 	bool snapToGrid(); */
+/* 	int gridSize(); */
     QString Settings::get(const QString &key);
     void set(const QString &key, const QString &value);
-    void write();
+/* 	void setSnapToGrid(bool snapToGrid); */
+/* 	void setGridSize(int gridSize); */
 
 signals:
-    void settingChanged(const QString &key);
+	void settingChanged(const QString &key);
+/* 	void snapToGrid(bool alignOnGrid); */
+/*     void gridSize(int gridSize); */
 
 private :
     Settings();
     Settings(const Settings &);
     ~Settings();
 
-    QSettings settings;
+    static const char* prefix;
+	static Settings* instance_;
 
-    static Settings *instance_;
-
-    static const char *prefix;
+/* 	bool snapToGrid_; */
+/* 	int gridSize_; */
 };
 
 #endif // SETTINGS_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.3 2003/09/01 19:51:10 garbeam Exp $
+ * $Id: moduleconfdialog.h,v 1.4 2003/09/02 13:07:57 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -48,39 +48,36 @@ public:
     ModuleConfDialog( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~ModuleConfDialog();
 
-    QPushButton* compilePushButton;
-    QPushButton* editCodePushButton;
-    QPushButton* helpPushButton;
-    QPushButton* cancelPushButton;
-    QPushButton* addIoPushButton;
-    QPushButton* removeIoPushButton;
-    QPushButton* okPushButton;
-    QListView* ioListView;
-    QGroupBox* cpuGroupBox;
-    QLabel* cpuNameTextLabel;
-    QLineEdit* cpuNameLineEdit;
-    QLabel* cpuClockTextLabel;
-    QSpinBox* cpuClockSpinBox;
-    QLabel* clockMsTextLabel;
-    QButtonGroup* offsetButtonGroup;
-    QLabel* offsetMsTextLabel;
-    QRadioButton* offsetAutoCalcRadioButton;
-    QRadioButton* offsetRadioButton;
-    QSpinBox* offsetSpinBox;
-    QButtonGroup* runtimeButtonGroup;
-    QLabel* runtimeMsTextLabel;
-    QRadioButton* runtimeAutoCalcRadioButton;
-    QSpinBox* runtimeSpinBox;
-    QRadioButton* runtimeRadioButton;
+    QListView *ioListView;
 
-    QLabel *ioNumberTextLabel;
+    QRadioButton *offsetAutoCalcRadioButton;
+    QRadioButton *offsetRadioButton;
+    QRadioButton *runtimeAutoCalcRadioButton;
+    QRadioButton *runtimeRadioButton;
+
+    QSpinBox *blockClockSpinBox;
+    QSpinBox *offsetSpinBox;
+    QSpinBox *runtimeSpinBox;
+
+    QLineEdit *blockNameLineEdit;
+    QLineEdit *blockDescrLineEdit;
     QLineEdit *ioNumberLineEdit;
-    QLabel *dataTextLabel;
     QLineEdit *dataLineEdit;
-    QLabel *bitsTextLabel;
+    QLineEdit *addressLineEdit;
     QLineEdit *bitsLineEdit;
 
 private:
+    QPushButton *applyPushButton;
+    QPushButton *compilePushButton;
+    QPushButton *editCodePushButton;
+    QPushButton *helpPushButton;
+    QPushButton *cancelPushButton;
+    QPushButton *addIoPushButton;
+    QPushButton *updateIoPushButton;
+    QPushButton *removeIoPushButton;
+    QPushButton *okPushButton;
+
+
     QListViewItem *inputRoot;
     QListViewItem *outputRoot;
     QListViewItem *periodicalRoot;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.5 2003/09/01 19:53:05 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.6 2003/09/02 13:07:57 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,29 +41,28 @@
 #include <qpixmap.h>
 #include <qlayout.h>
 
-#define INPUTS_TEXT "inputs"
-#define OUTPUTS_TEXT "outputs"
-#define PERIODICAL_TEXT "periodical inputs"
-
-
-ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool modal, WFlags fl )
-    : QDialog( parent, name, modal, fl )
+ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
+                                   bool modal, WFlags fl)
+    : QDialog(parent, name, modal, fl)
 {
-    if ( !name )
-    setName( "ModuleConfDialog" );
-    resize( 578, 485 ); 
-    setCaption( tr( "CPU <name>" ) );
+    if (!name) {
+        setName( "ModuleConfDialog" );
+    }
+    resize(400, 500); 
+    setCaption(tr("Block configuration"));
 
+    QBoxLayout *dialogLayout = new QVBoxLayout(this, 5);
+    QWidget *topWidget = new QWidget(this);
+    QBoxLayout *topLayout = new QHBoxLayout(topWidget, 5);
+    QWidget *leftWidget = new QWidget(topWidget);
+    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
+    QWidget *rightWidget = new QWidget(topWidget);
+    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
 
-    QBoxLayout *topLayout = new QHBoxLayout(this, 5);
-    QWidget *leftWidget = new QWidget(this);
-//    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
-    QWidget *rightWidget = new QWidget(this);
-//    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
+    ////////////////////////////////////////////////////////////
+    // top widget
 
-    topLayout->addWidget(leftWidget);
-    topLayout->addWidget(rightWidget);
-
+    // I/O list view
     ioListView = new QListView(leftWidget, "ioListView");
     ioListView->addColumn(tr("I/O"));
     ioListView->addColumn(tr("name"));
@@ -71,130 +70,199 @@ ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool mod
     ioListView->addColumn(tr("bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
 
-
-    compilePushButton = new QPushButton( this, "compilePushButton" );
-    compilePushButton->setGeometry( QRect( 470, 370, 90, 30 ) ); 
-    compilePushButton->setText( tr( "Co&mpile" ) );
-
-    editCodePushButton = new QPushButton( this, "editCodePushButton" );
-    editCodePushButton->setGeometry( QRect( 470, 330, 90, 30 ) ); 
-    editCodePushButton->setText( tr( "&Edit code" ) );
-
-    helpPushButton = new QPushButton( this, "helpPushButton" );
-    helpPushButton->setGeometry( QRect( 20, 440, 100, 30 ) ); 
-    helpPushButton->setText( tr( "&Help" ) );
-
-    cancelPushButton = new QPushButton( this, "cancelPushButton" );
-    cancelPushButton->setGeometry( QRect( 470, 440, 90, 30 ) ); 
-    cancelPushButton->setText( tr( "&Cancel" ) );
-
-    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
-
-    addIoPushButton = new QPushButton( this, "addIoPushButton" );
-    addIoPushButton->setGeometry( QRect( 350, 330, 90, 30 ) ); 
-    addIoPushButton->setText( tr( "&Add I/O" ) );
-
-    connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
-
-    removeIoPushButton = new QPushButton( this, "removeIoPushButton" );
-    removeIoPushButton->setGeometry( QRect( 350, 370, 90, 30 ) ); 
-    removeIoPushButton->setText( tr( "&Remove I/O" ) );
-
-    connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
-
-    okPushButton = new QPushButton( this, "okPushButton" );
-    okPushButton->setGeometry( QRect( 350, 440, 90, 30 ) ); 
-    okPushButton->setText( tr( "&OK" ) );
-    okPushButton->setToggleButton( FALSE );
-    okPushButton->setDefault( TRUE );
-
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
-
     // inputs root
-    inputRoot = new QListViewItem( ioListView, 0 );
-    inputRoot->setText(0, tr(INPUTS_TEXT));
+    inputRoot = new QListViewItem(ioListView, 0);
+    inputRoot->setText(0, tr("inputs"));
     inputRoot->setOpen(TRUE);
 
     // outputs root
     outputRoot = new QListViewItem(ioListView, inputRoot);
-    outputRoot->setText(0, tr(OUTPUTS_TEXT));
+    outputRoot->setText(0, tr("outputs"));
     outputRoot->setOpen(TRUE);
 
     // periodical root
     periodicalRoot = new QListViewItem(ioListView, outputRoot);
-    periodicalRoot->setText(0, tr(PERIODICAL_TEXT));
+    periodicalRoot->setText(0, tr("periodical inputs"));
     periodicalRoot->setOpen(TRUE);
 
-    ioListView->setGeometry( QRect( 20, 20, 300, 350 ) ); 
+    leftLayout->addWidget(ioListView);
+
+    // I/O list view manipulation widget
+    QWidget *editIoWidget = new QWidget(leftWidget);
+    QGridLayout *editIoLayout =
+        new QGridLayout(editIoWidget, 3, 4, 5);
+
+    ioNumberLineEdit = new QLineEdit(editIoWidget, "ioNumberLineEdit");
+    dataLineEdit = new QLineEdit(editIoWidget, "dataLineEdit");
+    addressLineEdit = new QLineEdit(editIoWidget, "addressLineEdit");
+    bitsLineEdit = new QLineEdit(editIoWidget, "bitsLineEdit");
+
+    editIoLayout->addWidget(new QLabel(tr("I/O"), editIoWidget), 0, 0);
+    editIoLayout->addWidget(ioNumberLineEdit, 0, 1);
+    editIoLayout->addWidget(new QLabel(tr("data"), editIoWidget), 0, 2);
+    editIoLayout->addWidget(dataLineEdit, 0, 3);
+    editIoLayout->addWidget(
+        new QLabel(tr("address"), editIoWidget), 1, 0);
+    editIoLayout->addWidget(addressLineEdit, 1, 1);
+    editIoLayout->addWidget(new QLabel(tr("bits"), editIoWidget), 1, 2);
+    editIoLayout->addWidget(bitsLineEdit, 1, 3);
 
 
-    ioNumberTextLabel = new QLabel(this, "ioNumberTextLabel");
-    ioNumberTextLabel->setGeometry(QRect(20, 380, 40, 20));
-    ioNumberTextLabel->setText(tr("I/O"));
+    // I/O manipulation buttons
+    QWidget *ioButtonsWidget = new QWidget(leftWidget);
+    QBoxLayout *ioButtonsLayout = new QHBoxLayout(ioButtonsWidget, 5);
 
-    ioNumberLineEdit = new QLineEdit(this, "ioNumberLineEdit");
-    ioNumberLineEdit->setGeometry(QRect(60, 380, 100, 20));
-    
+    addIoPushButton = new QPushButton(ioButtonsWidget, "addIoPushButton");
+    addIoPushButton->setText(tr("&Add"));
+    connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
 
-    cpuGroupBox = new QGroupBox( this, "cpuGroupBox" );
-    cpuGroupBox->setGeometry( QRect( 350, 20, 210, 80 ) ); 
-    cpuGroupBox->setTitle( tr( "CPU" ) );
+    updateIoPushButton =
+        new QPushButton(ioButtonsWidget, "updateIoPushButton");
+    updateIoPushButton->setText(tr("&Update"));
 
-    cpuNameTextLabel = new QLabel( cpuGroupBox, "cpuNameTextLabel" );
-    cpuNameTextLabel->setGeometry( QRect( 10, 20, 34, 21 ) ); 
-    cpuNameTextLabel->setText( tr( "name" ) );
+    removeIoPushButton =
+        new QPushButton(ioButtonsWidget, "removeIoPushButton");
+    removeIoPushButton->setText(tr("&Remove"));
+    connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
 
-    cpuNameLineEdit = new QLineEdit( cpuGroupBox, "cpuNameLineEdit" );
-    cpuNameLineEdit->setGeometry( QRect( 48, 20, 140, 22 ) ); 
+    ioButtonsLayout->addWidget(addIoPushButton);
+    ioButtonsLayout->addWidget(updateIoPushButton);
+    ioButtonsLayout->addWidget(removeIoPushButton);
 
-    cpuClockTextLabel = new QLabel( cpuGroupBox, "cpuClockTextLabel" );
-    cpuClockTextLabel->setGeometry( QRect( 10, 50, 65, 20 ) ); 
-    cpuClockTextLabel->setText( tr( "clock" ) );
+    leftLayout->addWidget(ioButtonsWidget);
+    leftLayout->addWidget(editIoWidget);
 
-    cpuClockSpinBox = new QSpinBox( cpuGroupBox, "cpuClockSpinBox" );
-    cpuClockSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
+    // block widget
+    QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
+    blockGroupBox->setTitle(tr("block"));
+    blockGroupBox->setMaximumHeight(130);
+    blockGroupBox->setMinimumHeight(130);
 
-    clockMsTextLabel = new QLabel( cpuGroupBox, "clockMsTextLabel" );
-    clockMsTextLabel->setGeometry( QRect( 170, 50, 20, 20 ) ); 
-    clockMsTextLabel->setText( tr( "ms" ) );
+    QGridLayout *blockLayout =
+        new QGridLayout(blockGroupBox, 3, 3, 5);
 
-    offsetButtonGroup = new QButtonGroup( this, "offsetButtonGroup" );
-    offsetButtonGroup->setGeometry( QRect( 350, 120, 210, 80 ) ); 
-    offsetButtonGroup->setTitle( tr( "offset" ) );
+    blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
+    blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
+    blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
 
-    offsetMsTextLabel = new QLabel( offsetButtonGroup, "offsetMsTextLabel" );
-    offsetMsTextLabel->setGeometry( QRect( 180, 50, 20, 20 ) ); 
-    offsetMsTextLabel->setText( tr( "ms" ) );
+    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 0, 0);
+    blockLayout->addWidget(blockNameLineEdit, 0, 1);
+    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 1, 0);
+    blockLayout->addWidget(blockDescrLineEdit, 1, 1);
+    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 2, 0);
+    blockLayout->addWidget(blockClockSpinBox, 2, 1);
+    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 2, 2);
 
-    offsetAutoCalcRadioButton = new QRadioButton( offsetButtonGroup, "offsetAutoCalcRadioButton" );
-    offsetAutoCalcRadioButton->setGeometry( QRect( 10, 20, 140, 20 ) ); 
-    offsetAutoCalcRadioButton->setText( tr( "automatic calculation" ) );
+    // offset widget
+    QButtonGroup *offsetButtonGroup =
+        new QButtonGroup(rightWidget, "offsetButtonGroup" );
+    offsetButtonGroup->setTitle(tr("offset"));
+    offsetButtonGroup->setMaximumHeight(100);
+    offsetButtonGroup->setMinimumHeight(100);
 
-    offsetRadioButton = new QRadioButton( offsetButtonGroup, "offsetRadioButton" );
-    offsetRadioButton->setGeometry( QRect( 10, 50, 60, 20 ) ); 
-    offsetRadioButton->setText( tr( "offset" ) );
+    QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3, 5);
 
-    offsetSpinBox = new QSpinBox( offsetButtonGroup, "offsetSpinBox" );
-    offsetSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
+    offsetAutoCalcRadioButton =
+        new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
+    offsetAutoCalcRadioButton->setText(tr("automatic calculation"));
 
-    runtimeButtonGroup = new QButtonGroup( this, "runtimeButtonGroup" );
-    runtimeButtonGroup->setGeometry( QRect( 350, 220, 210, 80 ) ); 
-    runtimeButtonGroup->setTitle( tr( "runtime" ) );
+    offsetRadioButton =
+        new QRadioButton(offsetButtonGroup, "offsetRadioButton");
+    offsetRadioButton->setText(tr("offset"));
 
-    runtimeMsTextLabel = new QLabel( runtimeButtonGroup, "runtimeMsTextLabel" );
-    runtimeMsTextLabel->setGeometry( QRect( 170, 50, 20, 20 ) ); 
-    runtimeMsTextLabel->setText( tr( "ms" ) );
+    offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
 
-    runtimeAutoCalcRadioButton = new QRadioButton( runtimeButtonGroup, "runtimeAutoCalcRadioButton" );
-    runtimeAutoCalcRadioButton->setGeometry( QRect( 10, 20, 140, 20 ) ); 
-    runtimeAutoCalcRadioButton->setText( tr( "automatic calculation" ) );
+    offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
+    offsetLayout->addWidget(offsetRadioButton, 1, 0);
+    offsetLayout->addWidget(offsetSpinBox, 1, 1);
+    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
 
-    runtimeSpinBox = new QSpinBox( runtimeButtonGroup, "runtimeSpinBox" );
-    runtimeSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
+    // runtime widget
+    QButtonGroup *runtimeButtonGroup =
+        new QButtonGroup(rightWidget, "runtimeButtonGroup");
+    runtimeButtonGroup->setTitle(tr("runtime"));
+    runtimeButtonGroup->setMaximumHeight(100);
+    runtimeButtonGroup->setMinimumHeight(100);
 
-    runtimeRadioButton = new QRadioButton( runtimeButtonGroup, "runtimeRadioButton" );
-    runtimeRadioButton->setGeometry( QRect( 10, 50, 90, 20 ) ); 
-    runtimeRadioButton->setText( tr( "runtime" ) );
+    QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3, 5);
+
+    runtimeAutoCalcRadioButton =
+        new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
+    runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
+
+    runtimeRadioButton = 
+        new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
+    runtimeRadioButton->setText(tr("runtime"));
+
+    runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
+
+    runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
+    runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
+    runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
+    runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
+
+    rightLayout->addWidget(blockGroupBox);
+    rightLayout->addWidget(offsetButtonGroup);
+    rightLayout->addWidget(runtimeButtonGroup);
+
+    // edit/compile button widget
+    QWidget *compileEditButtonsWidget = new QWidget(rightWidget);
+ 
+    QBoxLayout *compileEditButtonsLayout =
+        new QHBoxLayout(compileEditButtonsWidget, 5);
+
+    editCodePushButton =
+        new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
+    editCodePushButton->setText(tr("&Edit code"));
+
+    compilePushButton =
+        new QPushButton(compileEditButtonsWidget, "compilePushButton");
+    compilePushButton->setText(tr("Co&mpile"));
+
+
+    compileEditButtonsLayout->addWidget(editCodePushButton);
+    compileEditButtonsLayout->addWidget(compilePushButton);
+
+    rightLayout->addWidget(compileEditButtonsWidget);
+
+    // finish top layout
+    topLayout->addWidget(leftWidget);
+    topLayout->addWidget(rightWidget);
+
+    ////////////////////////////////////////////////////////////
+    // bottom widget
+
+    QWidget *bottomWidget = new QWidget(this);
+    QBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget, 5);
+
+    // ok button
+    okPushButton = new QPushButton(bottomWidget, "okPushButton");
+    okPushButton->setText(tr("&OK"));
+    okPushButton->setDefault(TRUE);
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    // help button
+    helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
+    helpPushButton->setText(tr("&Help"));
+
+    // apply button
+    applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
+    applyPushButton->setText(tr("&Apply"));
+
+    // cancel button
+    cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
+    cancelPushButton->setText(tr("&Cancel"));
+    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+    bottomLayout->addWidget(okPushButton);
+    bottomLayout->addWidget(helpPushButton);
+    bottomLayout->addWidget(applyPushButton);
+    bottomLayout->addWidget(cancelPushButton);
+
+    ////////////////////////////////////////////////////////////
+    // dialog
+    dialogLayout->addWidget(topWidget);
+    dialogLayout->addWidget(bottomWidget);
 }
 
 /**
@@ -217,7 +285,7 @@ void ModuleConfDialog::addIo()
         child->setText(0, QString::number(root->childCount(), 10));
         child->setText(1, "data" + child->text(0));
         child->setText(3, "32");
-        if (root->text(0).compare(tr(PERIODICAL_TEXT)) == 0) {
+        if (root->text(0).compare(tr("periodical inputs")) == 0) {
            child->setText(2, "");
         } else {
            child->setText(2,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.13 2003/08/27 21:12:45 vanto Exp $
+ * $Id: canvasview.cpp,v 1.14 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -49,11 +49,7 @@ CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
     : QCanvasView(canvas, parent, name, fl), project_(project),
       movingItem_(0)
 {
-    currentZ_ = 0;
     setAcceptDrops(TRUE);
-
-    connect(project, SIGNAL(modelAdded(AbstractModel *, int, int)),
-            this, SLOT(modelAdded(AbstractModel *, int, int)));
 }
 
 /*****************************************************************************
@@ -62,6 +58,11 @@ CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
 CanvasView::~CanvasView()
 {
     // no need to delete child widgets, Qt does it all for us
+}
+
+Project *CanvasView::project()
+{
+    return project_;
 }
 
 void CanvasView::contentsMousePressEvent(QMouseEvent* e)
@@ -118,13 +119,14 @@ void CanvasView::dropEvent(QDropEvent *e)
             QValueList<AbstractModel *> l = ModelFactory::generate(doc);
             for (QValueList<AbstractModel *>::Iterator it = l.begin();
                  it != l.end(); ++it) {
-                project_->add(*it, pos.x(), pos.y());
+                project_->add(*it);
+                ((GridCanvas *)canvas())->addView(*it, pos.x(), pos.y());
             }
         }
     }
 }
 
-void CanvasView::modelAdded(AbstractModel *item, int x, int y)
+/*void CanvasView::modelAdded(AbstractModel *item, int x, int y)
 {
     ++currentZ_;
     QCanvasItemList l = item->createView(canvas());
@@ -134,7 +136,7 @@ void CanvasView::modelAdded(AbstractModel *item, int x, int y)
         (*it)->show();
     }
     canvas()->update();
-}
+}*/
 
 QPoint CanvasView::toCanvas(QPoint pos)
 {

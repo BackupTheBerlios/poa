@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.14 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: mdiwindow.h,v 1.15 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,9 +27,13 @@
 
 class GridCanvas;
 
+#include "project.h"
+
 #include <qmainwindow.h>
 #include <qcanvas.h>
-class QCanvasView;
+#include <qcombobox.h>
+
+class CanvasView;
 
 /*****************************************************************************
  * Defines MDI windows.
@@ -39,7 +43,7 @@ class MdiWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MdiWindow(GridCanvas* canvas, QWidget* parent = 0, const char* name = 0,
+    MdiWindow(CanvasView *view, QWidget* parent = 0, const char* name = 0,
               WFlags f = WType_TopLevel);
     ~MdiWindow();
 
@@ -60,12 +64,8 @@ protected:
     virtual void resizeEvent(QResizeEvent *e);
 
 private:
-    QCanvasView* view_;
+    CanvasView *view_;
     double zoomLevel_;
-
-signals:
-    void message(const QString&, int );
-
 };
 
 #endif // POA_MDIWINDOW_H

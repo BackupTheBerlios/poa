@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.12 2003/08/22 22:47:49 squig Exp $
+ * $Id: mainwindow.h,v 1.13 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -64,6 +64,7 @@ private:
 
     QWorkspace* ws;
     Project *project_;
+    static const uint DEFAULT_ZOOM_LEVEL = 4;
 
     QComboBox *zoomComboBox;
     QToolBar *commonToolBar;

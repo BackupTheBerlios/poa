@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.15 2003/08/22 22:47:49 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.16 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,8 @@
 
 #include "canvasview.h"
 #include "gridcanvas.h"
+#include "poa.h"
+#include "project.h"
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -33,17 +35,21 @@
 #include <qaction.h>
 #include <qimage.h>
 #include <qpixmap.h>
+#include <qpoint.h>
 #include <qsize.h>
 #include <qwmatrix.h>
 
-MdiWindow::MdiWindow(GridCanvas* canvas, QWidget* parent,
+MdiWindow::MdiWindow(CanvasView *view, QWidget* parent,
                      const char* name, WFlags f)
-    : QMainWindow(parent, name, f)
+    : QMainWindow(parent, name, f), view_(view)
 {
     zoomLevel_ = 1.0;
 
-    view_ = new CanvasView(canvas->project(), canvas, this);
+    view_->reparent(this,0,QPoint());
     setCentralWidget(view_);
+    setCaption(view->project()->name()+" ["+view->canvas()->name()+"]");
+    setIcon(QPixmap(ICON_PATH + "document.xpm"));
+    resize(sizeHint());
 }
 
 MdiWindow::~MdiWindow()
@@ -59,6 +65,7 @@ QCanvas *MdiWindow::canvas()
 void MdiWindow::setCanvas(QCanvas *canvas)
 {
     view_->setCanvas(canvas);
+    setCaption(view_->project()->name()+" ["+view_->canvas()->name()+"]");
     // TODO: emit some repaint signal if needed to draw
     //       the newly set canvas
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.35 2003/08/27 21:12:45 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.36 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,10 +27,12 @@
 #include "aboutdialog.h"
 #include "cpuview.h"
 #include "blockview.h"
+#include "canvasview.h"
 #include "project.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "moduleconfdialog.h"
+#include "poa.h"
 #include "project.h"
 #include "settings.h"
 #include "settingsdialog.h"
@@ -51,10 +53,6 @@
 #include <qvariant.h>
 #include <qvbox.h>
 #include <qwhatsthis.h>
-
-
-#define ICON_PATH QString("icons/")
-#define DEFAULT_ZOOM_LEVEL 4
 
 
 /**
@@ -211,7 +209,7 @@ void MainWindow::initializeToolbars()
     zoomComboBox->insertItem("250 %", 5);
     zoomComboBox->insertItem("500 %", 6);
     zoomComboBox->insertItem("1000 %", 7);
-    zoomComboBox->setCurrentItem(4);
+    zoomComboBox->setCurrentItem(DEFAULT_ZOOM_LEVEL);
     zoomInAction->addTo(drawToolBar);
     zoomNormalAction->addTo(drawToolBar);
     zoomOutAction->addTo(drawToolBar);
@@ -394,15 +392,11 @@ void MainWindow::fileNew()
         delete project_;
     }
 
-    project_ = new Project();
+    project_ = new Project(tr("Unnamed"));
+    GridCanvas *canvas = project_->newCanvas("1");
+    CanvasView *view = new CanvasView(project_, canvas);
 
-    GridCanvas *canvas = new GridCanvas(project_);
-    project_->addCanvas(canvas);
-
-    MdiWindow *w = new MdiWindow(project_->canvasList()->getFirst(), ws, 0, WDestructiveClose);
-    w->setCaption(tr("Unnamed Layout"));
-    w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
-    w->resize(w->sizeHint());
+    MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
     w->showMaximized();
 
     // show the very first window in maximized mode
@@ -431,14 +425,15 @@ void MainWindow::fileOpen()
         if (file.open(IO_ReadOnly)) {
             QDomDocument doc;
             if (doc.setContent(&file)) {
-                project_ = new Project();
-                GridCanvas *canvas = new GridCanvas(project_);
-                project_->addCanvas(canvas);
-                MdiWindow *w = new MdiWindow(project_->canvasList()->getFirst(), ws, 0, WDestructiveClose);
-                project_->deserialize(&doc);
-                w->setCaption(fn);
-                w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
-                w->resize(w->sizeHint());
+                project_ = new Project(fn, &doc);
+                //               GridCanvas *canvas = new GridCanvas(project_);
+                //                project_->addCanvas(canvas);
+                //                project_->deserialize(&doc);
+                //                MdiWindow *w = new MdiWindow(project_, ws, 0, WDestructiveClose);
+                GridCanvas *canvas = project_->canvasList()->getFirst();
+                CanvasView *view = new CanvasView(project_, canvas);
+
+                MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
                 w->showMaximized();
             } else {
                 QMessageBox::warning( 0, "File error",

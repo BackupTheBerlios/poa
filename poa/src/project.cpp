@@ -18,31 +18,45 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.6 2003/08/27 21:12:45 vanto Exp $
+ * $Id: project.cpp,v 1.7 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
 #include "project.h"
 #include "gridcanvas.h"
 #include "modelfactory.h"
+#include "canvasview.h"
 
-Project::Project()
+Project::Project(QString name)
 {
+    name_ = name;
+}
+
+Project::Project(QString name, QDomDocument *document)
+{
+    name_ = name;
+    deserialize(document);
 }
 
 Project::~Project()
 {
 }
 
-void Project::add(AbstractModel *item, int x, int y)
+void Project::add(AbstractModel *item)
 {
     items_.append(item);
-    emit modelAdded(item, x, y);
 }
 
-void Project::addCanvas(GridCanvas *canvas)
+QString Project::name()
 {
-    canvasList_.append(canvas);
+    return name_;
+}
+
+GridCanvas *Project::newCanvas(const QString name)
+{
+    GridCanvas *gc = new GridCanvas(name);
+    canvasList_.append(gc);
+    return gc;
 }
 
 const QPtrList<GridCanvas> *Project::canvasList() const {
@@ -79,6 +93,7 @@ QDomDocument Project::serialize()
     for (canvas = canvasList_.first(); canvas; canvas = canvasList_.next()) {
         QDomElement vElem = doc.createElement("view");
         vElem.setAttribute("id",++i);
+        vElem.setAttribute("name", canvas->name());
         QCanvasItemList canvasItems = canvas->allItems();
         QCanvasItemList::iterator it;
         for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
@@ -100,19 +115,29 @@ void Project::deserialize(QDomDocument *document) {
 
     //QDomElement root = document->documentElement();
     QDomNodeList mList = document->elementsByTagName("model-item");
-    QDomNodeList vList = document->elementsByTagName("view-item");
+    QDomNodeList vList = document->elementsByTagName("view");
     for (unsigned int i = 0; i < mList.count(); i++) {
         QDomElement mEl = mList.item(i).toElement();
-        idMap[mEl.attribute("id","0")] = ModelFactory::generateSingle(mEl);
+        AbstractModel *model = ModelFactory::generateSingle(mEl);
+        idMap[mEl.attribute("id","0")] = model;
+        add(model);
     }
 
     for (unsigned int i = 0; i < vList.count(); i++) {
         QDomElement vEl = vList.item(i).toElement();
-        if (vEl.attribute("model-id","no") != "no") {
-            add(idMap[vEl.attribute("model-id","0")],
-                vEl.attribute("x","0").toUInt(),
-                vEl.attribute("y","0").toUInt());
-        }
+        QDomNodeList viList = vEl.elementsByTagName("view-item");
 
+        GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
+
+        qWarning(vEl.attribute("id",""));
+        for (uint j = 0; j < viList.count(); j++) {
+            QDomElement viEl = viList.item(j).toElement();
+            if (viEl.attribute("model-id","no") != "no") {
+                //add(idMap[viEl.attribute("model-id","0")]);
+                canvas->addView(idMap[viEl.attribute("model-id","0")],
+                    viEl.attribute("x","0").toUInt(),
+                    viEl.attribute("y","0").toUInt());
+            }
+        }
     }
 }

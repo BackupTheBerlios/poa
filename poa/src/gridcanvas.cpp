@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.10 2003/08/22 22:47:49 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.11 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -33,9 +33,10 @@
 #include <qrect.h>
 #include <qsize.h>
 
-GridCanvas::GridCanvas(Project *project)
-    : project_(project)
+GridCanvas::GridCanvas(QString name)
 {
+    name_ = name;
+    currentZ_ = 0;
     setGridSize(Settings::instance()->gridSize());
     setDoubleBuffering(TRUE);
 
@@ -43,9 +44,21 @@ GridCanvas::GridCanvas(Project *project)
             this, SLOT(setGridSize(int)));
 }
 
-Project *GridCanvas::project()
+QString GridCanvas::name()
 {
-    return project_;
+    return name_;
+}
+
+void GridCanvas::addView(AbstractModel *item, int x, int y)
+{
+    ++currentZ_;
+    QCanvasItemList l = item->createView(this);
+    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
+        (*it)->moveBy(x, y);
+        (*it)->setZ(currentZ_);
+        (*it)->show();
+    }
+    update();
 }
 
 void GridCanvas::setGridSize(int gridSize)

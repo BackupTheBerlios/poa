@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.5 2003/08/27 21:12:45 vanto Exp $
+ * $Id: project.h,v 1.6 2003/08/28 15:31:10 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -30,6 +30,7 @@
 
 #include <qptrlist.h>
 #include <qdom.h>
+#include <qcanvas.h>
 #include <qmap.h>
 
 /*****************************************************************************
@@ -41,21 +42,23 @@ class Project : public QObject
     Q_OBJECT
 
 public:
-    Project();
+    Project(QString name);
+    Project(QString name, QDomDocument *document);
     ~Project();
 
-    void add(AbstractModel *item, int x, int y);
-    void addCanvas(GridCanvas *canvas);
+    void add(AbstractModel *item);
+    QString name();
+    GridCanvas *newCanvas(const QString name);
     const QPtrList<GridCanvas> *canvasList() const;
     QDomDocument serialize();
-    void deserialize(QDomDocument *document);
-
-signals:
-    void modelAdded(AbstractModel *item, int x, int y);
 
 private:
+    void deserialize(QDomDocument *document);
+
     QPtrList<AbstractModel> items_;
     QPtrList<GridCanvas> canvasList_;
+
+    QString name_;
 };
 
 #endif // PROJECT_H

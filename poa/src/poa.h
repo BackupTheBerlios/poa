@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.12 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: poa.h,v 1.13 2003/12/20 16:13:17 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,10 @@
  * Macro definitions
  */
 #define INSTANCEOF(ptr,type) (((ptr) != 0) && (dynamic_cast<type*>(ptr) != 0))
+
+#ifndef rint
+#define rint(a) (floor((a)+0.5))
+#endif
 
 static const unsigned MAX_RECENT_PROJECTS = 5;
 static const unsigned WIDGET_SPACING = 5;

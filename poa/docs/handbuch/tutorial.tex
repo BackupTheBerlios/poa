@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch Tutorial
-%% $Id: tutorial.tex,v 1.4 2004/03/19 00:08:54 neco Exp $
+%% $Id: tutorial.tex,v 1.5 2004/03/19 16:45:47 neco Exp $
 %% Achtung: Diese Datei wird in das Handbuch inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -41,25 +41,25 @@ Bevor man mit dem Layout f"ur den Antriebsregler anfangen kann, muss zun"achts e
 	\item Den Button {\bf Create New Directory} anklicken.
 	\item Name des Projekt eingeben und mit Return best"atigen.
 	\item Den neu erzeugten Ordner anw"ahlen und den Button {\bf Open} dr"ucken.
-	\item Die Datei {\bf project.xlm} anw"ahlen und den Button {\bf Open} dr"ucken.
+	\item Die Datei {\bf project.xml} anw"ahlen und den Button {\bf Open} dr"ucken.
 \end{enumerate}
 Nach dem Anlegen und "offnen des neuen Projekt wird das Arbeitsfenster mit einem leeren Layout ge"offnet.
 \section{Funktionsbl"ocke erzeugen und konfigurieren}
 Zur Realisierung des Antriebreglers ben"otigt man verschiedene Typen von Bl"ocken und zwar:
 \begin{itemize}
-	\item 2 I/O-Bl"ocke, einen f"ur HardwareInput und einen f"ur HardwareOutput
+	\item 2 I/O-Bl"ocke, einen f"ur Hardware-Input und einen f"ur Hardware-Output
 	\item 3 CPU-Bl"ocke f"ur Signalverarbeitung, Lageregler und Drehzahlregler
 	\item 1 Core-Block f"ur Stromregler
 \end{itemize}
-\subsection{HardwareInput und HardwareOutput}
-HardwareInput und HardwareOutput bilden die Schnittstelle nach Au"sen. Daher werden I/O-Bl"ocke verwendet. Die ankommenden Signale werden "uber den HardwareInput-Block an den Singalverarbeitungsblock weitergeleitet. Signale, die nach Au"sen weitergeleitet werden m"ussen, kommen in den HardwareOutput-Block. Als erstes wird der HardwareInput erzeugt und konfiguriert:
+\subsection{Hardware-Input und Hardware-Output}
+Hardware-Input und Hardware-Output bilden die Schnittstelle nach Au"sen. Daher werden I/O-Bl"ocke verwendet. Die ankommenden Signale werden "uber den Hardware-Input-Block an den Singalverarbeitungsblock weitergeleitet. Signale, die nach Au"sen weitergeleitet werden m"ussen, kommen in den Hardware-Output-Block. Als erstes wird der HardwareInput erzeugt und konfiguriert:
 \begin{enumerate}
 	\item Einen I/O-Block aus der Blockbiliothek per Drag'n Drop ziehen, d.h. mit dem Mauszeiger den Block ankilcken, die Maustaste dabei gedr"uckt lassen, den Block ins Arbeitsfenster ziehen und die Maustaste wieder loslassen.
 	\item Im Dialog {\bf Block configuration} als erstes den Namen {\itshape "'HardwareInput"'} eingeben
 	\item Unter {\bf Description} den Block beschreiben {\itshape "'..."uber diesen Inputblock werden die Signale weitergeleitet..."'}.
 	\item Den Offset Eintrag auf {\itshape "'Auto (0 ns)"'} lassen.
-	\item Unter {\bf Clock} den Takt f"ur den HardwareInput-Block angeben, d.h. standardm"a"sig {\itshape "'0 ns"'} f"ur I/O-Bl"ocke.
-	\item Unter {\bf Runtime} den Eintrag auf 1 lassen.
+	\item Unter {\bf Clock} den Takt f"ur den Hardware-Input-Block angeben, d.h. standardm"a"sig {\itshape "'0 ns"'} f"ur I/O-Bl"ocke.
+	\item Unter {\bf Runtime} den Eintrag auf {\itshape "'1 ns"'} lassen.
 	\item In der Pintabelle die Pins f"ur die 4 Ausg"ange erzeugen und konfigurieren:
 		\begin{itemize}
 			\item Zum Erzeugen von Pins, die Pinkategorie ausw"ahlen und den Button {\bf New} dr"ucken.
@@ -85,7 +85,7 @@ Der Stromregler besitzt eine festgelegte Logik und Laufzeit. Daher wird er duch 
 
 
 \section{Funktionsbl"ocke verbinden}
-Nachdem alle erforderlichen Bl"ocke erzeugt und weitestgehend konfiguriert worden sind, m"ussen die Bl"ocke miteinander verbunden werden. Zum Verbinden von zwei Bl"ocken muss mit der Maustaste den Ausgangspin (xSoll) des einen Blocks anklicken, die Taste gedr"uckt halten und mit dem Cursor an den Eingangspin (xSoll) des Anderen andocken. Nach der Verbindung aller Pins erh"alt man eine Vernetzung etwa wie in Abb. 4.2.
+Nachdem alle erforderlichen Bl"ocke erzeugt und weitestgehend konfiguriert worden sind, m"ussen die Bl"ocke miteinander verbunden werden. Zum Verbinden von zwei Bl"ocken Ausgangspin (xSoll) des einen Blocks anklicken, die Maustaste gedr"uckt halten und "uber dem Eingangspin (xSoll) des anderen Blocks loslassen. Nach der Verbindung aller Pins erh"alt man eine Verdrahtung etwa wie in Abb. 4.2.
 \begin{figure}[htbp]
 
 \begin{center}

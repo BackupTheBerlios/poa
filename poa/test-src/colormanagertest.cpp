@@ -15,6 +15,7 @@ class ColorManagerTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testDragBy);
     CPPUNIT_TEST(testItem);
     CPPUNIT_TEST(testLightPalette);
+    CPPUNIT_TEST(testPalette);
     CPPUNIT_TEST(testRtti);
     CPPUNIT_TEST(testSerialize);
     CPPUNIT_TEST(testStrongPalette);
@@ -30,7 +31,7 @@ public:
     void setUp()
     {
         canvas = new GridCanvas("canvas");
-        palette = new Palette("Moc Palette");
+        palette = new Palette("Mock Palette");
         palette->addColor(QColor("#00FF00"));
         palette->addColor(QColor("#0000FF"));
         colorManager = new ColorManager(canvas, palette);
@@ -53,7 +54,7 @@ public:
         BlockModel block2("Type", "Description");
         block2.setClock(200);
         BlockModel block3("Type", "Description");
-        block2.setClock(300);
+        block3.setClock(300);
 
         CPPUNIT_ASSERT(colorManager->color(&block2) == palette->color(1));
         CPPUNIT_ASSERT(colorManager->color(&block3) == palette->color(0));
@@ -99,6 +100,11 @@ public:
         testPalette(Palette::createStrongPalette());
     }
 
+    void testPalette()
+    {
+        CPPUNIT_ASSERT(palette->size() == 2);
+    }
+
     void testPalette(Palette *palette)
     {
         CPPUNIT_ASSERT(palette->size() > 0);
@@ -126,7 +132,11 @@ public:
         QDomDocument document;
         QDomElement element = colorManager->serialize(&document);
 
-        ColorManager colorManager2(canvas, Palette::createLightPalette());
+        Palette *palette2 = new Palette("Mock Palette");
+        palette2->addColor(QColor("#00FF00"));
+        palette2->addColor(QColor("#0000FF"));
+
+        ColorManager colorManager2(canvas, palette2);
         colorManager2.deserialize(element);
 
         CPPUNIT_ASSERT(c1 == colorManager2.color(&block));

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.14 2003/09/09 23:21:22 vanto Exp $
+ * $Id: abstractmodel.h,v 1.15 2003/09/16 12:17:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,8 @@ class QCanvasItemList;
  */
 class AbstractModel : public QObject, public Serializable
 {
+    Q_OBJECT
+
 public:
     /**
      * Default constructor
@@ -92,6 +94,11 @@ public:
     virtual void deserialize(QDomElement element);
 
     /**
+     * Emits updated() signal
+     */
+    void updatePerformed();
+
+    /**
      * Creates the corresponding view objects.
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
@@ -100,6 +107,13 @@ private:
     QString type_;
     QString description_;
     uint id_;
+
+signals:
+    /**
+     * Emitted when updatePerformed() was called.
+     */
+    void updated();
+
 };
 
 #endif

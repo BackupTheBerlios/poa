@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.18 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.19 2003/09/16 12:17:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -68,6 +68,7 @@ void GridCanvas::addView(AbstractModel *item, int x, int y)
         (*it)->setZ(currentZ_);
         (*it)->show();
     }
+    connect(item, SIGNAL(updated()), this, SLOT(updateAll()));
     update();
 }
 

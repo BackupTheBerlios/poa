@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.7 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: abstractmodel.cpp,v 1.8 2003/09/16 12:17:50 garbeam Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -86,4 +86,9 @@ void AbstractModel::setType(const QString &type)
 void AbstractModel::setId(uint id)
 {
     id_ = id;
+}
+
+void AbstractModel::updatePerformed()
+{
+    emit(updated());
 }

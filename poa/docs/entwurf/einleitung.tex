@@ -1,36 +1,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: einleitung.tex,v 1.1 2003/07/13 20:15:58 garbeam Exp $
+%% $Id: einleitung.tex,v 1.2 2004/02/11 14:29:18 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter {Einleitung}
 
-Dieses Dokument ist Teil des Entwurfes von POA und kennzeichnet die
-Design-Entscheidungen für den Prototyp ''Messe''. Als Grundlage für den Umfang
-des Prototyps dient die interne Spezifikation.
-\par
-Hervorgerufen durch das agile Prozessmodell der POA-Entwicklung, ergeben sich
-an den Entwurf von POA folgende verschiedene Anforderungen:
+Dieses Dokument beschreibt die Entwurfsstrategien von POA. Es richtet
+sich an Entwickler mit Kenntnissen in C++ und Entwurfsmuster, die die
+Architektur von POA verstehen möchten. Das Dokument soll die
+Einarbeitung erleichtern und sicherstellen, dass die bestehenden
+Strukturen bei zukünftigen Erweiterung erhalten bleiben.
+
+Eine detailierte Beschreibung der einzelnen Funktionen ist nicht Teil
+dieses Dokuments. Diese befindet sich in Form von JavaDoc Kommentaren,
+die mit Doxygen ausgewertet werden können in den Header Dateien.
+
+Der POA Entwurf wurde nach folgenden Kritieren optimiert:
+
 \begin{itemize}
-\item leichte Erweiterbarkeit
-\item einfaches Design
-\item schnelle Integrierbarkeit
-\item hohe Modularität
+\item Leichte Erweiterbarkeit
+\item Hohe Änderbarkeit
 \end{itemize}
-\par
-Um diesen Anforderungen gerecht zu werden, wurden geeignete
-Design-Entscheidungen getroffen, die in Kapitel 2 in allgemeiner Form
-erläutert werden.
-\par
-Weiterhin wurde für den Entwurf Rahmen-Sourcecode in Form von Header Dateien
-erzeugt, der als Ausgangspunkt zur Implementierung des Prototypen ''Messe''
-genutzt werden soll, da er bereits alle wesentlichen Design-Entscheidungen
-enthält.\par
-In Kapitel 3 wird der konkrete Entwurf kurz erläutert.
+
+Erreicht wurden diese Eigenschafen in erster Linie durch ein einfaches
+Design. Es wurden nur die notwendigen Klassen implementiert, keine
+Technologie auf Vorrat angelegt. 
 
 %%% Local Variables: 
-%%% TeX-master: "angebot"
+%%% TeX-master: "entwurf"
 %%% End: 
 %%% vim:tw=79:

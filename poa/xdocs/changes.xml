@@ -2,14 +2,32 @@
 <document>
   <properties>
     <title>Changes</title>
-    <author email="vanto@users.berlios.de">Tammo van Lessen</author>
   </properties>
 
+  <!-- type == add, fix, update, remove, none, 
+               icon_warning_sml, icon_success_sml, icon_info_sml -->
+
   <body>
-	<release version="0.1.0" date="in CVS">
-      <action dev="garbeam" type="add">
-		Prototyping
-      </action>
+	<release version="0.1.0" date="2003-10-01">
+      <action type="none">Initial Release (prototype)</action>
+    </release>
+	<release version="0.2.0" date="2004-01-13">
+      <action type="add">Added scheduling dialog. The scheduling
+      dialog provides a list of all blocks and their timings as well as
+      a graphical display of the block dependencies.</action>
+      <action type="add">Added smart routing algorithm</action>
+      <action type="add">Added regression test framework</action>
+      <action type="update">Snap blocks to grid on drop</action>
+      <action type="update">Added consistency checking to project
+      management</action>
+      <action type="update">Changed unit of all timings from ms to ns</action>
+      <action type="update">Warn if a project is saved to a directory
+      that already contains a project file</action>
+      <action type="icon_success_sml">Ported source code to Windows</action>
+      <action type="fix">Ask to save changed files on project close</action>
+      <action type="fix">Fixed bug in project management that caused
+      connections to be restored incorrectly when a saved project was
+      opened</action>
     </release>
   </body>
 </document>

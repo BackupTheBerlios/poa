@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.37 2004/01/28 23:09:56 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.38 2004/02/11 13:01:41 squig Exp $
  *
  *****************************************************************************/
 
@@ -154,8 +154,8 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
 void GridCanvas::ensureVisibility(QCanvasItem *item)
 {
     QRect rect = item->boundingRect();
-    int newWidth = QMAX((int)item->x() + rect.width(), width());
-    int newHeight = QMAX((int)item->y() + rect.height(), height());
+    int newWidth = QMAX((int)rect.x() + rect.width(), width());
+    int newHeight = QMAX((int)rect.y() + rect.height(), height());
     if (newWidth > width() || newHeight > height()) {
         resize(newWidth, newHeight);
     }

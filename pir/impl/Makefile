@@ -7,7 +7,7 @@ ifeq ($(shell test -e Makefile.local && echo ja || echo nein),ja)
   include Makefile.local
 endif
 
-all      : marcel steffen
+all      : marcel motion steffen
 
 clean    : 
 	rm -f marcel.o marcel steffen.o steffen
@@ -17,6 +17,12 @@ marcel.o : marcel.c
 
 marcel   : marcel.o
 	$(LINK) -o marcel marcel.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
+
+motion.o  : motion.c
+	$(CC) motion.c $(INCLUDE_PATH)
+
+motion    : motion.o
+	$(LINK) -o motion motion.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
 
 steffen.o : steffen.c
 	$(CC) steffen.c $(INCLUDE_PATH)

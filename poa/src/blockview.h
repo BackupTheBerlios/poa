@@ -18,21 +18,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.17 2003/09/03 14:57:43 keulsn Exp $
+ * $Id: blockview.h,v 1.18 2003/09/04 15:20:06 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_BLOCKVIEW_H
 #define POA_BLOCKVIEW_H
 
+#include <qapplication.h>
 #include <qcanvas.h>
+#include <qfontmetrics.h>
 #include <qvaluevector.h>
 #include <qdom.h>
 
 #include "abstractview.h"
 class BlockModel;
 class PinView;
-
 
 /*****************************************************************************
  * Block view for all blocks on a <code>GridCanvas</code>.
@@ -135,7 +136,7 @@ protected:
     /** default width of a block */
     static const int DEFAULT_WIDTH = 150;
     /** default height of text drawn on the canvas */
-    static const int DEFAULT_FONT_HEIGHT = 12;
+    static int DEFAULT_FONT_HEIGHT;
     /** default vertical space between the top of the rectangle and the
      *  title */
     static const int DEFAULT_TOP_SPACING = 3;

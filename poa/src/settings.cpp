@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.6 2003/08/22 22:47:49 squig Exp $
+ * $Id: settings.cpp,v 1.7 2003/09/04 15:20:06 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -63,6 +63,13 @@ bool Settings::getBool(const QString &key, bool defaultValue)
     return settings.readBoolEntry(PREFIX + key, defaultValue);
 }
 
+
+QFont Settings::getFont(const QString &key, QFont defaultValue)
+{
+    QFont font;
+    font.fromString(get(PREFIX + key, defaultValue.toString()));
+    return font;
+}
 
 int Settings::getNum(const QString &key, int defaultValue)
 {

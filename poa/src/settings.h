@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.10 2003/08/30 18:37:33 vanto Exp $
+ * $Id: settings.h,v 1.11 2003/09/04 15:20:06 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <qapplication.h>
 #include <qvariant.h>
 #include <qobject.h>
 #include <qsettings.h>
@@ -44,6 +45,7 @@ public:
 
     QString get(const QString &key, QString defaultValue = QString::null);
     bool getBool(const QString &key, bool defaultValue = FALSE);
+    QFont getFont(const QString &key, QFont defaultValue = QApplication::font());
     int getNum(const QString &key, int defaultValue = 0);
 
     bool set(const QString &key, const QString &value);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.8 2003/08/20 14:46:19 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.9 2003/08/20 15:33:30 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -84,7 +84,14 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // initialize status bar implicitly
     (void)statusBar();
 
+    // set up mdi workspace
+    QVBox* vb = new QVBox(this);
+    vb->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+    ws = new QWorkspace(vb);
+    ws->setScrollBarsEnabled(TRUE);
+    setCentralWidget(vb);
 
+ 
     /////////////////////////////////////////////////////////////////
     // actions
     fileNewAction =
@@ -125,10 +132,10 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
         new QAction("About", image_help, "&About...", 0,
                     this, "helpAboutAction" );
 
-    openModuleConfDialogAction =
+    openModuleConfAction =
         new QAction("Module configuration", image_configure,
                     "&Module configuration", 0, this,
-                    "openModuleConfDialogAction");
+                    "openModuleConfAction");
 
     drawLineAction =
         new QAction("Draw line", image_line, "&Draw line",
@@ -146,6 +153,17 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
         new QAction("Zoom normal", image_zoomnormal, "Zoom &normal",
                     QKeySequence("Ctrl+="), this, "zoomNormalAction");
 
+    invokeCompilerAction =
+        new QAction("Compile", image_compile, "&Compile",
+                    QKeySequence("F8"), this, "invokeCompilerAction");
+
+    invokeDownloadAction =
+        new QAction("Download", image_download, "&Download", 
+                    QKeySequence("F7"), this, "invokeDownloadAction");
+
+    openSettingsAction =
+        new QAction("Configure POA", "Configure &POA...", 0,
+                    this, "openSettingsAction");
 
     /////////////////////////////////////////////////////////////////
     // toolbars
@@ -163,8 +181,10 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     // utility
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop); 
-    openModuleConfDialogAction->addTo(utilToolBar);
+    openModuleConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
+    invokeCompilerAction->addTo(utilToolBar);
+    invokeDownloadAction->addTo(utilToolBar);
 
     // draw
     drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop); 
@@ -186,7 +206,8 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     zoomOutAction->addTo(drawToolBar);
 
     /////////////////////////////////////////////////////////////////
-    // menubar
+    // menus
+
     menubar = new QMenuBar(this, "menubar");
     fileMenu = new QPopupMenu(this); 
     fileNewAction->addTo(fileMenu);
@@ -208,7 +229,10 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // tools
     toolsMenu = new QPopupMenu(this); 
     menubar->insertItem(trUtf8("&Tools"), toolsMenu);
-    openModuleConfDialogAction->addTo(toolsMenu);
+    openModuleConfAction->addTo(toolsMenu);
+    toolsMenu->insertSeparator();
+    invokeCompilerAction->addTo(toolsMenu);
+    invokeDownloadAction->addTo(toolsMenu);
 
     // draw
     drawMenu = new QPopupMenu(this); 
@@ -219,6 +243,11 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     zoomNormalAction->addTo(drawMenu);
     zoomOutAction->addTo(drawMenu);
 
+    // settings
+    settingsMenu = new QPopupMenu(this);
+    menubar->insertItem(tr("&Settings"), settingsMenu);
+    openSettingsAction->addTo(settingsMenu);
+    
     // help
     helpMenu = new QPopupMenu(this); 
     helpContentsAction->addTo(helpMenu);
@@ -226,29 +255,26 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     helpAboutAction->addTo(helpMenu);
     menubar->insertItem(trUtf8("&Help"), helpMenu );
 
+    /////////////////////////////////////////////////////////////////
     // signals and slots connections
-    connect( fileNewAction, SIGNAL( activated() ), this, SLOT( newLayout() ) );
-    connect( fileOpenAction, SIGNAL( activated() ), this, SLOT( fileOpen() ) );
-    connect( fileSaveAction, SIGNAL( activated() ), this, SLOT( fileSave() ) );
-    connect( fileSaveAsAction, SIGNAL( activated() ), this, SLOT( fileSaveAs() ) );
-    connect( fileExitAction, SIGNAL( activated() ),
-             qApp, SLOT(closeAllWindows()));
-    connect( editCutAction, SIGNAL( activated() ), this, SLOT( editCut() ) );
-    connect( editCopyAction, SIGNAL( activated() ), this, SLOT( editCopy() ) );
-    connect( editPasteAction, SIGNAL( activated() ), this, SLOT( editPaste() ) );
-    connect( helpContentsAction, SIGNAL( activated() ), this, SLOT( helpContents() ) );
-    connect( helpAboutAction, SIGNAL( activated() ), this, SLOT( helpAbout() ) );
+    connect(fileNewAction, SIGNAL(activated()), this, SLOT(newLayout()));
+    connect(fileOpenAction, SIGNAL(activated()), this, SLOT(fileOpen()));
+    connect(fileSaveAction, SIGNAL(activated()), this, SLOT(fileSave()));
+    connect(fileSaveAsAction, SIGNAL(activated()), this, SLOT(fileSaveAs()));
+    connect(fileExitAction, SIGNAL(activated()),
+            qApp, SLOT(closeAllWindows()));
+    connect(editCutAction, SIGNAL(activated()), this, SLOT(editCut()));
+    connect(editCopyAction, SIGNAL(activated()), this, SLOT(editCopy()));
+    connect(editPasteAction, SIGNAL(activated()), this, SLOT(editPaste()));
+    connect(helpContentsAction, SIGNAL(activated()),
+            this, SLOT(helpContents()));
+    connect(helpAboutAction, SIGNAL(activated()), this, SLOT(helpAbout()));
+    connect(openModuleConfAction, SIGNAL(activated()),
+            this, SLOT(openModuleConf()) );
+    connect(openSettingsAction, SIGNAL(activated()),
+            this, SLOT(openSettings()));
 
-    connect(openModuleConfDialogAction, SIGNAL(activated()),
-            this, SLOT(openModuleConfDialog()) );
-
-    // set up mdi workspace
-    QVBox* vb = new QVBox(this);
-    vb->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-    ws = new QWorkspace(vb);
-    ws->setScrollBarsEnabled(TRUE);
-    setCentralWidget(vb);
-    
+   
 }
 
 void MainWindow::closeWindow()
@@ -349,8 +375,7 @@ void MainWindow::editPaste()
 
 void MainWindow::helpContents()
 {
-	SettingsDialog *dialog = new SettingsDialog();
-	dialog->show();
+    qWarning( "MainWindow::helpContents(): Not implemented yet!" );
 }
 
 void MainWindow::helpAbout()
@@ -359,14 +384,19 @@ void MainWindow::helpAbout()
 	dialog->show();
 }
 
-void MainWindow::openModuleConfDialog()
+void MainWindow::openModuleConf()
 {
-    ModuleConfDialog *moduleConfDialog = new ModuleConfDialog();
-    moduleConfDialog->show();
+    ModuleConfDialog *dialog = new ModuleConfDialog();
+    dialog->show();
     // future: use exec() instead of show and
     //         determine exit code
 }
 
+void MainWindow::openSettings()
+{
+	SettingsDialog *dialog = new SettingsDialog();
+	dialog->show();
+}
 
 MdiWindow* MainWindow::newLayout()
 {

@@ -1,11 +1,27 @@
-/****************************************************************************
-** Form interface generated from reading ui file 'mainwindow.ui'
-**
-** Created: Tue Aug 19 15:35:58 2003
-**      by:  The User Interface Compiler (uic)
-**
-** WARNING! All changes made in this file will be lost!
-****************************************************************************/
+/*****************************************************************************
+ * POA - Programmierumgebung Offener Antrieb
+ *
+ * Copyright (C) 2003 Necati Aydin, Anselm Garbe, Stefan Hauser,
+ * Steffen Keul, Marcel Kilgus, Steffen Pingel, Tammo van Lessen
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ *
+ * $Id: mainwindow.h,v 1.6 2003/08/20 15:33:30 garbeam Exp $
+ *
+ *****************************************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -37,6 +53,7 @@ public:
     QPopupMenu *editMenu;
     QPopupMenu *toolsMenu;
     QPopupMenu *drawMenu;
+    QPopupMenu *settingsMenu;
     QPopupMenu *helpMenu;
     QToolBar *commonToolBar;
     QToolBar *utilToolBar;
@@ -56,7 +73,11 @@ public:
     QAction *zoomOutAction;
     QAction *zoomNormalAction;
     QAction *drawLineAction;
-    QAction* openModuleConfDialogAction;
+    QAction *openModuleConfAction;
+    QAction *invokeCompilerAction;
+    QAction *invokeDownloadAction;
+
+    QAction *openSettingsAction;
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -75,7 +96,8 @@ public slots:
     virtual void editPaste();
     virtual void helpContents();
     virtual void helpAbout();
-    virtual void openModuleConfDialog();
+    virtual void openModuleConf();
+    virtual void openSettings();
 
 private slots:
     MdiWindow* newLayout();

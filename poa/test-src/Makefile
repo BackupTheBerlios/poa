@@ -4,7 +4,8 @@ CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L../cppunit/lib -lcppun
 LDFLAGS  = $(CPPUNIT_LDFLAGS) -L$(QTDIR)/lib  -L/usr/X11R6/lib -lqt-mt -lpthread -lXext -lX11 -lm
 CPPUNIT_INCLUDES = $(shell cppunit-config --cflags || echo -I../cppunit/include)
 INCLUDES = $(CPPUNIT_INCLUDES) -I../src -I../src/qextserialport -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
-CC = g++
+CC = gcc
+CXX = g++
 
 SOURCES  = $(shell ls *.cpp)
 TESTOBJECTS = $(shell echo $(SOURCES) | sed 's/main\.cpp//;s/mainqt\.cpp//;s/\.cpp/.o/g')
@@ -15,7 +16,7 @@ all: main
 .PHONY : all clean check
 
 .cpp.o:
-	$(CC) $(CFLAGS) -c $(INCLUDES) -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -o $@ $<
 
 ../cppunit/lib/libcppunit.so:
 	ln -s libcppunit-1.9.so.11.0.0 ../cppunit/lib/libcppunit.so
@@ -29,11 +30,14 @@ all: main
 ../cppunit/lib/libqttestrunner.so.1:
 	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so.1
 
+coverage: 
+	make CXXFLAGS="$(CXXFLAGS) -fprofile-arcs -ftest-coverage" LDFLAGS="$(LDFLAGS) -fprofile-arcs -ftest-coverage" check
+
 main: poa ../cppunit/lib/libcppunit.so $(TESTOBJECTS) main.o
-	$(CC) -o main $(LDFLAGS) $(OBJECTS) main.o
+	$(CXX) -o main $(LDFLAGS) $(OBJECTS) main.o
 
 mainqt: poa ../cppunit/lib/libcppunit.so ../cppunit/lib/libqttestrunner.so $(TESTOBJECTS) mainqt.o
-	$(CC) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
+	$(CXX) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
 
 check: ../cppunit/lib/libcppunit-1.9.so.11 all
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./main

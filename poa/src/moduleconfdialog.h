@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.5 2003/09/02 13:35:55 garbeam Exp $
+ * $Id: moduleconfdialog.h,v 1.6 2003/09/02 20:22:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -78,7 +78,6 @@ private:
     QPushButton *removeIoPushButton;
     QPushButton *okPushButton;
 
-
     QListViewItem *inputRoot;
     QListViewItem *outputRoot;
     QListViewItem *periodicalRoot;
@@ -100,6 +99,10 @@ private slots:
      * a list view item was (de)selected.
      */
     void ioSelectionChanged();
+
+    void toggleManualOffset();
+
+    void toggleManualRuntime();
 };
 
 #endif // MODULECONFDIALOG_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.7 2003/09/02 13:35:55 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.8 2003/09/02 20:22:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,8 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
+
+#define PERIODICAL_IO_TEXT "periodical inputs"
 
 ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
                                    bool modal, WFlags fl)
@@ -84,7 +86,7 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
 
     // periodical root
     periodicalRoot = new QListViewItem(ioListView, outputRoot);
-    periodicalRoot->setText(0, tr("periodical inputs"));
+    periodicalRoot->setText(0, tr(PERIODICAL_IO_TEXT));
     periodicalRoot->setOpen(TRUE);
 
     leftLayout->addWidget(ioListView);
@@ -167,10 +169,15 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     offsetAutoCalcRadioButton =
         new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
     offsetAutoCalcRadioButton->setText(tr("automatic calculation"));
+    offsetAutoCalcRadioButton->setChecked(TRUE);
+    connect(offsetAutoCalcRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualOffset()));
 
     offsetRadioButton =
         new QRadioButton(offsetButtonGroup, "offsetRadioButton");
     offsetRadioButton->setText(tr("offset"));
+    connect(offsetRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualOffset()));
 
     offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
 
@@ -191,10 +198,15 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     runtimeAutoCalcRadioButton =
         new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
     runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
+    runtimeAutoCalcRadioButton->setChecked(TRUE);
+    connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
 
     runtimeRadioButton = 
         new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
     runtimeRadioButton->setText(tr("runtime"));
+    connect(runtimeRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
 
     runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
 
@@ -203,6 +215,7 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
     runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
 
+    // finish right layout
     rightLayout->addWidget(blockGroupBox);
     rightLayout->addWidget(offsetButtonGroup);
     rightLayout->addWidget(runtimeButtonGroup);
@@ -266,8 +279,10 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     dialogLayout->addWidget(topWidget);
     dialogLayout->addWidget(bottomWidget);
 
-    // disable list view manipulation buttons
+    // disable widgets, if neccessary
     ioSelectionChanged();
+    toggleManualOffset();
+    toggleManualRuntime();
 }
 
 /**
@@ -290,7 +305,7 @@ void ModuleConfDialog::addIo()
         child->setText(0, QString::number(root->childCount(), 10));
         child->setText(1, "data" + child->text(0));
         child->setText(3, "32");
-        if (root->text(0).compare(tr("periodical inputs")) == 0) {
+        if (root->text(0).compare(tr(PERIODICAL_IO_TEXT)) == 0) {
            child->setText(2, "");
         } else {
            child->setText(2,
@@ -314,10 +329,39 @@ void ModuleConfDialog::removeIo()
 }
 
 void ModuleConfDialog::ioSelectionChanged() {
-    bool enabled = ioListView->selectedItem() != 0;
-    bool isChild = enabled && !ioListView->selectedItem()->isOpen();
+    QListViewItem *item = ioListView->selectedItem();
+    QListViewItem *root = item;
+
+    bool enabled = item != 0;
+    bool isChild = enabled && !item->isOpen();
+    bool isPeriodical = false;
+
+    if (isChild) {
+        while (!root->isOpen()) {
+            root = root->parent();
+        }
+        isPeriodical = root->text(0).compare(tr(PERIODICAL_IO_TEXT)) == 0;
+    }
 
     addIoPushButton->setEnabled(enabled);
     updateIoPushButton->setEnabled(isChild);
     removeIoPushButton->setEnabled(isChild);
+
+    ioNumberLineEdit->setEnabled(isChild);
+    dataLineEdit->setEnabled(isChild);
+    addressLineEdit->setEnabled(isChild && !isPeriodical);
+    bitsLineEdit->setEnabled(isChild);
+
+    ioNumberLineEdit->setText(isChild ? item->text(0) : QString(""));
+    dataLineEdit->setText(isChild ? item->text(1) : QString(""));
+    addressLineEdit->setText(isChild ? item->text(2) : QString(""));
+    bitsLineEdit->setText(isChild ? item->text(3) : QString(""));
+}
+
+void ModuleConfDialog::toggleManualOffset() {
+    offsetSpinBox->setEnabled(offsetRadioButton->isChecked());
+}
+
+void ModuleConfDialog::toggleManualRuntime() {
+    runtimeSpinBox->setEnabled(runtimeRadioButton->isChecked());
 }

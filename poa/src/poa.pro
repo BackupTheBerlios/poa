@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.41 2003/09/18 14:24:36 vanto Exp $
+# $Id: poa.pro,v 1.42 2003/09/19 10:08:14 garbeam Exp $
 #
 ###############################################################################
 
@@ -64,6 +64,7 @@ HEADERS += outputview.h
 HEADERS += pinmodel.h
 HEADERS += pinvector.h
 HEADERS += pinview.h
+HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += poa.h
 HEADERS += settings.h
@@ -97,6 +98,7 @@ SOURCES += moveaction.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinvector.cpp
 SOURCES += pinview.cpp
+SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp

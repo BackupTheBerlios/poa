@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.92 2004/01/21 17:51:49 squig Exp $
+ * $Id: mainwindow.cpp,v 1.93 2004/01/21 17:57:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -962,7 +962,14 @@ void MainWindow::saveToLibrary()
                 Copyable *item = dynamic_cast<Copyable *>(*current);
                 if (item != 0) {
                     Q_ASSERT(item->model() != 0);
-                    root.appendChild(item->model()->serialize(&doc));
+
+                    CpuModel *cpu = dynamic_cast<CpuModel *>(item->model());
+                    if (cpu != 0) {
+                        root.appendChild(cpu->serializeWithSource(&doc));
+                    }
+                    else {
+                        root.appendChild(item->model()->serialize(&doc));
+                    }
                 }
             }
 

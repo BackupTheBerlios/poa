@@ -40,6 +40,14 @@
   <siteDirectory>/home/groups/poa/htdocs</siteDirectory>
   <distributionDirectory/>
 
+  <versions>
+    <version>
+      <id>0.1.0</id>
+      <name>0.1.0</name>
+      <tag>poa-0_1_0</tag>
+    </version>
+  </versions>
+
   <!-- the version control repository and http url for online access
        the connection element has the form:
        scm:<system>:<system specific connection string> -->

@@ -1,0 +1,11 @@
+VERSION = 0.2.0
+
+include Makefile
+
+CFLAGS += -DVERSION=$(VERSION)
+CXXFLAGS += -DVERSION=$(VERSION)
+DIST += CHANGES 
+
+mydist:
+	xsltproc -o CHANGES ../changes.xsl ../xdocs/changes.xml
+	mkdir -p .tmp/poa-$(VERSION) && cp --parents $(SOURCES) $(HEADERS) $(FORMS) $(DIST) .tmp/poa-$(VERSION) && ( cd `dirname .tmp/poa-$(VERSION)` && $(TAR) poa-$(VERSION).tar poa-$(VERSION) && $(GZIP) poa-$(VERSION).tar ) && $(MOVE) `dirname .tmp/poa`/poa-$(VERSION).tar.gz . && $(DEL_DIR) .tmp/poa-$(VERSION)

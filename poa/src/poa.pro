@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.69 2004/01/13 00:28:29 squig Exp $
+# $Id: poa.pro,v 1.70 2004/01/13 14:22:23 squig Exp $
 #
 ###############################################################################
 
@@ -38,7 +38,6 @@ win32:OBJECTS_DIR = debug
 TARGET = poa
 QMAKE_TARGET_DESTDIR = poa-0.1.0
 QMAKE_DEL_DIR = rm -rf
-#QMAKE_CXXFLAGS = -DVERSION=0.1.0
 
 DISTFILES += AUTHORS BUGS COPYING README TODO about.html 
 DISTFILES += templates/*.c icons/*.xpm icons/*.png

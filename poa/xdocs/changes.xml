@@ -4,12 +4,12 @@
     <title>Changes</title>
   </properties>
 
-  <!-- type == add, fix, update, remove, none, 
+  <!-- type == add, fix, update, remove,
                icon_warning_sml, icon_success_sml, icon_info_sml -->
 
   <body>
 	<release version="0.1.0" date="2003-10-01">
-      <action type="none">Initial Release (prototype)</action>
+      <action type="icon_success_sml">Initial Release (prototype)</action>
     </release>
 	<release version="0.2.0" date="2004-01-13">
       <action type="add">Added scheduling dialog. The scheduling

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.24 2003/09/26 15:40:21 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.25 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -48,8 +48,6 @@ GridCanvas::GridCanvas(QString name)
 void GridCanvas::addConnectorView(ConnectorViewList *viewList)
 {
     //    ConnectorViewList *viewList = new ConnectorViewList(source, target, this);
-    connectors_.append(viewList);
-
     QCanvasItemList segments = viewList->allSegments();
     for (QCanvasItemList::Iterator it = segments.begin();
      it != segments.end();

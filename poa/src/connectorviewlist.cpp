@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.16 2003/10/01 10:23:52 garbeam Exp $
+ * $Id: connectorviewlist.cpp,v 1.17 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -153,7 +153,16 @@ QString ConnectorViewList::tip()
 
 void ConnectorViewList::setSelected(bool selected)
 {
-    emit select(selected);
+    QValueListIterator<QCanvasItem*> it = segments_.begin();
+    while (it != segments_.end()) {
+        ((ConnectorViewSegment *)*it)->select(selected);
+        ++it;
+    }
+}
+
+void ConnectorViewList::setVisible(bool)
+{
+    // do nothing, the view list is never displayed
 }
 
 QDomElement ConnectorViewList::serialize(QDomDocument *document)
@@ -212,7 +221,6 @@ void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
         }
         else {
             current = new ConnectorViewSegment(first, second, canvas_, this);
-            connect(this, SIGNAL(select(bool)), current, SLOT(select(bool)));
             it = segments_.insert(it, current);
             current->show();
         }
@@ -239,7 +247,7 @@ void ConnectorViewList::deleteAllConnectorViews()
 void ConnectorViewList::pinMoved(PinView *pin)
 {
     if (pin == source_ || pin == target_) {
-	Q_ASSERT(pin->canvas() == canvas_);
+        Q_ASSERT(pin->canvas() == canvas_);
 
         QValueList<QPoint> *points =
           routeConnector(source_->connectorPoint(),
@@ -372,15 +380,16 @@ QString image(LineDirection dir)
 {
     switch(dir) {
     case LEFT:
-	return QString("left");
+        return QString("left");
     case RIGHT:
-	return QString("right");
+        return QString("right");
     case UP:
-	return QString("up");
+        return QString("up");
     case DOWN:
-	return QString("down");
+        return QString("down");
+    default:
+        return 0;
     }
-    return 0;
 }
 
 QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
@@ -454,31 +463,31 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
         }
     }
     else if (isRightAngle(fromDir, toDir)) {
-	if (fromDist >= 1 && toDir == fromAlternateDir) {
+        if (fromDist >= 1 && toDir == fromAlternateDir) {
             // one bending
             next = grid.move(from, fromDir, fromDist);
             list->append(next);
-	}
-	else if (fromDist >= 2 && isTurn(toDir, fromAlternateDir)) {
-	    // bend 3 times
-	    next = grid.move(from, fromDir, fromDist / 2);
-	    list->append(next);
-	    next = grid.move(next, fromAlternateDir,
-			     QABS(fromAlternateDist) + 1);
-	    list->append(next);
-	    next = grid.move(next, fromDir, (fromDist + 1) / 2);
-	    list->append(next);
         }
-	else if (fromDist == 1 && isTurn(toDir, fromAlternateDir)) {
-	    // spiral
-	    next = grid.move(from, fromDir, fromDist + 1);
-	    list->append(next);
-	    next = grid.move(next, fromAlternateDir, 
-			     QABS(fromAlternateDist) + 1);
-	    list->append(next);
-	    next = grid.move(next, -fromDir, 1);
-	    list->append(next);
-	}
+        else if (fromDist >= 2 && isTurn(toDir, fromAlternateDir)) {
+            // bend 3 times
+            next = grid.move(from, fromDir, fromDist / 2);
+            list->append(next);
+            next = grid.move(next, fromAlternateDir,
+                             QABS(fromAlternateDist) + 1);
+            list->append(next);
+            next = grid.move(next, fromDir, (fromDist + 1) / 2);
+            list->append(next);
+        }
+        else if (fromDist == 1 && isTurn(toDir, fromAlternateDir)) {
+            // spiral
+            next = grid.move(from, fromDir, fromDist + 1);
+            list->append(next);
+            next = grid.move(next, fromAlternateDir,
+                             QABS(fromAlternateDist) + 1);
+            list->append(next);
+            next = grid.move(next, -fromDir, 1);
+            list->append(next);
+        }
         else if (fromAlternateDist >= 2 && toDir == fromAlternateDir) {
                   // && fromDist <= 0
             // U-turn then one bending
@@ -528,17 +537,17 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
             next = grid.move(next, turnRight(fromDir), 1);
             list->append(next);
         }
-	else if (fromAlternateDist == 0) {
-		 // && fromDist < 0
-	    next = grid.move(from, fromDir, 1);
-	    list->append(next);
-	    next = grid.move(next, turnLeft(fromDir), 1);
-	    list->append(next);
-	    next = grid.move(next, -fromDir, (QABS(fromDist) + 1) / 2);
-	    list->append(next);
-	    next = grid.move(next, turnRight(fromDir), 1);
-	    list->append(next);
-	}
+        else if (fromAlternateDist == 0) {
+                 // && fromDist < 0
+            next = grid.move(from, fromDir, 1);
+            list->append(next);
+            next = grid.move(next, turnLeft(fromDir), 1);
+            list->append(next);
+            next = grid.move(next, -fromDir, (QABS(fromDist) + 1) / 2);
+            list->append(next);
+            next = grid.move(next, turnRight(fromDir), 1);
+            list->append(next);
+        }
         else {
             // U-turn
             if (fromDist >= 0) {
@@ -569,43 +578,43 @@ unsigned ConnectorViewList::weight(const QValueList<QPoint> &points)
     collisions.setAutoDelete(true);
 
     while (it != points.end()) {
-	first = second;
-	second = *it;
-	++it;
+        first = second;
+        second = *it;
+        ++it;
 
-	int left = QMIN(first.x(), second.x());
-	int top = QMIN(first.y(), second.y());
-	QRect rect = QRect(left,
-			   top,
-			   QABS(first.x() - second.x()),
-			   QABS(first.y() - second.y()));
-	if (rect.width() == 1) {
-	    rect.setLeft(rect.left() - 1);
-	    rect.setWidth(rect.width() + 1);
-	}
-	if (rect.height() == 1) {
-	    rect.setTop(rect.top() - 1);
-	    rect.setHeight(rect.height() + 1);
-	}
+        int left = QMIN(first.x(), second.x());
+        int top = QMIN(first.y(), second.y());
+        QRect rect = QRect(left,
+                           top,
+                           QABS(first.x() - second.x()),
+                           QABS(first.y() - second.y()));
+        if (rect.width() == 1) {
+            rect.setLeft(rect.left() - 1);
+            rect.setWidth(rect.width() + 1);
+        }
+        if (rect.height() == 1) {
+            rect.setTop(rect.top() - 1);
+            rect.setHeight(rect.height() + 1);
+        }
 
-	// collect all collisions
-	QCanvasItemList newCollisions = canvas_->collisions(rect);
-	QCanvasItemList::const_iterator current;
-	for (current = newCollisions.begin();
-	       current != newCollisions.end(); ++current) {
+        // collect all collisions
+        QCanvasItemList newCollisions = canvas_->collisions(rect);
+        QCanvasItemList::const_iterator current;
+        for (current = newCollisions.begin();
+               current != newCollisions.end(); ++current) {
 
-	    unsigned *value = new unsigned;
-	    if (INSTANCEOF(*current, ConnectorViewSegment)) {
-		*value += 5000;
-	    }
-	    else if (INSTANCEOF(*current, BlockView)) {
-		*value += 10000;
-	    }
-	    // current is inserted only once. If the same current is
-	    // intersected by a different rect then the value will be
-	    // updated but not inserted a second time.
-	    collisions.insert(*current, value);
-	}
+            unsigned *value = new unsigned;
+            if (INSTANCEOF(*current, ConnectorViewSegment)) {
+                *value += 5000;
+            }
+            else if (INSTANCEOF(*current, BlockView)) {
+                *value += 10000;
+            }
+            // current is inserted only once. If the same current is
+            // intersected by a different rect then the value will be
+            // updated but not inserted a second time.
+            collisions.insert(*current, value);
+        }
     }
 
     // sum up collision weight
@@ -626,30 +635,30 @@ unsigned ConnectorViewList::lineWeight(QPoint from, QPoint to)
     int left = QMIN(from.x(), to.x());
     int top = QMIN(from.y(), to.y());
     QRect rect = QRect(left,
-		       top,
-		       QABS(from.x() - to.x()),
-		       QABS(from.y() - to.y()));
+                       top,
+                       QABS(from.x() - to.x()),
+                       QABS(from.y() - to.y()));
     if (rect.width() == 1) {
-	rect.setLeft(rect.left() - 1);
-	rect.setWidth(rect.width() + 1);
+        rect.setLeft(rect.left() - 1);
+        rect.setWidth(rect.width() + 1);
     }
     if (rect.height() == 1) {
-	rect.setTop(rect.top() - 1);
-	rect.setHeight(rect.height() + 1);
+        rect.setTop(rect.top() - 1);
+        rect.setHeight(rect.height() + 1);
     }
 
     // collect all collisions
     QCanvasItemList newCollisions = canvas_->collisions(rect);
     QCanvasItemList::const_iterator current;
     for (current = newCollisions.begin();
-	 current != newCollisions.end(); ++current) {
-	
-	if (INSTANCEOF(*current, ConnectorViewSegment)) {
-	    value += 5000;
-	}
-	else if (INSTANCEOF(*current, BlockView)) {
-	    value += 10000;
-	}
+         current != newCollisions.end(); ++current) {
+
+        if (INSTANCEOF(*current, ConnectorViewSegment)) {
+            value += 5000;
+        }
+        else if (INSTANCEOF(*current, BlockView)) {
+            value += 10000;
+        }
     }
 
     // calculate altogether weight
@@ -657,11 +666,11 @@ unsigned ConnectorViewList::lineWeight(QPoint from, QPoint to)
 }
 
 QValueList<QPoint> *ConnectorViewList::routeOptimizing(QPoint from,
-						       LineDirection fromDir,
-						       QPoint to,
-						       LineDirection toDir)
+                                                       LineDirection fromDir,
+                                                       QPoint to,
+                                                       LineDirection toDir)
 {
     return routeConnector(from, fromDir, to, toDir);
 
-    
+
 }

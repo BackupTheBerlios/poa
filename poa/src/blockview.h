@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.34 2003/11/19 16:18:06 squig Exp $
+ * $Id: blockview.h,v 1.35 2003/11/24 20:11:58 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,11 +27,14 @@
 
 #include <qapplication.h>
 #include <qcanvas.h>
-#include <qfontmetrics.h>
-#include <qvaluelist.h>
 #include <qdom.h>
+#include <qfontmetrics.h>
+#include <qobject.h>
+#include <qvaluelist.h>
 
-#include "abstractview.h"
+#include "copyable.h"
+#include "moveable.h"
+#include "serializable.h"
 #include "tooltipable.h"
 class AbstractModel;
 class PinModel;
@@ -46,7 +49,8 @@ class PinView;
  * <code>this->move</code> or <code>this->moveBy</code>) then all pin views
  * are moved as well. The pin views must not be moved separately.
  */
-class BlockView: public AbstractView, public QCanvasRectangle, public Tooltipable
+class BlockView: public QObject, public QCanvasRectangle, public Copyable,
+                 public Moveable, public Serializable, public Tooltipable
 {
     Q_OBJECT
 

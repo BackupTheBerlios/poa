@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.44 2003/10/01 16:12:40 squig Exp $
+ * $Id: canvasview.cpp,v 1.45 2003/11/24 20:11:58 squig Exp $
  *
  *****************************************************************************/
 
 #include "canvasview.h"
 
 #include "abstractmodel.h"
-#include "abstractview.h"
 #include "blockview.h"
 #include "blockconfdialog.h"
 #include "canvasviewaction.h"
@@ -38,6 +37,7 @@
 #include "project.h"
 #include "mainwindow.h"
 #include "modelfactory.h"
+#include "moveable.h"
 #include "moveaction.h"
 #include "muxconfdialog.h"
 #include "muxmodel.h"
@@ -144,8 +144,8 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             selectItem(topItem);
 
             // notify item that is has been clicked
-            AbstractView *item = dynamic_cast<AbstractView*>(topItem);
-            if (item != 0 && item->isDraggable()) {
+            Moveable *item = dynamic_cast<Moveable*>(topItem);
+            if (item != 0) {
                 setAction(new MoveAction(this, e, topItem));
             }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.5 2003/09/23 15:49:25 keulsn Exp $
+ * $Id: connectorviewsegment.cpp,v 1.6 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -58,7 +58,6 @@ void ConnectorViewSegment::setSelected(bool yes)
     viewList_->setSelected(yes);
 }
 
-/* SLOT */
 void ConnectorViewSegment::select(bool yes)
 {
     QCanvasLine::setSelected(yes);

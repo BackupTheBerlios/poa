@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.54 2003/11/24 16:37:41 squig Exp $
+# $Id: poa.pro,v 1.55 2003/11/24 20:11:59 squig Exp $
 #
 ###############################################################################
 
@@ -43,7 +43,6 @@ include(poa.local)
 # source files
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
-HEADERS += abstractview.h
 HEADERS += blockmodel.h
 HEADERS += blockview.h
 HEADERS += canvasview.h

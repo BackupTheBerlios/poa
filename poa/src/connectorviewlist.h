@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.11 2003/09/26 14:19:00 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.12 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,14 +28,14 @@
 
 #include <qcanvas.h>
 #include <qobject.h>
+class QDomDocument;
+class QDomElement;
 
 #include "poa.h"
-
+#include "serializable.h"
 class ConnectorViewSegment;
 class GridCanvas;
 class PinView;
-class QDomDocument;
-class QDomElement;
 
 /**
  * Definition of a doubly linked connector view list which is used to manage
@@ -47,7 +47,7 @@ class QDomElement;
  * <code>this</code>. During propagation some items may be removed or new
  * items may be inserted into the list.
  */
-class ConnectorViewList : public QObject
+class ConnectorViewList : public QObject//, public Serializable
 {
     Q_OBJECT
 
@@ -59,9 +59,9 @@ public:
      * pin for the given <code>model</code>.
      */
     ConnectorViewList(PinView *source,
-		      PinView *target,
-		      GridCanvas *canvas,
-		      QDomElement *element = 0);
+                      PinView *target,
+                      GridCanvas *canvas,
+                      QDomElement *element = 0);
 
     /**
      * Default destructor
@@ -104,6 +104,11 @@ public:
     void setSelected(bool);
 
     /**
+     * Does nothing, the view list is never displayed.
+     */
+    virtual void setVisible(bool visible);
+
+    /**
      * Serializes this instance to a xml subtree.
      * @param document the main QDomDocument instance. Needed to create
      *        elements
@@ -138,9 +143,9 @@ protected:
      * points.
      */
     QValueList<QPoint> *routeOptimizing(QPoint from,
-					LineDirection fromDir,
-					QPoint to,
-					LineDirection toDir);
+                                        LineDirection fromDir,
+                                        QPoint to,
+                                        LineDirection toDir);
 
     unsigned weight(const QValueList<QPoint> &points);
 
@@ -155,6 +160,7 @@ private:
     /** the current canvas */
     QCanvas *canvas_;
     /** List of all segments of this connector view */
+    // FIX: this list should contain ConnectorViewSegment objects only
     QCanvasItemList segments_;
 
 public slots:
@@ -170,7 +176,7 @@ public slots:
     void deleteView();
 
 private slots:
-    /** 
+    /**
      * Will be connected to the incident pin views' signal 'moved'.
      */
     void pinMoved(PinView*);

@@ -18,18 +18,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.65 2003/10/01 16:12:40 squig Exp $
+ * $Id: mainwindow.cpp,v 1.66 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
 #include "mainwindow.h"
 
 #include "aboutdialog.h"
-#include "cpuview.h"
 #include "blockview.h"
 #include "canvasview.h"
 #include "connectorviewlist.h"
 #include "connectorviewsegment.h"
+#include "copyable.h"
 #include "project.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
@@ -564,8 +564,9 @@ void MainWindow::editCopy()
             doc.appendChild(root);
             for (QCanvasItemList::iterator current = items.begin();
                  current != items.end(); ++current) {
-                AbstractView *item = dynamic_cast<AbstractView *>(*current);
-                if (item != 0 && item->model() != 0) {
+                Copyable *item = dynamic_cast<Copyable *>(*current);
+                if (item != 0) {
+                    Q_ASSERT(item->model() != 0);
                     root.appendChild(item->model()->serialize(&doc));
                 }
             }
@@ -608,25 +609,26 @@ void MainWindow::editRemove()
         if (!items.isEmpty()) {
             for (QCanvasItemList::iterator current = items.begin();
                  current != items.end(); ++current) {
-                AbstractView *item = dynamic_cast<AbstractView *>(*current);
-                if (item != 0 && item->model() != 0) {
-                    if (INSTANCEOF(item, BlockView)) {
-                        project_->removeBlock(item->model());
-                    }
-                    else Q_ASSERT("Irgensoeinanderesding removed");
-                }
-                else {
-                    ConnectorViewSegment *conn = dynamic_cast<ConnectorViewSegment *>(*current);
-                    if (conn != 0 && conn->viewList() != 0) {
-                        // delete segment from list and mem
-                        ConnectorViewList *l = conn->viewList();
-                        l->deleteSegment(conn);
-                        // if list is empty, delete it
-                        if (l->allSegments().empty()) {
-                            delete l;
-                        }
-                    }
-                }
+                // FIX
+//                  AbstractView *item = dynamic_cast<AbstractView *>(*current);
+//                  if (item != 0 && item->model() != 0) {
+//                      if (INSTANCEOF(item, BlockView)) {
+//                          project_->removeBlock(item->model());
+//                      }
+//                      else Q_ASSERT("Irgensoeinanderesding removed");
+//                  }
+//                  else {
+//                      ConnectorViewSegment *conn = dynamic_cast<ConnectorViewSegment *>(*current);
+//                      if (conn != 0 && conn->viewList() != 0) {
+//                          // delete segment from list and mem
+//                          ConnectorViewList *l = conn->viewList();
+//                          l->deleteSegment(conn);
+//                          // if list is empty, delete it
+//                          if (l->allSegments().empty()) {
+//                              delete l;
+//                          }
+//                      }
+//                  }
             }
         }
         view->canvas()->update();

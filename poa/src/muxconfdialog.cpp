@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.22 2003/09/30 17:18:14 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.23 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -93,7 +93,7 @@ MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
 }
 
 MuxListViewItem::~MuxListViewItem() {
-    if (clone != 0) {
+    if (clone_ != 0) {
         delete clone_;
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.23 2003/10/01 16:12:40 squig Exp $
+ * $Id: pinview.cpp,v 1.24 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -59,11 +59,6 @@ PinView::PinView(PinModel *model, BlockView *block,
 PinView::~PinView()
 {
     block_->deletePinView(this);
-}
-
-AbstractModel *PinView::model()
-{
-    return 0;
 }
 
 PinView::DockPosition PinView::dockPosition()

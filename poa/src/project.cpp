@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.30 2003/11/24 16:37:41 squig Exp $
+ * $Id: project.cpp,v 1.31 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -248,6 +248,7 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
+                // FIX: null pointer checks!
                 canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());

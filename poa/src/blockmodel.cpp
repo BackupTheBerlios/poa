@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.29 2003/11/24 16:37:41 squig Exp $
+ * $Id: blockmodel.cpp,v 1.30 2003/11/24 20:11:58 squig Exp $
  *
  *****************************************************************************/
 
@@ -224,10 +224,10 @@ PinModel *BlockModel::findPinById(unsigned id)
 QDomElement BlockModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
-    root.setAttribute("hasEpisodicPins", hasEpisodicPins());
-    root.setAttribute("hasInputPins", hasInputPins());
-    root.setAttribute("hasOutputPins", hasOutputPins());
-    root.setAttribute("hasRuntime", hasRuntime());
+    root.setAttribute("hasEpisodicPins", hasEpisodicPins() ? "true" : "false");
+    root.setAttribute("hasInputPins", hasInputPins() ? "true" : "false");
+    root.setAttribute("hasOutputPins", hasOutputPins() ? "true" : "false");
+    root.setAttribute("hasRuntime", hasRuntime() ? "true" : "false");
 
     root.setAttribute("block-type", "block");
     root.setAttribute("name", name());
@@ -258,6 +258,9 @@ void BlockModel::deserialize(QDomElement element)
 
     setExecTime(element.attribute("exectime","0").toUInt());
     setHasEpisodicPins(element.attribute("hasEpisodicPins", "") == "true");
+    setHasInputPins(element.attribute("hasInputPins", "") == "true");
+    setHasOutputPins(element.attribute("hasOutputPins", "") == "true");
+    setHasRuntime(element.attribute("hasRuntime", "") == "true");
 
     // pins
     inputPins_->clear();

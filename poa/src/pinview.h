@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.20 2003/09/23 15:49:25 keulsn Exp $
+ * $Id: pinview.h,v 1.21 2003/11/24 20:11:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,6 @@
 #include <qcanvas.h>
 #include <qvaluevector.h>
 
-#include "abstractview.h"
 #include "poa.h"
 #include "tooltipable.h"
 
@@ -39,7 +38,7 @@ class PinModel;
 /**
  * Definition of a Pin view.
  */
-class PinView: public AbstractView, public QCanvasRectangle,
+class PinView: public QObject, public QCanvasRectangle,
                public Tooltipable
 {
 
@@ -66,7 +65,7 @@ public:
     virtual ~PinView();
 
     /**
-     * Moves the canvas item relative to its current position by (dx, dy). 
+     * Moves the canvas item relative to its current position by (dx, dy).
      * Emits the signal 'moved'
      */
     virtual void moveBy(double dx, double dy);
@@ -93,11 +92,6 @@ public:
      * Returns the side on that <code>this</code> docks onto a blockview
      */
     DockPosition dockPosition();
-
-    /**
-     * Returns the corresponding model of this view.
-     */
-    virtual AbstractModel *model();
 
     /**
      * Returns the corresponding model of this view as a PinModel.

@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.13 2003/09/08 13:35:04 squig Exp $
+ * $Id: settings.h,v 1.14 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
 #include <qapplication.h>
+#include <qstringlist.h>
 #include <qvariant.h>
 #include <qobject.h>
 #include <qsettings.h>
@@ -47,18 +48,21 @@ public:
     bool getBool(const QString &key, bool defaultValue = FALSE);
     QFont getFont(const QString &key, QFont defaultValue = QApplication::font());
     int getNum(const QString &key, int defaultValue = 0);
+    QStringList getStrings(const QString &key, bool *ok = 0);
 
     bool set(const QString &key, const QString &value);
     bool set(const QString &key, bool value);
     bool set(const QString &key, int value);
+    bool set(const QString &key, const QStringList &value);
 
     QColor activatedColor();
+    void addToRecentProjects(QString filename);
     QColor defaultBrushColor();
     QColor defaultColor();
     int gridSize();
-    void setGridSize(int gridSize);
     QColor selectedColor();
     bool snapToGrid();
+    void setGridSize(int gridSize);
     void setSnapToGrid(bool snapToGrid);
 
 signals:
@@ -66,6 +70,7 @@ signals:
 
     // the following settings emit an additional signal
     void gridSizeChanged(int gridSize);
+    void recentProjectsChanged();
 
 protected:
     Settings();

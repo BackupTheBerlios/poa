@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.9 2003/09/08 13:35:04 squig Exp $
+ * $Id: settings.cpp,v 1.10 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
 
+#include "poa.h"
 
 /**
  * A common prefix used for all setting keys.
@@ -77,6 +78,13 @@ int Settings::getNum(const QString &key, int defaultValue)
     return settings.readNumEntry(PREFIX + key, defaultValue);
 }
 
+QStringList Settings::getStrings(const QString &key, bool *ok)
+{
+    QSettings settings;
+    return settings.readListEntry(PREFIX + key, ok);
+}
+
+
 
 bool Settings::set(const QString &key, const QString &value)
 {
@@ -114,6 +122,18 @@ bool Settings::set(const QString &key, int value)
     return FALSE;
 }
 
+bool Settings::set(const QString &key, const QStringList &value)
+{
+    QStringList oldValue = getStrings(key);
+    if (oldValue != value) {
+        QSettings settings;
+        settings.writeEntry(PREFIX + key, value);
+        emit settingChanged(key);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 //  void Settings::setDefault(QSettings* settings, const QString &key,
 //                            const QString &value)
 //  {
@@ -128,6 +148,19 @@ bool Settings::set(const QString &key, int value)
 QColor Settings::activatedColor()
 {
     return Qt::green;
+}
+
+void Settings::addToRecentProjects(QString filename)
+{
+    QStringList list = getStrings("RecentProjects");
+    list.remove(filename);
+    list.prepend(filename);
+    while (list.size() > MAX_RECENT_PROJECTS) {
+        list.pop_back();
+    }
+    if (set("RecentProjects", list)) {
+        emit recentProjectsChanged();
+    }
 }
 
 QColor Settings::defaultBrushColor()

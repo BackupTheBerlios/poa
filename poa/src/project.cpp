@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.15 2003/09/07 19:07:46 squig Exp $
+ * $Id: project.cpp,v 1.16 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -31,19 +31,16 @@
 
 #include <qdom.h>
 
-Project::Project(QString name)
-{
-    currentBlockId_ = 0;
-    currentConnectorId_ = 0;
-    name_ = name;
-}
-
 Project::Project(QString name, QDomDocument *document)
+    : filename_(QString::null)
 {
-    name_ = name;
     currentBlockId_ = 0;
     currentConnectorId_ = 0;
-    deserialize(document);
+    name_ = name;
+
+    if (document != 0) {
+        deserialize(document);
+    }
 }
 
 Project::~Project()
@@ -78,6 +75,11 @@ void Project::createViews(AbstractModel *item, int x, int y)
          (canvas = it.current()) != 0; ++it) {
         canvas->addView(item, x, y);
     }
+}
+
+QString Project::filename()
+{
+    return filename_;
 }
 
 QString Project::name()
@@ -143,6 +145,11 @@ QDomDocument Project::serialize()
         vlist.appendChild(vElem);
     }
     return doc;
+}
+
+void Project::setFilename(const QString &filename)
+{
+    filename_ = filename;
 }
 
 void Project::deserialize(QDomDocument *document) {

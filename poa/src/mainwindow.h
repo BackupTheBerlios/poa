@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.16 2003/09/08 16:03:59 squig Exp $
+ * $Id: mainwindow.h,v 1.17 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,29 @@ public:
      */
     QAction *pasteAction();
 
+public slots:
+    virtual void checkClipboardContent();
+    virtual void fileNew();
+    virtual void fileOpen();
+    virtual void fileSave();
+    virtual void fileSaveAs();
+    virtual void fileExit();
+    virtual void editCut();
+    virtual void editCopy();
+    virtual void editPaste();
+    virtual void helpContents();
+    virtual void helpAbout();
+    virtual void openModuleConf();
+    virtual void openProject(QString filename);
+    virtual void openRecentProject(int index);
+    virtual void openSettings();
+    virtual void saveProject();
+    virtual void windowActivated(QWidget *w);
+    virtual void zoomTo(const QString &level);
+    virtual void zoomIn();
+    virtual void zoomOut();
+    virtual void zoomNormal();
+
 protected:
     void closeEvent(QCloseEvent *);
 
@@ -102,6 +125,8 @@ private:
     QWorkspace* ws;
     Project *project_;
     static const uint DEFAULT_ZOOM_LEVEL = 4;
+
+    QPopupMenu *recentProjectsMenu;
 
     QComboBox *zoomComboBox;
     QToolBar *commonToolBar;
@@ -131,29 +156,10 @@ private:
     QAction *cascadeAction;
     QAction *tileAction;
 
-public slots:
-    virtual void checkClipboardContent();
-    virtual void fileNew();
-    virtual void fileOpen();
-    virtual void fileSave();
-    virtual void fileSaveAs();
-    virtual void fileExit();
-    virtual void editCut();
-    virtual void editCopy();
-    virtual void editPaste();
-    virtual void helpContents();
-    virtual void helpAbout();
-    virtual void openModuleConf();
-    virtual void openSettings();
-    virtual void windowActivated(QWidget* w);
-    virtual void zoomTo(const QString& level);
-    virtual void zoomIn();
-    virtual void zoomOut();
-    virtual void zoomNormal();
-
 private slots:
     void closeWindow();
     void tileHorizontal();
+    void updateRecentProjectsMenu();
 
 };
 

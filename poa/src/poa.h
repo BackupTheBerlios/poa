@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.4 2003/09/08 13:35:04 squig Exp $
+ * $Id: poa.h,v 1.5 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,5 +31,6 @@
  * Macro definitions
  */
 #define INSTANCEOF(ptr,class) (((ptr) != 0) && (dynamic_cast<class*>((ptr)) != 0))
+static const uint MAX_RECENT_PROJECTS = 5;
 
 #endif // POA_POA_H

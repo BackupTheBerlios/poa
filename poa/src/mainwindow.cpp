@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.39 2003/09/10 16:24:26 squig Exp $
+ * $Id: mainwindow.cpp,v 1.40 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -102,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     initializeMenu();
 
     connectActions();
+    connect(Settings::instance(), SIGNAL(recentProjectsChanged()),
+            this, SLOT(updateRecentProjectsMenu()));
 
     // disable most actions
     windowActivated(0);
@@ -239,6 +241,10 @@ void MainWindow::initializeMenu()
     fileMenu->insertSeparator();
     fileSaveAction->addTo(fileMenu);
     fileSaveAsAction->addTo(fileMenu);
+    fileMenu->insertSeparator();
+    recentProjectsMenu = new QPopupMenu(fileMenu);
+    fileMenu->insertItem(tr("&Recent"), recentProjectsMenu);
+    updateRecentProjectsMenu();
     fileMenu->insertSeparator();
     fileExitAction->addTo(fileMenu );
 
@@ -444,58 +450,35 @@ void MainWindow::fileNew()
 
 void MainWindow::fileOpen()
 {
-    //qWarning( "MainWindow::fileOpen(): Not implemented yet!" );
-    if (!closeAll()) {
-        return;
-    }
-
-    if (project_) {
-        delete project_;
-    }
-
-    QString fn = QFileDialog::getOpenFileName( QString::null, QString::null, this);
-    if (!fn.isEmpty()) {
-        QFile file(fn);
-        if (file.open(IO_ReadOnly)) {
-            QDomDocument doc;
-            if (doc.setContent(&file)) {
-                project_ = new Project(fn, &doc);
-                //               GridCanvas *canvas = new GridCanvas(project_);
-                //                project_->addCanvas(canvas);
-                //                project_->deserialize(&doc);
-                //                MdiWindow *w = new MdiWindow(project_, ws, 0, WDestructiveClose);
-                GridCanvas *canvas = project_->canvasList()->getFirst();
-                CanvasView *view = new CanvasView(project_, canvas);
-
-                MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
-                w->showMaximized();
-            } else {
-                QMessageBox::warning( 0, "File error",
-                              QString("Cannot open project file: "+fn));
-            }
-            file.close();
-        }
+    QString filename
+        = QFileDialog::getOpenFileName(QString::null, QString::null, this);
+    if (!filename.isEmpty()) {
+        openProject(filename);
     }
 }
 
 void MainWindow::fileSave()
 {
     if (project_) {
-        QString fn = QFileDialog::getSaveFileName( QString::null, QString::null, this);
-        if ( !fn.isEmpty() ) {
-            QFile file(fn);
-            if (file.open(IO_WriteOnly)) {
-                QTextStream ts(&file);
-                project_->serialize().save(ts, 2);
-                file.close();
-            }
+        if (project_->filename().isEmpty()) {
+            fileSaveAs();
+        }
+        else {
+            saveProject();
         }
     }
 }
 
 void MainWindow::fileSaveAs()
 {
-    qWarning( "MainWindow::fileSaveAs(): Not implemented yet!" );
+    QString filename
+        = QFileDialog::getSaveFileName(QString::null, QString::null, this);
+    if (!filename.isEmpty()) {
+        // FIX: check if file already exists
+        project_->setFilename(filename);
+        saveProject();
+        Settings::instance()->addToRecentProjects(filename);
+    }
 }
 
 void MainWindow::fileExit()
@@ -583,6 +566,55 @@ void MainWindow::openModuleConf()
     //         determine exit code
 }
 
+void MainWindow::openProject(QString filename)
+{
+    if (!closeAll()) {
+        return;
+    }
+
+    if (project_) {
+        delete project_;
+    }
+
+    // FIX: wo ist die Fehlerbehandlung?
+    QFile file(filename);
+    if (file.open(IO_ReadOnly)) {
+        QDomDocument doc;
+        if (doc.setContent(&file)) {
+            project_ = new Project(filename, &doc);
+            project_->setFilename(filename);
+            //               GridCanvas *canvas = new GridCanvas(project_);
+            //                project_->addCanvas(canvas);
+            //                project_->deserialize(&doc);
+            //                MdiWindow *w = new MdiWindow(project_, ws, 0, WDestructiveClose);
+            GridCanvas *canvas = project_->canvasList()->getFirst();
+            CanvasView *view = new CanvasView(project_, canvas);
+
+            MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
+            w->showMaximized();
+
+            Settings::instance()->addToRecentProjects(filename);
+        }
+        else {
+            QMessageBox::warning
+                (this, tr("File error"),
+                 tr("Cannot open project file: %1").arg(filename));
+        }
+        file.close();
+    }
+}
+
+void MainWindow::openRecentProject(int i)
+{
+    QStringList list = Settings::instance()->getStrings("RecentProjects");
+    if (i < (int)list.count()) {
+        openProject(list[i]);
+    }
+    else {
+        qWarning("Index out of range.");
+    }
+}
+
 void MainWindow::openSettings()
 {
     SettingsDialog *dialog = new SettingsDialog();
@@ -592,6 +624,33 @@ void MainWindow::openSettings()
 QAction *MainWindow::pasteAction()
 {
     return editPasteAction;
+}
+
+void MainWindow::updateRecentProjectsMenu()
+{
+    recentProjectsMenu->clear();
+
+    QStringList list = Settings::instance()->getStrings("RecentProjects");
+    QStringList::Iterator it = list.begin();
+    uint i = 0;
+    while(it != list.end() && i < MAX_RECENT_PROJECTS) {
+        recentProjectsMenu->insertItem(*it, this, SLOT(openRecentProject(int)),
+                                       0, i);
+        ++i;
+        ++it;
+    }
+    recentProjectsMenu->setEnabled(i > 0);
+}
+
+void MainWindow::saveProject()
+{
+    // FIX: wo ist die Fehlerbehandlung?
+    QFile file(project_->filename());
+    if (file.open(IO_WriteOnly)) {
+        QTextStream ts(&file);
+        project_->serialize().save(ts, 2);
+        file.close();
+    }
 }
 
 void MainWindow::windowActivated(QWidget* w)

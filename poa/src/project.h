@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.13 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: project.h,v 1.14 2003/09/10 18:01:35 squig Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -46,15 +46,9 @@ public:
     /**
      * Creates a new project with the given name.
      * @param name will be showed in the mdiwindow title
+     * @param document will be deserialized, if != 0
      */
-    Project(QString name);
-
-    /**
-     * Creates a new project and deserialized the given xml document
-     * @param document will be deserialized
-     * @param name will be showed in the mdiwindow title
-     */
-    Project(QString name, QDomDocument *document);
+    Project(QString name, QDomDocument *document = 0);
 
     /**
      * Destroys the project
@@ -81,6 +75,12 @@ public:
     void createViews(AbstractModel *item, int x = 0, int y = 0);
 
     /**
+     * Returns the project's filenname.
+     * @return QString::null, if no filename has been set
+     */
+    QString filename();
+
+    /**
      * Returns the <code>project</code>'s name
      */
     QString name();
@@ -101,6 +101,11 @@ public:
      */
     QDomDocument serialize();
 
+    /**
+     * Sets the project's filenname for serialization.
+     */
+    void setFilename(const QString &filename);
+
 private:
     /**
      * Deserializes the given xml document to this project
@@ -118,6 +123,8 @@ private:
     /** current model id - provides project-wide unique ids */
     uint currentBlockId_;
     uint currentConnectorId_;
+    /** The filename for serialization. */
+    QString filename_;
 };
 
 #endif // PROJECT_H

@@ -18,42 +18,38 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.11 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: genericpriorityqueue.h,v 1.1 2003/12/15 04:07:09 keulsn Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_POA_H
-#define POA_POA_H
 
-#include <qpoint.h>
+#ifndef POA_GENERIC_PRIORITY_QUEUE_H
+#define POA_GENERIC_PRIORITY_QUEUE_H
 
-/*
- * Macro definitions
- */
-#define INSTANCEOF(ptr,type) (((ptr) != 0) && (dynamic_cast<type*>(ptr) != 0))
+#include "priorityqueue.h"
 
-static const unsigned MAX_RECENT_PROJECTS = 5;
-static const unsigned WIDGET_SPACING = 5;
+template<class Item>
+class GenericPriorityQueue
+{
+public:
 
+  void insert(Item *item) { queue_.insert(item); }
 
-/**
- * Returns a string representation of <code>p</code>
- */
-QString image(QPoint p);
+  void remove(Item *item) { queue_.remove(item); }
 
+  void clear() { queue_.clear(); }
 
-/** Direction of a line to be drawn on a canvas. */
-enum LineDirection {UNKNOWN, UP, DOWN, LEFT, RIGHT};
+  Item *head() { return static_cast<Item*>(queue_.head()); }
 
-//    static LineDirection reverse(LineDirection dir);
-int distInDir(LineDirection dir, int x, int y);
-LineDirection alternateDir(LineDirection dir, int x, int y);
-bool isRightAngle(LineDirection first, LineDirection second);
-bool isTurn(LineDirection first, LineDirection second);
-LineDirection turnLeft(LineDirection dir);
-LineDirection turnRight(LineDirection dir);
-QString image(LineDirection dir);
-LineDirection operator-(LineDirection dir);
+  Item *removeHead() { return static_cast<Item*>(queue_.removeHead()); }
+
+  bool isEmpty() const { return queue_.isEmpty(); }
+
+  unsigned size() const { return queue_.size(); }
+
+private:
+    PriorityQueue queue_;
+};
 
 
-#endif // POA_POA_H
+#endif // POA_GENERIC_PRIORITY_QUEUE

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.61 2003/12/15 01:09:05 keulsn Exp $
+# $Id: poa.pro,v 1.62 2003/12/15 04:07:09 keulsn Exp $
 #
 ###############################################################################
 
@@ -55,9 +55,10 @@ HEADERS += connectorrouter.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
 HEADERS += cpumodel.h
-#HEADERS += dijkstrarouter.h
+HEADERS += dijkstrarouter.h
 HEADERS += directrouter.h
 HEADERS += deployprojectwizard.h
+HEADERS += genericpriorityqueue.h
 HEADERS += grid.h
 HEADERS += gridcanvas.h
 HEADERS += layoutmanager.h
@@ -75,7 +76,6 @@ HEADERS += poa.h
 HEADERS += priorityqueue.h
 HEADERS += processdialog.h
 HEADERS += project.h
-HEADERS += reachedpoint.h
 HEADERS += router.h
 HEADERS += serializable.h
 HEADERS += settings.h
@@ -96,7 +96,7 @@ SOURCES += connectorrouter.cpp
 SOURCES += connectorviewlist.cpp
 SOURCES += connectorviewsegment.cpp
 SOURCES += cpumodel.cpp
-#SOURCES += dijkstrarouter.cpp
+SOURCES += dijkstrarouter.cpp
 SOURCES += directrouter.cpp
 SOURCES += deployprojectwizard.cpp
 SOURCES += grid.cpp
@@ -116,7 +116,6 @@ SOURCES += poa.cpp
 SOURCES += priorityqueue.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
-SOURCES += reachedpoint.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp

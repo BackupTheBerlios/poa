@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.1 2003/12/15 01:09:05 keulsn Exp $
+ * $Id: priorityqueue.cpp,v 1.2 2003/12/15 04:07:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -36,33 +36,7 @@ PriorityQueue::PriorityQueue()
 
 PriorityQueue::~PriorityQueue()
 {
-    PriorityItem *current = head_;
-    while (current != 0) {
-	PriorityItem *left = current->left();
-	PriorityItem *right = current->right();
-	if (left != 0) {
-	    // descend into left subtree first
-	    current = left;
-	}
-	else if (right != 0) {
-	    // descend into right subtree second
-	    current = right;
-	}
-	else {
-	    // no children --> remove
-	    PriorityItem *parent = current->parent();
-	    if (parent->left() == current) {
-		parent->setLeft(0);
-	    }
-	    else {
-		Q_ASSERT(parent->right() == current);
-		parent->setRight(0);
-	    }
-	    current->size_ = 0;
-
-	    current = parent;
-	}
-    }
+    clear();
 }
 
 void PriorityQueue::insert(PriorityItem *item)
@@ -201,6 +175,38 @@ void PriorityQueue::remove(PriorityItem *item)
 {
     Q_ASSERT(item != 0 && item->isInQueue());
     head_ = item->removeFromQueue();
+}
+
+
+void PriorityQueue::clear()
+{
+    PriorityItem *current = head_;
+    while (current != 0) {
+	PriorityItem *left = current->left();
+	PriorityItem *right = current->right();
+	if (left != 0) {
+	    // descend into left subtree first
+	    current = left;
+	}
+	else if (right != 0) {
+	    // descend into right subtree second
+	    current = right;
+	}
+	else {
+	    // no children --> remove
+	    PriorityItem *parent = current->parent();
+	    if (parent->left() == current) {
+		parent->setLeft(0);
+	    }
+	    else {
+		Q_ASSERT(parent->right() == current);
+		parent->setRight(0);
+	    }
+	    current->size_ = 0;
+
+	    current = parent;
+	}
+    }
 }
 
 PriorityItem *PriorityQueue::head()

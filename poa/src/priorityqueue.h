@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.1 2003/12/15 01:09:05 keulsn Exp $
+ * $Id: priorityqueue.h,v 1.2 2003/12/15 04:07:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -50,8 +50,8 @@ public:
 
     /**
      * Removes all items from this queue.
-     * Postcondition: Any item that was contained in this queue is not
-     * contained in any queue.
+     * Postcondition: Any item that was contained in this queue will not
+     * be contained in any queue.
      */
     virtual ~PriorityQueue();
 
@@ -70,6 +70,13 @@ public:
      * Postcondition: <code>*item</code> is not contained in any queue.
      */
     void remove(PriorityItem *item);
+
+    /**
+     * Clears this queue.
+     * Postcondition: Any item that was contained in this queue will not
+     * be contained in any queue.
+     */
+    void clear();
 
     /**
      * Returns a pointer to one of the highest-priority items. If there is

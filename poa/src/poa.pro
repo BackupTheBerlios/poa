@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.37 2003/09/16 15:18:13 garbeam Exp $
+# $Id: poa.pro,v 1.38 2003/09/18 01:51:17 keulsn Exp $
 #
 ###############################################################################
 
@@ -41,11 +41,11 @@ HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
 HEADERS += connectaction.h
 HEADERS += connectorview.h
-HEADERS += connectorviewlist.h
 HEADERS += coremodel.h
 HEADERS += coreview.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h
+HEADERS += grid.h
 HEADERS += inputmodel.h
 HEADERS += inputview.h
 HEADERS += layoutmanager.h
@@ -75,14 +75,13 @@ SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
-SOURCES += codemanager.cpp
 SOURCES += connectaction.cpp
 SOURCES += connectorview.cpp
-SOURCES += connectorviewlist.cpp
 SOURCES += coremodel.cpp
 SOURCES += coreview.cpp
 SOURCES += cpumodel.cpp
 SOURCES += cpuview.cpp
+SOURCES += grid.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp
 SOURCES += main.cpp

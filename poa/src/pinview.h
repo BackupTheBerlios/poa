@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.13 2003/09/16 09:54:39 garbeam Exp $
+ * $Id: pinview.h,v 1.14 2003/09/18 01:51:17 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include <qvaluevector.h>
 
 #include "abstractview.h"
+#include "poa.h"
 #include "tooltipable.h"
 
 class BlockView;
@@ -41,7 +42,6 @@ class PinModel;
 class PinView: public AbstractView, public QCanvasRectangle,
                public Tooltipable
 {
-    Q_OBJECT
 
 public:
 
@@ -68,6 +68,11 @@ public:
      * pin view.
      */
     QPoint connectorPoint();
+
+    /**
+     * Returns the direction that the docking line of a connector must have
+     */
+    LineDirection connectorDirection();
 
     /**
      * Returns the side on that <code>this</code> docks onto a blockview
@@ -109,12 +114,6 @@ private:
 
     DockPosition dockPosition_;
     PinModel *model_;
-
-public slots:
-    void deleteView();
-
-signals:
-    void deleted(PinView *);
-
 };
+
 #endif // POA_PINVIEW_H

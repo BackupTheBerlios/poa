@@ -18,153 +18,651 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.8 2003/09/15 17:38:51 garbeam Exp $
+ * $Id: connectorview.cpp,v 1.9 2003/09/18 01:51:17 keulsn Exp $
  *
  *****************************************************************************/
 
 
+#include <math.h>
+
 #include "connectorview.h"
+#include "grid.h"
 #include "pinmodel.h"
 #include "blockmodel.h"
 
-ConnectorView::ConnectorView(
-                 PinView *from,
-                 PinView *to,
-                 QCanvas *canvas)
+
+ConnectorView::ConnectorView(PinView *from,
+			     PinView *to,
+			     QCanvas *canvas)
     : QCanvasLine(canvas)
 {
-    from_ = from;
-    to_ = to;
-
-    connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
-    connect(to->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
-    bool changeDirection;
-    bool positiveDirection;
-    PinView::DockPosition dock = from->dockPosition();
-
-    switch (dock) {
-    case PinView::PIN_LEFT:
-    changeDirection = (to->connectorPoint().x()
-               >= from->connectorPoint().x());
-    setOrientation(HORIZONTAL);
-    positiveDirection = false;
-    break;
-    case PinView::PIN_RIGHT:
-    changeDirection = (to->connectorPoint().x()
-               <= from->connectorPoint().x());
-    setOrientation(HORIZONTAL);
-    positiveDirection = true;
-    break;
-    case PinView::PIN_TOP:
-    changeDirection = (to->connectorPoint().y()
-               >= from->connectorPoint().y());
-    setOrientation(VERTICAL);
-    positiveDirection = false;
-    break;
-    case PinView::PIN_BOTTOM:
-    changeDirection = (to->connectorPoint().y()
-               <= from->connectorPoint().y());
-    setOrientation(VERTICAL);
-    positiveDirection = true;
-    break;
-    }
-    dockToSource(from);
-
-    if (changeDirection) {
-    // must add a short line, then turn around and find a way towards
-    // the pin
-    QPoint nextPoint = startPoint();
-    if (orientation_ == HORIZONTAL) {
-        if (positiveDirection) {
-        nextPoint.setX(nextPoint.x() + DEFAULT_DOCK_LINE_LENGTH);
-        } else {
-        nextPoint.setX(nextPoint.x() - DEFAULT_DOCK_LINE_LENGTH);
-        }
-    } else {
-        if (positiveDirection) {
-        nextPoint.setY(nextPoint.y() + DEFAULT_DOCK_LINE_LENGTH);
-        } else {
-        nextPoint.setY(nextPoint.y() - DEFAULT_DOCK_LINE_LENGTH);
-        }
-    }
-
-    ConnectorView *nextSegment =
-        new ConnectorView(nextPoint,
-                  inflection(orientation_),
-                  from,
-                  to,
-                  canvas);
-    dockToTarget(nextSegment);
-    } else {
-    // find inflection point
-    QPoint point = firstInflectionPoint(startPoint(),
-                        orientation_,
-                        to->connectorPoint(),
-                        to->dockPosition());
-    if (point == to->connectorPoint()) {
-        // pin is reached directly
-        dockToTarget(to);
-    } else {
-        // add inflection point
-        ConnectorView *nextSegment =
-        new ConnectorView(point,
-                  inflection(orientation_),
-                  from,
-                  to,
-                  canvas);
-        dockToTarget(nextSegment);
-    }
-    }
+    from_ = 0;
+    to_ = 0;
+    first_ = true;
+    last_ = true;
+    prev_.pin = 0;
+    next_.pin = 0;
+    
+    /*    QValueList<QPoint> *list = routeConnector(from->connectorPoint(),
+					      from->connectorDirection(),
+					      true,
+					      to->connectorPoint(),
+					      to->connectorDirection(),
+					      true);*/
+    QValueList<QPoint> *list = routeConnector(from->connectorPoint(),
+					      from->connectorDirection(),
+					      to->connectorPoint(),
+					      to->connectorDirection());
+    applyPointList(list, to);
 }
 
-ConnectorView::ConnectorView(QPoint start,
-                             LineOrientation orientation,
-                             PinView *from,
-                             PinView *to,
-                             QCanvas *canvas)
+ConnectorView::ConnectorView(PinView *from,
+			     QPoint to,
+			     LineDirection toDir,
+			     QCanvas *canvas)
     : QCanvasLine(canvas)
 {
-    from_ = from;
-    to_ = to;
-    connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
-    connect(to->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
-    orientation_ = orientation;
+    from_ = 0;
+    to_ = 0;
+    first_ = true;
+    last_ = true;
+    prev_.pin = 0;
+    next_.pin = 0;
+    
+    QValueList<QPoint> *list = /*routeConnector(from->connectorPoint(),
+					      from->connectorDirection(),
+					      true,
+					      to,
+					      toDir,
+					      false);*/ 0;
+    applyPointList(list);
+}
+
+
+ConnectorView::ConnectorView(QPoint first,
+			     QPoint second,
+			     QCanvas *canvas)
+    : QCanvasLine(canvas)
+{
     first_ = true;
     prev_.pin = 0;
-    setPoints(start.x(), start.y(), start.x(), start.y());
-
-    QPoint point = firstInflectionPoint(startPoint(),
-                    orientation_,
-                    to->connectorPoint(),
-                    to->dockPosition());
-    if (point == to->connectorPoint()) {
-    // pin is reached directly
-    dockToTarget(to);
-    } else {
-    // add inflection point
-    ConnectorView *nextSegment =
-        new ConnectorView(point,
-                  inflection(orientation_),
-                  from,
-                  to,
-                  canvas);
-    dockToTarget(nextSegment);
-    }
+    last_ = true;
+    next_.pin = 0;
+    setPoints(first.x(), first.y(), second.x(), second.y());
 }
 
 ConnectorView::~ConnectorView()
 {
+    if (first_ && prev_.pin != 0) {
+	// FIX: notify prev_.pin
+    }
+    if (last_ && next_.pin != 0) {
+	// FIX: notify next_.pin
+    }
 }
 
-PinView *ConnectorView::from()
+
+LineDirection operator-(LineDirection dir)
 {
-    return from_;
+    switch (dir) {
+    case LEFT:
+        return RIGHT;
+    case RIGHT:
+	return LEFT;
+    case UP:
+	return DOWN;
+    case DOWN:
+	return UP;
+    case UNKNOWN:
+	return UNKNOWN;
+    default:
+	Q_ASSERT(false);
+	return UNKNOWN;
+    }
 }
 
-PinView *ConnectorView::to()
+int distInDir(LineDirection dir, int x, int y)
 {
-    return to_;
+    switch (dir) {
+    case LEFT:
+	return -x;
+    case RIGHT:
+	return x;
+    case UP:
+	return -y;
+    case DOWN:
+	return y;
+    default:
+	Q_ASSERT(false);
+	return 0;
+    }
 }
+
+LineDirection alternateDir(LineDirection dir, int x, int y)
+{
+    switch (dir) {
+    case LEFT:
+    case RIGHT:
+	if (y > 0) {
+	    return DOWN;
+	}
+	else {
+	    return UP;
+	}
+    case UP:
+    case DOWN:
+	if (x > 0) {
+	    return RIGHT;
+	}
+	else {
+	    return LEFT;
+	}
+    default:
+	Q_ASSERT(false);
+	return UNKNOWN;
+    }
+}
+
+
+bool isRightAngle(LineDirection first, LineDirection second)
+{
+    switch (first) {
+    case LEFT:
+    case RIGHT:
+	return second == UP || second == DOWN;
+    case UP:
+    case DOWN:
+	return second == LEFT || second == RIGHT;
+    case UNKNOWN:
+	return false;
+    default:
+	Q_ASSERT(false);
+	return false;
+    }
+}
+
+bool isTurn(LineDirection first, LineDirection second)
+{
+  Q_ASSERT(first != UNKNOWN && second != UNKNOWN);
+  return first == LEFT && second == LEFT
+    || first == RIGHT && second == RIGHT
+    || first == UP && second == UP
+    || first == DOWN && second == DOWN;
+}
+
+LineDirection turnLeft(LineDirection dir)
+{
+    switch (dir) {
+    case LEFT:
+	return DOWN;
+    case DOWN:
+	return RIGHT;
+    case RIGHT:
+	return UP;
+    case UP:
+	return LEFT;
+    default:
+	Q_ASSERT(false);
+	return UNKNOWN;
+    }
+}
+
+LineDirection turnRight(LineDirection dir)
+{
+    return -turnLeft(dir);
+}
+
+
+QValueList<QPoint> *ConnectorView::routeConnector(QPoint from,
+						  LineDirection fromDir,
+						  QPoint to,
+						  LineDirection toDir)
+{
+    Q_ASSERT(fromDir != UNKNOWN);
+
+    int x;
+    int y;
+    Grid grid(from, to, 10);
+    grid.getGridDistance(from, to, x, y);
+    Q_ASSERT(grid.move(from, x, y) == to);
+
+    int fromDist = distInDir(fromDir, x, y);
+    LineDirection fromAlternateDir = alternateDir(fromDir, x, y);
+    int fromAlternateDist = distInDir(fromAlternateDir, x, y);
+    Q_ASSERT(fromAlternateDist >= 0);
+
+    QValueList<QPoint> *list = new QValueList<QPoint>;
+    list->append(from);
+
+    QPoint next = from;
+
+    if (toDir == UNKNOWN) {
+	// FIX: implementation missing
+	Q_ASSERT(false);
+    }
+    else if (fromDir == toDir) {
+        if (fromDist >= 0 && fromAlternateDist == 0) {
+	    // straight line, already done.
+	}
+        else if (fromDist >= 2 && fromAlternateDist >= 1) {
+	    // one stair
+	    next = grid.move(from, fromDir, fromDist / 2);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, fromAlternateDist);
+	    list->append(next);
+	}
+	else if (fromDist < 2 && fromAlternateDist >= 1) {
+	    // S-shape
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, fromAlternateDist / 2);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, abs(fromDist) + 2);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir,
+			     (fromAlternateDist + 1) / 2);
+	    list->append(next);
+	}
+	else { // fromDist < 0 && fromAlternateDist == 0
+	    // circle
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, turnLeft(fromDir), 1);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, abs(fromDist) + 2);
+	    list->append(next);
+	    next = grid.move(next, turnRight(fromDir), 1);
+	    list->append(next);
+	}
+    }
+    else if (isRightAngle(fromDir, toDir)) {
+	if (fromDist >= 1) {
+	    // one bending
+	    next = grid.move(from, fromDir, fromDist);
+	    list->append(next);
+	}
+	else if (fromAlternateDist >= 2) { // && fromDist <= 0
+	    // U-turn then one bending
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, fromAlternateDist / 2);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, abs(fromDist) + 1);
+	    list->append(next);
+	}
+	else { // 0 <= fromAlternateDist <= 1 && fromDist <= 0
+	    // spiral
+	    LineDirection dir;
+	    if (fromAlternateDir != UNKNOWN) {
+		dir = -fromAlternateDir;
+	    }
+	    else {
+		dir = turnLeft(fromDir);
+	    }
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, dir, 1);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, abs(fromDist) + 1);
+	    list->append(next);
+	}
+    }
+    else if (isTurn(fromDir, toDir)) {
+	if (fromAlternateDist == 0) {
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, turnLeft(fromDir), 1);
+	    list->append(next);
+	    next = grid.move(next, fromDir, abs(fromDist));
+	    list->append(next);
+	    next = grid.move(next, turnRight(fromDir), 1);
+	    list->append(next);
+	}
+	else {
+	    // U-turn
+	    if (abs(fromDist) >= 0) {
+		next = grid.move(from, fromDir, abs(fromDist) + 1);
+	    }
+	    else {
+		next = grid.move(from, fromDir, 1);
+	    }
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, fromAlternateDist);
+	    list->append(next);
+	}
+    }
+
+    list->append(to);
+    return list;
+}
+
+
+void ConnectorView::applyPointList(QValueList<QPoint> *list,
+				   PinView *targetPin = 0)
+{
+    ConnectorView *current = this;
+    QPoint first;
+    qDebug("list->front()");
+    QPoint second = list->front();
+    qDebug("pop_front()");
+    list->pop_front();
+    qDebug("done.");
+    // if only one point is on list, then this point must be used.
+    setPoints(second.x(), second.y(), second.x(), second.y());
+    while (!list->isEmpty()) {
+	first = second;
+	second = list->front();
+	list->pop_front();
+	current->setPoints(first.x(), first.y(), second.x(), second.y());
+	if (!list->isEmpty()) {
+	    if (!current->last_) {
+		current = current->next_.connector;
+	    }
+	    else {
+		ConnectorView *newOne = new ConnectorView(first,
+							  second,
+							  canvas());
+		newOne->setNextPin(current->next_.pin);
+		newOne->setPrevConnector(current);
+		current->setNextConnector(newOne);
+		current = newOne;
+	    }
+	}
+    }
+    
+    qDebug("destroySuccessors()");
+    current->destroySuccessors();
+    qDebug("done.");
+    if (current->next_.pin != targetPin) {
+	current->setNextPin(targetPin);
+    }
+    qDebug("delete list");
+    delete list;
+    qDebug("done.");
+}
+
+void ConnectorView::destroySuccessors()
+{
+    if (!this->last_) {
+	PinView *targetPin = 0;
+	ConnectorView *current = this->next_.connector;
+	while (current != 0) {
+	    ConnectorView *prev = current;
+	    if (!prev->last_) {
+		current = prev->next_.connector;
+	    }
+	    else {
+		targetPin = prev->next_.pin;
+		current = 0;
+	    }
+	    delete prev;
+	}
+
+	setNextPin(targetPin);
+    }
+    qDebug("destroySuccessors done.");
+}
+
+
+/*
+bool ConnectorView::canUseDir(LineDirection goDir,
+			      bool honorGoDir,
+			      LineDirection dir)
+{
+    return (dir != UNKNOWN && (honorGoDir && goDir == dir))
+	|| (!honorGoDir && isRightAngle(goDir, dir));
+}
+
+
+QValueList<QPoint> *ConnectorView::routeUsingLastButOne(QPoint startPoint,
+							LineDirection startDir,
+							bool honorStartDir,
+							QPoint lastButOne,
+							QPoint endPoint)
+{
+    LineDirection dir;
+    if (lastButOne.x() < endPoint.x()) {
+	dir = RIGHT;
+	Q_ASSERT(lastButOne.y() == endPoint.y());
+    }
+    else if (lastButOne.x() > endPoint.x()) {
+	dir = LEFT;
+	Q_ASSERT(lastButOne.y() == endPoint.y());
+    }
+    else if (lastButOne.y() < endPoint.y()) {
+	dir = DOWN;
+	Q_ASSERT(lastButOne.x() == endPoint.x());
+    }
+    else if (lastButOne.y() > endPoint.y()) {
+	dir = UP;
+	Q_ASSERT(lastButOne.x() == endPoint.y());
+    }
+    else {
+	Q_ASSERT(false);
+    }
+    QValueList<QPoint> *list = routeConnector(startPoint, 
+					      startDir,
+					      honorStartDir,
+					      lastButOne,
+					      dir,
+					      false);
+    list->append(endPoint);
+    return list;
+}
+
+unsigned counter = 0;
+
+QValueList<QPoint> *ConnectorView::routeConnector(QPoint startPoint,
+						  LineDirection startDir,
+						  bool honorStartDir,
+						  QPoint endPoint,
+						  LineDirection endDir,
+						  bool honorEndDir)
+{
+    qDebug(QString("routeConnector(QPoint(") +
+	   QString::number(startPoint.x()) + ", " +
+	   QString::number(startPoint.y()) + "), QPoint(" + 
+	   QString::number(endPoint.x()) + ", " +
+	   QString::number(endPoint.y()) + "))");
+    int x;
+    int y;
+
+    Grid grid(startPoint, endPoint, 10);
+
+    LineDirection currentDir = startDir;
+    bool honorCurrentDir = honorStartDir;
+    QPoint currentPoint = startPoint;
+
+    QValueList<QPoint> *list = new QValueList<QPoint>;
+    QValueList<QPoint> *afterList = new QValueList<QPoint>;
+
+    while (currentPoint != endPoint && counter < 30) {
+
+	++counter;
+	list->append(currentPoint);
+	qDebug("Point = (" + QString::number(currentPoint.x()) + ", " +
+	       QString::number(currentPoint.y()) + ")");
+
+	grid.getGridDistance(currentPoint, endPoint, x, y);
+
+	LineDirection direct = UNKNOWN;
+	LineDirection primary = UNKNOWN;
+	LineDirection secondary = UNKNOWN;
+
+	if (x > 0) {
+	    primary = RIGHT;
+	    qDebug("primary == RIGHT");
+	}
+	else if (x < 0) {
+	    primary = LEFT;
+	    qDebug("primary == LEFT");
+	}
+
+	if (y > 0) {
+	    secondary = DOWN;
+	    qDebug("secondary == DOWN");
+	}
+	else if (y < 0) {
+	    secondary = UP;
+	    qDebug("secondary == UP");
+	}
+
+	unsigned primaryDistance = abs(x);
+	unsigned secondaryDistance = abs(y);
+
+	if (primaryDistance < secondaryDistance) {
+	    //	    qDebug("xchange dirs");
+	    LineDirection temp = primary;
+	    primary = secondary;
+	    primary = temp;
+	    unsigned distTemp = primaryDistance;
+	    primaryDistance = secondaryDistance;
+	    secondaryDistance = distTemp;
+	}
+
+	qDebug("primaryDistance == " + QString::number(primaryDistance));
+	qDebug("secondaryDistance == " + QString::number(secondaryDistance));
+
+	// Check if direct connection using a straight line is possible
+	if (secondary == UNKNOWN) {
+	    // primary may be UNKNOWN as well. In that case startPoint ==
+	    // endPoint
+	    direct = primary;
+	    //	    qDebug("Using direct connection");
+	}
+	else {
+	    direct = UNKNOWN;
+	    //	    qDebug("direct == UNKNOWN");
+	}
+
+	// Check if direct connection in a straight line is possible
+	bool directPossible = direct != UNKNOWN
+	    && canUseDir(currentDir, honorCurrentDir, direct)
+	    && canUseDir(endDir, honorEndDir, direct);
+
+	if (directPossible) {
+	    qDebug("directPossible");
+	}
+	else {
+	    qDebug("!directPossible");
+	}
+
+	bool stepDone = false;
+	if (directPossible) {
+	    // Direct connection possible
+	    afterList->prepend(endPoint);
+	    currentPoint = endPoint;
+	    stepDone = true;
+	}
+	else if (honorEndDir) {
+	    // No direct connection possible, weaken end direction
+
+	    // Add last segment, if its length predictably == 1
+	    switch (endDir) {
+	    case RIGHT:
+		if (x <= 0 || (x == 1 && (y != 0 || !canUseDir(currentDir,
+							       honorCurrentDir,
+							       RIGHT)))) {
+		    // docking at end point not possible in a straight line
+		    afterList->prepend(endPoint);
+		    endPoint = grid.move(endPoint, LEFT, 1);
+		    honorEndDir = false;
+		    stepDone = true;
+		}
+		break;
+	    case LEFT:
+		if (x >= 0 || (x == -1 && (y != 0 || !canUseDir(currentDir,
+								honorCurrentDir,
+								LEFT)))) {
+		    // docking at end point not possible in a straight line
+		    afterList->prepend(endPoint);
+		    endPoint = grid.move(endPoint, RIGHT, 1);
+		    honorEndDir = false;
+		    stepDone = true;
+		}
+		break;
+	    case DOWN:
+		if (y <= 0 || (y == 1 && (x != 0 || !canUseDir(currentDir,
+							       honorCurrentDir,
+							       DOWN)))) {
+		    // docking at end point not possible in a straight line
+		    afterList->prepend(endPoint);
+		    endPoint = grid.move(endPoint, UP, 1);
+		    honorEndDir = false;
+		    stepDone = true;
+		}
+		break;
+	    case UP:
+		if (y >= 0 || (y == -1 && (x != 0 || !canUseDir(currentDir,
+								honorCurrentDir,
+								UP)))) {
+		    // docking at end point not possible in a straight line
+		    afterList->prepend(endPoint);
+		    endPoint = grid.move(endPoint, DOWN, 1);
+		    honorEndDir = false;
+		    stepDone = true;
+		}
+		break;
+	    }
+	}
+
+	if (!stepDone) {
+	    // No last segment added.
+	    // Try to satisfy direct as much as possible trying primary and
+	    // secondary directions
+	    Q_ASSERT(primary != UNKNOWN);
+	    if (!canUseDir(currentDir, honorCurrentDir, primary)) {
+		primary = secondary;
+		primaryDistance = secondaryDistance;
+		secondary = UNKNOWN;
+	    }
+	    else if (!canUseDir(currentDir, honorCurrentDir, secondary)) {
+		secondary = UNKNOWN;
+	    }
+
+	    unsigned distance;
+	    
+	    if (primary == UNKNOWN) {
+		// no sensible direction possible, must turn around
+		if (honorCurrentDir) {
+		    // must go one dummy step to weaken honorCurrentDir
+		    primary = currentDir;
+		}
+		else {
+		    // must choose one direction orthogonal to currentDir
+		    primary = turnLeft(currentDir);
+		}
+		distance = 1;
+	    }
+	    else {
+		// Choose a decent direction and distance
+		if (isRightAngle (primary, endDir) || !honorEndDir) {
+		    distance = primaryDistance;
+		}
+		else {
+		    distance = primaryDistance / 2;
+		}
+	    }
+
+	    /*qDebug("next point == " +
+	      QString::number(dest.x()) + ", " + QString::number(dest.y()));
+
+	    currentPoint = grid.move(currentPoint, primary, distance);
+	    currentDir = primary;
+	    honorCurrentDir = false;
+
+	}
+    }
+
+    while (!afterList->isEmpty()) {
+	list->append(afterList->front());
+	afterList->pop_front();
+    }
+    list->append(endPoint);
+
+    return list;
+}*/
+
 
 QCanvasItemList ConnectorView::allSegments()
 {
@@ -182,34 +680,6 @@ QCanvasItemList ConnectorView::allSegments()
     return list;
 }
 
-ConnectorView::LineOrientation ConnectorView::inflection
-                                                  (LineOrientation orientation)
-{
-    switch (orientation) {
-    case HORIZONTAL:
-    return VERTICAL;
-    case VERTICAL:
-    return HORIZONTAL;
-    case UNKNOWN:
-    return UNKNOWN;
-    default:
-    // never happens, avoid compiler warning
-    Q_ASSERT(false);
-    return UNKNOWN;
-    }
-}
-
-void ConnectorView::setStartPoint(QPoint start)
-{
-    QPoint end = endPoint();
-    setPoints(start.x(), start.y(), end.x(), end.y());
-}
-
-void ConnectorView::setEndPoint(QPoint end)
-{
-    QPoint start = startPoint();
-    setPoints(start.x(), start.y(), end.x(), end.y());
-}
 
 void ConnectorView::setPrevConnector(ConnectorView *prev)
 {
@@ -235,167 +705,6 @@ void ConnectorView::setNextPin(PinView *target)
     next_.pin = target;
 }
 
-
-void ConnectorView::dockToSource(PinView *source)
-{
-    setPrevPin(source);
-
-    int x;
-    int y;
-    int oldX = endPoint().x();
-    int oldY = endPoint().y();
-    QPoint sourcePoint = source->connectorPoint();
-
-    switch (source->dockPosition()) {
-    case PinView::PIN_LEFT:
-    x = sourcePoint.x() - 1;
-    y = sourcePoint.y();
-    Q_ASSERT(orientation_ == HORIZONTAL);
-    break;
-    case PinView::PIN_RIGHT:
-    x = sourcePoint.x() + 1;
-    y = sourcePoint.y();
-    Q_ASSERT(orientation_ == HORIZONTAL);
-    break;
-    case PinView::PIN_TOP:
-    x = sourcePoint.x();
-    y = sourcePoint.y() - 1;
-    Q_ASSERT(orientation_ == VERTICAL);
-    break;
-    case PinView::PIN_BOTTOM:
-    x = sourcePoint.x();
-    y = sourcePoint.y() + 1;
-    Q_ASSERT(orientation_ == VERTICAL);
-    break;
-    }
-    if (orientation_ == HORIZONTAL) {
-    setPoints(x, y, oldX, y);
-    } else if (orientation_ == VERTICAL) {
-    setPoints(x, y, x, oldY);
-    } else {
-    setPoints(x, y, x, y);
-    }
-}
-
-void ConnectorView::dockToSource(ConnectorView *from)
-{
-    Q_ASSERT(orientation_ != UNKNOWN);
-    this->setPrevConnector(from);
-    from->setNextConnector(this);
-    Q_ASSERT((orientation_ == HORIZONTAL
-          && this->endPoint().y() == from->endPoint().y())
-         || (orientation_ == VERTICAL
-         && this->endPoint().x() == from->endPoint().x()));
-    setStartPoint(from->endPoint());
-}
-
-void ConnectorView::dockToTarget(PinView *target)
-{
-    setNextPin(target);
-
-    int x;
-    int y;
-    int oldX = endPoint().x();
-    int oldY = endPoint().y();
-    QPoint targetPoint = target->connectorPoint();
-
-    switch (target->dockPosition()) {
-    case PinView::PIN_LEFT:
-    x = targetPoint.x() - 1;
-    y = targetPoint.y();
-    Q_ASSERT(orientation_ == HORIZONTAL);
-    break;
-    case PinView::PIN_RIGHT:
-    x = targetPoint.x() + 1;
-    y = targetPoint.y();
-    Q_ASSERT(orientation_ == HORIZONTAL);
-    break;
-    case PinView::PIN_TOP:
-    x = targetPoint.x();
-    y = targetPoint.y() - 1;
-    Q_ASSERT(orientation_ == VERTICAL);
-    break;
-    case PinView::PIN_BOTTOM:
-    x = targetPoint.x();
-    y = targetPoint.y() + 1;
-    Q_ASSERT(orientation_ == VERTICAL);
-    break;
-    }
-
-    if (orientation_ == HORIZONTAL) {
-    setPoints(oldX, y, x, y);
-    } else if (orientation_ == VERTICAL) {
-    setPoints(x, oldY, x, y);
-    } else {
-    setPoints(x, y, x, y);
-    }
-}
-
-void ConnectorView::dockToTarget(ConnectorView *to)
-{
-    Q_ASSERT(orientation_ != UNKNOWN);
-    this->setNextConnector(to);
-    to->setPrevConnector(this);
-    Q_ASSERT((orientation_ == HORIZONTAL
-          && this->startPoint().y() == to->startPoint().y())
-         || (orientation_ == VERTICAL
-         && this->startPoint().x() == to->startPoint().x()));
-    setEndPoint(to->startPoint());
-}
-
-void ConnectorView::setOrientation(LineOrientation orientation)
-{
-    orientation_ = orientation;
-}
-
-QPoint ConnectorView::firstInflectionPoint(QPoint start,
-                       LineOrientation orientation,
-                       QPoint end,
-                       PinView::DockPosition dock)
-{
-    LineOrientation targetOrientation;
-    switch (dock) {
-    case PinView::PIN_LEFT:
-    case PinView::PIN_RIGHT:
-    targetOrientation = HORIZONTAL;
-    break;
-    case PinView::PIN_TOP:
-    case PinView::PIN_BOTTOM:
-    targetOrientation = VERTICAL;
-    break;
-    default:
-    // never happens
-    targetOrientation = UNKNOWN;
-    break;
-    }
-
-    if (orientation == HORIZONTAL) {
-    if (targetOrientation == HORIZONTAL) {
-        if (start.y() == end.y()) {
-        return end;
-        } else {
-        return QPoint((start.x() + end.x()) / 2, start.y());
-        }
-    } else {
-        Q_ASSERT(targetOrientation == VERTICAL);
-        return QPoint(end.x(), start.y());
-    }
-
-    } else {
-    Q_ASSERT(orientation == VERTICAL);
-    if (targetOrientation == HORIZONTAL) {
-        return QPoint(start.x(), end.y());
-    } else {
-        Q_ASSERT(targetOrientation == VERTICAL);
-        if (start.x() == end.x()) {
-        return end;
-        } else {
-        return QPoint(start.x(), (start.y() + end.y()) / 2);
-        }
-    }
-    }
-}
-
 QString ConnectorView::tip()
 {
     return QString("<b>Connector</b><br><hr>" \
@@ -409,7 +718,14 @@ QString ConnectorView::tip()
         .arg(to()->pinModel()->bits());
 }
 
-void ConnectorView::deleteView()
+
+PinView *ConnectorView::to()
 {
-    delete this;
+    return to_;
+}
+
+
+PinView *ConnectorView::from()
+{
+    return from_;
 }

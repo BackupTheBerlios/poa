@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.11 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: connectorview.h,v 1.12 2003/09/18 01:51:17 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 
 #include "tooltipable.h"
 #include "pinview.h"
+#include "poa.h"
 
 
 class ConnectorView;
@@ -47,19 +48,22 @@ class ConnectorView;
  * propagation some items may be removed or new items may be inserted into
  * the list.
  */
-class ConnectorView: public QObject, public QCanvasLine, public Tooltipable
+class ConnectorView: public QCanvasLine, public Tooltipable
 {
-    Q_OBJECT
 
 public:
     /**
      * Creates a connector view on the given <code>canvas</code> and draws a
-     * routed line from <code>from</code> pin to <code>to</code> pin for the
-     * given <code>model</code>
+     * routed line from <code>from</code> pin to <code>to</code> pin.
      */
     ConnectorView(PinView *from,
-          PinView *to,
-          QCanvas *canvas);
+		  PinView *to,
+		  QCanvas *canvas);
+
+    ConnectorView(PinView *from,
+		  QPoint to,
+		  LineDirection toDir,
+		  QCanvas *canvas);
 
     /**
      * Default destructor
@@ -74,24 +78,6 @@ public:
     QCanvasItemList allSegments();
 
     /**
-     * Orientation of a <code>ConnectorView</code>.
-     * <code>ConnectorView</code>s can only consist of  horizontal lines or
-     * vertical lines.
-     */
-    enum LineOrientation {UNKNOWN, HORIZONTAL, VERTICAL};
-
-    /**
-     * Returns the orientation orthogonal to <code>orientation</code> or
-     * <code>UNKNOWN</code> if <code>orientation == UNKNOWN</code>
-     */
-    static LineOrientation inflection(LineOrientation orientation);
-
-    /**
-     * Returns the orientation of this view.
-     */
-    LineOrientation orientation();
-
-    /**
      * Returns the tooltip text
      */
     QString tip();
@@ -102,15 +88,36 @@ public:
     PinView *to();
 
 protected:
-    ConnectorView(QPoint start,
-          LineOrientation orientation,
-          PinView *from,
-          PinView *to,
-          QCanvas *canvas);
+    ConnectorView(QPoint first,
+		  QPoint second,
+		  QCanvas *canvas);
 
-    void setStartPoint(QPoint start);
+    void applyPointList(QValueList<QPoint> *list,
+			PinView *targetPin = 0);
 
-    void setEndPoint(QPoint end);
+    void destroySuccessors();
+
+    bool canUseDir(LineDirection goDir,
+		   bool honorGoDir,
+		   LineDirection dir);
+
+    /*    QValueList<QPoint> *routeUsingLastButOne(QPoint startPoint,
+					     LineDirection startDir,
+					     bool honorStartDir,
+					     QPoint lastButOne,
+					     QPoint endPoint);
+
+    QValueList<QPoint> *routeConnector(QPoint startPoint,
+				       LineDirection startDir,
+				       bool honorStartDir,
+				       QPoint endPoint,
+				       LineDirection endDir,
+				       bool honorEndDir);*/
+    QValueList<QPoint> *routeConnector(QPoint from,
+				       LineDirection fromDir,
+				       QPoint to,
+				       LineDirection toDir);
+
 
     void setPrevConnector(ConnectorView *prev);
 
@@ -120,42 +127,6 @@ protected:
 
     void setNextPin(PinView *target);
 
-    void dockToSource(PinView *source);
-
-    void dockToSource(ConnectorView *from);
-
-    void dockToTarget(PinView *target);
-
-    void dockToTarget(ConnectorView *to);
-
-    void setOrientation(LineOrientation orientation);
-
-    /**
-     * Calculates the next point to be used in a multi line connector view.
-     * Supposes a connector view exists until the point <code>start</code>
-     * and the last segment has the orientation <code>orientation</code>.
-     * The point <code>end</code> must be reached to connect to a pin with
-     * direction <code>dock</code>.
-     *
-     * This function should be called until the value returned is equal
-     * to <code>end</code>. Then <code>ConnectorView</code>-objects should
-     * be created to connect the points returned.
-     *
-     * @param start The <code>ConnectorView</code> exists until this point
-     * @param orientation Orientation of the line that reaches
-     *        <code>start</code>
-     * @param end The point to be reached (usually
-     *        {@link PinView#connectorPoint})
-     * @param dock The direction in which the last line must dock onto
-     *        <code>end</code>
-     * @return The next point to be added to the polygon already drawn
-     *         until <code>start</code>
-     */
-    static QPoint firstInflectionPoint(QPoint start,
-                       LineOrientation orientation,
-                       QPoint end,
-                       PinView::DockPosition dock);
-
     /**
      * A <code>ConnectorView</code> can dock onto another connector view
      * or onto a pin.
@@ -164,7 +135,6 @@ protected:
         ConnectorView *connector;
         PinView *pin;
     };
-
 
     static const unsigned DEFAULT_DOCK_LINE_LENGTH = 5;
 
@@ -180,31 +150,25 @@ private:
      * true if <code>this</code> has a pin as source or no source,
      * false else
      */
-
     bool first_;
+
     /**
      * true if <code>this</code> has a pin as target or no target,
      * false else
      */
-
     bool last_;
+
     /**
      * <code>this</code>'s source item or 0 if <code>this</code> has no
      * source
      */
-
     ConnectorDocking prev_;
+
     /**
      * <code>this</code>'s target item or 0 if <code>this</code> has no target
      */
-
     ConnectorDocking next_;
 
-    /** Orientation of this view */
-    LineOrientation orientation_;
-
-public slots:
-    void deleteView();
 };
 
 

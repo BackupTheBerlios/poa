@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.14 2003/09/16 09:54:39 garbeam Exp $
+ * $Id: pinview.cpp,v 1.15 2003/09/18 01:51:17 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,6 @@ PinView::PinView(PinModel *model, BlockView *block,
     : QCanvasRectangle(block->canvas())
 {
     model_ = model;
-    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
     dockPosition_ = dockPosition;
     setZ(block->z());
     setBrush(QBrush(SolidPattern));
@@ -57,7 +56,6 @@ PinView::PinView(PinModel *model, BlockView *block,
 
 PinView::~PinView()
 {
-    emit(deleted(this));
 }
 
 AbstractModel *PinView::model()
@@ -68,6 +66,23 @@ AbstractModel *PinView::model()
 PinView::DockPosition PinView::dockPosition()
 {
     return dockPosition_;
+}
+
+LineDirection reverse(LineDirection dir)
+{
+    switch (dir) {
+    case LEFT:
+	return RIGHT;
+    case RIGHT:
+	return LEFT;
+    case UP:
+	return DOWN;
+    case DOWN:
+	return UP;
+    default:
+	Q_ASSERT(false);
+	return UNKNOWN;
+    }
 }
 
 QPoint PinView::connectorPoint()
@@ -89,6 +104,35 @@ QPoint PinView::connectorPoint()
     default:
         Q_ASSERT(false);
         return QPoint(0, 0);
+    }
+}
+
+LineDirection PinView::connectorDirection()
+{
+    LineDirection dir;
+    switch (dockPosition_) {
+    case PIN_TOP:
+	dir = DOWN;
+	break;
+    case PIN_LEFT:
+	dir = RIGHT;
+	break;
+    case PIN_RIGHT:
+	dir = LEFT;
+	break;
+    case PIN_BOTTOM:
+	dir = UP;
+	break;
+    default:
+	Q_ASSERT(false);
+	break;
+    }
+    if (model_->type() == PinModel::OUTPUT) {
+	// FIX: need special treatment for episodic pins
+	return reverse(dir);
+    }
+    else {
+	return dir;
     }
 }
 
@@ -148,9 +192,4 @@ QString PinView::tip()
         .arg(pt)
         .arg(pinModel()->address())
         .arg(pinModel()->bits());
-}
-
-void PinView::deleteView()
-{
-    delete this;
 }

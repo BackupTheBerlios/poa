@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.2 2003/08/20 09:47:53 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.3 2003/08/20 15:45:46 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -95,6 +95,9 @@ ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool mod
     okPushButton->setText( trUtf8( "&OK" ) );
     okPushButton->setToggleButton( FALSE );
     okPushButton->setDefault( TRUE );
+
+
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
 
     ioListView = new QListView( this, "ioListView" );
     ioListView->addColumn( trUtf8( "I/O" ) );

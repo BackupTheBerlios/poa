@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: autoschedulingdialog.h,v 1.2 2004/03/03 04:51:04 keulsn Exp $
+ * $Id: autoschedulingdialog.h,v 1.3 2004/03/05 14:48:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -45,7 +45,7 @@ class AutoSchedulingDialog : public QDialog
 {
     Q_OBJECT
 
-        public:
+public:
     /**
      * Creates a new dialog based on a block graph. This dialog should be
      * made modal.
@@ -57,18 +57,18 @@ class AutoSchedulingDialog : public QDialog
      */
     virtual ~AutoSchedulingDialog();
 
- protected:
+protected:
     /**
-     * Updates the list of remaining blocks.
+     * Updates the list box of remaining blocks.
      */
     void updateBlockList();
 
-    protected slots:
-        /**
-         * Initiates the auto scheduling on all paths in their specified order.
-         */
-        virtual void accept();
-    
+protected slots:
+    /**
+     * Initiates the auto scheduling on all paths in their specified order.
+     */
+    virtual void accept();
+
     /**
      * Executes a {@link PathChooserDialog} and adds the resulting path to
      * the path list. Updates the list of remaining blocks.
@@ -76,7 +76,8 @@ class AutoSchedulingDialog : public QDialog
     virtual void addPath();
 
     /**
-     * Removes a path from the path list. Updates the list of remaining blocks.
+     * Removes the selected path from the path list. Updates the list of
+     * remaining blocks.
      */
     virtual void removePath();
 
@@ -92,7 +93,7 @@ class AutoSchedulingDialog : public QDialog
      */
     virtual void lowerPrio();
 
- private:
+private:
     /** The list box of remaining blocks */
     QListBox *blockBox_;
     /** The list box of paths for scheduling */

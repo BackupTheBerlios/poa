@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.h,v 1.5 2004/03/03 04:51:04 keulsn Exp $
+ * $Id: pathchooserdialog.h,v 1.6 2004/03/05 14:48:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -47,23 +47,28 @@ class PathChooserDialog : public QDialog
 {
     Q_OBJECT
 
-        public:
-
+public:
     /**
      * Creates the dialog on a block graph. When the user is done, then
-     * a pointer to the chosen {@link Path}-object will be stored in
-     * <code>*result</code>. This dialog should be modal.
+     * a pointer to the chosen {@link Path}-object can be retrieved
+     * through the method {@link #path}. This dialog should be modal.
      */
-    PathChooserDialog(BlockGraph *graph, Path **result);
+    PathChooserDialog(BlockGraph *graph);
 
     /**
      * Default destructor.
      */
     virtual ~PathChooserDialog();
 
-    protected slots:
-        /** Updates the pin combo box for the source block and the path list. */
-        void sourceBlockActivated(int index);
+    /**
+     * Returns the path chosen by the user, or 0 if no path is chosen yet.
+     * A path is chosen only after the user has pressed the ok-button.
+     */
+    Path *path();
+
+protected slots:
+    /** Updates the pin combo box for the source block and the path list. */
+    void sourceBlockActivated(int index);
     /** Updates the path list. */
     void sourcePinActivated(int index);
     /** Updates the pin combo box for the target block and the path list */
@@ -74,7 +79,7 @@ class PathChooserDialog : public QDialog
     /** Accepts the path selected in the path list if there is one. */
     virtual void accept();
 
- protected:
+protected:
     /** Updates the pin combo box for the input pins. */
     void updateInPins();
     /** Updates the pin combo box for the output pins. */
@@ -82,7 +87,7 @@ class PathChooserDialog : public QDialog
     /** Updates the path list */
     void updatePaths();
 
- private:
+private:
     /** Creates the list of blocks in the block graph. */
     void loadBlocks();
     /** Deletes all paths */
@@ -129,11 +134,8 @@ class PathChooserDialog : public QDialog
     QComboBox *targetPin_;
     /** List box to choose one of the available paths */
     QListBox *pathChooser_;
-    /** 
-     * Pointer to a variable where the result of this dialog should be 
-     * copied to
-     */
-    Path **result_;
+    /** Result of this dialog */
+    Path *result_;
 };
 
 #endif // POA_PATHCHOOSERDIALOG

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: autoschedulingdialog.cpp,v 1.2 2004/03/03 04:51:03 keulsn Exp $
+ * $Id: autoschedulingdialog.cpp,v 1.3 2004/03/05 14:48:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -44,6 +44,8 @@ AutoSchedulingDialog::AutoSchedulingDialog(BlockGraph *graph)
     QValueList<BlockNode*> allBlocks = graph_->blocks();
     QValueList<BlockNode*>::iterator it = allBlocks.begin();
     for (; it != allBlocks.end(); ++it) {
+        // Remove the flag on all blocks, as soon as a block is contained
+        // in a path, the flag is set on that block.
         (*it)->setFlag(false);
     }
     paths_.setAutoDelete(true);
@@ -69,7 +71,7 @@ AutoSchedulingDialog::AutoSchedulingDialog(BlockGraph *graph)
 
     QWidget *prButtonSpace = new QWidget(this);
     QBoxLayout *priorityButtonLayout = new QVBoxLayout(prButtonSpace);
-    QPushButton *upButton = 
+    QPushButton *upButton =
         new PixmapButton(QPixmap(Util::findIcon("1uparrow.png")),
                          prButtonSpace);
     QPushButton *downButton =
@@ -140,10 +142,10 @@ void AutoSchedulingDialog::accept()
 
 void AutoSchedulingDialog::addPath()
 {
-    Path *newPath = 0;
-    PathChooserDialog *dialog = new PathChooserDialog(graph_, &newPath);
+    PathChooserDialog *dialog = new PathChooserDialog(graph_);
     int result = dialog->exec();
     if (result == QDialog::Accepted) {
+        Path *newPath = dialog->path();
         Q_ASSERT(newPath != 0);
         pathBox_->insertItem(newPath->getText(), -1);
         paths_.append(newPath);
@@ -157,10 +159,10 @@ void AutoSchedulingDialog::removePath()
     int index = pathBox_->currentItem();
     Path *old = paths_.at(index);
     if (old != 0) {
-        old->setNodeFlag(false);
-        // Note that this might have the flag reset on nodes where we still
+        // Note that this might reset the flag on nodes where we still
         // want it to be set, because those nodes are contained in another
         // path.
+        old->setNodeFlag(false);
         paths_.remove(index);
         pathBox_->removeItem(index);
         // Now ensure all node flags to their correct state

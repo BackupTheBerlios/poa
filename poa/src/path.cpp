@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: path.cpp,v 1.2 2004/03/03 04:51:04 keulsn Exp $
+ * $Id: path.cpp,v 1.3 2004/03/05 14:48:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -81,9 +81,6 @@ private:
     DepthFirstNodeList pred_;
 };
 
-typedef QMap<BlockNode*, DepthFirstNode*> DepthFirstMap;
-typedef QMapIterator<BlockNode*, DepthFirstNode*> DepthFirstMapIterator;
-
 
 
 /******************
@@ -122,7 +119,7 @@ Path::Path(BlockNode *target) {
     prepend(target);
 }
 
-Path::Path(const Path &other) 
+Path::Path(const Path &other)
     : PriorityItem()
 {
     runtime_ = other.runtime_;
@@ -186,12 +183,9 @@ void Path::optimize()
             // when starting from first block, then assign offset 0 to the
             // first block
             (*it)->setOffset(0);
-            offset = (*it)->runtime() + 1;
             (*it)->setFlag(true);
         }
-        else {
-            offset = (*it)->offset() + (*it)->runtime() + 1;
-        }
+        offset = (*it)->offset() + (*it)->runtime() + 1;
         // set offset going forward
         QValueList<BlockNode*>::iterator tmp = it;
         while (++it != nodes_.end()) {
@@ -253,8 +247,7 @@ void Path::optimize()
 bool Path::higherPriority(const PriorityItem *other) const {
     const Path *otherPath = dynamic_cast<const Path*>(other);
     Q_ASSERT(otherPath != 0);
-    return this->runtime_ > otherPath->runtime_
-        || this->getText() > otherPath->getText();
+    return this->runtime_ > otherPath->runtime_;
 }
 
 QString Path::getText() const
@@ -344,7 +337,7 @@ void Path::extractPaths(PathQueue &paths,
     DepthFirstNodeList::const_iterator adj = preds.begin();
     if (adj == preds.end()) {
         // first node reached
-        paths.insert(new Path(current));        
+        paths.insert(new Path(current));
     }
     else {
         do {
@@ -354,11 +347,11 @@ void Path::extractPaths(PathQueue &paths,
             current.removeFirst();
         } while (++adj != preds.end());
     }
-    
+
 }
 
 
-void Path::allPaths(PathQueue &paths, 
+void Path::allPaths(PathQueue &paths,
                     BlockNode *from,
                     BlockNode *to)
 {

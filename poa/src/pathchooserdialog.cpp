@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.7 2004/03/03 04:51:04 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.8 2004/03/05 14:48:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,12 +34,11 @@
 #include <qpushbutton.h>
 
 
-PathChooserDialog::PathChooserDialog(BlockGraph *graph, Path **result)
+PathChooserDialog::PathChooserDialog(BlockGraph *graph)
 {
     Q_ASSERT(graph != 0);
     graph_ = graph;
-    result_ = result;
-    *result_ = 0;
+    result_ = 0;
     outPins_ = 0;
     inPins_ = 0;
     blocks_ = 0;
@@ -100,6 +99,11 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph, Path **result)
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     loadBlocks();
+}
+
+Path *PathChooserDialog::path()
+{
+    return result_;
 }
 
 void PathChooserDialog::loadBlocks()
@@ -301,12 +305,12 @@ void PathChooserDialog::accept()
 {
     int index = pathChooser_->currentItem();
     if (index >= 0 && index < (int) pathsCount_) {
-        *result_ = paths_[index];
+        result_ = paths_[index];
         --pathsCount_;
         for (int i = index; i < (int) pathsCount_; ++i) {
             paths_[i] = paths_[i + 1];
         }
-        paths_[pathsCount_] = 0;        
+        paths_[pathsCount_] = 0;
         pathChooser_->removeItem(index);
         QDialog::accept();
     }

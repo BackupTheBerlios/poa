@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.11 2003/08/29 17:59:38 vanto Exp $
+ * $Id: gridcanvas.h,v 1.12 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 class Project;
 class QString;
 class AbstractModel;
+    
 /*****************************************************************************
  * Defines the grid canvas.
  */
@@ -38,14 +39,33 @@ class GridCanvas : public QCanvas {
     Q_OBJECT
 
 public:
+
+    /*****************************************************************************
+     * Creates a new grid canvas with the given name.
+     * name will be showed in the mdiwindow's title and will be serialized to
+     * xml, to identify this instance. name must be project-wide unique
+     */
     GridCanvas(QString name);
+
+    /*****************************************************************************
+     * Adds a view for the given <code>model</code> to the canvas at (x,y)-coords
+     * This method creates the view instance (and its children) by calling 
+     * AbstractModel::createView(QCanvas *canvas)
+     */
     void addViewAt(AbstractModel *item, int x, int y);
+
+    /*****************************************************************************
+     * Adds a view for the given <code>model</code> to the canvas.
+     * This method creates the view instance (and its children) by calling 
+     * AbstractModel::createView(QCanvas *canvas)
+     */
     void addView(AbstractModel *item);
 
 public slots:
     void setGridSize(int gridSize);
 
 private:
+
     /**
      * Counter for z-layer. Everytime a an item is added to the canvas,
      * all canvas items that make up the view for that item are assigned

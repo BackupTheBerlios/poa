@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.9 2003/08/27 21:12:45 vanto Exp $
+ * $Id: settings.h,v 1.10 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -51,9 +51,16 @@ public:
     bool set(const QString &key, int value);
 
     // the following settings emit an additional signal
+    /*****************************************************************************
+     * Grid size
+     */
     int gridSize();
-    bool snapToGrid();
     void setGridSize(int gridSize);
+
+    /*****************************************************************************
+     * Snap to grid
+     */
+    bool snapToGrid();
     void setSnapToGrid(bool snapToGrid);
 
 signals:

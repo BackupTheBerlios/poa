@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.17 2003/08/30 13:42:51 vanto Exp $
+ * $Id: blockview.cpp,v 1.18 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -131,13 +131,6 @@ QPopupMenu *BlockView::popupMenu()
     pm->insertItem("Edit Sourcecode...");
     return pm;
 }
-/*
-void BlockView::setModel(BlockModel *model)
-{
-    model_ = model;
-    // FIX: update views
-}*/
-
 
 void BlockView::moveBy(double dx, double dy)
 {

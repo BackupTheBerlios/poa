@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.9 2003/08/29 23:51:08 vanto Exp $
+ * $Id: abstractmodel.h,v 1.10 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,9 @@ class QCanvasItemList;
 class AbstractModel : public QObject
 {
 public:
+    /*****************************************************************************
+     * Default constructor
+     */
     AbstractModel(QString type = QString::null,
                   QString description = QString::null,
                   uint id = 0);

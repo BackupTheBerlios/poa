@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.h,v 1.5 2003/08/29 21:27:46 vanto Exp $
+ * $Id: pinvector.h,v 1.6 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,8 +38,20 @@ class PinVector: public PinPointerVector
 {
 
 public:
+
+    /*****************************************************************************
+     * Adds <code>pin</code> before <code>successor</code> to this vector
+     */
     void addBefore(PinModel *pin, PinModel *successor = 0);
+
+    /*****************************************************************************
+     * Removes the given pin from this vector
+     */
     void remove(PinModel *pin);
+
+    /*****************************************************************************
+     * Finds a pin according to it's id
+     */
     PinModel *findById(const unsigned id);
 };
 

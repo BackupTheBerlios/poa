@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.15 2003/08/30 13:42:51 vanto Exp $
+ * $Id: blockview.h,v 1.16 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -72,8 +72,6 @@ public:
      */
     BlockModel *model();
 
-    //void setModel(BlockModel *model);
-
     /*************************************************************************
      * Moves <code>this</code> and the pin views that are connected to
      * <code>this</code>.
@@ -83,12 +81,15 @@ public:
      */
     virtual void moveBy(double dx, double dy);
 
-    /*
+    /*****************************************************************************
      * Snaps this View to the given grid and returns the
      * a point which contains the snap delta.
      */
     virtual QPoint snapToGrid(unsigned gridsize);
 
+    /*****************************************************************************
+     * Run Time Type Identification
+     */
     virtual int rtti() const;
 
     /*************************************************************************

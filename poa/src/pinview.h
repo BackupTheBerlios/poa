@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.6 2003/08/29 17:53:19 keulsn Exp $
+ * $Id: pinview.h,v 1.7 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -45,12 +45,22 @@ public:
      */
     enum DockPosition {PIN_TOP, PIN_BOTTOM, PIN_LEFT, PIN_RIGHT};
 
+    /*****************************************************************************
+     * Creates a new pin view for the given pin and block model at the given 
+     * position.
+     */
     PinView(PinModel *model,
-	    BlockView *block,
-	    PinView::DockPosition dockPosition);
+        BlockView *block,
+        PinView::DockPosition dockPosition);
 
+    /*****************************************************************************
+     * Default destructor
+     */
     virtual ~PinView();
 
+    /*****************************************************************************
+     * Returns the corresponding model of this view
+     */
     PinModel *model();
 
     /*************************************************************************

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.15 2003/08/28 15:31:10 vanto Exp $
+ * $Id: mdiwindow.h,v 1.16 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -43,24 +43,54 @@ class MdiWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
+    /*****************************************************************************
+     * Default constructor
+     */
     MdiWindow(CanvasView *view, QWidget* parent = 0, const char* name = 0,
               WFlags f = WType_TopLevel);
+
+    /*****************************************************************************
+     * Default destructor
+     */
     ~MdiWindow();
 
+    /*****************************************************************************
+     * Returns the canvas of this mdi window
+     */
     QCanvas *canvas();
+
+    /*****************************************************************************
+     * Sets the canvas of this mdi window
+     */
     void setCanvas(QCanvas *);
 
     void load( const QString& fn );
     void save();
     void saveAs();
+
+    /*****************************************************************************
+     * Returns the current zoom level of this mdi window
+     */
     double zoomLevel();
+
+    /*****************************************************************************
+     * Resizes the canvas, if its size changed according to this' zoom level
+     */
     void resizeCanvas();
 
 public slots:
     void setZoomLevel(double zoomLevel);
 
 protected:
+    /*****************************************************************************
+     * Gets called if sb want to close this mdi window
+     */
     void closeEvent( QCloseEvent * );
+
+    /*****************************************************************************
+     * Gets called if sb resizes this mdi window
+     */
     virtual void resizeEvent(QResizeEvent *e);
 
 private:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.3 2003/08/22 15:06:11 squig Exp $
+ * $Id: librarywindow.h,v 1.4 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -41,21 +41,38 @@ class QTextBrowser;
 class LibraryListView : public QListView
 {
 public:
+
+    /*****************************************************************************
+     * Default constructor
+     */
     LibraryListView(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
+    /*****************************************************************************
+     * Serializes the currently selected item to a drag object
+     */
     QDragObject *dragObject();
 };
 
 /*****************************************************************************
- *
- * @author Steffen Pingel
+ * Provides the library module viewitems
  */
 class LibraryListViewItem : QListViewItem
 {
 public:
+
+    /*****************************************************************************
+     * Creates a library list view item for the given abstract model
+     */
     LibraryListViewItem(QListViewItem *parent, AbstractModel *item);
+
+    /*****************************************************************************
+     * Default destructor
+     */
     ~LibraryListViewItem();
 
+    /*****************************************************************************
+     * Returns the AbstractModel, represented by this view item
+     */
     AbstractModel &data() const;
 
 private:
@@ -68,15 +85,22 @@ private:
  * The library is a dock window with a tree and an information area
  * that show a short description of the selected item.
  *
- * @author Steffen Pingel
  */
 class LibraryWindow : public QDockWindow
 {
     Q_OBJECT
 
 public:
+    
+    /*****************************************************************************
+     * Creates a library window an docks it to the given place on the given widget
+     */
     LibraryWindow(Place p = InDock, QWidget * parent = 0,
                   const char* name = 0, WFlags f = 0 );
+
+    /*****************************************************************************
+     * Default destructor
+     */
     ~LibraryWindow();
 
 private :

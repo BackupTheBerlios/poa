@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.5 2003/08/29 17:53:19 keulsn Exp $
+ * $Id: connectorview.h,v 1.6 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,12 +51,19 @@ class ConnectorView: public QCanvasLine
 {
 
 public:
-
+    /*****************************************************************************
+     * Creates a connector view on the given <code>canvas</code> and draws a 
+     * routed line from <code>from</code> pin to <code>to</code> pin for the
+     * given <code>model</code>
+     */
     ConnectorView(ConnectorModel *model,
-		  PinView *from,
-		  PinView *to,
-		  QCanvas *canvas);
+          PinView *from,
+          PinView *to,
+          QCanvas *canvas);
 
+    /*****************************************************************************
+     * Default destructor
+     */
     virtual ~ConnectorView();
 
     /*************************************************************************
@@ -93,9 +100,9 @@ public:
 
 protected:
     ConnectorView(QPoint start,
-		  LineOrientation orientation,
-		  PinView *to,
-		  QCanvas *canvas);
+          LineOrientation orientation,
+          PinView *to,
+          QCanvas *canvas);
 
     void setStartPoint(QPoint start);
 
@@ -141,17 +148,17 @@ protected:
      *         until <code>start</code>
      */
     static QPoint firstInflectionPoint(QPoint start,
-				       LineOrientation orientation,
-				       QPoint end,
-				       PinView::DockPosition dock);
+                       LineOrientation orientation,
+                       QPoint end,
+                       PinView::DockPosition dock);
 
     /**
      * A <code>ConnectorView</code> can dock onto another connector view
      * or onto a pin.
      */
     union ConnectorDocking {
-	ConnectorView *connector;
-	PinView *pin;
+        ConnectorView *connector;
+        PinView *pin;
     };
 
 
@@ -168,21 +175,26 @@ private:
      * true if <code>this</code> has a pin as source or no source,
      * false else 
      */
+
     bool first_;
     /**
      * true if <code>this</code> has a pin as target or no target,
      * false else
      */
+
     bool last_;
     /**
      * <code>this</code>'s source item or 0 if <code>this</code> has no
      * source
      */
+     
     ConnectorDocking prev_;
     /**
      * <code>this</code>'s target item or 0 if <code>this</code> has no target
      */
+     
     ConnectorDocking next_;
+    
     /** Orientation of this view */
     LineOrientation orientation_;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.5 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: cpuview.h,v 1.6 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -39,17 +39,11 @@
 class CpuView: public AbstractView, public QCanvasRectangle
 {
 
-private:
-
-    CpuModel *cpuModel_;
-
 public:
-
+    /*****************************************************************************
+     * Creates a new CpuView on the given canvas
+     */
     CpuView(QCanvas* canvas) : QCanvasRectangle(10, 10, 100, 100, canvas) {};
-
-
-    CpuModel *getModel();
-    void setModel(CpuModel *cpuModel);
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.13 2003/08/28 15:31:10 vanto Exp $
+ * $Id: mainwindow.h,v 1.14 2003/08/30 18:37:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -45,11 +45,21 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    
+    /*****************************************************************************
+     * Default constructor
+     */
     MainWindow(QWidget* parent = 0, const char* name = 0,
                WFlags fl = WType_TopLevel);
+
+    /*****************************************************************************
+     * Default destructor
+     */
     ~MainWindow();
 
-
+    /*****************************************************************************
+     * Closes all mdi windows
+     */
     bool closeAll();
 
 protected:

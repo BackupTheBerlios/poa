@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.10 2003/09/12 14:53:14 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.11 2003/09/13 11:42:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,8 +46,6 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
-
-#include <iostream.h>
 
 PinListViewItem::PinListViewItem(QListView *parent,
                                  QListViewItem *after,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.18 2003/09/12 08:58:42 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.19 2003/09/13 11:42:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -90,7 +90,7 @@ void BlockModel::setName(QString name)
     name_ = name;
 }
 
-void BlockModel::addPin(PinModel *pin, PinModel *successor = 0) {
+void BlockModel::addPin(PinModel *pin, PinModel *successor) {
 
     if (pin != 0) {
         if (pin->id() == 0) {

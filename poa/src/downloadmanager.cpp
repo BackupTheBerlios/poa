@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.8 2004/01/26 16:04:53 papier Exp $
+ * $Id: downloadmanager.cpp,v 1.9 2004/01/29 21:02:52 papier Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "downloadmanager.h"
 #include "cpumodel.h"
 #include "settings.h"
+#include "srecord.h"
 #include "processdialog.h"
 #include "poaexception.h"
 #include "util.h"
@@ -52,6 +53,7 @@ DownloadManager::DownloadManager()
 
 DownloadManager::~DownloadManager()
 {
+
 }
 
 DownloadManager *DownloadManager::instance()
@@ -61,6 +63,56 @@ DownloadManager *DownloadManager::instance()
     }
 
     return instance_;
+}
+
+bool DownloadManager::readFile(QString filename)
+{
+  //open file
+  QFile file;
+  file.setName(filename);
+  if ( file.open( IO_ReadOnly )) {
+    
+    //read data
+    QString line;
+    int error;
+    while (! file.atEnd() ) {
+      error = file.readLine(line, 254);
+      if (error > 0) {
+	if (line.startsWith("S1") ) {
+
+	  srecFile_.append(new SRecord(line.left(2),   //type
+				       line.mid(3, 2), //count
+				       line.mid(5, 4), //address
+				       line.mid(9, (line.length() - 10) ), //data
+				       line.right(2)) ); //checksum
+	  
+	}
+      }
+      else {
+	throw PoaException(tr("Could not read srec file %1.").arg(filename));
+	return false;
+      }
+    }
+    file.close();
+    return true;
+  }
+  else {
+    throw PoaException(tr("Could not open srec file %1.").arg(filename));
+    return false;
+  }
+}
+
+int DownloadManager::fileSize()
+{
+  QPtrListIterator<SRecord> it (srecFile_);
+  SRecord *srecord;
+  int sum = 0;
+  bool ok;
+  while ((srecord = it.current()) != 0) {
+    sum += srecord->count().toInt( &ok, 10) -3;
+  } 
+  
+  return sum;
 }
 
 bool DownloadManager::run(const char* portname)
@@ -77,28 +129,28 @@ bool DownloadManager::run(const char* portname)
     //send header
     port.putch(0xff);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send adress
     port.putch(0x01);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send size
     port.putch((unsigned char) 0);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
 
     port.putch((unsigned char) 0);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send command
     //0x01 = LOAD
     //0x05 = RUN
     port.putch(0x05);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
 
     return true;
   }
@@ -106,21 +158,6 @@ bool DownloadManager::run(const char* portname)
 
 bool DownloadManager::download(QString filename, const char* portname)
 {
-
-  int fileSize = 0;
-  Q_LONG err = 0;
-  int lenght = 0;
-  int address = 0;
-  char line[255];
-  char line_tmp[255];
-  char data[255];
-  char dummy;
-  int dummy_int=0;
-  unsigned char character;
-  int pos = 0;
-
-
-
 
   //open serial port
   QextSerialPort port;
@@ -132,97 +169,58 @@ bool DownloadManager::download(QString filename, const char* portname)
   else {
 
     //open file
-    QFile file;
-    file.setName(filename);
-    if (! file.open( IO_ReadOnly )) {
-      throw PoaException(tr("Could not open srec file %1.").arg(filename));
-      return false;
-	}
-    else {
-    
-      //get size of data to send
-      while (file.atEnd() == false) {
-	err = file.readLine(line, 254);
-	
-	if (err != 0) {
-	  if (line[1]=='1') {
-	    sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
-		   &lenght, &address, line_tmp);
-	    fileSize += (lenght -3 );
-	  }
-	}
-      }
+    readFile(filename);
 
-      //      emit setProgressBarLength(fileSize);
-      file.close();
-    }
     //send header
     port.putch(0xff);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send adress
     port.putch(0x01);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send size
-    port.putch((unsigned char)(fileSize>>8));
+    port.putch((unsigned char)(fileSize()>>8));
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
-    port.putch((unsigned char)(fileSize&0xff));
+    port.putch((unsigned char)(fileSize()&0xff));
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send command
     //0x01 = LOAD
     //0x05 = RUN
     port.putch(0x01);
     port.flush();
-    qApp->processEvents(300);
+    qApp->processEvents(4);
     
     //send data
-    if (! file.open( IO_ReadOnly )) {
-      throw PoaException(tr("Could not open srec file %1.").arg(filename));
-      return false;
-    }
-    else {
-      // Open Progressbar Dialog
-      QProgressDialog progress(tr("Downloading srec file to cpld..."), 
-			       tr("Abort"), 
-			       fileSize, 
-			       0,
-			       "progress", 
-			       TRUE);
+    // Open Progressbar Dialog
+    QProgressDialog progress(tr("Downloading srec file to cpld..."), 
+			     tr("Abort"), 
+			     fileSize(), 
+			     0,
+			     "progress", 
+			     TRUE);
+    QPtrListIterator<SRecord> it (srecFile_);
+    SRecord *srecord;
+    while ((srecord = it.current()) !=0) {
+      const QString data = srecord->data();
+      for (int i=0; i < (data.length()); i++) {
 
-      while (file.atEnd() == false) {
-	err = file.readLine(line, 254);
-	
-	if (err!=0) {
-	  if (line[1] == '1') {
-	    sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
-		   &lenght, &address, line_tmp);
-	    //remove checksum
-	    strncpy( data, line_tmp, 2* (lenght-3) );
+	port.putch( data.at(i) );
+	port.flush();
 
-	    for (int i=0; i < (lenght-3); i++) {
-	      sscanf(data, "%2x%s", &character, data);
-	      port.putch(character);
-	      port.flush();
-	      pos++;
-
-	      progress.setProgress(progress.progress() +1);
-	      qApp->processEvents(300);
-
-	      if ( progress.wasCancelled() ){
-		return false;
-	      }
-	    }
-	  }
+	progress.setProgress(progress.progress() +1);
+	qApp->processEvents(4);
+      
+	if ( progress.wasCancelled() ){
+	  return false;
 	}
       }
-      file.close();
     }
     port.close();
     return true;

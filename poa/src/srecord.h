@@ -18,65 +18,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.6 2004/01/29 21:02:52 papier Exp $
+ * $Id: srecord.h,v 1.1 2004/01/29 21:02:52 papier Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_DOWNLOADMANAGER_H
-#define POA_DOWNLOADMANAGER_H
+#ifndef POA_SRECORD_H
+#define POA_SRECORD_H
 
-#include "cpumodel.h"
-#include "srecord.h"
-
-#include <qdir.h>
-#include <qfile.h>
-#include <qstring.h>
-/**
- * Manages a portion of binary code.
- */
-class DownloadManager : public QObject
+class SRecord
 {
+ public:
 
-    Q_OBJECT
+  // more infos about the srec format can be fount at 
+  // http://www.amelek.gda.pl/avr/uisp/srecord.htm
 
-public:
+  SRecord(const QString& type, 
+	  const QString& count,
+	  const QString& address,
+	  const QString& data,
+	  const QString& checksum) 
+    : type_(type), count_(count), address_(address), data_(data), checksum_(checksum)
+    {
 
-    /**
-     * DownloadManager singleton instance.
-     */
-    static DownloadManager *instance();
-    
-    /**
-     * returns <code>true</code> if the download of the srec file was
-     * successful.
-     */
-    bool download(QString filename, const char* portName);
+    }
 
-    /**
-     * returns <code>true</code> if the downloaded file was stared on the cpld.
-     */
-    bool run(const char* portName);
+  QString type() const { return type_; }
 
-protected:
-    DownloadManager();
-    ~DownloadManager();
+  QString count() const { return count_; }
 
+  QString address() const { return address_; }
 
-private:
-    static DownloadManager* instance_;
-    
-    bool readFile(QString filename);
-    int fileSize();
+  QString data() const { return data_; }
 
-    QPtrList<SRecord> srecFile_;
-    
-public slots:
+  QString checksum() const { return checksum_; }
 
-signals:
-    void increaseProgressBar();
-    void setProgressBarLength(int);
-
-
+ private:
+  QString type_;
+  QString count_;
+  QString address_;
+  QString data_;
+  QString checksum_;
 };
 
-#endif // POA_DOWNLOADMANAGER_H
+#endif // POA_SRECORD_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.15 2004/01/28 16:35:51 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.16 2004/01/29 21:02:52 papier Exp $
  *
  *****************************************************************************/
 
@@ -152,6 +152,7 @@ void DeployProjectWizard::setupDownloadPage()
     buttonLayout->addWidget(downloadButton);
     buttonLayout->addWidget(runButton);
     buttonLayout->addStretch(1);
+
     /*
     QWidget *downloadWidget = new QWidget(page);
     QProgressBar *downloadProgressBar = new QProgressBar(downloadWidget, "DownloadProgressBar" );
@@ -159,13 +160,13 @@ void DeployProjectWizard::setupDownloadPage()
     QBoxLayout *downloadLayout = new QHBoxLayout(downloadWidget, WIDGET_SPACING);
     downloadLayout->addWidget(downloadProgressBar);
     */
+
     QBoxLayout *pageLayout = new QVBoxLayout(page, WIDGET_SPACING);
     pageLayout->addWidget(infoLabel);
     pageLayout->addSpacing(2 * WIDGET_SPACING);
     pageLayout->addWidget(cpuWidget);
     pageLayout->addWidget(detailsGroupBox);
     pageLayout->addWidget(buttonWidget);
-    //    pageLayout->addWidget(downloadWidget);
     pageLayout->addStretch(1);
 
     addPage(page, trUtf8("Compile and Download Project"));
@@ -207,18 +208,6 @@ void DeployProjectWizard::downloadSelectedCpu()
     QString srecFilename = cm.sourceFilePath("srec");
     dm->download(srecFilename, (const char*)Settings::instance()->serialPort());
 }
-
-/*void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)
-{
-  downloadProgressBar->setTotalSteps(totalSteps);
-}
-
-void DeployProjectWizard::increaseDownloadProgressBar()
-{
-  int progress = downloadProgressBar->progress();
-  downloadProgressBar->setProgress(progress +1);
-}
-*/
 
 void DeployProjectWizard::setProblemReportItem(QListViewItem* item)
 {

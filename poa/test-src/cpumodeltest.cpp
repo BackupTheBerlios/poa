@@ -47,7 +47,7 @@ public:
 
     void testCpuId()
     {
-        CPPUNIT_ASSERT(cpu->cpuId() == -1);
+        CPPUNIT_ASSERT(cpu->cpuId() == 1);
 
         cpu->setCpuId(100);
         CPPUNIT_ASSERT(cpu->cpuId() == 100);
@@ -55,10 +55,9 @@ public:
 
     void testSerialize()
     {
-        cpu->setCpuId(1);
+        cpu->setCpuId(2);
         cpu->setAutoRuntime(false);
         cpu->setAutoOffset(false);
-        cpu->setPartOfLibrary(true);
 
         QDomDocument document;
         QDomElement element = cpu->serialize(&document);

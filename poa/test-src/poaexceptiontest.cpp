@@ -8,7 +8,7 @@
 class PoaExceptionTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(PoaExceptionTest);
-    CPPUNIT_TEST(testCopy);
+    CPPUNIT_TEST(testEmptyConstructor);
     CPPUNIT_TEST(testMessage);
     CPPUNIT_TEST_SUITE_END();
 
@@ -24,11 +24,10 @@ public:
     {
     }
 
-    void testCopy()
+    void testEmptyConstructor()
     {
-        PoaException e("Message");
-        PoaException e2(e);
-        CPPUNIT_ASSERT(e.message() == e2.message());
+        PoaException e;
+        CPPUNIT_ASSERT(e.message().isNull());
     }
 
     void testMessage()

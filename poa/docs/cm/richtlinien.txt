@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.9 2003/06/16 19:35:28 garbeam Exp $
+$Id: richtlinien.txt,v 1.10 2003/06/21 18:37:59 garbeam Exp $
 
 Richtlinien zur POA-Entwicklung
 ===============================
@@ -74,9 +74,11 @@ Benutzung sind in Kapitel 2.4 eingearbeitet.
 ------------------------
 Als Compiler wird der gcc 3.2.x eingesetzt (evtl. zu einem späteren
 Zeitpunkt gcc 3.3), als Toolkit wird Qt 3.1.x verwendet, als
-Konfigurationstool wird qmake verwendet, als Resourceneditor wird
-Qt Designer eingesetzt. Zur Generierung von Latex Dateien werden
-vorwiegend Makefiles eingesetzt, die GNU make 3.7+ kompatibel sein müssen.
+Konfigurationstool wird qmake verwendet.
+Zur Generierung von Latex Dateien werden vorwiegend Makefiles eingesetzt,
+die GNU make 3.7+ kompatibel sein müssen. Als Source Dokumentations
+Generator wird doxygen eingesetzt, die Codierrichtlinien gehen auf
+die doxygen spezifischen Eigenheiten ein.
 
 Als Dokumentationswerkzeug für das Angebot, die Mini-Spezifikation,
 und der Entwurfsdokumente wird LaTeX 2e oder neuer verwendet.
@@ -169,7 +171,7 @@ cvs commit (Kurzform: cvs ci)
 
 
 2.3 CVS für nicht-öffentliche Dateien
-------------------------------------------
+-------------------------------------
 
 Die grundsätzliche Bedienung ist äquivalent zu der Bedienung, wie in
 Kapitel 2.2 beschrieben.
@@ -210,5 +212,16 @@ Die grundsätzliche Bedienung der Zeiterfassung wird im Handbuch unter:
 https://duck.informatik.uni-stuttgart.de/www/times/manual/index.html
 
 beschrieben.
+
+-------------------------------------------------------------------------------
+
+
+3. C++ Codierrichtlinien
+
+
+Die Codierrichtlinien liegen als HTML-Dokument im POA-Wiki und in diesem
+Verzeichnis vor:
+
+./poa_guidelines.html
 
 -------------------------------------------------------------------------------

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.33 2004/01/24 16:20:10 squig Exp $
+ * $Id: pinview.cpp,v 1.34 2004/01/25 14:49:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -56,11 +56,11 @@ PinView::PinView(PinModel *model, BlockView *block,
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-        setSize(10, 3);
+        setSize(8, 2);
         break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-        setSize(3, 10);
+        setSize(2, 8);
         break;
     }
 }
@@ -99,16 +99,16 @@ QPoint PinView::connectorPoint()
     QRect r = rect();
     switch (dockPosition_) {
     case PIN_TOP:
-        return QPoint(r.center().x(), r.top());
+        return QPoint(r.center().x() + 1, r.top());
         break;
     case PIN_LEFT:
-        return QPoint(r.left(), r.center().y());
+        return QPoint(r.left(), r.center().y() + 1);
         break;
     case PIN_BOTTOM:
-        return QPoint(r.center().x(), r.bottom());
+        return QPoint(r.center().x() + 1, r.bottom());
         break;
     case PIN_RIGHT:
-        return QPoint(r.right(), r.center().y());
+        return QPoint(r.right(), r.center().y() + 1);
         break;
     default:
         Q_ASSERT(false);

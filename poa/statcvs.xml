@@ -6,6 +6,11 @@
     <authors type="map">
       <setting key="squig">Steffen Pingel</setting>
       <setting key="vanto">Tammo van Lessen</setting>
+      <setting key="garbeam">Anselm Garbe</setting>
+      <setting key="keulsn">Steffen Keul</setting>
+      <setting key="kilgus">Marcel Kilgus</setting>
+      <setting key="neco">Necati Aydin</setting>
+      <setting key="papier">Stefan Hauser</setting>
     </authors>
     <projectName>POA</projectName>
     <outputDir>xdocs/statcvs-xml</outputDir>

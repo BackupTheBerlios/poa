@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.6 2003/08/20 15:33:30 garbeam Exp $
+ * $Id: mainwindow.h,v 1.7 2003/08/21 08:43:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -54,20 +54,21 @@ public:
     QPopupMenu *toolsMenu;
     QPopupMenu *drawMenu;
     QPopupMenu *settingsMenu;
+    QPopupMenu *windowMenu;
     QPopupMenu *helpMenu;
     QToolBar *commonToolBar;
     QToolBar *utilToolBar;
     QToolBar *drawToolBar;
-    QAction* fileNewAction;
-    QAction* fileOpenAction;
-    QAction* fileSaveAction;
-    QAction* fileSaveAsAction;
-    QAction* fileExitAction;
-    QAction* editCutAction;
-    QAction* editCopyAction;
-    QAction* editPasteAction;
-    QAction* helpContentsAction;
-    QAction* helpAboutAction;
+    QAction *fileNewAction;
+    QAction *fileOpenAction;
+    QAction *fileSaveAction;
+    QAction *fileSaveAsAction;
+    QAction *fileExitAction;
+    QAction *editCutAction;
+    QAction *editCopyAction;
+    QAction *editPasteAction;
+    QAction *helpContentsAction;
+    QAction *helpAboutAction;
 
     QAction *zoomInAction;
     QAction *zoomOutAction;
@@ -78,6 +79,7 @@ public:
     QAction *invokeDownloadAction;
 
     QAction *openSettingsAction;
+    QAction *tileHorizontalAction;
 
 protected:
     void closeEvent(QCloseEvent *);

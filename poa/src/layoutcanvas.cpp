@@ -18,37 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutcanvas.h,v 1.3 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: layoutcanvas.cpp,v 1.1 2003/08/21 08:43:22 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_LAYOUTCANVAS_H
-#define POA_LAYOUTCANVAS_H
+
+#include "layoutcanvas.h"
 
 #include <qcanvas.h>
 
-#include "viewmap.h"
-#include "blockview.h"
-#include "layoutmanager.h"
+LayoutCanvas::LayoutCanvas()
+{
 
-/*****************************************************************************
- * Defines the layout canvas displayed by MdiWindow.
- * @author garbeam
+
+};
+
+
+
+// methods after this line maybe deprecated
+/**
+ * Returns an unique key of this blockView
  */
-class LayoutCanvas : public QCanvas {
+QString* LayoutCanvas::putView(BlockView *blockView)
+{
+    return 0;
+};
 
-    Q_OBJECT
-
-private:
-
-    LayoutManager *layoutManager_;
-
-public:
-	LayoutCanvas();
-
-    // Returns an unique key of this blockView
-    QString *putView(BlockView *blockView);
-    BlockView *getView(QString &key);
+BlockView* LayoutCanvas::getView(QString &key)
+{
+    return 0;
 };
 
 #endif // POA_NETWORKCANVAS_H

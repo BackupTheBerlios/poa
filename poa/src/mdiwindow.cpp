@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.2 2003/08/20 16:09:42 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.3 2003/08/21 08:43:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,11 +33,10 @@
 #include <qimage.h>
 #include <qpixmap.h>
 
-
 MdiWindow::MdiWindow(LayoutCanvas* canvas, QWidget* parent, const char* name, WFlags f)
-	: QMainWindow(parent, name, f)
+    : QMainWindow(parent, name, f)
 {
-	view_ = new QCanvasView(canvas, this);
+    view_ = new QCanvasView(canvas, this);
     setCentralWidget(view_);
 }
 
@@ -46,18 +45,31 @@ MdiWindow::~MdiWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
+LayoutCanvas* MdiWindow::getCanvas()
+{
+    return layoutCanvas_;
+}
+
+void MdiWindow::setCanvas(LayoutCanvas *layoutCanvas)
+{
+    layoutCanvas_ = layoutCanvas;
+    // TODO: emit some repaint signal if needed to draw
+    //       the newly set canvas
+}
+
 void MdiWindow::closeEvent( QCloseEvent *e )
 {
-	e->accept();
+    e->accept();
 }
 
 LayoutCanvas *MdiWindow::canvas()
 {
-	return (LayoutCanvas *)view_->canvas();
+    return (LayoutCanvas *)view_->canvas();
 }
 
 void MdiWindow::load( const QString& fn )
 {
+    // prevents currently compiler warning
     QString bla = fn;
 }
 

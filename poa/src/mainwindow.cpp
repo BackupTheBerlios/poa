@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.10 2003/08/20 16:09:42 squig Exp $
+ * $Id: mainwindow.cpp,v 1.11 2003/08/21 08:43:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -75,14 +75,14 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     QPixmap image_zoomout(ICON_PATH + "zoomout.png");
 
     QComboBox *zoomComboBox;
-    
+
     // initialize main window
     if (!name) {
         setName("MainWindow");
     }
     resize(520, 480); 
     setCaption(trUtf8("POA"));
-    
+
     // initialize status bar implicitly
     (void)statusBar();
 
@@ -93,7 +93,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     ws->setScrollBarsEnabled(TRUE);
     setCentralWidget(vb);
 
- 
+
     /////////////////////////////////////////////////////////////////
     // actions
     fileNewAction =
@@ -167,6 +167,10 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
         new QAction("Configure POA", "Configure &POA...", 0,
                     this, "openSettingsAction");
 
+    tileHorizontalAction = 
+        new QAction("Tile horizontal", "Tile &horizontal", 0,
+                    this, "tileHorizontalAction");
+
     /////////////////////////////////////////////////////////////////
     // toolbars
     //
@@ -225,7 +229,6 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     editCutAction->addTo(editMenu);
     editCopyAction->addTo(editMenu);
     editPasteAction->addTo(editMenu);
-    editMenu->insertSeparator();
     menubar->insertItem(trUtf8("&Edit"), editMenu);
 
     // tools
@@ -249,7 +252,12 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     settingsMenu = new QPopupMenu(this);
     menubar->insertItem(tr("&Settings"), settingsMenu);
     openSettingsAction->addTo(settingsMenu);
-    
+
+    // window
+    windowMenu = new QPopupMenu(this);
+    menubar->insertItem(tr("&Window"), windowMenu);
+    tileHorizontalAction->addTo(windowMenu);
+
     // help
     helpMenu = new QPopupMenu(this); 
     helpContentsAction->addTo(helpMenu);
@@ -272,9 +280,19 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
             this, SLOT(helpContents()));
     connect(helpAboutAction, SIGNAL(activated()), this, SLOT(helpAbout()));
     connect(openModuleConfAction, SIGNAL(activated()),
-            this, SLOT(openModuleConf()) );
+            this, SLOT(openModuleConf()));
     connect(openSettingsAction, SIGNAL(activated()),
             this, SLOT(openSettings()));
+    connect(tileHorizontalAction, SIGNAL(activated()),
+            this, SLOT(tileHorizontal()));
+}
+
+/**
+ * Destroys the object and frees any allocated resources
+ */
+MainWindow::~MainWindow()
+{
+    // no need to delete child widgets, Qt does it all for us
 }
 
 void MainWindow::closeWindow()
@@ -325,13 +343,6 @@ void MainWindow::closeEvent( QCloseEvent *e )
     QMainWindow::closeEvent( e );
 }
 
-/*  
- *  Destroys the object and frees any allocated resources
- */
-MainWindow::~MainWindow()
-{
-    // no need to delete child widgets, Qt does it all for us
-}
 
 void MainWindow::fileNew()
 {
@@ -380,8 +391,8 @@ void MainWindow::helpContents()
 
 void MainWindow::helpAbout()
 {
-	AboutDialog *dialog = new AboutDialog();
-	dialog->show();
+    AboutDialog *dialog = new AboutDialog();
+    dialog->show();
 }
 
 void MainWindow::openModuleConf()
@@ -394,20 +405,19 @@ void MainWindow::openModuleConf()
 
 void MainWindow::openSettings()
 {
-	SettingsDialog *dialog = new SettingsDialog();
-	dialog->show();
+    SettingsDialog *dialog = new SettingsDialog();
+    dialog->show();
 }
 
 MdiWindow* MainWindow::newLayout()
 {
-	LayoutCanvas *doc = new LayoutCanvas();
-	doc->resize(400, 400);
+    LayoutCanvas *doc = new LayoutCanvas();
+    doc->resize(400, 400);
 
     MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
-//    connect(w, SIGNAL(message(const QString&, int)),
-//            statusBar(), SLOT(message(const QString&, int)));
     w->setCaption("unnamed layout");
-	w->resize(w->sizeHint());
+    w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
+    w->resize(w->sizeHint());
     // show the very first window in maximized mode
     if (ws->windowList().isEmpty()) {
         w->showMaximized();
@@ -415,17 +425,17 @@ MdiWindow* MainWindow::newLayout()
         w->show();
     }
 
-	// FIX: remove: create dummy items
-	QCanvasPolygonalItem *i
-		= new QCanvasRectangle( rand()%doc->width(),rand()%doc->height(),
-								doc->width()/5,doc->width()/5,doc);
+    // FIX: remove: create dummy items
+    QCanvasPolygonalItem *i
+        = new QCanvasRectangle( rand()%doc->width(),rand()%doc->height(),
+                                doc->width()/5,doc->width()/5,doc);
     int z = rand()%256;
     i->setBrush( QColor(z,z,z) );
     i->setPen( QPen(QColor(rand()%32*8,rand()%32*8,rand()%32*8), 6) );
     i->setZ(z);
     i->show();
 
-	doc->update();
+    doc->update();
 
     return w;
 }

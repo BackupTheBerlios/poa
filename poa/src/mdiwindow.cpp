@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.6 2003/08/21 13:18:31 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.7 2003/08/21 14:09:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include <qaction.h>
 #include <qimage.h>
 #include <qpixmap.h>
+#include <qsize.h>
 
 MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent, const char* name, WFlags f)
     : QMainWindow(parent, name, f)
@@ -72,4 +73,20 @@ void MdiWindow::save()
 
 void MdiWindow::saveAs()
 {
+}
+
+void MdiWindow::resizeEvent(QResizeEvent *e)
+{
+
+    e = 0; // don't care
+    QSize viewSize = view_->size();
+    QSize canvasSize = canvas()->size();
+
+    // Resize the canvas only if its smaller than the current
+    // canvas view.
+    if ((canvasSize.width() < viewSize.width()) ||
+            (canvasSize.height() < viewSize.height()))
+    {
+        canvas()->resize(viewSize.width(), viewSize.height());
+    }
 }

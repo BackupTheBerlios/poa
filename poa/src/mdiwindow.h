@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.8 2003/08/21 13:18:31 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.9 2003/08/21 14:09:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -40,10 +40,10 @@ class MdiWindow : public QMainWindow
 
 public:
     MdiWindow(QCanvas* canvas, QWidget* parent = 0, const char* name = 0, 
-			  WFlags f = WType_TopLevel);
+              WFlags f = WType_TopLevel);
     ~MdiWindow();
 
-	QCanvas *canvas();
+    QCanvas *canvas();
     void setCanvas(QCanvas *);
 
     void load( const QString& fn );
@@ -52,10 +52,10 @@ public:
 
 protected:
     void closeEvent( QCloseEvent * );
+    virtual void MdiWindow::resizeEvent(QResizeEvent *e);
 
 private:
     QCanvasView* view_;
-    
 
 signals:
     void message(const QString&, int );

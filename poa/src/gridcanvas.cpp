@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.2 2003/08/21 13:18:30 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.3 2003/08/21 14:09:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -50,7 +50,7 @@ GridCanvas::GridCanvas() {
 
     connect(this, SIGNAL(resized()), this, SLOT(redrawGrid()));
 
-    resize(1600, 1400);
+    resize(400, 400);
 
 }
 

@@ -18,39 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.6 2003/08/26 15:59:23 vanto Exp $
+ * $Id: layoutmanager.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-
-#ifndef POA_CPUMODEL_H
-#define POA_CPUMODEL_H
-
-
-#include "codemanager.h"
-#include "blockmodel.h"
+#ifndef POA_LAYOUTMANAGER_H
+#define POA_LAYOUTMANAGER_H
 
 
 /*****************************************************************************
- * A block that executes some source code everytime it is triggered.
- * A CpuModel-object can calculate its execution time based on its
- * source code.
- *
- * @author keulsn
+ * Manages layout creation.
+ * @author garbeam
  */
-class CpuModel: public BlockModel
+class LayoutManager
 {
+  public:
 
- public:
-    QString code () const;
-    void setCode (QString &code);
-
- private:
-
-    unsigned short id_;
-    QString *code_;
-    bool autoExecTime_;
+    LayoutManager();
+    virtual ~LayoutManager();
 
 };
 
-#endif
+#endif // POA_LAYOUTMANAGER_H

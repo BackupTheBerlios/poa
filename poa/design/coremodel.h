@@ -18,6 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: defaultheader,v 1.1 2003/07/08 11:41:13 garbeam Exp $
+ * $Id: coremodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
+
+
+#ifndef POA_COREMODEL_H
+#define POA_COREMODEL_H
+
+
+#include "blockmodel.h"
+
+
+/*****************************************************************************
+ * A block that calculates one specific function everytime it is triggered.
+ *
+ * @author keulsn
+ */
+class CoreModel: public BlockModel
+{
+};
+
+
+#endif

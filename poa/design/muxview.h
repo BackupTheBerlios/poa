@@ -18,46 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.1 2003/07/13 20:15:12 garbeam Exp $
+ * $Id: muxview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MAINWINDOW_H
-#define POA_MAINWINDOW_H
+#ifndef POA_MUXVIEW_H
+#define POA_MUXVIEW_H
 
+#include "muxmodel.h"
+#include "blockview.h"
 
 /*****************************************************************************
- * Defines the main application window.
+ * Definition of a mux view.
  * @author garbeam
  */
-class MainWindow: public QMainWindow
+class MuxView: public BlockView
 {
-    Q_OBJECT
-public:
-    MainWindow();
-    ~MainWindow();
-
-protected:
-    void closeEvent( QCloseEvent * );
-
-private slots:
-    MdiWindow* newMdiWindow();
-    void load();
-    void save();
-    void saveAs();
-    void closeWindow();
-    void tileHorizontal();
-
-    void about();
-
-    void windowsMenuAboutToShow();
-    void windowsMenuActivated( int id );
 
 private:
-    QWorkspace* workspace_;
-    QToolBar *toolbar_;
-    QPopupMenu* windowMenu_;
+
+    MuxModel *muxModel_;
+
+public:
+
+    MuxModel *getModel();
+    void setModel(MuxModel *muxModel);
+
 };
 
-
-#endif // POA_MAINWINDOW_H
+#endif // POA_MUXVIEW_H

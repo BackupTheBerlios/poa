@@ -18,36 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockmodel.h,v 1.5 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: inputblockview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
+#ifndef POA_INPUTBLOCKVIEW_H
+#define POA_INPUTBLOCKVIEW_H
 
-#ifndef POA_INPUTBLOCKMODEL_H
-#define POA_INPUTBLOCKMODEL_H
-
-
-#include "blockmodel.h"
-#include "pinvector.h"
-
+#include "inputblockmodel.h"
+#include "blockview.h"
 
 /*****************************************************************************
- * A block providing inputs into the system.
- *
- * @author keulsn
+ * Definition of a input block view.
+ * @author garbeam
  */
-class InputBlockModel: public BlockModel
+class InputBlockView: public BlockView
 {
-  public:
-  
-    void addOutputPin (PinModel *pin, PinModel *successor = 0);
-    void removeOutputPin (PinModel *pin);
 
-  private:
+private:
 
-    PinVector *outputPins;
-  
+    InputBlockModel *inputBlockModel_;
+
+public:
+
+    InputBlockModel *getModel();
+    void setModel(InputBlockModel *cpuModel);
+
 };
 
-
-#endif
+#endif // POA_CPUVIEW_H

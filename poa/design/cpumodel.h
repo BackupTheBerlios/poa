@@ -18,43 +18,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.2 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: cpumodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
 
-#include <qmainwindow.h>
+#ifndef POA_CPUMODEL_H
+#define POA_CPUMODEL_H
 
-#include "layoutcanvas.h"
+
+#include "codemanager.h"
+#include "blockmodel.h"
+
 
 /*****************************************************************************
- * Defines MDI windows.
- * @author garbeam
+ * A block that executes some source code everytime it is triggered.
+ * A CpuModel-object can calculate its execution time based on its
+ * source code.
+ *
+ * @author keulsn
  */
-class MdiWindow : public QMainWindow
+class CpuModel: public BlockModel
 {
-    Q_OBJECT
 
-private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+ public:
+    QString code () const;
+    void setCode (QString &code);
 
-public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
-    ~MdiWindow();
+ private:
 
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-
-protected:
-    void closeEvent( QCloseEvent * );
-
-signals:
-    void message(const QString&, int );
+    unsigned short id_;
+    QString *code_;
+    bool autoExecTime_;
 
 };
 
-#endif // POA_MDIWINDOW_H
+#endif

@@ -18,33 +18,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.3 2003/07/14 22:14:23 keulsn Exp $
+ * $Id: inputblockmodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_PINVIEW_H
-#define POA_PINVIEW_H
 
-#include <qcanvasitem.h>
+#ifndef POA_INPUTBLOCKMODEL_H
+#define POA_INPUTBLOCKMODEL_H
 
-#include "pinmodel.h"
+
+#include "blockmodel.h"
+#include "pinvector.h"
+
 
 /*****************************************************************************
- * Definition of a Pin view.
- * @author garbeam
+ * A block providing inputs into the system.
+ *
+ * @author keulsn
  */
-class PinView: public QCanvasItem
+class InputBlockModel: public BlockModel
 {
+  public:
+  
+    void addOutputPin (PinModel *pin, PinModel *successor = 0);
+    void removeOutputPin (PinModel *pin);
 
-private:
+  private:
 
-    PinModel *pinModel_;
-
-public:
-
-    PinModel *getModel();
-    void setModel(PinModel *cpuModel);
-
+    PinVector *outputPins;
+  
 };
 
-#endif // POA_PINVIEW_H
+
+#endif

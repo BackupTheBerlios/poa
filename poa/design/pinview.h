@@ -18,35 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.3 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: pinview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
+#ifndef POA_PINVIEW_H
+#define POA_PINVIEW_H
 
-#ifndef POA_CODEMANAGER_H
-#define POA_CODEMANAGER_H
+#include <qcanvasitem.h>
 
-
-#include <qstring.h>
-
+#include "pinmodel.h"
 
 /*****************************************************************************
- * Manages a portion of source code.
- * @author keulsn
+ * Definition of a Pin view.
+ * @author garbeam
  */
-class CodeManager
+class PinView: public QCanvasItem
 {
-  public:
 
-    CodeManager();
-    virtual ~CodeManager();
+private:
 
-    QString *getSource () const;
-    void setSource (QString &source);
+    PinModel *pinModel_;
 
-    virtual int compile ();
+public:
+
+    PinModel *getModel();
+    void setModel(PinModel *cpuModel);
 
 };
 
-
-#endif
+#endif // POA_PINVIEW_H

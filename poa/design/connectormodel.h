@@ -18,36 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutcanvas.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: connectormodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_LAYOUTCANVAS_H
-#define POA_LAYOUTCANVAS_H
 
-#include <qcanvas.h>
+#ifndef POA_CONNECTORMODEL_H
+#define POA_CONNECTORMODEL_H
 
-#include "viewmap.h"
-#include "blockview.h"
-#include "layoutmanager.h"
 
-/*****************************************************************************
- * Defines the layout canvas displayed by MdiWindow.
- * @author garbeam
- */
-class LayoutCanvas : public QCanvasView {
+#include "pinmodel.h"
 
-    Q_OBJECT
 
-private:
+class ConnectorModel
+{
+  public:
 
-    ViewMap *views_;
-    LayoutManager *layoutManager_;
+    ConnectorModel(PinModel *source,
+		   PinModel *target);
 
-public:
-    // Returns an unique key of this blockModelView
-    QString *putView(BlockView *blockView);
-    BlockView *getView(QString &key);
+    virtual ~ConnectorModel();
+
+  private:
+
+    PinModel *source_;
+    PinModel *target_;
+    unsigned width_;
+    
+
 };
 
-#endif // POA_NETWORKCANVAS_H
+
+#endif  // POA_CONNECTORMODEL_H

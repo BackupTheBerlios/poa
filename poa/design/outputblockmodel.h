@@ -18,35 +18,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.h,v 1.2 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: outputblockmodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_CONNECTORMODEL_H
-#define POA_CONNECTORMODEL_H
+#ifndef POA_OUTPUTBLOCKMODEL_H
+#define POA_OUTPUTBLOCKMODEL_H
 
 
-#include "pinmodel.h"
+#include "blockmodel.h"
+#include "pinvector.h"
 
 
-class ConnectorModel
+/*****************************************************************************
+ * A block receiving outputs from the system and transmitting those outputs
+ * to the environment.
+ *
+ * @author keulsn
+ */
+class OutputBlockModel: public BlockModel
 {
   public:
-
-    ConnectorModel(PinModel *source,
-		   PinModel *target);
-
-    virtual ~ConnectorModel();
+  
+    void addInputPin (PinModel *pin, PinModel *successor = 0);
+    void removeInputPin (PinModel *pin);
 
   private:
 
-    PinModel *source_;
-    PinModel *target_;
-    unsigned width_;
-    
-
+    PinVector *inputPins;
+  
 };
 
 
-#endif  // POA_CONNECTORMODEL_H
+#endif

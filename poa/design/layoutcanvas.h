@@ -18,33 +18,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
+ * $Id: layoutcanvas.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_BLOCKVIEW_H
-#define POA_BLOCKVIEW_H
+#ifndef POA_LAYOUTCANVAS_H
+#define POA_LAYOUTCANVAS_H
 
-#include <qcanvasitem.h>
+#include <qcanvas.h>
 
-#include "blockmodel.h"
+#include "viewmap.h"
+#include "blockview.h"
+#include "layoutmanager.h"
 
 /*****************************************************************************
- * Definition of a block view.
+ * Defines the layout canvas displayed by MdiWindow.
  * @author garbeam
  */
-class BlockView: public QCanvasItem
-{
+class LayoutCanvas : public QCanvasView {
+
+    Q_OBJECT
 
 private:
 
-    BlockModel *blockModel_;
+    ViewMap *views_;
+    LayoutManager *layoutManager_;
 
 public:
-
-    BlockModel *getModel();
-    void setModel(BlockModel *blockModel);
-
+    // Returns an unique key of this blockModelView
+    QString *putView(BlockView *blockView);
+    BlockView *getView(QString &key);
 };
 
-#endif // POA_BLOCKMODELVIEW_H
+#endif // POA_NETWORKCANVAS_H

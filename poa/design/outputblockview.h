@@ -18,31 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.5 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: outputblockview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
+#ifndef POA_OUTPUTBLOCKVIEW_H
+#define POA_OUTPUTBLOCKVIEW_H
 
-#ifndef POA_MUXMODEL_H
-#define POA_MUXMODEL_H
-
-
-#include "inputoutputblockmodel.h"
-
+#include "outputblockmodel.h"
+#include "blockview.h"
 
 /*****************************************************************************
- * A block that has both: inputs and outputs. Outputs are directly dependent
- * on inputs and the production of outputs takes no time.
- *
- * @author keulsn
+ * Definition of a ouput block view.
+ * @author garbeam
  */
-class MuxModel: public BlockModel
+class OutputBlockView: public BlockView
 {
 
-  public:
+private:
 
+    OutputBlockModel *outputBlockModel_;
+
+public:
+
+    OutputBlockModel *getModel();
+    void setModel(OutputBlockModel *outputBlockModel);
 
 };
 
-
-#endif
+#endif // POA_CPUVIEW_H

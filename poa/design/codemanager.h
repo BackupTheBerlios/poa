@@ -18,63 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: viewmap.h,v 1.4 2003/08/16 18:00:09 garbeam Exp $
+ * $Id: codemanager.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_VIEWMAP_H
-#define POA_VIEWMAP_H
 
-#include <qmap.h>
+#ifndef POA_CODEMANAGER_H
+#define POA_CODEMANAGER_H
 
-#include "blockmodel.h"
+
+#include <qstring.h>
 
 
 /*****************************************************************************
- * Basic map container for BlockModel objects.
- * Used by NetworkCanvas to store its BlockModelView items.
- * @author garbeam
+ * Manages a portion of source code.
+ * @author keulsn
  */
-class ViewMap
+class CodeManager
 {
+  public:
 
-private:
+    CodeManager();
+    virtual ~CodeManager();
 
-    QMap *map_;
+    QString *getSource () const;
+    void setSource (QString &source);
 
-public:
-
-    void put(QString &key, BlockView *blockView);
-    BlockView *get(QString &key);
+    virtual int compile ();
 
 };
 
-#endif // POA_VIEWMAP_H
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif

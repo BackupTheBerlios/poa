@@ -18,26 +18,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.h,v 1.4 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: mainwindow.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-
-#ifndef POA_COREMODEL_H
-#define POA_COREMODEL_H
-
-
-#include "blockmodel.h"
+#ifndef POA_MAINWINDOW_H
+#define POA_MAINWINDOW_H
 
 
 /*****************************************************************************
- * A block that calculates one specific function everytime it is triggered.
- *
- * @author keulsn
+ * Defines the main application window.
+ * @author garbeam
  */
-class CoreModel: public BlockModel
+class MainWindow: public QMainWindow
 {
+    Q_OBJECT
+public:
+    MainWindow();
+    ~MainWindow();
+
+protected:
+    void closeEvent( QCloseEvent * );
+
+private slots:
+    MdiWindow* newMdiWindow();
+    void load();
+    void save();
+    void saveAs();
+    void closeWindow();
+    void tileHorizontal();
+
+    void about();
+
+    void windowsMenuAboutToShow();
+    void windowsMenuActivated( int id );
+
+private:
+    QWorkspace* workspace_;
+    QToolBar *toolbar_;
+    QPopupMenu* windowMenu_;
 };
 
 
-#endif
+#endif // POA_MAINWINDOW_H

@@ -18,25 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutmanager.h,v 1.2 2003/07/15 09:20:13 keulsn Exp $
+ * $Id: pinmodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_LAYOUTMANAGER_H
-#define POA_LAYOUTMANAGER_H
+#ifndef POA_PINMODEL_H
+#define POA_PINMODEL_H
 
+#include <qobject.h>
 
-/*****************************************************************************
- * Manages layout creation.
- * @author garbeam
- */
-class LayoutManager
+class PinModel: public QObject
 {
-  public:
+  Q_OBJECT
 
-    LayoutManager();
-    virtual ~LayoutManager();
+public:
+
+    void setName (QString &name);
+
+private:
+
+    QString *name_;
+    unsigned address_;
+    unsigned bits_;   // data type to be used in C source and width of pin
+                      // one pin can be wider than one bit.
+
+public slots:
+
+    void attach (Connector *connector);
+    void deattach (Connector *connector);
 
 };
 
-#endif // POA_LAYOUTMANAGER_H
+#endif // POA_PINMODEL_H

@@ -18,32 +18,31 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
+ * $Id: muxmodel.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_INPUTBLOCKVIEW_H
-#define POA_INPUTBLOCKVIEW_H
 
-#include "inputblockmodel.h"
-#include "blockview.h"
+#ifndef POA_MUXMODEL_H
+#define POA_MUXMODEL_H
+
+
+#include "inputoutputblockmodel.h"
+
 
 /*****************************************************************************
- * Definition of a input block view.
- * @author garbeam
+ * A block that has both: inputs and outputs. Outputs are directly dependent
+ * on inputs and the production of outputs takes no time.
+ *
+ * @author keulsn
  */
-class InputBlockView: public BlockView
+class MuxModel: public BlockModel
 {
 
-private:
+  public:
 
-    InputBlockModel *inputBlockModel_;
-
-public:
-
-    InputBlockModel *getModel();
-    void setModel(InputBlockModel *cpuModel);
 
 };
 
-#endif // POA_CPUVIEW_H
+
+#endif

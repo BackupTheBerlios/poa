@@ -18,34 +18,63 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coreview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
+ * $Id: viewmap.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_COREVIEW_H
-#define POA_COREVIEW_H
+#ifndef POA_VIEWMAP_H
+#define POA_VIEWMAP_H
 
-#include "coremodel.h"
-#include "inputblockview.h"
-#include "outputblockview.h"
+#include <qmap.h>
+
+#include "blockmodel.h"
 
 
 /*****************************************************************************
- * Definition of a core view.
+ * Basic map container for BlockModel objects.
+ * Used by NetworkCanvas to store its BlockModelView items.
  * @author garbeam
  */
-class CoreView: public InputBlockView, public OutputBlockView
+class ViewMap
 {
 
 private:
 
-    CoreModel *coreModel_;
+    QMap *map_;
 
 public:
 
-    CoreModel *getModel();
-    void setModel(CoreModel *coreModel);
+    void put(QString &key, BlockView *blockView);
+    BlockView *get(QString &key);
 
 };
 
-#endif // POA_COREVIEW_H
+#endif // POA_VIEWMAP_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

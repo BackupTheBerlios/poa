@@ -18,32 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
+ * $Id: blockview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MUXVIEW_H
-#define POA_MUXVIEW_H
+#ifndef POA_BLOCKVIEW_H
+#define POA_BLOCKVIEW_H
 
-#include "muxmodel.h"
-#include "blockview.h"
+#include <qcanvasitem.h>
+
+#include "blockmodel.h"
 
 /*****************************************************************************
- * Definition of a mux view.
+ * Definition of a block view.
  * @author garbeam
  */
-class MuxView: public BlockView
+class BlockView: public QCanvasItem
 {
 
 private:
 
-    MuxModel *muxModel_;
+    BlockModel *blockModel_;
 
 public:
 
-    MuxModel *getModel();
-    void setModel(MuxModel *muxModel);
+    BlockModel *getModel();
+    void setModel(BlockModel *blockModel);
 
 };
 
-#endif // POA_MUXVIEW_H
+#endif // POA_BLOCKMODELVIEW_H

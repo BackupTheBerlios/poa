@@ -18,44 +18,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.2 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: pinvector.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-
-#ifndef POA_CONNECTORVIEW_H
-#define POA_CONNECTORVIEW_H
-
-
-#include <qcanvasitem.h>
-#include <qpointarray.h>
+#ifndef POA_PINVECTOR_H
+#define POA_PINVECTOR_H
 
 #include "pinmodel.h"
 
-
 /*****************************************************************************
- * Definition of a connector view.
- * @author keulsn
+ * Collection of pinmodels.
+ * @author keulsn, garbeam
  */
-class ConnectorView: public QCanvasItem  // probably QCanvasPolygon??
+class PinVector
 {
-
-private:
-
-    ConnectorModel *connectorModel_;
-    QPointArray points_;
-
-public:
-
-    QPoint getPoint(int index);
-    void setPoint(QPoint point, uint index);
-    void addPoint(QPoint point, uint after = 0);
-    void removePoint (uint index);
-
-    ConnectorModel *getModel();
-    void setModel(ConnectorModel *connectorModel);
-
 };
 
 
-#endif // POA_CONNECTORMODELVIEW_H
+#endif // POA_PINVECTOR_H

@@ -18,33 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.4 2003/08/16 18:00:09 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_CPUVIEW_H
-#define POA_CPUVIEW_H
+#ifndef POA_MDIWINDOW_H
+#define POA_MIDWINDOW_H
 
-#include "cpumodel.h"
-#include "inputblockview.h"
-#include "outputblockview.h"
+#include <qmainwindow.h>
+
+#include "layoutcanvas.h"
 
 /*****************************************************************************
- * Definition of a cpu view.
+ * Defines MDI windows.
  * @author garbeam
  */
-class CpuView: public BlockView
+class MdiWindow : public QMainWindow
 {
+    Q_OBJECT
 
 private:
-
-    CpuModel *cpuModel_;
+    LayoutCanvas* layoutCanvas_;
+    QString filename_;
 
 public:
+    MdiWindow( QWidget* parent, const char* name, int wflags );
+    ~MdiWindow();
 
-    CpuModel *getModel();
-    void setModel(CpuModel *cpuModel);
+    void load( const QString& fn );
+    void save();
+    void saveAs();
+
+protected:
+    void closeEvent( QCloseEvent * );
+
+signals:
+    void message(const QString&, int );
 
 };
 
-#endif // POA_CPUVIEW_H
+#endif // POA_MDIWINDOW_H

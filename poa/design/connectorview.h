@@ -18,32 +18,44 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
+ * $Id: connectorview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_OUTPUTBLOCKVIEW_H
-#define POA_OUTPUTBLOCKVIEW_H
 
-#include "outputblockmodel.h"
-#include "blockview.h"
+#ifndef POA_CONNECTORVIEW_H
+#define POA_CONNECTORVIEW_H
+
+
+#include <qcanvasitem.h>
+#include <qpointarray.h>
+
+#include "pinmodel.h"
+
 
 /*****************************************************************************
- * Definition of a ouput block view.
- * @author garbeam
+ * Definition of a connector view.
+ * @author keulsn
  */
-class OutputBlockView: public BlockView
+class ConnectorView: public QCanvasItem  // probably QCanvasPolygon??
 {
 
 private:
 
-    OutputBlockModel *outputBlockModel_;
+    ConnectorModel *connectorModel_;
+    QPointArray points_;
 
 public:
 
-    OutputBlockModel *getModel();
-    void setModel(OutputBlockModel *outputBlockModel);
+    QPoint getPoint(int index);
+    void setPoint(QPoint point, uint index);
+    void addPoint(QPoint point, uint after = 0);
+    void removePoint (uint index);
+
+    ConnectorModel *getModel();
+    void setModel(ConnectorModel *connectorModel);
 
 };
 
-#endif // POA_CPUVIEW_H
+
+#endif // POA_CONNECTORMODELVIEW_H

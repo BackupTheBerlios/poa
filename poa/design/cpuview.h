@@ -18,37 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modulelibraryitem.h,v 1.4 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: cpuview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
+#ifndef POA_CPUVIEW_H
+#define POA_CPUVIEW_H
 
-#ifndef POA_MODULELIBRARYITEM_H
-#define POA_MODULELIBRARYITEM_H
-
-
-#include <qobject.h>
-
+#include "cpumodel.h"
+#include "inputblockview.h"
+#include "outputblockview.h"
 
 /*****************************************************************************
- * Base class for items in the module library.
- * Subclasses QListBoxItem as a very simple interface. If more functionality
- * is needed, QListViewItem might be a better choice.
- *
- * @author keulsn
+ * Definition of a cpu view.
+ * @author garbeam
  */
-class ModuleLibraryItem: public QObject
+class CpuView: public BlockView
 {
-  Q_OBJECT
 
-  public:
+private:
 
+    CpuModel *cpuModel_;
 
-  public slots:
+public:
 
-    void drag ();
+    CpuModel *getModel();
+    void setModel(CpuModel *cpuModel);
 
 };
 
-
-#endif
+#endif // POA_CPUVIEW_H

@@ -18,22 +18,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.h,v 1.2 2003/07/13 20:14:10 garbeam Exp $
+ * $Id: coreview.h,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_PINVECTOR_H
-#define POA_PINVECTOR_H
+#ifndef POA_COREVIEW_H
+#define POA_COREVIEW_H
 
-#include "pinmodel.h"
+#include "coremodel.h"
+#include "inputblockview.h"
+#include "outputblockview.h"
+
 
 /*****************************************************************************
- * Collection of pinmodels.
- * @author keulsn, garbeam
+ * Definition of a core view.
+ * @author garbeam
  */
-class PinVector
+class CoreView: public InputBlockView, public OutputBlockView
 {
+
+private:
+
+    CoreModel *coreModel_;
+
+public:
+
+    CoreModel *getModel();
+    void setModel(CoreModel *coreModel);
+
 };
 
-
-#endif // POA_PINVECTOR_H
+#endif // POA_COREVIEW_H

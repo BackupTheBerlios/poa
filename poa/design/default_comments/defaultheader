@@ -18,37 +18,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockmodel.h,v 1.4 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: defaultheader,v 1.1 2003/08/28 18:24:21 vanto Exp $
  *
  *****************************************************************************/
-
-
-#ifndef POA_OUTPUTBLOCKMODEL_H
-#define POA_OUTPUTBLOCKMODEL_H
-
-
-#include "blockmodel.h"
-#include "pinvector.h"
-
-
-/*****************************************************************************
- * A block receiving outputs from the system and transmitting those outputs
- * to the environment.
- *
- * @author keulsn
- */
-class OutputBlockModel: public BlockModel
-{
-  public:
-  
-    void addInputPin (PinModel *pin, PinModel *successor = 0);
-    void removeInputPin (PinModel *pin);
-
-  private:
-
-    PinVector *inputPins;
-  
-};
-
-
-#endif

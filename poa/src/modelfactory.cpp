@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.19 2004/01/21 13:26:39 squig Exp $
+ * $Id: modelfactory.cpp,v 1.20 2004/03/19 15:54:34 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -53,8 +53,7 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
             else if (element.attribute("block-type", "") == "cpu") {
                 model = new CpuModel(element);
             }
-            else if ((element.attribute("block-type", "") == "mux")
-                     || (element.attribute("block-type", "") == "demux")) {
+            else if (element.attribute("block-type", "") == "mux") {
                 model = new MuxModel(element);
             }
 

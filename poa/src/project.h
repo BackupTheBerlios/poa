@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.28 2004/01/22 00:05:06 squig Exp $
+ * $Id: project.h,v 1.29 2004/03/19 15:54:34 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -46,8 +46,8 @@ class Project : public QObject
 public:
     /**
      * Creates a new project with the given name.
-     * @param name will be showed in the mdiwindow title
-     * @param document will be deserialized, if != 0
+     * @param path path to project.xml. will be used to load and store project
+     *        data and shown in the title of the mdiwindow.
      */
     Project(QString path);
 
@@ -58,14 +58,14 @@ public:
     ~Project();
 
     /**
-     * Adds a block model to the project.
-     * @param item the AbstractModel
+     * Adds a model to the project.
+     * @param item the AbstractModel.
      */
     void addBlock(AbstractModel *item);
 
     /*
-     * Removes a block model from the project.
-     * @param item the AbstractModel
+     * Removes a model from the project.
+     * @param item the AbstractModel, must belong to the project.
      */
     void removeBlock(AbstractModel *item);
 
@@ -106,7 +106,8 @@ public:
 
     /**
      * Sets the changed-status of this project.
-     * Set it to false on save, to true on changes
+     * Set it to false on save, to true on changes.
+     * Emits a modified() signal on true.
      */
     void setModified(bool);
 

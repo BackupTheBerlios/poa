@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.11 2003/11/24 16:37:41 squig Exp $
+ * $Id: modelfactory.h,v 1.12 2004/03/19 15:54:34 vanto Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
@@ -29,8 +29,6 @@ class AbstractModel;
 #include <qvaluelist.h>
 class QDomNode;
 
-/**  class AbstractModelList : public QValueList<AbstractModel *> { */
-/**  }; */
 
 /**
  * Generates model objects from xml data.
@@ -40,12 +38,12 @@ class ModelFactory
 public:
 
     /**
-     * Generates cpu respectivly core models
+     * Generates cpu respectivly core models from xml data.
      */
     static QValueList<AbstractModel *> generate(QDomNode node);
 
     /**
-     * FIX: set this to true to create clean new instances.
+     * Clear models properties.
      */
     static void clearProperties(AbstractModel* model);
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.54 2004/02/15 04:05:53 kilgus Exp $
+ * $Id: project.cpp,v 1.55 2004/03/19 15:54:34 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -41,10 +41,9 @@
 #include "poaexception.h"
 
 Project::Project(QString path)
-    : filename_(QString::null)
 {
     currentBlockId_ = 0;
-
+    filename_ = QString::null;
     modified_ = false;
 
     setPath(path);
@@ -81,10 +80,12 @@ void Project::open()
             Settings::instance()->addToRecentProjects(path_);
             //            file.close();
             setModified(false);
+            file.close();
         } else {
-            throw PoaException(tr("Could not parse project file in %1").arg(path_));
+            file.close();
+            throw PoaException(tr("Could not parse project file in %1")
+                               .arg(path_));
         }
-        file.close();
     } else {
         throw PoaException(tr("Could not open project file in %1.").arg(path_));
     }
@@ -92,12 +93,13 @@ void Project::open()
 
 void Project::save()
 {
-    //FIX: Fehlerbehandlung
     QDir dir(path_);
     QFileInfo fi(dir, QString("project.xml"));
     QFile file(fi.absFilePath());
     if (file.open(IO_WriteOnly)) {
         QTextStream ts(&file);
+
+        // serialize and indent xml by 2 spaces
         serialize().save(ts, 2);
         file.close();
         setModified(false);
@@ -134,6 +136,7 @@ void Project::addBlock(AbstractModel *item)
 
 void Project::removeBlock(AbstractModel *item)
 {
+    Q_ASSERT(blocks_.contains(item));
     blocks_.remove(item);
     delete item;
     setModified(true);
@@ -183,7 +186,9 @@ QPtrList<AbstractModel> *Project::blocks()
 void Project::setModified(bool mod)
 {
     modified_ = mod;
-    emit modified(mod);
+    if (mod) {
+        emit modified(mod);
+    }
 }
 
 void Project::setPath(QString path)
@@ -200,8 +205,8 @@ bool Project::isModified()
 
 QDomDocument Project::serialize()
 {
-    typedef QMap<ConnectorViewList *, bool> ConSerMap;
-    ConSerMap serialized;
+    QMap<ConnectorViewList *, bool> serialized;
+
     QDomDocument doc;
     QDomElement proj = doc.createElement("project");
     doc.appendChild(proj);
@@ -252,8 +257,7 @@ QDomDocument Project::serialize()
 }
 
 void Project::deserialize(QDomDocument *document) {
-    typedef QMap<uint, AbstractModel*> IdMap;
-    IdMap idMap;
+    QMap<uint, AbstractModel*> idMap;
 
     QDomNodeList mList = document->elementsByTagName("model");
     if (mList.count() != 1) {
@@ -315,7 +319,7 @@ void Project::deserialize(QDomDocument *document) {
             AbstractModel *tb = dynamic_cast<AbstractModel*>(
                 idMap[conEl.attribute("target-block","0").toUInt()]);
 
-            if (sb == 0 && tb == 0) {
+            if (sb == 0 || tb == 0) {
                 throw PoaException(tr("Could not load the project. %1 does not contain a valid project file.").arg(name_));
             }
 

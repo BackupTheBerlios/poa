@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.1 2003/12/10 13:40:01 papier Exp $
+ * $Id: downloadmanager.h,v 1.2 2004/01/09 15:50:41 papier Exp $
  *
  *****************************************************************************/
 
@@ -50,7 +50,7 @@ public:
      * returns <code>true</code> if the download of the srec file was
      * successful.
      */
-    bool download(QString filename);
+    bool download(QString filename, const char* portName);
 
 protected:
     DownloadManager();

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.66 2004/01/05 15:48:49 kilgus Exp $
+# $Id: poa.pro,v 1.67 2004/01/09 15:50:41 papier Exp $
 #
 ###############################################################################
 
@@ -63,6 +63,7 @@ HEADERS += cpumodel.h
 HEADERS += dijkstrarouter.h
 HEADERS += directrouter.h
 HEADERS += deployprojectwizard.h
+HEADERS += downloadmanager.h
 HEADERS += genericpriorityqueue.h
 HEADERS += grid.h
 HEADERS += gridcanvas.h
@@ -108,6 +109,7 @@ SOURCES += cpumodel.cpp
 SOURCES += dijkstrarouter.cpp
 SOURCES += directrouter.cpp
 SOURCES += deployprojectwizard.cpp
+SOURCES += downloadmanager.cpp
 SOURCES += grid.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp
@@ -130,4 +132,20 @@ SOURCES += scheduledialog.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp
+
+###############################################################################
+# Qextserialport
+##############################################################################
+HEADERS += qextserialport/qextserialbase.h
+HEADERS += qextserialport/qextserialport.h
+
+SOURCES += qextserialport/qextserialbase.cpp
+SOURCES += qextserialport/qextserialport.cpp
+
+unix:HEADERS += qextserialport/posix_qextserialport.h
+unix:SOURCES += qextserialport/posix_qextserialport.cpp
+unix:DEFINES  = _TTY_POSIX_
+
+win32:HEADERS += qextserialport/win_qextserialport.h
+win32:SOURCES += qextserialport/win_qextserialport.cpp
 

@@ -48,10 +48,11 @@ public:
 
 protected:
     HANDLE Win_Handle;
-	COMMCONFIG	Win_CommConfig;
-	COMMTIMEOUTS Win_CommTimeouts;
+    COMMCONFIG	Win_CommConfig;
+    COMMTIMEOUTS Win_CommTimeouts;
 
     void construct(void);
 };
 
 #endif
+

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.1 2003/12/10 13:40:01 papier Exp $
+ * $Id: downloadmanager.cpp,v 1.2 2004/01/09 15:50:41 papier Exp $
  *
  *****************************************************************************/
 
@@ -28,10 +28,16 @@
 #include "settings.h"
 #include "processdialog.h"
 #include "util.h"
+#include "qextserialport/qextserialbase.h"
+#include "qextserialport/qextserialport.h"
 
 #include <qfileinfo.h>
+#include <qfile.h>
 #include <qprocess.h>
+#include <qstring.h>
 #include <qstringlist.h>
+#include <stdio.h>
+#include <time.h>
 
 /**
  * The singleton instance.
@@ -55,10 +61,107 @@ DownloadManager *DownloadManager::instance()
     return instance_;
 }
 
-bool DownloadManager::download(QSting filename)
+bool DownloadManager::download(QString filename, const char* portname)
 {
 
-return true
+#define PAUSE   300
+
+  long fileSize = 0;
+  Q_LONG err = 0;
+  int lenght = 0;
+  int address = 0;
+  char line[255];
+  char line_tmp[255];
+  char data[255];
+  char dummy;
+  int dummy_int=0;
+  unsigned char character;
+  int pos = 0;
+  clock_t c1;
+
+  //open serial port
+  QextSerialPort port;
+  port.setName(portname);
+  port.open(0);
+
+
+  //open file
+  QFile file;
+  file.setName(filename);
+  file.open( IO_ReadOnly );
+
+  //get size of data to send
+  while (file.atEnd() == false) {
+    err = file.readLine(line, 254);
+
+    if (err != 0) {
+      if (line[1]=='1') {
+	sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int, 
+	       &lenght, &address, line_tmp);
+	fileSize += (lenght -3 );
+      }
+    }
+  }
+  file.close();
+
+  //send header
+  port.putch(0xff);
+  port.flush();
+  c1=clock();
+  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+
+
+  //send adress
+  port.putch(0x01);
+  port.flush();
+  c1=clock();
+  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+
+  //send size
+  port.putch((unsigned char)(fileSize>>8));
+  port.flush();
+  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+  c1=clock();
+
+  port.putch((unsigned char)(fileSize&0xff));
+  port.flush();
+  c1=clock();
+  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+
+  //send command 
+  //0x01 = LOAD 
+  //0x05 = RUN
+  port.putch(0x01);
+  port.flush();
+  c1=clock();
+  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+
+  //send data
+  file.open( IO_ReadOnly );
+  while (file.atEnd() == false) {
+    err = file.readLine(line, 254);
+
+    if (err!=0) {
+      if (line[1] == '1') {
+	sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
+	       &lenght, &address, line_tmp);
+	//remove checksum
+	strncpy( data, line_tmp, 2* (lenght-3) );
+	for (int i=0; i < (lenght-3); i++) {
+	  sscanf(data, "%2x%s", &character, data);
+	  port.putch(character);
+	  port.flush();
+	  pos++;
+	  c1=clock();
+	  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+	  //Prozessbalken erhöhen
+	}
+      }
+    }
+  }
+  file.close();
+  port.close();
+  return true;
 }
 
 

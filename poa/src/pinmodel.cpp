@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.16 2003/09/16 16:03:32 squig Exp $
+ * $Id: pinmodel.cpp,v 1.17 2003/09/18 10:19:03 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -51,7 +51,7 @@ PinModel::PinModel(BlockModel *parent, const QString &name)
     connected_ = 0;
     id_ = 0;
     address_ = 0;
-    bits_ = 0;
+    bits_ = 32;
 }
 
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)

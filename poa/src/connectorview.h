@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.12 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: connectorview.h,v 1.13 2003/09/18 10:19:03 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -48,8 +48,9 @@ class ConnectorView;
  * propagation some items may be removed or new items may be inserted into
  * the list.
  */
-class ConnectorView: public QCanvasLine, public Tooltipable
+class ConnectorView: public QObject, public QCanvasLine, public Tooltipable
 {
+    Q_OBJECT
 
 public:
     /**
@@ -57,13 +58,13 @@ public:
      * routed line from <code>from</code> pin to <code>to</code> pin.
      */
     ConnectorView(PinView *from,
-		  PinView *to,
-		  QCanvas *canvas);
+          PinView *to,
+          QCanvas *canvas);
 
-    ConnectorView(PinView *from,
-		  QPoint to,
-		  LineDirection toDir,
-		  QCanvas *canvas);
+    ConnectorView(PinView *source, PinView *target,
+          QPoint to,
+          LineDirection toDir,
+          QCanvas *canvas);
 
     /**
      * Default destructor
@@ -88,35 +89,35 @@ public:
     PinView *to();
 
 protected:
-    ConnectorView(QPoint first,
-		  QPoint second,
-		  QCanvas *canvas);
+    ConnectorView(PinView *source, PinView *target, QPoint first,
+          QPoint second,
+          QCanvas *canvas);
 
     void applyPointList(QValueList<QPoint> *list,
-			PinView *targetPin = 0);
+            PinView *targetPin = 0);
 
     void destroySuccessors();
 
     bool canUseDir(LineDirection goDir,
-		   bool honorGoDir,
-		   LineDirection dir);
+           bool honorGoDir,
+           LineDirection dir);
 
     /*    QValueList<QPoint> *routeUsingLastButOne(QPoint startPoint,
-					     LineDirection startDir,
-					     bool honorStartDir,
-					     QPoint lastButOne,
-					     QPoint endPoint);
+                         LineDirection startDir,
+                         bool honorStartDir,
+                         QPoint lastButOne,
+                         QPoint endPoint);
 
     QValueList<QPoint> *routeConnector(QPoint startPoint,
-				       LineDirection startDir,
-				       bool honorStartDir,
-				       QPoint endPoint,
-				       LineDirection endDir,
-				       bool honorEndDir);*/
+                       LineDirection startDir,
+                       bool honorStartDir,
+                       QPoint endPoint,
+                       LineDirection endDir,
+                       bool honorEndDir);*/
     QValueList<QPoint> *routeConnector(QPoint from,
-				       LineDirection fromDir,
-				       QPoint to,
-				       LineDirection toDir);
+                       LineDirection fromDir,
+                       QPoint to,
+                       LineDirection toDir);
 
 
     void setPrevConnector(ConnectorView *prev);
@@ -169,6 +170,9 @@ private:
      */
     ConnectorDocking next_;
 
+
+public slots:
+        void deleteView();
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.24 2003/09/16 17:29:54 garbeam Exp $
+ * $Id: blockmodel.h,v 1.25 2003/09/18 10:19:03 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -58,22 +58,6 @@ public:
      * Default destructor
      */
     virtual ~BlockModel();
-
-    /**
-     * Returns <code>true</code> if this cannot itself be contained in a
-     * project, but produce instances. Returns <code>false</code> if this
-     * can be contained in a project.
-     */
-//    virtual bool isProducer() const;
-
-    /**
-     * Creates an instance that can be inserted into a project.
-     *
-     * Precondition:
-     *   this->isProducer()
-     */
-//   virtual BlockModel *getInstance ();
-
 
     /**
      * Returns a list of all episodic pins of this.

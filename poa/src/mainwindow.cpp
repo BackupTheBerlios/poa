@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.6 2003/08/20 13:50:34 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.7 2003/08/20 14:06:02 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "imagedata.h" // contains toolbar icons
 #include "mainwindow.h"
 #include "moduleconfdialog.h"
+#include "settingsdialog.h"
 
 #include <qaction.h>
 #include <qapplication.h>
@@ -305,7 +306,8 @@ void MainWindow::editPaste()
 
 void MainWindow::helpContents()
 {
-    qWarning( "MainWindow::helpContents(): Not implemented yet!" );
+	SettingsDialog *dialog = new SettingsDialog();
+	dialog->show();
 }
 
 void MainWindow::helpAbout()

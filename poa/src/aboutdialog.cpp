@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.cpp,v 1.1 2003/08/20 10:33:16 squig Exp $
+ * $Id: aboutdialog.cpp,v 1.2 2003/08/20 14:06:02 squig Exp $
  *
  *****************************************************************************/
 #include "aboutdialog.h"
@@ -28,7 +28,7 @@
 #include <qtextedit.h>
 
 /*****************************************************************************
- * Constructs an about dialog.
+ * Constructs the dialog.
  */
 AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal, 
 						 WFlags flags)

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file 'optiondialog.ui'
 **
-** Created: Tue Aug 19 15:38:55 2003
+** Created: Wed Aug 20 13:45:10 2003
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!

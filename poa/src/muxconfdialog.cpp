@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.28 2003/12/17 15:58:45 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.29 2003/12/17 17:19:30 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include <qmessagebox.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
+#include <qradiobutton.h>
 #include <qspinbox.h>
 #include <qtooltip.h>
 #include <qvariant.h>
@@ -176,12 +177,12 @@ void MuxConfDialog::initIOWidget() {
         new QPushButton(rightWidget, "removeIoPushButton");
     removeIoPushButton->setText("Remove I/O");
 
-    leftLayout->addWidget(new QLabel(tr("inputs"), leftWidget));
+    leftLayout->addWidget(new QRadioButton(tr("inputs"), leftWidget));
     leftLayout->addWidget(inputListView);
     leftLayout->addWidget(nameWidget);
     leftLayout->addWidget(addIoPushButton);
 
-    rightLayout->addWidget(new QLabel(tr("outputs"), rightWidget));
+    rightLayout->addWidget(new QRadioButton(tr("outputs"), rightWidget));
     rightLayout->addWidget(outputListView);
     rightLayout->addWidget(bitsWidget);
     rightLayout->addWidget(removeIoPushButton);
@@ -289,6 +290,7 @@ void MuxConfDialog::initBottomWidget() {
 
 void MuxConfDialog::initConnections() {
 
+    
     connect(updatePushButton, SIGNAL(clicked()), this, SLOT(updateMapping()));
     connect(removePushButton, SIGNAL(clicked()), this, SLOT(removeIoOrMapping()));
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
@@ -714,6 +716,27 @@ void MuxConfDialog::ok() {
     accept();
 }
 
+void MuxConfDialog::newIo()
+{
+    // determine list view
+#if 0
+    PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
+
+    if (item != 0) {
+        PinListViewItem *parentItem = item;
+        while (!parentItem->isOpen()) {
+            parentItem = (PinListViewItem *)parentItem->parent();
+        }
+        int childCount = parentItem->childCount() + 1;
+        PinModel *pin = new PinModel(model_,
+                "data" + QString::number(childCount),
+                childCount * 100, 32, parentItem->type());
+        newPins_.append(pin);
+        new PinListViewItem(parentItem, item != parentItem ? item : 0, pin);
+        updatePositions(parentItem->type());
+    }
+#endif
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.16 2003/12/17 15:58:45 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.17 2003/12/17 17:19:30 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,6 +43,7 @@ class QLabel;
 class QLineEdit;
 class QPushButton;
 class QSpinBox;
+class QRadioButton;
 
 /**
  * Provides the MuxMapping view items.
@@ -188,6 +189,8 @@ private slots:
      * Applies the changes to the model and closes this dialog.
      */
     void ok();
+
+    void newIo();
 
 };
 

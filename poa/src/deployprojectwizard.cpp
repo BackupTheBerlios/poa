@@ -18,18 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.9 2004/01/18 19:12:52 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.10 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
-#include "deployprojectwizard.h"
-#include "project.h"
 #include "abstractmodel.h"
 #include "blockmodel.h"
-#include "pinmodel.h"
 #include "codemanager.h"
 #include "cpumodel.h"
+#include "deployprojectwizard.h"
 #include "downloadmanager.h"
+#include "pinmodel.h"
+#include "problemmanager.h"
+#include "project.h"
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -48,55 +49,50 @@
 #include <qfileinfo.h>
 #include <qdatetime.h>
 
-/* 
+/*
  *  Constructs the DeployProjectWizard.
  *
  *  The wizard will by default be modeless, unless you set 'modal' to
  *  TRUE to construct a modal wizard.
  */
-DeployProjectWizard::DeployProjectWizard( QWidget* parent,  const char* name, bool modal, WFlags fl )
-    : QWizard( parent, name, modal, fl )
+DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
+                                         const char* name, bool modal,
+                                         WFlags fl)
+    : QWizard(parent, name, modal, fl), project_(project)
 {
-    if ( !name )
-	setName( "deployProjectWizard" );
-    resize( 600, 480 ); 
-    setCaption( trUtf8( "Deploy Project" ) );
+    resize(600, 400);
+    setCaption(tr("Deploy Project"));
 
-    DownloadManager *dm = DownloadManager::instance();
-  
-    connect(dm, SIGNAL(increaseProgressBar()),     this, SLOT(increaseDownloadProgressBar()));
-    connect(dm, SIGNAL(setProgressBarLength(int)), this, SLOT(setDownloadProgressBarLength(int)));  
-  
     setupCheckPage();
     setupCompilePage();
     setupSchedulingPage();
     setupDownloadPage();
-    
+
+    DownloadManager *dm = DownloadManager::instance();
+
+    connect(dm, SIGNAL(increaseProgressBar()),     this, SLOT(increaseDownloadProgressBar()));
+    connect(dm, SIGNAL(setProgressBarLength(int)), this, SLOT(setDownloadProgressBarLength(int)));
 }
 
 void DeployProjectWizard::setupCheckPage()
 {
-    CheckPage = new QWidget( this, "CheckPage" );
+    CheckPage = new QWidget(this);
 
-    CheckListView = new QListView( CheckPage, "CheckupListView" );
-    CheckListView->addColumn( trUtf8( "Checkup" ) );
-    CheckListView->addColumn( trUtf8( "Correct?" ) );
-    QListViewItem * CheckListItem = new QListViewItem( CheckListView, 0 );
-    CheckListItem->setText( 0, trUtf8( "pin connections" ) );
-    CheckListItem->setText( 1, trUtf8( "all pins connected" ) );
+    CheckListView = new QListView(CheckPage);
+    CheckListView->addColumn(trUtf8("Description"));
+    CheckListView->addColumn(trUtf8("Result"));
 
-    CheckListItem = new QListViewItem( CheckListView, CheckListItem );
-    CheckListItem->setText( 0, trUtf8( "other checks" ) );
-
-    CheckListView->setGeometry( QRect( 0, 0, 580, 270 ) ); 
+    CheckListView->setGeometry( QRect( 0, 0, 580, 270 ) );
 
     ErrorsGroupBox = new QGroupBox( CheckPage, "ErrorsGroupBox" );
-    ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) ); 
+    ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) );
     ErrorsGroupBox->setTitle( trUtf8( "Errors:" ) );
 
     ErrorsTextEdit = new QTextEdit( ErrorsGroupBox, "ErrorsTextEdit" );
-    ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) ); 
-    ErrorsTextEdit->setText( trUtf8( "pin xy is not connected" ) );
+    ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) );
+
+    ProblemManager manager(project_, CheckListView);
+    manager.report();
 
     addPage( CheckPage, trUtf8( "Plausibility checkup" ) );
 }
@@ -133,7 +129,7 @@ void DeployProjectWizard::setupCompilePage()
     CompileListItem = new QListViewItem( CompileListView,CompileListItem );
     CompileListItem->setText( 0, trUtf8( "CPU x" ) );
 
-    CompileListView->setGeometry( QRect( 0, 0, 580, 410 ) ); 
+    CompileListView->setGeometry( QRect( 0, 0, 580, 410 ) );
     addPage( CompilePage, trUtf8( "Compile" ) );
 }
 
@@ -145,11 +141,11 @@ void DeployProjectWizard::setupSchedulingPage()
     SchedulingListView->addColumn( trUtf8( "Block" ) );
     SchedulingListView->addColumn( trUtf8( "Runtime" ) );
     SchedulingListView->addColumn( trUtf8( "Offset" ) );
-    QListViewItem * SchedulingListItem = 
+    QListViewItem * SchedulingListItem =
       new QListViewItem( SchedulingListView, 0 );
     SchedulingListItem->setText( 0, trUtf8( "New Item" ) );
 
-    SchedulingListView->setGeometry( QRect( 0, 0, 580, 410 ) ); 
+    SchedulingListView->setGeometry( QRect( 0, 0, 580, 410 ) );
     addPage( SchedulingPage, trUtf8( "Scheduling" ) );
 }
 
@@ -158,20 +154,20 @@ void DeployProjectWizard::setupDownloadPage()
     DownloadPage = new QWidget( this, "DownloadPage" );
 
     CompileTextLabel = new QLabel( DownloadPage, "CompileTextLabel" );
-    CompileTextLabel->setGeometry( QRect( 140, 70, 161, 31 ) ); 
+    CompileTextLabel->setGeometry( QRect( 140, 70, 161, 31 ) );
     CompileTextLabel->setText( trUtf8( "Compiling..." ) );
 
     DownloadProgressBar = new QProgressBar( DownloadPage, "DownloadProgressBar" );
-    DownloadProgressBar->setGeometry( QRect( 140, 280, 280, 31 ) ); 
+    DownloadProgressBar->setGeometry( QRect( 140, 280, 280, 31 ) );
 
     DownloadTextLabel = new QLabel( DownloadPage, "DownloadTextLabel" );
-    DownloadTextLabel->setGeometry( QRect( 140, 230, 161, 31 ) ); 
+    DownloadTextLabel->setGeometry( QRect( 140, 230, 161, 31 ) );
     DownloadTextLabel->setText( trUtf8( "Downloading..." ) );
 
     CompileProgressBar = new QProgressBar( DownloadPage, "CompileProgressBar" );
-    CompileProgressBar->setGeometry( QRect( 140, 120, 280, 31 ) ); 
+    CompileProgressBar->setGeometry( QRect( 140, 120, 280, 31 ) );
     addPage( DownloadPage, trUtf8( "Compile and download Project" ) );
-    
+
 }
 
 void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)
@@ -211,11 +207,11 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
   /*  for (uint i=0; i < blocks.count(); ++i){
     if blocks.at(i).hasInputPins() {
     DON'T USE PINVECTORS ANYMORE!
-	   j != blocks.at(i).inputPins().end();
-	   ++j){
-	if (*j).*connected() == null {
-	  // pin is not connected!!
-	}
+           j != blocks.at(i).inputPins().end();
+           ++j){
+        if (*j).*connected() == null {
+          // pin is not connected!!
+        }
       }
     if blocks.take(i).hasOutputPins() {
     }
@@ -227,7 +223,7 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
   return true;
 }
 
-/* 
+/*
  * Checks for every block if it is a cpu or not.
  * For every cpu it is cheked if it has already a binary file and if the
  * binary is actual, if not it will be compiled
@@ -243,24 +239,24 @@ bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
     ++it;
 
     if (INSTANCEOF(block, CpuModel)) {
-      if (QFileInfo binary(cm.cpuPath(block)).exists() and 
-	  QFileInfo source(cm.cpuPath(block) + 
-			   cm.sourceFilePath(block) + 
-			   cm.fileName(block)).exists() )  {
-	if ( binary(cm.cpuPath(block)).lastModified() < 
-	     source(cm.cpuPath(block) + cm.sourceFilePath(block)).lastModified()) {
-	  //        if compile(block) != alles ok returncode compile error
-	  //        }
-	}
+      if (QFileInfo binary(cm.cpuPath(block)).exists() and
+          QFileInfo source(cm.cpuPath(block) +
+                           cm.sourceFilePath(block) +
+                           cm.fileName(block)).exists() )  {
+        if ( binary(cm.cpuPath(block)).lastModified() <
+             source(cm.cpuPath(block) + cm.sourceFilePath(block)).lastModified()) {
+          //        if compile(block) != alles ok returncode compile error
+          //        }
+        }
       }
       else {
-	if source(cm.sourceFilePath(block).exists() {
-	//        if compile(block) != alles ok returncode compile error
-	}
-	//      else error cpu without source
+        if source(cm.sourceFilePath(block).exists() {
+        //        if compile(block) != alles ok returncode compile error
+        }
+        //      else error cpu without source
       }
     }
-    
+
   }
   */
   return true;
@@ -272,7 +268,7 @@ bool DeployProjectWizard::download() {
 }
 
 
-/*  
+/*
  *  Destroys the object and frees any allocated resources
  */
 DeployProjectWizard::~DeployProjectWizard()

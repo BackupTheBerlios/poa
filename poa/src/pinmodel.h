@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.31 2004/01/18 23:15:12 squig Exp $
+ * $Id: pinmodel.h,v 1.32 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -85,6 +85,11 @@ public:
      * Sets the parent of this pin.
      */
     void setParent(BlockModel *parent);
+
+    /**
+     * Returns the full qualified name. The include the parents and
+     * the pins name. */
+    QString absName();
 
     /**
      * Attach to another PinModel
@@ -192,6 +197,11 @@ public:
      * Clones this model.
      */
     PinModel *clone();
+
+    /**
+     * Returns the tooltip text.
+     */
+    QString tip();
 
     /**
      * Needs to be invoked after the properties have been

@@ -18,53 +18,57 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.11 2004/01/19 11:23:07 squig Exp $
+ * $Id: problemmanager.h,v 1.1 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
 
-#include <qvariant.h>
-#include <qtabdialog.h>
+#ifndef POA_PROBLEMMANAGER_H
+#define POA_PROBLEMMANAGER_H
 
-class QComboBox;
-class QLineEdit;
-class QPushButton;
-class QSpinBox;
+#include <qlistview.h>
+#include <qvaluelist.h>
 
-/**
- * Provides the settings dialog.
- *
- * The settings dialog has mutliple tabs.
- */
-class SettingsDialog : public QTabDialog
+class ProblemReportItem : public QListViewItem
 {
-    Q_OBJECT
-
 public:
-    SettingsDialog(QWidget* parent = 0, const char* name = 0,
-                   bool modal = FALSE, WFlags fl = 0);
-    ~SettingsDialog();
 
-    QLineEdit* compilerLineEdit_;
-    QLineEdit* cTemplateLineEdit_;
-    QLineEdit* downloadLineEdit_;
-    QLineEdit* editorLineEdit_;
-    QSpinBox* gridSizeSpinBox_;
-    QComboBox* serialPortComboBox_;
+    ProblemReportItem(QListViewItem *parent, QString shortDescription);
 
-public slots:
-    void applySettings();
-    void chooseExternalEditor();
-    void chooseExternalCompiler();
-    void chooseTemplatePath();
-    void chooseDownloadTool();
+    QString longDescription();
+    void setLongDescription(QString longDescription);
+    QString shortDescription();
 
-private :
-    QWidget *createGeneralTab();
-    QWidget *createPathTab();
-    QWidget *createDownloadTab();
-    void setup();
+    //QValueList<QAction*> actions();
+
+private:
+
+    QString longDescription_;
 };
 
-#endif // SETTINGSDIALOG_H
+/**
+ * Checks a project for consistency
+ */
+class ProblemManager
+{
+public:
+
+    ProblemManager(Project *project, QListView *listView);
+    ~ProblemManager();
+
+    void report();
+
+protected:
+
+    void checkConnected(PinModel *pin);
+    void checkConnectionBits(PinModel *pin);
+    void updateRoot(QListViewItem *item);
+
+private:
+
+    Project *project_;
+    QListViewItem *connectionRoot_;
+    QListViewItem *blockRoot_;
+};
+
+
+#endif // POA_PROBLEMMANAGER_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.31 2004/01/13 00:28:29 squig Exp $
+ * $Id: pinview.cpp,v 1.32 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -187,27 +187,7 @@ void PinView::updateProperties()
 
 QString PinView::tip()
 {
-    QString pt("Unkown type");
-    switch (model()->type()) {
-    case PinModel::INPUT:
-        pt = "Input pin";
-        break;
-    case PinModel::OUTPUT:
-        pt = "Output pin";
-        break;
-    case PinModel::EPISODIC:
-        pt = "Episodic pin";
-        break;
-    }
-
-    return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
-            "<b>Address:</b> 0x%4<br>" \
-            "<b>Width:</b>%5 bits")
-        .arg(model()->id())
-        .arg(model()->name())
-        .arg(pt)
-        .arg(model()->address())
-        .arg(model()->bits());
+    return model()->tip();
 }
 
 void PinView::deleteConnection()

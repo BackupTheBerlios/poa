@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.82 2004/01/18 23:15:11 squig Exp $
+ * $Id: mainwindow.cpp,v 1.83 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -813,7 +813,8 @@ void MainWindow::openRecentProject(int i)
 void MainWindow::openScheduling()
 {
     ScheduleDialog *dialog = new ScheduleDialog(project_, this);
-    dialog->show();
+    dialog->exec();
+    delete dialog;
 }
 
 
@@ -823,12 +824,15 @@ void MainWindow::openSettings()
     dialog->show();
 }
 
-int MainWindow::openDeployWizard()
+void MainWindow::openDeployWizard()
 {
-  DeployProjectWizard *wizard = new DeployProjectWizard(this);
-  int result = wizard->exec();
-  delete wizard;
-  return result;
+    CanvasView *view = activeView();
+    if (view != 0) {
+        DeployProjectWizard *wizard
+            = new DeployProjectWizard(view->project(), this);
+        wizard->exec();
+        delete wizard;
+    }
 }
 
 QAction *MainWindow::pasteAction()

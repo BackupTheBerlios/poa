@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.39 2004/01/18 23:15:12 squig Exp $
+ * $Id: pinmodel.cpp,v 1.40 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include <qstring.h>
 #include <qdom.h>
 
+#include "blockmodel.h"
 #include "blockview.h"
 
 PinModel::PinModel(BlockModel *parent, const QString &name,
@@ -74,6 +75,11 @@ BlockModel *PinModel::parent()
 
 void PinModel::setParent(BlockModel *parent) {
     parent_ = parent;
+}
+
+QString PinModel::absName()
+{
+    return QString("%1->%2").arg(parent()->name()).arg(name());
 }
 
 void PinModel::attach(PinModel *connectTo)
@@ -229,6 +235,31 @@ PinModel *PinModel::clone()
     pin->setId(id_);
     pin->setPosition(position_);
     return pin;
+}
+
+QString PinModel::tip()
+{
+    QString pt("Unkown type");
+    switch (type()) {
+    case PinModel::INPUT:
+        pt = "Input pin";
+        break;
+    case PinModel::OUTPUT:
+        pt = "Output pin";
+        break;
+    case PinModel::EPISODIC:
+        pt = "Episodic pin";
+        break;
+    }
+
+    return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
+            "<b>Address:</b> 0x%4<br>" \
+            "<b>Width:</b>%5 bits")
+        .arg(position())
+        .arg(name())
+        .arg(pt)
+        .arg(address(), 16)
+        .arg(bits());
 }
 
 void PinModel::updatePerformed()

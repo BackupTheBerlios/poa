@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.73 2004/01/18 13:50:48 squig Exp $
+# $Id: poa.pro,v 1.74 2004/01/19 11:23:07 squig Exp $
 #
 ###############################################################################
 
@@ -83,6 +83,7 @@ HEADERS += pinview.h
 HEADERS += poa.h
 HEADERS += poaexception.h
 HEADERS += priorityqueue.h
+HEADERS += problemmanager.h
 HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += removeable.h
@@ -129,6 +130,7 @@ SOURCES += pinview.cpp
 SOURCES += poa.cpp
 SOURCES += poaexception.cpp
 SOURCES += priorityqueue.cpp
+SOURCES += problemmanager.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += scheduledialog.cpp

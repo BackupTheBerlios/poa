@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.h,v 1.3 2004/01/18 23:15:11 squig Exp $
+ * $Id: blockgraph.h,v 1.4 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -142,7 +142,7 @@ public:
     BlockGraph(Project *project);
 
     QValueList<BlockNode*> blocks() const;
-    void addBlockVertices();
+    QValueList<PinNode*> pins() const;
 
 private:
 

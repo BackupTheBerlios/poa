@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.27 2004/01/13 00:28:29 squig Exp $
+ * $Id: pinview.h,v 1.28 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -127,7 +127,9 @@ public:
     virtual void setSelected(bool yes);
 
     /**
-     * Return the tooltip text
+     * Returns the tooltip text.
+     *
+     * @see PinModel#tip()
      */
     QString tip();
 

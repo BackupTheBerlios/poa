@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.3 2004/01/18 23:15:11 squig Exp $
+ * $Id: blockgraph.cpp,v 1.4 2004/01/19 11:23:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -265,33 +265,41 @@ void BlockGraph::addBlockNeighbour(PinNode *source, PinNode *target,
 
 QValueList<BlockNode*> BlockGraph::blocks() const
 {
-    QPtrList<PinNode> seen;
-    QPtrList<PinNode> pending;
-
-    for (QPtrListIterator<BlockNode> it(inputBlocks_); it != 0; ++it) {
-        QValueList<PinModel*> pins = (*it)->model()->pins();
-        for (QValueList<PinModel*>::Iterator it2 = pins.begin();
-             it2 != pins.end(); ++it2) {
-            qDebug("Push: " + (*it2)->name());
-            pending.append(nodeByModel_[*it2]);
-        }
-    }
-
-
-    while (!pending.isEmpty()) {
-        PinNode *node = pending.first();
-        pending.removeFirst();
-        seen.append(node);
-
-        qDebug("Name: " + node->model()->name());
-
-        QPtrList<PinNode> pins = node->neighbours();
-        for (QPtrListIterator<PinNode> it(pins); it != 0; ++it) {
-            if (!seen.contains(*it)) {
-                pending.append(*it);
-            }
-        }
-    }
-
     return nodeByBlock_.values();
 }
+
+QValueList<PinNode*> BlockGraph::pins() const
+{
+    return nodeByModel_.values();
+}
+
+
+// Breitensuche
+//
+//      QPtrList<PinNode> seen;
+//      QPtrList<PinNode> pending;
+
+//      for (QPtrListIterator<BlockNode> it(inputBlocks_); it != 0; ++it) {
+//          QValueList<PinModel*> pins = (*it)->model()->pins();
+//          for (QValueList<PinModel*>::Iterator it2 = pins.begin();
+//               it2 != pins.end(); ++it2) {
+//              qDebug("Push: " + (*it2)->name());
+//              pending.append(nodeByModel_[*it2]);
+//          }
+//      }
+
+
+//      while (!pending.isEmpty()) {
+//          PinNode *node = pending.first();
+//          pending.removeFirst();
+//          seen.append(node);
+
+//          qDebug("Name: " + node->model()->name());
+
+//          QPtrList<PinNode> pins = node->neighbours();
+//          for (QPtrListIterator<PinNode> it(pins); it != 0; ++it) {
+//              if (!seen.contains(*it)) {
+//                  pending.append(*it);
+//              }
+//          }
+//      }

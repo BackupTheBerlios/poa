@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.19 2004/01/28 17:35:17 squig Exp $
+ * $Id: colormanager.cpp,v 1.20 2004/01/28 17:37:23 vanto Exp $
  *
  *****************************************************************************/
 
@@ -188,6 +188,7 @@ QDomElement ColorManager::serialize(QDomDocument *document)
         root.appendChild(mapping);
     }
     root.setAttribute("name", palette_->name());
+    root.setAttribute("last-pal-entry", palPosition_);
     return root;
 }
 
@@ -203,6 +204,9 @@ void ColorManager::deserialize(QDomElement element)
                                  .toUInt());
         }
     }
+
+    // pal position
+    palPosition_ = element.attribute("last-pal-entry", "0").toUInt();
 
     // position
     moveBy(element.attribute("x", "0").toUInt(),

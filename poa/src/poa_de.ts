@@ -458,7 +458,7 @@ Soll die existierende Datei überschrieben werden?</translation>
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation>Ne&amp;uste</translation>
+        <translation>&amp;Zuletzt geöffnet</translation>
     </message>
     <message>
         <source>&amp;Edit</source>

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.16 2004/01/11 15:12:27 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.17 2004/01/11 16:01:29 vanto Exp $
  *
  *****************************************************************************/
 
@@ -57,6 +57,8 @@ const int CANVAS_WIDTH = 800;       // Canvas width
 const int X_ORIGIN = 50;            // Blocks start at this origin
 const int BOX_HEIGHT = 10;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
+const int RULER_HEIGHT = 25;
+const int RULER_TICK = 25;         // Shows every RULER_TICK ns a tick
 const double PIX_PER_NS = 1.0;      // Pixels per nanosecond
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,6 +74,7 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     setCaption(tr("Scheduling"));
 
     project_ = pro;
+    zoom_ = 1.0;
     initLayout();
 }
 
@@ -188,8 +191,6 @@ void ScheduleDialog::initLayout()
     initGraphWidget();
     initBottomWidget();
 
-    //    dialogLayout->addWidget(topWidget);
-    //    dialogLayout->addWidget(middleWidget);
     dialogLayout->addWidget(splitterWidget);
     dialogLayout->addWidget(bottomWidget);
 }
@@ -232,7 +233,7 @@ void ScheduleDialog::initGraphWidget()
     canvas = new QCanvas();
     canvas->setBackgroundColor(QObject::white);
     canvasView = new QCanvasView(canvas, middleWidget);
-    zoomMatrix = QWMatrix(1,0,0,1,0,0);
+
     middleLayout->addWidget(canvasView);
 
     connect(canvasView, SIGNAL(contentsMoving(int, int)),
@@ -266,7 +267,7 @@ void ScheduleDialog::initCanvas()
                                       BOX_HEIGHT + BOX_YSPACING);
     highlightCanvasRectangle->setBrush(QBrush(qApp->palette().active().highlight()));
     highlightCanvasRectangle->setPen(QPen(white));
-    highlightCanvasRectangle->move(0, BOX_YSPACING / 2);
+    highlightCanvasRectangle->move(0, RULER_HEIGHT - BOX_YSPACING / 2);
     highlightCanvasRectangle->setZ(0);
     highlightCanvasRectangle->show();
 
@@ -277,7 +278,7 @@ void ScheduleDialog::initCanvas()
     labelCanvas->update();
 }
 
-void ScheduleDialog::clearCanvases()
+void ScheduleDialog::clearCanvas()
 {
     QCanvasItemList::iterator it;
     QCanvasItemList canvasItems = canvas->allItems();
@@ -293,20 +294,44 @@ void ScheduleDialog::clearCanvases()
 
 bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 {
+    // draw labels
     if (*time == 0) {
-        QCanvasText* text = new QCanvasText(bt->getBlock()->name(), labelCanvas);
+        QCanvasText* text = new QCanvasText(bt->getBlock()->name(),
+                                            labelCanvas);
         text->move(WIDGET_SPACING, *Y);
         text->show();
 
-        // resize label canvas if label doesnt fit.
+        // resize canvas if label doesn't fit.
         if (text->boundingRect().width() +
             (2 * WIDGET_SPACING) > labelCanvas->width()) {
             qDebug("Resize canvas");
             labelCanvas->resize(text->boundingRect().width()
                                 + (2 * WIDGET_SPACING), labelCanvas->height());
         }
+
+        // draw ruler
+        int x = WIDGET_SPACING;
+        text = new QCanvasText(QString::number(RULER_TICK)+" ns", canvas);
+        text->move(x, 1);
+        text->setColor(gray);
+
+        text->show();
+        while (x < canvas->width()) {
+            x += PIX_PER_NS * zoom_ * RULER_TICK;
+            // draw short line
+            QCanvasLine *tick = new QCanvasLine(canvas);
+            tick->setPoints(x, 0, x, 10);
+            tick->setPen(gray);
+            tick->show();
+            // draw long line
+            tick = new QCanvasLine(canvas);
+            tick->setPoints(x, 10, x, canvas->height());
+            tick->setPen(lightGray);
+            tick->show();
+        }
     }
 
+    // draw blocks
     int t = bt->getOffset();
     int X = rint(t * PIX_PER_NS);
     while (X < canvas->width()) {
@@ -318,23 +343,24 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
         QRect thisBlock = calcBlockPosition(bt, t);
         QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);
         box->setBrush(QBrush(white));
-        box->setZ(1);
+        box->setZ(2);
         box->show();
 
         // draw lines for all connected 'children'
         for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
             BlockTree *target = *it;
 
-            /** REVIEW ME! -->  */
-            if (target->getBackReference()) {
-                target = blocksToTree_[target->getBlock()];
-            }
-            /** <-- REVIEW ME! */
-
-            // find next start time for the target block
+            // skip if child has no clock
             if (target->getClock() <= 0) {
                 continue;
             }
+
+            // block lookup
+            if (target->getBackReference()) {
+                target = blocksToTree_[target->getBlock()];
+            }
+
+            // find next start time for the target block
             int targetTime = target->getOffset();
             while (targetTime <= t + bt->getRuntime()) {
                 targetTime += target->getClock();
@@ -355,11 +381,6 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 
         }
 
-
-//      QCanvasLine* line = new QCanvasLine(canvas);
-//      (*lit)->setPoints(100, 100, 150, 150);
-//      (*lit)->show();
-
         t += bt->getClock();
         X = rint(t * PIX_PER_NS);
     }
@@ -374,9 +395,9 @@ QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)
     int line = blocks_.find(bt);
     Q_ASSERT(line != -1);
 
-    int x = rint(time * PIX_PER_NS);
-    int y = line * (BOX_HEIGHT + BOX_YSPACING) + BOX_YSPACING;
-    int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS));
+    int x = WIDGET_SPACING + rint(time * PIX_PER_NS * zoom_);
+    int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
+    int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS * zoom_));
     int h = BOX_HEIGHT;
 
     return QRect(x, y, w, h);
@@ -407,11 +428,11 @@ void ScheduleDialog::initBottomWidget()
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
     // zoom slider
-    zoomSlider = new QSlider( Horizontal, bottomWidget, "slider" );
-    zoomSlider->setRange( 0, 99 );
-    zoomSlider->setValue( 0 );
-    connect( zoomSlider, SIGNAL(valueChanged(int)),
-                 SLOT(zoomChanged(int)) );
+    zoomSlider = new QSlider(Horizontal, bottomWidget, "slider");
+    zoomSlider->setRange(0, 99);
+    zoomSlider->setValue(0);
+    connect(zoomSlider, SIGNAL(valueChanged(int)),
+            SLOT(zoomChanged(int)));
 
 
     bottomLayout->addWidget(zoomSlider);
@@ -442,22 +463,21 @@ void ScheduleDialog::updateHighlighter(int row, int)
 {
     if (row >= 0) {
         highlightCanvasRectangle->move
-            (0, BOX_YSPACING / 2 + row * (BOX_YSPACING + BOX_HEIGHT));
+            (0, RULER_HEIGHT - BOX_YSPACING / 2 + row * (BOX_YSPACING + BOX_HEIGHT));
         canvas->update();
     }
 }
 
 void ScheduleDialog::zoomChanged(int zoom)
 {
-    zoomMatrix.setMatrix(1.0 + (zoom/5),0,0,1,0,0);
-    canvasView->setWorldMatrix(zoomMatrix);
+    zoom_ = 1.0 + (zoom/5);
+    clearCanvas();
+    initCanvas();
 }
 
 void ScheduleDialog::modelChanged(int, int)
 {
-    qDebug("clear canv");
-    clearCanvases();
-    qDebug("renew");
+    clearCanvas();
     initCanvas();
 }
 

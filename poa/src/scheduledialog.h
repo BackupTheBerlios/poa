@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.10 2004/01/11 13:57:35 vanto Exp $
+ * $Id: scheduledialog.h,v 1.11 2004/01/11 16:01:29 vanto Exp $
  *
  *****************************************************************************/
 
@@ -78,7 +78,7 @@ private:
     QPushButton *okPushButton;
 
     QSlider *zoomSlider;
-    QWMatrix zoomMatrix;
+    double zoom_;
 
     Project *project_;
     QPtrList<BlockTree> inputBlocks;
@@ -98,7 +98,7 @@ private:
     /*
      * Clears all graph widget canvases.
      */
-    void clearCanvases();
+    void clearCanvas();
 
     /**
      * Initializes layout.
@@ -146,10 +146,13 @@ private slots:
      */
     void ok();
 
+    /**
+     * Highlightes the same row in the graph widget as in the table.
+     */
     void updateHighlighter(int row, int column);
 
     /**
-     * Changes the zooming.
+     * Changes the zooming level.
      */
     void zoomChanged(int);
 
@@ -159,18 +162,33 @@ private slots:
     void modelChanged(int row, int col);
 
     /**
-     * A row has been swapped
+     * A row has been swapped.
      */
     void rowMoved(int section, int fromIndex, int toIndex);
 };
 
-
+/**
+ * This class provides a spin box editor for a BlockTree object in a
+ * QTable.
+ */
 class SpinBoxItem : public QTableItem
 {
+
  public:
+    /**
+     * Type of the blocktree field.
+     */
     enum BTField {RUNTIME, CLOCK, OFFSET};
     SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field);
+
+    /**
+     * Creates this editor on demand.
+     */
     QWidget *createEditor() const;
+
+    /**
+     * Updates the model if the editor gets closed.
+     */
     void setContentFromEditor( QWidget *w );
 
  private:
@@ -178,18 +196,32 @@ class SpinBoxItem : public QTableItem
     BlockTree *blocktree_;
     BTField field_;
 
+    /**
+     * Sets the value to the corresponding property in the blocktree
+     * object.
+     */
     void setValue(int value);
+    /**
+     * Returns a value from the blocktree object, depending on the field.
+     */
     int value() const;
+
 };
 
+/**
+ * This class provides a arrowheaded line.
+ */
 class ArrowLine : public QCanvasLine
 {
+
  public:
     ArrowLine(QCanvas *canvas);
     virtual void drawShape(QPainter &p);
+
  private:
     static const double RAD2DEG = 57.2958;
     double computeAngle(int sx, int sy, int ex, int ey);
+
 };
 
 #endif // POA_SCHEDULEDIALOG_H

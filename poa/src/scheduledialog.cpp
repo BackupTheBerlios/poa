@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.50 2004/01/28 18:23:49 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.51 2004/01/29 16:30:53 vanto Exp $
  *
  *****************************************************************************/
 
@@ -525,7 +525,12 @@ void ScheduleDialog::swapRows(int index1, int index2)
     timingTable->updateContents();
 
     // set row selection
-    timingTable->selectRow(index2);
+    //    timingTable->selectRow(index2);
+    QTableSelection selection;
+    selection.init(index2, 0);
+    selection.expandTo(index2, timingTable->numCols() -1);
+    timingTable->addSelection(selection);
+
 
     // redraw canvas
     clearCanvas();

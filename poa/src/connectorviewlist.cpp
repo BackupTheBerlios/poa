@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.24 2004/01/13 15:01:08 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.25 2004/01/13 15:04:37 vanto Exp $
  *
  *****************************************************************************/
 
@@ -116,12 +116,12 @@ QValueList<QPoint> ConnectorViewList::points()
     ConnectorViewSegment *nextSegment = segments_.last();
     ConnectorViewSegment *current = 0;
     while (nextSegment != 0) {
-	current = nextSegment;
-	list.prepend(current->endPoint());
-	nextSegment = segments_.prev();
+        current = nextSegment;
+        list.prepend(current->endPoint());
+        nextSegment = segments_.prev();
     }
     if (current != 0) {
-	list.prepend(current->startPoint());
+        list.prepend(current->startPoint());
     }
     return list;
 }
@@ -166,6 +166,7 @@ QDomElement ConnectorViewList::serialize(QDomDocument *document)
     QValueList<QPoint>::Iterator it;
     for( it = pList.begin(); it != pList.end(); ++it ) {
         QDomElement point = document->createElement("point");
+        //qDebug("("+QString::number((*it).x())+","+QString::number((*it).y())+")");
         point.setAttribute("x", (*it).x());
         point.setAttribute("y", (*it).y());
         points.appendChild(point);
@@ -184,6 +185,7 @@ void ConnectorViewList::deserialize(QDomElement *element)
     QValueList<QPoint> *points = new QValueList<QPoint>;
     for (uint i = 0; i < pList.count(); i++) {
         QDomElement pEl = pList.item(i).toElement();
+        //qDebug("("+pEl.attribute("x","0")+","+pEl.attribute("y","0")+")");
         points->append(QPoint(pEl.attribute("x","0").toUInt(),
                              pEl.attribute("y","0").toUInt()));
     }
@@ -194,42 +196,42 @@ void ConnectorViewList::deserialize(QDomElement *element)
 void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
 {
     if (list.size() < 2) {
-	segments_.clear();
+    segments_.clear();
     }
     else {
 
-	QValueList<QPoint>::const_iterator point = list.begin();
-	ConnectorViewSegment *current = segments_.first();
+    QValueList<QPoint>::const_iterator point = list.begin();
+    ConnectorViewSegment *current = segments_.first();
 
-	QPoint second = *point;
-	++point;
-	QPoint first;
-	
-	while (point != list.end()) {
-	    first = second;
-	    second = *point;
-	    ++point;
+    QPoint second = *point;
+    ++point;
+    QPoint first;
 
-	    if (current != 0) {
-		current->setPoints(first.x(), first.y(),
-				   second.x(), second.y());
-	    }
-	    else {
-		current = new ConnectorViewSegment(first, second,
-						   canvas_, this);
+    while (point != list.end()) {
+        first = second;
+        second = *point;
+        ++point;
 
-		segments_.append(current);
-		current->show();
-	    }
-	    current = segments_.next();
-	}
+        if (current != 0) {
+        current->setPoints(first.x(), first.y(),
+                   second.x(), second.y());
+        }
+        else {
+        current = new ConnectorViewSegment(first, second,
+                           canvas_, this);
 
-	if (current != 0) {
-	    while (current != segments_.last()) {
-		segments_.removeLast();
-	    }
-	    segments_.removeLast();
-	}
+        segments_.append(current);
+        current->show();
+        }
+        current = segments_.next();
+    }
+
+    if (current != 0) {
+        while (current != segments_.last()) {
+        segments_.removeLast();
+        }
+        segments_.removeLast();
+    }
     }
 }
 

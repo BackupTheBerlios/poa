@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.16 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.17 2004/01/13 15:04:37 vanto Exp $
  *
  *****************************************************************************/
 
@@ -127,7 +127,7 @@ public:
      */
     QCanvas *canvas() const;
 
-protected:
+    //protected:
 
     /**
      * Deserializes an xml subtree to recreate the point list.

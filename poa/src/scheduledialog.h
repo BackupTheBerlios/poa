@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.12 2004/01/11 17:01:26 vanto Exp $
+ * $Id: scheduledialog.h,v 1.13 2004/01/11 17:06:55 vanto Exp $
  *
  *****************************************************************************/
 
@@ -81,6 +81,8 @@ private:
     double zoom_;
 
     Project *project_;
+    bool modified_;
+
     QPtrList<BlockTree> inputBlocks;
     QPtrList<BlockTree> blocks_;
     QMap<BlockModel*, BlockTree*> blocksToTree_;

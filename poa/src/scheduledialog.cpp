@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.21 2004/01/11 17:01:26 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.22 2004/01/11 17:06:55 vanto Exp $
  *
  *****************************************************************************/
 
@@ -74,6 +74,7 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     setCaption(tr("Scheduling"));
 
     project_ = pro;
+    modified_ = false;
     zoom_ = 1.0;
     initLayout();
 }
@@ -156,6 +157,7 @@ void ScheduleDialog::updateModel()
     for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         (*it)->commit();
     }
+    project_->setModified(project_->isModified() || modified_);
 }
 
 void ScheduleDialog::fillTimingTable(BlockTree* bt)
@@ -491,6 +493,7 @@ void ScheduleDialog::zoomChanged(int zoom)
 
 void ScheduleDialog::modelChanged(int, int)
 {
+    modified_ = true;
     clearCanvas();
     initCanvas();
 }

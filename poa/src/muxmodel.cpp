@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.34 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.35 2004/01/28 23:34:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -147,7 +147,6 @@ void MuxMapping::setId(unsigned id) {
 MuxModel::MuxModel(QString type, QString description)
     : BlockModel(type, description)
 {
-    setName(QString("new %1").arg(type));
     initIdCounter();
     setDescription(description);
 }

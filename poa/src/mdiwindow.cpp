@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.25 2004/01/28 23:09:56 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.26 2004/01/28 23:34:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -101,23 +101,22 @@ void MdiWindow::closeEvent(QCloseEvent *e)
  */
 void MdiWindow::resizeCanvas()
 {
-    QSize viewSize = view()->size();
-    viewSize /= zoomLevel_;
+    QSize viewSize = size() / zoomLevel_;
     QSize canvasSize = view()->canvas()->size();
 
     // Resize the canvas only if its smaller than the current
     // canvas view.
     int newWidth = QMAX(canvasSize.width(), viewSize.width());
     int newHeight = QMAX(canvasSize.height(), viewSize.height());
-    if (newWidth > canvasSize.width() || newHeight > viewSize.height()) {
+    if (newWidth > canvasSize.width() || newHeight > canvasSize.height()) {
         view()->canvas()->resize(newWidth, newHeight);
     }
-
 }
 
-void MdiWindow::resizeEvent(QResizeEvent *e)
+void MdiWindow::resizeEvent(QResizeEvent *event)
 {
-    e = 0; // don't care
+    QMainWindow::resizeEvent(event);
+
     resizeCanvas();
 }
 

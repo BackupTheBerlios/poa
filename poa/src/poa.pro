@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.12 2003/08/21 14:33:21 squig Exp $
+# $Id: poa.pro,v 1.13 2003/08/21 20:12:53 garbeam Exp $
 #
 ###############################################################################
 
@@ -28,8 +28,13 @@ CONFIG += debug
 TEMPLATE = app
 INCLUDEPATH += .
 
-# added for use under BSD and some Linux distris (garbeam)
-#INCLUDEPATH	+= $(QTINC)
+# added for use under OpenBSD (garbeam)
+UNAME = $$system(uname -s)
+contains (UNAME, OpenBSD) {
+	# I have multi-threaded Qt
+	INCLUDEPATH += $(QTINC)
+	CONFIG += thread
+}
 
 # source files
 HEADERS += aboutdialog.h 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.18 2003/08/21 16:25:18 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.19 2003/08/21 20:12:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,8 +46,9 @@
 #include <qwhatsthis.h>
 
 
-// Note: should this be configurable?
 #define ICON_PATH QString("icons/")
+#define DEFAULT_ZOOM_LEVEL 4
+
 
 /** 
  * Constructs a MainWindow which is a child of 'parent', with the 
@@ -210,7 +211,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     zoomComboBox->insertItem("25 %", 1);
     zoomComboBox->insertItem("50 %", 2);
     zoomComboBox->insertItem("75 %", 3);
-    zoomComboBox->insertItem("100 %", 4);
+    zoomComboBox->insertItem("100 %", DEFAULT_ZOOM_LEVEL);
     zoomComboBox->insertItem("250 %", 5);
     zoomComboBox->insertItem("500 %", 6);
     zoomComboBox->insertItem("1000 %", 7);
@@ -303,6 +304,12 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     connect(zoomComboBox, SIGNAL(activated(const QString&)),
             this, SLOT(zoomTo(const QString&)));
+
+    connect(zoomNormalAction, SIGNAL(activated()), this, SLOT(zoomNormal()));
+
+    connect(zoomOutAction, SIGNAL(activated()), this, SLOT(zoomOut()));
+
+    connect(zoomInAction, SIGNAL(activated()), this, SLOT(zoomIn()));
 }
 
 /**
@@ -429,9 +436,7 @@ void MainWindow::openSettings()
 
 MdiWindow* MainWindow::newDoc()
 {
-//    LayoutCanvas *doc = new LayoutCanvas();
     GridCanvas *doc = new GridCanvas();
-//    doc->resize(400, 400);
 
     MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
     w->setCaption("unnamed layout");
@@ -471,6 +476,32 @@ void MainWindow::windowActivated(QWidget* w)
     }
 }
 
+void MainWindow::zoomIn()
+{
+    zoomStepwise(1);
+}
+
+void MainWindow::zoomNormal()
+{
+    zoomStepwise(0);
+}
+
+void MainWindow::zoomOut()
+{
+    zoomStepwise(-1);
+}
+
+/**
+ * Supports toolbar/menu zooming.
+ * If step equals 0, the default value will be set (100 %).
+ */
+void MainWindow::zoomStepwise(int step)
+{
+    zoomComboBox->setCurrentItem(
+        step != 0 ? zoomComboBox->currentItem() + step : DEFAULT_ZOOM_LEVEL);
+    zoomTo(zoomComboBox->currentText());
+}
+
 void MainWindow::zoomTo(const QString& level)
 {
     QString level_ = level.stripWhiteSpace();
@@ -489,4 +520,3 @@ void MainWindow::zoomTo(const QString& level)
         }
     }
 }
-

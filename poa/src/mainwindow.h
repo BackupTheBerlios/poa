@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.10 2003/08/21 14:33:21 squig Exp $
+ * $Id: mainwindow.h,v 1.11 2003/08/21 20:12:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -90,6 +90,7 @@ protected:
 
 private:
     QWorkspace* ws;
+    void zoomStepwise(int step);
 
 public slots:
     virtual void fileNew();
@@ -104,9 +105,12 @@ public slots:
     virtual void helpAbout();
     virtual void openModuleConf();
     virtual void openSettings();
-	void windowActivated(QWidget* w);
-	virtual void zoomTo(const QString& level);
-	
+    virtual void windowActivated(QWidget* w);
+    virtual void zoomTo(const QString& level);
+    virtual void zoomIn();
+    virtual void zoomOut();
+    virtual void zoomNormal();
+
 private slots:
     MdiWindow* newDoc();
     void closeWindow();

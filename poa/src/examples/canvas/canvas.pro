@@ -1,5 +1,5 @@
 # added for local use under BSD
-INCLUDEPATH	+= $(QTDIR)/include/qt3
+INCLUDEPATH	+= $(QTINC)
 
 TEMPLATE	= app
 CONFIG		+= qt warn_on release thread

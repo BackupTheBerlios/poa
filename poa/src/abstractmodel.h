@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.19 2004/01/21 13:57:18 vanto Exp $
+ * $Id: abstractmodel.h,v 1.20 2004/01/21 14:00:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -88,8 +88,14 @@ public:
      */
     virtual void setId(uint id);
 
+    /**
+     * \copydoc Serializable::serialize(QDomDocument)
+     */
     virtual QDomElement serialize(QDomDocument *document);
 
+    /**
+     * \copydoc Serializable::deserialize(QDomElement)
+     */
     virtual void deserialize(QDomElement element);
 
     /**

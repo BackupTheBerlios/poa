@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.55 2003/11/24 20:11:59 squig Exp $
+# $Id: poa.pro,v 1.56 2003/11/26 14:31:32 garbeam Exp $
 #
 ###############################################################################
 
@@ -65,7 +65,6 @@ HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
 HEADERS += pinmodel.h
-HEADERS += pinvector.h
 HEADERS += pinview.h
 HEADERS += processdialog.h
 HEADERS += project.h
@@ -102,7 +101,6 @@ SOURCES += muxconfdialog.cpp
 SOURCES += muxmodel.cpp
 SOURCES += muxview.cpp
 SOURCES += pinmodel.cpp
-SOURCES += pinvector.cpp
 SOURCES += pinview.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp

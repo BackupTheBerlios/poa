@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.57 2004/01/27 05:51:39 kilgus Exp $
+ * $Id: canvasview.cpp,v 1.58 2004/01/27 16:56:55 squig Exp $
  *
  *****************************************************************************/
 
@@ -150,7 +150,9 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
 void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 {
-    autoScrollTimerId = startTimer(100);
+    if (e->button() == LeftButton) {
+        autoScrollTimerId = startTimer(100);
+    }
 
     if (action_) {
         action_->mousePressEvent(e);

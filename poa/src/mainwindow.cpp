@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.70 2003/12/03 18:26:12 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.71 2003/12/03 18:38:52 vanto Exp $
  *
  *****************************************************************************/
 
@@ -557,8 +557,6 @@ void MainWindow::fileSave()
             QMessageBox::warning
                 (this, tr("File error"),
                  tr("Cannot save project %1").arg(project_->name()));
-        } else {
-            project_->setModified(false);
         }
     }
 }

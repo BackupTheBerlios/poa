@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.32 2003/12/03 18:26:12 vanto Exp $
+ * $Id: project.cpp,v 1.33 2003/12/03 18:38:52 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -74,14 +74,17 @@ bool Project::open()
             deserialize(&doc);
             Settings::instance()->addToRecentProjects(path_);
             file.close();
+            modified_ = false;
             return true;
         }
         else {
             file.close();
+            modified_ = false;
             return false;
         }
         file.close();
     }
+    modified_ = false;
     return false;
 }
 
@@ -95,7 +98,7 @@ bool Project::save()
         QTextStream ts(&file);
         serialize().save(ts, 2);
         file.close();
-
+        modified_ = false;
         return true;
     }
     return false;
@@ -115,12 +118,14 @@ void Project::addBlock(AbstractModel *item)
     }
 
     blocks_.append(item);
+    modified_ = true;
 }
 
 void Project::removeBlock(AbstractModel *item)
 {
     blocks_.remove(item);
     delete item;
+    modified_ = true;
 }
 
 void Project::createConnectorViews(PinView *source, PinView *target)

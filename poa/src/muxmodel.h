@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.17 2003/09/29 09:52:41 garbeam Exp $
+ * $Id: muxmodel.h,v 1.18 2003/09/29 10:59:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -186,8 +186,11 @@ public:
 
     /**
      * Adds mux pin.
+     * @param suppressEmission if <code>true</code> no pinAdded signal
+     * will be emitted. (This is used when updating an existing
+     * PinModel.)
      */
-    void addMuxPin(MuxPin *pin);
+    void addMuxPin(MuxPin *pin, bool suppressEmission = false);
 
     /**
      * Removes the given pin from this MuxModel and any related
@@ -242,6 +245,12 @@ public:
      * otherwise <code>0</code>.
      */
     PinModel *outputForName(QString name);
+
+    /**
+     * Adds <code>output</code> to this model.
+     * <code>pinAdded(output)</code> signal will be emitted.
+     */
+    void addOutput(PinModel *pin);
 
 private:
 

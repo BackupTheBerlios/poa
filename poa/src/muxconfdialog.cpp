@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.14 2003/09/29 10:23:15 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.15 2003/09/29 10:59:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -333,6 +333,8 @@ void MuxConfDialog::updateModel() {
         model_->setName(nameLineEdit->text());
 
         // update output pins
+        // Note: MuxModel::addOutput emits also a pinAdded signal,
+        // so this is used only for new Outputs!
         QPtrList<PinModel> *pinModels = model_->outputPins();
         pinModels->clear();
         for (unsigned i = 0; i < mappedToIos_.count(); i++) {
@@ -350,7 +352,7 @@ void MuxConfDialog::updateModel() {
             }
             else {
                 // new pin
-                pinModels->append(currPin);
+                model_->addOutput(currPin);
             }
         }
 
@@ -391,7 +393,7 @@ void MuxConfDialog::updateModel() {
                         origMappings->remove(i);
                         delete mapping;
                     }
-                    model_->addMuxPin(origPin);
+                    model_->addMuxPin(origPin, true);
                     QPtrList<MuxMapping> *currMappings = currPin->mappings();
                     for (unsigned i = 0; i < currMappings->count(); i++) {
                         MuxMapping *mapping = currMappings->at(i);

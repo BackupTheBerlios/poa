@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.17 2003/09/29 09:52:41 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.18 2003/09/29 10:59:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -164,10 +164,20 @@ MuxModel::~MuxModel()
     emit deleted();
 }
 
-void MuxModel::addMuxPin(MuxPin *pin)
+void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
 {
     muxPins_.append(pin);
-    emit pinAdded(pin->model());
+    QPtrList<MuxMapping> *mappings = pin->mappings();
+
+    if (!suppressEmission) {
+        if (mappings->count() > 0) {
+            // emit pinAdd signals for each mapping if needed
+            for (unsigned i = 0; i < mappings->count(); i++) {
+                emit pinAdded(mappings->at(i)->output());
+            }
+        }
+        emit pinAdded(pin->model());
+    }
 }
 
 void MuxModel::removeMuxPin(MuxPin *pin)
@@ -238,6 +248,11 @@ QPtrList<PinModel> *MuxModel::outputPins() {
     return &outputPins_;
 }
 
+void MuxModel::addOutput(PinModel *pin) {
+    outputPins_.append(pin);
+    emit pinAdded(pin);
+}
+
 void MuxModel::addMuxMapping(MuxMapping *mapping) {
 
     MuxPin *pin = mapping->muxPin();
@@ -245,9 +260,7 @@ void MuxModel::addMuxMapping(MuxMapping *mapping) {
     mappings->append(mapping);
 
     if (!outputPins_.containsRef(mapping->output())) {
-        PinModel *output = mapping->output();
-        outputPins_.append(output);
-        emit pinAdded(output);
+        addOutput(mapping->output());
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.3 2003/12/03 16:06:20 squig Exp $
+ * $Id: util.cpp,v 1.4 2003/12/03 18:22:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,8 @@
 #include <qfileinfo.h>
 #include <qstring.h>
 #include <qstringlist.h>
+
+const QString Util::ICON_PATH = QString("icons/");
 
 bool Util::copyFile(QFile *source, QFile *target)
 {
@@ -54,8 +56,17 @@ bool Util::copyFile(QFile *source, QFile *target)
     return false;
 }
 
+QString Util::findIcon(QString filename)
+{
+    return findResource(ICON_PATH + filename);
+}
+
 QString Util::findResource(QString filename)
 {
+    QFileInfo fi = QFileInfo(filename);
+    if (fi.exists()) {
+        return fi.absFilePath();
+    }
     return QString();
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.19 2003/12/03 18:22:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "gridcanvas.h"
 #include "poa.h"
 #include "project.h"
+#include "util.h"
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -48,7 +49,7 @@ MdiWindow::MdiWindow(CanvasView *view, QWidget* parent,
     view_->reparent(this,0,QPoint());
     setCentralWidget(view_);
     setCaption(view->project()->name()+" - "+view->canvas()->name());
-    setIcon(QPixmap(ICON_PATH + "document.xpm"));
+    setIcon(Util::findIcon("document.xpm"));
     resize(sizeHint());
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.9 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: poa.h,v 1.10 2003/12/03 18:22:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,8 +26,6 @@
 #define POA_POA_H
 
 #include <qpoint.h>
-
-#define ICON_PATH QString("icons/")
 
 /*
  * Macro definitions

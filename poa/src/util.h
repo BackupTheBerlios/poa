@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.4 2003/12/03 16:06:20 squig Exp $
+ * $Id: util.h,v 1.5 2003/12/03 18:22:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -43,6 +43,7 @@ class Util
 {
 
  public:
+    static const QString ICON_PATH;
 
     /**
      * Copies <code>source</code>'s content line by line
@@ -58,6 +59,13 @@ class Util
      * successfully, <code>false</code> otherwise.
      */
     static bool copyFile(QFile *source, QFile *target);
+
+    /**
+     * Searches the resource pathes for icon filename.
+     *
+     * @see #findResource(QString)
+     */
+    static QString findIcon(QString filename);
 
     /**
      * Searches the resource pathes for filename.

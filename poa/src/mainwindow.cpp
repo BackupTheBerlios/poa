@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.68 2003/11/26 17:27:15 squig Exp $
+ * $Id: mainwindow.cpp,v 1.69 2003/12/03 18:22:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,7 @@
 #include "removeable.h"
 #include "settings.h"
 #include "settingsdialog.h"
+#include "util.h"
 
 #include <qaction.h>
 #include <qapplication.h>
@@ -86,7 +87,7 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
         setName("MainWindow");
     }
     setCaption(tr("POA"));
-    setIcon(QPixmap(ICON_PATH + "poa.png"));
+    setIcon(QPixmap(Util::findIcon("poa.png")));
 
     // restore window settings
     Settings *s = Settings::instance();
@@ -122,27 +123,27 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
 
 void MainWindow::initializeActions()
 {
-    QPixmap image_compile(ICON_PATH + "compile.png");
-    QPixmap image_configure(ICON_PATH + "configure.png");
-    QPixmap image_contents(ICON_PATH + "contents.png");
-    QPixmap image_download(ICON_PATH + "dowload.png");
-    QPixmap image_deploy(ICON_PATH + "wizard.png");
-    QPixmap image_editcopy(ICON_PATH + "editcopy.png");
-    QPixmap image_editcut(ICON_PATH + "editcut.png");
-    QPixmap image_editdelete(ICON_PATH + "editdelete.png");
-    QPixmap image_editpaste(ICON_PATH + "editpaste.png");
-    QPixmap image_filesave(ICON_PATH + "filesave.png");
-    QPixmap image_help(ICON_PATH + "help.png");
-    QPixmap image_scheduling(ICON_PATH + "scheduling.png");
-    QPixmap image_zoomin(ICON_PATH + "zoomin.png");
-    QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
-    QPixmap image_zoomout(ICON_PATH + "zoomout.png");
+    QPixmap image_compile(Util::findIcon("compile.png"));
+    QPixmap image_configure(Util::findIcon("configure.png"));
+    QPixmap image_contents(Util::findIcon("contents.png"));
+    QPixmap image_download(Util::findIcon("dowload.png"));
+    QPixmap image_deploy(Util::findIcon("wizard.png"));
+    QPixmap image_editcopy(Util::findIcon("editcopy.png"));
+    QPixmap image_editcut(Util::findIcon("editcut.png"));
+    QPixmap image_editdelete(Util::findIcon("editdelete.png"));
+    QPixmap image_editpaste(Util::findIcon("editpaste.png"));
+    QPixmap image_filesave(Util::findIcon("filesave.png"));
+    QPixmap image_help(Util::findIcon("help.png"));
+    QPixmap image_scheduling(Util::findIcon("scheduling.png"));
+    QPixmap image_zoomin(Util::findIcon("zoomin.png"));
+    QPixmap image_zoomnormal(Util::findIcon("zoomnormal.png"));
+    QPixmap image_zoomout(Util::findIcon("zoomout.png"));
 
     fileNewAction = new QAction
-        (tr("New"), QPixmap(ICON_PATH + "filenew.png"),
+        (tr("New"), QPixmap(Util::findIcon("filenew.png")),
          tr("&New"), QKeySequence("Ctrl+N"), this, "fileNewAction");
     fileOpenAction = new QAction
-        (tr("Open..."), QPixmap(ICON_PATH + "fileopen.png"),
+        (tr("Open..."), QPixmap(Util::findIcon("fileopen.png")),
          tr("&Open..."), QKeySequence("Ctrl+O"), this,
          "fileOpenAction");
     fileSaveAction =

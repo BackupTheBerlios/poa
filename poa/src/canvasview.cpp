@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.61 2004/01/28 23:09:56 squig Exp $
+ * $Id: canvasview.cpp,v 1.62 2004/02/11 09:51:16 squig Exp $
  *
  *****************************************************************************/
 
@@ -121,6 +121,9 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
         if (topItem->rtti() == BlockView::RTTI) {
             MainWindow::instance()->openBlockConf();
+        }
+        else if (topItem->rtti() == ConnectorViewSegment::RTTI) {
+            MainWindow::instance()->smartRoute();
         }
         else if (topItem->rtti() == TextView::RTTI) {
             TextView *item = dynamic_cast<TextView*>(topItem);

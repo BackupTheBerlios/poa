@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.10 2004/02/22 01:55:08 squig Exp $
+ * $Id: connectormoveaction.cpp,v 1.11 2004/04/24 15:45:41 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,7 @@ ConnectorMoveAction::ConnectorMoveAction(CanvasView *view, QMouseEvent *e,
 int cart2deg(int x, int y)
 {
     int angle = QABS((int)(atan2(y, x) * 180.0 / PI));
-    if (angle == 180) angle = 0;
+    if (angle >= 180) angle -= 180;
     return angle;
 }
 
@@ -64,6 +64,7 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
     // Create new point if needed (segment is on a pin).
     QValueList<QPoint>::Iterator it;
     QValueList<QPoint>::Iterator lastIt;
+    QValueList<QPoint>::Iterator doubleIt;
     for (it = points.begin(); it != points.end(); ++it ) {
         if ((*it == startP) || (*it == endP)) {
             // Translate point using delta
@@ -74,6 +75,7 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
             if (*it == *points.begin())
                 newPoints.append(*it);
             newPoints.append(newPoint);     // Insert translated point
+
             if (*it == *(--points.end()))   // Same as before, but last in list
                 newPoints.append(*it);
         } else
@@ -116,11 +118,28 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
         lastIt = it;
     }
 
+    // Finally, delete loops
+    for (it = newPoints.begin(); it != newPoints.end(); ++it ) {
+        doubleIt = it;
+        for (doubleIt = ++doubleIt; doubleIt != newPoints.end(); ++doubleIt) {
+            if (*doubleIt == *it) {
+                // Found loop, remove points in between
+                do  {
+                    lastIt = it;
+                    it++;
+                    newPoints.remove(lastIt);
+                } while (*doubleIt != *it);
+                it = doubleIt;
+            }
+        }
+    }
+    
     // Save viewList now, item_ might become invalid after applyPointList
     ConnectorViewList *viewList = item_->viewList();
     viewList->applyPointList(newPoints);
 
     // Now look through new segments list and search for "our" segment
+    item_ = 0;      // In case we don't find it anymore (was within a loop)
     QCanvasItemList itemList = viewList->allSegments();
     QCanvasItemList::iterator itemIt;
     for (itemIt = itemList.begin(); itemIt != itemList.end(); ++itemIt) {
@@ -181,8 +200,13 @@ void ConnectorMoveAction::mouseMoveEvent(QMouseEvent *e)
         QPoint moved = dragBy(dx, dy);
         startPoint_ += moved;
 
-        view()->gridCanvas()->ensureVisibility(item_);
-        view()->canvas()->update();
+        // If moved line got lost then end move action
+        if (!item_) 
+            view()->setAction(0);
+        else {
+            view()->gridCanvas()->ensureVisibility(item_);
+            view()->canvas()->update();
+        }
     }
 }
 

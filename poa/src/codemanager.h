@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.9 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: codemanager.h,v 1.10 2003/09/18 13:06:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -83,31 +83,6 @@ protected:
 
 private:
     static CodeManager* instance_;
-
-    /**
-     * Copies <code>source</code>'s content line by line
-     * to <code>target</code>.
-     * Assumes that:
-     * <ul>
-     *  <li><code>source</code> exists, is accessible, is not opened</li>
-     *  <li><code>target</code> does not exist yet (or will be
-     *  overwritten), is not opened</li>
-     *  <li> <code>target</code>'s directory exists.
-     * </ul>
-     * Returns <code>true</code> if the file could be copied
-     * successfully, <code>false</code> otherwise.
-     */
-    bool copyFile(QFile *source, QFile *target);
-
-    /**
-     * Removes a directory with all it's files subdirectories.
-     * Assumes that the user has all permissions to perform the removal.
-     * Returns <code>true</code> if the directory could be deleted
-     * successfully, <code>false</code> otherwise.
-     * @param subDir the directory to be removed.
-     */
-    bool removeDir(QDir *subDir);
-
 
 public slots:
     /**

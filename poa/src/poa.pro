@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.39 2003/09/18 07:45:32 garbeam Exp $
+# $Id: poa.pro,v 1.40 2003/09/18 13:06:22 garbeam Exp $
 #
 ###############################################################################
 
@@ -68,6 +68,7 @@ HEADERS += poa.h
 HEADERS += settings.h
 HEADERS += gridcanvas.h
 HEADERS += tooltipable.h
+HEADERS += util.h
 
 SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
@@ -97,6 +98,7 @@ SOURCES += pinview.cpp
 SOURCES += project.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
+SOURCES += util.cpp
 
 TARGET = poa
 

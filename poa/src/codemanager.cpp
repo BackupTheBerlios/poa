@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.6 2003/09/17 16:50:14 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.7 2003/09/18 13:06:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "settings.h"
+#include "util.h"
 
 #include <qfileinfo.h>
 #include <qprocess.h>
@@ -102,32 +103,6 @@ void CodeManager::edit(CpuModel *model)
 
 }
 
-bool CodeManager::copyFile(QFile *source, QFile *target)
-{
-    QStringList lines;
-    if (source->open(IO_ReadOnly) && target->open(IO_WriteOnly)) {
-
-        QTextStream istream(source);
-
-        QString line;
-        while (!istream.eof()) {
-            line = istream.readLine();
-            lines += line;
-        }
-        source->close();
-
-        QTextStream ostream(target);
-        for (QStringList::Iterator it = lines.begin(); it != lines.end(); ++it) {
-            ostream << *it << "\n";
-        }
-        target->close();
-
-        return true;
-    }
-
-    return false;
-}
-
 void CodeManager::save(CpuModel *model)
 {
     Settings* s = Settings::instance();
@@ -158,7 +133,7 @@ void CodeManager::save(CpuModel *model)
         QFile cpuTemplate(s->templatePath());
         if (cpuTemplate.exists())
         {
-            copyFile(&cpuTemplate, &source);
+            Util::copyFile(&cpuTemplate, &source);
         }
         else {
             // TODO: Pop up error dialog.
@@ -169,40 +144,12 @@ void CodeManager::save(CpuModel *model)
     // with his editor.
 }
 
-bool CodeManager::removeDir(QDir *subDir)
-{
-    const QFileInfoList *filist = subDir->entryInfoList();
-    QFileInfoListIterator it(*filist);
-    QFileInfo *fi;
-    while ((fi = it.current()) != 0) {
-        ++it;
-        if (fi->isDir()) {
-            QDir *dir = new QDir(fi->filePath());
-            if (!removeDir(dir))
-            {
-                delete dir; // free
-                // error, directory is not empty!
-                return false;
-            }
-            delete dir; // else
-        }
-        else {
-            if (!QFile(fi->filePath()).remove())
-            {
-                return false;
-            }
-        }
-    }
-
-    return subDir->rmdir(subDir->absPath());
-}
-
 void CodeManager::remove(CpuModel *model)
 {
     // check directory structure
     QDir cpuDir(sourcePath(model));
 
-    if (!removeDir(&cpuDir)) {
+    if (!Util::removeDir(&cpuDir)) {
         // TODO: pop up error dialog.
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.11 2003/09/18 10:19:03 garbeam Exp $
+ * $Id: connectorview.cpp,v 1.12 2003/09/18 14:12:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,7 @@ ConnectorView::ConnectorView(PinView *from,
     last_ = true;
     prev_.pin = 0;
     next_.pin = 0;
-    
+
     /*    QValueList<QPoint> *list = routeConnector(from->connectorPoint(),
                           from->connectorDirection(),
                           true,
@@ -56,6 +56,8 @@ ConnectorView::ConnectorView(PinView *from,
                           to->connectorPoint(),
                           to->connectorDirection());
     applyPointList(list, to);
+    setPen(QPen(Qt::black, 2));
+
 }
 
 ConnectorView::ConnectorView(PinView *source, PinView *target,
@@ -72,7 +74,7 @@ ConnectorView::ConnectorView(PinView *source, PinView *target,
     last_ = true;
     prev_.pin = 0;
     next_.pin = 0;
-    
+
     QValueList<QPoint> *list = /*routeConnector(from->connectorPoint(),
                           from->connectorDirection(),
                           true,
@@ -80,6 +82,8 @@ ConnectorView::ConnectorView(PinView *source, PinView *target,
                           toDir,
                           false);*/ 0;
     applyPointList(list);
+    setPen(QPen(Qt::black, 2));
+
 }
 
 
@@ -98,6 +102,7 @@ ConnectorView::ConnectorView(PinView *source, PinView *target,
     last_ = true;
     next_.pin = 0;
     setPoints(first.x(), first.y(), second.x(), second.y());
+    setPen(QPen(Qt::black, 2));
 }
 
 ConnectorView::~ConnectorView()
@@ -379,7 +384,7 @@ void ConnectorView::applyPointList(QValueList<QPoint> *list,
         }
     }
     }
-    
+
     qDebug("destroySuccessors()");
     current->destroySuccessors();
     qDebug("done.");
@@ -450,7 +455,7 @@ QValueList<QPoint> *ConnectorView::routeUsingLastButOne(QPoint startPoint,
     else {
     Q_ASSERT(false);
     }
-    QValueList<QPoint> *list = routeConnector(startPoint, 
+    QValueList<QPoint> *list = routeConnector(startPoint,
                           startDir,
                           honorStartDir,
                           lastButOne,
@@ -471,7 +476,7 @@ QValueList<QPoint> *ConnectorView::routeConnector(QPoint startPoint,
 {
     qDebug(QString("routeConnector(QPoint(") +
        QString::number(startPoint.x()) + ", " +
-       QString::number(startPoint.y()) + "), QPoint(" + 
+       QString::number(startPoint.y()) + "), QPoint(" +
        QString::number(endPoint.x()) + ", " +
        QString::number(endPoint.y()) + "))");
     int x;
@@ -631,7 +636,7 @@ QValueList<QPoint> *ConnectorView::routeConnector(QPoint startPoint,
         }
 
         unsigned distance;
-        
+
         if (primary == UNKNOWN) {
         // no sensible direction possible, must turn around
         if (honorCurrentDir) {

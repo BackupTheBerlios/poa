@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.33 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.34 2003/09/18 14:12:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -296,22 +296,19 @@ void CanvasToolTip::maybeTip(const QPoint &pos)
 {
     QCanvasView *view = static_cast<QCanvasView *>(parentWidget());
 
-    QPoint p = view->inverseWorldMatrix().map(pos);
+    QPoint p = view->inverseWorldMatrix().map(view->viewportToContents(pos));
     QCanvasItemList l = view->canvas()->collisions(p);
     if (!l.isEmpty()) {
         // first item is top item
         QCanvasItem *topItem = l.first();
         Tooltipable *item = dynamic_cast<Tooltipable*>(topItem);
         if (item != 0) {
-            QRect r
-                = view->inverseWorldMatrix().mapRect(topItem->boundingRect());
-            tip(r, item->tip());
+            // reverse coordinate conversion
+            QRect r = view->worldMatrix().map(topItem->boundingRect());
+            QRect target
+                = QRect(view->contentsToViewport(r.topLeft()),
+                        view->contentsToViewport(r.bottomRight()));
+            tip(target, item->tip());
         }
-        /*        if (INSTANCEOF(item, BlockView)) {
-            tip( ((QCanvasRectangle*)item)->rect(),  item->model()->tip());
-        }
-        else {*/
-        //            tip( QRect(pos.x(),pos.y(),5,5),  item->tip());
-            /*        }*/
     }
 }

@@ -1,3 +1,7 @@
+2003-09-18  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* canvasview.cpp (maybeTip): Fixed coordinate mapping.
+
 2003-09-16  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* mainwindow.cpp (zoomStepwise): Check bounds, removed 1000%.

@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.17 2004/06/07 16:41:07 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.18 2004/06/07 22:20:37 vanto Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.17 $
-\RCSdef $Date: 2004/06/07 16:41:07 $
+\RCSdef $Revision: 1.18 $
+\RCSdef $Date: 2004/06/07 22:20:37 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -1242,7 +1242,7 @@ Das Team hat sich erfreulicherweise als überaus kompetent erwiesen,
 eine Eigenschaft die leider auch in höheren Semestern der
 Softwaretechnik nicht immer selbstverständlich ist. Auch
 Zwischenmenschlich sind mir keinerlei Probleme aufgefallen, im
-Gegenteil. Die Team-Grüße war der Aufgabenstellung angemessen.
+Gegenteil. Die Team-Größe war der Aufgabenstellung angemessen.
 
 Das Team war größtenteils sehr motiviert und auch das Projekt
 Management hat sehr gut funktioniert. Alles in allem eine sehr
@@ -1369,6 +1369,114 @@ Das entstandene Produkt erfüllt die Anforderungen des Kunden und ist
 qualitativ gut.
 
 \section{Tammo van Lessen}
+\subsection{Aufgaben}
+
+Der Abschnitt Studienprojekt B begann für mich mit der Auswahl eines
+der angebotenen Projekte. Beide schienen mir sehr interessant, ich
+entschied mich jedoch für das Projekt POA, da es eine interessante
+Zusammenspiel zwischen Software und Hardware darstellt für die ich
+mich schon früher begeistern konnte.
+
+\subsection{Tätigkeiten}
+
+\subsubsection{Seminar}
+
+So lag es nahe, dass ich als Thema für das Seminar die Programmierbare
+Logik wählte. Ziel des Vortrags war es aufzuzeigen welche Arten der
+programmierbaren Logik es gibt und auf welche Weise sie
+funktioniert. Dazu befasste ich mich mit der Geschichte der
+Halbleitertechnologie, ging von den Fullcustom ICs über die Semicustom
+ICs zur dynamischen Verdrahtung in ICs über und beendete die Reise bei
+komplexen System on a Chip Lösungen. Auf dem Weg ging ich jeweils auf
+die Speichertechnologien sowie die logische Darstellung der Funktion
+auf dem Chip ein. Zum Abschluß stellte ich den Altera CPLD-Chip \emph{APEX
+20k} und dessen eingebettete CPU \emph{NIOS} kurz vor. Diese beiden
+Komponenten kommen bei dem POA Projekt auf der Hardwareseite zum Einsatz.
+
+\subsubsection{Aufgaben}
+Nachdem der Projektplan erstellt war, war es meine Aufgabe, die
+Anforderungen an das Projekt grob zu ordnen und in einer projektinternen
+Spezifikation festzuhalten. Daran angeknüpft nahm ich an einem Review
+des Entwurfs teil, welches produktiv einige Verbesserungen ermöglichte
+und somit ein schlanker aber leistungsfähiger Entwurf entstand.
+
+An der darauf folgenden Implementierungsphase war ich fast über die
+gesamte Laufzeit beteiligt. Zu Beginn erstellte bzw. erweiterte ich
+das Datenmodell und das Projektmanagement und war für die Persistenz
+der Daten zuständig. Dazu verwendete ich das von Qt zur Verfügung
+gestellte XML DOM-Framework. 
+
+Weiterhin übernahm ich den von Marcel begonnenen Scheduling-Dialog
+führte ihn zu dem jetzigen Stand. Dazu implementierte ich die
+Darstellung der Blöcke sowie die Zoomfunktion auf der Zeitachse.
+
+Neben vielen kleineren Verfeinerungen die an der GUI vornahm startete
+ich das Unterprojekt GCover. GCover verabeitet die Ausgabe des GNU
+Compilertools gcov und erstellt daraus eine HTML-Suite die die
+Anweisungsüberdeckung bei der Ausführung von Testfällen
+visualisiert. Die Messung dieser Überdeckung selbst übernimmt
+gcov. Zusammen mit Steffen wurde dieses Werkzeug parallel zur POA
+Implementierung fertiggestellt und für die Veranschaulichung der
+Testüberdeckung angewendet.
+
+Am Ende der ersten Iteration analysierten Steffen, Anselm und ich die
+Entwurfstreue und die Architekturqualität des entstandenen Quellcodes
+und definierten daraus einige Refactoring-Maßnahmen. Das hat sich in
+einigen Punkten ausbezahlt. So konnten wir einige Verstöße gegen das
+Model-View-Controller-Konzept finden und beheben. Ausserdem sind uns
+bei einige Redundanzen im Datenmodell aufgefallen, die wir dann
+entfernen konnten.
+
+Zum Abschluß der Implementierungsphase nahm ich an Code-Reviews von
+ausgewählten Komponenten teil. Auch hier konnten wir einige
+Kleinigkeiten und potentielle Fehler finden.
+
+Die Projekthomepage, zu finden unter http://poa.berlios.de wurde
+ebenfalls von mir konfiguriert und informiert den Besucher über die
+aktuelle Projektentwicklung. So sind dort Metriken, CVS Statistiken,
+API sowie die projektbegleitende Dokumentation zu finden. Die Homepage
+wird dazu mit Maven generiert.
+
+
+\subsection{Team}
+Zu Beginn des Projekts waren mir nur drei der sieben Teammitglieder
+bekannt. So war es mir nicht möglich die Qualifikation und Motivation
+des Team abzuschätzen oder gar den Projekterfolg vorherzusagen. Es hat
+sich aber schnell herausgestellt, das sich ein sehr kompetentes Team
+gefunden hat. Besonders positiv ist mir die unkomplizierte
+Kommunikation im Team aufgefallen. Das Arbeitsklima bei den
+Kernarbeitszeittreffen waren immer sehr gut. So konnten wir uns
+jederzeit sehr gut absprechen. So gab es kaum vor, dass Schnittstellen
+falsch bedient wurden etc.
+
+\subsection{Persönlicher Lernerfolg}
+Für mich persönlich war das Projekt eine neue Herausforderung, war es
+doch für mich das erste Studienprojekt und damit auch das erste
+Projekt dieser Größe. Hinzu kam, dass mit sowohl die
+Programmiersprache C++ sowie das Toolkit Qt bis dato unbekannt waren
+und ich mich selbst nicht besonders gut einschätzen konnte.
+Was ich jedoch schnell gelernt habe: Wenn man die Konzepte des
+objektorientieren Programmierens verstanden hat, ist es eher zweit
+rangig in welcher Sprache man implementiert. Die Besonderheiten von
+C++ konnte ich relativ schnell lernen, nicht zuletzt Dank der guten
+Teamdynamik. Auch in die Qt-Bibliothek konnte ich mich schnell
+eingewöhnen. Lerneffekt hier war, dass nicht alles was als toll
+angepriesen wird auch uneingeschränkt toll ist. So sind beispielsweise
+bei Qt die APIs nicht immer konsistent, ausserdem sind die
+GUI-Komponenten teilweise nicht bis zum Ende durchdacht. Die
+Qt-Spezialität \emph{Signal \& Slots}, die eine Einbettung des
+Observer-Patterns in die Programmiersprache ermöglicht ist sehr
+einfache autonome Objekt-Benachrichtigungen, allerdings kann man
+schnell den Überblick verlieren.
+
+Neben diesen technischen Dingen lernte ich aber auch einiges über das
+zwischenmenschliche Miteinander in einem Projekt dieser Größe, Vor-
+und Nachteile von iterativen Entwicklungsprozessen und wie wichtig
+eine klare und offene Kommunikation ist. Letzteres ist mir jedoch
+nicht direkt bei diesem Projekt aufgefallen. Das deutet auf einen
+optimales Arbeitsklima hin.
+
+Somit sehe ich das Projekt aus meiner Sicht als Erfolg.
 
 \appendix
 

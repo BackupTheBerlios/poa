@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.5 2004/01/29 14:27:22 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.6 2004/01/29 16:07:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -165,7 +165,7 @@ void MuxMappingConfDialog::sync() {
 
     inputComboBox_->clear();
     outputComboBox_->clear();
-    QListViewItemIterator it = *itemIter_;
+    QListViewItemIterator it = *((QListViewItemIterator *)itemIter_);
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->type() == PinModel::INPUT) {

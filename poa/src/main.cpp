@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.14 2003/08/22 13:31:37 keulsn Exp $
+ * $Id: main.cpp,v 1.15 2003/08/22 13:45:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -68,26 +68,26 @@
  */
 int main (int argc, char *argv[])
 {
-    CpuModel model("CPU 1", 1, TRUE);
-    QByteArray xml = model.serialize();
-    cout << xml << "\n";
-
-    QDomDocument *doc = new QDomDocument("cpu");
-    QString msg;
-    int line;
-    int col;
-    QString foo(xml);
-    doc->setContent(foo, &msg, &line, &col);
-    CpuModel model2(doc);
-
-    cout << "---\n";
-    cout << msg << line << ":" << col << "\n";
-
-    cout << "---\n";
-
-    xml = model2.serialize();
-    cout << xml << "\n";
-
+//    CpuModel model("CPU 1", 1, TRUE);
+//    QByteArray xml = model.serialize();
+//    cout << xml << "\n";
+//
+//    QDomDocument *doc = new QDomDocument("cpu");
+//    QString msg;
+//    int line;
+//    int col;
+//    QString foo(xml);
+//    doc->setContent(foo, &msg, &line, &col);
+//    CpuModel model2(doc);
+//
+//    cout << "---\n";
+//    cout << msg << line << ":" << col << "\n";
+//
+//    cout << "---\n";
+//
+//    xml = model2.serialize();
+//    cout << xml << "\n";
+//
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);

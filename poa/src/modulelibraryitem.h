@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modulelibraryitem.h,v 1.2 2003/08/22 12:06:16 squig Exp $
+ * $Id: modulelibraryitem.h,v 1.3 2003/08/22 13:45:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -53,7 +53,7 @@ public:
 	/*************************************************************************
 	 * Returns an XML representation of this instance.
 	 */
-    virtual QByteArray serialize() = 0;
+//    virtual QByteArray serialize() = 0;
 
 };
 

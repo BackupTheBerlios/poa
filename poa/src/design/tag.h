@@ -18,43 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.2 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: tag.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#ifndef POA_TAG_H
+#define POA_TAG_H
 
-#include <qmainwindow.h>
-
-#include "layoutcanvas.h"
+#include "xmlwriter.h"
 
 /*****************************************************************************
- * Defines MDI windows.
+ * Represents a xml tag.
  * @author garbeam
  */
-class MdiWindow : public QMainWindow
-{
-    Q_OBJECT
+class Tag {
 
 private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+    QString name_;
+    QString value_;
+    QMap attributes_;
+    XmlWriter writer_;
 
 public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
-    ~MdiWindow();
-
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-
-protected:
-    void closeEvent( QCloseEvent * );
-
-signals:
-    void message(const QString&, int );
+    Tag(XmlWriter *writer);
+    void setName(QString &name);
+    void addAttribute(QString &key, QString &value);
+    QString *getName();
+    QString *getValue(QString &key);
+    void write(); // inherits QTextStream?
 
 };
 
-#endif // POA_MDIWINDOW_H
+#endif // POA_TAG_H

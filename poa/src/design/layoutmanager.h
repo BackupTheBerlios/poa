@@ -18,33 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: networkcanvas.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
+ * $Id: layoutmanager.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_NETWORKCANVAS_H
-#define POA_NETWORKCANVAS_H
+#ifndef POA_LAYOUTMANAGER_H
+#define POA_LAYOUTMANAGER_H
 
-#include <qcanvas.h>
-
-#include "viewvector.h"
 
 /*****************************************************************************
- * Defines the network canvas displayed by MdiWindow.
+ * Manages layout creation.
  * @author garbeam
  */
-class NetworkCanvas : public QCanvasView {
+class LayoutManager
+{
+  public:
 
-    Q_OBJECT
+    LayoutManager();
+    virtual ~CodeManager();
 
-private:
-
-    ViewMap *views_;
-
-public:
-    // Returns an unique key of this blockModelView
-    QString *putView(BlockModelView *blockModelView);
-    BlockModelView *getView(QString &key);
 };
 
-#endif // POA_NETWORKCANVAS_H
+#endif // POA_LAYOUTMANAGER_H

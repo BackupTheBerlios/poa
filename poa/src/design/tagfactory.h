@@ -18,43 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.2 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: tagfactory.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#ifndef POA_TAGFACTORY_H
+#define POA_TAGFACTORY_H
 
-#include <qmainwindow.h>
-
-#include "layoutcanvas.h"
+#include <qobject.h>
+#include "tag.h"
 
 /*****************************************************************************
- * Defines MDI windows.
+ * Interface for generating tags of various objects.
  * @author garbeam
  */
-class MdiWindow : public QMainWindow
-{
-    Q_OBJECT
-
-private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+class TagFactory {
 
 public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
-    ~MdiWindow();
+    virtual Tag *produceTag(QObject *object);
 
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-
-protected:
-    void closeEvent( QCloseEvent * );
-
-signals:
-    void message(const QString&, int );
 
 };
 
-#endif // POA_MDIWINDOW_H
+#endif // POA_TAGFACTORY_H

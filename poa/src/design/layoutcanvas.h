@@ -18,43 +18,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.2 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: layoutcanvas.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#ifndef POA_LAYOUTCANVAS_H
+#define POA_LAYOUTCANVAS_H
 
-#include <qmainwindow.h>
+#include <qcanvas.h>
 
-#include "layoutcanvas.h"
+#include "viewmap.h"
+#include "blockview.h"
+#include "layoutmanager.h"
 
 /*****************************************************************************
- * Defines MDI windows.
+ * Defines the layout canvas displayed by MdiWindow.
  * @author garbeam
  */
-class MdiWindow : public QMainWindow
-{
+class LayoutCanvas : public QCanvasView {
+
     Q_OBJECT
 
 private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+
+    ViewMap *views_;
+    LayoutManager *layoutManager_;
 
 public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
-    ~MdiWindow();
-
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-
-protected:
-    void closeEvent( QCloseEvent * );
-
-signals:
-    void message(const QString&, int );
-
+    // Returns an unique key of this blockModelView
+    QString *putView(BlockView *blockView);
+    BlockView *getView(QString &key);
 };
 
-#endif // POA_MDIWINDOW_H
+#endif // POA_NETWORKCANVAS_H

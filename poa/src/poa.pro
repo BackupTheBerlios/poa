@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.60 2003/12/03 17:33:42 garbeam Exp $
+# $Id: poa.pro,v 1.61 2003/12/15 01:09:05 keulsn Exp $
 #
 ###############################################################################
 
@@ -72,6 +72,7 @@ HEADERS += muxview.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
 HEADERS += poa.h
+HEADERS += priorityqueue.h
 HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += reachedpoint.h
@@ -112,6 +113,7 @@ SOURCES += muxview.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp
 SOURCES += poa.cpp
+SOURCES += priorityqueue.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += reachedpoint.cpp

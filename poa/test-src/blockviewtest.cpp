@@ -3,6 +3,7 @@
 
 #include "blockmodel.h"
 #include "blockview.h"
+#include "gridcanvas.h"
 #include "pinmodel.h"
 #include "pinview.h"
 
@@ -24,13 +25,15 @@ private:
 
     BlockModel *blockModel;
     BlockView *block;
+    GridCanvas *canvas;
 
 public:
 
     void setUp()
     {
+        canvas = new GridCanvas("canvas");
         blockModel = new BlockModel("Type", "Description");
-        block = dynamic_cast<BlockView *>(blockModel->createView(0)[0]);
+        block = dynamic_cast<BlockView *>(blockModel->createView(canvas)[0]);
 
         blockModel->addPin(new PinModel(blockModel, "Input", 0, 0,
                                         PinModel::INPUT));
@@ -41,11 +44,12 @@ public:
     void tearDown()
     {
         delete blockModel;
+        //delete canvas;
     }
 
     void testCanvas()
     {
-        CPPUNIT_ASSERT(block->canvas() == 0);
+        CPPUNIT_ASSERT(block->canvas() == canvas);
     }
 
     void testDraggable()

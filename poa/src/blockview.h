@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.46 2004/01/22 22:27:47 squig Exp $
+ * $Id: blockview.h,v 1.47 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,7 @@
 #include "tooltipable.h"
 class AbstractModel;
 class BlockModel;
+class GridCanvas;
 class PinModel;
 class PinView;
 
@@ -69,19 +70,12 @@ public:
      * <code>model</code>. Use the member {@link #addPinViewsTo} to get a
      * list of the pin views that were created.
      */
-    BlockView(BlockModel *model, QCanvas *canvas);
+    BlockView(BlockModel *model, GridCanvas *canvas);
 
     /**
      * Default destructor
      */
     virtual ~BlockView();
-
-    /**
-     * Returns a list of all canvas items that were created implicitely with
-     * <code>this</code>.
-     * @see #BlockView
-     */
-    void addPinViewsTo(QCanvasItemList &list);
 
     /**
      * Returns the model for <code>this</code>.
@@ -158,7 +152,11 @@ public:
 
 public slots:
     void addPin(PinModel *);
-//    void addPins(const QValueList<PinModel *>);
+
+    /**
+     * Invoked by PinView#PinView() when a PinView object is instanciated.
+     */
+    void addPin(PinView *);
     void deletePinView(PinView *);
     void updateView();
     void deleteView();

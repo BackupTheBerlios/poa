@@ -63,7 +63,7 @@ public:
         QDomElement element = cpu->serialize(&document);
 
         CpuModel cpu2(element);
-        CPPUNIT_ASSERT(cpu2.cpuId() == 1);
+        CPPUNIT_ASSERT(cpu2.cpuId() == 2);
         CPPUNIT_ASSERT(cpu2.autoRuntime() == false);
         CPPUNIT_ASSERT(cpu2.autoOffset() == false);
     }

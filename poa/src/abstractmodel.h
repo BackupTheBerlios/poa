@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.21 2004/01/21 20:38:39 squig Exp $
+ * $Id: abstractmodel.h,v 1.22 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #define ABSTRACTMODEL_H
 
 #include "serializable.h"
+class GridCanvas;
 class Project;
 
 #include <qobject.h>
@@ -69,7 +70,7 @@ public:
     /**
      * Creates the corresponding view objects.
      */
-    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
+    virtual QCanvasItemList createView(GridCanvas *canvas) = 0;
 
     /**
      * \copydoc Serializable::deserialize(QDomElement)

@@ -3,6 +3,7 @@
 
 #include "blockmodel.h"
 #include "blockview.h"
+#include "gridcanvas.h"
 #include "pinmodel.h"
 #include "pinview.h"
 
@@ -24,6 +25,7 @@ private:
     PinView *rightPin;
     PinView *topPin;
     BlockView *blockView;
+    GridCanvas *canvas;
 
 public:
 
@@ -32,7 +34,8 @@ public:
         BlockModel *block = new BlockModel("Type", "Description");
         pinModel = new PinModel(block, "Input", 0, 0, PinModel::INPUT);
 
-        blockView = new BlockView(block, 0);
+        canvas = new GridCanvas("canvas");
+        blockView = new BlockView(block, canvas);
 
         bottomPin = new PinView(pinModel, blockView, PinView::PIN_BOTTOM);
         leftPin = new PinView(pinModel, blockView, PinView::PIN_LEFT);
@@ -43,11 +46,12 @@ public:
     void tearDown()
     {
         delete blockView->model();
+        //delete canvas;
     }
 
     void testCanvas()
     {
-        CPPUNIT_ASSERT(leftPin->canvas() == 0);
+        CPPUNIT_ASSERT(leftPin->canvas() == canvas);
     }
 
     void testConnector()

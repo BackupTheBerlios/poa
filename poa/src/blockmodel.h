@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.39 2004/01/18 17:33:51 squig Exp $
+ * $Id: blockmodel.h,v 1.40 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@ class QDomElement;
 class QString;
 
 #include "abstractmodel.h"
+class GridCanvas;
 class PinModel;
 
 /**
@@ -89,7 +90,7 @@ public:
     /**
      * Creates the CanvasItems for the block.
      */
-    virtual QCanvasItemList createView(QCanvas *canvas);
+    virtual QCanvasItemList createView(GridCanvas *canvas);
 
     /**
      * Deletes an input pin from this block model.
@@ -198,6 +199,11 @@ protected:
      * Deserializes an xml subtree and sets this' properties
      */
     virtual void deserialize(QDomElement element);
+
+    /**
+     * Returns a tooltip string for auto values.
+     */
+    QString toTip(bool autoValue, int value);
 
 private:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.62 2004/01/22 23:45:50 vanto Exp $
+ * $Id: blockview.cpp,v 1.63 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ const int BlockView::DEFAULT_LABEL_WIDTH = 40;
 const int BlockView::RTTI = 1000;
 
 
-BlockView::BlockView(BlockModel *model, QCanvas *canvas)
+BlockView::BlockView(BlockModel *model, GridCanvas *canvas)
     : QCanvasRectangle(canvas)
 {
     this->model_ = model;
@@ -84,8 +84,14 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 
 BlockView::~BlockView()
 {
-}
+    // delete all PinView objects
+    QValueList<PinView *> allPins = pins();
+    for (QValueList<PinView *>::const_iterator it = allPins.begin();
+         it != allPins.end(); ++it) {
 
+        delete *it;
+    }
+}
 
 bool BlockView::isDraggable()
 {
@@ -101,55 +107,51 @@ QPoint BlockView::dragBy(int dx, int dy)
 
 void BlockView::addPin(PinModel *pin)
 {
-    PinView *pinView;
     switch (pin->type()) {
     case PinModel::INPUT:
-        pinView = pin->createView(this, PinView::PIN_LEFT);
+        pin->createView(this, PinView::PIN_LEFT);
         break;
     case PinModel::OUTPUT:
-        pinView = pin->createView(this, PinView::PIN_RIGHT);
+        pin->createView(this, PinView::PIN_RIGHT);
         break;
     case PinModel::EPISODIC:
-        pinView = pin->createView(this, PinView::PIN_BOTTOM);
+        pin->createView(this, PinView::PIN_BOTTOM);
         break;
     }
+}
 
-    // FIX: we should obey the sort order: pin->position()
+void BlockView::addPin(PinView *pinView)
+{
     pinList(pinView)->append(pinView);
 }
 
 void BlockView::addPins(const QValueList<PinModel *> pins)
 {
+    for (QValueList<PinModel *>::const_iterator it = pins.begin();
+         it != pins.end(); ++it) {
 
-    /*    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
-        PinModel *pin = it.current();
-        addPin(pin);
-        }*/
-    QValueList<PinModel *>::const_iterator it;
-    for (it = pins.begin(); it != pins.end(); ++it) {
         addPin(*it);
     }
 }
 
-void BlockView::addPinViewsTo(QCanvasItemList &list)
-{
-    for (QValueList<PinView*>::iterator current1 = leftPins_.begin();
-         current1 != leftPins_.end(); ++current1) {
+//  void BlockView::addPinViewsTo(QCanvasItemList &list)
+//  {
+//      for (QValueList<PinView*>::iterator current1 = leftPins_.begin();
+//           current1 != leftPins_.end(); ++current1) {
 
-        list.prepend(*current1);
-    }
-    for (QValueList<PinView*>::iterator current2 = rightPins_.begin();
-         current2 != rightPins_.end(); ++current2) {
+//          list.prepend(*current1);
+//      }
+//      for (QValueList<PinView*>::iterator current2 = rightPins_.begin();
+//           current2 != rightPins_.end(); ++current2) {
 
-        list.prepend(*current2);
-    }
-    for (QValueList<PinView*>::iterator current3 = bottomPins_.begin();
-         current3 != bottomPins_.end(); ++current3) {
+//          list.prepend(*current2);
+//      }
+//      for (QValueList<PinView*>::iterator current3 = bottomPins_.begin();
+//           current3 != bottomPins_.end(); ++current3) {
 
-        list.prepend(*current3);
-    }
-}
-
+//          list.prepend(*current3);
+//      }
+//  }
 
 void addToList(QValueList<ConnectorViewList*> &list,
            QValueList<PinView*> *pins)
@@ -157,10 +159,10 @@ void addToList(QValueList<ConnectorViewList*> &list,
     QValueList<PinView*>::const_iterator it;
 
     for (it = pins->begin(); it != pins->end(); ++it) {
-    ConnectorViewList *connector = (*it)->connector();
-    if (connector != 0) {
-        list.prepend(connector);
-    }
+        ConnectorViewList *connector = (*it)->connector();
+        if (connector != 0) {
+            list.prepend(connector);
+        }
     }
 }
 
@@ -241,22 +243,6 @@ void BlockView::moveBy(double dx, double dy)
     QCanvasRectangle::moveBy(dx, dy);
     arrangePins();
     arrangeConnectors();
-
-    /*    QValueList<PinView*>::iterator current = leftPins_.begin();
-          while (current != leftPins_.end()) {
-          (*current)->moveBy(dx, dy);
-          ++current;
-          }
-          current = rightPins_.begin();
-          while (current != rightPins_.end()) {
-          (*current)->moveBy(dx, dy);
-          ++current;
-          }
-          current = bottomPins_.begin();
-          while (current != bottomPins_.end()) {
-          (*current)->moveBy(dx, dy);
-          ++current;
-          }*/
 }
 
 void BlockView::remove(Project *project)
@@ -295,32 +281,19 @@ void BlockView::setZ(double z)
 {
     QCanvasRectangle::setZ(z);
 
-    QValueListIterator<PinView *> current = leftPins_.begin();
-    while (current != leftPins_.end()) {
-        (*current)->setZ(z);
-        ++current;
-    }
-    current = rightPins_.begin();
-    while (current != rightPins_.end()) {
-        (*current)->setZ(z);
-        ++current;
-    }
-    current = bottomPins_.begin();
-    while (current != bottomPins_.end()) {
-        (*current)->setZ(z);
-        ++current;
+    // raise all pins to the same z level
+    QValueList<PinView *> allPins = pins();
+    for (QValueList<PinView *>::const_iterator it = allPins.begin();
+         it != allPins.end(); ++it) {
+
+        (*it)->setZ(z);
     }
 }
 
 void BlockView::updateProperties()
 {
     GridCanvas *gc = dynamic_cast<GridCanvas*>(canvas());
-
     Q_ASSERT(gc != 0);
-
-    if (gc == 0) {
-        return;
-    }
 
     if (isActive()) {
         setBrush(QBrush(gc->colorManager()->activatedColor(this->model())));

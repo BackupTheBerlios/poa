@@ -4,6 +4,7 @@
 #include "connectorviewlist.h"
 #include "blockmodel.h"
 #include "blockview.h"
+#include "gridcanvas.h"
 #include "pinmodel.h"
 #include "pinview.h"
 
@@ -24,11 +25,13 @@ private:
     PinView *targetPin;
     BlockView *blockView;
     ConnectorViewList *connector;
+    GridCanvas *canvas;
 
 public:
 
     void setUp()
     {
+        canvas = new GridCanvas("canvas");
         BlockModel *block = new BlockModel("Type", "Description");
         PinModel *inputPin
             = new PinModel(block, "Input", 0, 0, PinModel::INPUT);
@@ -36,21 +39,22 @@ public:
             = new PinModel(block, "Output", 0, 0, PinModel::OUTPUT);
         inputPin->attach(outputPin);
 
-        blockView = new BlockView(block, 0);
+        blockView = new BlockView(block, canvas);
         sourcePin = new PinView(inputPin, blockView, PinView::PIN_RIGHT);
         targetPin = new PinView(outputPin, blockView, PinView::PIN_LEFT);
 
-        connector = new ConnectorViewList(sourcePin, targetPin, 0, 0);
+        connector = new ConnectorViewList(sourcePin, targetPin, canvas, 0);
     }
 
     void tearDown()
     {
         delete blockView->model();
+        delete canvas;
     }
 
     void testCanvas()
     {
-        CPPUNIT_ASSERT(connector->canvas() == 0);
+        CPPUNIT_ASSERT(connector->canvas() == canvas);
     }
 
     void testPins()

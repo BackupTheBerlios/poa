@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.37 2004/01/21 20:38:39 squig Exp $
+ * $Id: cpumodel.cpp,v 1.38 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -121,7 +121,8 @@ void CpuModel::setAutoRuntime(const bool autoRuntime)
 QString CpuModel::tip()
 {
     CodeManager *codeManager = CodeManager::instance();
-    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
+    return QString("<u>%1</u> (%2)<br>"
+                   "<i>%3</i><hr>" \
                    "<b>Id on CPLD:</b> %4<br>" \
                    "<b>Clock:</b> %5 ns<br>" \
                    "<b>Offset:</b> %6<br>" \
@@ -130,11 +131,9 @@ QString CpuModel::tip()
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())
-        //        .arg((this->cpuId()==-1)?"not defined":QString::number(this->cpuId()))
-        // garbeam: patched to work with Qt 3.2.x - ambigious overload
-        .arg((this->cpuId()==-1)?QString("not defined"):QString::number(this->cpuId()))
+        .arg(this->cpuId())
         .arg(this->clock())
-        .arg((this->autoOffset())?QString("auto"):QString::number(this->offset())+" ns")
-        .arg(QString::number(this->runtime())+" ns")
+        .arg(toTip(this->autoOffset(), this->offset()))
+        .arg(toTip(this->autoRuntime(), this->runtime()))
         .arg(codeManager->sourceFilePath(this));
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.44 2004/01/18 17:33:51 squig Exp $
+ * $Id: blockmodel.cpp,v 1.45 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -95,12 +95,12 @@ QPtrList<PinModel> BlockModel::connectionsForInputPin(PinModel *)
     return connectedPins;
 }
 
-QCanvasItemList BlockModel::createView(QCanvas *canvas)
+QCanvasItemList BlockModel::createView(GridCanvas *canvas)
 {
     QCanvasItemList list;
     BlockView *view = new BlockView(this, canvas);
     list.append(view);
-    view->addPinViewsTo(list);
+    //view->addPinViewsTo(list);
     return list;
 }
 
@@ -266,16 +266,26 @@ void BlockModel::setRuntime(const unsigned int runtime)
 
 QString BlockModel::tip()
 {
-    QString s = QString("<b>Core</b><br>" \
-                        "<u>%1</u> (%2)<br>" \
-                        "<i>%3</i>")
+    QString s = QString("<u>%2</u> (%3)<br>" \
+                        "<i>%4</i><hr>"
+                        "<b>Clock:</b> %5 ns<br>" \
+                        "<b>Offset:</b> %6<br>")
         .arg(this->name())
         .arg(this->type())
-        .arg(this->description());
+        .arg(this->description())
+        .arg(this->clock())
+        .arg(toTip(this->autoOffset(), this->offset()));
     if (hasRuntime()) {
-        s.append(QString("<hr><b>Execution time:</b> %1 ns")
+        s.append(QString("<b>Execution time:</b> %1 ns")
                  .arg(QString::number(this->runtime())));
     }
 
     return s;
+}
+
+QString BlockModel::toTip(bool autoValue, int value)
+{
+    return (autoValue)
+        ? QString("Auto (%1 ns)").arg(QString::number(value))
+        : QString("%1 ns").arg(QString::number(value));
 }

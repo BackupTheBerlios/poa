@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.32 2004/01/19 11:23:07 squig Exp $
+ * $Id: pinview.cpp,v 1.33 2004/01/24 16:20:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -46,6 +46,9 @@ PinView::PinView(PinModel *model, BlockView *block,
     connector_ = 0;
     connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
     connect(model_, SIGNAL(detached()), this, SLOT(deleteConnection()));
+
+    Q_ASSERT(block_ != 0);
+    block_->addPin(this);
 
     dockPosition_ = dockPosition;
     setZ(block->z());

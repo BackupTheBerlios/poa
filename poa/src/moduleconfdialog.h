@@ -57,7 +57,6 @@ public:
     QSpinBox* runtimeSpinBox;
     QRadioButton* runtimeRadioButton;
 
-
 };
 
 #endif // MODULECONFDIALOG_H

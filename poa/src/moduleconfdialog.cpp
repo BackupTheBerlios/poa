@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.1 2003/08/19 14:19:38 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.2 2003/08/20 09:47:53 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -79,6 +79,8 @@ ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool mod
     cancelPushButton = new QPushButton( this, "cancelPushButton" );
     cancelPushButton->setGeometry( QRect( 470, 440, 90, 30 ) ); 
     cancelPushButton->setText( trUtf8( "&Cancel" ) );
+
+    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     addIoPushButton = new QPushButton( this, "addIoPushButton" );
     addIoPushButton->setGeometry( QRect( 350, 330, 90, 30 ) ); 

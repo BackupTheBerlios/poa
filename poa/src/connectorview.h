@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: connectorview.h,v 1.2 2003/08/25 11:58:29 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -53,7 +53,7 @@ public:
     void addPoint(QPoint point, uint after = 0);
     void removePoint (uint index);
 
-    ConnectorModel *getModel();
+    ConnectorModel *model();
     void setModel(ConnectorModel *connectorModel);
 
 };

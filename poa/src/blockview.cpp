@@ -18,13 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.6 2003/08/22 22:47:49 squig Exp $
+ * $Id: blockview.cpp,v 1.7 2003/08/25 11:58:29 keulsn Exp $
  *
  *****************************************************************************/
+
+
 #include "blockview.h"
 
 #include <qbrush.h>
 #include <qpainter.h>
+
+
+/*unsigned max(unsigned left, unsigned right)
+{
+    if (left > right) return left;
+    else return right;
+}*/
+
 
 BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 	: QCanvasRectangle(canvas)
@@ -41,10 +51,9 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 
         // pins
         unsigned numberOfPins = 0;
-		// FIX: where is max declared?
-//          numberOfPins = max (model->getInputPins()->size(),
-//                              model->getOutputPins()->size());
-		numberOfPins = model->getOutputPins()->size();
+
+	numberOfPins = max (model->getInputPins()->size(),
+			    model->getOutputPins()->size());
         numberOfPins += model->getEpisodicPins()->size();
         height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
     }
@@ -58,7 +67,7 @@ BlockView::~BlockView()
 }
 
 
-BlockModel *BlockView::getModel()
+BlockModel *BlockView::model()
 {
     return model_;
 }
@@ -81,12 +90,12 @@ void BlockView::drawShape(QPainter &p)
 {
     QCanvasRectangle::drawShape(p);
 	
-	if (model_->name() != QString::null) {
-		QRect textArea((int) x(),
-					   (int) y() + 3,
-					   width(),
-					   BlockView::DEFAULT_FONT_HEIGHT);
-		p.drawText(textArea, Qt::AlignHCenter, model_->name());
+	if (!(model_->name().isNull())) {
+	    QRect textArea((int) x(),
+			   (int) y() + 3,
+			   width(),
+			   BlockView::DEFAULT_FONT_HEIGHT);
+	    p.drawText(textArea, Qt::AlignHCenter, model_->name());
 	}
 }
 

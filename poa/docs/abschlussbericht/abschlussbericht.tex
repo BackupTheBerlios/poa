@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.19 2004/06/08 04:41:53 kilgus Exp $
+%% $Id: abschlussbericht.tex,v 1.20 2004/06/08 08:14:16 keulsn Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.19 $
-\RCSdef $Date: 2004/06/08 04:41:53 $
+\RCSdef $Revision: 1.20 $
+\RCSdef $Date: 2004/06/08 08:14:16 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -107,7 +107,7 @@ Angebotsdokument verbindlich mit dem Auftraggeber vereinbart wurden:
       Manipulation
 \item Rahmencodegenerierung f"ur eingebettete CPU-Bl"ocke in einem CPLD-Layout
 \item Plausibilit"atspr"ufung und Optimierung eines entworfenen CPLD-Layouts
-\item Compilieren und herunterladen von Quellcode f"ur die CPU-Bl"ocke
+\item Compilieren und Herunterladen von Quellcode f"ur die CPU-Bl"ocke
 \item Speichern und "Offnen von CPLD-Layouts und zugeh"origem Quellcode
 \item Konfiguration der Programmeigenschaften
 \item Zusammenarbeit mit externen Programmen
@@ -120,7 +120,7 @@ umgesetzt:
 \begin{itemize}
 \item Automatisches Routing von Verbindungen zwischen Blöcken
 \item Drucken von Netzwerken
-\item Vergrössern und verkleinern der Netzwerkansicht
+\item Vergrößern und verkleinern der Netzwerkansicht
 \item Automatische Laufzeitoptimierung von Signalen (Scheduling)
 \item Öffnen mehrerer Projekte zur gleichen Zeit mit
   Datenaustauschmöglichkeiten über die Zwischenablage
@@ -150,9 +150,9 @@ werden und in einem Dialog konfiguriert werden.
 Einstellbar sind Parameter wie die Taktrate, Laufzeit und die Anzahl
 der Pins über die andere Blöcke vernetzt werden können. CPUs bieten
 außerdem die Möglichkeit über den Aufruf eines externen Editors
-Quellcode zu Hinterlegen, der auf der CPU ausgeführt wird, nachdem der
+Quellcode zu hinterlegen, der auf der CPU ausgeführt wird, nachdem der
 Download auf den CPLD erfolgt ist. Damit können vollständig selbst
-Entwickelte Regelungsalgorithmen verwendet werden. Wenn mehrere Blöcke
+entwickelte Regelungsalgorithmen verwendet werden. Wenn mehrere Blöcke
 auf der Arbeitsoberfläche plaziert wurden, können diese mit der Maus
 an ihren Pins verbunden werden.
 
@@ -291,7 +291,7 @@ gemieden.
 
 Um die Ergebnisse anschaulich und einfach verfügbar zu machen, wurde
 gcover entwickelt. GCover wertet die Ausgabe von gcov aus und stellt
-die Anweisungsüberdeckung in einem HTML Frameset ähnlich des
+die Anweisungsüberdeckung in einem HTML Frameset ähnlich dem
 verbreiteten JavaDoc von Sun dar.
 
 \begin{figure}[h!]
@@ -563,8 +563,8 @@ wurden Merkmale wie die manuelle Laufzeitoptimierung, die im
 Prototypen nur als funktionslose Dialoge zur Verfügung standen,
 implementiert. Der automatische Routing Algorithmus wurde durch einen
 zweiten Algorithmus ergänzt, der Überdeckungen mit anderen
-Verbindungen und Blöcken berücksichtigt, aber einen höheren Aufwand
-hat. Zur Qualitätssicherung wurde ein CppUnit basierter
+Verbindungen und Blöcken berücksichtigt, aber weniger effizient ist.
+Zur Qualitätssicherung wurde ein CppUnit basierter
 Regressionstest eingeführt.
 
 Zum Ende der Iteration wurde das bisher nur unter Linux entwickelte
@@ -603,7 +603,7 @@ Daraufhin wurde POA zusätzlich zu der bisher verwendeten Sprache
 Englisch auf Deutsch lokalisiert und die automatische Optimierung von
 Signallaufzeiten implementiert.
 
-Die anschliessende Zeit wurde für ausgiebige Reviews des Quellcodes
+Die anschließende Zeit wurde für ausgiebige Reviews des Quellcodes
 verwendet. Abgesehen von einfach manuell testbaren Klassen der
 Benutzeroberfläche wurde in fünf Review Sitzungen der größte Teil des
 Quellcodes geprüft. Im Ergebnis wurden einige Hauptfehler und mehrere
@@ -615,7 +615,7 @@ zweiten Runde bereits im Vorfeld der Reviews überarbeitet.
 
 Im Nachhinein kann festgestellt werden, dass es sicherlich positive
 Auswirkungen auf die Qualität gehabt hätte Quellcode Reviews bereits
-zu einem früheren Zeitpunkt und regelmässig durchzuführen.
+zu einem früheren Zeitpunkt und regelmäßig durchzuführen.
 
 Im Anschluss an die Reviews wurde ein umfangreicher Systemtest
 durchgeführt, um die graphische Benutzeroberfläche zu prüfen. Aufgrund

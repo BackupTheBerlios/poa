@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.cpp,v 1.2 2004/02/13 17:07:57 keulsn Exp $
+ * $Id: scheduler.cpp,v 1.3 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -29,11 +29,10 @@
 #include <limits.h>
 
 
-
 class DepthFirstNode
 {
 public:
-    DepthFirstNode(BlockNode *block, DepthFirstNode *pred);
+    DepthFirstNode(BlockNode *block);
 
     void addPredecessor(DepthFirstNode *node);
     const DepthFirstNodeList getPredecessors() const;
@@ -57,10 +56,9 @@ typedef QMapIterator<BlockNode*, DepthFirstNode*> DepthFirstMapIterator;
  * DepthFirstNode *
  ******************/
 
-DepthFirstNode::DepthFirstNode(BlockNode *block, DepthFirstNode *pred)
+DepthFirstNode::DepthFirstNode(BlockNode *block)
 {
     block_ = block;
-    pred_.prepend(pred);
     time = -1;
     lowest = INT_MAX;
 }
@@ -118,10 +116,70 @@ void Path::removeFirst()
     }
 }
 
+unsigned Path::length() const
+{
+    return nodes_.size();
+}
+
+const BlockNode *Path::front(int add) const
+{
+    return nodes_[0 + add];
+}
+
+const BlockNode *Path::end(int add) const
+{
+    return nodes_[nodes_.size() - 1 + add];
+}
+
+void Path::optimize()
+{
+    if (nodes_.size() > 0) {
+	unsigned offset;
+	// find last block that has an offset, if such a block exists, else
+	// find first block
+	QValueList<BlockNode*>::iterator it = nodes_.end();
+	while (--it != nodes_.begin() && !(*it)->flag());
+	if (!(*it)->flag()) {
+	    Q_ASSERT(it == nodes_.begin());
+	    // when starting from first block, then assign offset 0 to the
+	    // first block
+	    (*it)->setOffset(0);
+	    offset = (*it)->runtime() + 1;
+	    (*it)->setFlag(true);
+	}
+	else {
+	    offset = (*it)->offset() + (*it)->runtime() + 1;
+	}
+	// set offset going forward
+	QValueList<BlockNode*>::iterator tmp = it;
+	while (++it != nodes_.end()) {
+	    (*it)->setOffset(offset);
+	    offset += (*it)->runtime() + 1;
+	    (*it)->setFlag(true);
+	}
+	// set offset going backward
+	it = tmp;
+	offset = (*it)->offset();
+	while (it != nodes_.begin()) {
+	    offset -= (*it)->runtime() + 1;
+	    --it;
+	    if ((*it)->flag()) {
+		// block already has an offset
+		offset = (*it)->flag();
+	    }
+	    else {
+		// block needs new offset
+		(*it)->setOffset(offset);
+		(*it)->setFlag(true);
+	    }
+	}
+    }
+}
+
 bool Path::higherPriority(const PriorityItem *other) const {
     const Path *otherPath = dynamic_cast<const Path*>(other);
     Q_ASSERT(otherPath != 0);
-    return this->runtime_ < otherPath->runtime_;
+    return this->runtime_ > otherPath->runtime_;
 }
 
 QString Path::getText() const
@@ -177,7 +235,7 @@ void Scheduler::firstPass(DepthFirstNode &current,
 	    neighbour = *it;
 	}
 	else {
-	    blockMap[nn] = neighbour = new DepthFirstNode(nn, &current);
+	    blockMap[nn] = neighbour = new DepthFirstNode(nn);
 	}
 
 	if (neighbour->time < 0) {
@@ -240,11 +298,13 @@ void Scheduler::extractPaths(PathQueue &paths,
 }
 
 
-void Scheduler::allPaths(PathQueue &paths, BlockNode *from, BlockNode *to)
+void Scheduler::allPaths(PathQueue &paths, 
+			 BlockNode *from,
+			 BlockNode *to)
 {
     // Use a modification of Tarjan's algorithm to find all paths that do not
     // contain any cycle
-    DepthFirstNode *fromNode = new DepthFirstNode(from, 0);
+    DepthFirstNode *fromNode = new DepthFirstNode(from);
     BlockMap blockMap;
     blockMap[from] = fromNode;
     int time;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.h,v 1.2 2004/02/13 17:07:57 keulsn Exp $
+ * $Id: scheduler.h,v 1.3 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -46,6 +46,12 @@ public:
 
     QString getText() const;
 
+    unsigned length() const;
+    const BlockNode *front(int add) const;
+    const BlockNode *end(int add) const;
+
+    void optimize();
+
     virtual bool higherPriority(const PriorityItem *other) const;
 
 private:
@@ -67,7 +73,9 @@ public:
     Scheduler(BlockGraph *graph);
     virtual ~Scheduler();
 
-    void allPaths(PathQueue &paths, BlockNode *from, BlockNode *to);
+    void allPaths(PathQueue &paths,
+		  BlockNode *from,
+		  BlockNode *to);
     
 protected:
 

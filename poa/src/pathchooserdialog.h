@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.h,v 1.2 2004/02/13 17:07:57 keulsn Exp $
+ * $Id: pathchooserdialog.h,v 1.3 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -49,6 +49,8 @@ protected slots:
     void sourcePinActivated(int index);
     void targetBlockActivated(int index);
     void targetPinActivated(int index);
+
+    virtual void accept();
 
 protected:
     void updateInPins();

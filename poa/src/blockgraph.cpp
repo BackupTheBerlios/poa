@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.9 2004/01/28 16:36:53 vanto Exp $
+ * $Id: blockgraph.cpp,v 1.10 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,7 @@ BlockNode::BlockNode(BlockModel* block)
     clock_ = block->clock();
     offset_ = block->offset();
     runtime_ = block->runtime();
+    flag_ = false;
 }
 
 BlockNode::~BlockNode()
@@ -92,6 +93,11 @@ unsigned int BlockNode::runtime() const
     return runtime_;
 }
 
+bool BlockNode::flag() const
+{
+    return flag_;
+}
+
 void BlockNode::setAutoOffset(const bool autoOffset)
 {
     autoOffset_ = autoOffset;
@@ -110,6 +116,11 @@ void BlockNode::setOffset(const unsigned int offset)
 void BlockNode::setRuntime(const unsigned int runtime)
 {
     runtime_ = runtime;
+}
+
+void BlockNode::setFlag(bool flag)
+{
+    flag_ = flag;
 }
 
 PinNode::PinNode(BlockNode *parent, PinModel *pin)

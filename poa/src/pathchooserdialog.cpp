@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.3 2004/02/13 17:07:57 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.4 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,8 @@
 #include "blockmodel.h"
 #include "blockgraph.h"
 
+#include <qhbuttongroup.h>
+#include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -59,13 +61,13 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph)
 
     targetPin_ = new QComboBox(this);
     QLabel *inputLabel = new QLabel(targetPin_, tr("&Input Pin"), this);
-    gridLayout->addWidget(inputLabel, 1, 0);
-    gridLayout->addWidget(targetPin_, 1, 1);
+    gridLayout->addWidget(inputLabel, 1, 3);
+    gridLayout->addWidget(targetPin_, 1, 4);
     gridLayout->addItem(new QSpacerItem(5, 0, QSizePolicy::Fixed), 1, 2);
     targetBlock_ = new QComboBox(this);
     QLabel *targetLabel = new QLabel(targetBlock_, tr("&Target Block"), this);
-    gridLayout->addWidget(targetLabel, 1, 3);
-    gridLayout->addWidget(targetBlock_, 1, 4);
+    gridLayout->addWidget(targetLabel, 1, 0);
+    gridLayout->addWidget(targetBlock_, 1, 1);
 
     connect(sourceBlock_, SIGNAL(activated(int)),
 	    this, SLOT(sourceBlockActivated(int)));
@@ -84,11 +86,13 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph)
     topPane->addWidget(pathLabel);
     topPane->addWidget(pathChooser_);
 
-    QBoxLayout *buttonPane = new QHBoxLayout(topPane);
-    QPushButton *okButton = new QPushButton(tr("&OK"), this);
-    buttonPane->addWidget(okButton);
-    QPushButton *cancelButton = new QPushButton(tr("&Cancel"), this);
-    buttonPane->addWidget(cancelButton);
+    QHButtonGroup *mainButtons = new QHButtonGroup(this);
+    //    QBoxLayout *buttonPane = new QHBoxLayout(topPane);
+    QPushButton *okButton = new QPushButton(tr("&OK"), mainButtons);
+    //    buttonPane->addWidget(okButton);
+    QPushButton *cancelButton = new QPushButton(tr("&Cancel"), mainButtons);
+    //    buttonPane->addWidget(cancelButton);
+    topPane->addWidget(mainButtons);
 
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
@@ -210,20 +214,55 @@ void PathChooserDialog::updatePaths()
     unsigned i;
 
     freePaths();
-    PathQueue queue;
+    QValueList<Path*> pathList;
     int fromIndex = sourceBlock_->currentItem();
     int toIndex = targetBlock_->currentItem();
+    int fromPinIndex = sourcePin_->currentItem();
+    int toPinIndex = targetPin_->currentItem();
     if (fromIndex > 0 && toIndex > 0) {
+	PathQueue queue;
+	PinModel *fromPin = 0;
+	PinModel *toPin = 0;
+	if (fromPinIndex > 0) {
+	    fromPin = outPins_[fromPinIndex];
+	}
+	if (toPinIndex > 0) {
+	    toPin = inPins_[toPinIndex];
+	}
 	BlockNode *from = blocks_[fromIndex];
 	BlockNode *to = blocks_[toIndex];
 	scheduler_.allPaths(queue, from, to);
+	// filter paths not beginning or ending with correct pin
+	while (!queue.isEmpty()) {
+	    Path *path = queue.removeHead();
+	    bool legal = true;
+	    if (path->length() > 1) {
+		if (legal && fromPin != 0) {
+		    PinModel *secondPin = fromPin->connected();
+		    legal = (secondPin != 0)
+			&& (secondPin->parent() == path->front(+1)->model());
+		}
+		if (legal && toPin != 0) {
+		    PinModel *preLastPin = toPin->connected();
+		    legal = (preLastPin != 0)
+			&& (preLastPin->parent() == path->end(-1)->model());
+		}
+	    }
+
+	    if (legal) {
+		pathList.prepend(path);
+	    }
+	    else {
+		delete path;
+	    }
+	}
     }
 
-    pathsCount_ = queue.size();
+    pathsCount_ = pathList.size();
     paths_ = new (Path*)[pathsCount_];
     for (i = 0; i < pathsCount_; ++i) {
-	Q_ASSERT(!queue.isEmpty());
-	paths_[i] = queue.removeHead();
+	paths_[i] = pathList.front();
+	pathList.pop_front();
     }
 
     while (pathChooser_->count() > 0) {
@@ -242,6 +281,7 @@ void PathChooserDialog::sourceBlockActivated(int)
 
 void PathChooserDialog::sourcePinActivated(int)
 {
+    updatePaths();
 }
 
 void PathChooserDialog::targetBlockActivated(int)
@@ -252,4 +292,23 @@ void PathChooserDialog::targetBlockActivated(int)
 
 void PathChooserDialog::targetPinActivated(int)
 {
+    updatePaths();
+}
+
+void PathChooserDialog::accept()
+{
+    // flag all blocks that still need automatic offset calculation
+    // unflag all block that already have an offset
+    QValueList<BlockNode*> allBlocks = graph_->blocks();
+    QValueList<BlockNode*>::iterator it = allBlocks.begin();
+    for (; it != allBlocks.end(); ++it) {
+	(*it)->setFlag(!(*it)->autoOffset());
+    }
+    paths_[0]->optimize();
+//     for (int i = 0; i < priorityCount_; ++i) {
+// 	scheduler_.optimize(priority_[i]);
+// 	// all blocks on path priority_[i] are now unflagged and thus will
+// 	// be ignored in the next pass of this loop
+//     }
+    QDialog::accept();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.h,v 1.6 2004/01/26 16:44:28 keulsn Exp $
+ * $Id: blockgraph.h,v 1.7 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -86,6 +86,11 @@ public:
     unsigned int runtime() const;
 
     /**
+     * Returns the state of the flag
+     */
+    bool flag() const;
+
+    /**
      * Sets the automatic offset calculation.
      */
     void setAutoOffset(const bool autoOffset);
@@ -106,9 +111,9 @@ public:
     void setRuntime(const unsigned int time);
 
     /**
-     * Returns true if this represents an input block. False otherwise.
+     * Sets the flag
      */
-    bool isInput() const;
+    void setFlag(bool flag);
 
 private:
     BlockModel *block_;
@@ -119,6 +124,8 @@ private:
     int clock_;
     int offset_;
     int runtime_;
+
+    bool flag_;
 };
 
 class PinNode

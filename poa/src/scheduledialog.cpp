@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.59 2004/02/15 04:00:13 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.60 2004/02/16 10:40:26 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -508,7 +508,10 @@ void ScheduleDialog::autoSchedule()
     // do something
     PathChooserDialog *dialog = new PathChooserDialog(graph_);
 
-    /*int result = */dialog->exec();
+    int result = dialog->exec();
+    if (result == QDialog::Accepted) {
+	// FIX: call some fancy updating method
+    }
 }
 
 void ScheduleDialog::print()

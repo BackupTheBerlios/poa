@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.21 2004/06/04 13:55:35 garbeam Exp $
+ * $Id: deployprojectwizard.cpp,v 1.22 2004/06/04 14:46:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -108,6 +108,7 @@ void DeployProjectWizard::setupCheckPage()
             this, SLOT(setProblemReportItem(QListViewItem *)));
 
     addPage(splitter, trUtf8("Check Project"));
+    setHelpEnabled(splitter, false);
 }
 
 void DeployProjectWizard::setupDownloadPage()
@@ -137,7 +138,7 @@ void DeployProjectWizard::setupDownloadPage()
     connect(cpuComboBox, SIGNAL(activated(int)), this, SLOT(cpuSelected(int)));
 
     QWidget *buttonWidget = new QWidget(page);
-    QPushButton *compileButton = new QPushButton("&Compile", buttonWidget);
+    QPushButton *compileButton = new QPushButton("C&ompile", buttonWidget);
     connect(compileButton, SIGNAL(clicked()), this, SLOT(compileSelectedCpu()));
 
     QPushButton *downloadButton = new QPushButton("&Download", buttonWidget);
@@ -163,6 +164,8 @@ void DeployProjectWizard::setupDownloadPage()
 
     addPage(page, trUtf8("Compile and Download Project"));
     setFinishEnabled(page, true);
+    setHelpEnabled(page, false);
+    compileButton->setFocus();
 }
 
 QString DeployProjectWizard::checkSerialPort()

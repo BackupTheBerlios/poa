@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: processdialog.h,v 1.2 2003/09/19 11:47:37 garbeam Exp $
+ * $Id: processdialog.h,v 1.3 2004/06/04 14:46:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -66,7 +66,7 @@ private:
 public slots:
     void readFromStdout();
     void readFromStderr();
-    void enableOkButton();
+    void focusOkButton();
 
 };
 

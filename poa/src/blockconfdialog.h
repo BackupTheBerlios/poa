@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.6 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.7 2003/09/13 18:15:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,8 @@ public:
     /**
      * Creates a IO list view item for the given abstract model
      */
-    PinListViewItem(QListViewItem *parent, PinModel *item = 0);
+    PinListViewItem(QListViewItem *parent, PinModel *clone = 0,
+            PinModel *origin = 0);
 
     /**
      * Default destructor
@@ -71,6 +72,11 @@ public:
      * Returns the PinModel, represented by this view item
      */
     PinModel *data() const;
+
+    /**
+     * Returns the origin PinModel, represented by this view item
+     */
+    PinModel *origData() const;
 
     /**
      * Returns type of this view item (used for items without
@@ -90,7 +96,8 @@ public:
     void update();
 
 private:
-    PinModel *item_;
+    PinModel *clone_;
+    PinModel *origin_;
     PinModel::PinType type_;
     bool root_;
 };

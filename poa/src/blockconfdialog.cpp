@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.11 2003/09/13 11:42:59 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.12 2003/09/13 18:15:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -54,42 +54,48 @@ PinListViewItem::PinListViewItem(QListView *parent,
 {
     setOpen(true);
     type_ = type;
-    item_ = 0;
+    clone_ = origin_ = 0;
 }
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,
-                                 PinModel *item)
+                                 PinModel *clone, PinModel *origin)
     : QListViewItem(parent)
 {
     setOpen(false);
-    if (item != 0) {
-        type_ = item->type();
+    if (clone != 0) {
+        type_ = clone->type();
     }
-    item_ = item;
+    clone_ = clone;
+    origin_ = origin;
 
     update();
 }
 
 void PinListViewItem::update() {
 
-    if (item_ != 0) {
-        setText(0, QString::number(item_->id(), 10));
-        setText(1, item_->name());
-        if (item_->type() != PinModel::EPISODIC) {
-            setText(2, QString::number(item_->address(), 16));
+    if (clone_ != 0) {
+        setText(0, QString::number(clone_->id(), 10));
+        setText(1, clone_->name());
+        if (clone_->type() != PinModel::EPISODIC) {
+            setText(2, QString::number(clone_->address(), 16));
         }
-        setText(3, QString::number(item_->bits(), 10));
+        setText(3, QString::number(clone_->bits(), 10));
     }
 }
 
 PinListViewItem::~PinListViewItem()
 {
-    delete item_;
+    delete clone_;
 }
 
 PinModel *PinListViewItem::data() const
 {
-    return item_;
+    return clone_;
+}
+
+PinModel *PinListViewItem::origData() const
+{
+    return origin_;
 }
 
 PinModel::PinType PinListViewItem::type() {
@@ -239,7 +245,7 @@ void BlockConfDialog::initRuntimeWidget()
         runtimeButtonGroup->setMinimumWidth(280);
         runtimeButtonGroup->setMaximumHeight(100);
         runtimeButtonGroup->setMinimumHeight(100);
- 
+
         runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
 
         QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3,
@@ -432,7 +438,8 @@ void BlockConfDialog::addPins(PinVector pins, PinListViewItem *root) {
 
     for (unsigned i = 0; i < pins.size(); ++i) {
         PinListViewItem *child =
-            new PinListViewItem((QListViewItem *)root, pins[i]->clone());
+            new PinListViewItem((QListViewItem *)root, pins[i]->clone(),
+            pins[i]);
         child->setVisible(true);
     }
 }

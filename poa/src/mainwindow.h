@@ -30,7 +30,7 @@ public:
     QMenuBar *menubar;
     QPopupMenu *fileMenu;
     QPopupMenu *editMenu;
-    QPopupMenu *PopupMenu;
+    QPopupMenu *toolsMenu;
     QPopupMenu *PopupMenu_3;
     QPopupMenu *helpMenu;
     QToolBar *commonToolBar;
@@ -52,6 +52,8 @@ public:
     QAction* helpIndexAction;
     QAction* helpAboutAction;
 
+    QAction* openModuleConfDialogAction;
+
 
 public slots:
     virtual void fileNew();
@@ -69,6 +71,7 @@ public slots:
     virtual void helpIndex();
     virtual void helpContents();
     virtual void helpAbout();
+    virtual void openModuleConfDialog();
 
 };
 

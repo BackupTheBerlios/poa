@@ -18,11 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.3 2003/08/20 08:38:56 garbeam Exp $
+ * $Id: main.cpp,v 1.4 2003/08/20 09:28:40 garbeam Exp $
  *
  *****************************************************************************/
 
-
+// NOTE:
+//   The following model-/view-headers are included temporary to
+//   check, if everything compiles.
+//   Later this won't be needed anymore.
+//
 #include "blockmodel.h"
 #include "blockview.h"
 #include "codemanager.h"
@@ -39,7 +43,6 @@
 #include "layoutmanager.h"
 #include "mainwindow.h"
 #include "mdiwindow.h"
-
 #include "moduleconfdialog.h"
 #include "modulelibraryitem.h"
 #include "muxmodel.h"
@@ -51,15 +54,27 @@
 #include "pinvector.h"
 #include "pinview.h"
 #include "viewmap.h"
+// END of temporary inclusions
+//
+
+// find a good place for constants, maybe consts.h?
+#define VERSION "POA-current"
+
+#include "mainwindow.h"
+#include <qapplication.h>
 
 /**
  * This is the main entry point of the POA app.
  * @author garbeam
  */
-int main ()
+int main (int argc, char *argv[])
 {
+    QApplication app(argc, argv);
+    MainWindow *mainWindow = new MainWindow();
+    app.setMainWidget(mainWindow);
+    mainWindow->setCaption(VERSION);
+    mainWindow->show();
 
-    return 0;
-
+    return app.exec();
 }
 

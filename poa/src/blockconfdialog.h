@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.20 2003/12/17 10:39:18 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.21 2003/12/17 11:31:54 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -71,7 +71,6 @@ private:
 
     QLineEdit *blockNameLineEdit;
     QLineEdit *blockDescrLineEdit;
-    QLineEdit *ioNumberLineEdit;
     QLineEdit *ioNameLineEdit;
     QLineEdit *addressLineEdit;
     QLineEdit *bitsLineEdit;

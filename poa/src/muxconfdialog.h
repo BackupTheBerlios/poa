@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.14 2003/11/26 15:52:45 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.15 2003/12/17 11:31:54 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 
 class MuxMapping;
 class MuxModel;
+class PinListViewItem;
 class PinModel;
 
 class QBoxLayout;
@@ -87,92 +88,6 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Provides the mux view items.
- */
-class MuxListViewItem : public QListViewItem
-{
-public:
-
-    /**
-     * Creates a IO list view item for the given MuxModel.
-     */
-    MuxListViewItem(QListView *parent, QListViewItem *after,
-                    PinModel *clone = 0, PinModel * origin = 0);
-
-    /**
-     * Default destructor
-     */
-    ~MuxListViewItem();
-
-    /**
-     * Returns the PinModel, represented by this view item.
-     */
-    PinModel *data() const;
-
-    /**
-     * Returns the origin PinModel, represented by this view item.
-     */
-    PinModel *origData() const;
-
-    /**
-     * Sets the origin pin.
-     */
-    void setOrigData(PinModel *pin);
-
-    /**
-     * Updates the view with current contents of the <code>clone_</code> 
-     * PinModel.
-     */
-    void update();
-
-private:
-    PinModel *clone_;
-    PinModel *origin_;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Provides combo box items.
- */
-class MapToComboBoxItem
-{
-public:
-
-    /**
-     * Creates a IO list view item for the given MuxModel.
-     */
-    MapToComboBoxItem(PinModel *clone = 0, PinModel* origin = 0);
-
-    /**
-     * Default destructor
-     */
-    ~MapToComboBoxItem();
-
-    /**
-     * Returns the PinModel.
-     */
-    PinModel *data() const;
-
-    /**
-     * Returns the origin PinModel.
-     */
-    PinModel *origData() const;
-
-    /**
-     * Sets the <code>origin_<code> PinModel of this combo box
-     * item.
-     */
-    void setOrigData(PinModel *origin);
-
-private:
-    PinModel *clone_;
-    PinModel *origin_;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 
 class MuxConfDialog : public QDialog
 {
@@ -190,6 +105,9 @@ private:
     /** Initializes top widget. */
     void initTopWidget();
 
+    /** Initializes I/O widget. */
+    void initIOWidget();
+
     /** Initializes mapping widget. */
     void initMappingWidget();
 
@@ -205,22 +123,22 @@ private:
     /** Syncs the <code>model_</code> with this dialog. */
     void updateModel();
 
-    /** Returns an mapped IO by its name, if it exist, otherwise 0. */
-    PinModel *ioForString(QString name);
-
     /** Adds a new MuxMapping to the selected item. */
-    void addMapping(MuxListViewItem *item);
+    void addMapping();
 
     /** Adds a new IO to the mappings list view. */
     void addIo();
 
     /** Removes the IO given by <code>item</code>. */
-    void removeIo(MuxListViewItem *item);
+    void removeIo();
 
     /** Removes the Mapping given by <code>item</code>. */
     void removeMapping(MuxMappingListViewItem *item);
 
     QLineEdit* nameLineEdit;
+    QLineEdit *ioNameLineEdit;
+    QPushButton *addIoPushButton;
+    QPushButton *removeIoPushButton;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;
@@ -231,12 +149,14 @@ private:
     QComboBox* ioComboBox_;
     QSpinBox* endSpinBox;
     QSpinBox* beginSpinBox;
+    QSpinBox *ioBitsSpinBox;
     QListView* mappingListView;
+    QListView* inputListView;
+    QListView* outputListView;
     QBoxLayout *dialogLayout_;
 
     MuxModel *model_;
 
-    QPtrList<MapToComboBoxItem> mappedToIos_;
     QPtrList<PinModel> deletedPins_;
 
 private slots:
@@ -253,12 +173,6 @@ private slots:
      * Updates a mapping.
      */
     void updateMapping();
-
-    /** 
-     * Adds an IO if no I/O is selected or no mapping was defined.
-     * Otherwise adds a MuxMapping to the selected IO.
-     */
-    void addIoOrMapping();
 
     /**
      * Applies the changes to the model.

@@ -18,15 +18,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.26 2003/12/17 10:39:18 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.27 2003/12/17 11:31:54 garbeam Exp $
  *
  *****************************************************************************/
-
-#include "muxconfdialog.h"
-
-#include "muxmodel.h"
-#include "pinmodel.h"
-#include "poa.h"
 
 #include <qcombobox.h>
 #include <qgroupbox.h>
@@ -42,6 +36,13 @@
 #include <qtooltip.h>
 #include <qvariant.h>
 #include <qwhatsthis.h>
+
+#include "muxconfdialog.h"
+
+#include "muxmodel.h"
+#include "pinlistviewitem.h"
+#include "pinmodel.h"
+#include "poa.h"
 
 MuxMappingListViewItem::MuxMappingListViewItem(
     QListViewItem *parent, MuxMapping *clone, MuxMapping *origin)
@@ -82,68 +83,6 @@ void MuxMappingListViewItem::update() {
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
-                                 PinModel *clone, PinModel *origin)
-    : QListViewItem(parent, after)
-{
-    setOpen(true);
-    clone_ = clone;
-    origin_ = origin;
-
-    update();
-}
-
-MuxListViewItem::~MuxListViewItem() {
-    if (clone_ != 0) {
-        delete clone_;
-    }
-}
-
-PinModel *MuxListViewItem::data() const {
-    return clone_;
-}
-
-PinModel *MuxListViewItem::origData() const {
-    return origin_;
-}
-
-void MuxListViewItem::setOrigData(PinModel *pin) {
-    origin_ = pin;
-}
-
-void MuxListViewItem::update() {
-    if (clone_ != 0) {
-        setText(0, clone_->name());
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-MapToComboBoxItem::MapToComboBoxItem(PinModel *clone, PinModel *origin) {
-    clone_ = clone;
-    origin_ = origin;
-}
-
-MapToComboBoxItem::~MapToComboBoxItem() {
-    if (clone_ != 0) {
-        delete clone_;
-    }
-}
-
-PinModel *MapToComboBoxItem::data() const {
-    return clone_;
-}
-
-PinModel *MapToComboBoxItem::origData() const {
-    return origin_;
-}
-
-void MapToComboBoxItem::setOrigData(PinModel *origin) {
-    origin_ = origin;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
                              const char* name, bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
@@ -173,6 +112,7 @@ void MuxConfDialog::initLayout() {
     dialogLayout_ = new QVBoxLayout(this, WIDGET_SPACING);
 
     initTopWidget();
+    initIOWidget();
     initMappingWidget();
     initBottomWidget();
 }
@@ -190,11 +130,64 @@ void MuxConfDialog::initTopWidget() {
 
 }
 
-void MuxConfDialog::initMappingWidget() {
+void MuxConfDialog::initIOWidget() {
 
-    QGroupBox *mappingGroupBox = new QGroupBox(this, "mappingGroupBox");
-    mappingGroupBox->setTitle(tr("Mappings"));
-    QBoxLayout *mappingLayout = new QVBoxLayout(mappingGroupBox, 3 * WIDGET_SPACING);
+    QGroupBox *ioGroupBox = new QGroupBox(this, "ioGroupBox");
+    ioGroupBox->setTitle(tr("I/Os"));
+    QBoxLayout *ioLayout = new QVBoxLayout(ioGroupBox, 3 * WIDGET_SPACING);
+
+    QWidget *listViewWidget = new QWidget(ioGroupBox);
+    QBoxLayout *listViewLayout =
+        new QHBoxLayout(listViewWidget, WIDGET_SPACING);
+
+    inputListView = new QListView(listViewWidget, "inputListView");
+    inputListView->addColumn(tr("Position"));
+    inputListView->addColumn(tr("I/O name"));
+    inputListView->addColumn(tr("Bits"));
+
+    outputListView = new QListView(listViewWidget, "outputListView");
+    outputListView->addColumn(tr("Position"));
+    outputListView->addColumn(tr("I/O name"));
+    outputListView->addColumn(tr("Bits"));
+
+    listViewLayout->addWidget(inputListView);
+    listViewLayout->addWidget(outputListView);
+
+    QWidget *manipulationWidget = new QWidget(ioGroupBox);
+    QGridLayout *manipulationLayout =
+        new QGridLayout(manipulationWidget, 2, 2, 3 * WIDGET_SPACING);
+
+    ioNameLineEdit =
+        new QLineEdit(manipulationWidget, "ioNameLineEdit");
+    ioBitsSpinBox = new QSpinBox(manipulationWidget, "ioBitsSpinBox");
+    addIoPushButton =
+        new QPushButton(manipulationWidget, "addIoPushButton");
+    addIoPushButton->setText("Add I/O");
+    removeIoPushButton =
+        new QPushButton(manipulationWidget, "removeIoPushButton");
+    removeIoPushButton->setText("Add I/O");
+
+    QWidget *nameWidget = new QWidget(manipulationWidget);
+    QBoxLayout *nameLayout =
+        new QHBoxLayout(nameWidget, WIDGET_SPACING);
+
+    nameLayout->addWidget(new QLabel(tr("I/O name"), nameWidget));
+    nameLayout->addWidget(ioNameLineEdit);
+
+    QWidget *bitsWidget = new QWidget(manipulationWidget);
+    QBoxLayout *bitsLayout =
+        new QHBoxLayout(bitsWidget, WIDGET_SPACING);
+
+    bitsLayout->addWidget(new QLabel(tr("bits"), bitsWidget));
+
+
+    
+#if 0
+    mappingListView = new QListView(mappingListView, "mappingsListView");
+    mappingListView->addColumn(tr("Input"));
+    mappingListView->addColumn(tr("Range"));
+    mappingListView->addColumn(tr("Output"));
+    mappingListView->addColumn(tr("Range"));
 
     QWidget *manipulationWidget = new QWidget(mappingGroupBox);
     QGridLayout *manipulationLayout =
@@ -250,6 +243,69 @@ void MuxConfDialog::initMappingWidget() {
     mappingLayout->addWidget(manipulationWidget);
 
     dialogLayout_->addWidget(mappingGroupBox);
+#endif
+}
+void MuxConfDialog::initMappingWidget() {
+
+    QGroupBox *mappingGroupBox = new QGroupBox(this, "mappingGroupBox");
+    mappingGroupBox->setTitle(tr("Mappings"));
+    QBoxLayout *mappingLayout = new QVBoxLayout(mappingGroupBox, 3 * WIDGET_SPACING);
+
+    QWidget *manipulationWidget = new QWidget(mappingGroupBox);
+    QGridLayout *manipulationLayout =
+        new QGridLayout(manipulationWidget, 2, 3, 3 * WIDGET_SPACING);
+
+    // begin
+    QWidget *beginWidget = new QWidget(manipulationWidget);
+    QBoxLayout *beginLayout = new QHBoxLayout(beginWidget, WIDGET_SPACING);
+
+    beginSpinBox = new QSpinBox(beginWidget, "beginSpinBox");
+
+    beginLayout->addWidget(new QLabel(tr("Begin"), beginWidget));
+    beginLayout->addWidget(beginSpinBox);
+
+    // end
+    QWidget *endWidget = new QWidget(manipulationWidget);
+    QBoxLayout *endLayout = new QHBoxLayout(endWidget, WIDGET_SPACING);
+
+    endSpinBox = new QSpinBox(endWidget, "endSpinBox");
+
+    endLayout->addWidget(new QLabel(tr("End"), endWidget));
+    endLayout->addWidget(endSpinBox);
+
+    // prepare combobox and buttons to put into grid layout
+    ioComboBox_ = new QComboBox(true, manipulationWidget, "ioComboBox_");
+    ioComboBox_->setAutoCompletion(true);
+
+    addPushButton = new QPushButton(manipulationWidget, "addPushButton");
+    addPushButton->setText(tr("&Add"));
+
+    updatePushButton = new QPushButton(manipulationWidget, "updatePushButton");
+    updatePushButton->setText(tr("&Update"));
+
+    removePushButton = new QPushButton(manipulationWidget, "removePushButton");
+    removePushButton->setText(tr("Remove"));
+
+    // put everything together into grid layout
+    manipulationLayout->addWidget(beginWidget, 0, 0);
+    manipulationLayout->addWidget(endWidget, 0, 1);
+    manipulationLayout->addWidget(ioComboBox_, 0, 2);
+    manipulationLayout->addWidget(addPushButton, 1, 0);
+    manipulationLayout->addWidget(updatePushButton, 1, 1);
+    manipulationLayout->addWidget(removePushButton, 1, 2);
+
+    // prepare mapping ListView
+    mappingListView = new QListView(mappingListView, "mappingsListView");
+    mappingListView->addColumn(tr("Input"));
+    mappingListView->addColumn(tr("Range"));
+    mappingListView->addColumn(tr("Output"));
+    mappingListView->addColumn(tr("Range"));
+
+    // finish mapping layout
+    mappingLayout->addWidget(mappingListView);
+    mappingLayout->addWidget(manipulationWidget);
+
+    dialogLayout_->addWidget(mappingGroupBox);
 }
 
 
@@ -282,7 +338,6 @@ void MuxConfDialog::initBottomWidget() {
 
 void MuxConfDialog::initConnections() {
 
-    connect(addPushButton, SIGNAL(clicked()), this, SLOT(addIoOrMapping()));
     connect(updatePushButton, SIGNAL(clicked()), this, SLOT(updateMapping()));
     connect(removePushButton, SIGNAL(clicked()), this, SLOT(removeIoOrMapping()));
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
@@ -497,52 +552,14 @@ void MuxConfDialog::mappingSelectionChanged() {
     }
 }
 
-PinModel *MuxConfDialog::ioForString(QString name) {
-
-    // Note: dangerous if there exists several PinModels with
-    // the same name. It'll return always first match.
-    QPtrListIterator<MapToComboBoxItem> it(mappedToIos_);
-    while (it.current() != 0) {
-        PinModel *pin = it.current()->data();
-        ++it;
-        if (pin->name() == name) {
-            return pin;
-        }
-    }
-
-    return 0;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Add IO/Mapping Slot/Helpers
 //
 void MuxConfDialog::addIo() {
 
-    PinModel::PinType type;
-    QString name;
-
-    if (model_->muxType() == MuxModel::MUX) {
-        type = PinModel::INPUT;
-        name = "input";
-    }
-    else {
-        type = PinModel::OUTPUT;
-        name = "output";
-    }
-
-    unsigned bits = 32;
-    unsigned id = mappingListView->childCount() + 1;
-
-    PinModel *pin =
-        new PinModel(model_,
-                    QString("%1 %2").arg(name).arg(id),
-                    0, bits, type);
-
-    new MuxListViewItem(mappingListView, 0, pin, 0);
-
 }
 
-void MuxConfDialog::addMapping(MuxListViewItem *item) {
+void MuxConfDialog::addMapping() {
 
     PinModel::PinType type;
     QString name;
@@ -557,7 +574,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
     }
 
     QString mapToName = ioComboBox_->currentText();
-    unsigned id = mappedToIos_.count() + 1;
+    unsigned id =0;// mappedToIos_.count() + 1;
 
     if (mapToName == "") {
         mapToName = QString("%1 %2").arg(name).arg(id);
@@ -583,7 +600,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
     //
 
     // Get model for name, if it already exists
-    PinModel *mapTo = ioForString(mapToName);
+    PinModel *mapTo = 0;//ioForString(mapToName);
 
     if (mapTo == 0) {
         // the given mapTo name does not exist yet,
@@ -591,14 +608,15 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
 
         mapTo =
             new PinModel(model_, mapToName, id * 100, 0, type);
-        mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
+//        mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
         ioComboBox_->insertItem(mapToName);
     }
 
-    PinModel *currPin = item->data();
-    PinModel *origPin = item->origData();
+    //PinModel *currPin = item->data();
+    //PinModel *origPin = item->origData();
     MuxMapping *mapping;
 
+/*
     if (origPin != 0) {
         mapping = new MuxMapping(origPin, mapTo,
                 beginSpinBox->value(),
@@ -609,33 +627,21 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
                 beginSpinBox->value(),
                 endSpinBox->value(), 0, 0);
     }
-
+*/
     QPtrList<MuxMapping> *mappings = model_->mappings();
     mappings->append(mapping);
 
     // update ListView
-    new MuxMappingListViewItem(item, mapping, 0);
+    new MuxMappingListViewItem(0, mapping, 0);
 
-}
-
-void MuxConfDialog::addIoOrMapping() {
-
-    MuxListViewItem *item = (MuxListViewItem *)mappingListView->selectedItem();
-
-    if (item != 0) {
-        addMapping(item);
-    }
-    else {
-        addIo();
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Remove IO/Mapping Slot/Helpers
 //
-void MuxConfDialog::removeIo(MuxListViewItem *item) {
+void MuxConfDialog::removeIo() {
 
-    PinModel *origInputPin = item->origData();
+    PinModel *origInputPin = 0;//item->origData();
     PinModel *connected = 0;
     if (origInputPin != 0) {
         PinModel *origPin = 0; //origInputPin->model();
@@ -643,7 +649,7 @@ void MuxConfDialog::removeIo(MuxListViewItem *item) {
             connected = origPin->connected();
         }
     }
-
+#if 0
     if ((item->childCount() > 0) || connected != 0) {
         QString warnMessage = (item->childCount() > 0) ?
             item->text(0) + " has " +
@@ -672,6 +678,7 @@ void MuxConfDialog::removeIo(MuxListViewItem *item) {
 
     mappingListView->takeItem(item);
     // Note: item will be deleted by its parent mappingListView.
+#endif
 }
 
 void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
@@ -683,8 +690,6 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
     while (!iter->isOpen()) {
         iter = iter->parent();
     }
-
-    MuxListViewItem *parentItem = (MuxListViewItem *)iter;
 
     if (origMapping != 0) {
         PinModel *origPin = origMapping->output();
@@ -717,7 +722,7 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
     mappings->remove(mapping);
 
     // finally, we delete the item from the list
-    parentItem->takeItem(item);
+    //parentItem->takeItem(item);
 
 }
 
@@ -728,8 +733,6 @@ void MuxConfDialog::removeIoOrMapping() {
     if (item != 0) {
 
         if (item->isOpen()) {
-            // parent MuxListViewItem
-            removeIo((MuxListViewItem *)item);
         }
         else {
             removeMapping((MuxMappingListViewItem *)item);

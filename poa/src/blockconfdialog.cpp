@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.41 2003/12/17 10:39:18 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.42 2003/12/17 11:31:54 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -294,8 +294,8 @@ void BlockConfDialog::initListView()
 {
     // I/O list view
     ioListView = new QListView(leftWidget, "ioListView");
-    ioListView->addColumn(tr("I/O"));
-    ioListView->addColumn(tr("name"));
+    ioListView->addColumn(tr("position"));
+    ioListView->addColumn(tr("I/O name"));
     ioListView->addColumn(tr("address"));
     ioListView->addColumn(tr("bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
@@ -309,17 +309,14 @@ void BlockConfDialog::initListView()
     // I/O list view manipulation widget
     QWidget *editIoWidget = new QWidget(leftWidget);
     QGridLayout *editIoLayout =
-        new QGridLayout(editIoWidget, 3, 4, WIDGET_SPACING);
+        new QGridLayout(editIoWidget, 3, 3, WIDGET_SPACING);
 
-    ioNumberLineEdit = new QLineEdit(editIoWidget, "ioNumberLineEdit");
     ioNameLineEdit = new QLineEdit(editIoWidget, "ioNameLineEdit");
     addressLineEdit = new QLineEdit(editIoWidget, "addressLineEdit");
     bitsLineEdit = new QLineEdit(editIoWidget, "bitsLineEdit");
 
-    editIoLayout->addWidget(new QLabel(tr("I/O"), editIoWidget), 0, 0);
-    editIoLayout->addWidget(ioNumberLineEdit, 0, 1);
-    editIoLayout->addWidget(new QLabel(tr("data"), editIoWidget), 0, 2);
-    editIoLayout->addWidget(ioNameLineEdit, 0, 3);
+    editIoLayout->addWidget(new QLabel(tr("I/O name"), editIoWidget), 0, 0);
+    editIoLayout->addWidget(ioNameLineEdit, 0, 1);
     editIoLayout->addWidget(
         new QLabel(tr("address"), editIoWidget), 1, 0);
     editIoLayout->addWidget(addressLineEdit, 1, 1);
@@ -498,7 +495,6 @@ void BlockConfDialog::updateIo()
         if (pin != 0) {
             pin->setName(ioNameLineEdit->text());
             bool ok;
-            pin->setId(ioNumberLineEdit->text().toUInt(&ok, 10));
             pin->setAddress(addressLineEdit->text().toUInt(&ok, 16));
             // TODO: check ok and pop up an error dialog, if ok is false
             pin->setBits(bitsLineEdit->text().toUInt(&ok, 10));
@@ -577,12 +573,10 @@ void BlockConfDialog::ioSelectionChanged() {
     updateIoPushButton->setEnabled(isChild);
     removeIoPushButton->setEnabled(isChild);
 
-    ioNumberLineEdit->setEnabled(isChild);
     ioNameLineEdit->setEnabled(isChild);
     addressLineEdit->setEnabled(isChild && !isPeriodical);
     bitsLineEdit->setEnabled(isChild);
 
-    ioNumberLineEdit->setText(isChild ? item->text(0) : QString(""));
     ioNameLineEdit->setText(isChild ? item->text(1) : QString(""));
     addressLineEdit->setText(isChild ? item->text(2) : QString(""));
     bitsLineEdit->setText(isChild ? item->text(3) : QString(""));

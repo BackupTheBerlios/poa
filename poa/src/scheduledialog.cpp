@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.5 2004/01/09 22:04:45 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.6 2004/01/09 22:27:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -144,18 +144,12 @@ void ScheduleDialog::fillTimingTable(BlockTree* bt)
         bt->getBlock()->name());
     timingTable->setItem(i, 0, i1);
 
-    //    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-    //  QString::number(bt->getRuntime()));
     QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::RUNTIME);
     timingTable->setItem(i, 1, i2);
 
-    //    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-    //        QString::number(bt->getClock()));
     QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::CLOCK);
     timingTable->setItem(i, 2, i3);
 
-    //    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-    //        QString::number(bt->getOffset()));
     QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::OFFSET);
     timingTable->setItem(i, 3, i4);
 
@@ -197,6 +191,13 @@ void ScheduleDialog::initTimingWidget()
     timingTable->setSelectionMode(QTable::SingleRow);
     timingTable->setReadOnly(false);
     timingTable->setFocusStyle(QTable::FollowStyle);
+    timingTable->setRowMovingEnabled(true);
+
+    connect(timingTable, SIGNAL(valueChanged(int, int)),
+            this, SLOT(modelChanged(int,int)));
+
+    connect(timingTable->verticalHeader(), SIGNAL(indexChange(int, int, int)),
+            this, SLOT(rowMoved(int, int, int)));
 
     for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
         fillTimingTable(*it);
@@ -251,6 +252,20 @@ void ScheduleDialog::initGraphWidget()
 
     connect(timingTable, SIGNAL(currentChanged(int, int)),
             this, SLOT(updateHighlighter(int, int)));
+}
+
+void ScheduleDialog::clearCanvases()
+{
+    QCanvasItemList::iterator it;
+    QCanvasItemList canvasItems = canvas->allItems();
+    for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
+        delete *it;
+    }
+
+    canvasItems = labelCanvas->allItems();
+    for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
+        delete *it;
+    }
 }
 
 bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
@@ -372,6 +387,27 @@ void ScheduleDialog::zoomChanged(int zoom)
     canvasView->setWorldMatrix(zoomMatrix);
 }
 
+void ScheduleDialog::modelChanged(int, int)
+{
+    qDebug("clear canv");
+    clearCanvases();
+    qDebug("renew");
+    int Y = WIDGET_SPACING;
+    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+        int time = 0;
+        qDebug("it");
+        drawTimings(*it, &Y, &time);
+    }
+    canvas->update();
+    labelCanvas->update();
+}
+
+void ScheduleDialog::rowMoved(int section, int fromIndex, int toIndex)
+{
+    qDebug("Move: Section:"+QString::number(section)+",from: "+QString::number(fromIndex)+", to: "+QString::number(toIndex));
+    //    inputBlocks.insert(toIndex, inputBlocks.take(fromIndex));
+    modelChanged(0,0);
+}
 
 SpinBoxItem::SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field )
     : QTableItem(t, et, "0"), spinbox_(0), blocktree_(bt), field_(field)
@@ -385,7 +421,6 @@ QWidget *SpinBoxItem::createEditor() const
 {
     // create a spinbox editor
     ((SpinBoxItem*)this)->spinbox_ = new QSpinBox(table()->viewport());
-    QObject::connect(spinbox_, SIGNAL(valueChanged(int)), table(), SLOT(doValueChanged()));
     spinbox_->setValue(value());
     spinbox_->setRange(0, INT_MAX);
     return spinbox_;

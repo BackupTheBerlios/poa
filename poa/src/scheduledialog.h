@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.4 2004/01/09 21:40:38 squig Exp $
+ * $Id: scheduledialog.h,v 1.5 2004/01/09 22:27:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -87,6 +87,7 @@ private:
     void buildTree();
     void fillTimingTable(BlockTree* bt);
     bool drawTimings(BlockTree* bt, int* Y, int* time);
+    void clearCanvases();
 
     /**
      * Initializes layout.
@@ -140,9 +141,19 @@ private slots:
     void updateHighlighter(int row, int column);
 
     /**
-     * Changes the zooming
+     * Changes the zooming.
      */
     void zoomChanged(int);
+
+    /**
+     * Some values in the table has been changed.
+     */
+    void modelChanged(int row, int col);
+
+    /**
+     * A row has been swapped
+     */
+    void rowMoved(int section, int fromIndex, int toIndex);
 };
 
 

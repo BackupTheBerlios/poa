@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.42 2003/12/17 11:31:54 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.43 2003/12/17 16:35:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -92,19 +92,15 @@ void BlockConfDialog::initLayout()
     initListView();
     initBlockWidget();
 
-    if (model_->hasRuntime()) {
-        if (INSTANCEOF(model_, CpuModel)) {
-            initOffsetWidget();
-        }
-        initRuntimeWidget();
-    }
-
     if (INSTANCEOF(model_, CpuModel)) {
+        initOffsetWidget();
+        initRuntimeWidget();
         initCompileEditButtonWidget();
     }
 
-    rightLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Maximum,
-                                          QSizePolicy::Minimum));
+//     rightLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Maximum,
+//                                           QSizePolicy::Minimum));
+    rightLayout->addStretch(1);
     topLayout->addWidget(leftWidget);
     topLayout->addWidget(rightWidget);
 
@@ -122,12 +118,14 @@ void BlockConfDialog::initBlockWidget()
     QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
     blockGroupBox->setTitle(tr(model_->type()));
 
+    // the margin is calculated relative to the outer border of blockGroupBox
+    // so we need to include an offset of about 11 pixels for the border
     QGridLayout *blockLayout =
-        new QGridLayout(blockGroupBox, 4, 3, 3 * WIDGET_SPACING);
-
+        new QGridLayout(blockGroupBox, 4, 3, 11 + WIDGET_SPACING,
+                        WIDGET_SPACING);
     if (INSTANCEOF(model_, CpuModel)) {
         cpuIdSpinBox = new QSpinBox(blockGroupBox, "cpuIdSpinBox");
-        blockLayout->addWidget(new QLabel(tr("id"), blockGroupBox), 0, 0);
+        blockLayout->addWidget(new QLabel(tr("ID"), blockGroupBox), 0, 0);
         blockLayout->addWidget(cpuIdSpinBox, 0, 1);
     }
 
@@ -135,13 +133,21 @@ void BlockConfDialog::initBlockWidget()
     blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
     blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
 
-    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 1, 0);
+    blockLayout->addWidget(new QLabel(tr("Name"), blockGroupBox), 1, 0);
     blockLayout->addWidget(blockNameLineEdit, 1, 1);
-    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 2, 0);
+    blockLayout->addWidget(new QLabel(tr("Description"), blockGroupBox), 2, 0);
     blockLayout->addWidget(blockDescrLineEdit, 2, 1);
-    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 3, 0);
+    blockLayout->addWidget(new QLabel(tr("Clock"), blockGroupBox), 3, 0);
     blockLayout->addWidget(blockClockSpinBox, 3, 1);
-    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 3, 2);
+    blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 3, 2);
+
+    if (model_->hasRuntime() && !INSTANCEOF(model_, CpuModel)) {
+        runtimeSpinBox = new QSpinBox(blockGroupBox, "runtimeSpinBox");
+
+        blockLayout->addWidget(new QLabel(tr("Runtime"), blockGroupBox), 4, 0);
+        blockLayout->addWidget(runtimeSpinBox, 4, 1);
+        blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 4, 2);
+    }
 
     rightLayout->addWidget(blockGroupBox);
 }
@@ -152,21 +158,22 @@ void BlockConfDialog::initOffsetWidget()
     // offset widget
     QButtonGroup *offsetButtonGroup =
         new QButtonGroup(rightWidget, "offsetButtonGroup" );
-    offsetButtonGroup->setTitle(tr("offset"));
+    offsetButtonGroup->setTitle(tr("Offset"));
 
-    QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3,
-                                                3 * WIDGET_SPACING);
+    QGridLayout *offsetLayout
+        = new QGridLayout(offsetButtonGroup, 2, 3, 11 + WIDGET_SPACING,
+                          WIDGET_SPACING);
 
     offsetAutoCalcRadioButton =
         new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
-    offsetAutoCalcRadioButton->setText(tr("automatic calculation"));
+    offsetAutoCalcRadioButton->setText(tr("Automatic Calculation"));
     offsetAutoCalcRadioButton->setChecked(TRUE);
     connect(offsetAutoCalcRadioButton, SIGNAL(clicked()),
             this, SLOT(toggleManualOffset()));
 
     offsetRadioButton =
         new QRadioButton(offsetButtonGroup, "offsetRadioButton");
-    offsetRadioButton->setText(tr("offset"));
+    offsetRadioButton->setText(tr("Manual Offset"));
     connect(offsetRadioButton, SIGNAL(clicked()),
             this, SLOT(toggleManualOffset()));
 
@@ -175,7 +182,7 @@ void BlockConfDialog::initOffsetWidget()
     offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
     offsetLayout->addWidget(offsetRadioButton, 1, 0);
     offsetLayout->addWidget(offsetSpinBox, 1, 1);
-    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
+    offsetLayout->addWidget(new QLabel(tr("ns"), offsetButtonGroup), 1, 2);
 
     rightLayout->addWidget(offsetButtonGroup);
 }
@@ -183,52 +190,52 @@ void BlockConfDialog::initOffsetWidget()
 void BlockConfDialog::initRuntimeWidget()
 {
 
-    if (INSTANCEOF(model_, CpuModel)) {
-        // runtime widget
-        QButtonGroup *runtimeButtonGroup =
-            new QButtonGroup(rightWidget, "runtimeButtonGroup");
-        runtimeButtonGroup->setTitle(tr("runtime"));
+    // runtime widget
+    QButtonGroup *runtimeButtonGroup =
+        new QButtonGroup(rightWidget, "runtimeButtonGroup");
+    runtimeButtonGroup->setTitle(tr("Runtime"));
 
-        runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
+    runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
 
-        QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3,
-                                                     3 * WIDGET_SPACING);
-        runtimeAutoCalcRadioButton =
-            new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
-        runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
-        runtimeAutoCalcRadioButton->setChecked(TRUE);
-        connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
-                this, SLOT(toggleManualRuntime()));
+    QGridLayout *runtimeLayout
+        = new QGridLayout(runtimeButtonGroup, 2, 3, 11 + WIDGET_SPACING,
+                          WIDGET_SPACING);
+    runtimeAutoCalcRadioButton =
+        new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
+    runtimeAutoCalcRadioButton->setText(tr("Automatic Calculation"));
+    runtimeAutoCalcRadioButton->setChecked(TRUE);
+    connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
 
-        runtimeRadioButton =
-            new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
-        runtimeRadioButton->setText(tr("runtime"));
-        connect(runtimeRadioButton, SIGNAL(clicked()),
-                this, SLOT(toggleManualRuntime()));
-        runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
-        runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
-        runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
-        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
-        rightLayout->addWidget(runtimeButtonGroup);
-    }
-    else {
-        // runtime widget for non cpu blocks (redundancy because of
-        // aestetic reasons)
-        QGroupBox *runtimeGroupBox =
-            new QGroupBox(rightWidget, "runtimeGroupBox");
-        runtimeGroupBox->setTitle(tr("runtime"));
+    runtimeRadioButton =
+        new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
+    runtimeRadioButton->setText(tr("Manual Runtime"));
+    connect(runtimeRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
+    runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
+    runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
+    runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
+    runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeButtonGroup), 1, 2);
+    rightLayout->addWidget(runtimeButtonGroup);
+//     }
+//     else {
+//         // runtime widget for non cpu blocks (redundancy because of
+//         // aestetic reasons)
+//         QGroupBox *runtimeGroupBox =
+//             new QGroupBox(rightWidget, "runtimeGroupBox");
+//         runtimeGroupBox->setTitle(tr("Runtime"));
 
-        runtimeSpinBox = new QSpinBox(runtimeGroupBox, "runtimeSpinBox");
+//         runtimeSpinBox = new QSpinBox(runtimeGroupBox, "runtimeSpinBox");
 
-        // Note: For some Qt specific reasons, a spacing of 5px within
-        // QBoxLayout produces overlapping labels. So WIDGET_SPACING
-        // isn't used here.
-        QBoxLayout *runtimeLayout = new QHBoxLayout(runtimeGroupBox, 15);
-        runtimeLayout->addWidget(new QLabel(tr("runtime"), runtimeGroupBox));
-        runtimeLayout->addWidget(runtimeSpinBox);
-        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeGroupBox));
-        rightLayout->addWidget(runtimeGroupBox);
-    }
+//         // Note: For some Qt specific reasons, a spacing of 5px within
+//         // QBoxLayout produces overlapping labels. So WIDGET_SPACING
+//         // isn't used here.
+//         QBoxLayout *runtimeLayout = new QHBoxLayout(runtimeGroupBox, 15);
+//         runtimeLayout->addWidget(new QLabel(tr("Runtime"), runtimeGroupBox));
+//         runtimeLayout->addWidget(runtimeSpinBox);
+//         runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeGroupBox));
+//         rightLayout->addWidget(runtimeGroupBox);
+//     }
 }
 
 void BlockConfDialog::initCompileEditButtonWidget()
@@ -242,7 +249,7 @@ void BlockConfDialog::initCompileEditButtonWidget()
 
     editCodePushButton =
         new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
-    editCodePushButton->setText(tr("&Edit code"));
+    editCodePushButton->setText(tr("&Edit Code"));
     connect(editCodePushButton, SIGNAL(clicked()), this, SLOT(edit()));
 
     compilePushButton =
@@ -250,9 +257,9 @@ void BlockConfDialog::initCompileEditButtonWidget()
     compilePushButton->setText(tr("Co&mpile"));
     connect(compilePushButton, SIGNAL(clicked()), this, SLOT(compile()));
 
-
     compileEditButtonsLayout->addWidget(editCodePushButton);
     compileEditButtonsLayout->addWidget(compilePushButton);
+    compileEditButtonsLayout->addStretch(1);
 
     rightLayout->addWidget(compileEditButtonsWidget);
 
@@ -283,6 +290,7 @@ void BlockConfDialog::initBottomWidget()
     cancelPushButton->setText(tr("&Cancel"));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
+    bottomLayout->addStretch(1);
     bottomLayout->addWidget(okPushButton);
     bottomLayout->addWidget(helpPushButton);
     bottomLayout->addWidget(applyPushButton);
@@ -294,14 +302,13 @@ void BlockConfDialog::initListView()
 {
     // I/O list view
     ioListView = new QListView(leftWidget, "ioListView");
-    ioListView->addColumn(tr("position"));
-    ioListView->addColumn(tr("I/O name"));
-    ioListView->addColumn(tr("address"));
-    ioListView->addColumn(tr("bits"));
+    ioListView->addColumn(tr("Position"));
+    ioListView->addColumn(tr("I/O Name"));
+    ioListView->addColumn(tr("Address"));
+    ioListView->addColumn(tr("Bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
     ioListView->setMinimumWidth(300);
     ioListView->setSorting(10); // 10 > number of columns
-    leftLayout->addWidget(ioListView);
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
 
@@ -315,12 +322,12 @@ void BlockConfDialog::initListView()
     addressLineEdit = new QLineEdit(editIoWidget, "addressLineEdit");
     bitsLineEdit = new QLineEdit(editIoWidget, "bitsLineEdit");
 
-    editIoLayout->addWidget(new QLabel(tr("I/O name"), editIoWidget), 0, 0);
+    editIoLayout->addWidget(new QLabel(tr("I/O Name"), editIoWidget), 0, 0);
     editIoLayout->addWidget(ioNameLineEdit, 0, 1);
     editIoLayout->addWidget(
-        new QLabel(tr("address"), editIoWidget), 1, 0);
+        new QLabel(tr("Address"), editIoWidget), 1, 0);
     editIoLayout->addWidget(addressLineEdit, 1, 1);
-    editIoLayout->addWidget(new QLabel(tr("bits"), editIoWidget), 1, 2);
+    editIoLayout->addWidget(new QLabel(tr("Bits"), editIoWidget), 1, 2);
     editIoLayout->addWidget(bitsLineEdit, 1, 3);
 
 
@@ -347,7 +354,9 @@ void BlockConfDialog::initListView()
     ioButtonsLayout->addWidget(newIoPushButton);
     ioButtonsLayout->addWidget(updateIoPushButton);
     ioButtonsLayout->addWidget(removeIoPushButton);
+    ioButtonsLayout->addStretch(1);
 
+    leftLayout->addWidget(ioListView);
     leftLayout->addWidget(ioButtonsWidget);
     leftLayout->addWidget(editIoWidget);
 }
@@ -391,7 +400,6 @@ void BlockConfDialog::syncModel() {
              it != pinList.end(); ++it)
         {
             PinModel *pin = (*it);
-            qDebug(pin->name());
             switch (pin->type()) {
             case PinModel::INPUT:
                 new PinListViewItem(inputRoot_, 0, pin->clone(), pin);

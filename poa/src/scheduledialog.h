@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.8 2004/01/11 13:11:01 vanto Exp $
+ * $Id: scheduledialog.h,v 1.9 2004/01/11 13:45:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,11 @@ private:
     void buildTree();
     void fillTimingTable(BlockTree* bt);
     bool drawTimings(BlockTree* bt, int* Y, int* time);
+
+    /*
+     * Calculates the position of the given block at the given time
+     */
+    QRect calcBlockPosition(BlockTree *bt, int time);
 
     /*
      * Clears all graph widget canvases.

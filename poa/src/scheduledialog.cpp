@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.10 2004/01/11 13:11:01 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.11 2004/01/11 13:45:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -307,21 +307,41 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
     }
 
     int t = bt->getOffset();
-
-    int X = WIDGET_SPACING + rint(t * PIX_PER_NS);
+    int X = rint(t * PIX_PER_NS);
     while (X < canvas->width()) {
 
         if (bt->getClock() <= 0) {
             return false;
         }
 
-        QCanvasRectangle* box = new QCanvasRectangle(0, 0, 0, 0, canvas);
-        box->move(X, *Y);
-        int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS));
+        QRect thisBlock = calcBlockPosition(bt, t);
+        QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);
         box->setBrush(QBrush(white));
-        box->setSize(w, BOX_HEIGHT);
         box->setZ(1);
         box->show();
+
+        for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
+            BlockTree *target = *it;
+
+            /** REVIEW ME! -->  */
+            if (target->getBackReference()) {
+                target = blocksToTree_[target->getBlock()];
+            }
+            /** <-- REVIEW ME! */
+
+            int targetTime = target->getOffset();
+            while (targetTime <= t + bt->getRuntime()) {
+                targetTime += target->getClock();
+            }
+
+            QRect targetBlock = calcBlockPosition(target, targetTime);
+            QCanvasLine *line = new QCanvasLine(canvas);
+            line->setPoints(thisBlock.right(), thisBlock.y() + (BOX_HEIGHT / 2), targetBlock.x(), targetBlock.y());
+            line->setZ(1);
+            line->show();
+
+        }
+
 
 //      QCanvasLine* line = new QCanvasLine(canvas);
 //      (*lit)->setPoints(100, 100, 150, 150);
@@ -333,11 +353,20 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 
     *Y += BOX_HEIGHT + BOX_YSPACING;
 
-    /*    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
-        drawTimings(*it, Y, time);
-        }*/
-
     return true;
+}
+
+QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)
+{
+    int line = blocks_.find(bt);
+    Q_ASSERT(line != -1);
+
+    int x = rint(time * PIX_PER_NS);
+    int y = line * (BOX_HEIGHT + BOX_YSPACING) + BOX_YSPACING;
+    int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS));
+    int h = BOX_HEIGHT;
+
+    return QRect(x, y, w, h);
 }
 
 void ScheduleDialog::initBottomWidget()

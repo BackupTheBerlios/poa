@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: inputblockmodel.h,v $, $Revision: 1.1 $
- *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $RCSfile: inputblockmodel.h,v $, $Revision: 1.2 $
+ *  $Author: garbeam $
+ *  $Date: 2003/07/08 11:41:13 $
  *
  *****************************************************************************/
 
@@ -49,7 +49,7 @@ class InputBlockModel: public BlockModel
 
   private:
 
-    PinVector *outputPins;
+    PinVector *inputPins;
   
 };
 

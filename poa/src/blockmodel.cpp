@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.25 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.26 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -189,7 +189,6 @@ void BlockModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
 
-    setName( element.attribute("name","unnamed") );
     setExecTime((unsigned int) element.attribute("exectime","0").toUInt());
 
     // pins

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.9 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: abstractmodel.cpp,v 1.10 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -78,6 +78,7 @@ QDomElement AbstractModel::serialize(QDomDocument *document)
 
 void AbstractModel::deserialize(QDomElement element)
 {
+    setName(element.attribute("name","unnamed"));
     setType(element.attribute("type", "unknown"));
     setDescription(element.attribute("desc","no description"));
     setId(element.attribute("id","0").toUInt());

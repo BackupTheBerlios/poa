@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.2 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.3 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "muxconfdialog.h"
 
 #include "muxmodel.h"
+#include "pinmodel.h"
 #include "poa.h"
 
 #include <qcombobox.h>
@@ -48,13 +49,22 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
     : QDialog(parent, name, modal, fl)
 {
     model_ = model;
+    tmpModel_ = 0;
+
     if (!name) {
         setName( "MuxConfDialog" );
         resize(400, 500); 
     }
-    setCaption(tr("Mux configuration"));
+    if (model_->type() == MuxModel::MUX) {
+        setCaption(tr("Mux configuration"));
+    }
+    else {
+        setCaption(tr("Demux configuration"));
+    }
 
     initLayout();
+    initConnections();
+    mappingSelectionChanged();
 
 }
 
@@ -77,6 +87,7 @@ void MuxConfDialog::initTopWidget() {
     topLayout->addWidget(nameLineEdit);
 
     dialogLayout_->addWidget(topWidget);
+
 }
 
 void MuxConfDialog::initMappingWidget() {
@@ -153,14 +164,12 @@ void MuxConfDialog::initBottomWidget() {
     okPushButton = new QPushButton(bottomWidget, "okPushButton");
     okPushButton->setText(tr("&OK"));
     okPushButton->setDefault(TRUE);
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
 
     applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
     applyPushButton->setText(tr("&Apply"));
 
     cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton");
     cancelPushButton->setText(tr("&Cancel"));
-    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     bottomLayout->addWidget(helpPushButton);
     bottomLayout->addWidget(okPushButton);
@@ -171,11 +180,73 @@ void MuxConfDialog::initBottomWidget() {
     dialogLayout_->addWidget(bottomWidget);
 }
 
+void MuxConfDialog::initConnections() {
+
+    connect(addPushButton, SIGNAL(clicked()), this, SLOT(addIoOrMapping()));
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(mappingListView, SIGNAL(selectionChanged()),
+            this, SLOT(mappingSelectionChanged()));
+}
+
 /**
  *  Destroys the object and frees any allocated resources
  */
 MuxConfDialog::~MuxConfDialog()
 {
-    // no need to delete child widgets, Qt does it all for us
+    if (tmpModel_ != 0) {
+        delete tmpModel_;
+    }
 }
 
+void MuxConfDialog::syncModel() {
+
+    Q_ASSERT(model_ != 0);
+
+    if (tmpModel_ != 0) {
+        delete tmpModel_;
+    }
+
+    tmpModel_ = new MuxModel(model_->type(), model_->description());
+
+    // TODO: mappings cloning, outpt & input cloning
+
+
+}
+
+
+void MuxConfDialog::updateModel() {
+
+
+}
+
+void MuxConfDialog::mappingSelectionChanged() {
+
+    QListViewItem *item = mappingListView->selectedItem();
+    bool selectedMapping = (item != 0);
+
+    updatePushButton->setEnabled(selectedMapping);
+    removePushButton->setEnabled(selectedMapping);
+    beginSpinBox->setEnabled(selectedMapping);
+    endSpinBox->setEnabled(selectedMapping);
+    ioComboBox_->setEnabled(selectedMapping);
+
+    if (selectedMapping) {
+        addPushButton->setText(tr("&Add"));
+    }
+    else {
+        if (model_->type() == MuxModel::MUX) {
+            addPushButton->setText(tr("&New Input"));
+        }
+        else {
+            addPushButton->setText(tr("&New Output"));
+        }
+    }
+}
+
+void MuxConfDialog::addIoOrMapping() {
+
+
+
+
+}

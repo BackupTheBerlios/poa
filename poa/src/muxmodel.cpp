@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.8 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.9 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,23 +89,23 @@ QDomElement MuxMapping::serialize(QDomDocument *document)
     return root;
 }
 
+MuxMapping *MuxMapping::clone() {
+    return new MuxMapping(output_, input_, begin_, end_);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 MuxModel::MuxModel(QString type, QString description)
     : AbstractModel(type, description)
 {
-    inputPins_ = new PinVector();
-    outputPins_ = new PinVector();
-    setType(type);
     setName(QString("new %1").arg(type));
+    type_ = (type == "mux") ? MUX : DEMUX;
     setDescription(description);
 }
 
 MuxModel::MuxModel(QDomElement coreElement)
     : AbstractModel(QString::null, QString::null)
 {
-    inputPins_ = new PinVector();
-    outputPins_ = new PinVector();
     if (!coreElement.isNull()) {
         deserialize(coreElement);
     }
@@ -113,28 +113,24 @@ MuxModel::MuxModel(QDomElement coreElement)
 
 MuxModel::~MuxModel()
 {
-    PinVector::iterator it;
-
-    for (QPtrListIterator<MuxMapping> i(mappings_); i.current() != 0; ++i) {
-        delete (*i);
+    for (QPtrListIterator<MuxMapping> it(mappings_); it.current() != 0; ++it) {
+        delete *it;
     }
 
-    for(it = inputPins_->begin(); it != inputPins_->end(); ++it ) {
-        delete (*it);
+    for (QPtrListIterator<PinModel> it(inputPins_); it.current() != 0; ++it) {
+        delete *it;
     }
-    delete inputPins_;
 
-    for(it = outputPins_->begin(); it != outputPins_->end(); ++it ) {
-        delete (*it);
+    for (QPtrListIterator<PinModel> it(outputPins_); it.current() != 0; ++it) {
+        delete *it;
     }
-    delete outputPins_;
 
     emit deleted();
 }
 
 PinModel *MuxModel::addPin(PinModel::PinType type)
 {
-    PinVector *pinVector;
+    QPtrList<PinModel> *l;
     unsigned id;
     unsigned bits;
 
@@ -143,13 +139,13 @@ PinModel *MuxModel::addPin(PinModel::PinType type)
     switch(type) {
     case PinModel::INPUT:
         bits = 32;
-        id = inputPins_->size() + 1;
-        pinVector = inputPins_;
+        id = inputPins_.count() + 1;
+        l = &inputPins_;
         break;
     case PinModel::OUTPUT:
         bits = 0;
-        id = outputPins_->size() + 1;
-        pinVector = outputPins_;
+        id = outputPins_.count() + 1;
+        l = &outputPins_;
         break;
     case PinModel::EPISODIC:
         // assertion true, so do nothing.
@@ -157,7 +153,9 @@ PinModel *MuxModel::addPin(PinModel::PinType type)
     }
 
     PinModel *pin = new PinModel(this, id, QString("Output %1").arg(id), 0, bits, type);
-    pinVector->addBefore(pin);
+    l->append(pin);
+
+    delete l; // l was only temporary used.
 
     return pin;
 }
@@ -195,7 +193,7 @@ void MuxModel::removeMuxMappings(PinModel *pin)
                 output->setBits(output->bits() - bits);
             }
             else {
-                outputPins_->remove(output);
+                outputPins_.remove(output);
                 delete output;
             }
             mappings_.remove(mapping);
@@ -208,10 +206,10 @@ void MuxModel::removePin(PinModel *pin)
 {
     switch (pin->type()) {
     case PinModel::INPUT:
-        inputPins_->remove(pin);
+        inputPins_.remove(pin);
         break;
     case PinModel::OUTPUT:
-        outputPins_->remove(pin);
+        outputPins_.remove(pin);
         break;
     case PinModel::EPISODIC:
         qDebug("Warning: Cannot remove EPISODIC pin from MuxModel");
@@ -233,15 +231,20 @@ QDomElement MuxModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
     root.setAttribute("name", name());
-    root.setAttribute("block-type", "mux");
+    if (type_ == MUX) {
+        root.setAttribute("block-type", "mux");
+    }
+    else {
+        root.setAttribute("block-type", "demux");
+    }
 
-    for (unsigned i = 0; i < inputPins_->size(); i++) {
-        QDomElement pinElem = inputPins_->at(i)->serialize(document);
+    for (unsigned i = 0; i < inputPins_.count(); i++) {
+        QDomElement pinElem = inputPins_.at(i)->serialize(document);
         pinElem.setAttribute("type","input");
         root.appendChild(pinElem);
     }
-    for (unsigned i = 0; i < outputPins_->size(); i++) {
-        QDomElement pinElem = outputPins_->at(i)->serialize(document);
+    for (unsigned i = 0; i < outputPins_.count(); i++) {
+        QDomElement pinElem = outputPins_.at(i)->serialize(document);
         pinElem.setAttribute("type","output");
         root.appendChild(pinElem);
     }
@@ -258,11 +261,16 @@ void MuxModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
 
-    // pins
-    inputPins_->clear();
-    outputPins_->clear();
+    if (element.attribute("block-type", "") == "mux") {
+        type_ = MUX;
+        setType("mux");
+    }
+    else {
+        type_ = DEMUX;
+        setType("demux");
+    }
 
-    // TODO
+    // TODO: MuxMappings
     QDomNode node = element.firstChild();
     while ( !node.isNull() ) {
         if (node.isElement() && node.nodeName() == "pin" ) {
@@ -270,10 +278,28 @@ void MuxModel::deserialize(QDomElement element)
             PinModel *pinModel = new PinModel(0, pin);
             if (pin.attribute("type", "") == "input") {
                 pinModel->setType(PinModel::INPUT);
+                inputPins_.append(pinModel);
             } else if (pin.attribute("type","") == "output") {
                 pinModel->setType(PinModel::OUTPUT);
+                outputPins_.append(pinModel);
             }
         }
         node = node.nextSibling();
      }
+}
+
+MuxModel::MuxType MuxModel::muxType() {
+    return type_;
+}
+
+QPtrList<MuxMapping> *MuxModel::mappings() {
+    return &mappings_;
+}
+
+QPtrList<PinModel> *MuxModel::outputs() {
+    return &outputPins_;
+}
+
+QPtrList<PinModel> *MuxModel::inputs() {
+    return &inputPins_;
 }

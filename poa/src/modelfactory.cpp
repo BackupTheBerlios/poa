@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.13 2003/09/23 12:15:40 garbeam Exp $
+ * $Id: modelfactory.cpp,v 1.14 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -51,7 +51,8 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
             else if (element.attribute("block-type","") == "core") {
                 model = new CoreModel(element);
             }
-            else if (element.attribute("block-type", "") == "mux")
+            else if ((element.attribute("block-type", "") == "mux") ||
+                     (element.attribute("block-type", "") == "demux"))
             {
                 model = new MuxModel(element);
             }

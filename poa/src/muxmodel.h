@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.10 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: muxmodel.h,v 1.11 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,9 @@
 #define POA_MUXMODEL_H
 
 #include "abstractmodel.h"
-#include "pinvector.h"
 #include "pinmodel.h"
+
+#include <qptrlist.h>
 
 /**
  * Provides range mappings from an input PinModel to an output
@@ -89,6 +90,9 @@ public:
      */
     QDomElement serialize(QDomDocument *document);
 
+    /** Clones this MuxMapping */
+    MuxMapping *clone();
+
 private:
 
     PinModel *input_;
@@ -113,6 +117,12 @@ class MuxModel: public AbstractModel
     Q_OBJECT
 
 public:
+
+    /**
+     * Defines the enum MuxType.
+     */
+    enum MuxType {MUX, DEMUX};
+
     /**
      * Creates a MuxModel instance for the library
      */
@@ -183,14 +193,38 @@ public:
      */
     void deserialize(QDomElement element);
 
+
+    /**
+     * Returns the type of this muxmodel.
+     */
+    MuxType muxType();
+
+    /**
+     * Returns mappings pointer list.
+     */
+    QPtrList<MuxMapping> *mappings();
+
+    /**
+     * Returns input pin list.
+     */
+    QPtrList<PinModel> *inputs();
+
+    /**
+     * Returns outputs pointer list.
+     */
+    QPtrList<PinModel> *outputs();
+
+
 private:
 
     /** Contains all I/O mappings, see {@link MuxMapping} for detail */
     QPtrList<MuxMapping> mappings_;
 
     /** input and output pins */
-    PinVector *inputPins_;
-    PinVector *outputPins_;
+    QPtrList<PinModel> inputPins_;
+    QPtrList<PinModel> outputPins_;
+
+    MuxType type_;
 
 signals:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.2 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.3 2003/09/24 11:11:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include <qvariant.h>
 #include <qdialog.h>
 
+class PinModel;
 class MuxModel;
 
 class QBoxLayout;
@@ -62,6 +63,15 @@ private:
     /** Initializes bottom buttons. */
     void initBottomWidget();
 
+    /** Initializes connections. */
+    void initConnections();
+
+    /** Syncs this dialog with <code>model_</code>. */
+    void syncModel();
+
+    /** Syncs the <code>model_</code> with this dialog. */
+    void updateModel();
+
     QLineEdit* nameLineEdit;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
@@ -78,6 +88,20 @@ private:
 
     MuxModel *model_;
 
+    /** Contains all temparary info */
+    MuxModel *tmpModel_;
+
+private slots:
+
+    /** Magic selection, button title changing. */
+    void mappingSelectionChanged();
+
+
+    /** 
+     * Adds an IO if no I/O is selected or no mapping was defined.
+     * Otherwise adds a MuxMapping to the selected IO.
+     */
+    void addIoOrMapping();
 };
 
 #endif // POA_MUXCONFDIALOG_H

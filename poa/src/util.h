@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.7 2004/01/12 17:06:24 squig Exp $
+ * $Id: util.h,v 1.8 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -61,6 +61,11 @@ class Util
      * successfully, <code>false</code> otherwise.
      */
     static bool copyFile(QFile *source, QFile *target);
+
+    /**
+     * Reads <code>file</code>'s content line by line to a QString.
+     */
+    static QString readFile(QFile *file);
 
     /**
      * Searches the resource pathes for icon filename.

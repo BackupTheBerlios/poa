@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.12 2003/09/23 14:48:51 garbeam Exp $
+ * $Id: codemanager.h,v 1.13 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,11 @@ public:
      * If the CPU_NN_sdk directory does not exist, it will be created.
      */
     bool edit(CpuModel *model);
+
+    /**
+     * Returns the content of the source file in a QString.
+     */
+    QString sourceCode(CpuModel *model);
 
 
 protected:

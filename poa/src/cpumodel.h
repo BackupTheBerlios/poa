@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.29 2004/01/21 13:57:18 vanto Exp $
+ * $Id: cpumodel.h,v 1.30 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -76,10 +76,17 @@ class CpuModel: public BlockModel
     void setCpuId(const int cpuId);
 
     /**
-     * Serializes this instance to a xml subtree @param document the
-     * main QDomDocument instance. Needed to create elements.
+     * Serializes this instance to an xml subtree
+     * @param document the main QDomDocument instance.
+     * Needed to create elements.
      */
     QDomElement serialize(QDomDocument *document);
+
+    /**
+     * Serializes this instance with the cpu source code as a CDATA element
+     * to an xml subtree.
+     */
+    QDomElement serializeWithSource(QDomDocument *document);
 
     /**
      * Deserializes an xml subtree and sets this' properties
@@ -111,6 +118,7 @@ class CpuModel: public BlockModel
     bool autoRuntime_;
     int cpuId_;
     Project *project_;
+    QString source_;
 
 };
 

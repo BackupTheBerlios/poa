@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.6 2004/01/12 19:13:57 squig Exp $
+ * $Id: util.cpp,v 1.7 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -56,6 +56,24 @@ bool Util::copyFile(QFile *source, QFile *target)
     }
 
     return false;
+}
+
+QString Util::readFile(QFile *file)
+{
+    QStringList lines;
+    if (file->open(IO_ReadOnly)) {
+
+        QTextStream istream(file);
+
+        QString line;
+        while (!istream.eof()) {
+            line = istream.readLine();
+            lines += line;
+        }
+        file->close();
+    }
+
+    return lines.join("\n");
 }
 
 QString Util::findIcon(QString filename)

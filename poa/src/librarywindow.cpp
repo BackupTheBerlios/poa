@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.34 2004/01/21 16:07:51 squig Exp $
+ * $Id: librarywindow.cpp,v 1.35 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -303,7 +303,14 @@ QDragObject *LibraryListView::dragObject()
     QDomDocument doc;
     QDomElement root = doc.createElement("model");
     doc.appendChild(root);
-    root.appendChild(item->data().serialize(&doc));
+
+    CpuModel *cpu = dynamic_cast<CpuModel*>(&(item->data()));
+    if (cpu != 0) {
+        root.appendChild(cpu->serializeWithSource(&doc));
+    }
+    else {
+        root.appendChild(item->data().serialize(&doc));
+    }
     QStoredDrag *dragItem = new QStoredDrag("text/xml", this);
     dragItem->setEncodedData(doc.toCString());
     return dragItem;

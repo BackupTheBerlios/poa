@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.13 2004/01/20 17:46:10 vanto Exp $
+ * $Id: codemanager.cpp,v 1.14 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -176,4 +176,14 @@ void CodeManager::remove(CpuModel *model)
     if (!Util::removeDir(&cpuDir)) {
         // TODO: pop up error dialog.
     }
+}
+
+QString CodeManager::sourceCode(CpuModel *model)
+{
+    QFile source(sourceFilePath(model));
+
+    if (source.exists()) {
+        return Util::readFile(&source);
+    }
+    return "";
 }

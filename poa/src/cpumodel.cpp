@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.35 2004/01/21 13:57:18 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.36 2004/01/21 17:20:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -83,12 +83,42 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     return root;
 }
 
+QDomElement CpuModel::serializeWithSource(QDomDocument *document)
+{
+    QString code = source_;
+
+    // if cpu has no external sourcefile because its part of the library,
+    // serialize the sourcecode which was deserialized from xml on
+    // instanciation.
+    if (!isPartOfLibrary()) {
+        code = CodeManager::instance()->sourceCode(this);
+    }
+
+    QDomElement root = serialize(document);
+    QDomElement source = document->createElement("source-code");
+    QDomCDATASection cdata = document->createCDATASection(code);
+    source.appendChild(cdata);
+    root.appendChild(source);
+
+    return root;
+}
+
 void CpuModel::deserialize(QDomElement element)
 {
     BlockModel::deserialize(element);
 
     setAutoRuntime((element.attribute("auto-runtime", "true") == "true"));
     setCpuId(element.attribute("cpuid", "0").toInt());
+
+    // fetch sourcecode if available in xml tree
+    QDomNodeList mList = element.elementsByTagName("source-code");
+
+    if (mList.count() == 1
+        && mList.item(0).toElement().firstChild().isCDATASection()) {
+
+        source_ =
+            mList.item(0).toElement().firstChild().toCDATASection().data();
+    }
 }
 
 void CpuModel::setAutoRuntime(const bool autoRuntime)

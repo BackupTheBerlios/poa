@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.7 2003/09/09 23:21:22 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.8 2003/09/11 16:30:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,18 @@
 #include "blockview.h"
 #include "blockmodel.h"
 #include "connectormodel.h"
+
+PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
+                   unsigned address, unsigned bits, PinType type)
+{
+    name_ = name;
+    parent_ = parent;
+    id_ = id;
+    connector_ = 0;
+    address_ = address;
+    bits_ = bits;
+    type_ = type;
+}
 
 
 PinModel::PinModel(BlockModel *parent, const QString &name)

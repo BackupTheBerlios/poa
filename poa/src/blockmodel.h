@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.17 2003/09/09 23:21:22 vanto Exp $
+ * $Id: blockmodel.h,v 1.18 2003/09/11 16:30:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -99,34 +99,14 @@ public:
     void setExecTime(const unsigned int time);
 
     /**
-     * Adds an input pin to this
+     * Adds an pin to this block model.
      */
-    void addInputPin(PinModel *pin, PinModel *successor = 0);
+    void addPin(PinModel *pin, PinModel *successor = 0);
 
     /**
-     * Removes an input pin from this
+     * Removes an input pin from this block model.
      */
-    void removeInputPin(PinModel *pin);
-
-    /**
-     * Adds an output pin to this
-     */
-    void addOutputPin(PinModel *pin, PinModel *successor = 0);
-
-    /**
-     * Removes an output pin from this
-     */
-    void removeOutputPin(PinModel *pin);
-
-    /**
-     * Adds an episodic pin to this
-     */
-    void addEpisodicPin(PinModel *pin, PinModel *successor = 0);
-
-    /**
-     * Removes an episodic pin from this
-     */
-    void removeEpisodicPin(PinModel *pin);
+    void removePin(PinModel *pin);
 
     /**
      * Finds a pin according to its id

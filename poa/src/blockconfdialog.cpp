@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.3 2003/09/11 15:32:31 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.4 2003/09/11 16:30:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -51,8 +51,6 @@ PinListViewItem::PinListViewItem(QListView *parent,
     setOpen(true);
     type_ = type;
     item_ = 0;
-    //setText(0, item->type());
-    //setText(1, item->description());
 }
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,
@@ -64,8 +62,15 @@ PinListViewItem::PinListViewItem(QListViewItem *parent,
         type_ = item->type();
     }
     item_ = item;
-    //setText(0, item->type());
-    //setText(1, item->description());
+
+    if (item != 0) {
+        setText(0, QString::number(item->id(), 10));
+        setText(1, item->name());
+        if (item->type() != PinModel::EPISODIC) {
+            setText(2, QString::number(item->address(), 16));
+        }
+        setText(3, QString::number(item->bits(), 10));
+    }
 }
 
 PinListViewItem::~PinListViewItem()
@@ -340,23 +345,19 @@ BlockConfDialog::~BlockConfDialog()
 
 void BlockConfDialog::newIo()
 {
-    QListViewItem *root = ioListView->selectedItem();
+    PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
 
-    if (root != 0) {
-        // Only parent items are open.
-        while (!root->isOpen()) {
-            root = root->parent();
+    if (item != 0) {
+        while (!item->isRoot()) {
+            item = (PinListViewItem *)item->parent();
         }
-        QListViewItem *child = new QListViewItem(root); 
-        child->setText(0, QString::number(root->childCount(), 10));
-        child->setText(1, "data" + child->text(0));
-        child->setText(3, "32");
-        if (root->text(0).compare(tr(EPISODIC_IO_TEXT)) == 0) {
-           child->setText(2, "");
-        } else {
-           child->setText(2,
-                          QString::number(root->childCount() * 100, 16));
-        }
+        int childCount = item->childCount();
+        PinModel *model = new PinModel(model_, childCount,
+                "data" + QString::number(childCount),
+                childCount * 100, 32, item->type());
+
+        PinListViewItem *child = new PinListViewItem(item, model);
+        child->setVisible(true);
     }
 }
 

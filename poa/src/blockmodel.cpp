@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.15 2003/09/09 23:21:22 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.16 2003/09/11 16:30:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -79,58 +79,46 @@ unsigned int BlockModel::execTime()
     return execTime_;
 }
 
-void BlockModel::addInputPin(PinModel *pin, PinModel *successor)
-{
-    if (pin->id() == 0) {
-        pin->setId(++currentPinId_);
-    } else if (pin->id() > currentPinId_) {
-        currentPinId_ = pin->id();
+void BlockModel::addPin(PinModel *pin, PinModel *successor = 0) {
+
+    if (pin != 0) {
+        if (pin->id() == 0) {
+            pin->setId(++currentPinId_);
+        } else if (pin->id() > currentPinId_) {
+            currentPinId_ = pin->id();
+        }
+        pin->setType(PinModel::EPISODIC);
+
+        switch (pin->type()) {
+            case PinModel::INPUT:
+                inputPins_->addBefore(pin, successor);
+                break;
+            case PinModel::OUTPUT:
+                outputPins_->addBefore(pin, successor);
+                break;
+            case PinModel::EPISODIC:
+                episodicPins_->addBefore(pin, successor);
+                break;
+        }
     }
-    pin->setType(PinModel::INPUT);
-    inputPins_->addBefore(pin, successor);
     // FIX: update views
 }
 
-void BlockModel::removeInputPin(PinModel *pin)
-{
-    inputPins_->remove(pin);
-    // FIX: update views
-}
+void BlockModel::removePin(PinModel *pin) {
 
-void BlockModel::addOutputPin(PinModel *pin, PinModel *successor)
-{
-    if (pin->id() == 0) {
-        pin->setId(++currentPinId_);
-    } else if (pin->id() > currentPinId_) {
-        currentPinId_ = pin->id();
+    if (pin != 0) {
+        switch (pin->type()) {
+            case PinModel::INPUT:
+                inputPins_->remove(pin);
+                break;
+            case PinModel::OUTPUT:
+                outputPins_->remove(pin);
+                break;
+            case PinModel::EPISODIC:
+                episodicPins_->remove(pin);
+                break;
+        }
     }
-    pin->setType(PinModel::OUTPUT);
-    outputPins_->addBefore(pin, successor);
-    // FIX: update views
-}
-
-void BlockModel::removeOutputPin(PinModel *pin)
-{
-    outputPins_->remove(pin);
-    // FIX: opdate views
-}
-
-void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor)
-{
-    if (pin->id() == 0) {
-        pin->setId(++currentPinId_);
-    } else if (pin->id() > currentPinId_) {
-        currentPinId_ = pin->id();
-    }
-    pin->setType(PinModel::EPISODIC);
-    episodicPins_->addBefore(pin, successor);
-    // FIX: update views
-}
-
-
-void BlockModel::removeEpisodicPin(PinModel *pin)
-{
-    episodicPins_->remove(pin);
     // FIX: update views
 }
 
@@ -187,12 +175,13 @@ void BlockModel::deserialize(QDomElement element)
             QDomElement pin = node.toElement();
             PinModel *pinModel = new PinModel(this, pin);
             if (pin.attribute("type", "") == "input") {
-                addInputPin(pinModel);
+                pinModel->setType(PinModel::INPUT);
             } else if (pin.attribute("type","") == "output") {
-                addOutputPin(pinModel);
+                pinModel->setType(PinModel::OUTPUT);
             } else if (pin.attribute("type","") == "episodic") {
-                addEpisodicPin(pinModel);
+                pinModel->setType(PinModel::EPISODIC);
             }
+            addPin(pinModel);
         }
         node = node.nextSibling();
      }

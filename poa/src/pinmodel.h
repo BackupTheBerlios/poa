@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.10 2003/09/09 23:21:22 vanto Exp $
+ * $Id: pinmodel.h,v 1.11 2003/09/11 16:30:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -47,6 +47,17 @@ public:
      * Defines the type of this pin
      */
     enum PinType {INPUT, OUTPUT, EPISODIC};
+
+    /**
+     * Creates a new <code>PinModel</code>.
+     * @param parent is the parent BlockModel.
+     * @param id is its id.
+     * @param name is its name.
+     * @param address is its address.
+     * @param bits is its bits.
+     */
+    PinModel(BlockModel *parent, unsigned id, const QString &name,
+             unsigned address, unsigned bits, PinType type);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code>.

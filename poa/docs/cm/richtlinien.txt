@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.10 2003/06/21 18:37:59 garbeam Exp $
+$Id: richtlinien.txt,v 1.11 2003/06/21 18:38:39 garbeam Exp $
 
 Richtlinien zur POA-Entwicklung
 ===============================
@@ -23,6 +23,8 @@ Inhalt
 2.2.4     Änderungen commiten
 2.3     CVS für nicht-öffentliche Dateien
 2.4     Zeiterfassung
+
+3.    C++ Codierrichtlinien
 
 -------------------------------------------------------------------------------
 

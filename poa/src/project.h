@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.27 2004/01/20 17:46:10 vanto Exp $
+ * $Id: project.h,v 1.28 2004/01/22 00:05:06 squig Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -130,6 +130,11 @@ public:
      * Saves the project in another directory.
      */
     void saveAs(QString path);
+
+    /**
+     * Sets the location of the project.
+     */
+    void setPath(QString path);
 
     /**
      * Returns the current project path.

@@ -18,16 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.35 2004/01/21 23:38:21 squig Exp $
+ * $Id: mainwindow.h,v 1.36 2004/01/22 00:05:06 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_MAINWINDOW_H
 #define POA_MAINWINDOW_H
 
-#include "mdiwindow.h"
+class AbstractModel;
 class CanvasView;
 class ConnectorRouter;
+class MdiWindow;
 
 #include <qvariant.h>
 #include <qmainwindow.h>
@@ -70,6 +71,12 @@ public:
      * @return 0, if no window is active
      */
     CanvasView *activeView() const;
+
+    /**
+     * Returns the active window.
+     * @return 0, if no window is active
+     */
+    MdiWindow *activeWindow() const;
 
     /**
      * Returns a reference to the main window.

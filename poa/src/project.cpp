@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.46 2004/01/21 20:38:39 squig Exp $
+ * $Id: project.cpp,v 1.47 2004/01/22 00:05:06 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -45,9 +45,8 @@ Project::Project(QString path)
     currentBlockId_ = 0;
 
     modified_ = false;
-    QDir dir(path);
-    name_ = dir.path();
-    path_ = dir.canonicalPath();
+
+    setPath(path);
 }
 
 Project::~Project()
@@ -108,8 +107,9 @@ void Project::save()
 
 void Project::saveAs(QString path)
 {
-    path_ = path;
+    setPath(path);
     save();
+
     Settings::instance()->addToRecentProjects(path_);
 }
 
@@ -184,6 +184,13 @@ void Project::setModified(bool mod)
 {
     modified_ = mod;
     emit modified(mod);
+}
+
+void Project::setPath(QString path)
+{
+    QDir dir(path);
+    name_ = dir.path();
+    path_ = dir.canonicalPath();
 }
 
 bool Project::isModified()

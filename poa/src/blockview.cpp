@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.55 2004/01/17 15:05:59 squig Exp $
+ * $Id: blockview.cpp,v 1.56 2004/01/22 00:05:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,7 @@
 #include "pinmodel.h"
 #include "pinview.h"
 #include "poa.h"
+#include "project.h"
 #include "settings.h"
 #include "util.h"
 

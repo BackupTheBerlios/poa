@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.96 2004/01/21 23:38:21 squig Exp $
+ * $Id: mainwindow.cpp,v 1.97 2004/01/22 00:05:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,6 +38,7 @@
 #include "directrouter.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
+#include "mdiwindow.h"
 #include "modelfactory.h"
 #include "moveable.h"
 #include "muxconfdialog.h"
@@ -92,7 +93,7 @@ const uint MainWindow::DEFAULT_ZOOM_LEVEL = 4;
  * The main window is only instanciated once.
  */
 MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
-    : QMainWindow(parent, name, fl), project_(0)
+    : QMainWindow(parent, name, fl)
 {
     // initialize main window
     setCaption(tr("POA"));
@@ -411,14 +412,20 @@ MainWindow::~MainWindow()
 
 CanvasView *MainWindow::activeView() const
 {
-    MdiWindow *m = (MdiWindow *)ws->activeWindow();
+    MdiWindow *m = dynamic_cast<MdiWindow *>(ws->activeWindow());
     return (m != 0) ? m->view() : 0;
+}
+
+MdiWindow *MainWindow::activeWindow() const
+{
+    MdiWindow *w = dynamic_cast<MdiWindow *>(ws->activeWindow());
+    return (w != 0) ? w : 0;
 }
 
 void MainWindow::closeWindow()
 {
-    MdiWindow *m = (MdiWindow *)ws->activeWindow();
-    if (m) {
+    MdiWindow *m = activeWindow();
+    if (m != 0) {
         m->close();
     }
 }
@@ -746,8 +753,8 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
-    CanvasView *view = activeView();
-    if (view != 0) {
+    MdiWindow *window = activeWindow();
+    if (window != 0) {
         QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
         fd->setMode(QFileDialog::Directory);
         fd->setFilter("POA project (project.xml)");
@@ -794,13 +801,16 @@ void MainWindow::fileSaveAs()
             }
             }*/
         try {
-            view->project()->saveAs(projDir.path());
+            window->view()->project()->saveAs(projDir.path());
         }
         catch (const PoaException e) {
             QMessageBox::warning(this,
                                  tr("File error"),
                                  e.message());
         }
+
+        // update caption
+        window->setModified(false);
     }
 
    /*    QString filename
@@ -832,7 +842,7 @@ void MainWindow::helpAbout()
 
 MainWindow *MainWindow::instance()
 {
-    return (MainWindow *)qApp->mainWidget();
+    return dynamic_cast<MainWindow *>(qApp->mainWidget());
 }
 
 void MainWindow::openBlockConf()
@@ -1141,7 +1151,7 @@ void MainWindow::zoomTo(const QString& level)
     double zoom = level_.toInt(&success);
     if (success) {
         zoom /= 100.0;
-        MdiWindow *m = dynamic_cast<MdiWindow *>(ws->activeWindow());
+        MdiWindow *m = activeWindow();
         if (m != 0) {
             m->setZoomLevel(zoom);
             m->resizeCanvas();

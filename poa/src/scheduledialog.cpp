@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.11 2004/01/11 13:45:02 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.12 2004/01/11 13:57:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qimage.h>
+#include <qpainter.h>
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qslider.h>
@@ -320,6 +321,7 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
         box->setZ(1);
         box->show();
 
+        // draw lines for all connected 'children'
         for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
             BlockTree *target = *it;
 
@@ -329,14 +331,22 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
             }
             /** <-- REVIEW ME! */
 
+            // find next start time for the target block
             int targetTime = target->getOffset();
             while (targetTime <= t + bt->getRuntime()) {
                 targetTime += target->getClock();
             }
 
+            // calcualte position of the target block
             QRect targetBlock = calcBlockPosition(target, targetTime);
-            QCanvasLine *line = new QCanvasLine(canvas);
-            line->setPoints(thisBlock.right(), thisBlock.y() + (BOX_HEIGHT / 2), targetBlock.x(), targetBlock.y());
+
+            // draw a line with arrowhead between this block and the next
+            // target block.
+            QCanvasLine *line = new ArrowLine(canvas);
+            line->setPoints(thisBlock.right(),
+                            thisBlock.y() + (BOX_HEIGHT / 2),
+                            targetBlock.x(),
+                            targetBlock.y());
             line->setZ(1);
             line->show();
 
@@ -499,4 +509,52 @@ void SpinBoxItem::setValue(int value)
     case CLOCK: blocktree_->setClock(value); break;
     case OFFSET: blocktree_->setOffset(value); break;
     }
+}
+
+ArrowLine::ArrowLine(QCanvas *canvas)
+    : QCanvasLine(canvas)
+{
+}
+
+void ArrowLine::drawShape(QPainter &p)
+{
+    QCanvasLine::drawShape(p);
+
+    double angle = computeAngle(sx, sy, ex, ey);
+    QPointArray pts(3);
+
+    QWMatrix m;
+    int x, y;
+    m.rotate(angle);
+    m.map(-10, -5, &x, &y);
+    pts.setPoint(0, x, y);
+    m.map(-10, 5, &x, &y);
+    pts.setPoint(1, x, y);
+    m.map(0, 0, &x, &y);
+    pts.setPoint(2, x, y);
+
+    p.drawPoints(pts);
+}
+
+double ArrowLine::computeAngle(int sx, int sy, int ex, int ey)
+{
+
+    double run = ex - sx;
+    double rise = ey - sy;
+
+    double angle;
+    if (run == 0)
+        if (rise < 0)
+            angle = 270;
+        else
+            angle = 90;
+    else
+        {
+            angle = RAD2DEG * atan(rise/run);
+            if (run < 0)
+                angle += 180;
+            if (rise < 0)
+                angle += 360;
+        }
+    return angle;
 }

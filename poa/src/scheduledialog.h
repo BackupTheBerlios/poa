@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.9 2004/01/11 13:45:02 vanto Exp $
+ * $Id: scheduledialog.h,v 1.10 2004/01/11 13:57:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -167,19 +167,29 @@ private slots:
 
 class SpinBoxItem : public QTableItem
 {
-public:
+ public:
     enum BTField {RUNTIME, CLOCK, OFFSET};
     SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field);
     QWidget *createEditor() const;
     void setContentFromEditor( QWidget *w );
 
-private:
+ private:
     QSpinBox *spinbox_;
     BlockTree *blocktree_;
     BTField field_;
 
     void setValue(int value);
     int value() const;
+};
+
+class ArrowLine : public QCanvasLine
+{
+ public:
+    ArrowLine(QCanvas *canvas);
+    virtual void drawShape(QPainter &p);
+ private:
+    static const double RAD2DEG = 57.2958;
+    double computeAngle(int sx, int sy, int ex, int ey);
 };
 
 #endif // POA_SCHEDULEDIALOG_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.29 2004/01/21 23:38:21 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.30 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -81,7 +81,19 @@ void GridCanvas::addView(AbstractModel *item, int x, int y)
         (*it)->show();
         ensureVisibility(*it);
     }
-    connect(item, SIGNAL(updated()), this, SLOT(updateAll()));
+    // FIX: what the fuck do we need that for? View objects should take care
+    // of the updating themselfs
+    //connect(item, SIGNAL(updated()), this, SLOT(updateAll()));
+    update();
+}
+
+void GridCanvas::addView(QCanvasItem *item, int x, int y)
+{
+    double z = incZ();
+    item->moveBy(x, y);
+    item->setZ(z);
+    item->show();
+    ensureVisibility(item);
     update();
 }
 

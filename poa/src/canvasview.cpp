@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.54 2004/01/18 23:15:11 squig Exp $
+ * $Id: canvasview.cpp,v 1.55 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@
 #include "muxconfdialog.h"
 #include "muxmodel.h"
 #include "settings.h"
+#include "textview.h"
 
 #include <qvariant.h>
 #include <qaction.h>
@@ -49,6 +50,7 @@
 #include <qcursor.h>
 #include <qdom.h>
 #include <qpoint.h>
+#include <qinputdialog.h>
 #include <qwmatrix.h>
 #include <qpainter.h>
 #include <qpopupmenu.h>
@@ -64,6 +66,7 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     setAcceptDrops(true);
     setDragAutoScroll(true);
     tooltip_ = new CanvasToolTip(this);
+    editMode_ = Default;
 
     popupMenu = new QPopupMenu(this);
     MainWindow::instance()->blockConfAction()->addTo(popupMenu);
@@ -116,6 +119,24 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
         if (topItem->rtti() == BlockView::RTTI) {
             MainWindow::instance()->openBlockConf();
         }
+        else if (topItem->rtti() == TextView::RTTI) {
+            TextView *item = dynamic_cast<TextView*>(topItem);
+
+            bool ok = false;
+            QString text = QInputDialog::getText
+                (tr("POA"), tr("Annotate"),
+                 QLineEdit::Normal, item->text(), &ok, this);
+            if (ok) {
+                if (text.isEmpty()) {
+                    item->remove(project());
+                }
+                else {
+                    item->setText(text);
+                }
+                project()->setModified(true);
+                canvas()->update();
+            }
+        }
     }
     else {
         // nirvana click
@@ -133,6 +154,19 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
     }
 
     QPoint p = inverseWorldMatrix().map(e->pos());
+
+    if (editMode_ == Annotate) {
+        bool ok = false;
+        QString text = QInputDialog::getText
+            (tr("POA"), tr("Annotate"),
+             QLineEdit::Normal, QString::null, &ok, this);
+        if (ok && !text.isEmpty()) {
+            gridCanvas()->addView(new TextView(text, canvas()), p.x(), p.y());
+            project()->setModified(true);
+        }
+        return;
+    }
+
     QCanvasItemList l = canvas()->collisions(p);
     if (e->button() == LeftButton) {
         if (!l.isEmpty()) {
@@ -274,6 +308,11 @@ void CanvasView::selectItem(QCanvasItem *item)
     emit(selectionChanged(item));
 }
 
+CanvasView::EditMode CanvasView::editMode() const
+{
+    return editMode_;
+}
+
 QCanvasItemList CanvasView::selectedItems()
 {
     QCanvasItemList selectedItems;
@@ -298,6 +337,17 @@ void CanvasView::setAction(CanvasViewAction *action)
     project_->setModified(true);
     // FIX: this call should go somewhere else
     canvas()->update();
+}
+
+void CanvasView::setEditMode(EditMode mode)
+{
+    if (mode == Annotate) {
+        setCursor(QCursor(QCursor::IbeamCursor));
+    }
+    else {
+        setCursor(QCursor());
+    }
+    editMode_ = mode;
 }
 
 QPoint CanvasView::toCanvas(QPoint pos)

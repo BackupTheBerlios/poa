@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.75 2004/01/19 21:14:30 squig Exp $
+# $Id: poa.pro,v 1.76 2004/01/22 12:07:42 squig Exp $
 #
 ###############################################################################
 
@@ -50,7 +50,6 @@ HEADERS += abstractmodel.h
 HEADERS += blockconfdialog.h 
 HEADERS += blockgraph.h
 HEADERS += blockmodel.h
-HEADERS += blocktree.h
 HEADERS += blockview.h
 HEADERS += canvasview.h
 HEADERS += canvasviewaction.h
@@ -93,6 +92,7 @@ HEADERS += scheduledialog.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
+HEADERS += textview.h
 HEADERS += tooltipable.h
 HEADERS += util.h
 
@@ -101,7 +101,6 @@ SOURCES += abstractmodel.cpp
 SOURCES += blockconfdialog.cpp
 SOURCES += blockmodel.cpp
 SOURCES += blockgraph.cpp
-SOURCES += blocktree.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
@@ -138,6 +137,7 @@ SOURCES += project.cpp
 SOURCES += scheduledialog.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
+SOURCES += textview.cpp
 SOURCES += util.cpp
 
 ###############################################################################

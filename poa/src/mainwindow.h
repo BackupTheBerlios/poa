@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.36 2004/01/22 00:05:06 squig Exp $
+ * $Id: mainwindow.h,v 1.37 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -202,6 +202,9 @@ private:
     QAction *editCopyAction;
     QAction *editPasteAction;
     QAction *editRemoveAction;
+    QAction *editModeDefaultAction_;
+    QAction *editModeAnnotateAction_;
+    QActionGroup *editModeActionGroup_;
     QAction *defaultRouteAction_;
     QAction *helpContentsAction;
     QAction *helpAboutAction;
@@ -225,7 +228,8 @@ private slots:
     void closeWindow();
     void tileHorizontal();
     void updateRecentProjectsMenu();
-    void selectionChanged(QCanvasItem *);
+    void selectionChanged(QCanvasItem *item);
+    void setEditMode(QAction *action);
 };
 
 #endif // POA_MAINWINDOW_H

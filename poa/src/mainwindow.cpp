@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.98 2004/01/22 10:26:38 squig Exp $
+ * $Id: mainwindow.cpp,v 1.99 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -184,6 +184,17 @@ void MainWindow::initializeActions()
     editRemoveAction =
         new QAction("Remove", image_editdelete, "&Remove",
                     QKeySequence("Del"), this, "removeAction" );
+
+    editModeActionGroup_ = new QActionGroup(this, "editMode", true);
+    editModeAnnotateAction_
+        = new QAction("Annotate", QPixmap(Util::findIcon("editclear.png")),
+                      "&Annotate", 0, editModeActionGroup_, "editModeAnnotate",
+                      true);
+    editModeDefaultAction_
+        = new QAction("Default", QPixmap(Util::findIcon("editdefault.png")),
+                      "&Default",0, editModeActionGroup_, "editModeDefault",
+                      true);
+    editModeDefaultAction_->setOn(true);
     helpContentsAction =
         new QAction("Contents", image_contents, "&Contents...",
                     QKeySequence("F1"), this, "helpContentsAction");
@@ -252,6 +263,11 @@ void MainWindow::initializeToolbars()
     editPasteAction->addTo(commonToolBar);
     commonToolBar->addSeparator();
     editRemoveAction->addTo(commonToolBar);
+
+    // edit
+    QToolBar *editToolBar = new QToolBar(tr("edit toolbar"), this, DockTop);
+    editModeDefaultAction_->addTo(editToolBar);
+    editModeAnnotateAction_->addTo(editToolBar);
 
     // utility
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
@@ -369,6 +385,8 @@ void MainWindow::connectActions()
     connect(editCopyAction, SIGNAL(activated()), this, SLOT(editCopy()));
     connect(editPasteAction, SIGNAL(activated()), this, SLOT(editPaste()));
     connect(editRemoveAction, SIGNAL(activated()), this, SLOT(editRemove()));
+    connect(editModeActionGroup_, SIGNAL(selected(QAction *)),
+            this, SLOT(setEditMode(QAction *)));
     connect(QApplication::clipboard(), SIGNAL(dataChanged()),
             this, SLOT(checkClipboardContent()));
     connect(helpContentsAction, SIGNAL(activated()),
@@ -1076,6 +1094,11 @@ void MainWindow::windowActivated(QWidget *window)
         invokeSchedulingAction->setEnabled(true);
         fileSaveAsAction->setEnabled(true);
         filePrintAction->setEnabled(true);
+        editModeActionGroup_->setEnabled(true);
+        editModeActionGroup_->setEnabled(false);
+        CanvasView::EditMode mode = m->view()->editMode();
+        editModeAnnotateAction_->setOn(mode == CanvasView::Annotate);
+        editModeDefaultAction_->setOn(mode == CanvasView::Default);
     }
     else {
         editCutAction->setEnabled(false);
@@ -1089,6 +1112,7 @@ void MainWindow::windowActivated(QWidget *window)
         fileSaveAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
         fileSaveAsAction->setEnabled(false);
+        editModeActionGroup_->setEnabled(false);
     }
 }
 
@@ -1100,6 +1124,19 @@ void MainWindow::selectionChanged(QCanvasItem *item)
     invokeCompilerAction->setEnabled(INSTANCEOF(item, BlockView));
     editRemoveAction->setEnabled(INSTANCEOF(item, Removeable));
     saveToLibraryAction_->setEnabled(INSTANCEOF(item, BlockView));
+}
+
+void MainWindow::setEditMode(QAction *action)
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        if (action == editModeAnnotateAction_) {
+            view->setEditMode(CanvasView::Annotate);
+        }
+        else {
+            view->setEditMode(CanvasView::Default);
+        }
+    }
 }
 
 void MainWindow::zoomIn()

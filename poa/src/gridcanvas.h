@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.25 2004/01/21 23:38:21 squig Exp $
+ * $Id: gridcanvas.h,v 1.26 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,6 +60,8 @@ public:
      * children) by calling AbstractModel::createView(QCanvas *canvas)
      */
     void addView(AbstractModel *item, int x = 0, int y = 0);
+
+    void addView(QCanvasItem *item, int x = 0, int y = 0);
 
     /**
      * Adds ConnectorViews between the two given PinViews. Uses an egoistic

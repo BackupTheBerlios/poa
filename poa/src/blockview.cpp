@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.56 2004/01/22 00:05:06 squig Exp $
+ * $Id: blockview.cpp,v 1.57 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -516,8 +516,7 @@ QString BlockView::tip()
 QDomElement BlockView::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("view-item");
-    root.setAttribute("x", x());
-    root.setAttribute("y", y());
+    root.setAttribute("model-id", model()->id());
     return root;
 }
 

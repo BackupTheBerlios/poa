@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.28 2003/11/26 16:27:10 squig Exp $
+ * $Id: canvasview.h,v 1.29 2004/01/22 12:07:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -57,6 +57,8 @@ class CanvasView : public QCanvasView
 
 public:
 
+    enum EditMode { Default, Annotate };
+
     /**
      * Creates a new <code>CanvasView</code>
      * @param project The project this canvas view belongs to
@@ -72,6 +74,8 @@ public:
      * Default destructor
      */
     ~CanvasView();
+
+    EditMode editMode() const;
 
     /**
      * Returns the associated canvas.
@@ -93,6 +97,8 @@ public:
      * is cancelled.
      */
     void setAction(CanvasViewAction *action);
+
+    void setEditMode(EditMode mode);
 
 public slots:
     /**
@@ -182,6 +188,12 @@ private:
     CanvasToolTip *tooltip_;
     /** The popup menu. */
     QPopupMenu *popupMenu;
+
+    /**
+     * The edit mode. Default means standard selektion of blocks,
+     * Annotate means adding annontations with an IBeamCursor.
+     */
+    EditMode editMode_;
 };
 
 class CanvasToolTip : public QToolTip

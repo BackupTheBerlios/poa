@@ -18,9 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.16 2004/01/15 14:47:18 kilgus Exp $
+ * $Id: settings.cpp,v 1.17 2004/01/17 12:47:14 garbeam Exp $
  *
  *****************************************************************************/
+
+#include <qdir.h>
+
 #include "settings.h"
 
 #include "poa.h"
@@ -33,6 +36,7 @@ Settings* Settings::instance_ = 0;
 Settings::Settings(QString prefix)
 {
     this->prefix = prefix;
+    confPath_ = QDir::homeDirPath() + "/.poa";
 }
 
 Settings::~Settings()
@@ -46,6 +50,11 @@ Settings *Settings::instance()
     }
 
     return instance_;
+}
+
+QString Settings::confPath() {
+
+    return confPath_;
 }
 
 QString Settings::get(const QString &key, QString defaultValue)

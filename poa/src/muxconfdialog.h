@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.20 2004/01/15 14:47:18 kilgus Exp $
+ * $Id: muxconfdialog.h,v 1.21 2004/01/17 12:47:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -144,10 +144,14 @@ private:
     void removeDependentMappings(PinModel *pin);
 
     QLineEdit* nameLineEdit;
-    QLineEdit *ioNameLineEdit;
-    QPushButton *addIoPushButton;
-    QPushButton *updateIoPushButton_;
-    QPushButton *removeIoPushButton_;
+    QLineEdit *inputNameLineEdit;
+    QLineEdit *outputNameLineEdit;
+    QPushButton *addInputPushButton;
+    QPushButton *updateInputPushButton_;
+    QPushButton *removeInputPushButton_;
+    QPushButton *addOutputPushButton;
+    QPushButton *updateOutputPushButton_;
+    QPushButton *removeOutputPushButton_;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;
@@ -159,13 +163,12 @@ private:
     QSpinBox *lastInputBitSpinBox;
     QSpinBox *firstOutputBitSpinBox;
     QSpinBox *lastOutputBitSpinBox;
-    QSpinBox *ioBitsSpinBox;
+    QSpinBox *inputBitsSpinBox;
+    QSpinBox *outputBitsSpinBox;
     QListView* mappingListView;
     QListView* inputListView;
     QListView* outputListView;
     QBoxLayout *dialogLayout_;
-    QRadioButton *inputRadioButton_;
-    QRadioButton *outputRadioButton_;
 
     MuxModel *model_;
 
@@ -204,14 +207,23 @@ private slots:
      */
     void ok();
 
-    /** Adds a new IO. */
-    void addIo();
+    /** Adds a new input. */
+    void addInput();
 
-    /** Updates the selected IO. */
-    void updateIo();
+    /** Updates the selected input. */
+    void updateInput();
 
-    /** Removes the selected IO. */
-    void removeIo();
+    /** Removes the selected input. */
+    void removeInput();
+
+    /** Adds a new output. */
+    void addOutput();
+
+    /** Updates the selected output. */
+    void updateOutput();
+
+    /** Removes the selected output. */
+    void removeOutput();
 };
 
 #endif // POA_MUXCONFDIALOG_H

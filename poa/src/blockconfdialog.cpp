@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.45 2004/01/09 14:40:32 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.46 2004/01/17 12:47:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -132,6 +132,7 @@ void BlockConfDialog::initBlockWidget()
     blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
     blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
     blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
+    blockClockSpinBox->setRange(0, INT_MAX);
 
     blockLayout->addWidget(new QLabel(tr("Name"), blockGroupBox), 1, 0);
     blockLayout->addWidget(blockNameLineEdit, 1, 1);
@@ -143,6 +144,7 @@ void BlockConfDialog::initBlockWidget()
 
     if (model_->hasRuntime() && !INSTANCEOF(model_, CpuModel)) {
         runtimeSpinBox = new QSpinBox(blockGroupBox, "runtimeSpinBox");
+        runtimeSpinBox->setRange(0, INT_MAX);
 
         blockLayout->addWidget(new QLabel(tr("Runtime"), blockGroupBox), 4, 0);
         blockLayout->addWidget(runtimeSpinBox, 4, 1);
@@ -178,6 +180,7 @@ void BlockConfDialog::initOffsetWidget()
             this, SLOT(toggleManualOffset()));
 
     offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
+    offsetSpinBox->setRange(0, INT_MAX);
 
     offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
     offsetLayout->addWidget(offsetRadioButton, 1, 0);
@@ -196,6 +199,7 @@ void BlockConfDialog::initRuntimeWidget()
     runtimeButtonGroup->setTitle(tr("Runtime"));
 
     runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
+    runtimeSpinBox->setRange(0, INT_MAX);
 
     QGridLayout *runtimeLayout
         = new QGridLayout(runtimeButtonGroup, 2, 3, 11 + WIDGET_SPACING,
@@ -436,12 +440,6 @@ void BlockConfDialog::updateModel() {
             cpuModel->setOffset(offsetSpinBox->value());
         }
 
-        // deleted pins
-        for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
-            model_->deletePin(*dit);
-        }
-        deletedPins_.clear();
-
         // updated pins
         for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
             PinModel *pin = *uit;
@@ -453,6 +451,12 @@ void BlockConfDialog::updateModel() {
             origPin->setPosition(pin->position());
         }
         updatedPins_.clear();
+
+        // deleted pins
+        for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
+            model_->deletePin(*dit);
+        }
+        deletedPins_.clear();
 
         // new pins
         for (QPtrListIterator<PinModel> nit(newPins_); nit != 0; ++nit) {
@@ -529,6 +533,9 @@ void BlockConfDialog::removeIo()
             if (origPin->connected() == 0) {
                 // Save deleted pins, to clean up views
                 // if the changes will be applied.
+                if (updatedPins_.contains(origPin)) {
+                    updatedPins_.remove(origPin);
+                }
                 deletedPins_.append(origPin);
             }
             else {
@@ -547,6 +554,9 @@ void BlockConfDialog::removeIo()
                 {
                     case 0: // The user clicked OK, so all related connections
                             // will be removed after applying changes.
+                        if (updatedPins_.contains(origPin)) {
+                            updatedPins_.remove(origPin);
+                        }
                         deletedPins_.append(origPin);
                         break;
                     case 1: // Cancel removal.
@@ -586,8 +596,8 @@ void BlockConfDialog::ioSelectionChanged() {
     bitsLineEdit->setEnabled(isChild);
 
     ioNameLineEdit->setText(isChild ? item->text(1) : QString(""));
-    addressLineEdit->setText(isChild ? item->text(2) : QString(""));
-    bitsLineEdit->setText(isChild ? item->text(3) : QString(""));
+    addressLineEdit->setText(isChild ? item->text(3) : QString(""));
+    bitsLineEdit->setText(isChild ? item->text(2) : QString(""));
 }
 
 void BlockConfDialog::toggleManualOffset() {

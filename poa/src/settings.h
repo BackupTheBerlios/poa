@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.19 2004/01/12 17:06:24 squig Exp $
+ * $Id: settings.h,v 1.20 2004/01/17 12:47:14 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -67,6 +67,7 @@ public:
     QString terminalCmd();
     QString compilerCmd();
     QString editorCmd();
+    QString confPath();
 
 public slots:
     void setGridSize(int gridSize);
@@ -93,6 +94,9 @@ private :
      * A common prefix used for all setting keys.
      */
     QString prefix;
+
+    /** Contains path to .poa/ configuration directory. */
+    QString confPath_;
 
     /**
      * Methods of {@link SettingsTest} need access the protected constructor.

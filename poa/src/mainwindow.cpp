@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.79 2004/01/12 14:35:50 squig Exp $
+ * $Id: mainwindow.cpp,v 1.80 2004/01/17 12:47:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -58,6 +58,7 @@
 #include <qcombobox.h>
 #include <qdragobject.h>
 #include <qdom.h>
+#include <qdir.h>
 #include <qfile.h>
 #include <qfiledialog.h>
 #include <qimage.h>
@@ -104,6 +105,18 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     move(s->getNum("MainWindow/X", 0), s->getNum("MainWindow/Y", 0));
     resize(s->getNum("MainWindow/Width", 640),
            s->getNum("MainWindow/Height", 480));
+
+    // create $HOME/.poa if it does not exist
+    QDir confDir(s->confPath());
+    if (!confDir.exists()) {
+        confDir.mkdir(s->confPath(), TRUE);
+    }
+    // create $HOME/.poa/library if it does not exist
+    QString libPath(s->confPath() + "/library");
+    QDir libDir(libPath);
+    if (!libDir.exists()) {
+        libDir.mkdir(libPath);
+    }
 
     // initialize status bar implicitly
     (void)statusBar();

@@ -7,6 +7,7 @@
 package gcover.output;
 
 import gcover.FileInfo;
+import gcover.LineInfo;
 import gcover.Project;
 import gcover.util.Formatter;
 
@@ -18,13 +19,22 @@ import java.util.Date;
 import org.apache.ecs.Entities;
 import org.apache.ecs.XhtmlDocument;
 import org.apache.ecs.Doctype.XHtml10Strict;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.xhtml.b;
+import org.apache.ecs.xhtml.div;
+import org.apache.ecs.xhtml.img;
+import org.apache.ecs.xhtml.link;
+import org.apache.ecs.xhtml.pre;
+import org.apache.ecs.xhtml.span;
+import org.apache.ecs.xhtml.table;
+import org.apache.ecs.xhtml.tbody;
+import org.apache.ecs.xhtml.td;
+import org.apache.ecs.xhtml.tr;
 
 /**
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.1 2003/07/15 18:06:32 vanto Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.2 2003/07/24 21:22:49 vanto Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -71,14 +81,14 @@ public class XHTMLOutputter implements Outputter {
 								.addElement(new td("file stats").setNoWrap(true))
 								.addElement(new td(new b("LOC")).setAlign("right"))
 								.addElement(new td(""+file.getLines().length).setAlign("right"))
-								.addElement(new td(new b("EL")).setAlign("right"))
-								.addElement(new td(""+file.getExecutedLinesCount()).setAlign("right")) )
+								.addElement(new td(new b("Exec.")).setAlign("right"))
+								.addElement(new td(""+file.getExecutionCount()).setAlign("right")) )
 							.addElement(new tr()
 								.addElement(new td())
 								.addElement(new td(new b("IL")).setAlign("right"))
 								.addElement(new td(""+file.getInstrumentedLinesCount()).setAlign("right"))
-								.addElement(new td(new b("Exec.")).setAlign("right"))
-								.addElement(new td(""+file.getExecutionCount()).setAlign("right"))
+								.addElement(new td(new b("EL")).setAlign("right"))
+								.addElement(new td(""+file.getExecutedLinesCount()).setAlign("right"))
 							)
 
 							.setAlign("right"))
@@ -87,7 +97,7 @@ public class XHTMLOutputter implements Outputter {
 					)			
 			);
 					
-			
+			int cov = (int)(file.getCoverage()*200);
 			table header = new table();
 			header.setCellSpacing(0).setCellPadding(2);
 			header.addElement(
@@ -108,12 +118,78 @@ public class XHTMLOutputter implements Outputter {
 						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
 						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
 						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
-						.addElement(new td(new b(Formatter.formatNumber(file.getCoverage()*100,2))).setAlign("center").setClass("graphBarLeft"))
-						.addElement(new td("BAR").setClass("graphBar"))
+						.addElement(new td(new b(Formatter.formatNumber(file.getCoverage()*100,2)+"%")).setAlign("center").setClass("graphBarLeft"))
+						.addElement(new td("BAR")
+							.addElement(new table()
+								.addElement(new tbody()
+									.addElement(new tr()
+										.addElement(new td()
+											.addElement(new img()
+												.setSrc("trans.gif")
+												.setAlt("coverage")
+												.setHeight(12)
+												.setWidth(cov)
+											)
+											.setClass("covered")
+										)
+										.addElement(new td()
+											.addElement(new img()
+												.setSrc("trans.gif")
+												.setAlt("coverage")
+												.setHeight(12)
+												.setWidth(200-cov)
+											)
+											.setClass("uncovered")
+										)
+									)
+								)
+								.setCellSpacing(0)
+								.setClass("barGraph")
+							
+							)
+							.setClass("graphBar")
+						
+						)
 					)
 
 			);
 			doc.appendBody(header);
+			table sourceView = new table();
+			sourceView.setCellPadding(0).setCellSpacing(0).setClass("srcView");
+			tbody srcViewBody = new tbody();
+			sourceView.addElement(srcViewBody);
+
+			for (int i=0; i<file.getLines().length; i++) {
+				LineInfo li = file.getLines()[i];
+				if (li.isInstrumented()) {
+					if (li.getExecCount() == 0) {
+						srcViewBody
+							.addElement(new tr()
+								.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCountHilight"))
+								.addElement(new td(""+li.getExecCount()).setAlign("right").setClass("coverageCountHilight"))
+								.addElement(new td(new span()
+													.addElement(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcHilight")).setClass("srcLine"))
+							);
+					} else {
+						srcViewBody
+							.addElement(new tr()
+								.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCountHilight"))
+								.addElement(new td(""+li.getExecCount()).setAlign("right").setClass("lineCountHilight"))
+								.addElement(new td(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcLine"))
+							);
+					}
+				} else {
+					srcViewBody
+						.addElement(new tr()
+							.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCount"))
+							.addElement(new td("").setAlign("right").setClass("coverageCount"))
+							.addElement(new td(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcLine"))
+						);
+				}
+			}
+			
+			doc.appendBody(sourceView);
+			
 			//doc.output(fw);
 			doc.getHtml().setPrettyPrint(true);
 			fw.write(doc.toString());

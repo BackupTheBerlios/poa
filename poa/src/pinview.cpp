@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.3 2003/08/27 15:49:23 keulsn Exp $
+ * $Id: pinview.cpp,v 1.4 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,8 +30,8 @@
 
 
 PinView::PinView(PinModel *model,
-		 BlockView *block,
-		 PinView::DockPosition dockPosition)
+         BlockView *block,
+         PinView::DockPosition dockPosition)
     : QCanvasRectangle(block->canvas())
 {
     model_ = model;
@@ -40,12 +40,12 @@ PinView::PinView(PinModel *model,
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-	setSize(10, 2);
-	break;
+    setSize(10, 2);
+    break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-	setSize(2, 10);
-	break;
+    setSize(2, 10);
+    break;
     }
 }
 
@@ -67,3 +67,13 @@ PinModel *PinView::model()
     return model_;
 }
 
+void PinView::setSelected(bool yes) {
+    if (yes) {
+        setPen(red);
+        setBrush(QBrush(red, SolidPattern));
+    } else {
+        setPen(black);
+        setBrush(QBrush(black, SolidPattern));
+    }
+    QCanvasRectangle::setSelected(yes);
+}

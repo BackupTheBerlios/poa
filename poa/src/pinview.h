@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.4 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: pinview.h,v 1.5 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -46,13 +46,17 @@ public:
     enum DockPosition {PIN_TOP, PIN_BOTTOM, PIN_LEFT, PIN_RIGHT};
 
     PinView(PinModel *model,
-	    BlockView *block,
-	    PinView::DockPosition dockPosition);
+        BlockView *block,
+        PinView::DockPosition dockPosition);
 
     virtual ~PinView();
 
     PinModel *model();
-    void setModel(PinModel *model);
+
+    /**
+     * Sets the brush to red if Pin is selected, otherwise black
+     */
+    virtual void setSelected(bool yes);
 
 private:
 

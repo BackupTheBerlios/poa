@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.14 2003/08/27 17:50:40 vanto Exp $
+ * $Id: blockview.cpp,v 1.15 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 #include <qbrush.h>
 #include <qcanvas.h>
+#include <qpopupmenu.h>
 #include <qpainter.h>
 
 #include "blockmodel.h"
@@ -122,6 +123,14 @@ BlockModel *BlockView::model()
 }
 
 
+QPopupMenu *BlockView::popupMenu()
+{
+    QPopupMenu *pm = new QPopupMenu();
+    pm->insertItem("Configure...");
+    pm->insertSeparator();
+    pm->insertItem("Edit Sourcecode...");
+    return pm;
+}
 /*
 void BlockView::setModel(BlockModel *model)
 {
@@ -157,6 +166,17 @@ int BlockView::rtti() const
     return BlockView::RTTI;
 }
 
+
+void BlockView::setSelected(bool yes)
+{
+    if (yes) {
+        setBrush(red);
+    } else {
+        setBrush(white);
+    }
+    QCanvasRectangle::setSelected(yes);
+
+}
 
 void BlockView::drawShape(QPainter &p)
 {

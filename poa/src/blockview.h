@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.12 2003/08/27 17:50:40 vanto Exp $
+ * $Id: blockview.h,v 1.13 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -52,7 +52,7 @@ public:
      * also canvas view objects for all pins that connects to
      * <code>model</code>. Use the member {@link #addPinViewsTo} to get a
      * list of the pin views that were created.
-     */ 
+     */
     BlockView(BlockModel *model, QCanvas *canvas);
 
     virtual ~BlockView();
@@ -82,12 +82,20 @@ public:
 
     virtual int rtti() const;
 
+    /**
+     * Sets the brush to red if Pin is selected, otherwise black
+     */
+    virtual void setSelected(bool yes);
+
+
     QDomElement serialize(QDomDocument *document);
     void deserialize(QDomElement element);
 
 protected:
 
     virtual void drawShape (QPainter &p);
+
+    virtual QPopupMenu *popupMenu();
 
     /*************************************************************************
      * Alignes all pins that dock onto <code>this</code> either on the left

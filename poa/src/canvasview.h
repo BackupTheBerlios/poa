@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.14 2003/08/28 16:29:59 keulsn Exp $
+ * $Id: canvasview.h,v 1.15 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 class AbstractModel;
 class Project;
+class PinView;
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -118,10 +119,18 @@ private:
     /** The canvas item that is currently in moving state if any, else 0 */
     QCanvasItem *movingItem_;
     /**
-     * The point in <>-coordinates where <code>movingItem_</code>
+     * The point in canvas-coordinates where <code>movingItem_</code>
      * received the moving state. Only valid if <code>movingItem_ != 0</code>
      */
     QPoint movingStartPoint_;
+    /**
+     * The start pin for a new connection
+     */
+    PinView *startPin_;
+    /**
+     * The currently selected canvas item
+     */
+    QCanvasItem *selectedItem_;
 };
 
 #endif // CANVASVIEW_H

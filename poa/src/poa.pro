@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.25 2003/08/27 17:50:40 vanto Exp $
+# $Id: poa.pro,v 1.26 2003/08/28 18:04:35 vanto Exp $
 #
 ###############################################################################
 
@@ -66,6 +66,7 @@ HEADERS += pinmodel.h
 HEADERS += pinvector.h
 HEADERS += pinview.h
 HEADERS += project.h
+HEADERS += poa.h
 HEADERS += settings.h
 HEADERS += gridcanvas.h
 

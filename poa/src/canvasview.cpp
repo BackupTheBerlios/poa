@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.16 2003/08/28 16:29:59 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.17 2003/08/28 18:04:35 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,7 @@
 CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
                        const char* name, WFlags fl)
     : QCanvasView(canvas, parent, name, fl), project_(project),
-      movingItem_(0)
+    movingItem_(0), selectedItem_(0)
 {
     setAcceptDrops(TRUE);
 }
@@ -69,23 +69,48 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
     if (e->button() == LeftButton) {
         if (!l.isEmpty()) {
             // first item is top item
-	    QCanvasItem *topItem = l.first();
-	    if (INSTANCEOF(topItem, BlockView)) {
-		movingItem_ = topItem;
-		movingStartPoint_ = p;
-	    }
+            QCanvasItem *topItem = l.first();
+
+            // item selection
+            if (selectedItem_) {
+                if (selectedItem_ != topItem) {
+                    // deselect old item
+                    selectedItem_->setSelected(FALSE);
+                    // select new item
+                    selectedItem_ = topItem;
+                    selectedItem_->setSelected(TRUE);
+                }
+            } else {
+                // select new item
+                selectedItem_ = topItem;
+                selectedItem_->setSelected(TRUE);
+            }
+            canvas()->update();
+
+            // move blocks
+            if (INSTANCEOF(topItem, BlockView)) {
+                movingItem_ = topItem;
+                movingStartPoint_ = p;
+            }
+        } else {
+            // nirvana click -> deselect
+            if (selectedItem_) {
+                selectedItem_->setSelected(FALSE);
+                canvas()->update();
+                selectedItem_ = 0;
+            }
         }
     }
     else if (e->button() == RightButton) {
         if (!l.isEmpty()) {
-	    AbstractView *item = dynamic_cast<AbstractView *>(l.first());
-	    // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
-	    if (item != 0) {
-		QPopupMenu *menu = item->popupMenu();
-		if (menu) {
-		    menu->exec(e->pos());
-		}
-	    }
+            AbstractView *item = dynamic_cast<AbstractView *>(l.first());
+            // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
+            if (item != 0) {
+                QPopupMenu *menu = item->popupMenu();
+                if (menu) {
+                    menu->exec(mapToGlobal(e->pos()));
+                }
+            }
         }
     }
 }

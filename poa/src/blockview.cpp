@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.39 2003/09/29 09:52:40 garbeam Exp $
+ * $Id: blockview.cpp,v 1.40 2003/09/30 16:40:31 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,8 @@
 #include <qbrush.h>
 #include <qcanvas.h>
 #include <qpainter.h>
+
+#include <math.h>
 
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
@@ -101,7 +103,7 @@ bool BlockView::isDraggable()
 QSize BlockView::dragBy(double dx, double dy)
 {
     // must convert to be consistent with return value
-    moveBy((double) (int) dx, (double) (int) dy);
+    moveBy(rint(dx), rint(dy));
     return QSize((int) dx, (int) dy);
 }
 
@@ -369,11 +371,14 @@ void BlockView::arrangeHorizontalPins()
 
     int x__ = (int)x() + DEFAULT_LEFT_BORDER;
     int y__ = (int)y() + height();
-    unsigned width__
+    // width__ MUST not be declared 'unsigned' because it is used in
+    // calculation together with x__ wich is signed
+    int width__
         = (width() - DEFAULT_LEFT_BORDER - DEFAULT_RIGHT_BORDER
-           - bottomPins_.size() * DEFAULT_LABEL_SPACING)
+           - (bottomPins_.size() - 1) * DEFAULT_LABEL_SPACING)
         / bottomPins_.size();
-    for (unsigned i = 0; i < bottomPins_.size(); ++i) {
+    // same for 'i', MUST be signed.
+    for (int i = 0; i < (int) bottomPins_.size(); ++i) {
         bottomPins_[i]->move(x__
                              + i * DEFAULT_LABEL_SPACING
                              + i * width__ + width__ / 2,

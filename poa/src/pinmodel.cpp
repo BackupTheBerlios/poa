@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.41 2004/02/05 14:00:23 papier Exp $
+ * $Id: pinmodel.cpp,v 1.42 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,6 @@ PinModel::PinModel(BlockModel *parent, const QString &name,
     id_ = 0;
     position_ = position;
     connected_ = 0;
-    view_ = 0;
 }
 
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
@@ -52,7 +51,6 @@ PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
     parent_ = parent;
     position_ = 0;
     connected_ = 0;
-    view_ = 0;
 
     if (!pinElem.isNull()) {
         deserialize(pinElem);
@@ -63,18 +61,12 @@ PinModel::~PinModel()
 {
     detach();
 
-    if (view_) {
-        emit(deleted());
-    }
+    emit(deleted());
 }
 
 BlockModel *PinModel::parent()
 {
     return parent_;
-}
-
-void PinModel::setParent(BlockModel *parent) {
-    parent_ = parent;
 }
 
 QString PinModel::absName()
@@ -108,12 +100,14 @@ PinModel *PinModel::connected()
     return connected_;
 }
 
-bool PinModel::isConnectable(PinModel *toPin)
+bool PinModel::isConnectable(PinModel *target)
 {
-    return (this->connected_ == 0 && toPin->connected_ == 0
+    // first check if any of the pins are connected and then check if
+    // types are connectable
+    return (this->connected_ == 0 && target->connected_ == 0
             && (type() == EPISODIC
-                || toPin->type() == EPISODIC
-                || type() != toPin->type()));
+                || target->type() == EPISODIC
+                || type() != target->type()));
 }
 
 PinModel::PinType PinModel::type()
@@ -137,7 +131,7 @@ void PinModel::setId(unsigned id)
     id_ = id;
 }
 
-unsigned PinModel::position()
+unsigned PinModel::position() const
 {
     return position_;
 }
@@ -184,9 +178,7 @@ unsigned int PinModel::bits()
 PinView *PinModel::createView(BlockView *block,
                               PinView::DockPosition dockPosition)
 {
-    view_ = new PinView(this, block, dockPosition);
-    view_->show();
-    return view_;
+    return new PinView(this, block, dockPosition);
 }
 
 QDomElement PinModel::serialize(QDomDocument *document)
@@ -224,17 +216,9 @@ void PinModel::deserialize(QDomElement element)
     else if (element.attribute("type","") == "output") {
         setType(PinModel::OUTPUT);
     }
-    else if (element.attribute("type","") == "episodic") {
+    else {//if (element.attribute("type","") == "episodic") {
         setType(PinModel::EPISODIC);
     }
-}
-
-PinModel *PinModel::clone()
-{
-    PinModel *pin = new PinModel(parent_, name_, address_, bits_, type_);
-    pin->setId(id_);
-    pin->setPosition(position_);
-    return pin;
 }
 
 QString PinModel::tip()
@@ -253,8 +237,8 @@ QString PinModel::tip()
     }
 
     return QString(tr("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
-		      "<b>Address:</b> 0x%4<br>" \
-		      "<b>Width:</b>%5 bits"))
+              "<b>Address:</b> 0x%4<br>" \
+              "<b>Width:</b>%5 bits"))
         .arg(position())
         .arg(name())
         .arg(pt)

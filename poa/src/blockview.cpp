@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.72 2004/02/15 03:24:51 kilgus Exp $
+ * $Id: blockview.cpp,v 1.73 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -101,6 +101,8 @@ QPoint BlockView::dragBy(int dx, int dy)
 
 void BlockView::addPin(PinModel *pin)
 {
+    // merely calling createView is enough, since, the PinView
+    // constructor will invoke addPin(PinView) to register itself
     switch (pin->type()) {
     case PinModel::INPUT:
         pin->createView(this, PinView::PIN_LEFT);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.32 2004/01/19 11:23:07 squig Exp $
+ * $Id: pinmodel.h,v 1.33 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,6 @@
 
 #include <qcanvas.h>
 #include <qdom.h>
-
 class BlockModel;
 class BlockView;
 class ConnectorModel;
@@ -39,7 +38,16 @@ class QDomDocument;
 class QDomElement;
 
 /**
- * Stores the properties of a pin that is part of a {@link BlockModel}.
+ * Represents a pin. Each pin is part of a BlockModel called the
+ * parent. Pins are means for blocks to read or write data. Each pin
+ * has an address that represents the memory location on the CPLD and
+ * width that determines the number of bits of the data.
+ *
+ * Pins can be connected to other pins by invoking attach() which
+ * means that data written to the pin is transfered to the connected
+ * pin on the CPLD.
+ *
+ * PinModel objects are represented by PinView objects on screen.
  */
 class PinModel : public QObject
 {
@@ -48,56 +56,53 @@ class PinModel : public QObject
 public:
 
     /**
-     * Defines the type of this pin
+     * Defines the pin types.
      */
-    enum PinType {INPUT, OUTPUT, EPISODIC};
+    enum PinType { INPUT, OUTPUT, EPISODIC };
 
     /**
-     * Creates a new <code>PinModel</code>.
-     * @param parent is the parent model.
-     * @param id is its id.
-     * @param name is its name.
-     * @param address is its address.
-     * @param bits is its bits.
+     * Construct a pin.
+     *
+     * @param parent the parent block
+     * @param name the name of the pin
+     * @param address the address of the pin
+     * @param bits the number of bits for the pin
+     * @param type the type of the pin
+     * @param position the position of the pin
      */
     PinModel(BlockModel *parent, const QString &name,
              unsigned address = 0, unsigned bits = 0,
              PinType type = INPUT, unsigned position = 0);
 
     /**
-     * Creates a view for <code>PinModel</code> on <code>canvas</code> and de-
-     * serializes the given xml subtree to set this' properties.
-     * @param parent is the parent BlockModel
+     * Constructs a pin, deserializing its properties from element.
+     *
+     * @param parent the parent block
+     * @param element stores the properties
      */
-    PinModel(BlockModel *parent, QDomElement pinElem);
+    PinModel(BlockModel *parent, QDomElement element);
 
-    /**
-     * Default destructor
-     */
     virtual ~PinModel();
 
     /**
-     * Returns this' parent
+     * Returns the parent.
      */
     BlockModel *parent();
 
     /**
-     * Sets the parent of this pin.
+     * Returns the full qualified name.
+     *
+     * @return the name of the parent and the name of the pin
      */
-    void setParent(BlockModel *parent);
-
-    /**
-     * Returns the full qualified name. The include the parents and
-     * the pins name. */
     QString absName();
 
     /**
-     * Attach to another PinModel
+     * Attach to another PinModel.
      */
     void attach(PinModel *connectTo);
 
     /**
-     * Detach from the attached PinModel
+     * Detach from the attached PinModel.
      */
     void detach();
 
@@ -107,96 +112,119 @@ public:
     PinModel *connected();
 
     /*
-     * Returns if this pin is connectable to <code>toPin</code>.
+     * Returns true, if this pin can be connected to target. The
+     * return value depenends on the type of the pin and on the type
+     * of target.
+     *
+     * The following connections are possible:
+     *
+     *  - Input <-> Output
+     *  - Episodic <-> Output
+     *  - Episodic <-> Input
+     *  - Episodic <-> Episodic
+     *
+     * @return false, if the pin or target is already connected or
+     * if the types of the pins do not match any of the conditions above
      */
-    bool isConnectable(PinModel *toPin);
+    bool isConnectable(PinModel *target);
 
     /**
-     * Returns the type of this pin
+     * Returns the type of the pin
      */
     PinType type();
 
     /**
-     * Sets the type of this pin
+     * Sets the type of the pin
      */
     void setType(PinType type);
 
     /**
-     * Returns the position of the pin.
-     * The position is set by the BlockConfDialog.
+     * Returns the position of the pin. The position determines the
+     * order in which the pins are displayed on the canvas. Lower
+     * positions are shown above or left from higher
+     * positions. Invoked by BlockConfDialog when the pins are
+     * reordered.
      */
-    unsigned position();
+    unsigned position() const;
 
     /**
      * Sets the position of the pin.
-     * Used by the BlockModel
+     *
+     * @see position()
      */
     void setPosition(unsigned position);
 
     /**
-     * Returns this' id.
-     * The id is set by the BlockModel which contains this pin.
+     * Returns parent-unique id. Used by BlockModel.
      */
     unsigned id();
 
     /**
-     * Sets this' id.
-     * Used by the BlockModel
+     * Sets the parent-unique id. Invoked by BlockModel
      */
     void setId(const unsigned id);
 
     /**
-     * Returns this' name
+     * Returns the name of the pin.
      */
     QString name();
 
     /**
-     * Sets this' name
+     * Sets the name of the pin.
      */
     void setName(QString name);
 
     /**
-     * Returns this pin's address on the cpld
+     * Returns the address of the pin. The address determines the
+     * memory location on the CPLD and is used by the CPU template
+     * algorithm as the value for the corresponding variable.
      */
     unsigned int address();
 
     /**
-     * Sets this pin's address on the cpld
+     * Sets the address of the pin.
+     *
+     * @see #address()
      */
     void setAddress(unsigned int address);
 
     /**
-     * Returns this pin's bit width on the cpld
+     * Returns the number of bits of the pin, also called width of the
+     * pin. Determines the data type for the corresponding variable to
+     * be used in the C source.
      */
     unsigned int bits();
 
     /**
-     * Sets this pin's bit width on the cpld
+     * Sets the number of bits of the pin.
      */
     void setBits(unsigned int bits);
 
     /**
-     * Creates the CanvasItems for this.
+     * Creates the corresponding PinView object.
+     *
+     * @param block the parent view
+     * @param dockPosition the edge of parent the pin is displayed at
+     * @return the view object
      */
     PinView *createView(BlockView *block,
                         PinView::DockPosition dockPosition);
 
+
     /**
-     * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create
-     * elements
+     * Serializes the pin to an xml subtree.
+     *
+     * @param document the parent document, needed to create elements.
+     * @return the node, storing all persistent block properties
      */
     QDomElement serialize(QDomDocument *document);
 
     /**
-     * Deserializes an xml subtree and sets this' properties
+     * Sets the properties of the pin from element.
+     *
+     * @param element stores the properties
      */
     void deserialize(QDomElement element);
-
-    /**
-     * Clones this model.
-     */
-    PinModel *clone();
 
     /**
      * Returns the tooltip text.
@@ -205,8 +233,9 @@ public:
 
     /**
      * Needs to be invoked after the properties have been
-     * changed. Emits the {@link updated()} signal to notify the views
-     * to repaint. */
+     * changed. Emits the updated() signal to notify the views to
+     * repaint.
+     */
     void updatePerformed();
 
 private:
@@ -216,25 +245,24 @@ private:
     QString name_;
     BlockModel *parent_;
     unsigned address_;
-    unsigned bits_;   // data type to be used in C source and width of pin
-                      // one pin can be wider than one bit.
+    unsigned bits_;
     PinModel *connected_;
     PinType type_;
-    PinView *view_;
 
 signals:
     /**
-     * Emitted, when th pin is deleted.
+     * Emitted, before the pin is deleted.
      */
     void deleted();
 
     /**
-     * Emitted, when the pin is detached.
+     * Emitted, after the pin has been detached.
      */
     void detached();
 
     /**
-     * Emitted, after the pin's properties have been changed.
+     * Emitted, after the properties of the pin have changed.
+     *
      * @see #updatePerformed()
      */
     void updated();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.23 2004/01/28 16:35:51 squig Exp $
+ * $Id: abstractmodel.h,v 1.24 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,15 +38,29 @@ class QCanvas;
 class QCanvasItemList;
 
 /**
- * Base class for all model classes.
+ * Represents the base class of model classes that can be stored in
+ * the library or a project. The AbstractModel class provides methods
+ * for serialization and deserialization that should be reimplented by
+ * subclasses.
+ *
+ * Each model can have multiple associated view objects that display
+ * the model on a GridCanvas.
+ *
+ * @see LibraryWindow
+ * @see Project
  */
 class AbstractModel : public QObject, public Serializable
 {
     Q_OBJECT
 
 public:
+
     /**
-     * Default constructor
+     * Constructs a model.
+     *
+     * @param type the library category
+     * @param description a short description
+     * @param id the project unique id
      */
     AbstractModel(QString type = QString::null,
                   QString description = QString::null,
@@ -54,21 +68,20 @@ public:
 
     /**
      * Returns the description of the model.
-     * This value contains different content
-     * - in the library: the description of the generic block
-     * - in the project: the description of the instanciated block
      */
     virtual QString description() const;
 
     /**
-     * Returns the project-wide id of this block.
-     * This property should be set in Project::add(),
-     * for library items id should be 0
+     * Returns the project-unique id of the model. This property is
+     * managed by Project#addBlock(AbstractModel). Not used for
+     * library items.
      */
     virtual uint id() const;
 
     /**
-     * Creates the corresponding view objects.
+     * Creates the corresponding view objects on canvas.
+     *
+     * @param canvas the canvas the items will be created on
      */
     virtual QCanvasItemList createView(GridCanvas *canvas) = 0;
 
@@ -78,30 +91,35 @@ public:
     virtual void deserialize(QDomElement element);
 
     /**
-     * Returns the name of this model.
+     * Returns the name of the model.
      */
     virtual QString name() const;
 
     /**
-     * Sets the block description
-     * {@link #description}
+     * Sets the description of the model
+     *
+     * @see #description()
      */
     virtual void setDescription(const QString &description);
 
     /**
-     * Sets the project-wide id
-     * {@see #id}
+     * Sets the project-wide id.
+     *
+     * @see #id()
      */
     virtual void setId(uint id);
 
     /**
-     * Sets the name of this model.
+     * Sets the name of the model.
+     *
+     * @see #name()
      */
     virtual void setName(QString name);
 
     /**
-     * Sets the block type
-     * {@link #type}
+     * Sets the type of the model.
+     *
+     * @see #type()
      */
     virtual void setType(const QString &type);
 
@@ -123,26 +141,28 @@ public:
 
     /**
      * Needs to be invoked after the model properties have been
-     * changed. Emits the {@link updated()} signal to notify the views
-     * to repaint. */
+     * changed. Emits the updated() signal to notify the views
+     * to repaint.
+     */
     void updatePerformed();
 
     /**
-     * Returns the type of this block, eg. NIOS16-CPU
+     * Returns the type of this block, eg. CPU. The type is used as
+     * the category in the library.
      */
     virtual QString type() const;
 
-protected:
-    QString name_;
-
 private:
+
     QString type_;
     QString description_;
     uint id_;
+    QString name_;
 
 signals:
+
     /**
-     * Emitted when updatePerformed() was called.
+     * Emitted when updatePerformed() is called.
      */
     virtual void updated();
 

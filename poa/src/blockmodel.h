@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.41 2004/01/25 15:53:31 vanto Exp $
+ * $Id: blockmodel.h,v 1.42 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -36,12 +36,20 @@ class GridCanvas;
 class PinModel;
 
 /**
- * Base class for blocks.
- * A block can be either<br>
- * <ul>
- *   <li>Contained in the module library or</li>
- *   <li>Contained in a certain project</li>
- * </ul>
+ * Represents a block. A block can be either be stored in the module
+ * library or in a project. The BlockModel class acts as the concrete
+ * or super class for all types of blocks like input, output, core and
+ * cpu blocks.
+ *
+ * The BlockModel class provides all common properties like clock,
+ * offset and runtime. It also stores a list of PinModel objects. The
+ * type of a block is determined by the kind of pins it has. Output
+ * blocks for instance only have input pins, so hasInputPins() will
+ * return true where as the other has... methods will return false.
+ *
+ * BlockModel objects are represented by BlockView objects on screen.
+ *
+ * @see BlockView
  */
 class BlockModel: public AbstractModel
 {
@@ -50,25 +58,29 @@ class BlockModel: public AbstractModel
 public:
 
     /**
-     * Creates a BlockModel instance
-     * @param name the name of this block instance
+     * Constructs a block.
+     *
+     * @param type the type of the library item, also used for the name property
      * @param description the description of this block instance
-     * @param type the name of the library item (type)
      */
     BlockModel(QString type, QString description);
 
     /**
-     * Creates a CpuModel instance for the project out of an xml element.
+     * Constructs a block, deserializing its properties from element.
+     *
+     * @param element stores the properties
+     * @see #deserialize(QDomElement)
      */
     BlockModel(QDomElement element);
 
     /**
-     * Default destructor
+     * Deletes all pins.
      */
     virtual ~BlockModel();
 
     /**
-     * Adds an pin to this block model.
+     * Adds pin to this block. Pin will be deleted by the block. Emits
+     * pinAdded(pin).
      */
     void addPin(PinModel *pin);
 
@@ -83,7 +95,7 @@ public:
     unsigned int clock() const;
 
     /**
-     * Returns a list of all PinModels that are connected to input.
+     * Returns a list of all PinModel objects that are connected to input.
      */
     virtual QPtrList<PinModel> connectionsForInputPin(PinModel *input);
 
@@ -93,7 +105,7 @@ public:
     virtual QCanvasItemList createView(GridCanvas *canvas);
 
     /**
-     * Deletes an input pin from this block model.
+     * Removes pin from the block model and deletes pin.
      */
     void deletePin(PinModel *pin);
 
@@ -178,8 +190,10 @@ public:
     void setRuntime(const unsigned int runtime);
 
     /**
-     * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create elements
+     * Serializes the block to an xml subtree.
+     *
+     * @param document the parent document, needed to create elements.
+     * @return the node, storing all persistent block properties
      */
     virtual QDomElement serialize(QDomDocument *document);
 
@@ -189,14 +203,17 @@ public:
     virtual QString tip();
 
     /**
-     * The position of the first pin. Usually either 0 or 1.
+     * The position of the first pin. Usually either 0 or 1. Used by
+     * the BlockConfDialog as the index of the first pin of each type.
      */
     static const int FIRST_PIN_POSISION;
 
 protected:
 
     /**
-     * Deserializes an xml subtree and sets this' properties
+     * Sets the properties of the block from element.
+     *
+     * @param element stores the properties
      */
     virtual void deserialize(QDomElement element);
 
@@ -217,17 +234,20 @@ private:
     unsigned long offset_;
     unsigned int runtime_;
 
+    /**
+     * Stores the PinModel objects. Each PinModel has a block-unique id.
+     */
     QMap<uint, PinModel *> pinById_;
 
 signals:
 
     /**
-     * Emitted when a pin is added.
+     * Emitted after a pin has been added.
      */
     void pinAdded(PinModel *pin);
 
     /**
-     * Emitted when model gets deleted
+     * Emitted before the block is deleted.
      */
     void deleted(BlockModel *);
 

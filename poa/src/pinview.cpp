@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.36 2004/01/28 18:16:52 squig Exp $
+ * $Id: pinview.cpp,v 1.37 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -64,6 +64,7 @@ PinView::PinView(PinModel *model, BlockView *block,
         setSize(2, 8);
         break;
     }
+    show();
 }
 
 PinView::~PinView()

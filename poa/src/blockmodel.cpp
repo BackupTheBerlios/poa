@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.48 2004/02/05 14:00:23 papier Exp $
+ * $Id: blockmodel.cpp,v 1.49 2004/02/16 16:24:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -46,12 +46,11 @@ BlockModel::BlockModel(QString type, QString description)
 
     clock_ = 0;
     currentPinId_ = 0;
-    name_ = type;
     autoOffset_ = true;
     offset_ = 0;
     runtime_ = 0;
 
-    pinById_ = QMap<uint, PinModel*>();
+    setName(type);
 }
 
 BlockModel::BlockModel(QDomElement element)
@@ -64,8 +63,8 @@ BlockModel::~BlockModel()
 
     QValueList<PinModel*> pinList = pinById_.values();
     for (QValueList<PinModel *>::iterator it = pinList.begin();
-         it != pinList.end(); ++it)
-    {
+         it != pinList.end(); ++it) {
+
         deletePin(*it);
     }
 
@@ -84,6 +83,9 @@ unsigned int BlockModel::clock() const
 
 QPtrList<PinModel> BlockModel::connectionsForInputPin(PinModel *)
 {
+    // simply collect all output pins, we assume that logically each
+    // input pin is connected to each output pin
+
     QValueList<PinModel*> pins = this->pins();
     QPtrList<PinModel> connectedPins;
     for (QValueList<PinModel*>::Iterator it = pins.begin(); it != pins.end();
@@ -127,15 +129,16 @@ bool BlockModel::hasRuntime() const
 
 void BlockModel::addPin(PinModel *pin)
 {
+    Q_ASSERT(pin->parent() == this);
+
     if (pinById_.contains(pin->id())) {
-        // find next free id (highest in Map +1)
-        //currentPinId_ = pinById_.keys().last()+1;
-        while (pinById_.contains(++currentPinId_));
-        //qDebug("id: "+QString::number(pin->id())+" -> "+QString::number(currentPinId_)+" / "+QString::number(pinById_.keys().last()+1));
+        // find free id
+        while (pinById_.contains(currentPinId_)) {
+            ++currentPinId_;
+        }
         pin->setId(currentPinId_);
     }
     pinById_[pin->id()] = pin;
-    pin->setParent(this);
 
     emit pinAdded(pin);
 }
@@ -209,15 +212,6 @@ void BlockModel::deserialize(QDomElement element)
         if (node.isElement() && node.nodeName() == "pin" ) {
             QDomElement pin = node.toElement();
             PinModel *pinModel = new PinModel(this, pin);
-            if (pin.attribute("type", "") == "input") {
-                pinModel->setType(PinModel::INPUT);
-            }
-            else if (pin.attribute("type","") == "output") {
-                pinModel->setType(PinModel::OUTPUT);
-            }
-            else if (pin.attribute("type","") == "episodic") {
-                pinModel->setType(PinModel::EPISODIC);
-            }
             addPin(pinModel);
         }
         node = node.nextSibling();
@@ -270,7 +264,7 @@ QString BlockModel::tip()
     QString s = QString(tr("<u>%2</u> (%3)<br>" \
                         "<i>%4</i><hr>"
                         "<b>Clock:</b> %5<br>" \
-			   "<b>Offset:</b> %6<br>"))
+               "<b>Offset:</b> %6<br>"))
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.9 2003/12/17 13:49:51 squig Exp $
+ * $Id: connectaction.cpp,v 1.10 2003/12/20 16:10:07 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -53,7 +53,7 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     QCanvasItemList allItems = view->canvas()->allItems();
     for (QCanvasItemList::iterator it = allItems.begin();
          it != allItems.end(); ++it) {
-        if (INSTANCEOF(*it, PinView) && *it != source
+		if ((*it)->rtti() == PinView::RTTI && *it != source
             && (((PinView *)*it)->parent() != source->parent()))
         {
             PinView *pv = (PinView *)(*it);
@@ -80,7 +80,7 @@ void ConnectAction::mouseMoveEvent(QMouseEvent *e)
 
     QCanvasItem *item = activeItemAt(p);
     if (item != 0) {
-        Q_ASSERT(INSTANCEOF(item, PinView));
+        Q_ASSERT(item->rtti() == PinView::RTTI);
         QPoint target = dynamic_cast<PinView*>(item)->connectorPoint();
         line_.setPoints(line_.startPoint().x(), line_.startPoint().y(),
                         target.x(), target.y());

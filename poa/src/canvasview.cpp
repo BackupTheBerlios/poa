@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.50 2003/12/17 13:49:51 squig Exp $
+ * $Id: canvasview.cpp,v 1.51 2003/12/20 16:09:26 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -107,7 +107,7 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
     if (topItem != 0) {
         selectItem(topItem);
 
-        if (INSTANCEOF(topItem, BlockView)) {
+        if (topItem->rtti() == BlockView::RTTI) {
             MainWindow::instance()->openBlockConf();
         }
     }

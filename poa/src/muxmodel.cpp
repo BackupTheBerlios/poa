@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.3 2003/09/22 08:57:04 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.4 2003/09/22 10:43:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -97,14 +97,76 @@ MuxModel::~MuxModel()
 
 }
 
-void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
-                             unsigned begin, unsigned end)
+PinModel *MuxModel::addPin(PinModel::PinType type)
 {
+    PinVector *pinVector;
+    unsigned id;
+    unsigned bits;
+
+    Q_ASSERT(type != PinModel::EPISODIC);
+
+    switch(type) {
+    case PinModel::INPUT:
+        bits = 32;
+        id = inputPins_->size() + 1;
+        pinVector = inputPins_;
+        break;
+    case PinModel::OUTPUT:
+        bits = 0;
+        id = outputPins_->size() + 1;
+        pinVector = outputPins_;
+        break;
+    case PinModel::EPISODIC:
+        // assertion true, so do nothing.
+        break;
+    }
+
+    PinModel *pin = new PinModel(this, id, QString("Output %1").arg(id), 0, bits, type);
+    pinVector->addBefore(pin);
+
+    return pin;
+}
+
+void MuxModel::addMuxMapping(PinModel *input, unsigned begin, unsigned end)
+{
+    addMuxMapping(input, addPin(PinModel::OUTPUT), begin, end);
+}
+
+void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
+                             unsigned begin, unsigned end, bool setOutputBits)
+{
+    Q_ASSERT(output != 0);
+    // add bits of cureent mapping to output
+    if (setOutputBits) {
+        output->setBits(output->bits() + (begin - end));
+    }
     MuxMapping *mapping = new MuxMapping(input, output, begin, end);
 
-
     mappings_.append(mapping);
+}
 
+void MuxModel::removeMuxMappings(PinModel *input)
+{
+    for (QPtrListIterator<MuxMapping> it(mappings_); it.current() != 0; ++it) {
+        MuxMapping *mapping = (*it);
+
+        if (mapping->input() == input) {
+
+            PinModel *output = mapping->output();
+            unsigned bits = mapping->end() - mapping->begin();
+            if (output->bits() > bits) {
+                // there are other existing mappings, so reset bits
+                // of the current output pin.
+                output->setBits(output->bits() - bits);
+            }
+            else {
+                outputPins_->remove(output);
+                delete output;
+            }
+            mappings_.remove(mapping);
+            delete mapping;
+        }
+    }
 }
 
 void MuxModel::removePin(PinModel *pin)

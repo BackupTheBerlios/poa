@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.6 2003/09/22 08:57:04 garbeam Exp $
+ * $Id: muxmodel.h,v 1.7 2003/09/22 10:43:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -125,9 +125,34 @@ public:
 
     /**
      * Adds a new MuxMapping.
+     * @param output has to be valid not <code>NULL</code>. 
+     * @param setOutputBits if <code>false</code> the bits in output
+     * PinModel have to be set manually, otherwise <code>(end - begin)</code>
+     * will be added to the current bits value of output PinModel
+     * by this method.
      */
     void addMuxMapping(PinModel *input, PinModel *output,
-                       unsigned begin, unsigned end);
+                       unsigned begin, unsigned end, bool setOutputBits = true);
+
+    /**
+     * Overloaded for convenience.
+     * Adds a new MuxMapping. Creates a new output PinModel and sets
+     * it bits value to <code>(end - begin)</code>.
+     */
+    void addMuxMapping(PinModel *input, unsigned begin, unsigned end);
+
+    /**
+     * Adds a new pin to the dedicated PinVector (given by <code>type</code>)
+     * and returns it.
+     */
+    PinModel *addPin(PinModel::PinType type);
+
+    /**
+     * Removes alle MuxMappings which are related to <code>input</code>
+     * pin. If the involved output pin has more bits than the specific
+     * mapping, it will be shrinked, otherwise it will be removed.
+     */
+    void removeMuxMappings(PinModel *input);
 
     /**
      * Removes the given pin from this MuxModel and any related

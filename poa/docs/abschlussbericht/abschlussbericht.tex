@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.30 2004/06/15 12:05:36 neco Exp $
+%% $Id: abschlussbericht.tex,v 1.31 2004/06/15 21:48:33 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.30 $
-\RCSdef $Date: 2004/06/15 12:05:36 $
+\RCSdef $Revision: 1.31 $
+\RCSdef $Date: 2004/06/15 21:48:33 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -197,30 +197,56 @@ dem Handbuch entnommen werden.
 \subsection{Technische Umsetzung}
 \label{design}
 
-Die Architektur von POA lässt sich in stark zusammenhängende Module
-aufteilen, die eine geringe Kopplung aufweisen. 
+Die Architektur von POA wurde aufgrund des forschungsnahen Charakters
+des Projekts mit den Zielen einfacher Erweiterbarkeit und hoher
+Änderbarkeit entworfen. Erreicht wurden diese Eigenschaften in erster
+Linie durch ein einfaches Design. Es wurden nur die notwendigen
+Klassen implementiert und keine Technologie auf Vorrat angelegt.
+Soweit möglich wurden Entwurfsmuster verwendet, um das einfache
+Verständnis des Quellcodes zu erhöhen. Es wurden unter anderen das
+Model-View-Controller-, Strategie- und das Singletonmuster benutzt.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=10cm]{design}
-  \caption{POA Architektur}
+  \caption{POA Architektur}\label{arch_grafik}
 \end{figure}
 
-FIX: Kurze Beschreibung der Architektur
+Die Architektur von POA gliedert sich in stark zusammenhängende
+Module, die durch schmale Schnittstellen miteinander kommunizieren und
+so eine geringe Kopplung aufweisen. So kann jedes dieser Module
+einzeln an geänderte Anforderungen angepasst werden, wobei die
+Interoperabilität erhalten bleibt. Auf diese Weise wird die
+größtmögliche Flexibilität für die Weiterentwicklung und Wartung der
+Software sichergestellt.
 
-Der POA Entwurf wurde nach folgenden Kriterien optimiert:
+In Abbildung \ref{arch_grafik} werden die Module von POA dargestellt.
+Die grün dargestellten Module bilden die Basis des POA-Systems.
+Entwürfe für Regler auf dem Offenen Antrieb werden in Projekten
+entwickelt. Die Daten eines Projekts werden in den Models des Projekts
+gespeichert.
+
+Die rot dargestellten Module, Problemmanager, Scheduling und Download,
+bilden die wesent\-lichen Aufgaben von POA ab.
 
 \begin{itemize}
-\item Einfache Erweiterbarkeit
-\item Hohe Änderbarkeit
+\item Prüfen der Integrität eines Projekts und Anzeige der
+  aufgefundenen Probleme
+\item Automatische Berechnung eines optimalen Schedulings für das
+  Netzwerk von Blöcken
+\item Compilation des Quellcodes und Download auf die spezifizierten
+  CPUs
 \end{itemize}
 
-Erreicht wurden diese Eigenschaften in erster Linie durch ein einfaches
-Design. Es wurden nur die notwendigen Klassen implementiert, keine
-Technologie auf Vorrat angelegt. Soweit möglich wurden Entwurfsmuster
-verwendet, um das einfache Verständnis des Quellcodes zu erhöhen. Es
-wurden unter anderen das Model-View-Controller, Strategie und das
-Singletonmuster benutzt.
+Die in blau eingefärbten Module realisieren die
+Benutzungsschnittstelle von POA. Das Modul GUI umfasst Klassen zur
+Darstellung von Dialogen. Die Views visualisieren die relevanten
+Nutzdaten und das Routing-Modul wird eingesetzt, um Konnektoren
+überkreuzungs\-arm in ein Netzwerk einzubringen.
+
+Schließlich bietet das Utils Modul diverse Funktionalität, die häuftig
+benötigt wird. Die Klassen dieses Moduls sind Kandidaten um in
+folgenden Projekten wiederverwendet zu werden.
 
 Eine detailierte Beschreibung der Architektur befindet sich im
 Entwurfsdokument.
@@ -276,7 +302,7 @@ Konfigurationsmanagements und der Testbericht des Systemtests.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{gcover}
+  \includegraphics[width=10cm]{gcover}
   \caption{HTML-Ausgabe von GCover}
 \end{figure}
 
@@ -295,12 +321,6 @@ GCover entwickelt. GCover wertet die Ausgabe von gcov aus und stellt
 die Anweisungsüberdeckung in einem HTML Frameset ähnlich dem
 verbreiteten JavaDoc von Sun dar.
 
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=15cm]{gcover-file}
-  \caption{Anweisungsüberdeckung einer einzelnen Datei}
-\end{figure}
-
 GCover generiert eine Übersichtsseite, die die Anweisungs- und
 Zweigüberdeckung aller Dateien anzeigt. Bei Auswahl einer Datei wird
 der Quellcode der Datei angezeigt. Die Zahl in der linken Spalte gibt
@@ -311,6 +331,13 @@ GCover wurde im POA-Projekt eingesetzt, um die Vollständigkeit des mit
 CppUnit durchgeführten Regressionstests zu überprüfen. Es diente den
 Entwicklern als Hilfsmittel um nicht ausgeführte Zeilen zu finden und
 die Tests entsprechend anzupassen.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{gcover-file}
+  \caption{Anweisungsüberdeckung einer einzelnen Datei}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektorganisation}
@@ -328,13 +355,18 @@ Betreuer stand Dipl.-Ing. Peter Pruschek zur Verfügung.
 
 Der Auftragnehmer bestand aus einem Entwicklerteam von sieben
 Studenten der Softwaretechnik, die zu Beginn des Projekts im sechsten
-Semester studierten. Auf dem Bild zusehen sind (v.l.) Necati Aydin,
-Steffen Keul, Marcel Kilgus, Anselm Garbe, Tammo van Lessen und Stefan
-Hauser, Steffen Pingel.
+Semester studierten. Auf dem Bild \ref{poa-team} zusehen sind Necati
+Aydin, Marcel Kilgus, Tammo van Lessen, Anselm Garbe, Stefan Hauser
+und Steffen Pingel (von links). Steffen Keul hielt sich zum Zeitpunkt
+der Aufnahme bereits auf Grund eines Praktikums im Ausland auf.
 
-\begin{center}
-\includegraphics[width=10cm]{Fotos/group_1}
-\end{center}
+\begin{figure}[h!]
+  \centering
+  \begin{center}
+    \includegraphics[width=10cm]{Fotos/group_3}
+  \end{center}
+  \caption{POA-Team}\label{poa-team}
+\end{figure}
 
 \subsection{Rollen}
 
@@ -344,15 +376,15 @@ gemeinschaftlich soweit möglich auf Basis freiwilliger Übernahme
 während gemeinsamer Team-Treffen. Wenn eine Aufgabe von keinem der
 Entwickler übernommen wurde, wurde diese vom Projektleiter zugeteilt.
 
-Lediglich ein Verzicht auf die explizite Zuweisung der
-Qualitätssicherung ist als Mangel anzusehen. Leider wollte keiner der
-Entwickler diese Rolle übernehmen. Ausgeglichen wurde das durch das
-kooperative Vorgehensmodell. Die Dokumente wurden in der Regel von
-mindesten zwei Entwicklern gemeinsam verfasst und grundsätzlich
-anschliessend von dem gesamten Team in einem Review geprüft. Die
-Qualität des Quellcodes wurde in Form von Peer-Reviews laufend
-geprüft. Die einzelnen Quellcode-Dateien konnten von jedem Entwickler
-eingesehen und geändert werden (siehe auch \ref{developer by file}).
+Auch die Rolle der Qualitätssicherung wurde nicht explizit vergeben.
+Die Qualitätssicherung wurde im Sinne des kooperativen Vorgehensmodell
+als gemeinschaftliche Aufgabe aufgefasst. Die Dokumente wurden in der
+Regel von mindesten zwei Entwicklern gemeinsam verfasst und
+grundsätzlich anschliessend von dem gesamten Team in einem Review
+geprüft. Die Qualität des Quellcodes wurde in Form von Peer-Reviews
+laufend geprüft. Die einzelnen Quellcode-Dateien konnten von jedem
+Entwickler eingesehen und geändert werden (siehe auch \ref{developer
+  by file}).
 
 \subsubsection{Projektleiter}
 
@@ -736,7 +768,7 @@ Geschwindigkeit aus.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{jira}
+  \includegraphics[width=14cm]{jira}
   \caption{Jira Road Map Ansicht}
 \end{figure}
 
@@ -931,26 +963,68 @@ getesteten Klassen gemessen, ergibt sich eine Testüberdeckung von
 \end{center}
 
 \subsection{Tätigkeiten}
-POA war für mich das erste Projekt in dieser Größenordnung. Da ich das StuPro B vor StuPro A machen durfte, hatte ich noch keine Erfahrungen gesammelt, die ich in POA einbringen konnte, wie manch ein anderer in diesem Projekt. Qt war für uns alle noch Neuland, doch das war auch eine weitere Herausforderung. Für mich pesönlich kam noch erschwerend dazu, dass ich mit Softwareentwicklung in dieser Größe keine Erfahrungen hatte und die Programmierspache C++ für mich auch neu zuerlernen war. 
+
+POA war für mich das erste Projekt in dieser Größenordnung. Da ich das
+StuPro B vor StuPro A machen durfte, hatte ich noch keine Erfahrungen
+gesammelt, die ich in POA einbringen konnte, wie manch ein anderer in
+diesem Projekt. Qt war für uns alle noch Neuland, doch das war auch
+eine weitere Herausforderung. Für mich pesönlich kam noch erschwerend
+dazu, dass ich mit Softwareentwicklung in dieser Größe keine
+Erfahrungen hatte und die Programmierspache C++ für mich auch neu
+zuerlernen war.
  
-In den frühen Phasen des Projekt war ich weitesgehend an qualitätssichernden Maßnahmen beteiligt. Zu diesen Maßnahmen gehörten Reviews bzw. Walkthroughs des Angebots, der Spezifikation und des Entwurfs. Parallel dazu war ich bemüht mich in QT und C++ einzuarbeiten. Ebenso musste ich mich in Latex einarbeiten, welches ich bis dato nicht kannte. Latex wurde zur Erstellung der meisten Dokumente eingesetzt.
+In den frühen Phasen des Projekt war ich weitesgehend an
+qualitätssichernden Maßnahmen beteiligt. Zu diesen Maßnahmen gehörten
+Reviews bzw. Walkthroughs des Angebots, der Spezifikation und des
+Entwurfs. Parallel dazu war ich bemüht mich in QT und C++
+einzuarbeiten. Ebenso musste ich mich in Latex einarbeiten, welches
+ich bis dato nicht kannte. Latex wurde zur Erstellung der meisten
+Dokumente eingesetzt.
 
-Während der ersten Implementierungsphase hatte ich anfangs einige Probleme mich in den bis dahin entstandenen Code einzuarbeiten, da ich mir eine etwas längere Auszeit in der vorlesungsfreien Zeit, wegen Arbeit und Urlaub, genommen hatte.
+Während der ersten Implementierungsphase hatte ich anfangs einige
+Probleme mich in den bis dahin entstandenen Code einzuarbeiten, da ich
+mir eine etwas längere Auszeit in der vorlesungsfreien Zeit, wegen
+Arbeit und Urlaub, genommen hatte.
 
-In der zweiten Implementierungsphase, nach der Präsentation des Prototyps im Oktober, hatte ich die Aufgabe ein geeignetes Testframework für Unittests zu finden. Also schaute ich mich ein wenig um, und es gab eigentlich nur CppUnit und QtUnit. CppUnit lehnt sich das ursprünglich simple JUnit, ist aber unglaublich aufgebläht und verkompliziert, allerdings gut dokumentiert. QtUnit ist komplett undokumentiert, und daher sehr schwierig gewesen, zum Laufen zu bringen. Um größere Komplikationen zu vermeiden, entschied ich mich für CppUnit und passte es für unsere Zwecke an.
+In der zweiten Implementierungsphase, nach der Präsentation des
+Prototyps im Oktober, hatte ich die Aufgabe ein geeignetes
+Testframework für Unittests zu finden. Also schaute ich mich ein wenig
+um, und es gab eigentlich nur CppUnit und QtUnit. CppUnit lehnt sich
+das ursprünglich simple JUnit, ist aber unglaublich aufgebläht und
+verkompliziert, allerdings gut dokumentiert. QtUnit ist komplett
+undokumentiert, und daher sehr schwierig gewesen, zum Laufen zu
+bringen. Um größere Komplikationen zu vermeiden, entschied ich mich
+für CppUnit und passte es für unsere Zwecke an.
 
-In der letzten Phase des Projekts war ich mit dem Schreiben des Handbuchs beauftragt.
-Dafür musste ich mich mit Latex intensiv beschäftigen. Beim Schreiben des Handbuchs führte ich auch einige Abnahmetests aus, wodurch ich einige Fehler aufdecken konnte, und diese an die jeweiligen Entwickler weiterleitete.
+In der letzten Phase des Projekts war ich mit dem Schreiben des
+Handbuchs beauftragt.  Dafür musste ich mich mit Latex intensiv
+beschäftigen. Beim Schreiben des Handbuchs führte ich auch einige
+Abnahmetests aus, wodurch ich einige Fehler aufdecken konnte, und
+diese an die jeweiligen Entwickler weiterleitete.
 
-Desweiteren nahm ich an fast allen Reviews als Gutachter bzw. als Autor im Laufe des Projekts teil, und war teilweise bei der Erstellung dieses Dokoments beteiligt.
+Desweiteren nahm ich an fast allen Reviews als Gutachter bzw. als
+Autor im Laufe des Projekts teil, und war teilweise an der Erstellung
+dieses Dokoments beteiligt.
 
 \subsection{Beurteilung}
-Meiner Meinung nach ist POA ein voller Erfolg. Die Anforderungen des Kunden wurden laut ihm zu seiner Zufriedenheit erfüllt. Das Projekt war zu keiner Zeit in irrgendeiner Weise bedroht, was sicherlich zum Einen an der Führungsrolle des Projektleiters und zum Anderen am Team selbst lag.
 
-Was mich positiv überrascht hat, ist der Zusammenhalt unseres Teams. Es gab zu keiner Zeit zwischenmenchliche Konflikte, was über einem Zeitraum von einem Jahr mit 7 unterschiedlichen Persönlichkeiten nicht Selbstverständlich ist. 
+Meiner Meinung nach ist POA ein voller Erfolg. Die Anforderungen des
+Kunden wurden laut ihm zu seiner Zufriedenheit erfüllt. Das Projekt
+war zu keiner Zeit in irgendeiner Weise bedroht, was sicherlich zum
+Einen an der Führungsrolle des Projektleiters und zum Anderen am Team
+selbst lag.
 
-Was ich persönlich aus diesem Projekt mitnehmen werde, ist das Erlernen einer neuen Programmiersprache, der Umgang mit CVS, Latex und dem Toolkit Qt, und die positive Erfahrung bezüglich des Teamverhaltens.
+Was mich positiv überrascht hat, ist der Zusammenhalt unseres Teams.
+Es gab zu keiner Zeit zwischenmenschliche Konflikte, was über einem
+Zeitraum von einem Jahr mit 7 unterschiedlichen Persönlichkeiten nicht
+selbstverständlich ist.
 
+Was ich persönlich aus diesem Projekt mitnehmen werde, ist das
+Erlernen einer neuen Programmiersprache, der Umgang mit CVS, Latex und
+dem Toolkit Qt, und die positive Erfahrung bezüglich des
+Teamverhaltens.
+
+\newpage
 \section{Anselm Garbe}
 
 \begin{center}
@@ -1036,8 +1110,9 @@ dar, da der Zeitrahmen nicht überzogen wurde und somit sich die Kosten im
 Rahmen des für Studienprojekte vorgesehenen Zeitaufwands beliefen.
 
 Daß die POA Entwicklung ein voller Erfolg war, dürfte vor allem auf die
-Team-Zusammensetzung zurückzuführen sein.
+Team-Zu\-sam\-men\-set\-zung zurückzuführen sein.
 
+\newpage
 \section{Stefan Hauser}
 
 \begin{center}
@@ -1060,7 +1135,7 @@ des Projekts einen großen Wissensgewinn, durch den Know-How-Transfer
 zwischen des Team-Mitgliedern. \newline
 
 Die Entscheidung f"ur POA war aus meiner Sicht die richtige, denn wir 
-bildeten ein schlagkr"aftiges Team und auch der Kontakt mit Christian
+bildeten ein schlag\-kräf\-tiges Team und auch der Kontakt mit Christian
 Kramer war kollegial, immer schnell hergestellt und
 unproblematisch. Der hervorragende Projektverlauf spiegelt sich auch
 darin wieder, dass wir nie auf die Hilfe unseres Betreuers angewiesen
@@ -1144,7 +1219,7 @@ geben. Insofern kann ich schon jetzt vom meinem erlangten Wissen
 profitieren, ein wirklich positives Fazit ziehen und mich bei allen 
 Team-Mitgliedern f"ur die gute Zusammenarbeit bedanken.
 
-
+\newpage
 \section{Steffen Keul}
 
 \subsection{Aufgaben}
@@ -1289,8 +1364,7 @@ erleben. Obwohl ich dieses Vorgehen nach wie vor nicht für optimal
 halte, fand ich es sehr lehrreich mich mit Vor- und Nachteilen dieses
 Vorgehens in der praktischen Anwendung auseinander zu setzen.
 
-
-
+\newpage
 \section{Marcel Kilgus}
 
 \begin{center}
@@ -1305,7 +1379,7 @@ Verfahren evaluiert, vom einfachen Profiling bis zum Schreiben eines
 kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen
 einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies
 nicht mit vertretbarem Aufwand und vor allem nicht in der benötigten
-Präzision möglich war. Die einzig verbleibende Option einer
+Präzision möglich war. Die einzig ver\-blei\-ben\-de Option einer
 hardwaregestützten Instrumentierung des Codes inklusive Ausführung auf
 einem realen CPLD konnte im Rahmen des Projekts leider nicht weiter
 verfolgt werden.
@@ -1387,6 +1461,7 @@ leicht ungenauen, aufgrund der weitergehenden Forschung teilweise auch
 dem Kunden noch nicht hundertprozentig bekannten Anforderungen
 gewachsen.
 
+\newpage
 \section{Steffen Pingel}
 
 \begin{center}
@@ -1502,6 +1577,7 @@ Kommunikation mit unserem Kunden Christian Kramer war sehr kooperativ.
 Das entstandene Produkt erfüllt die Anforderungen des Kunden und 
 entspricht qualitativ meinen Erwartungen.
 
+\newpage
 \section{Tammo van Lessen}
 
 \begin{center}
@@ -1536,7 +1612,7 @@ Komponenten kommen bei dem POA Projekt auf der Hardwareseite zum Einsatz.
 Nachdem der Projektplan erstellt war, war es meine Aufgabe, die
 Anforderungen an das Projekt grob zu ordnen und in einer projektinternen
 Spezifikation festzuhalten. Daran angeknüpft nahm ich an einem Review
-des Entwurfs teil, welches produktiv einige Verbesserungen ermöglichte
+des Entwurfs teil, welches produktiv einige Ver\-besserun\-gen ermöglichte
 und somit ein schlanker aber leistungsfähiger Entwurf entstand.
 
 An der darauf folgenden Implementierungsphase war ich fast über die

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.13 2004/06/15 09:09:58 vanto Exp $
+%% $Id: design.tex,v 1.14 2004/06/15 21:48:33 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -17,7 +17,7 @@ Interoperabilität erhalten bleibt.
 
 Auf diese Weise wird die größtmögliche Flexibilität für die
 Weiterentwicklung und Wartung der Software sichergestellt. Aufgrund
-des forschungsnahen Charakters des OA-Projekts wurde auf die
+des forschungsnahen Charakters des POA-Projekts wurde auf die
 Flexibilität der Architektur besonderer Wert gelegt.
 
 \begin{figure}[h!]
@@ -36,15 +36,16 @@ Projekten (\ref{project}) entwickelt. Die Daten eines Projekts werden
 in den Models (\ref{model}) des Projekts gespeichert.
 
 Die rot dargestellten Module, Problemmanager (\ref{problem_manager}),
-Scheduling (\ref{scheduling}) und Download (\ref{download}) bilden die
+Scheduling (\ref{scheduling}) und Download (\ref{download}), bilden die
 wesentlichen Aufgaben von POA ab.
+
 \begin{itemize}
 \item Prüfen der Integrität eines Projekts und Anzeige der
-aufgefundenen Problem.
+  aufgefundenen Probleme
 \item Automatische Berechnung eines optimalen Schedulings für das
-Netzwerk von Blöcken.
+  Netzwerk von Blöcken
 \item Compilation des Sourcecodes und Download auf die spezifizierten
-CPUs
+  CPUs
 \end{itemize}
 
 Die in blau eingefärbten Module realisieren die

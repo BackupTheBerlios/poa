@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.60 2004/01/22 22:27:47 squig Exp $
+ * $Id: blockview.cpp,v 1.61 2004/01/22 22:36:13 vanto Exp $
  *
  *****************************************************************************/
 
@@ -67,7 +67,8 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 
     BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
 
-    setBrush(white);
+    //    setBrush(white);
+    updateProperties();
     setPen(QPen(Settings::instance()->defaultColor(), 2));
 
     connect(model_, SIGNAL(pinAdded(PinModel *)),
@@ -313,20 +314,14 @@ void BlockView::setZ(double z)
 
 void BlockView::updateProperties()
 {
-    /*    if (isActive()) {
-        setBrush(QBrush(Settings::instance()->activatedColor()));
-    }
-    else if (isSelected()) {
-        setBrush(QBrush(Settings::instance()->selectedColor()));
-    }
-    else {
-        setBrush(QBrush(Settings::instance()->defaultBrushColor()));
-    }*/
     GridCanvas *gc = dynamic_cast<GridCanvas*>(canvas());
+
     Q_ASSERT(gc != 0);
+
     if (gc == 0) {
         return;
     }
+
     if (isActive()) {
         setBrush(QBrush(gc->colorManager()->activatedColor(this->model())));
     }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.3 2004/01/22 22:10:27 vanto Exp $
+ * $Id: colormanager.cpp,v 1.4 2004/01/22 22:36:13 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,13 +29,13 @@ ColorManager::ColorManager()
 {
     palPosition_ = 0;
     palette_ = new Palette("Web-Colors");
-    palette_->addColor(QColor("#FF0000"));
+    /*    palette_->addColor(QColor("#FF0000"));
     palette_->addColor(QColor("#FFA500"));
     palette_->addColor(QColor("#FFFF00"));
     palette_->addColor(QColor("#008000"));
     palette_->addColor(QColor("#0000FF"));
     palette_->addColor(QColor("#800080"));
-    palette_->addColor(QColor("#7FFFDF"));
+    palette_->addColor(QColor("#7FFFDF"));*/
     palette_->addColor(QColor("#8A2BE2"));
     palette_->addColor(QColor("#A52A2A"));
     palette_->addColor(QColor("#DEB887"));
@@ -70,31 +70,22 @@ QColor ColorManager::color_(const BlockModel *model, int luminance)
 QColor ColorManager::color(AbstractModel *model, int luminance)
 {
     BlockModel *bm = dynamic_cast<BlockModel*>(model);
-    if (bm == 0) {
-        return Settings::instance()->defaultColor();
+    if ((bm != 0) && (bm->clock() != 0)) {
+        return color_(bm, luminance);
+
     }
 
-    return color_(bm, luminance);
+    return Settings::instance()->defaultBrushColor();
 }
 
-QColor ColorManager::activatedColor(AbstractModel *model, int luminance)
+QColor ColorManager::activatedColor(AbstractModel*, int)
 {
-    BlockModel *bm = dynamic_cast<BlockModel*>(model);
-    if (bm == 0) {
-        return Settings::instance()->activatedColor();
-    }
-
-    return color_(bm, luminance + 50);
+    return Settings::instance()->activatedColor();
 }
 
-QColor ColorManager::selectedColor(AbstractModel *model, int luminance)
+QColor ColorManager::selectedColor(AbstractModel*, int)
 {
-    BlockModel *bm = dynamic_cast<BlockModel*>(model);
-    if (bm == 0) {
-        return Settings::instance()->selectedColor();
-    }
-
-    return color_(bm, luminance + 70);
+    return Settings::instance()->selectedColor();
 }
 
 Palette::Palette(QString name)

@@ -10,7 +10,7 @@ CXX = g++
 
 SOURCES  = $(shell ls *.cpp)
 TESTOBJECTS = $(shell echo $(SOURCES) | sed 's/main\.cpp//;s/mainqt\.cpp//;s/\.cpp/.o/g')
-OBJECTS = $(TESTOBJECTS) $(shell find ../src -name "*.o" -not -name "main.o" -not -name "mainqt.o")
+OBJECTS = $(TESTOBJECTS) $(shell find ../src -maxdepth 1 -name "*.o" -not -name "main.o" -not -name "mainqt.o")
 
 all: main
 

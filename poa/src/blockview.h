@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.3 2003/08/22 13:31:37 keulsn Exp $
+ * $Id: blockview.h,v 1.4 2003/08/22 16:58:42 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -54,9 +54,11 @@ class BlockView: public QCanvasRectangle
 
  private:
 
-    BlockModel *blockModel_;
+    BlockModel *model_;
 
-    static const int RTTI_ = 1000;
+    static const int RTTI = 1000;
+    static const int DEFAULT_WIDTH = 150;
+    static const int DEFAULT_FONT_HEIGHT = 12;
 
 };
 

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.19 2003/08/22 16:50:51 squig Exp $
+# $Id: poa.pro,v 1.20 2003/08/22 16:58:42 keulsn Exp $
 #
 ###############################################################################
 
@@ -71,6 +71,7 @@ HEADERS += viewmap.h
 HEADERS += gridcanvas.h
 
 SOURCES += aboutdialog.cpp
+SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += cpumodel.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockmodel.h,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: inputblockmodel.h,v 1.2 2003/08/22 16:58:42 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -42,10 +42,6 @@ class InputBlockModel: public BlockModel
   
     void addOutputPin (PinModel *pin, PinModel *successor = 0);
     void removeOutputPin (PinModel *pin);
-
-  private:
-
-    PinVector *outputPins;
   
 };
 

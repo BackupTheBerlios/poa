@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.46 2004/01/25 15:53:31 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.47 2004/01/28 18:23:49 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@
 
 #include "blockview.h"
 #include "pinmodel.h"
+#include "poa.h"
 
 const int BlockModel::FIRST_PIN_POSISION = 1;
 
@@ -268,16 +269,16 @@ QString BlockModel::tip()
 {
     QString s = QString("<u>%2</u> (%3)<br>" \
                         "<i>%4</i><hr>"
-                        "<b>Clock:</b> %5 ns<br>" \
+                        "<b>Clock:</b> %5<br>" \
                         "<b>Offset:</b> %6<br>")
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())
-        .arg(this->clock())
+        .arg(formatTimeProperly(this->clock()))
         .arg(toTip(this->autoOffset(), this->offset()));
     if (hasRuntime()) {
-        s.append(QString("<b>Execution time:</b> %1 ns")
-                 .arg(QString::number(this->runtime())));
+        s.append(QString("<b>Execution time:</b> %1")
+                 .arg(formatTimeProperly(this->runtime())));
     }
 
     return s;
@@ -286,6 +287,6 @@ QString BlockModel::tip()
 QString BlockModel::toTip(bool autoValue, int value)
 {
     return (autoValue)
-        ? QString("Auto (%1 ns)").arg(QString::number(value))
-        : QString("%1 ns").arg(QString::number(value));
+        ? QString("Auto (%1)").arg(formatTimeProperly(value))
+        : QString("%1").arg(formatTimeProperly(value));
 }

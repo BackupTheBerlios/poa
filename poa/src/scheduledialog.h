@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.25 2004/01/26 19:17:18 vanto Exp $
+ * $Id: scheduledialog.h,v 1.26 2004/01/28 18:23:49 vanto Exp $
  *
  *****************************************************************************/
 
@@ -224,7 +224,6 @@ class SpinBoxItem : public QTableItem
     void setContentFromEditor( QWidget *w );
 
  private:
-    QSpinBox *spinbox_;
     BlockNode *node_;
     NodeField field_;
 

@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.21 2004/01/28 17:38:23 vanto Exp $
+ * $Id: colormanager.cpp,v 1.22 2004/01/28 18:23:49 vanto Exp $
  *
  *****************************************************************************/
 
 #include "colormanager.h"
+#include "poa.h"
 #include "settings.h"
 
 #include <qintdict.h>
@@ -152,14 +153,14 @@ void ColorManager::recalculateSize()
 {
     QFont headerFont = QApplication::font();
     headerFont.setBold(true);
-    int width = QFontMetrics(headerFont).width(LEGEND_TITLE) + 2 * HSPACE;
+    int width = QFontMetrics(headerFont).width(LEGEND_TITLE) + (2 * HSPACE);
 
     QFontMetrics metrics(QApplication::font());
     for (QMap<int,int>::iterator it = nsToPalIndex_.begin();
          it != nsToPalIndex_.end(); it++) {
 
         // calculate max width
-        width = QMAX(width, metrics.width(QString::number(it.key()) + " ns")
+        width = QMAX(width, metrics.width(formatTimeProperly(it.key()))
                      + SAMPLE_SIZE + 3 * HSPACE);
 
     }
@@ -250,7 +251,7 @@ void ColorManager::drawShape(QPainter &p)
                          width() - HSPACE,
                          ly + FONT_HEIGHT);
         p.drawText(textArea, QObject::AlignLeft,
-                  QString::number(it.key()) + " ns");
+                  formatTimeProperly(it.key()));
 
         ly += FONT_HEIGHT + VSPACE;
     }

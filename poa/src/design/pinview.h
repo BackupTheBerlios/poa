@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
+ * $Id: pinview.h,v 1.3 2003/07/14 22:14:23 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,7 @@
 
 #include <qcanvasitem.h>
 
-#include "pin.h"
+#include "pinmodel.h"
 
 /*****************************************************************************
  * Definition of a Pin view.
@@ -38,12 +38,12 @@ class PinView: public QCanvasItem
 
 private:
 
-    Pin *cpuModel_;
+    PinModel *pinModel_;
 
 public:
 
-    Pin *getModel();
-    void setModel(Pin *cpuModel);
+    PinModel *getModel();
+    void setModel(PinModel *cpuModel);
 
 };
 

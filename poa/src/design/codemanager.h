@@ -19,11 +19,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *  First Author: Steffen Keul
- *
- *  $RCSfile: codemanager.h,v $, $Revision: 1.1 $
- *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Id: codemanager.h,v 1.2 2003/07/14 22:14:23 keulsn Exp $
  *
  *****************************************************************************/
 

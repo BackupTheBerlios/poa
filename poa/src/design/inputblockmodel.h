@@ -21,9 +21,7 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: inputblockmodel.h,v $, $Revision: 1.3 $
- *  $Author: keulsn $
- *  $Date: 2003/07/08 17:34:13 $
+ *  $Id: inputblockmodel.h,v 1.4 2003/07/14 22:14:23 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -45,8 +43,8 @@ class InputBlockModel: public BlockModel
 {
   public:
   
-    void addOutputPin (Pin *pin, Pin *successor = 0);
-    void removeOutputPin (Pin *pin);
+    void addOutputPin (PinModel *pin, PinModel *successor = 0);
+    void removeOutputPin (PinModel *pin);
 
   private:
 

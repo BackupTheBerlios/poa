@@ -19,11 +19,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *  First Author: Steffen Keul
- *
- *  $RCSfile: outputblockmodel.h,v $, $Revision: 1.2 $
- *  $Author: keulsn $
- *  $Date: 2003/07/08 17:34:13 $
+ *  $Id: outputblockmodel.h,v 1.3 2003/07/14 22:14:23 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -46,8 +42,8 @@ class OutputBlockModel: public BlockModel
 {
   public:
   
-    void addInputPin (Pin *pin, Pin *successor = 0);
-    void removeInputPin (Pin *pin);
+    void addInputPin (PinModel *pin, PinModel *successor = 0);
+    void removeInputPin (PinModel *pin);
 
   private:
 

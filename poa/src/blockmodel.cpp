@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.33 2003/12/02 09:59:50 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.34 2003/12/03 17:33:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -57,29 +57,11 @@ BlockModel::BlockModel(QDomElement element)
 BlockModel::~BlockModel()
 {
 
-    /*    for(QPtrListIterator<PinModel> it(episodicPins_); it != 0; ++it) {
-        PinModel *pin = it.current();
-        delete pin;
-    }
-    episodicPins_.clear();
-
-    for(QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
-        PinModel *pin = it.current();
-        delete pin;
-    }
-    inputPins_.clear();
-
-    for(QPtrListIterator<PinModel> it(outputPins_); it != 0; ++it) {
-        PinModel *pin = it.current();
-        delete pin;
-    }
-    outputPins_.clear();*/
-
     QValueList<PinModel*> pinList = pinById_.values();
-    QValueList<PinModel*>::iterator cit;
-    for ( cit = pinList.begin(); cit != pinList.end(); ++cit ) {
-        removePin(*cit);
-        delete (*cit);
+    for (QValueList<PinModel *>::iterator it = pinList.begin();
+         it != pinList.end(); ++it)
+    {
+        deletePin(*it);
     }
 
     emit deleted();
@@ -93,11 +75,6 @@ QCanvasItemList BlockModel::createView(QCanvas *canvas)
     view->addPinViewsTo(list);
     return list;
 }
-
-/*QPtrList<PinModel> *BlockModel::episodicPins()
-{
-    return &episodicPins_;
-}*/
 
 bool BlockModel::hasEpisodicPins()
 {
@@ -170,7 +147,7 @@ unsigned int BlockModel::clock()
     return clock_;
 }
 
-void BlockModel::addPin(PinModel *pin, bool emitSignal)
+void BlockModel::addPin(PinModel *pin)
 {
 
     /*    if (pin->id() == 0) {
@@ -186,6 +163,7 @@ void BlockModel::addPin(PinModel *pin, bool emitSignal)
         pin->setId(currentPinId_);
     }
     pinById_[pin->id()] = pin;
+    pin->setParent(this);
 
     /*
     switch (pin->type()) {
@@ -200,13 +178,10 @@ void BlockModel::addPin(PinModel *pin, bool emitSignal)
         break;
         }*/
 
-    if (emitSignal) {
-        emit pinAdded(pin);
-    }
-
+    emit pinAdded(pin);
 }
 
-void BlockModel::removePin(PinModel *pin)
+void BlockModel::deletePin(PinModel *pin)
 {
     /*    switch (pin->type()) {
     case PinModel::INPUT:
@@ -220,6 +195,7 @@ void BlockModel::removePin(PinModel *pin)
         break;
         }*/
     pinById_.remove(pin->id());
+    delete pin;
 }
 
 

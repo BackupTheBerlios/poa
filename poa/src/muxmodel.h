@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.22 2003/11/26 15:52:45 garbeam Exp $
+ * $Id: muxmodel.h,v 1.23 2003/12/03 17:33:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -200,6 +200,11 @@ public:
     /** Returns MuxMapping list. */
     QPtrList<MuxMapping> *mappings();
 
+    /** TODO: this will be implemented soon, don't worry about inlines.  */
+    inline QPtrList<PinModel> *connectionsForInputPin(PinModel *input)
+    {
+        return 0;
+    };
 
 private:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.32 2003/12/03 16:06:20 squig Exp $
+ * $Id: pinmodel.cpp,v 1.33 2003/12/03 17:33:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,11 +42,13 @@ PinModel::PinModel(BlockModel *parent, const QString &name,
     id_ = 0;
     position_ = 0;
     connected_ = 0;
+    view_ = 0;
 }
 
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
 {
     parent_ = parent;
+    position_ = 0;
     connected_ = 0;
     view_ = 0;
 // TODO position stuff
@@ -61,7 +63,10 @@ PinModel::~PinModel()
         connected_->detach();
     }
     detach();
-    emit(deleted());
+
+    if (view_) {
+        emit(deleted());
+    }
 }
 
 BlockModel *PinModel::parent()
@@ -121,7 +126,7 @@ void PinModel::setId(unsigned id)
     id_ = id;
 }
 
-unsigned PinModel::position() const
+unsigned PinModel::position()
 {
     return position_;
 }
@@ -214,6 +219,7 @@ PinModel *PinModel::clone()
 
     PinModel *pin = new PinModel(parent_, name_, address_, bits_, type_);
     pin->setId(id_);
+    pin->setPosition(position_);
 
     return pin;
 }

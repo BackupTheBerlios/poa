@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.36 2003/12/03 16:06:20 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.37 2003/12/03 17:33:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -64,9 +64,7 @@ PinListViewItem::PinListViewItem(QListViewItem *parent,
     : QListViewItem(parent)
 {
     setOpen(false);
-    if (clone != 0) {
-        type_ = clone->type();
-    }
+    type_ = clone->type();
     clone_ = clone;
     origin_ = origin;
 
@@ -76,7 +74,7 @@ PinListViewItem::PinListViewItem(QListViewItem *parent,
 void PinListViewItem::update() {
 
     if (clone_ != 0) {
-        setText(0, QString::number(clone_->id(), 10));
+        setText(0, QString::number(clone_->position(), 10));
         setText(1, clone_->name());
         if (clone_->type() != PinModel::EPISODIC) {
             setText(2, QString::number(clone_->address(), 16));
@@ -368,22 +366,6 @@ void BlockConfDialog::initListView()
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
 
-    // add pin root list item
-
-    inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
-    inputRoot_->setText(0, tr("Inputs"));
-    inputRoot_->setVisible(model_->hasInputPins());
-
-    outputRoot_ = new PinListViewItem(ioListView, 0,
-                                          PinModel::OUTPUT);
-    outputRoot_->setText(0, tr("Outputs"));
-    outputRoot_->setVisible(model_->hasOutputPins());
-
-    episodicRoot_ =
-            new PinListViewItem(ioListView, 0, PinModel::EPISODIC);
-    episodicRoot_->setText(0, tr("Episodic Inputs"));
-    episodicRoot_->setVisible(model_->hasEpisodicPins());
-
 
     // I/O list view manipulation widget
     QWidget *editIoWidget = new QWidget(leftWidget);
@@ -436,6 +418,21 @@ void BlockConfDialog::initListView()
 
 void BlockConfDialog::syncModel() {
 
+    // add pin root list item
+    inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
+    inputRoot_->setText(0, tr("Inputs"));
+    inputRoot_->setVisible(model_->hasInputPins());
+
+    outputRoot_ = new PinListViewItem(ioListView, 0,
+                                          PinModel::OUTPUT);
+    outputRoot_->setText(0, tr("Outputs"));
+    outputRoot_->setVisible(model_->hasOutputPins());
+
+    episodicRoot_ =
+            new PinListViewItem(ioListView, 0, PinModel::EPISODIC);
+    episodicRoot_->setText(0, tr("Episodic Inputs"));
+    episodicRoot_->setVisible(model_->hasEpisodicPins());
+
     if (model_ != 0) {
         blockNameLineEdit->setText(model_->name());
         blockDescrLineEdit->setText(model_->description());
@@ -454,11 +451,11 @@ void BlockConfDialog::syncModel() {
             offsetSpinBox->setValue(cpuModel->offset());
         }
 
-        QValueList<PinModel*> pinList = model_->pins();
-        QValueList<PinModel*>::iterator it;
-        for (it = pinList.begin(); it != pinList.end(); ++it) {
-            //        for (QValueListIterator<PinModel*> it(model_->pins()); it != 0; ++it) {
-            PinModel *pin = (*it); //it.current();
+        QValueList<PinModel *> pinList = model_->pins();
+        for (QValueList<PinModel *>::iterator it = pinList.begin();
+             it != pinList.end(); ++it)
+        {
+            PinModel *pin = (*it);
             qDebug(pin->name());
             switch (pin->type()) {
             case PinModel::INPUT:
@@ -472,7 +469,6 @@ void BlockConfDialog::syncModel() {
                 break;
             }
         }
-
     }
 }
 
@@ -494,49 +490,41 @@ void BlockConfDialog::updateModel() {
             cpuModel->setOffset(offsetSpinBox->value());
         }
 
-        // clear and free deleted pins
+        // deleted pins
         for (QPtrListIterator<PinModel> it(deletedPins_); it != 0; ++it) {
-            PinModel *pin = it.current();
-            delete pin;
+            model_->deletePin(*it);
         }
         deletedPins_.clear();
 
-        // clear models
-        //        model_->inputPins()->clear();
-        //        model_->outputPins()->clear();
-        //        model_->episodicPins()->clear();
-        QValueList<PinModel*> pinList = model_->pins();
-        QValueList<PinModel*>::iterator cit;
-        for ( cit = pinList.begin(); cit != pinList.end(); ++cit ) {
-            model_->removePin(*cit);
+        // updated pins
+        for (QPtrListIterator<PinModel> it(updatedPins_); it != 0; ++it) {
+            PinModel *pin = *it;
+            PinModel *origPin = model_->findPinById(pin->id());
+            origPin->setName(pin->name());
+            origPin->setAddress(pin->address());
+            origPin->setBits(pin->bits());
+            origPin->setType(pin->type());
+            origPin->setPosition(pin->position());
         }
+        updatedPins_.clear();
 
-        QListViewItemIterator it(ioListView);
-        for ( ; it.current(); ++it) {
-            PinListViewItem *item = (PinListViewItem *)it.current();
-            if (!item->isRoot()) {
-                PinModel *source = item->data();
-                PinModel *target = item->origData();
-                if (target != 0) {
-                    target->setId(source->id());
-                    target->setName(source->name());
-                    target->setAddress(source->address());
-                    target->setBits(source->bits());
-                    target->setType(source->type());
-                    // use original pin
-                    model_->addPin(target, false);
-                }
-                else {
-                    // new pin
-                    PinModel *newPin = source->clone();
-                    model_->addPin(source->clone(), true);
-                    item->setOrigPin(newPin);
-                }
-            }
+        // new pins
+        for (QPtrListIterator<PinModel> it(newPins_); it != 0; ++it) {
+            PinModel *pin = *it;
+
+            model_->addPin(pin->clone());
         }
+        newPins_.clear();
+
+        // clears list view
+        ioListView->clear();
+
         // Notify model about update, so the view will be
         // repaint.
         ((AbstractModel *)model_)->updatePerformed();
+
+        // sync again
+        syncModel();
     }
 }
 
@@ -552,8 +540,10 @@ void BlockConfDialog::newIo()
         PinModel *pin = new PinModel(model_,
                 "data" + QString::number(childCount),
                 childCount * 100, 32, item->type());
+        newPins_.append(pin);
         PinListViewItem *child = new PinListViewItem(item, pin);
         child->setVisible(true);
+        updatePositions(item->type());
     }
 }
 
@@ -571,7 +561,10 @@ void BlockConfDialog::updateIo()
             pin->setAddress(addressLineEdit->text().toUInt(&ok, 16));
             // TODO: check ok and pop up an error dialog, if ok is false
             pin->setBits(bitsLineEdit->text().toUInt(&ok, 10));
-            item->update();
+            if (item->origData() != 0) {
+                updatedPins_.append(pin);
+            }
+            updatePositions(item->type());
         }
     }
 }
@@ -585,17 +578,18 @@ void BlockConfDialog::removeIo()
         while (!root->isRoot()) {
             root = (PinListViewItem *)root->parent();
         }
-        PinModel *origin = item->origData();
-        if (origin != 0) {
-            if(origin->connected() == 0) {
+
+        PinModel *origPin = item->origData();
+        if (origPin != 0) {
+            if (origPin->connected() == 0) {
                 // Save deleted pins, to clean up views
                 // if the changes will be applied.
-                deletedPins_.append(item->origData());
+                deletedPins_.append(origPin);
             }
             else {
                 // there exists a connection between the selected pin
                 // and another one
-                PinModel *connected = origin->connected();
+                PinModel *connected = origPin->connected();
                 switch(QMessageBox::warning(this, "POA",
                             "The selected I/O is connected to I/O <i>id=" +
                             QString::number(connected->id()) + " name=" +
@@ -608,7 +602,7 @@ void BlockConfDialog::removeIo()
                 {
                     case 0: // The user clicked OK, so all related connections
                             // will be removed after applying changes.
-                        deletedPins_.append(origin);
+                        deletedPins_.append(origPin);
                         break;
                     case 1: // Cancel removal.
                         return;
@@ -618,6 +612,7 @@ void BlockConfDialog::removeIo()
         }
 
         root->takeItem(item);
+        updatePositions(item->type());
         delete item;
     }
 }
@@ -710,9 +705,23 @@ void BlockConfDialog::edit()
     }
 }
 
-void BlockConfDialog::updatePositions(PinModel::PinType) {
+void BlockConfDialog::updatePositions(PinModel::PinType type) {
 
-//    for (QPtrListIterator<
+    unsigned position = 0;
+    for (QListViewItemIterator it(ioListView); it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+        if (!item->isRoot()) {
+            PinModel *pin = item->data();
 
-
+            if (pin->type() == type) {
+                pin->setPosition(position);
+                PinModel *origPin = item->origData();
+                if (origPin && origPin->position() != position) {
+                    updatedPins_.append(pin);
+                }
+                position++;
+            }
+            item->update();
+        }
+    }
 }

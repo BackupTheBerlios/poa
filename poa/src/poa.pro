@@ -19,11 +19,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.59 2003/12/03 16:06:20 squig Exp $
+# $Id: poa.pro,v 1.60 2003/12/03 17:33:42 garbeam Exp $
 #
 ###############################################################################
 
-#CONFIG += debug 
+CONFIG += debug 
 CONFIG += release
 CONFIG += thread
 

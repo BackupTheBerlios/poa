@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.5 2003/08/22 15:30:38 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.6 2003/08/22 15:35:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -37,7 +37,7 @@ GridCanvas::GridCanvas() {
 
     // create grid pixmap
     QRect r(0, 0, 1000, 1000);
-    gridTile= new QPixmap(r.size());
+    QPixmap *gridTile = new QPixmap(r.size());
     gridTile->fill(white);
 
     QPen pen(gray, 1);
@@ -59,13 +59,6 @@ GridCanvas::GridCanvas() {
     }
     p.end();
 
-    connect(this, SIGNAL(resized()), this, SLOT(redrawGrid()));
-
     resize(1000, 1000);
-
-}
-
-void GridCanvas::redrawGrid() {
-
     setBackgroundPixmap(*gridTile);
 }

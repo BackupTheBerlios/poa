@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.13 2003/08/22 12:53:38 squig Exp $
+ * $Id: main.cpp,v 1.14 2003/08/22 13:31:37 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,22 +34,22 @@
 #include "connectormodel.h"
 #include "connectorview.h"
 #include "coremodel.h"
-#include "coreview.h"
+//#include "coreview.h"
 #include "cpumodel.h"
-#include "cpuview.h"
+//#include "cpuview.h"
 #include "inputblockmodel.h"
-#include "inputblockview.h"
+//#include "inputblockview.h"
 #include "layoutmanager.h"
 #include "mainwindow.h"
 #include "moduleconfdialog.h"
 #include "modulelibraryitem.h"
 #include "muxmodel.h"
-#include "muxview.h"
+//#include "muxview.h"
 #include "outputblockmodel.h"
-#include "outputblockview.h"
+//#include "outputblockview.h"
 #include "pinmodel.h"
 #include "pinvector.h"
-#include "pinview.h"
+//#include "pinview.h"
 #include "viewmap.h"
 // END of temporary inclusions
 //

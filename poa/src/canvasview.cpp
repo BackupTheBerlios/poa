@@ -18,12 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.2 2003/08/22 12:31:14 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.3 2003/08/22 12:53:38 squig Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
 
+#include "cpumodel.h"
+
 #include <qvariant.h>
+#include <qdom.h>
 #include <qpoint.h>
 #include <qwmatrix.h>
 
@@ -34,6 +37,7 @@ CanvasView::CanvasView(QCanvas *canvas, QWidget *parent, const char* name,
                        WFlags fl)
     : QCanvasView(canvas, parent, name, fl)
 {
+    setAcceptDrops(TRUE);
 }
 
 /*****************************************************************************
@@ -65,6 +69,30 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
                            p.y() - movingStartPoint.y());
         movingStartPoint = p;
         canvas()->update();
+    }
+}
+
+void CanvasView::dragEnterEvent(QDragEnterEvent *e)
+{
+    e->accept(e->provides("text/xml"));
+}
+
+void CanvasView::dropEvent(QDropEvent *e)
+{
+    QByteArray data = e->encodedData("text/xml");
+    if (data) {
+        QDomDocument *doc = new QDomDocument("cpu");
+        if (doc->setContent(QString(data))) {
+            CpuModel model2(doc);
+            // FIX: remove: create dummy items
+            QPoint pos = viewportToContents(e->pos());
+            QCanvasPolygonalItem *i
+                = new QCanvasRectangle(pos.x(), pos.y(), 100, 100, canvas());
+            i->setBrush(QColor(255, 255, 255));
+            i->setPen(QPen(QColor(0, 0, 0), 2));
+            i->show();
+            canvas()->update();
+        }
     }
 }
 

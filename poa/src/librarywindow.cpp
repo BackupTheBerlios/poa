@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.3 2003/08/22 12:06:16 squig Exp $
+ * $Id: librarywindow.cpp,v 1.4 2003/08/22 12:53:38 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -110,7 +110,7 @@ LibraryListView::LibraryListView(QWidget *parent = 0, const char *name = 0,
 QDragObject *LibraryListView::dragObject()
 {
     LibraryListViewItem *item = (LibraryListViewItem *)selectedItem();
-    QStoredDrag *dragItem = new QStoredDrag("text/xml", this, "poa");
+    QStoredDrag *dragItem = new QStoredDrag("text/xml", this);
     dragItem->setEncodedData(item->serialize());
     return dragItem;
 }

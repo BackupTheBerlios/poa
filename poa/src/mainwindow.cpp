@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.23 2003/08/22 12:06:16 squig Exp $
+ * $Id: mainwindow.cpp,v 1.24 2003/08/22 12:53:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -453,18 +453,6 @@ MdiWindow* MainWindow::newDoc()
     } else {
         w->show();
     }
-
-    // FIX: remove: create dummy items
-    QCanvasPolygonalItem *i
-        = new QCanvasRectangle( 255%doc->width(),255%doc->height(),
-                                doc->width()/5,doc->width()/5,doc);
-    int z = 255%256;
-    i->setBrush( QColor(z,z,z) );
-    i->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );
-    i->setZ(z);
-    i->show();
-
-    doc->update();
 
     return w;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.12 2003/08/22 12:06:16 squig Exp $
+ * $Id: main.cpp,v 1.13 2003/08/22 12:53:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -70,14 +70,23 @@ int main (int argc, char *argv[])
 {
     CpuModel model("CPU 1", 1, TRUE);
     QByteArray xml = model.serialize();
-    cout << xml;
+    cout << xml << "\n";
 
     QDomDocument *doc = new QDomDocument("cpu");
-    doc->setContent(xml);
+    QString msg;
+    int line;
+    int col;
+    QString foo(xml);
+    doc->setContent(foo, &msg, &line, &col);
     CpuModel model2(doc);
 
-    xml = model.serialize();
-    cout << xml;
+    cout << "---\n";
+    cout << msg << line << ":" << col << "\n";
+
+    cout << "---\n";
+
+    xml = model2.serialize();
+    cout << xml << "\n";
 
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();

@@ -44,6 +44,7 @@ class PriorityQueueTest : public CppUnit::TestFixture
     CPPUNIT_TEST(test2Up1Down);
     CPPUNIT_TEST(test2Up1DownChanging);
     CPPUNIT_TEST(testChanging);
+    CPPUNIT_TEST(testRemoving);
     CPPUNIT_TEST_SUITE_END();
 
 private:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.9 2003/09/10 10:39:00 garbeam Exp $
+ * $Id: abstractview.h,v 1.10 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -72,12 +72,6 @@ public:
      * Invoked when the mouse button has been pressed.
      */
     virtual void mousePressEvent(CanvasView *, QMouseEvent *) { };
-
-    /**
-     * Invoked when the mouse button has been pressed.
-     */
-    virtual void mouseDoubleClickEvent(CanvasView *, QMouseEvent *) { };
-
 
     /**
      * Return a context menu.

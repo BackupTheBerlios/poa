@@ -18,11 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.10 2003/09/03 08:40:16 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.1 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
-#include "moduleconfdialog.h"
+#include "blockconfdialog.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
@@ -43,12 +43,12 @@
 
 #define PERIODICAL_IO_TEXT "periodical inputs"
 
-ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
+BlockConfDialog::BlockConfDialog(QWidget* parent, const char* name,
                                    bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
     if (!name) {
-        setName("ModuleConfDialog");
+        setName("BlockConfDialog");
     }
     resize(400, 500);
     setCaption(tr("Block configuration"));
@@ -290,12 +290,12 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
 /**
  *  Destroys the object and frees any allocated resources
  */
-ModuleConfDialog::~ModuleConfDialog()
+BlockConfDialog::~BlockConfDialog()
 {
     // no need to delete child widgets, Qt does it all for us
 }
 
-void ModuleConfDialog::newIo()
+void BlockConfDialog::newIo()
 {
     QListViewItem *root = ioListView->selectedItem();
 
@@ -317,7 +317,7 @@ void ModuleConfDialog::newIo()
     }
 }
 
-void ModuleConfDialog::updateIo()
+void BlockConfDialog::updateIo()
 {
     QListViewItem *item = ioListView->selectedItem();
 
@@ -330,7 +330,7 @@ void ModuleConfDialog::updateIo()
     }
 }
 
-void ModuleConfDialog::removeIo()
+void BlockConfDialog::removeIo()
 {
     QListViewItem *item = ioListView->selectedItem();
     QListViewItem *root = item;
@@ -344,7 +344,7 @@ void ModuleConfDialog::removeIo()
     }
 }
 
-void ModuleConfDialog::ioSelectionChanged() {
+void BlockConfDialog::ioSelectionChanged() {
     QListViewItem *item = ioListView->selectedItem();
     QListViewItem *root = item;
 
@@ -374,10 +374,10 @@ void ModuleConfDialog::ioSelectionChanged() {
     bitsLineEdit->setText(isChild ? item->text(3) : QString(""));
 }
 
-void ModuleConfDialog::toggleManualOffset() {
+void BlockConfDialog::toggleManualOffset() {
     offsetSpinBox->setEnabled(offsetRadioButton->isChecked());
 }
 
-void ModuleConfDialog::toggleManualRuntime() {
+void BlockConfDialog::toggleManualRuntime() {
     runtimeSpinBox->setEnabled(runtimeRadioButton->isChecked());
 }

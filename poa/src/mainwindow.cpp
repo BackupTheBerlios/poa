@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.40 2003/09/10 18:01:35 squig Exp $
+ * $Id: mainwindow.cpp,v 1.41 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "modelfactory.h"
-#include "moduleconfdialog.h"
+#include "blockconfdialog.h"
 #include "poa.h"
 #include "project.h"
 #include "settings.h"
@@ -154,10 +154,10 @@ void MainWindow::initializeActions()
     helpAboutAction =
         new QAction("About", image_help, "&About...", 0,
                     this, "helpAboutAction" );
-    openModuleConfAction =
-        new QAction("Module configuration", image_configure,
-                    "&Module configuration", 0, this,
-                    "openModuleConfAction");
+    openBlockConfAction =
+        new QAction("Block configuration", image_configure,
+                    "&Block configuration", 0, this,
+                    "openBlockConfAction");
     drawLineAction =
         new QAction("Draw line", image_line, "&Draw line",
                     QKeySequence("Ctrl+L"), this, "drawLineAction");
@@ -202,7 +202,7 @@ void MainWindow::initializeToolbars()
 
     // utility
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
-    openModuleConfAction->addTo(utilToolBar);
+    openBlockConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
     invokeCompilerAction->addTo(utilToolBar);
     invokeDownloadAction->addTo(utilToolBar);
@@ -265,7 +265,7 @@ void MainWindow::initializeMenu()
     // tools
     toolsMenu = new QPopupMenu(this);
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
-    openModuleConfAction->addTo(toolsMenu);
+    openBlockConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
     invokeCompilerAction->addTo(toolsMenu);
     invokeDownloadAction->addTo(toolsMenu);
@@ -306,8 +306,8 @@ void MainWindow::connectActions()
     connect(helpContentsAction, SIGNAL(activated()),
             this, SLOT(helpContents()));
     connect(helpAboutAction, SIGNAL(activated()), this, SLOT(helpAbout()));
-    connect(openModuleConfAction, SIGNAL(activated()),
-            this, SLOT(openModuleConf()));
+    connect(openBlockConfAction, SIGNAL(activated()),
+            this, SLOT(openBlockConf()));
     connect(openSettingsAction, SIGNAL(activated()),
             this, SLOT(openSettings()));
     connect(tileHorizontalAction, SIGNAL(activated()),
@@ -414,6 +414,11 @@ QAction *MainWindow::copyAction()
 QAction *MainWindow::cutAction()
 {
     return editCutAction;
+}
+
+QAction *MainWindow::blockConfAction()
+{
+    return openBlockConfAction;
 }
 
 void MainWindow::fileNew()
@@ -558,9 +563,9 @@ MainWindow *MainWindow::instance()
     return (MainWindow *)qApp->mainWidget();
 }
 
-void MainWindow::openModuleConf()
+void MainWindow::openBlockConf()
 {
-    ModuleConfDialog *dialog = new ModuleConfDialog();
+    BlockConfDialog *dialog = new BlockConfDialog();
     dialog->show();
     // future: use exec() instead of show and
     //         determine exit code

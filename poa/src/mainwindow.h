@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.17 2003/09/10 18:01:35 squig Exp $
+ * $Id: mainwindow.h,v 1.18 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,12 @@ public:
      */
     QAction *pasteAction();
 
+
+    /**
+     * Returns the block configure dialog.
+     */
+    QAction *blockConfAction();
+
 public slots:
     virtual void checkClipboardContent();
     virtual void fileNew();
@@ -101,7 +107,7 @@ public slots:
     virtual void editPaste();
     virtual void helpContents();
     virtual void helpAbout();
-    virtual void openModuleConf();
+    virtual void openBlockConf();
     virtual void openProject(QString filename);
     virtual void openRecentProject(int index);
     virtual void openSettings();
@@ -147,7 +153,7 @@ private:
     QAction *zoomOutAction;
     QAction *zoomNormalAction;
     QAction *drawLineAction;
-    QAction *openModuleConfAction;
+    QAction *openBlockConfAction;
     QAction *invokeCompilerAction;
     QAction *invokeDownloadAction;
 

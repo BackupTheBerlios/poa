@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.31 2003/09/09 23:21:22 vanto Exp $
+# $Id: poa.pro,v 1.32 2003/09/11 12:43:11 garbeam Exp $
 #
 ###############################################################################
 
@@ -53,7 +53,7 @@ HEADERS += librarywindow.h
 HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
 HEADERS += modelfactory.h
-HEADERS += moduleconfdialog.h 
+HEADERS += blockconfdialog.h 
 HEADERS += moveaction.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
@@ -87,7 +87,7 @@ SOURCES += librarywindow.cpp
 SOURCES += main.cpp
 SOURCES += mainwindow.cpp
 SOURCES += mdiwindow.cpp
-SOURCES += moduleconfdialog.cpp
+SOURCES += blockconfdialog.cpp
 SOURCES += modelfactory.cpp
 SOURCES += moveaction.cpp
 SOURCES += pinmodel.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.21 2003/09/09 14:04:44 vanto Exp $
+ * $Id: canvasview.h,v 1.22 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -128,6 +128,12 @@ protected:
      * status bar.
      */
     virtual void contentsMouseMoveEvent(QMouseEvent *e);
+
+    /**
+     * Called when a mouse button is double clicked on <code>this</code>'s content.
+     */
+    virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
+
 
     /**
      * Approves those <code>QDragEnterEvent</code> that may be passed to

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.26 2003/09/10 10:39:00 garbeam Exp $
+ * $Id: blockview.cpp,v 1.27 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@
 #include "blockmodel.h"
 #include "canvasview.h"
 #include "mainwindow.h"
+#include "blockconfdialog.h"
 #include "moveaction.h"
 #include "pinvector.h"
 #include "pinview.h"
@@ -152,7 +153,8 @@ void BlockView::mousePressEvent(CanvasView *view, QMouseEvent *e)
 
 void BlockView::mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e)
 {
-    // TODO: view->setAction(new ConfDialogBlaFasel);
+    BlockConfDialog *dialog = new BlockConfDialog();
+    dialog->show();
 }
 
 QPopupMenu *BlockView::popupMenu()

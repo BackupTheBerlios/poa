@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.8 2003/09/03 08:40:16 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.1 2003/09/11 12:43:11 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef MODULECONFDIALOG_H
-#define MODULECONFDIALOG_H
+#ifndef BLOCKCONFDIALOG_H
+#define BLOCKCONFDIALOG_H
 
 #include <qvariant.h>
 #include <qdialog.h>
@@ -40,14 +40,14 @@ class QPushButton;
 class QRadioButton;
 class QSpinBox;
 
-class ModuleConfDialog : public QDialog
+class BlockConfDialog : public QDialog
 { 
     Q_OBJECT
 
 public:
-    ModuleConfDialog(QWidget* parent = 0, const char* name = 0,
+    BlockConfDialog(QWidget* parent = 0, const char* name = 0,
                      bool modal = FALSE, WFlags fl = 0 );
-    ~ModuleConfDialog();
+    ~BlockConfDialog();
 
     QListView *ioListView;
 
@@ -118,4 +118,4 @@ private slots:
     void toggleManualRuntime();
 };
 
-#endif // MODULECONFDIALOG_H
+#endif // BLOCKCONFDIALOG_H

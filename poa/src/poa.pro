@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.34 2003/09/15 11:41:06 garbeam Exp $
+# $Id: poa.pro,v 1.35 2003/09/15 11:41:56 garbeam Exp $
 #
 ###############################################################################
 
@@ -40,7 +40,6 @@ HEADERS += canvasview.h
 HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
 HEADERS += connectaction.h
-#HEADERS += connectormodel.h
 HEADERS += connectorview.h
 HEADERS += coremodel.h
 HEADERS += coreview.h
@@ -76,7 +75,6 @@ SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
 SOURCES += connectaction.cpp
-#SOURCES += connectormodel.cpp
 SOURCES += connectorview.cpp
 SOURCES += coremodel.cpp
 SOURCES += coreview.cpp

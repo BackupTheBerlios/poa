@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.24 2003/09/29 18:59:12 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.25 2003/09/30 21:54:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -167,11 +167,6 @@ PinView *PinModel::createView(BlockView *block,
 {
     view_ = new PinView(this, block, dockPosition);
     view_->show();
-    return view_;
-}
-
-PinView *PinModel::view()
-{
     return view_;
 }
 

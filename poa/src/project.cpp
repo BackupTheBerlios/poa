@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.26 2003/09/30 20:05:52 papier Exp $
+ * $Id: project.cpp,v 1.27 2003/09/30 21:54:18 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -229,11 +229,10 @@ void Project::deserialize(QDomDocument *document) {
 
     // create model instances
     QDomElement mEl = bList.item(0).toElement();
-    QValueList<AbstractModel *> l = ModelFactory::generate(mEl);
+    QValueList<AbstractModel *> l = ModelFactory::generate(mEl, false);
     for (QValueList<AbstractModel *>::Iterator it = l.begin();
          it != l.end(); ++it) {
         addBlock(*it);
-        // TODO: Tammo review!!!
         idMap[(*it)->id()] = *it;
     }
 
@@ -254,21 +253,44 @@ void Project::deserialize(QDomDocument *document) {
                     viEl.attribute("y","0").toUInt());
             }
         }
+
         // create connector views
         for (uint j = 0; j < conList.count(); j++) {
             QDomElement conEl = conList.item(j).toElement();
+
             BlockModel *sb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("source-block","0").toUInt()]);
             BlockModel *tb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("target-block","0").toUInt()]);
+
             if (sb == 0 && tb == 0) {
                 qWarning("Could not connect non-existent blocks.");
                 return;
             }
-            PinModel *sp = sb->findPinById(conEl.attribute("source-pin","0").toUInt());
-            PinModel *tp = tb->findPinById(conEl.attribute("target-pin","0").toUInt());
-            if (sp != 0 && tp != 0) {
-                sp->attach(tp);
-                ConnectorViewList *viewList = new ConnectorViewList(sp->view(), tp->view(), canvas, &conEl);
-                canvas->addConnectorView(viewList);
+
+            uint sid = conEl.attribute("source-pin","0").toUInt();
+            uint tid = conEl.attribute("target-pin","0").toUInt();
+
+            PinView *spv = 0;
+            PinView *tpv = 0;
+
+            QCanvasItemList canvasItems = canvas->allItems();
+            QCanvasItemList::iterator it;
+
+            for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
+                PinView *pv = dynamic_cast<PinView*>(*it);
+                if (pv != 0 && pv->parent()->model() == sb && pv->pinModel()->id() == sid) {
+                    spv = pv;
+                }
+                if (pv != 0 && pv->parent()->model() == tb && pv->pinModel()->id() == tid) {
+                    tpv = pv;
+                }
+            }
+
+            Q_ASSERT(spv != 0 && tpv!=0);
+
+            if (spv != 0 && tpv != 0) {
+                spv->pinModel()->attach(tpv->pinModel());
+                ConnectorViewList *vl = new ConnectorViewList(spv, tpv, canvas);
+                canvas->addConnectorView(vl);
             }
         }
     }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.15 2003/09/28 21:52:11 squig Exp $
+ * $Id: modelfactory.cpp,v 1.16 2003/09/30 21:54:18 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -35,7 +35,7 @@
 /**
  * Generates model objects from xml data.
  */
-QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
+QValueList<AbstractModel *> ModelFactory::generate(QDomNode node, bool virgin)
 {
     QValueList<AbstractModel *> l;
 
@@ -67,9 +67,11 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
             }
 
             if (model != 0) {
-                model->setDescription(QString::null);
-                model->setId(0);
-                model->setName(model->type());
+                if (virgin) {
+                    model->setDescription(QString::null);
+                    model->setId(0);
+                    model->setName(model->type());
+                }
                 l.append(model);
             }
         }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.21 2004/01/19 21:14:30 squig Exp $
+ * $Id: scheduledialog.h,v 1.22 2004/01/20 16:16:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,10 @@ class QTable;
 class QSlider;
 class QSplitter;
 
+/**
+ * Scheduling Dialog.
+ * Shows a table with all block properties and the scheduling graph
+ */
 class ScheduleDialog : public QDialog
 {
     Q_OBJECT
@@ -85,9 +89,14 @@ private:
     BlockGraph *graph_;
     QValueList<BlockNode*> blocks_;
 
-    void buildBranch(BlockNode *node);
-    void buildNode();
+    /**
+     * Fills the table with timing information.
+     */
     void fillTimingTable(BlockNode* node);
+
+    /**
+     * Draws one row in the graph.
+     */
     void drawTimings(BlockNode* node);
 
     /**
@@ -96,7 +105,7 @@ private:
     void drawRuler();
 
     /**
-     * Calculates the position of the given block at the given time
+     * Calculates the position of the given block at the given time.
      */
     QRect calcBlockPosition(BlockNode *node, int time);
 
@@ -125,6 +134,9 @@ private:
      */
     void initBottomWidget();
 
+    /**
+     * Initializes the graph canvas and calculates the dynamic stretching.
+     */
     void initCanvas();
 
     /**
@@ -132,6 +144,9 @@ private:
      */
     void updateModel();
 
+    /**
+     * Swaps two rows and updates the table as well as the graph.
+     */
     void swapRows(int index1, int index2);
 
 private slots:
@@ -180,13 +195,14 @@ private slots:
 };
 
 /**
- * This class provides a spin box editor for a BlockNode object in a
+ * Provides a spin box editor for a BlockNode object in a
  * QTable.
  */
 class SpinBoxItem : public QTableItem
 {
 
  public:
+
     /**
      * Type of the blocknode field.
      */
@@ -213,6 +229,7 @@ class SpinBoxItem : public QTableItem
      * object.
      */
     void setValue(int value);
+
     /**
      * Returns a value from the blocknode object, depending on the field.
      */
@@ -221,7 +238,7 @@ class SpinBoxItem : public QTableItem
 };
 
 /**
- * This class provides a arrowheaded line.
+ * Provides an arrow-headed line.
  */
 class ArrowLine : public QCanvasLine
 {

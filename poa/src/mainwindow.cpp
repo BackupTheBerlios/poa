@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.84 2004/01/20 15:11:13 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.85 2004/01/20 16:16:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -849,6 +849,7 @@ void MainWindow::routeSelected(ConnectorRouter *router)
         QCanvasItemList items = view->selectedItems();
 
         router->route(items);
+        project_->setModified(true);
         activeView()->canvas()->update();
     }
     delete router;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.21 2004/01/17 12:47:14 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.22 2004/01/20 16:16:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -90,6 +90,9 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Mux Configuration Dialog.
+ */
 class MuxConfDialog : public QDialog
 {
     Q_OBJECT

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.22 2004/01/17 17:35:39 squig Exp $
+ * $Id: blockconfdialog.h,v 1.23 2004/01/20 16:16:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,6 +47,9 @@ class QPushButton;
 class QRadioButton;
 class QSpinBox;
 
+/**
+ * Block Configuration Dialog.
+ */
 class BlockConfDialog : public QDialog
 {
     Q_OBJECT

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.24 2004/02/11 12:14:07 squig Exp $
+ * $Id: settings.cpp,v 1.25 2004/02/16 16:42:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -220,7 +220,7 @@ bool Settings::snapToGrid()
 
 QColor Settings::selectedColor()
 {
-    return Qt::lightGray;
+    return Qt::darkGray;
 }
 
 void Settings::setGridSize(int gridSize)

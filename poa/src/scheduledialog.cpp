@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.7 2004/01/09 22:39:44 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.8 2004/01/09 22:42:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -241,6 +241,11 @@ void ScheduleDialog::initGraphWidget()
                    BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
     labelCanvas->resize(50, BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
 
+    initCanvas();
+}
+
+void ScheduleDialog::initCanvas()
+{
     int Y = BOX_YSPACING;
     for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
         int time = 0;
@@ -259,6 +264,9 @@ void ScheduleDialog::initGraphWidget()
 
     connect(timingTable, SIGNAL(currentChanged(int, int)),
             this, SLOT(updateHighlighter(int, int)));
+
+    canvas->update();
+    labelCanvas->update();
 }
 
 void ScheduleDialog::clearCanvases()
@@ -383,9 +391,11 @@ void ScheduleDialog::ok()
 
 void ScheduleDialog::updateHighlighter(int row, int)
 {
-    highlightCanvasRectangle->move
-        (0, BOX_YSPACING / 2 + row * (BOX_YSPACING + BOX_HEIGHT));
-    canvas->update();
+    if (row >= 0) {
+        highlightCanvasRectangle->move
+            (0, BOX_YSPACING / 2 + row * (BOX_YSPACING + BOX_HEIGHT));
+        canvas->update();
+    }
 }
 
 void ScheduleDialog::zoomChanged(int zoom)
@@ -399,14 +409,7 @@ void ScheduleDialog::modelChanged(int, int)
     qDebug("clear canv");
     clearCanvases();
     qDebug("renew");
-    int Y = WIDGET_SPACING;
-    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
-        int time = 0;
-        qDebug("it");
-        drawTimings(*it, &Y, &time);
-    }
-    canvas->update();
-    labelCanvas->update();
+    initCanvas();
 }
 
 void ScheduleDialog::rowMoved(int section, int fromIndex, int toIndex)

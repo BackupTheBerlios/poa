@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.6 2004/01/09 22:39:44 vanto Exp $
+ * $Id: scheduledialog.h,v 1.7 2004/01/09 22:42:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -112,6 +112,8 @@ private:
      * Initializes bottom widget.
      */
     void initBottomWidget();
+
+    void initCanvas();
 
     /**
      * Updates model_'s content by using current dialog's content.

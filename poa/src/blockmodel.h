@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.18 2003/09/11 16:30:21 garbeam Exp $
+ * $Id: blockmodel.h,v 1.19 2003/09/12 08:58:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -99,6 +99,16 @@ public:
     void setExecTime(const unsigned int time);
 
     /**
+     * Returns the name of this block.
+     */
+    QString name() const;
+
+    /**
+     * Sets the name of this block.
+     */
+    void setName(QString name);
+
+    /**
      * Adds an pin to this block model.
      */
     void addPin(PinModel *pin, PinModel *successor = 0);
@@ -137,6 +147,7 @@ private:
     PinVector *inputPins_;
     unsigned currentPinId_;
     unsigned int execTime_;
+    QString name_;
 };
 
 

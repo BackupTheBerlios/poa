@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.4 2003/09/11 17:53:41 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.5 2003/09/12 08:58:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@
 #include <qlistview.h>
 #include <qvariant.h>
 #include <qdialog.h>
+class QBoxLayout;
 class QVBoxLayout; 
 class QHBoxLayout; 
 class QGridLayout; 
@@ -123,6 +124,15 @@ public:
     QLineEdit *bitsLineEdit;
 
 private:
+    QBoxLayout *dialogLayout;
+    QBoxLayout *topLayout;
+    QBoxLayout *leftLayout;
+    QBoxLayout *rightLayout;
+    QWidget *topWidget;
+    QWidget *leftWidget;
+    QWidget *rightWidget;
+    QWidget *bottomWidget;
+
     QPushButton *applyPushButton;
     QPushButton *compilePushButton;
     QPushButton *editCodePushButton;
@@ -133,16 +143,62 @@ private:
     QPushButton *removeIoPushButton;
     QPushButton *okPushButton;
 
-    PinListViewItem *inputRoot;
-    PinListViewItem *outputRoot;
-    PinListViewItem *episodicRoot;
+    PinListViewItem *inputRoot_;
+    PinListViewItem *outputRoot_;
+    PinListViewItem *episodicRoot_;
 
     BlockModel *model_;
 
     /**
-     * Synchronizes dialog with current model_ content.
+     * Initializes layout.
      */
-    void update();
+    void initLayout();
+
+    /**
+     * Initializes list view widget.
+     */
+    void initListView();
+
+    /**
+     * Initializes block widget.
+     */
+    void initBlockWidget();
+
+    /**
+     * Initializes offset widget.
+     */
+    void initOffsetWidget();
+
+    /**
+     * Initializes runtime widget.
+     */
+    void initRuntimeWidget();
+
+    /**
+     * Initializes compile/edit buttons widget.
+     */
+    void initCompileEditButtonWidget();
+
+
+    /**
+     * Initializes bottom widget.
+     */
+    void initBottomWidget();
+
+    /**
+     * Synchronizes dialog with model_'s content.
+     */
+    void syncModel();
+
+    /**
+     * Updates model_'s content by using current dialog's content.
+     */
+    void updateModel();
+
+    /**
+     * Clones all pins of the model to the list view.
+     */
+    void addPins(PinVector pins, PinListViewItem *root);
 
 private slots:
     /**

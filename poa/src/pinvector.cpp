@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.cpp,v 1.3 2003/09/01 18:48:05 squig Exp $
+ * $Id: pinvector.cpp,v 1.4 2003/09/12 08:58:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -55,4 +55,13 @@ PinModel *PinVector::findById(const unsigned id) {
         }
     }
     return 0;
+}
+
+void PinVector::removeAllPins() {
+
+    for (unsigned i = 0; i < size(); i++) {
+        PinModel *pin = at(i);
+        erase(begin() + i);
+        delete pin;
+    }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.6 2003/09/11 17:53:41 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.7 2003/09/12 08:58:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -109,17 +109,198 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
 
     model_ = model;
 
-    QBoxLayout *dialogLayout = new QVBoxLayout(this, 5);
-    QWidget *topWidget = new QWidget(this);
-    QBoxLayout *topLayout = new QHBoxLayout(topWidget, 5);
-    QWidget *leftWidget = new QWidget(topWidget);
-    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
-    QWidget *rightWidget = new QWidget(topWidget);
-    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
+    initLayout();
 
-    ////////////////////////////////////////////////////////////
-    // top widget
+    // disable widgets, if neccessary
+    syncModel();
+    ioSelectionChanged();
+    toggleManualOffset();
+    toggleManualRuntime();
+}
 
+void BlockConfDialog::initLayout()
+{
+    dialogLayout = new QVBoxLayout(this, 5);
+    topWidget = new QWidget(this);
+    topLayout = new QHBoxLayout(topWidget, 5);
+    leftWidget = new QWidget(topWidget);
+    leftLayout = new QVBoxLayout(leftWidget, 5);
+    rightWidget = new QWidget(topWidget);
+    rightLayout = new QVBoxLayout(rightWidget, 5);
+    bottomWidget = new QWidget(this);
+
+    initListView();
+    initBlockWidget();
+    initOffsetWidget();
+    initRuntimeWidget();
+    initCompileEditButtonWidget();
+
+    topLayout->addWidget(leftWidget);
+    topLayout->addWidget(rightWidget);
+
+    initBottomWidget();
+
+    // dialog
+    dialogLayout->addWidget(topWidget);
+    dialogLayout->addWidget(bottomWidget);
+}
+
+void BlockConfDialog::initBlockWidget()
+{
+
+    // block widget
+    QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
+    blockGroupBox->setTitle(tr("block"));
+    blockGroupBox->setMaximumHeight(130);
+    blockGroupBox->setMinimumHeight(130);
+
+    QGridLayout *blockLayout =
+        new QGridLayout(blockGroupBox, 3, 3, 5);
+
+    blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
+    blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
+    blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
+
+    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 0, 0);
+    blockLayout->addWidget(blockNameLineEdit, 0, 1);
+    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 1, 0);
+    blockLayout->addWidget(blockDescrLineEdit, 1, 1);
+    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 2, 0);
+    blockLayout->addWidget(blockClockSpinBox, 2, 1);
+    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 2, 2);
+
+    rightLayout->addWidget(blockGroupBox);
+}
+
+void BlockConfDialog::initOffsetWidget()
+{
+
+    // offset widget
+    QButtonGroup *offsetButtonGroup =
+        new QButtonGroup(rightWidget, "offsetButtonGroup" );
+    offsetButtonGroup->setTitle(tr("offset"));
+    offsetButtonGroup->setMaximumHeight(100);
+    offsetButtonGroup->setMinimumHeight(100);
+
+    QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3, 5);
+
+    offsetAutoCalcRadioButton =
+        new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
+    offsetAutoCalcRadioButton->setText(tr("automatic calculation"));
+    offsetAutoCalcRadioButton->setChecked(TRUE);
+    connect(offsetAutoCalcRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualOffset()));
+
+    offsetRadioButton =
+        new QRadioButton(offsetButtonGroup, "offsetRadioButton");
+    offsetRadioButton->setText(tr("offset"));
+    connect(offsetRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualOffset()));
+
+    offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
+
+    offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
+    offsetLayout->addWidget(offsetRadioButton, 1, 0);
+    offsetLayout->addWidget(offsetSpinBox, 1, 1);
+    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
+
+    rightLayout->addWidget(offsetButtonGroup);
+}
+
+void BlockConfDialog::initRuntimeWidget()
+{
+
+    // runtime widget
+    QButtonGroup *runtimeButtonGroup =
+        new QButtonGroup(rightWidget, "runtimeButtonGroup");
+    runtimeButtonGroup->setTitle(tr("runtime"));
+    runtimeButtonGroup->setMaximumHeight(100);
+    runtimeButtonGroup->setMinimumHeight(100);
+
+    QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3, 5);
+
+    runtimeAutoCalcRadioButton =
+        new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
+    runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
+    runtimeAutoCalcRadioButton->setChecked(TRUE);
+    connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
+
+    runtimeRadioButton = 
+        new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
+    runtimeRadioButton->setText(tr("runtime"));
+    connect(runtimeRadioButton, SIGNAL(clicked()),
+            this, SLOT(toggleManualRuntime()));
+
+    runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
+
+    runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
+    runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
+    runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
+    runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
+
+    rightLayout->addWidget(runtimeButtonGroup);
+}
+
+void BlockConfDialog::initCompileEditButtonWidget()
+{
+
+    // edit/compile button widget
+    QWidget *compileEditButtonsWidget = new QWidget(rightWidget);
+
+    QBoxLayout *compileEditButtonsLayout =
+        new QHBoxLayout(compileEditButtonsWidget, 5);
+
+    editCodePushButton =
+        new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
+    editCodePushButton->setText(tr("&Edit code"));
+
+    compilePushButton =
+        new QPushButton(compileEditButtonsWidget, "compilePushButton");
+    compilePushButton->setText(tr("Co&mpile"));
+
+
+    compileEditButtonsLayout->addWidget(editCodePushButton);
+    compileEditButtonsLayout->addWidget(compilePushButton);
+
+    rightLayout->addWidget(compileEditButtonsWidget);
+
+}
+
+void BlockConfDialog::initBottomWidget()
+{
+
+    QBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget, 5);
+
+    // ok button
+    okPushButton = new QPushButton(bottomWidget, "okPushButton");
+    okPushButton->setText(tr("&OK"));
+    okPushButton->setDefault(TRUE);
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+    // help button
+    helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
+    helpPushButton->setText(tr("&Help"));
+
+    // apply button
+    applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
+    applyPushButton->setText(tr("&Apply"));
+
+    // cancel button
+    cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
+    cancelPushButton->setText(tr("&Cancel"));
+    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+    bottomLayout->addWidget(okPushButton);
+    bottomLayout->addWidget(helpPushButton);
+    bottomLayout->addWidget(applyPushButton);
+    bottomLayout->addWidget(cancelPushButton);
+
+}
+
+
+void BlockConfDialog::initListView()
+{
     // I/O list view
     ioListView = new QListView(leftWidget, "ioListView");
     ioListView->addColumn(tr("I/O"));
@@ -131,16 +312,16 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
             this, SLOT(ioSelectionChanged()));
 
     // inputs root
-    inputRoot = new PinListViewItem(ioListView, 0, PinModel::INPUT);
-    inputRoot->setText(0, tr("inputs"));
+    inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
+    inputRoot_->setText(0, tr("inputs"));
 
     // outputs root
-    outputRoot = new PinListViewItem(ioListView, inputRoot, PinModel::OUTPUT);
-    outputRoot->setText(0, tr("outputs"));
+    outputRoot_ = new PinListViewItem(ioListView, inputRoot_, PinModel::OUTPUT);
+    outputRoot_->setText(0, tr("outputs"));
 
     // episodic root
-    episodicRoot = new PinListViewItem(ioListView, outputRoot, PinModel::EPISODIC);
-    episodicRoot->setText(0, tr(EPISODIC_IO_TEXT));
+    episodicRoot_ = new PinListViewItem(ioListView, outputRoot_, PinModel::EPISODIC);
+    episodicRoot_->setText(0, tr(EPISODIC_IO_TEXT));
 
     leftLayout->addWidget(ioListView);
 
@@ -190,189 +371,52 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
 
     leftLayout->addWidget(ioButtonsWidget);
     leftLayout->addWidget(editIoWidget);
-
-    // block widget
-    QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
-    blockGroupBox->setTitle(tr("block"));
-    blockGroupBox->setMaximumHeight(130);
-    blockGroupBox->setMinimumHeight(130);
-
-    QGridLayout *blockLayout =
-        new QGridLayout(blockGroupBox, 3, 3, 5);
-
-    blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
-    blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
-    blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
-
-    blockLayout->addWidget(new QLabel(tr("name"), blockGroupBox), 0, 0);
-    blockLayout->addWidget(blockNameLineEdit, 0, 1);
-    blockLayout->addWidget(new QLabel(tr("description"), blockGroupBox), 1, 0);
-    blockLayout->addWidget(blockDescrLineEdit, 1, 1);
-    blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 2, 0);
-    blockLayout->addWidget(blockClockSpinBox, 2, 1);
-    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 2, 2);
-
-    // offset widget
-    QButtonGroup *offsetButtonGroup =
-        new QButtonGroup(rightWidget, "offsetButtonGroup" );
-    offsetButtonGroup->setTitle(tr("offset"));
-    offsetButtonGroup->setMaximumHeight(100);
-    offsetButtonGroup->setMinimumHeight(100);
-
-    QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3, 5);
-
-    offsetAutoCalcRadioButton =
-        new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
-    offsetAutoCalcRadioButton->setText(tr("automatic calculation"));
-    offsetAutoCalcRadioButton->setChecked(TRUE);
-    connect(offsetAutoCalcRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualOffset()));
-
-    offsetRadioButton =
-        new QRadioButton(offsetButtonGroup, "offsetRadioButton");
-    offsetRadioButton->setText(tr("offset"));
-    connect(offsetRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualOffset()));
-
-    offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
-
-    offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
-    offsetLayout->addWidget(offsetRadioButton, 1, 0);
-    offsetLayout->addWidget(offsetSpinBox, 1, 1);
-    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
-
-    // runtime widget
-    QButtonGroup *runtimeButtonGroup =
-        new QButtonGroup(rightWidget, "runtimeButtonGroup");
-    runtimeButtonGroup->setTitle(tr("runtime"));
-    runtimeButtonGroup->setMaximumHeight(100);
-    runtimeButtonGroup->setMinimumHeight(100);
-
-    QGridLayout *runtimeLayout = new QGridLayout(runtimeButtonGroup, 2, 3, 5);
-
-    runtimeAutoCalcRadioButton =
-        new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
-    runtimeAutoCalcRadioButton->setText(tr("automatic calculation"));
-    runtimeAutoCalcRadioButton->setChecked(TRUE);
-    connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualRuntime()));
-
-    runtimeRadioButton = 
-        new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
-    runtimeRadioButton->setText(tr("runtime"));
-    connect(runtimeRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualRuntime()));
-
-    runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
-
-    runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
-    runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
-    runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
-    runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
-
-    // finish right layout
-    rightLayout->addWidget(blockGroupBox);
-    rightLayout->addWidget(offsetButtonGroup);
-    rightLayout->addWidget(runtimeButtonGroup);
-
-    // edit/compile button widget
-    QWidget *compileEditButtonsWidget = new QWidget(rightWidget);
- 
-    QBoxLayout *compileEditButtonsLayout =
-        new QHBoxLayout(compileEditButtonsWidget, 5);
-
-    editCodePushButton =
-        new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
-    editCodePushButton->setText(tr("&Edit code"));
-
-    compilePushButton =
-        new QPushButton(compileEditButtonsWidget, "compilePushButton");
-    compilePushButton->setText(tr("Co&mpile"));
-
-
-    compileEditButtonsLayout->addWidget(editCodePushButton);
-    compileEditButtonsLayout->addWidget(compilePushButton);
-
-    rightLayout->addWidget(compileEditButtonsWidget);
-
-    // finish top layout
-    topLayout->addWidget(leftWidget);
-    topLayout->addWidget(rightWidget);
-
-    ////////////////////////////////////////////////////////////
-    // bottom widget
-
-    QWidget *bottomWidget = new QWidget(this);
-    QBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget, 5);
-
-    // ok button
-    okPushButton = new QPushButton(bottomWidget, "okPushButton");
-    okPushButton->setText(tr("&OK"));
-    okPushButton->setDefault(TRUE);
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
-
-    // help button
-    helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
-    helpPushButton->setText(tr("&Help"));
-
-    // apply button
-    applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
-    applyPushButton->setText(tr("&Apply"));
-
-    // cancel button
-    cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
-    cancelPushButton->setText(tr("&Cancel"));
-    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
-
-    bottomLayout->addWidget(okPushButton);
-    bottomLayout->addWidget(helpPushButton);
-    bottomLayout->addWidget(applyPushButton);
-    bottomLayout->addWidget(cancelPushButton);
-
-    ////////////////////////////////////////////////////////////
-    // dialog
-    dialogLayout->addWidget(topWidget);
-    dialogLayout->addWidget(bottomWidget);
-
-    // disable widgets, if neccessary
-    update();
-    ioSelectionChanged();
-    toggleManualOffset();
-    toggleManualRuntime();
 }
 
-void BlockConfDialog::update() {
+void BlockConfDialog::addPins(PinVector pins, PinListViewItem *root) {
+
+    for (unsigned i = 0; i < pins.size(); ++i) {
+        // clone original pin
+        PinModel *pin = new PinModel(model_, pins[i]->id(),
+                                    pins[i]->name(), pins[i]->address(),
+                                    pins[i]->bits(), pins[i]->type());
+        PinListViewItem *child =
+            new PinListViewItem((QListViewItem *)root, pin);
+        child->setVisible(true);
+    }
+}
+
+void BlockConfDialog::syncModel() {
+
     if (model_ != 0) {
+        blockNameLineEdit->setText(model_->name());
         blockDescrLineEdit->setText(model_->description());
+        runtimeSpinBox->setValue(model_->execTime());
 
+        addPins(*(model_->inputPins()), inputRoot_);
+        addPins(*(model_->outputPins()), outputRoot_);
+        addPins(*(model_->episodicPins()), episodicRoot_);
+    }
+}
 
-        PinVector &pins = *(model_->inputPins());
+void BlockConfDialog::updateModel() {
 
-        for (unsigned i = 0; i < pins.size(); ++i) {
-            PinListViewItem *child =
-                new PinListViewItem((QListViewItem *)inputRoot,
-                        (PinModel *)pins[i]);
-            child->setVisible(true);
+    if (model_ != 0) {
+        model_->setName(blockNameLineEdit->text());
+        model_->setDescription(blockDescrLineEdit->text());
+        model_->setExecTime(runtimeSpinBox->value());
+
+        model_->inputPins()->removeAllPins();
+        model_->outputPins()->removeAllPins();
+        model_->episodicPins()->removeAllPins();
+
+        PinListViewItem *item = (PinListViewItem *)ioListView->firstChild();
+        while (item != 0) {
+            if (!item->isRoot()) {
+                model_->addPin(item->data());
+            }
+            item = (PinListViewItem *)item->nextSibling();
         }
-
-        pins = *(model_->outputPins());
-
-        for (unsigned i = 0; i < pins.size(); ++i) {
-            PinListViewItem *child =
-                new PinListViewItem((QListViewItem *)outputRoot,
-                        (PinModel *)pins[i]);
-            child->setVisible(true);
-        }
-
-        pins = *(model_->episodicPins());
-
-        for (unsigned i = 0; i < pins.size(); ++i) {
-            PinListViewItem *child =
-                new PinListViewItem((QListViewItem *)episodicRoot,
-                        (PinModel *)pins[i]);
-            child->setVisible(true);
-        }
-
     }
 }
 
@@ -396,8 +440,6 @@ void BlockConfDialog::newIo()
         PinModel *pin = new PinModel(model_, childCount,
                 "data" + QString::number(childCount),
                 childCount * 100, 32, item->type());
-        model_->addPin(pin);
-
         PinListViewItem *child = new PinListViewItem(item, pin);
         child->setVisible(true);
     }
@@ -412,11 +454,11 @@ void BlockConfDialog::updateIo()
         PinModel *pin = item->data();
         if (pin != 0) {
             pin->setName(ioNameLineEdit->text());
-            bool *ok;
-            pin->setId(ioNumberLineEdit->text().toUInt(ok, 10));
-            pin->setAddress(addressLineEdit->text().toUInt(ok, 16));
+            bool ok;
+            pin->setId(ioNumberLineEdit->text().toUInt(&ok, 10));
+            pin->setAddress(addressLineEdit->text().toUInt(&ok, 16));
             // TODO: check ok and pop up an error dialog, if ok is false
-            pin->setBits(bitsLineEdit->text().toUInt(ok, 10));
+            pin->setBits(bitsLineEdit->text().toUInt(&ok, 10));
             item->update();
         }
     }

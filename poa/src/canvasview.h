@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.29 2004/01/22 12:07:42 squig Exp $
+ * $Id: canvasview.h,v 1.30 2004/01/26 15:57:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -99,6 +99,8 @@ public:
     void setAction(CanvasViewAction *action);
 
     void setEditMode(EditMode mode);
+
+    virtual void timerEvent(QTimerEvent *e);
 
 public slots:
     /**
@@ -194,6 +196,8 @@ private:
      * Annotate means adding annontations with an IBeamCursor.
      */
     EditMode editMode_;
+
+    int autoScrollTimerId;
 };
 
 class CanvasToolTip : public QToolTip

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.55 2004/01/22 12:07:42 squig Exp $
+ * $Id: canvasview.cpp,v 1.56 2004/01/26 15:57:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -67,7 +67,9 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     setDragAutoScroll(true);
     tooltip_ = new CanvasToolTip(this);
     editMode_ = Default;
+    autoScrollTimerId = 0;
 
+    // initialize popup menu
     popupMenu = new QPopupMenu(this);
     MainWindow::instance()->blockConfAction()->addTo(popupMenu);
     QPopupMenu *routeMenu = new QPopupMenu(popupMenu);
@@ -148,6 +150,8 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
 void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 {
+    autoScrollTimerId = startTimer(100);
+
     if (action_) {
         action_->mousePressEvent(e);
         return;
@@ -209,6 +213,11 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 
 void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
 {
+    if (autoScrollTimerId != 0) {
+        killTimer(autoScrollTimerId);
+        autoScrollTimerId = 0;
+    }
+
     if (action_) {
         action_->mouseReleaseEvent(e);
     }
@@ -244,18 +253,25 @@ void CanvasView::doAutoScroll()
 
     int dx = 0, dy = 0;
     if (p.y() < AUTOSCROLL_MARGIN) {
-        dy = -1;
+        // scroll up
+        dy = -(AUTOSCROLL_MARGIN - p.y());
     }
     else if (p.y() > visibleHeight() - AUTOSCROLL_MARGIN) {
-        dy = +1;
+        // scroll down
+        dy = p.y() - visibleHeight() - AUTOSCROLL_MARGIN;
     }
+
     if ( p.x() < AUTOSCROLL_MARGIN ) {
-        dx = -1;
+        // scroll left
+        dx = -(AUTOSCROLL_MARGIN - p.x());
     } else if ( p.x() > visibleWidth() - AUTOSCROLL_MARGIN) {
-        dx = +1;
+        // scroll rigth
+        dx = p.x() - visibleWidth() - AUTOSCROLL_MARGIN;
     }
-    if ( dx || dy ) {
-        scrollBy(dx,dy);
+
+    if (dx != 0 || dy != 0) {
+        // FIX: should resize the canvas if scrolled to border
+        scrollBy(dx, dy);
     }
 }
 
@@ -348,6 +364,13 @@ void CanvasView::setEditMode(EditMode mode)
         setCursor(QCursor());
     }
     editMode_ = mode;
+}
+
+void CanvasView::timerEvent(QTimerEvent *e)
+{
+    if (e->timerId() == autoScrollTimerId) {
+        doAutoScroll();
+    }
 }
 
 QPoint CanvasView::toCanvas(QPoint pos)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.8 2004/02/20 17:40:16 kilgus Exp $
+ * $Id: connectormoveaction.cpp,v 1.9 2004/02/20 20:54:57 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -38,11 +38,12 @@ ConnectorMoveAction::ConnectorMoveAction(CanvasView *view, QMouseEvent *e,
 }
 
 // Convert cartesian coordinates into an angle (DEG)
+// Onle a halve circle is returned (0..179)
 int cart2deg(int x, int y)
 {
-    if (x == 0) return 90;
-
-    return (int)(atan(y / x) * 360 / 2 * PI);
+    int angle = abs((int)(atan2(y, x) * 180.0 / PI));
+    if (angle == 180) angle = 0;
+    return angle;
 }
 
 QPoint ConnectorMoveAction::dragBy(int dx, int dy)
@@ -75,7 +76,6 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
             newPoints.append(newPoint);     // Insert translated point
             if (*it == *(--points.end()))   // Same as before, but last in list
                 newPoints.append(*it);
-
         } else
             newPoints.append(*it);          // Just copy all other points
     }

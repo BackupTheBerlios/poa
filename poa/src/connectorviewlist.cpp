@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.15 2003/09/30 16:12:45 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.16 2003/10/01 10:23:52 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -380,6 +380,7 @@ QString image(LineDirection dir)
     case DOWN:
 	return QString("down");
     }
+    return 0;
 }
 
 QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,

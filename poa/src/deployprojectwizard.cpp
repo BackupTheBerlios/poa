@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.3 2003/09/30 20:05:52 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.4 2003/10/01 10:23:52 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -182,7 +182,9 @@ void DeployProjectWizard::showPage(QWidget* page)
 
 }
 
-bool DeployProjectWizard::allPinsConnected(QPtrList<AbstractModel>* blocks){
+bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
+    // @papier: Prefer using iterators instæad of at(N)
+
   /*  for (uint i=0; i < blocks.count(); ++i){
     if blocks.at(i).hasInputPins() {
       for (PinVector::iterator j = blocks.at(i).inputPins().begin();

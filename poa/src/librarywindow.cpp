@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.8 2003/08/27 17:50:40 vanto Exp $
+ * $Id: librarywindow.cpp,v 1.9 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -81,7 +81,7 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    CpuModel *cpu = new CpuModel(0, TRUE, "NIOS32", "NIOS 32-Bit Cpu");
+    CpuModel *cpu = new CpuModel("NIOS32", "NIOS 32-Bit Cpu");
     PinModel *firstPin = new PinModel("Input1");
     cpu->addInputPin(firstPin);
     cpu->addInputPin(new PinModel("Second Input"), firstPin);
@@ -89,10 +89,9 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(cpuListViewItem,
                             cpu);
     new LibraryListViewItem(cpuListViewItem,
-                            new CpuModel(0, TRUE, "NIOS16",
-                                         "NIOS 16-Bit Cpu"));
+                            new CpuModel("NIOS 16", "NIOS 16-Bit Cpu"));
     new LibraryListViewItem(coreListViewItem,
-                            new CoreModel("TestCore", "Coredump"));
+                            new CoreModel("InputBlock", "Coredump"));
 }
 
 /*****************************************************************************
@@ -132,7 +131,7 @@ LibraryListViewItem::LibraryListViewItem(QListViewItem *parent,
                                          AbstractModel *item)
     : QListViewItem(parent), item_(item)
 {
-    setText(0, item->name());
+    setText(0, item->type());
     setText(1, item->description());
 
     setDragEnabled(TRUE);

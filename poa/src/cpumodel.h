@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.11 2003/08/26 23:27:11 vanto Exp $
+ * $Id: cpumodel.h,v 1.12 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -37,17 +37,63 @@ class CpuModel: public BlockModel
 {
 
  public:
-    CpuModel(unsigned short id, bool autoExecTime, QString name,
-             QString description);
+    /*
+     * Creates a CpuModel instance for the library
+     */
+    CpuModel(QString type, QString description);
+
+    /*
+     * Creates a CpuModel instance for the project out of an xml subtree
+     */
     CpuModel(QDomElement cpuElement);
+
+    /*
+     * Returns a representation (filename or what? //TODO) of the sourcecode
+     * associated with this CpuModel
+     */
     QString code() const;
+
+    /*
+     * Sets code_
+     * {@link #code()}
+     */
     void setCode(const QString &code);
+
+    /*
+     * Returns the cpu id. This id is used to upload <code>code()</code> to
+     * corresponding cpu on the cpld board
+     */
+    unsigned int cpuId();
+
+    /*
+     * Sets the cpu id
+     */
+    void setCpuId(const unsigned int cpuId);
+
+    /*
+     * Indicates if the automatic execution time calculator should be used
+     */
+    bool autoExecTime();
+
+    /*
+     * Toggles the usage of the automatic execution time calculator
+     */
+    void setAutoExecTime(const bool autoExecTime);
+
+    /*
+     * Serializes this instance to a xml subtree
+     * @param document the main QDomDocument instance. Needed to create elements
+     */
     QDomElement serialize(QDomDocument *document);
+
+    /*
+     * Deserializes an xml subtree and sets this' properties
+     */
     void deserialize(QDomElement element);
 
  private:
     QString code_;
-    unsigned short id_;
+    unsigned int cpuId_;
     bool autoExecTime_;
 
 };

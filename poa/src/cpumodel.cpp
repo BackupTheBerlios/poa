@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.12 2003/08/27 17:50:40 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.13 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -29,12 +29,11 @@
 
 #include "pinmodel.h"
 
-CpuModel::CpuModel(unsigned short id, bool autoExecTime, QString name,
-                   QString description)
-    : BlockModel(name, description)
+CpuModel::CpuModel(QString type, QString description)
+    : BlockModel(type, description)
 {
-    id_ = id;
-    autoExecTime_ = autoExecTime;
+    cpuId_ = 0;
+    autoExecTime_ = 0;
 
     // FIX: remove
     PinModel *firstPin = new PinModel(QString("Input1"));
@@ -45,6 +44,7 @@ CpuModel::CpuModel(unsigned short id, bool autoExecTime, QString name,
 }
 
 CpuModel::CpuModel(QDomElement cpuElem)
+    : BlockModel(QString::null, QString::null)
 {
     if (!cpuElem.isNull()) {
         deserialize(cpuElem);
@@ -61,27 +61,45 @@ void CpuModel::setCode(const QString &code)
   code_ = code;
 }
 
+unsigned int CpuModel::cpuId()
+{
+    return cpuId_;
+}
+
+void CpuModel::setCpuId(const unsigned int cpuId)
+{
+    cpuId_ = cpuId;
+}
+
+bool CpuModel::autoExecTime()
+{
+    return autoExecTime_;
+}
+
+void CpuModel::setAutoExecTime(const bool autoExecTime)
+{
+    autoExecTime_ = autoExecTime;
+}
+
 /**
- * Produces the XML representation of this instance like:
- *
- * <cpu name="cpu_XY" id="nn" autotime="true"/>
+ * Produces the XML representation of this instance
  */
 QDomElement CpuModel::serialize(QDomDocument *document)
 {
-    QDomElement root = BlockModel::serialize(document); //= document->createElement("cpu");
-    root.setAttribute("type", "cpu");
+    QDomElement root = BlockModel::serialize(document);
+    root.setAttribute("block-type", "cpu");
     root.setAttribute("srcfile", code_);
-    root.setAttribute("cpuid", (unsigned int) id_);
+    root.setAttribute("cpuid", (unsigned int) cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     return root;
 }
 
 void CpuModel::deserialize(QDomElement element) {
     BlockModel::deserialize(element);
-    id_ = (unsigned short) element.attribute("cpuid", "0").toUInt();
+    cpuId_ = (unsigned short) element.attribute("cpuid", "0").toUInt();
     // TRUE if value of autotime contains "TRUE" (case insensitive),
     // FALSE otherwise.
     autoExecTime_ =
-        element.attribute("autotime", "true").contains("true", FALSE);
+        element.attribute("autotime", "true").contains("true", false);
     setCode(element.attribute("srcfile",""));
 }

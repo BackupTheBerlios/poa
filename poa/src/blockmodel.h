@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.10 2003/08/26 23:27:11 vanto Exp $
+ * $Id: blockmodel.h,v 1.11 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -44,8 +44,13 @@ class BlockModel: public AbstractModel
 {
 public:
 
-    BlockModel(QString name = QString::null,
-               QString description = QString::null);
+    /*
+     * Creates a BlockModel instance
+     * @param name the name of this block instance
+     * @param description the description of this block instance
+     * @param type the name of the library item (type)
+     */
+    BlockModel(QString type, QString description);
     virtual ~BlockModel();
 
     /*************************************************************************

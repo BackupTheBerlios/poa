@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockmodel.h,v 1.3 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: inputblockmodel.h,v 1.4 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -37,10 +37,10 @@
 class InputBlockModel: public BlockModel
 {
   public:
-  
+    InputBlockModel(QString name, QString description, QString type);
     void addOutputPin (PinModel *pin, PinModel *successor = 0);
     void removeOutputPin (PinModel *pin);
-  
+
 };
 
 

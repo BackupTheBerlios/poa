@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.10 2003/08/28 23:07:13 vanto Exp $
+ * $Id: project.cpp,v 1.11 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -26,15 +26,18 @@
 #include "gridcanvas.h"
 #include "modelfactory.h"
 #include "canvasview.h"
+#include <qdom.h>
 
 Project::Project(QString name)
 {
+    currentModelId_ = 0;
     name_ = name;
 }
 
 Project::Project(QString name, QDomDocument *document)
 {
     name_ = name;
+    currentModelId_ = 0;
     deserialize(document);
 }
 
@@ -44,6 +47,9 @@ Project::~Project()
 
 void Project::add(AbstractModel *item)
 {
+    if (item->id() == 0) {
+        item->setId(++currentModelId_);
+    }
     items_.append(item);
 }
 
@@ -65,9 +71,6 @@ const QPtrList<GridCanvas> *Project::canvasList() const {
 
 QDomDocument Project::serialize()
 {
-    typedef QMap<AbstractModel *, unsigned int> IdMap;
-    IdMap idMap;
-
     QDomDocument doc;
     QDomElement proj = doc.createElement("project");
     doc.appendChild(proj);
@@ -78,21 +81,15 @@ QDomDocument Project::serialize()
 
     // create model list
     AbstractModel *model;
-    unsigned int i = 0;
     for (model = items_.first(); model; model = items_.next()) {
-        i++;
         QDomElement mElem = model->serialize(&doc);
-        mElem.setAttribute("id",i);
         mlist.appendChild(mElem);
-        idMap[model] = i;
     }
 
     // create view list
     GridCanvas *canvas;
-    i = 0;
     for (canvas = canvasList_.first(); canvas; canvas = canvasList_.next()) {
         QDomElement vElem = doc.createElement("view");
-        vElem.setAttribute("id",++i);
         vElem.setAttribute("name", canvas->name());
         QCanvasItemList canvasItems = canvas->allItems();
         QCanvasItemList::iterator it;
@@ -101,7 +98,7 @@ QDomDocument Project::serialize()
             BlockView *bv = (dynamic_cast<BlockView *> (*it));
             if (bv != 0) {
                 QDomElement viElem = bv->serialize(&doc);
-                viElem.setAttribute("model-id", idMap[bv->model()]);
+                viElem.setAttribute("model-id", bv->model()->id());
                 vElem.appendChild(viElem);
             }
         }
@@ -111,20 +108,26 @@ QDomDocument Project::serialize()
 }
 
 void Project::deserialize(QDomDocument *document) {
-    typedef QMap<QString, AbstractModel*> IdMap;
+    typedef QMap<uint, AbstractModel*> IdMap;
     IdMap idMap;
 
-    QDomNodeList mList = document->elementsByTagName("model-item");
-    QDomNodeList vList = document->elementsByTagName("view");
     // create model instances
-    for (unsigned int i = 0; i < mList.count(); i++) {
-        QDomElement mEl = mList.item(i).toElement();
-        AbstractModel *model = ModelFactory::generateSingle(mEl);
-        idMap[mEl.attribute("id","0")] = model;
-        add(model);
+    QDomNodeList mList = document->elementsByTagName("model");
+    if (mList.count() != 1) {
+        qWarning("no valid project file");
+        return;
+    }
+
+    QDomElement mEl = mList.item(0).toElement();
+    QValueList<AbstractModel *> l = ModelFactory::generate(mEl);
+    for (QValueList<AbstractModel *>::Iterator it = l.begin();
+         it != l.end(); ++it) {
+        idMap[(*it)->id()] = *it;
+        add(*it);
     }
 
     // create canvases
+    QDomNodeList vList = document->elementsByTagName("view");
     for (unsigned int i = 0; i < vList.count(); i++) {
         QDomElement vEl = vList.item(i).toElement();
         QDomNodeList viList = vEl.elementsByTagName("view-item");
@@ -134,7 +137,7 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
-                 canvas->addView(idMap[viEl.attribute("model-id","0")],
+                 canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
             }

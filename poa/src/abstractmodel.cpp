@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.4 2003/08/27 10:50:22 vanto Exp $
+ * $Id: abstractmodel.cpp,v 1.5 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
 
-AbstractModel::AbstractModel(QString name, QString description)
-    : name_(name), description_(description)
+AbstractModel::AbstractModel(QString type, QString description, uint id = 0)
+    : type_(type), description_(description), id_(id)
 {
 }
 
@@ -39,9 +39,17 @@ QString AbstractModel::description() const
 /*************************************************************************
  * Returns the name of the item.
  */
-QString AbstractModel::name() const
+QString AbstractModel::type() const
 {
-    return name_;
+    return type_;
+}
+
+/*************************************************************************
+ * Returns the project unique id
+ */
+uint AbstractModel::id() const
+{
+    return id_;
 }
 
 /**
@@ -52,15 +60,17 @@ QString AbstractModel::name() const
 QDomElement AbstractModel::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("model-item");
-    root.setAttribute("name", name());
+    root.setAttribute("type", type());
     root.setAttribute("desc", description());
+    root.setAttribute("id", id());
     return root;
 }
 
 void AbstractModel::deserialize(QDomElement element)
 {
-    setName(element.attribute("name", "unknown"));
+    setType(element.attribute("type", "unknown"));
     setDescription(element.attribute("desc","no description"));
+    setId(element.attribute("id","0").toUInt());
 }
 
 void AbstractModel::setDescription(const QString &description)
@@ -68,7 +78,12 @@ void AbstractModel::setDescription(const QString &description)
     description_ = description;
 }
 
-void AbstractModel::setName(const QString &name)
+void AbstractModel::setType(const QString &type)
 {
-    name_ = name;
+    type_ = type;
+}
+
+void AbstractModel::setId(uint id)
+{
+    id_ = id;
 }

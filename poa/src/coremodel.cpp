@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.cpp,v 1.1 2003/08/28 13:12:58 vanto Exp $
+ * $Id: coremodel.cpp,v 1.2 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "coremodel.h"
@@ -29,8 +29,8 @@
 
 #include "pinmodel.h"
 
-CoreModel::CoreModel(QString name, QString description)
-    : BlockModel(name, description)
+CoreModel::CoreModel(QString type, QString description)
+    : BlockModel(type, description)
 {
     // FIX: remove
     PinModel *firstPin = new PinModel(QString("Input1"));
@@ -41,6 +41,7 @@ CoreModel::CoreModel(QString name, QString description)
 }
 
 CoreModel::CoreModel(QDomElement coreElement)
+    : BlockModel(QString::null, QString::null)
 {
     if (!coreElement.isNull()) {
         BlockModel::deserialize(coreElement);
@@ -48,13 +49,11 @@ CoreModel::CoreModel(QDomElement coreElement)
 }
 
 /**
- * Produces the XML representation of this instance like:
- *
- * <model-item type="core" name="cpu_XY" id="nn" autotime="true"/>
+ * Produces the XML representation of this instance
  */
 QDomElement CoreModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
-    root.setAttribute("type", "core");
+    root.setAttribute("block-type", "core");
     return root;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.15 2003/08/28 18:04:35 vanto Exp $
+ * $Id: blockview.cpp,v 1.16 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -189,7 +189,7 @@ void BlockView::drawShape(QPainter &p)
            currentY,
            width(),
            BlockView::DEFAULT_FONT_HEIGHT);
-    if (!(model_->name().isNull())) {
+    if (model_->name() != 0) {
     p.drawText(textArea, Qt::AlignHCenter, model_->name());
     }
     currentY += textArea.height() + BlockView::DEFAULT_HEADER_SPACING;

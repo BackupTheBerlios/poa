@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.8 2003/08/29 10:45:49 vanto Exp $
+ * $Id: project.h,v 1.9 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -99,6 +99,8 @@ private:
     QPtrList<GridCanvas> canvasList_;
     /* project name */
     QString name_;
+    /* current model id - provides project-wide unique ids */
+    uint currentModelId_;
 };
 
 #endif // PROJECT_H

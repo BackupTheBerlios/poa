@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.7 2003/08/27 21:12:45 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.8 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -38,27 +38,34 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
     for (uint i = 0; i < children.length(); i++) {
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "model-item") {
+            AbstractModel *model = 0;
             QDomElement element = item.toElement();
-        if (element.attribute("type","") == "cpu") {
-            l.append(new CpuModel(element));
-        } else if (element.attribute("type","") == "core") {
-            l.append(new CoreModel(element));
-        }
+            if (element.attribute("block-type","") == "cpu") {
+                model = new CpuModel(element);
+            } else if (element.attribute("block-type","") == "core") {
+                model = new CoreModel(element);
+            }
+            if (model != 0) {
+                model->setDescription(QString::null);
+                model->setId(0);
+                model->setName("new "+model->type());
+                l.append(model);
+            }
         }
     }
 
     return l;
 }
 
-AbstractModel *ModelFactory::generateSingle(QDomNode &node)
+/*AbstractModel *ModelFactory::generateSingle(QDomNode &node)
 {
     if (node.isElement() && node.nodeName() == "model-item") {
         QDomElement element = node.toElement();
-        if (element.attribute("type","") == "cpu") {
+        if (element.attribute("block-type","") == "cpu") {
             return new CpuModel(element);
-        } else if (element.attribute("type","") == "core") {
+        } else if (element.attribute("block-type","") == "core") {
             return new CoreModel(element);
         }
     }
     return 0;
-}
+}*/

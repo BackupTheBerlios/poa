@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.7 2003/08/28 18:09:24 keulsn Exp $
+ * $Id: abstractmodel.h,v 1.8 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -40,13 +40,48 @@ class QCanvasItemList;
 class AbstractModel : public QObject
 {
 public:
-    AbstractModel(QString name = QString::null,
-                  QString description = QString::null);
+    AbstractModel(QString type = QString::null,
+                  QString description = QString::null,
+                  uint id = 0);
 
+    /*
+     * Returns the description of the model.
+     * This value contains different content
+     * - in the library: the description of the generic block
+     * - in the project: the description of the instanciated block
+     */
     virtual QString description() const;
-    virtual QString name() const;
+
+    /*
+     * Returns the type of this block, eg. NIOS16-CPU
+     */
+    virtual QString type() const;
+
+    /*
+     * Returns the project-wide id of this block.
+     * This property should be set in Project::add(),
+     * for library items id should be 0
+     */
+    virtual uint id() const;
+
+    /*
+     * Sets the block description
+     * {@link #description}
+     */
     virtual void setDescription(const QString &description);
-    virtual void setName(const QString &name);
+
+    /*
+     * Sets the block type
+     * {@link #type}
+     */
+    virtual void setType(const QString &type);
+
+    /*
+     * Sets the project-wide id
+     * {@see #id}
+     */
+
+    virtual void setId(uint id);
 
     /*************************************************************************
      * Returns an XML representation of this instance.
@@ -60,8 +95,9 @@ public:
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
 
 private:
-    QString name_;
+    QString type_;
     QString description_;
+    uint id_;
 };
 
 #endif

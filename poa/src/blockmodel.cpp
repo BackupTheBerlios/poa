@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.9 2003/08/27 17:50:40 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.10 2003/08/29 14:34:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -32,8 +32,8 @@
 #include "pinvector.h"
 
 
-BlockModel::BlockModel(QString name, QString description)
-    : AbstractModel(name, description)
+BlockModel::BlockModel(QString type, QString description)
+    : AbstractModel(type, description)
 {
     episodicPins_ = new PinVector();
     inputPins_ = new PinVector();
@@ -141,6 +141,7 @@ QDomElement BlockModel::serialize(QDomDocument *document)
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
     root.setAttribute("offset", (unsigned int)offset_);
     root.setAttribute("clock", (unsigned int)clock_);
+    root.setAttribute("name", name());
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
         QDomElement pinElem = inputPins_->at(i)->serialize(document);
@@ -167,6 +168,7 @@ void BlockModel::deserialize(QDomElement element)
     setAutoOffset( (element.attribute("auto-offset","true") == "true") );
     setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
     setClock( (unsigned int)element.attribute("clock","0").toUInt() );
+    setName( element.attribute("name","unnamed") );
     // pins
     inputPins_->clear();
     outputPins_->clear();

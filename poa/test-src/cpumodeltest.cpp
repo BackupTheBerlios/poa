@@ -11,7 +11,6 @@ class CpuModelTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE(CpuModelTest);
     CPPUNIT_TEST(testAutoSetter);
     CPPUNIT_TEST(testCpuId);
-    CPPUNIT_TEST(testProjectPath);
     CPPUNIT_TEST(testSerialize);
     CPPUNIT_TEST_SUITE_END();
 
@@ -52,14 +51,6 @@ public:
 
         cpu->setCpuId(100);
         CPPUNIT_ASSERT(cpu->cpuId() == 100);
-    }
-
-    void testProjectPath()
-    {
-        CPPUNIT_ASSERT(cpu->projectPath().isNull());
-
-        cpu->setProjectPath("ProjectPath");
-        CPPUNIT_ASSERT(cpu->projectPath() == "ProjectPath");
     }
 
     void testSerialize()

@@ -11,7 +11,7 @@
     <outputDir>xdocs/statcvs-xml</outputDir>
     <renderer>xdoc</renderer>
 
-    <include>src/**/*.cpp;src/**/*.h;test-src/**/*.cpp;test-src/**/*.h</include>
+    <include>doc/**/*.tex;src/**/*.cpp;src/**/*.h;test-src/**/*.cpp;test-src/**/*.h</include>
     <exclude>src/qextserialport/**;src/design/**;src/examples/**</exclude>
 
     <modules type="map">

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.51 2004/01/25 18:18:09 vanto Exp $
+ * $Id: project.cpp,v 1.52 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -127,7 +127,6 @@ void Project::addBlock(AbstractModel *item)
     else if (item->id() > currentBlockId_) {
         currentBlockId_ = item->id();
     }
-    item->setProject(this);
 
     blocks_.append(item);
     setModified(true);

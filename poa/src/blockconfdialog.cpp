@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.59 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.60 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -37,19 +37,23 @@
 
 #include "blockconfdialog.h"
 #include "blockconfwidget.h"
+#include "blockmodel.h"
 #include "canvasview.h"
 #include "blockmodel.h"
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "mainwindow.h"
 #include "pinlistviewitem.h"
+#include "pinmodel.h"
 #include "poa.h"
+#include "poaexception.h"
 #include "runtimemanager.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
-                                 const char* name, bool modal, WFlags fl)
+BlockConfDialog::BlockConfDialog(BlockModel *model, Project *project,
+                                 QWidget* parent, const char* name, bool modal,
+                                 WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
     if (!name) {
@@ -59,6 +63,7 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     setCaption(tr("Block configuration"));
 
     model_ = model;
+    project_ = project;
 
     initLayout();
 
@@ -246,8 +251,10 @@ void BlockConfDialog::sync() {
     blockConfWidget_->sync();
 }
 
-void BlockConfDialog::commit()
+bool BlockConfDialog::commit()
 {
+    bool success = true;
+
     model_->setName(blockNameLineEdit->text());
     model_->setDescription(blockDescrLineEdit->text());
     model_->setClock(clockSpinBox->value());
@@ -269,6 +276,8 @@ void BlockConfDialog::commit()
         else {
             cpuModel->setAutoRuntime(true);
         }
+
+        success &= saveSource(cpuModel);
     }
     else if (model_->hasRuntime()) {
         model_->setRuntime(runtimeSpinBox->value());
@@ -282,8 +291,11 @@ void BlockConfDialog::commit()
         model_->updatePerformed();
     }
 
+
     // sync again
     sync();
+
+    return success;
 }
 
 void BlockConfDialog::cancel()
@@ -298,8 +310,9 @@ void BlockConfDialog::apply()
 
 void BlockConfDialog::ok()
 {
-    commit();
-    accept();
+    if (commit()) {
+        accept();
+    }
 }
 
 void BlockConfDialog::calcRuntime()
@@ -316,30 +329,71 @@ void BlockConfDialog::calcRuntime()
 
 void BlockConfDialog::compile()
 {
-    if (INSTANCEOF(model_, CpuModel)) {
-        CpuModel *model = (CpuModel *)model_;
-        // Note: This additional slot is needed, because the
-        // clicked() signal of QPushButton is not able to
-        // emit the current <code>model_</code>.
-        CodeManager *codeManager = CodeManager::instance();
-        codeManager->compile(model);
+    CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
+    if (cpuModel != 0 && saveSource(cpuModel)) {
+        CodeManager codeManager(project_, cpuModel);
+        codeManager.compile();
     }
 }
 
 void BlockConfDialog::edit()
 {
-    if (INSTANCEOF(model_, CpuModel)) {
-        CpuModel *model = (CpuModel *)model_;
-        // Note: This additional slot is needed, because the
-        // clicked() signal of QPushButton is not able to
-        // emit the current <code>model_</code>.
-        CodeManager *codeManager = CodeManager::instance();
-        if (!codeManager->edit(model)) {
-            QMessageBox::critical(this, "POA", "The code cannot be edited.\n\n"
-                                 "This may depend on a bad configuration of the"
-                                 " external editor or\n"
-                                 "you have no read/write permission to the"
-                                 " filesystem.", "&OK");
+    CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
+    if (cpuModel != 0 && saveSource(cpuModel)) {
+        CodeManager codeManager(project_, cpuModel);
+        if (!codeManager.edit()) {
+            QMessageBox::critical
+                (this, "POA", "The code cannot be edited.\n\n"
+                 "This may depend on a bad configuration of the"
+                 " external editor or\n"
+                 "you have no read/write permission to the"
+                 " filesystem.", "&OK");
         }
     }
+}
+
+bool BlockConfDialog::saveSource(CpuModel *cpuModel)
+{
+    try {
+        CodeManager codeManager(project_, cpuModel);
+        codeManager.createDirectories();
+
+        QFile sourceFile(codeManager.sourceFilePath());
+        if (!sourceFile.exists()) {
+            if (cpuModel->source().isNull()) {
+                codeManager.copyTemplate();
+            }
+            else {
+                codeManager.saveSource();
+            }
+        }
+        else {
+            if (!cpuModel->source().isNull()) {
+                QMessageBox mb
+                    ("POA",
+                     "The block contains uncommited source code, "
+                     "but there is a file on disk already.\n"
+                     "Overwrite existing file?",
+                     QMessageBox::Information,
+                     QMessageBox::Yes | QMessageBox::Default,
+                     QMessageBox::No,
+                     QMessageBox::Cancel | QMessageBox::Escape );
+                switch(mb.exec()) {
+                case QMessageBox::Yes:
+                    codeManager.saveSource();
+                    break;
+                case QMessageBox::No:
+                    break;
+                case QMessageBox::Cancel:
+                    return false;
+                    break;
+                }
+            }
+        }
+    }
+    catch (const PoaException e) {
+        QMessageBox::warning(this, tr("POA Error"), e.message());
+    }
+
+    return true;
 }

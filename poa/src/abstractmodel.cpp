@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.12 2004/01/21 20:38:39 squig Exp $
+ * $Id: abstractmodel.cpp,v 1.13 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -62,11 +62,6 @@ void AbstractModel::deserialize(QDomElement element)
     setId(element.attribute("id","0").toUInt());
 }
 
-Project *AbstractModel::project() const
-{
-    return project_;
-}
-
 void AbstractModel::setDescription(const QString &description)
 {
     description_ = description;
@@ -80,11 +75,6 @@ void AbstractModel::setId(uint id)
 void AbstractModel::setType(const QString &type)
 {
     type_ = type;
-}
-
-void AbstractModel::setProject(Project *project)
-{
-    project_ = project;
 }
 
 /**
@@ -101,7 +91,7 @@ QDomElement AbstractModel::serialize(QDomDocument *document)
     return root;
 }
 
-QDomElement AbstractModel::serializeCopy(QDomDocument *document)
+QDomElement AbstractModel::serializeCopy(QDomDocument *document, Project *)
 {
     return serialize(document);
 }

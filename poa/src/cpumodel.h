@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.31 2004/01/21 20:38:39 squig Exp $
+ * $Id: cpumodel.h,v 1.32 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -89,12 +89,26 @@ class CpuModel: public BlockModel
     /**
      * Reads the source from disk before serialization.
      */
-    virtual QDomElement serializeCopy(QDomDocument *document);
+    virtual QDomElement serializeCopy(QDomDocument *document, Project *project);
 
     /**
      * Sets the automatic runtime calculation.
      */
     virtual void setAutoRuntime(const bool autoRuntime);
+
+    /**
+     * Sets the source code.
+     */
+    virtual void setSource(QString source);
+
+    /**
+     * Returns the source code. The model only contains source code if
+     * source was deserialized, otherwise the source is probably
+     * already saved to disk.
+     *
+     * @return QString::null if no source code is saved in the model
+     */
+    virtual QString source();
 
     /**
      * Returns the tooltip text.
@@ -112,11 +126,6 @@ class CpuModel: public BlockModel
     bool autoRuntime_;
     int cpuId_;
     QString source_;
-
-    /**
-     * The code manager needs to access the source_ property.
-     */
-    friend class CodeManager;
 };
 
 #endif

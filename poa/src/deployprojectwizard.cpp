@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.14 2004/01/27 06:26:26 kilgus Exp $
+ * $Id: deployprojectwizard.cpp,v 1.15 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -155,7 +155,7 @@ void DeployProjectWizard::setupDownloadPage()
     /*
     QWidget *downloadWidget = new QWidget(page);
     QProgressBar *downloadProgressBar = new QProgressBar(downloadWidget, "DownloadProgressBar" );
-    
+
     QBoxLayout *downloadLayout = new QHBoxLayout(downloadWidget, WIDGET_SPACING);
     downloadLayout->addWidget(downloadProgressBar);
     */
@@ -174,23 +174,21 @@ void DeployProjectWizard::setupDownloadPage()
 
 void DeployProjectWizard::compileSelectedCpu()
 {
-  CodeManager *cm = CodeManager::instance();
-  cm->compile(currentCpu_);
+    CodeManager cm(project_, currentCpu_);
+    cm.compile();
 }
 
 void DeployProjectWizard::cpuSelected(int index)
 {
     currentCpu_ = cpuModels.at(index);
 
-    CodeManager *cm = CodeManager::instance();
+    CodeManager cm(project_, currentCpu_);
+    cm.compile();
 
-    QString sourceFilename = cm->sourceFilePath(currentCpu_);
+    QString sourceFilename = cm.sourceFilePath();
     QFileInfo sourceFileInfo(sourceFilename);
 
-    QString srecFilename =
-      (sourceFilename.endsWith(".c"))
-        ? sourceFilename.left(sourceFilename.length() - 2) + ".srec"
-        : sourceFilename + ".srec";
+    QString srecFilename = cm.sourceFilePath("srec");
     QFileInfo srecFileInfo(srecFilename);
 
     cpuDetailsLabel_->setText
@@ -202,14 +200,12 @@ void DeployProjectWizard::cpuSelected(int index)
 
 void DeployProjectWizard::downloadSelectedCpu()
 {
-  CodeManager *cm = CodeManager::instance();
-  DownloadManager *dm = DownloadManager::instance();
-  QString sourceFilename = cm->sourceFilePath(currentCpu_);
-  QString srecFilename =
-      (sourceFilename.endsWith(".c"))
-        ? sourceFilename.left(sourceFilename.length() - 2) + ".srec"
-        : sourceFilename + ".srec";
-  dm->download(srecFilename, (const char*)Settings::instance()->serialPort());
+    CodeManager cm(project_, currentCpu_);
+
+    DownloadManager *dm = DownloadManager::instance();
+    QString sourceFilename = cm.sourceFilePath();
+    QString srecFilename = cm.sourceFilePath("srec");
+    dm->download(srecFilename, (const char*)Settings::instance()->serialPort());
 }
 
 /*void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.59 2004/01/28 01:49:37 kilgus Exp $
+ * $Id: canvasview.cpp,v 1.60 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -187,16 +187,16 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
                 setAction(new MoveAction(this, e, item));
             }
             else {
-				ConnectorViewSegment *segment = 
-					dynamic_cast<ConnectorViewSegment*>(topItem);
-				if (segment != 0) {
-					setAction(new ConnectorMoveAction(this, e, segment));
-				} else
-				{
-	                PinView *pinItem = dynamic_cast<PinView*>(topItem);
-    	            if (pinItem != 0 && !pinItem->isConnected()) {
-        	            setAction(new ConnectAction(this, e, pinItem));
-					}
+                ConnectorViewSegment *segment =
+                    dynamic_cast<ConnectorViewSegment*>(topItem);
+                if (segment != 0) {
+                    setAction(new ConnectorMoveAction(this, e, segment));
+                } else
+                {
+                    PinView *pinItem = dynamic_cast<PinView*>(topItem);
+                    if (pinItem != 0 && !pinItem->isConnected()) {
+                        setAction(new ConnectAction(this, e, pinItem));
+                    }
                 }
             }
 
@@ -318,7 +318,7 @@ void CanvasView::dropEvent(QDropEvent *e)
                 }
                 else if (INSTANCEOF(*it, BlockModel)) {
                     BlockConfDialog *dialog =
-                        new BlockConfDialog((BlockModel *)(*it));
+                        new BlockConfDialog((BlockModel *)(*it), project());
                     dialog->exec();
                     delete dialog;
                 }

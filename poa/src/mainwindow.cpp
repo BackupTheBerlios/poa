@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.104 2004/01/27 16:39:56 squig Exp $
+ * $Id: mainwindow.cpp,v 1.105 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -620,7 +620,8 @@ void MainWindow::editCopy()
                 Copyable *item = dynamic_cast<Copyable *>(*current);
                 if (item != 0) {
                     Q_ASSERT(item->model() != 0);
-                    root.appendChild(item->model()->serializeCopy(&doc));
+                    root.appendChild
+                        (item->model()->serializeCopy(&doc, view->project()));
                 }
             }
 
@@ -717,7 +718,7 @@ void MainWindow::fileSave()
             view->project()->save();
         }
         catch (const PoaException e) {
-            QMessageBox::warning(this, tr("File error"), e.message());
+            QMessageBox::warning(this, tr("POA Error"), e.message());
         }
     }
 }
@@ -832,7 +833,7 @@ void MainWindow::openBlockConf()
             }
             else if (INSTANCEOF(model, BlockModel)) {
                 BlockConfDialog *dialog
-                    = new BlockConfDialog((BlockModel *)model);
+                    = new BlockConfDialog((BlockModel *)model, view->project());
                 if (dialog->exec() == QDialog::Accepted) {
                     view->project()->setModified(true);
                 }
@@ -992,7 +993,8 @@ void MainWindow::saveToLibrary()
                 Copyable *item = dynamic_cast<Copyable *>(*current);
                 if (item != 0) {
                     Q_ASSERT(item->model() != 0);
-                    root.appendChild(item->model()->serializeCopy(&doc));
+                    root.appendChild(item->model()->serializeCopy
+                                     (&doc, view->project()));
                 }
             }
 

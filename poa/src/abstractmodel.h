@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.22 2004/01/24 16:20:10 squig Exp $
+ * $Id: abstractmodel.h,v 1.23 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -83,11 +83,6 @@ public:
     virtual QString name() const;
 
     /**
-     * Returns the project.
-     */
-    Project *project() const;
-
-    /**
      * Sets the block description
      * {@link #description}
      */
@@ -103,12 +98,6 @@ public:
      * Sets the name of this model.
      */
     virtual void setName(QString name);
-
-    /**
-     * Sets the project.
-     * Used by CodeManager to save its sources.
-     */
-    void setProject(Project *project);
 
     /**
      * Sets the block type
@@ -128,9 +117,9 @@ public:
      * treatment.
      *
      * @see #serialize(QDomDocument)
-     * @see CpuModel#serializeCopy(QDomDocument)
+     * @see CpuModel#serializeCopy(QDomDocument,Project)
      */
-    virtual QDomElement serializeCopy(QDomDocument *document);
+    virtual QDomElement serializeCopy(QDomDocument *document, Project *project);
 
     /**
      * Needs to be invoked after the model properties have been
@@ -150,7 +139,6 @@ private:
     QString type_;
     QString description_;
     uint id_;
-    Project *project_;
 
 signals:
     /**

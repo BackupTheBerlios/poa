@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.38 2004/01/24 16:20:10 squig Exp $
+ * $Id: cpumodel.cpp,v 1.39 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,9 +60,24 @@ int CpuModel::cpuId()
     return cpuId_;
 }
 
-void CpuModel::setCpuId(const int cpuId)
+void CpuModel::deserialize(QDomElement element)
 {
-    cpuId_ = cpuId;
+    BlockModel::deserialize(element);
+
+    setAutoRuntime((element.attribute("auto-runtime", "true") == "true"));
+    setCpuId(element.attribute("cpuid", "1").toInt());
+
+    // fetch sourcecode if available in xml tree
+    QDomNodeList mList = element.elementsByTagName("source-code");
+    if (mList.count() == 1
+        && mList.item(0).toElement().firstChild().isCDATASection()) {
+
+        source_
+            = mList.item(0).toElement().firstChild().toCDATASection().data();
+    }
+    else {
+        source_ = QString::null;
+    }
 }
 
 QDomElement CpuModel::serialize(QDomDocument *document, QString source)
@@ -84,33 +99,11 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     return serialize(document, source_);
 }
 
-QDomElement CpuModel::serializeCopy(QDomDocument *document)
+QDomElement CpuModel::serializeCopy(QDomDocument *document, Project *project)
 {
     // read source file from disk in case it is not set
-    return serialize(document,
-                     source_.isEmpty()
-                     ? CodeManager::instance()->sourceCode(this)
-                     : source_);
-}
-
-void CpuModel::deserialize(QDomElement element)
-{
-    BlockModel::deserialize(element);
-
-    setAutoRuntime((element.attribute("auto-runtime", "true") == "true"));
-    setCpuId(element.attribute("cpuid", "1").toInt());
-
-    // fetch sourcecode if available in xml tree
-    QDomNodeList mList = element.elementsByTagName("source-code");
-    if (mList.count() == 1
-        && mList.item(0).toElement().firstChild().isCDATASection()) {
-
-        source_
-            = mList.item(0).toElement().firstChild().toCDATASection().data();
-    }
-    else {
-        source_ = QString::null;
-    }
+    CodeManager codeManager(project, this);
+    return serialize(document, codeManager.sourceCode());
 }
 
 void CpuModel::setAutoRuntime(const bool autoRuntime)
@@ -118,22 +111,34 @@ void CpuModel::setAutoRuntime(const bool autoRuntime)
     autoRuntime_ = autoRuntime;
 }
 
+void CpuModel::setCpuId(const int cpuId)
+{
+    cpuId_ = cpuId;
+}
+
+void CpuModel::setSource(QString source)
+{
+    source_ = source;
+}
+
+QString CpuModel::source()
+{
+    return source_;
+}
+
 QString CpuModel::tip()
 {
-    CodeManager *codeManager = CodeManager::instance();
     return QString("<u>%1</u> (%2)<br>"
                    "<i>%3</i><hr>" \
                    "<b>Id on CPLD:</b> %4<br>" \
                    "<b>Clock:</b> %5 ns<br>" \
                    "<b>Offset:</b> %6<br>" \
-                   "<b>Execution time:</b> %7<br>" \
-                   "<b>Source:</b> %8")
+                   "<b>Execution time:</b> %7")
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())
         .arg(this->cpuId())
         .arg(this->clock())
         .arg(toTip(this->autoOffset(), this->offset()))
-        .arg(toTip(this->autoRuntime(), this->runtime()))
-        .arg(codeManager->sourceFilePath(this));
+        .arg(toTip(this->autoRuntime(), this->runtime()));
 }

@@ -18,107 +18,92 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.13 2004/01/21 17:20:56 vanto Exp $
+ * $Id: codemanager.h,v 1.14 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_CODEMANAGER_H
 #define POA_CODEMANAGER_H
 
-#include "cpumodel.h"
+class CpuModel;
+class Project;
 
 #include <qdir.h>
-#include <qfile.h>
 #include <qstring.h>
 
 /**
  * Manages a portion of source code.
  */
-class CodeManager : public QObject
-{
-
-    Q_OBJECT
+class CodeManager {
 
 public:
 
-    /**
-     * CodeManager singleton instance.
-     */
-    static CodeManager *instance();
-
-    /**
-     * Returns path to the source file.
-     * If the project was not saved, the source file will be
-     * the standard template. Otherwise it will be managed implicitly.
-     */
-    QString sourceFilePath(CpuModel *model);
+    CodeManager(Project *project, CpuModel *cpuModel);
+    ~CodeManager();
 
     /**
      * Returns path to the CPU specific top level directory.
      */
-    QString cpuPath(CpuModel *model);
+    QString cpuPath();
 
-    /**
-     * Returns path to the CPU specific source directory.
-     */
-    QString sourcePath(CpuModel *model);
+    void copyTemplate();
+
+    void createDirectories();
 
     /**
      * Returns path to the CPU specific library directory.
      */
-    QString libPath(CpuModel *model);
+    QString libPath();
 
     /**
      * Returns path to the CPU specific inclusion directory.
      */
-    QString incPath(CpuModel *model);
+    QString incPath();
 
-   /**
+    /**
      * Returns filename of the source file of this cpu.
      */
-    QString fileName(CpuModel *model);
+    QString filename(QString extension = "c");
 
     /**
      * Executes the compiler and returns it's return code.
      */
-    int compile(CpuModel *model);
+    int compile();
 
     /**
      * Opens the external editor with the source code of this CPU and
      * returns <code>true</code> if editor launch was successful.
      * If the CPU_NN_sdk directory does not exist, it will be created.
      */
-    bool edit(CpuModel *model);
+    bool edit();
+
+    /**
+     * Removes the source template structure created by save().
+     */
+    //void remove(CpuModel *model);
+
+    void saveSource();
 
     /**
      * Returns the content of the source file in a QString.
      */
-    QString sourceCode(CpuModel *model);
-
-
-protected:
-    CodeManager();
-    ~CodeManager();
+    QString sourceCode();
 
     /**
-     * Removes the source template structure created by save().
-     * Called by the destructor.
+     * Returns path to the source file.
      */
-    void remove(CpuModel *model);
+    QString sourceFilePath(QString extension = "c");
 
+    /**
+     * Returns path to the CPU specific source directory.
+     */
+    QString sourcePath();
 
 private:
-    static CodeManager* instance_;
+    void createDirectory(const QDir &path);
 
-public slots:
-    /**
-     * Saves the source template into a structure as follows:
-     * CPU_nn_sdk
-     *  src/cpu_nn.c
-     *  lib/
-     *  inc/
-     */
-    void save(CpuModel *model);
+    CpuModel *model_;
+    Project *project_;
 
 };
 

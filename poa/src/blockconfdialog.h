@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.26 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.27 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,10 +27,11 @@
 
 #include <qdialog.h>
 
-#include "blockmodel.h"
-#include "pinmodel.h"
-
 class BlockConfWidget;
+class BlockModel;
+class CpuModel;
+class Project;
+
 class QBoxLayout;
 class QLineEdit;
 class QPushButton;
@@ -44,7 +45,7 @@ class BlockConfDialog : public QDialog
     Q_OBJECT
 
 public:
-    BlockConfDialog(BlockModel *model, QWidget* parent = 0,
+    BlockConfDialog(BlockModel *model, Project *project, QWidget* parent = 0,
                     const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     ~BlockConfDialog();
 
@@ -64,6 +65,7 @@ private:
     QWidget *rightWidget;
     QWidget *bottomWidget;
 
+    Project *project_;
     BlockModel *model_;
     BlockConfWidget *blockConfWidget_;
 
@@ -106,7 +108,9 @@ private:
     /**
      * Commits all current dialog's content to model.
      */
-    void commit();
+    bool commit();
+
+    bool saveSource(CpuModel *cpuModel);
 
 private slots:
 

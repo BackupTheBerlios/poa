@@ -18,174 +18,151 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.15 2004/01/21 20:38:39 squig Exp $
+ * $Id: codemanager.cpp,v 1.16 2004/01/28 16:35:51 squig Exp $
  *
  *****************************************************************************/
 
 
 #include "codemanager.h"
 #include "cpumodel.h"
-#include "settings.h"
+#include "poaexception.h"
 #include "project.h"
 #include "processdialog.h"
+#include "settings.h"
 #include "util.h"
 
+#include <qfile.h>
 #include <qfileinfo.h>
 #include <qprocess.h>
 #include <qstringlist.h>
 
-/**
- * The singleton instance.
- */
-CodeManager* CodeManager::instance_ = 0;
-
-CodeManager::CodeManager()
+CodeManager::CodeManager(Project *project, CpuModel *cpuModel)
 {
+    project_ = project;
+    model_ = cpuModel;
 }
 
 CodeManager::~CodeManager()
 {
 }
 
-CodeManager *CodeManager::instance()
+QString CodeManager::cpuPath()
 {
-    if (instance_ == 0) {
-        instance_ = new CodeManager();
-    }
-
-    return instance_;
-}
-
-QString CodeManager::cpuPath(CpuModel *model)
-{
-    // model must belong to a project!
-    Q_ASSERT(model->project() != 0);
     return QString("%1/CPU_%2_sdk")
-        .arg(model->project()->projectPath())
-        .arg(model->cpuId());
+        .arg(project_->projectPath())
+        .arg(model_->cpuId());
 }
 
-QString CodeManager::sourcePath(CpuModel *model)
+QString CodeManager::sourcePath()
 {
-    return QString("%1/src").arg(cpuPath(model));
+    return QString("%1/src").arg(cpuPath());
 }
 
-QString CodeManager::libPath(CpuModel *model)
+QString CodeManager::libPath()
 {
-    return QString("%1/lib").arg(cpuPath(model));
+    return QString("%1/lib").arg(cpuPath());
 }
 
-QString CodeManager::incPath(CpuModel *model)
+QString CodeManager::incPath()
 {
-    return QString("%1/inc").arg(cpuPath(model));
+    return QString("%1/inc").arg(cpuPath());
 }
 
-QString CodeManager::fileName(CpuModel *model)
+QString CodeManager::filename(QString extension)
 {
-    return QString("cpu_%1.c").arg(model->cpuId());
+    return QString("cpu_%1.%2")
+        .arg(model_->cpuId())
+        .arg(extension);
 }
 
-QString CodeManager::sourceFilePath(CpuModel *model)
+QString CodeManager::sourceFilePath(QString extension)
 {
     return QString("%1/%2")
-        .arg(sourcePath(model))
-        .arg(fileName(model));
+        .arg(sourcePath())
+        .arg(filename(extension));
 }
 
-int CodeManager::compile(CpuModel *model)
+int CodeManager::compile()
 {
-    QFile source(sourceFilePath(model));
-    if (!source.exists()) {
-        save(model);
-    }
-
     // create arguments
     QStringList args
         = QStringList::split(' ', Settings::instance()->compilerCmd());
-    args.append(fileName(model));
+    args.append(filename());
 
     ProcessDialog *dialog = ProcessDialog::instance();
-    return dialog->run(sourcePath(model), args);
+    return dialog->run(sourcePath(), args);
 }
 
-bool CodeManager::edit(CpuModel *model)
+void CodeManager::createDirectories()
 {
-    QFile source(sourceFilePath(model));
-    if (!source.exists()) {
-        save(model);
-    }
+    // check directory structure
+    createDirectory(QDir(cpuPath()));
+    createDirectory(QDir(sourcePath()));
+    createDirectory(QDir(libPath()));
+    createDirectory(QDir(incPath()));
+}
 
-    QProcess *proc = new QProcess(this);
+void CodeManager::createDirectory(const QDir &path)
+{
+    if (!path.exists()) {
+        if (!path.mkdir(path.absPath())) {
+            throw PoaException
+                (QString("Could not create directory: %1").arg(path.absPath()));
+        }
+    }
+}
+
+bool CodeManager::edit()
+{
+    QProcess *proc = new QProcess();
     QStringList args
         = QStringList::split(' ', Settings::instance()->editorCmd());
-    args.append(source.name());
+    args.append(filename());
 
     proc->setArguments(args);
-    proc->setWorkingDirectory(QDir(sourcePath(model)));
+    proc->setWorkingDirectory(QDir(sourcePath()));
 
     return proc->launch("");
 }
 
-void CodeManager::save(CpuModel *model)
+void CodeManager::copyTemplate()
 {
-    // check directory structure
-    QDir cpuDir(cpuPath(model));
-    QDir srcDir(sourcePath(model));
-    QDir libDir(libPath(model));
-    QDir incDir(incPath(model));
-
-    if (!cpuDir.exists()) {
-        cpuDir.mkdir(cpuDir.absPath());
+    QFile cpuTemplate(Settings::instance()->templatePath());
+    if (cpuTemplate.exists()) {
+        QFile source(sourceFilePath());
+        Util::copyFile(&cpuTemplate, &source);
     }
-    if (!srcDir.exists()) {
-        srcDir.mkdir(srcDir.absPath());
-    }
-    if (!libDir.exists()) {
-        libDir.mkdir(libDir.absPath());
-    }
-    if (!incDir.exists()) {
-        incDir.mkdir(incDir.absPath());
-    }
-
-    // check source file
-    QFile source(sourceFilePath(model));
-    if (!source.exists()) {
-        if (!model->source_.isNull()) {
-            Util::writeFile(&source, model->source_);
-            model->source_ = QString::null;
-        }
-        else {
-            // copy template
-            QFile cpuTemplate(Settings::instance()->templatePath());
-            if (cpuTemplate.exists()) {
-                Util::copyFile(&cpuTemplate, &source);
-            }
-            else {
-                // TODO: Pop up error dialog.
-            }
-        }
-    }
-    // else: don't care, the user has to save all changes
-    // with his editor.
-}
-
-void CodeManager::remove(CpuModel *model)
-{
-    // check directory structure
-    QDir cpuDir(cpuPath(model));
-
-    if (!Util::removeDir(&cpuDir)) {
-        // TODO: pop up error dialog.
+    else {
+        throw PoaException(QString("Could not copy code template: %1 does not exist.").arg(Settings::instance()->templatePath()));
     }
 }
 
-QString CodeManager::sourceCode(CpuModel *model)
+void CodeManager::saveSource()
 {
-    if (!model->source_.isNull()) {
-        return model->source_;
+    Q_ASSERT(!model_->source().isNull());
+
+    QFile source(sourceFilePath());
+    Util::writeFile(&source, model_->source());
+    model_->setSource(QString::null);
+}
+
+// void CodeManager::remove()
+// {
+//     // check directory structure
+//     QDir cpuDir(cpuPath(model_));
+
+//     if (!Util::removeDir(&cpuDir)) {
+//         // TODO: pop up error dialog.
+//     }
+// }
+
+QString CodeManager::sourceCode()
+{
+    if (!model_->source().isNull()) {
+        return model_->source();
     }
 
-    QFile source(sourceFilePath(model));
+    QFile source(sourceFilePath());
     if (source.exists()) {
         return Util::readFile(&source);
     }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.52 2004/01/29 16:31:47 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.53 2004/01/30 14:43:20 papier Exp $
  *
  *****************************************************************************/
 
@@ -162,8 +162,8 @@ void ScheduleDialog::initTimingWidget()
 
     timingTable = new QTable(0, 4, topWidget, "timingWidget");
     timingTable->horizontalHeader()->setLabel(0, tr( "Block" ));
-    timingTable->horizontalHeader()->setLabel(1, tr( "Laufzeit" ));
-    timingTable->horizontalHeader()->setLabel(2, tr( "Takt" ));
+    timingTable->horizontalHeader()->setLabel(1, tr( "Runtime" ));
+    timingTable->horizontalHeader()->setLabel(2, tr( "Clock" ));
     timingTable->horizontalHeader()->setLabel(3, tr( "Offset" ));
 
     timingTable->setSelectionMode(QTable::SingleRow);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.105 2004/01/28 16:35:51 squig Exp $
+ * $Id: mainwindow.cpp,v 1.106 2004/01/30 14:43:20 papier Exp $
  *
  *****************************************************************************/
 
@@ -236,7 +236,7 @@ void MainWindow::initializeActions()
         new QAction("Cascade", "&Cascade", 0, this, "cascadeAction");
     settingsShowGridAction_ =
         new QAction(tr("Show Grid"), tr("&Show Grid"),
-                    QKeySequence(tr("Ctrl+G")), this, "editSettingsShowGrid",
+                    QKeySequence("Ctrl+G"), this, "editSettingsShowGrid",
                     true);
     settingsShowGridAction_->setOn(Settings::instance()->showGrid());
     smartRouteAction_ = new QAction

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.cpp,v 1.3 2004/01/21 22:28:46 squig Exp $
+ * $Id: moveaction.cpp,v 1.4 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,25 +41,33 @@ MoveAction::MoveAction(CanvasView *view, QMouseEvent *e, Moveable *item)
 void MoveAction::mouseMoveEvent(QMouseEvent *e)
 {
     QPoint p = view()->inverseWorldMatrix().map(e->pos());
-    if (p.x() < 0 || p.y() < 0) {
-        return;
-    }
-
     if (Settings::instance()->snapToGrid() &&
         !(e->stateAfter() & Qt::ControlButton)) {
-        QPoint oldPos = QPoint((int)item_->currentX(), (int)item_->currentY());
+        QPoint oldPos = QPoint((int)item_->item()->x(), (int)item_->item()->y());
 
         // move to closest grid coordinate
         QPoint newPos = view()->gridCanvas()->toGrid(oldPos + p - startPoint_);
-        item_->dragBy(newPos.x() - oldPos.x(), newPos.y() - oldPos.y());
 
-        startPoint_ += newPos - oldPos;
+        int dx = newPos.x() - oldPos.x();
+        int dy = newPos.y() - oldPos.y();
+
+        // make sure item is not moved outside of canvas
+        if (item_->item()->x() + dx < 0) {
+            dx = (int)item_->item()->x();
+        }
+        if (item_->item()->y() + dy < 0) {
+            dy = (int)item_->item()->y();
+        }
+        QPoint moved = item_->dragBy(dx, dy);
+
+        startPoint_ += moved;
     }
     else {
         item_->dragBy(p.x() - startPoint_.x(), p.y() - startPoint_.y());
         startPoint_ = p;
     }
 
+    view()->gridCanvas()->ensureVisibility(item_->item());
     view()->canvas()->update();
 }
 

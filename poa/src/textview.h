@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: textview.h,v 1.1 2004/01/22 12:07:42 squig Exp $
+ * $Id: textview.h,v 1.2 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -54,24 +54,16 @@ public:
     virtual ~TextView();
 
     /**
-     * Returns <code>x()</code>. Needed for {@link Moveable}.
-     */
-    virtual double currentX();
-
-    /**
-     * Returns <code>y()</code>. Needed for {@link Moveable}.
-     */
-    virtual double currentY();
-
-    /**
      * Deserializes an xml subtree and sets this' properties
      */
     void deserialize(QDomElement element);
 
+    virtual QCanvasItem *item();
+
     /**
      * Invokes moveBy(double,double).
      */
-    virtual QSize dragBy(double dx, double dy);
+    virtual QPoint dragBy(int dx, int dy);
 
     virtual void remove(Project *project);
 

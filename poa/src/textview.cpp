@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: textview.cpp,v 1.1 2004/01/22 12:07:42 squig Exp $
+ * $Id: textview.cpp,v 1.2 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,25 +44,21 @@ TextView::~TextView()
 {
 }
 
-double TextView::currentX()
-{
-    return x();
-}
-
-double TextView::currentY()
-{
-    return y();
-}
-
 void TextView::deserialize(QDomElement element)
 {
     setText(element.attribute("text", ""));
 }
 
-QSize TextView::dragBy(double dx, double dy)
+QPoint TextView::dragBy(int dx, int dy)
 {
-    moveBy(rint(dx), rint(dy));
-    return QSize((int)dx, (int)dy);
+    // must convert to be consistent with return value
+    moveBy(dx, dy);
+    return QPoint(dx, dy);
+}
+
+QCanvasItem *TextView::item()
+{
+    return this;
 }
 
 void TextView::remove(Project *)

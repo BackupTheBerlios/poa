@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.59 2004/01/22 22:20:58 vanto Exp $
+ * $Id: blockview.cpp,v 1.60 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -92,23 +92,11 @@ bool BlockView::isDraggable()
 }
 
 
-QSize BlockView::dragBy(double dx, double dy)
+QPoint BlockView::dragBy(int dx, int dy)
 {
-    // must convert to be consistent with return value
-    moveBy(rint(dx), rint(dy));
-    return QSize((int) dx, (int) dy);
+    moveBy(dx, dy);
+    return QPoint(dx, dy);
 }
-
-double BlockView::currentX()
-{
-    return x();
-}
-
-double BlockView::currentY()
-{
-    return y();
-}
-
 
 void BlockView::addPin(PinModel *pin)
 {
@@ -235,6 +223,11 @@ void BlockView::arrangePins()
     arrangeVerticalPins();
     arrangeHorizontalPins();
     arrangeConnectors();
+}
+
+QCanvasItem *BlockView::item()
+{
+    return this;
 }
 
 AbstractModel *BlockView::model()

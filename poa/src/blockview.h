@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.45 2004/01/17 15:05:59 squig Exp $
+ * $Id: blockview.h,v 1.46 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -97,28 +97,9 @@ public:
      * Drags <code>this</code> and all attached pin views by the specified
      * amount
      */
-    virtual QSize dragBy(double dx, double dy);
+    virtual QPoint dragBy(int dx, int dy);
 
-    /**
-     * Synonym for <code>x()</code>. Needed for {@link Moveable}.
-     */
-    virtual double currentX();
-
-    /**
-     * Synonym for <code>y()</code>. Needed for {@link Moveable}.
-     */
-    virtual double currentY();
-
-/*     /\** */
-/*      * Activates a {@link MovingAction } for <code>view</code> that moves */
-/*      * the BlockView. */
-/*      *\/ */
-/*     virtual void mousePressEvent(CanvasView *view, QMouseEvent *e); */
-
-/*     /\** */
-/*      * Opens the block model dialog for <code>view</code>. */
-/*      *\/ */
-/*     virtual void mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e); */
+    virtual QCanvasItem *item();
 
     /**
      * Moves <code>this</code> and the pin views that are connected to

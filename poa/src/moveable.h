@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveable.h,v 1.2 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: moveable.h,v 1.3 2004/01/22 22:27:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,8 @@
 #ifndef MOVEABLE_H
 #define MOVEABLE_H
 
-#include <qsize.h>
+#include <qpoint.h>
+class QCanvasItem;
 
 /**
  * Defines the requirements for movable view objects.
@@ -46,17 +47,9 @@ public:
      * @return The distance <code>this</code> has really moved. Does not
      *         have to be equal to <code>QSize (dx, dy)</code>.
      */
-    virtual QSize dragBy(double, double) = 0;
+    virtual QPoint dragBy(int dx, int dy) = 0;
 
-    /**
-     * Returns <code>this</code>'s current position's x-coordinate.
-     */
-    virtual double currentX() = 0;
-
-    /**
-     * Returns <code>this</code>'s current position's y-coordinate.
-     */
-    virtual double currentY() = 0;
+    virtual QCanvasItem *item() = 0;
 
 };
 #endif

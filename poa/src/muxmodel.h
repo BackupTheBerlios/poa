@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.27 2003/12/10 16:13:21 garbeam Exp $
+ * $Id: muxmodel.h,v 1.28 2004/01/09 16:48:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -122,6 +122,12 @@ public:
      */
     MuxMapping *clone(PinModel *input, PinModel *output);
 
+    /** Returns the id of this mapping. */
+    unsigned id();
+
+    /** Sets the id of this mapping. */
+    void setId(unsigned id);
+
 private:
 
     PinModel *input_;
@@ -132,6 +138,7 @@ private:
     unsigned lastInputBit_;
     unsigned lastOutputBit_;
 
+    unsigned id_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,6 +185,11 @@ public:
     void removeMuxMapping(MuxMapping *mapping);
 
     /**
+     * Finds a mux mapping by id.
+     */
+    MuxMapping *findMuxMappingById(unsigned id);
+
+    /**
      * Creates the CanvasItems for this.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
@@ -205,12 +217,18 @@ public:
     /** Returns list pointer of all PinModels which are connected by input. */
     QPtrList<PinModel> connectionsForInputPin(PinModel *input);
 
+
 private:
+
+    void initIdCounter();
 
     /** MuxMapping's */
     QPtrList<MuxMapping> mappings_;
 
     MuxType type_;
+
+    unsigned idCounter_;
+
 
 // signals are inherited from BlockModel
 };

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.29 2003/12/10 16:13:21 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.30 2004/01/09 16:48:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@ MuxMapping::MuxMapping(PinModel *input, PinModel *output,
 {
     Q_ASSERT(firstInputBit <= lastInputBit);
     Q_ASSERT(firstOutputBit <= lastOutputBit);
+    id_ = 0;
     input_ = input;
     output_ = output;
     firstInputBit_ = firstInputBit;
@@ -104,6 +105,7 @@ void MuxMapping::setLastOutputBit(unsigned lastOutputBit) {
 QDomElement MuxMapping::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("muxmapping");
+    root.setAttribute("id", id_);
     root.setAttribute("input-id", input_->id());
     root.setAttribute("output-id", output_->id());
     root.setAttribute("first-input-bit", firstInputBit_);
@@ -114,7 +116,9 @@ QDomElement MuxMapping::serialize(QDomDocument *document)
 }
 
 void MuxMapping::deserialize(MuxModel *parent, QDomElement element) {
-    unsigned id = element.attribute("input-id", 0).toUInt();
+    unsigned id = element.attribute("id", 0).toUInt();
+    id_ = id;
+    id = element.attribute("input-id", 0).toUInt();
     input_ = parent->findPinById(id);
     id = element.attribute("output-id", 0).toUInt();
     output_ = parent->findPinById(id);
@@ -125,8 +129,19 @@ void MuxMapping::deserialize(MuxModel *parent, QDomElement element) {
 }
 
 MuxMapping *MuxMapping::clone(PinModel *input, PinModel *output) {
-    return new MuxMapping(input, output, firstInputBit_, lastInputBit_,
+    MuxMapping *mapping =
+           new MuxMapping(input, output, firstInputBit_, lastInputBit_,
                           firstOutputBit_, lastOutputBit_);
+    mapping->setId(id_);
+    return mapping;
+}
+
+unsigned MuxMapping::id() {
+    return id_;
+}
+
+void MuxMapping::setId(unsigned id) {
+    id_ = id;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,6 +151,7 @@ MuxModel::MuxModel(QString type, QString description)
 {
     setName(QString("new %1").arg(type));
     type_ = (type == "Mux") ? MUX : DEMUX;
+    initIdCounter();
     setDescription(description);
 }
 
@@ -201,6 +217,22 @@ void MuxModel::deserialize(QDomElement element)
         }
         node = node.nextSibling();
     }
+
+    initIdCounter();
+}
+
+MuxMapping *MuxModel::findMuxMappingById(unsigned id)
+{
+    for (QPtrListIterator<MuxMapping> it(mappings_); it != 0; ++it) {
+
+        MuxMapping *mapping = *it;
+        if (mapping->id() == id) {
+            return mapping;
+        }
+    }
+
+    // not found
+    return 0;
 }
 
 MuxModel::MuxType MuxModel::muxType() {
@@ -209,7 +241,11 @@ MuxModel::MuxType MuxModel::muxType() {
 
 void MuxModel::addMuxMapping(MuxMapping *mapping) {
 
+    idCounter_++;
+    mapping->setId(idCounter_);
     mappings_.append(mapping);
+    Q_ASSERT(mapping->input() != 0);
+    Q_ASSERT(mapping->output() != 0);
 }
 
 void MuxModel::removeMuxMapping(MuxMapping *mapping) {
@@ -233,4 +269,21 @@ QPtrList<PinModel> MuxModel::connectionsForInputPin(PinModel *input) {
     }
 
     return connectedPins;
+}
+
+
+void MuxModel::initIdCounter() {
+
+    if (mappings_.count() < 1) {
+        idCounter_ = 0;
+        return;
+    }
+
+    for (QPtrListIterator<MuxMapping> it(mappings_); it != 0; ++it) {
+
+        MuxMapping *mapping = *it;
+        if (mapping->id() >= idCounter_) {
+            idCounter_ = mapping->id() + 1;
+        }
+    }
 }

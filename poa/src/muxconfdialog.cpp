@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.32 2004/01/09 14:40:32 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.33 2004/01/09 16:48:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -105,7 +105,7 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
     initLayout();
     initConnections();
     listViewSelectionChanged();
-    //syncModel();
+    syncModel();
 
 }
 
@@ -315,8 +315,8 @@ void MuxConfDialog::initConnections() {
         this, SLOT(updateMapping()));
     connect(removeMappingPushButton_, SIGNAL(clicked()),
         this, SLOT(removeMapping()));
-//    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
- //   connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
+    connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(inputListView, SIGNAL(selectionChanged()),
             this, SLOT(listViewSelectionChanged()));
@@ -367,10 +367,10 @@ void MuxConfDialog::syncModel() {
             }
         }
 
-        for (QPtrListIterator<MuxMapping> it2(*model_->mappings()); it2 != 0;)
+        for (QPtrListIterator<MuxMapping> it2(*model_->mappings());
+             it2 != 0; ++it2)
         {
-            ++it2;
-            MuxMapping *mapping = it2.current();
+            MuxMapping *mapping = *it2;
             PinModel *clonedInput =
                 findPinById(PinModel::INPUT, mapping->input()->id());
             Q_ASSERT(clonedInput);
@@ -382,133 +382,97 @@ void MuxConfDialog::syncModel() {
                                        mapping->clone(clonedInput, clonedOutput),
                                        mapping);
         }
-
-
     }
 }
 
 
 void MuxConfDialog::updateModel() {
-#if 0
     Q_ASSERT(model_ != 0);
-    if (model_ != 0) {
 
-        model_->setName(nameLineEdit->text());
+    model_->setName(nameLineEdit->text());
 
-        // update output pins
-        // Note: MuxModel::addOutput emits also a pinAdded signal,
-        // so this is used only for new Outputs!
-        QPtrList<PinModel> *pinModels = model_->outputPins();
-        pinModels->clear();
-        QPtrListIterator<MapToComboBoxItem> iter(mappedToIos_);
-        MapToComboBoxItem *item;
-        while ((item = iter.current()) != 0) {
-            ++iter;
-            PinModel *origPin = item->origData();
-            PinModel *currPin = item->data();
+    ////////////////////////////////////////////////////////////
+    // IO handling
 
-            if (origPin != 0) {
-                origPin->setId(currPin->id());
-                origPin->setName(currPin->name());
-                origPin->setAddress(currPin->address());
-                origPin->setBits(currPin->bits());
-                origPin->setType(currPin->type());
-                origPin->setParent(model_);
-                pinModels->append(origPin);
-            }
-            else {
-                // new pin
-                PinModel *newOuput = currPin->clone();
-                model_->addPin(newOuput);
-                item->setOrigData(newOuput);
-            }
-        }
-
-        //////////////////////////////////////////////////////////////
-        // delete everything which was deleted by the user
-        QPtrListIterator<PinModel> delMux(deletedPins_);
-        PinModel *pin;
-        while ((pin = delMux.current()) != 0) {
-            ++delMux;
-            model_->removePin(pin);
-        }
-        deletedPins_.clear();
-
-        // Flush mux input pin list. Already deleted PinModels
-        // won't resist anymore in the model, not deleted
-        // PinModels will be restored in the next step.
-        QPtrList<PinModel> *inputPins = model_->inputPins();
-        inputPins->clear();
-
-        // rebuild mux pin list.
-        QListViewItemIterator it(mappingListView);
-        for ( ; it.current(); ++it) {
-            QListViewItem *item = it.current();
-            if (item->isOpen()) { // only input pins are open
-                MuxListViewItem *muxItem =  (MuxListViewItem *)item;
-
-                PinModel *origPin = muxItem->origData();
-                PinModel *currPin = muxItem->data();
-                PinModel *newPin;
-
-                if (origPin != 0) {
-                    // use original input pin and change its mux mappings
-                    // to the current model
-                    QPtrListIterator<MuxMapping> origMapIter(*model_->mappings());
-                    MuxMapping *m;
-                    while ((m = origMapIter.current()) != 0) {
-                        ++origMapIter;
-                        delete m;
-                    }
-                    //origPin->mappings()->clear();
-                    model_->addPin(origPin, true);
-                    QPtrListIterator<MuxMapping> currMapIter(*model_->mappings());
-                    while ((m = currMapIter.current()) != 0) {
-                        ++currMapIter;
-                        PinModel *output = 0; //model_->outputForName(m->output()->name());
-                        Q_ASSERT(output != 0);
-                        MuxMapping *newMapping =
-                            m->clone(origPin, output);
-                        model_->addMuxMapping(newMapping);
-                    }
-                    newPin = origPin;
-                }
-                else {
-                    // It's a new input pin, just add a cloned one
-                    PinModel *inputPin = currPin->clone();
-                    model_->addPin(inputPin);
-                    muxItem->setOrigData(inputPin);
-                    newPin = inputPin;
-                }
-                // Update listView MuxMapping items
-                QListViewItem *child = muxItem->firstChild();
-                while (child != 0) {
-
-                    MuxMappingListViewItem *mapItem =
-                        (MuxMappingListViewItem *)child;
-
-                    if (mapItem->data()->input() == currPin) {
-
-                        MuxMapping *currMapping = mapItem->data();
-
-                        // reset origin info
-                        mapItem->setOrigMapping(
-                                newPin->findEqual(currMapping));
-                    }
-
-                    child = child->nextSibling();
-                }
-
-            }
-        }
-        // Reset outputs on model
-        model_->updateOutputs();
-
-        // Notify model about update, so the view will be
-        // repaint.
-        ((AbstractModel *)model_)->updatePerformed();
+    // deleted pins
+    for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
+        model_->deletePin(*dit);
     }
-#endif
+
+    // updated pins
+    for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
+        PinModel *pin = *uit;
+        PinModel *origPin = model_->findPinById(pin->id());
+        origPin->setName(pin->name());
+        origPin->setBits(pin->bits());
+        origPin->setPosition(pin->position());
+    }
+
+    // new pins
+    for (QPtrListIterator<PinModel> nit(newPins_); nit != 0; ++nit) {
+        PinModel *pin = *nit;
+
+        PinModel *clone = pin->clone();
+        model_->addPin(clone);
+        // id has been set by addPin
+        pin->setId(clone->id());
+    }
+
+    ////////////////////////////////////////////////////////////
+    // mapping handling
+
+    // deleted mappings
+    for (QPtrListIterator<MuxMapping> dmit(deletedMappings_);
+         dmit != 0; ++dmit)
+    {
+        model_->removeMuxMapping(*dmit);
+    }
+
+    // updated mappings
+    for (QPtrListIterator<MuxMapping> umit(updatedMappings_);
+         umit != 0; ++umit)
+    {
+        MuxMapping *mapping = *umit;
+        MuxMapping *origMapping = model_->findMuxMappingById(mapping->id());
+        origMapping->setInput(mapping->input());
+        origMapping->setOutput(mapping->output());
+        origMapping->setFirstInputBit(mapping->firstInputBit());
+        origMapping->setLastInputBit(mapping->lastInputBit());
+        origMapping->setFirstOutputBit(mapping->firstOutputBit());
+        origMapping->setLastOutputBit(mapping->lastOutputBit());
+    }
+
+    // new mapping
+    for (QPtrListIterator<MuxMapping> nmit(newMappings_);
+         nmit != 0; ++nmit)
+    {
+        MuxMapping *mapping = *nmit;
+
+        PinModel *input = model_->findPinById(mapping->input()->id());
+        Q_ASSERT(input != 0);
+        PinModel *output = model_->findPinById(mapping->output()->id());
+        Q_ASSERT(output != 0);
+        model_->addMuxMapping(mapping->clone(input, output));
+    }
+
+    // clears list views, will also delete all dedicated cloned models!
+    inputListView->clear();
+    outputListView->clear();
+    mappingListView->clear();
+
+    deletedPins_.clear();
+    updatedPins_.clear();
+    newPins_.clear();
+    deletedMappings_.clear();
+    updatedMappings_.clear();
+    newMappings_.clear();
+
+    // Notify model about update, so the view will be
+    // repaint.
+    ((AbstractModel *)model_)->updatePerformed();
+
+    // sync again
+    syncModel();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -861,10 +825,10 @@ PinModel *MuxConfDialog::findPinById(PinModel::PinType type, unsigned id)
     for ( ; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
 
-        PinModel *clone = item->data();
+        PinModel *pin = item->data(); //item->origData should also do
 
-        if (clone->id() == id) {
-            return clone;
+        if (pin && pin->id() == id) {
+            return pin;
         }
     }
 

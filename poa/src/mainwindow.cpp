@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.29 2003/08/22 16:50:51 squig Exp $
+ * $Id: mainwindow.cpp,v 1.30 2003/08/22 17:15:17 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -468,7 +468,7 @@ MdiWindow* MainWindow::newDoc()
     i->show();*/
 
     // FIX: remove: another one
-    BlockView *view = new BlockView(0, canvas);
+    BlockView *view = new BlockView(new BlockModel(QString("Test")), canvas);
     int z = 255%256;
     view->setBrush( QColor(z,0,z) );
     view->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.23 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.24 2004/01/28 15:19:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -67,8 +67,23 @@ public:
      */
     void update();
 
+    void setFirstInputBit(unsigned firstInputBit);
+    void setFirstOutputBit(unsigned firstOutputBit);
+    void setLastInputBit(unsigned lastInputBit);
+    void setLastOutputBit(unsigned lastOutputBit);
+
+    unsigned firstInputBit();
+    unsigned firstOutputBit();
+    unsigned lastInputBit();
+    unsigned lastOutputBit();
+
+
 private:
     MuxMapping *mapping_;
+    unsigned firstInputBit_;
+    unsigned firstOutputBit_;
+    unsigned lastInputBit_;
+    unsigned lastOutputBit_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,6 +163,9 @@ private slots:
 
     /** Adds a new MuxMapping. */
     void addMapping();
+
+    /** Updates a MuxMapping. */
+    void updateMapping();
 
     /** Remove the selected MuxMapping. */
     void removeMapping();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.58 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.59 2004/01/28 15:19:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -278,7 +278,9 @@ void BlockConfDialog::commit()
     blockConfWidget_->commit();
 
     // notify model about update to repaint views
-    model_->updatePerformed();
+    if (blockConfWidget_->newPinSortOrder()) {
+        model_->updatePerformed();
+    }
 
     // sync again
     sync();

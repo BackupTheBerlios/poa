@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.37 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.38 2004/01/28 15:19:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -55,6 +55,11 @@ MuxMappingListViewItem::MuxMappingListViewItem(
     setOpen(false);
     mapping_ = mapping;
 
+    firstInputBit_ = 0;
+    firstOutputBit_ = 0;
+    lastInputBit_ = 0;
+    lastOutputBit_ = 0;
+
     update();
 }
 
@@ -73,8 +78,46 @@ void MuxMappingListViewItem::update() {
         setText(2, mapping_->output()->name());
         setText(3, QString::number(mapping_->firstOutputBit()) + " - "
                    + QString::number(mapping_->lastOutputBit()));
+
+        firstInputBit_ = mapping_->firstInputBit();
+        firstOutputBit_ = mapping_->firstOutputBit();
+        lastInputBit_ = mapping_->lastInputBit();
+        lastOutputBit_ = mapping_->lastOutputBit();
     }
 }
+
+void MuxMappingListViewItem::setFirstInputBit(unsigned firstInputBit) {
+    firstInputBit_ = firstInputBit;
+}
+
+void MuxMappingListViewItem::setFirstOutputBit(unsigned firstOutputBit) {
+    firstOutputBit_ = firstOutputBit;
+}
+
+void MuxMappingListViewItem::setLastInputBit(unsigned lastInputBit) {
+    lastInputBit_ = lastInputBit;
+}
+
+void MuxMappingListViewItem::setLastOutputBit(unsigned lastOutputBit) {
+    lastOutputBit_ = lastOutputBit;
+}
+
+unsigned MuxMappingListViewItem::firstInputBit() {
+    return firstInputBit_;
+}
+
+unsigned MuxMappingListViewItem::firstOutputBit() {
+    return firstOutputBit_;
+}
+
+unsigned MuxMappingListViewItem::lastInputBit() {
+    return lastInputBit_;
+}
+
+unsigned MuxMappingListViewItem::lastOutputBit() {
+    return lastOutputBit_;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -127,8 +170,11 @@ void MuxConfDialog::initMappingWidget() {
     mappingGroupBox->setTitle(tr("Mappings"));
     QBoxLayout *mappingLayout = new QVBoxLayout(mappingGroupBox, 3 * WIDGET_SPACING);
 
+    QWidget *boxWidget = new QWidget(mappingGroupBox);
+    QBoxLayout *boxLayout = new QVBoxLayout(boxWidget, WIDGET_SPACING);
+
     // prepare buttons to put into grid layout
-    QWidget *buttonWidget = new QWidget(mappingGroupBox);
+    QWidget *buttonWidget = new QWidget(boxWidget);
     QBoxLayout *buttonLayout =
         new QHBoxLayout(buttonWidget, WIDGET_SPACING);
 
@@ -137,16 +183,24 @@ void MuxConfDialog::initMappingWidget() {
     connect(newMappingButton, SIGNAL(clicked()),
             this, SLOT(addMapping()));
 
+    QPushButton *updateMappingButton = new QPushButton(buttonWidget);
+    updateMappingButton->setText(tr("&Update"));
+    connect(updateMappingButton, SIGNAL(clicked()),
+            this, SLOT(updateMapping()));
+
     QPushButton *removeMappingButton = new QPushButton(buttonWidget);
     removeMappingButton->setText(tr("Remove"));
     connect(removeMappingButton, SIGNAL(clicked()),
             this, SLOT(removeMapping()));
 
+    buttonLayout->addStretch(1);
     buttonLayout->addWidget(newMappingButton);
+    buttonLayout->addWidget(updateMappingButton);
     buttonLayout->addWidget(removeMappingButton);
+    buttonLayout->addStretch(1);
 
     // prepare mapping ListView
-    mappingListView = new QListView(mappingGroupBox, "mappingsListView");
+    mappingListView = new QListView(boxWidget, "mappingsListView");
     mappingListView->setAllColumnsShowFocus(TRUE);
     mappingListView->addColumn(tr("Input"));
     mappingListView->addColumn(tr("Range"));
@@ -154,8 +208,10 @@ void MuxConfDialog::initMappingWidget() {
     mappingListView->addColumn(tr("Range"));
 
     // finish mapping layout
-    mappingLayout->addWidget(mappingListView);
-    mappingLayout->addWidget(buttonWidget);
+    boxLayout->addWidget(mappingListView);
+    boxLayout->addWidget(buttonWidget);
+
+    mappingLayout->addWidget(boxWidget);
 
     dialogLayout_->addWidget(mappingGroupBox);
 }
@@ -256,7 +312,9 @@ void MuxConfDialog::commit() {
 
     // Notify model about update, so the view will be
     // repaint.
-    ((AbstractModel *)model_)->updatePerformed();
+    if (blockConfWidget_->newPinSortOrder()) {
+        ((AbstractModel *)model_)->updatePerformed();
+    }
 
     // sync again
     sync();
@@ -341,11 +399,30 @@ void MuxConfDialog::addMapping() {
     if (dialog->exec() == QDialog::Rejected) {
         mappingListView->takeItem(item);
     }
+    else {
+        item->update();
+    }
     delete dialog;
 }
 
+void MuxConfDialog::updateMapping() {
+
+    MuxMappingListViewItem *item =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
+
+    if (item) {
+        MuxMappingConfDialog *dialog
+            = new MuxMappingConfDialog(
+                    QListViewItemIterator(blockConfWidget_->ioListView()),
+                    item, this);
+        if (dialog->exec() == QDialog::Accepted) {
+            item->update();
+        }
+        delete dialog;
+    }
+}
+
 void MuxConfDialog::removeMapping() {
-#if 0
     MuxMappingListViewItem *selected =
         (MuxMappingListViewItem *)mappingListView->selectedItem();
 
@@ -353,23 +430,12 @@ void MuxConfDialog::removeMapping() {
         return;
     }
 
-    MuxMapping *mapping = selected->data();
-    MuxMapping *origMapping = selected->origData();
-
-    if (origMapping != 0) {
-        if (updatedMappings_.contains(origMapping)) {
-            updatedMappings_.remove(origMapping);
-        }
-
-        deletedMappings_.append(origMapping);
-    }
-
-    if (newMappings_.contains(mapping)) {
-        newMappings_.remove(mapping);
+    MuxMapping *mapping = selected->mapping();
+    if (mapping) {
+        deletedMappings_.append(mapping);
     }
     mappingListView->takeItem(selected);
     delete selected;
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.1 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: blockconfwidget.h,v 1.2 2004/01/28 15:19:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -61,6 +61,9 @@ public:
 
     QListView *ioListView() const;
 
+    /** Returns <code>true</code> if pin order changed. */
+    bool newPinSortOrder();
+
 private:
     QListView *ioListView_;
 
@@ -73,6 +76,7 @@ private:
 
     QPushButton *newIoPushButton_;
     QPushButton *removeIoPushButton_;
+    bool newPinSortOrder_;
 
     /**
      * Initializes layout.

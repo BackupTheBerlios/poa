@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.2 2004/01/28 07:08:47 squig Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.3 2004/01/28 15:19:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@ MuxMappingConfDialog::MuxMappingConfDialog(
         QWidget* parent,
         const char* name,
         bool modal, WFlags fl)
+    : QDialog(parent, name, modal, fl)
 {
     itemIter_ = iter;
     muxMappingItem_ = item;
@@ -65,16 +66,26 @@ void MuxMappingConfDialog::initLayout() {
         = new QVBoxLayout(this, WIDGET_SPACING);
 
     // I/Os
-    QWidget *comboWidget = new QWidget(this);
-    QBoxLayout *comboLayout
-        = new QHBoxLayout(comboWidget, WIDGET_SPACING);
+    QWidget *ioWidget = new QWidget(this);
+    QBoxLayout *ioLayout
+        = new QHBoxLayout(ioWidget, WIDGET_SPACING);
 
-    inputComboBox_ = new QComboBox(comboWidget);
-    outputComboBox_ = new QComboBox(comboWidget);
-    comboLayout->add(new QLabel(tr("Inputs "), comboWidget));
-    comboLayout->add(inputComboBox_);
-    comboLayout->add(new QLabel(tr("Outputs"), comboWidget));
-    comboLayout->add(outputComboBox_);
+    QWidget *comboInputWidget = new QWidget(ioWidget);
+    QBoxLayout *comboInputLayout
+        = new QHBoxLayout(comboInputWidget, WIDGET_SPACING);
+    QWidget *comboOutputWidget = new QWidget(ioWidget);
+    QBoxLayout *comboOutputLayout
+        = new QHBoxLayout(comboOutputWidget, WIDGET_SPACING);
+
+    inputComboBox_ = new QComboBox(comboInputWidget);
+    outputComboBox_ = new QComboBox(comboOutputWidget);
+    comboInputLayout->add(new QLabel(tr("Inputs "), comboInputWidget));
+    comboInputLayout->add(inputComboBox_);
+    comboOutputLayout->add(new QLabel(tr("Outputs"), comboOutputWidget));
+    comboOutputLayout->add(outputComboBox_);
+
+    ioLayout->addWidget(comboInputWidget);
+    ioLayout->addWidget(comboOutputWidget);
 
     // range widget
     QWidget *rangeWidget = new QWidget(this);
@@ -119,50 +130,66 @@ void MuxMappingConfDialog::initLayout() {
     cancelButton->setText(tr("&Cancel"));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
+    buttonLayout->addStretch(1);
     buttonLayout->add(okButton);
     buttonLayout->add(cancelButton);
+    buttonLayout->addStretch(1);
 
     // base layout
-    baseLayout->add(comboWidget);
+    baseLayout->add(ioWidget);
     baseLayout->add(rangeWidget);
     baseLayout->add(buttonWidget);
 }
 
 void MuxMappingConfDialog::sync() {
 
+    inputComboBox_->clear();
+    outputComboBox_->clear();
+    int inputIdx = 1, inputCount = 1;
+    int outputIdx = 1, outputCount = 1;
     QListViewItemIterator it = *itemIter_;
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->type() == PinModel::INPUT) {
             inputComboBox_->insertItem(item->text(1));
+            if (item->text(1) == muxMappingItem_->text(1)) {
+                inputIdx = inputCount;
+            } 
+            inputCount++;
         }
         else if (item->type() == PinModel::OUTPUT) {
             outputComboBox_->insertItem(item->text(1));
+            if (item->text(1) == muxMappingItem_->text(1)) {
+                outputIdx = outputCount;
+            } 
+            outputCount++;
         }
     }
-    inputComboBox_->setCurrentText(muxMappingItem_->text(0));
-    outputComboBox_->setCurrentText(muxMappingItem_->text(2));
+    inputComboBox_->setCurrentItem(inputIdx);
+    outputComboBox_->setCurrentItem(outputIdx);
 
-    MuxMapping *mapping = muxMappingItem_->mapping();
-    if (mapping) {
-        firstInputBitSpinBox_->setValue(mapping->firstInputBit());
-        firstOutputBitSpinBox_->setValue(mapping->firstOutputBit());
-        lastOutputBitSpinBox_->setValue(mapping->lastOutputBit());
-        lastInputBitSpinBox_->setValue(mapping->lastInputBit());
-    }
-    else {
-        // HACK, to prevent string parsing
-        firstInputBitSpinBox_->setValue(0);
-        firstOutputBitSpinBox_->setValue(0);
-        lastInputBitSpinBox_->setValue(0);
-        lastOutputBitSpinBox_->setValue(0);
-    }
+    firstInputBitSpinBox_->setValue(muxMappingItem_->firstInputBit());
+    firstOutputBitSpinBox_->setValue(muxMappingItem_->firstOutputBit());
+    lastOutputBitSpinBox_->setValue(muxMappingItem_->lastOutputBit());
+    lastInputBitSpinBox_->setValue(muxMappingItem_->lastInputBit());
 }
 
 void MuxMappingConfDialog::commit() {
 
-    // TODO
+    muxMappingItem_->setText(0, inputComboBox_->currentText());
+    muxMappingItem_->setText(2, inputComboBox_->currentText());
+    muxMappingItem_->setText(1,
+         QString::number(firstInputBitSpinBox_->value()) + " - "
+         + QString::number(lastInputBitSpinBox_->value()));
+    muxMappingItem_->setText(3,
+         QString::number(firstOutputBitSpinBox_->value()) + " - "
+         + QString::number(lastOutputBitSpinBox_->value()));
 
+
+    muxMappingItem_->setFirstInputBit(firstInputBitSpinBox_->value());
+    muxMappingItem_->setFirstOutputBit(firstOutputBitSpinBox_->value());
+    muxMappingItem_->setLastInputBit(lastInputBitSpinBox_->value());
+    muxMappingItem_->setLastOutputBit(lastOutputBitSpinBox_->value());
 }
 
 void MuxMappingConfDialog::cancel() {

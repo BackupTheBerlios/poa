@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.27 2003/12/02 09:59:50 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.28 2003/12/03 12:59:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,8 @@
 #include "blockview.h"
 
 PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
-                   unsigned address, unsigned bits, PinType type)
+                   unsigned address, unsigned bits, PinType type,
+                   unsigned position = 0)
 {
     Q_ASSERT(name != 0);
     name_ = name;
@@ -41,6 +42,7 @@ PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
     address_ = address;
     bits_ = bits;
     type_ = type;
+    position_ = position;
 }
 
 
@@ -53,6 +55,8 @@ PinModel::PinModel(BlockModel *parent, const QString &name)
     id_ = 0;
     address_ = 0;
     bits_ = 32;
+    position_ = 0;
+}
 }
 
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
@@ -60,6 +64,7 @@ PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
     parent_ = parent;
     connected_ = 0;
     view_ = 0;
+// TODO position stuff
     if (!pinElem.isNull()) {
         deserialize(pinElem);
     }
@@ -129,6 +134,16 @@ unsigned PinModel::id()
 void PinModel::setId(unsigned id)
 {
     id_ = id;
+}
+
+unsigned PinModel::position() const
+{
+    return position_;
+}
+
+void PinModel::setPosition(unsigned position)
+{
+    position_ = position;
 }
 
 QString PinModel::name()

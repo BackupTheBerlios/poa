@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.22 2003/11/26 16:02:58 vanto Exp $
+ * $Id: pinmodel.h,v 1.23 2003/12/03 12:59:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -59,7 +59,8 @@ public:
      * @param bits is its bits.
      */
     PinModel(BlockModel *parent, unsigned id, const QString &name,
-             unsigned address, unsigned bits, PinType type);
+             unsigned address, unsigned bits, PinType type,
+             unsigned position = 0);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code>.
@@ -118,6 +119,18 @@ public:
      * Sets the type of this pin
      */
     void setType(PinType type);
+
+    /**
+     * Returns this' position.
+     * The position is set by the BlockConfDialog.
+     */
+    unsigned position() const;
+
+    /**
+     * Sets this' position.
+     * Used by the BlockModel
+     */
+    void setPosition(const unsigned position);
 
     /**
      * Returns this' id.
@@ -194,6 +207,7 @@ public:
 private:
 
     unsigned id_;
+    unsigned position_;
     QString name_;
     BlockModel *parent_;
     unsigned address_;

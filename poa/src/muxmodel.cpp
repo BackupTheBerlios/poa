@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.12 2003/09/25 11:02:48 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.13 2003/09/25 15:10:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,7 +36,6 @@ MuxMapping::MuxMapping(PinModel *output, unsigned begin, unsigned end)
 
 MuxMapping::~MuxMapping()
 {
-
 }
 
 PinModel *MuxMapping::output()

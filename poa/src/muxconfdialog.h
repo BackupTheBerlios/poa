@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.6 2003/09/25 11:02:48 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.7 2003/09/25 15:10:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -124,6 +124,41 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Provides combo box items.
+ */
+class MapToComboBoxItem
+{
+public:
+
+    /**
+     * Creates a IO list view item for the given MuxModel.
+     */
+    MapToComboBoxItem(PinModel *clone = 0, PinModel* origin = 0);
+
+    /**
+     * Default destructor
+     */
+    ~MapToComboBoxItem();
+
+    /**
+     * Returns the PinModel.
+     */
+    PinModel *data() const;
+
+    /**
+     * Returns the origin PinModel.
+     */
+    PinModel *origData() const;
+
+private:
+    PinModel *clone_;
+    PinModel *origin_;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+
 class MuxConfDialog : public QDialog
 {
     Q_OBJECT
@@ -164,6 +199,12 @@ private:
     /** Adds a new IO to the mappings list view. */
     void addIo();
 
+    /** Removes the IO given by <code>item</code>. */
+    void removeIo(MuxListViewItem *item);
+
+    /** Removes the Mapping given by <code>item</code>. */
+    void removeMapping(MuxMappingListViewItem *item);
+
     QLineEdit* nameLineEdit;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
@@ -180,7 +221,7 @@ private:
 
     MuxModel *model_;
 
-    QPtrList<PinModel> mappedToIos_;
+    QPtrList<MapToComboBoxItem> mappedToIos_;
     QPtrList<MuxMapping> deletedMappings_;
     QPtrList<MuxPin> deletedMuxPins_;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.7 2003/09/25 11:07:28 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.8 2003/09/25 15:10:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -108,6 +108,27 @@ void MuxListViewItem::update() {
     if (clone_ != 0) {
         setText(0, clone_->model()->name());
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MapToComboBoxItem::MapToComboBoxItem(PinModel *clone, PinModel *origin) {
+    clone_ = clone;
+    origin_ = origin;
+}
+
+MapToComboBoxItem::~MapToComboBoxItem() {
+    if (clone_ != 0) {
+        delete clone_;
+    }
+}
+
+PinModel *MapToComboBoxItem::data() const {
+    return clone_;
+}
+
+PinModel *MapToComboBoxItem::origData() const {
+    return origin_;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -264,9 +285,9 @@ void MuxConfDialog::initConnections() {
 MuxConfDialog::~MuxConfDialog()
 {
     for (unsigned i = 0; i < mappedToIos_.count(); i++) {
-        PinModel *pin = mappedToIos_.at(i);
+        MapToComboBoxItem *item  = mappedToIos_.at(i);
         mappedToIos_.remove(i);
-        delete pin;
+        delete item;
     }
 
     for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
@@ -324,7 +345,7 @@ void MuxConfDialog::mappingSelectionChanged() {
 PinModel *MuxConfDialog::ioForString(QString name) {
 
     for (unsigned i = 0; i < mappedToIos_.count(); i++) {
-        PinModel *model = mappedToIos_.at(i);
+        PinModel *model = mappedToIos_.at(i)->data();
         if (model->name() == name) {
             return model;
         }
@@ -381,7 +402,6 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
     bool proceed = true;
 
     if (mapToName == "") {
-
         mapToName = QString("%1 %2").arg(name).arg(id);
         switch(QMessageBox::warning(this, "POA",
                     "Cannot create a new mapping without a valid\n" +
@@ -416,7 +436,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
                 new PinModel(model_, id, mapToName, id * 100, 0,
                         (type == PinModel::INPUT) ? PinModel::OUTPUT : 
                         PinModel::INPUT);
-            mappedToIos_.append(mapTo);
+            mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
             ioComboBox_->insertItem(mapToName);
         }
 
@@ -448,14 +468,95 @@ void MuxConfDialog::addIoOrMapping() {
 ///////////////////////////////////////////////////////////////////////////////
 // Remove IO/Mapping Slot/Helpers
 //
+void MuxConfDialog::removeIo(MuxListViewItem *item) {
+
+    MuxPin *origMuxPin = item->origData();
+    PinModel *connected = 0;
+    if (origMuxPin != 0) {
+        PinModel *origPin = origMuxPin->model();
+        if (origPin != 0) {
+            connected = origPin->connected();
+        }
+    }
+ 
+    if ((item->childCount() > 0) || connected != 0) {
+        QString warnMessage = (item->childCount() > 0) ?
+            item->text(0) + " has " +
+            QString::number(item->childCount()) +
+            " outgoing mappings.\n\n"
+            "All mappings and any outgoing or incoming\n"
+            "connections will be removed.\n":
+            "All mappings and any outgoing or incoming\n"
+            "connections will be removed.\n";
+
+        switch(QMessageBox::warning(this, "POA",
+               warnMessage, "Ok", "Cancel", 0, 0, 1))
+        {
+        case 0: // The user clicked OK, so all related connections
+            // will be removed after applying changes.
+            deletedMuxPins_.append(origMuxPin);
+            break;
+        case 1: // Cancel removal.
+            return;
+            break;
+        }
+    }
+
+    mappingListView->takeItem(item);
+    // Note: item will be deleted by its parent mappingListView.
+}
+
+void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
+
+    MuxMapping *origMapping = item->origData();
+
+    if (origMapping != 0) {
+        PinModel *origPin = origMapping->output();
+        if (origPin != 0) {
+            PinModel *connected = origPin->connected();
+            if (connected != 0) {
+                switch(QMessageBox::warning(this, "POA",
+                            item->text(0) + " is connected to " +
+                            connected->name() + " of " +
+                            connected->parent()->name() + ".\n\n"
+                            "This connection will be removed after you"
+                            "apply your changes.\n",
+                            "Ok", "Cancel", 0, 0, 1))
+                {
+                case 0: // The user clicked OK, so all related connections
+                    // will be removed after applying changes.
+                    deletedMappings_.append(origMapping);
+                    break;
+                case 1: // Cancel removal.
+                    return;
+                    break;
+                }
+            }
+        }
+    }
+
+    QListViewItem *iter = (QListViewItem *)item;
+    // determine parent
+    while (!iter->isOpen()) {
+        iter = iter->parent();
+    }
+
+    // finally, we delete the item from the list
+    ((MuxListViewItem *)iter)->takeItem(item);
+}
+
 void MuxConfDialog::removeIoOrMapping() {
 
-    MuxListViewItem *item = (MuxListViewItem *)mappingListView->selectedItem();
+    QListViewItem *item = mappingListView->selectedItem();
 
     if (item != 0) {
-        // TODO:
-    }
-    else {
-        // TODO:
+
+        if (item->isOpen()) {
+            // parent MuxListViewItem
+            removeIo((MuxListViewItem *)item);
+        }
+        else {
+            removeMapping((MuxMappingListViewItem *)item);
+        }
     }
 }

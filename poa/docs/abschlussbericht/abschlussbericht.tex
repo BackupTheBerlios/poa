@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.14 2004/06/06 23:11:20 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.15 2004/06/07 00:23:56 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.14 $
-\RCSdef $Date: 2004/06/06 23:11:20 $
+\RCSdef $Revision: 1.15 $
+\RCSdef $Date: 2004/06/07 00:23:56 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -204,9 +204,7 @@ aufteilen, die eine gerine Kopplung aufweisen.
   \caption{POA Architektur}
 \end{figure}
 
-Im Model und Project Modul wird das Datenmodell verwaltet. 
-
-Die Module Scheduling, Problemmanager und Download...
+FIX: Kurze Beschreibung der Architektur
 
 Der POA Entwurf wurde nach folgenden Kritieren optimiert:
 
@@ -340,7 +338,7 @@ Entwicklungsstyl. Die Dokumente wurden in der Regel von mindesten zwei
 Entwicklern gemeinsam verfasst und grundsätzlich anschliessend von dem
 gesammten Team in einem Review geprüft. Die einzelnen Quellcode
 Dateien konnten vom jedem Entwickler eingesehen und geändert werden
-(siehe auch \ref{owners per file}), damit wurde die Qualität laufend
+(siehe auch \ref{developer by file}), damit wurde die Qualität laufend
 in Form von Peer-Reviews gesichert. 
 
 \subsubsection{Projektleiter}
@@ -461,7 +459,8 @@ Die vereinbarten Meilensteine wurde eingehalten bzw. im mit dem
 Einverständnis des Kunden geringfügig verschoben. Durch eine
 kontinuierliche Fortschrittskontrolle und Planungsanpassung wurde vom
 Team dazu beigetragen die Wahrscheinlichkeit einer Verzögerung
-frühzeitig erkennbar zu machen.
+frühzeitig erkennbar zu machen. Auf Grund der Reduzierung der
+Iterationen wurde der Meilenstein M3 gestrichen.
 
 Als Schwierig erwiess sich die Koordination der individuellen
 Wochenpläne. Bedingt durch unterschiedlich gewählte Vorlesungen,
@@ -682,6 +681,14 @@ Informationenn über die Entwickler, den Quellcode und die
 Projektablauf. Damit konnte sowohl für den Kunden als auch für die
 Entwickler eine hohe Transparenz erreicht werden.
 
+Einer der von Maven generierten Berichte wird von mit dem von Tammo
+van Lessen und Steffen Pingel entwickelten Analysewerkzeug StatCVS-XML
+erzeugt. Die mit StatCVS-XML generierten Statistiken aus der CVS
+Aktivität (siehe auch \ref{cvs analyse}) wurden währen der Iterationen
+laufend aktualisiert. StatCVS-XML ermöglicht einen direkten Vergleich
+der Entwickler untereinander und hat im POA Projekt zu einem
+motivierenden Ansporn geführt. 
+
 \subsubsection{Berlios}
 \label{berlios}
 
@@ -692,6 +699,12 @@ Mailinglisten und ein Quellcode Repository (CVS). Zum Bedauern des
 Teams ließ die Verfügbarkeit von Berlios in den letzten Wochen des
 Projekts stark zu wünschen übrig und erschwerte so den
 Informationsaustausch.
+
+Ergäzend zu Berlios wurde auf ein ähnliche Platform mit dem Namen
+DuckForge an der Fakultät für Informatik und Elektrotechnik zur
+Erfassung der Arbeitszeit zurück gegriffen. Leider zeichnet sich
+die Zeiterfassung von DuckForge nicht durch intuitive Bedienung und
+hohe Geschwindigkeit aus. 
 
 \subsubsection{Jira}
 \label{jira}
@@ -705,18 +718,23 @@ Informationsaustausch.
 Die Tracker Funktionalität von Berlios wurde nicht benutzt.
 Stattdessen wurde Jira von Atlassian eingesetzt, die freundlicherweise
 eine kostenlose Lizens für das POA Projekt zur Verfügung stellten.
-Jira ermöglicht eine detailierte Erfassung von Aufgaben und
-Fehlerberichten inklusive einer Zeitabschätzung und
-Fortschrittserfassung. Letzters war sehr hilfreich bei der Planung und
-Kontrolle der Iterationen.
+Jira ist ein webbasiertes Trackersystem, das auf einem von Tammo van
+Lessen zur Verfügung gestellten Server betrieben wurde. Jira
+ermöglicht eine detailierte Erfassung von Aufgaben und Fehlerberichten
+inklusive einer Zeitabschätzung und Fortschrittserfassung. Letzters
+war sehr hilfreich bei der Planung und Kontrolle der Iterationen. Jira
+bietet einfache Bedienbarkeit und übersichtliche
+Analysefunktionen. 
 
-Jira ist ein Tammo van Lessen hat
-
-\subsubsection{StatCVS-XML}
-
-Mit dem von Tammo van Lessen und Steffen Pingel entwickelten
-Analysewerkzeug StatCVS-XML wurden laufend Statistiken aus der CVS
-Aktivität generiert (siehe auch \ref{cvs analyse}). 
+Die geprüften Open-Source Alternativen wie Bugzilla sind weniger
+intuitiv zu Bedienen und in Bezug auf die Analysen nicht ausreichend
+mächtig zur Erfassung von Aufgaben. Jira kann zur Erfassung von
+Fehlerberichten und Aufgaben empfohlen werden, allerdings gilt der
+nicht triviale Administrationsaufwand, der Kenntnisse im J2EE Bereich
+vorraussetzt nicht zu unterschätzen. Durch einen Fehler bei der
+Installation war es zu einem fortgeschrittenen Zeitpunkt des POA
+Projekts leider notwendig die Jira erneut zu installieren und die
+Datenbank mit erfassten Berichten zu löschen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Statistische Analyse}
@@ -746,6 +764,7 @@ An dem Diagramm lassen sich sehr gut die Iterationen ablesen.
   \caption{Verteilung der Quellcode Zeilenanzahl auf die Module}
 \end{figure}
 
+\label{developer by file}
 \begin{figure}[h!]
   \centering
   \begin {tabular}[l]{ll}
@@ -1226,10 +1245,6 @@ des Projekts oft zu optimistisch, wurden aber zunehmend besser, so
 dass die Planung zu Ende des Projekts präziser vorgenommen werden
 konnte. 
 
-FIX: Kernarbeitszeit
-     Einarbeitung in den Problemdomain
-     1000+ Mails
-
 Im Laufe des Projekts habe ich neben der Organisation zahlreiche
 produktive Tätigkeiten übernommen. Ich habe mich an der Verfassung des
 Angebots beteiligt, sowie den Entwurf mitgestaltet. Während der
@@ -1277,16 +1292,32 @@ den Focus nicht ausschließlich auf den Umfang des Produkts zu legen,
 sondern vor allem auch die Qualität und das Vorgehensmodell zu
 beachten.
 
-FIX: Tolle lernerfahrung
+Mir ist deutlich geworden wie wichtig es ist sich als
+Softwareentwickler in die Problemdomäne des Kunden einzuarbeiten. Ohne
+Verständniss für die mit POA zu programmierende Hardware, wäre es
+nicht möglich gewesen ein sinnvolles Bedienkonzept zu entwickeln. Es
+hat auch die Kommunikation mit dem Kunden erleichert, daß ich, wie die
+anderen Teammitglieder, bereits Vorlesungen der Automatisierungstechnik
+besucht hatte und mit dem Umfeld der Werkzeugmaschinen vertraut war.
+
+Auf Seite der Softwaretechnik habe ich viel über den Aufwand und die
+Schwierigkeiten der Organisation von Softwareprojekten gelernt. Es war
+eine größere Herausforderung als erwartetet sieben Entwickler so zu
+koordinieren, daß eine produktive Teamdynamik entsteht, alle
+Entwickler ausreichend gefordert und ausgelastet sind. Über 1000
+E-Mails, die im zusammenhang mit dem POA Projekt verschickt wurden
+bestätigen meinen positiven Eindruck der lebhaften, kommunikativen
+Athmosphäre des Projekts, die sich auch in sozialen Aktivitäten
+außerhalb der Universität äußert.
 
 Abschliessend beurteile ich das Projekt als Erfolg. Alle Team
 Mitglieder haben sich bemüht das im Studium erworbene Wissen praktisch
-umzusetzen. Im Verlaufe des Projekts hat sich eine produktive
-Teamdynamik entwickelt, die sich auch in sozialen Aktivitäten
-außerhalb der Universität äußert. Das gewählte Vorgehensmodell
-erscheint mir den besonderen Anforderungen eines Studienprojekts
-gerecht zu werden. Das entstandene Produkt erfüllt die Anforderungen
-des Kunden und ist qualitativ gut.
+umzusetzen. Im Verlaufe des Projekts hat tolle Teamdynamik entwickelt.
+Das gewählte Vorgehensmodell erscheint mir den besonderen
+Anforderungen eines Studienprojekts gerecht zu werden. Die
+Kommuikation mit unserem Kunden Christian Kramer war sehr kooperativ.
+Das entstandene Produkt erfüllt die Anforderungen des Kunden und ist
+qualitativ gut.
 
 \section{Tammo van Lessen}
 

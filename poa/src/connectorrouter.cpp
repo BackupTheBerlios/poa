@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.cpp,v 1.1 2003/12/03 11:13:13 keulsn Exp $
+ * $Id: connectorrouter.cpp,v 1.2 2003/12/04 10:28:15 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,23 +28,25 @@
 
 #include <qcanvas.h>
 
-#include <set>
+#include <pair.h>
+#include <map>
 
 
 void ConnectorRouter::route(QCanvasItemList items)
 {
-    typedef map<ConnectorViewSegment*, ConnectorViewSegment*> ConnectorHistory;
+    typedef std::map<ConnectorViewSegment*, ConnectorViewSegment*> ConnectorHistory;
+
     ConnectorHistory history;
     QCanvasItemList::iterator it = items.begin();
     for (; it != items.end(); ++it) {
-	ConnectorViewSegment *view = dynamic_cast<ConnectorViewSegment*>(*it);
-	if (view != 0) {
-	    pair<ConnectorHistory::iterator, bool> result =
-	      history.insert(ConnectorHistory::value_type(view, view));
+        ConnectorViewSegment *view = dynamic_cast<ConnectorViewSegment*>(*it);
+        if (view != 0) {
+            std::pair<ConnectorHistory::iterator, bool> result =
+              history.insert(ConnectorHistory::value_type(view, view));
 
-	    if (result.second) {
-		route(view->viewList());
-	    }
-	}
+            if (result.second) {
+                route(view->viewList());
+            }
+        }
     }
 }

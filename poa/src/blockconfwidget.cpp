@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.18 2004/02/10 10:19:06 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.19 2004/02/10 12:32:13 squig Exp $
  *
  *****************************************************************************/
 
@@ -193,6 +193,7 @@ void BlockConfWidget::cancelRename()
 {
     if (currentRenameItem != 0) {
         currentRenameItem->cancelRename();
+        currentRenameItem = 0;
     }
 
 //      if (ioListView_->isRenaming()) {
@@ -317,7 +318,7 @@ void BlockConfWidget::removeIo()
                             QString::number(connected->id()) + tr(" name=") +
                             connected->name() + tr(" of ") +
                             connected->parent()->name() + "</i>.\n\n" +
-					    tr("The connection will be removed if you apply "
+                                            tr("The connection will be removed if you apply "
                             "your changes.\n\n"),
                             tr("&OK"),
                             tr("&Cancel"), 0, 0, 1 ) )

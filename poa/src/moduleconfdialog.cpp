@@ -18,18 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.3 2003/08/20 15:45:46 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.4 2003/09/01 19:51:10 garbeam Exp $
  *
  *****************************************************************************/
 
-/****************************************************************************
-** Form implementation generated from reading ui file 'moduleconfdialog.ui'
-**
-** Created: Tue Aug 19 15:37:56 2003
-**      by:  The User Interface Compiler (uic)
-**
-** WARNING! All changes made in this file will be lost!
-****************************************************************************/
 #include "moduleconfdialog.h"
 
 #include <qvariant.h>
@@ -47,136 +39,165 @@
 #include <qwhatsthis.h>
 #include <qimage.h>
 #include <qpixmap.h>
+#include <qlayout.h>
+
+#define INPUTS_TEXT "inputs"
+#define OUTPUTS_TEXT "outputs"
+#define PERIODICAL_TEXT "periodical inputs"
 
 
-/* 
- *  Constructs a ModuleConfDialog which is a child of 'parent', with the 
- *  name 'name' and widget flags set to 'f'.
- *
- *  The dialog will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal dialog.
- */
 ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool modal, WFlags fl )
     : QDialog( parent, name, modal, fl )
 {
     if ( !name )
-	setName( "ModuleConfDialog" );
+    setName( "ModuleConfDialog" );
     resize( 578, 485 ); 
-    setCaption( trUtf8( "CPU <name>" ) );
+    setCaption( tr( "CPU <name>" ) );
+
+
+    QBoxLayout *topLayout = new QHBoxLayout(this, 5);
+    QWidget *leftWidget = new QWidget(this);
+    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
+    QWidget *rightWidget = new QWidget(this);
+    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
+
+    topLayout->addWidget(leftWidget);
+    topLayout->addWidget(rightWidget);
+
+    ioListView = new QListView(leftWidget, "ioListView");
+    ioListView->addColumn(tr("I/O"));
+    ioListView->addColumn(tr("name"));
+    ioListView->addColumn(tr("address"));
+    ioListView->addColumn(tr("bits"));
+    ioListView->setAllColumnsShowFocus(TRUE);
+
 
     compilePushButton = new QPushButton( this, "compilePushButton" );
     compilePushButton->setGeometry( QRect( 470, 370, 90, 30 ) ); 
-    compilePushButton->setText( trUtf8( "Co&mpile" ) );
+    compilePushButton->setText( tr( "Co&mpile" ) );
 
     editCodePushButton = new QPushButton( this, "editCodePushButton" );
     editCodePushButton->setGeometry( QRect( 470, 330, 90, 30 ) ); 
-    editCodePushButton->setText( trUtf8( "&Edit code" ) );
+    editCodePushButton->setText( tr( "&Edit code" ) );
 
     helpPushButton = new QPushButton( this, "helpPushButton" );
     helpPushButton->setGeometry( QRect( 20, 440, 100, 30 ) ); 
-    helpPushButton->setText( trUtf8( "&Help" ) );
+    helpPushButton->setText( tr( "&Help" ) );
 
     cancelPushButton = new QPushButton( this, "cancelPushButton" );
     cancelPushButton->setGeometry( QRect( 470, 440, 90, 30 ) ); 
-    cancelPushButton->setText( trUtf8( "&Cancel" ) );
+    cancelPushButton->setText( tr( "&Cancel" ) );
 
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
 
     addIoPushButton = new QPushButton( this, "addIoPushButton" );
     addIoPushButton->setGeometry( QRect( 350, 330, 90, 30 ) ); 
-    addIoPushButton->setText( trUtf8( "&Add I/O" ) );
+    addIoPushButton->setText( tr( "&Add I/O" ) );
+
+    connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
 
     removeIoPushButton = new QPushButton( this, "removeIoPushButton" );
     removeIoPushButton->setGeometry( QRect( 350, 370, 90, 30 ) ); 
-    removeIoPushButton->setText( trUtf8( "&Remove I/O" ) );
+    removeIoPushButton->setText( tr( "&Remove I/O" ) );
+
+    connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
 
     okPushButton = new QPushButton( this, "okPushButton" );
     okPushButton->setGeometry( QRect( 350, 440, 90, 30 ) ); 
-    okPushButton->setText( trUtf8( "&OK" ) );
+    okPushButton->setText( tr( "&OK" ) );
     okPushButton->setToggleButton( FALSE );
     okPushButton->setDefault( TRUE );
 
-
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
 
-    ioListView = new QListView( this, "ioListView" );
-    ioListView->addColumn( trUtf8( "I/O" ) );
-    ioListView->addColumn( trUtf8( "name" ) );
-    ioListView->addColumn( trUtf8( "address" ) );
-    ioListView->addColumn( trUtf8( "bits" ) );
-    QListViewItem * item = new QListViewItem( ioListView, 0 );
-    item->setText( 0, trUtf8( "input" ) );
+    // inputs root
+    inputRoot = new QListViewItem( ioListView, 0 );
+    inputRoot->setText(0, tr(INPUTS_TEXT));
+    inputRoot->setOpen(TRUE);
 
-    item = new QListViewItem( ioListView, item );
-    item->setText( 0, trUtf8( "output" ) );
+    // outputs root
+    outputRoot = new QListViewItem(ioListView, inputRoot);
+    outputRoot->setText(0, tr(OUTPUTS_TEXT));
+    outputRoot->setOpen(TRUE);
 
-    item = new QListViewItem( ioListView, item );
-    item->setText( 0, trUtf8( "periodical" ) );
+    // periodical root
+    periodicalRoot = new QListViewItem(ioListView, outputRoot);
+    periodicalRoot->setText(0, tr(PERIODICAL_TEXT));
+    periodicalRoot->setOpen(TRUE);
 
-    ioListView->setGeometry( QRect( 20, 20, 300, 390 ) ); 
+    ioListView->setGeometry( QRect( 20, 20, 300, 350 ) ); 
+
+
+    ioNumberTextLabel = new QLabel(this, "ioNumberTextLabel");
+    ioNumberTextLabel->setGeometry(QRect(20, 380, 40, 20));
+    ioNumberTextLabel->setText(tr("I/O"));
+
+    ioNumberLineEdit = new QLineEdit(this, "ioNumberLineEdit");
+    ioNumberLineEdit->setGeometry(QRect(60, 380, 100, 20));
+    
 
     cpuGroupBox = new QGroupBox( this, "cpuGroupBox" );
     cpuGroupBox->setGeometry( QRect( 350, 20, 210, 80 ) ); 
-    cpuGroupBox->setTitle( trUtf8( "CPU" ) );
+    cpuGroupBox->setTitle( tr( "CPU" ) );
 
     cpuNameTextLabel = new QLabel( cpuGroupBox, "cpuNameTextLabel" );
     cpuNameTextLabel->setGeometry( QRect( 10, 20, 34, 21 ) ); 
-    cpuNameTextLabel->setText( trUtf8( "name" ) );
+    cpuNameTextLabel->setText( tr( "name" ) );
 
     cpuNameLineEdit = new QLineEdit( cpuGroupBox, "cpuNameLineEdit" );
     cpuNameLineEdit->setGeometry( QRect( 48, 20, 140, 22 ) ); 
 
     cpuClockTextLabel = new QLabel( cpuGroupBox, "cpuClockTextLabel" );
     cpuClockTextLabel->setGeometry( QRect( 10, 50, 65, 20 ) ); 
-    cpuClockTextLabel->setText( trUtf8( "clock" ) );
+    cpuClockTextLabel->setText( tr( "clock" ) );
 
     cpuClockSpinBox = new QSpinBox( cpuGroupBox, "cpuClockSpinBox" );
     cpuClockSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
 
     clockMsTextLabel = new QLabel( cpuGroupBox, "clockMsTextLabel" );
     clockMsTextLabel->setGeometry( QRect( 170, 50, 20, 20 ) ); 
-    clockMsTextLabel->setText( trUtf8( "ms" ) );
+    clockMsTextLabel->setText( tr( "ms" ) );
 
     offsetButtonGroup = new QButtonGroup( this, "offsetButtonGroup" );
     offsetButtonGroup->setGeometry( QRect( 350, 120, 210, 80 ) ); 
-    offsetButtonGroup->setTitle( trUtf8( "offset" ) );
+    offsetButtonGroup->setTitle( tr( "offset" ) );
 
     offsetMsTextLabel = new QLabel( offsetButtonGroup, "offsetMsTextLabel" );
     offsetMsTextLabel->setGeometry( QRect( 180, 50, 20, 20 ) ); 
-    offsetMsTextLabel->setText( trUtf8( "ms" ) );
+    offsetMsTextLabel->setText( tr( "ms" ) );
 
     offsetAutoCalcRadioButton = new QRadioButton( offsetButtonGroup, "offsetAutoCalcRadioButton" );
     offsetAutoCalcRadioButton->setGeometry( QRect( 10, 20, 140, 20 ) ); 
-    offsetAutoCalcRadioButton->setText( trUtf8( "automatic calculation" ) );
+    offsetAutoCalcRadioButton->setText( tr( "automatic calculation" ) );
 
     offsetRadioButton = new QRadioButton( offsetButtonGroup, "offsetRadioButton" );
     offsetRadioButton->setGeometry( QRect( 10, 50, 60, 20 ) ); 
-    offsetRadioButton->setText( trUtf8( "offset" ) );
+    offsetRadioButton->setText( tr( "offset" ) );
 
     offsetSpinBox = new QSpinBox( offsetButtonGroup, "offsetSpinBox" );
     offsetSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
 
     runtimeButtonGroup = new QButtonGroup( this, "runtimeButtonGroup" );
     runtimeButtonGroup->setGeometry( QRect( 350, 220, 210, 80 ) ); 
-    runtimeButtonGroup->setTitle( trUtf8( "runtime" ) );
+    runtimeButtonGroup->setTitle( tr( "runtime" ) );
 
     runtimeMsTextLabel = new QLabel( runtimeButtonGroup, "runtimeMsTextLabel" );
     runtimeMsTextLabel->setGeometry( QRect( 170, 50, 20, 20 ) ); 
-    runtimeMsTextLabel->setText( trUtf8( "ms" ) );
+    runtimeMsTextLabel->setText( tr( "ms" ) );
 
     runtimeAutoCalcRadioButton = new QRadioButton( runtimeButtonGroup, "runtimeAutoCalcRadioButton" );
     runtimeAutoCalcRadioButton->setGeometry( QRect( 10, 20, 140, 20 ) ); 
-    runtimeAutoCalcRadioButton->setText( trUtf8( "automatic calculation" ) );
+    runtimeAutoCalcRadioButton->setText( tr( "automatic calculation" ) );
 
     runtimeSpinBox = new QSpinBox( runtimeButtonGroup, "runtimeSpinBox" );
     runtimeSpinBox->setGeometry( QRect( 110, 50, 55, 22 ) ); 
 
     runtimeRadioButton = new QRadioButton( runtimeButtonGroup, "runtimeRadioButton" );
     runtimeRadioButton->setGeometry( QRect( 10, 50, 90, 20 ) ); 
-    runtimeRadioButton->setText( trUtf8( "runtime" ) );
+    runtimeRadioButton->setText( tr( "runtime" ) );
 }
 
-/*  
+/**
  *  Destroys the object and frees any allocated resources
  */
 ModuleConfDialog::~ModuleConfDialog()
@@ -184,3 +205,37 @@ ModuleConfDialog::~ModuleConfDialog()
     // no need to delete child widgets, Qt does it all for us
 }
 
+void ModuleConfDialog::addIo()
+{
+    QListViewItem *root = ioListView->selectedItem();
+
+    if (root != 0) {
+        while (!root->isOpen()) {
+            root = root->parent();
+        }
+        QListViewItem *child = new QListViewItem(root); 
+        child->setText(0, QString::number(root->childCount(), 10));
+        child->setText(1, "data" + child->text(0));
+        child->setText(3, "32");
+        if (root->text(0).compare(tr(PERIODICAL_TEXT)) == 0) {
+           child->setText(2, "");
+        } else {
+           child->setText(2,
+                          QString::number(root->childCount() * 100, 16));
+        }
+    }
+}
+
+void ModuleConfDialog::removeIo()
+{
+    QListViewItem *item = ioListView->selectedItem();
+    QListViewItem *root = item;
+
+    if (root != 0) {
+        while (!root->isOpen()) {
+            root = root->parent();
+        }
+        root->takeItem(item);
+        delete item;
+    }
+}

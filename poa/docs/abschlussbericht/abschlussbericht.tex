@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.2 2004/04/26 20:23:18 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.3 2004/05/03 19:59:16 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.2 $
-\RCSdef $Date: 2004/04/26 20:23:18 $
+\RCSdef $Revision: 1.3 $
+\RCSdef $Date: 2004/05/03 19:59:16 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -17,7 +17,7 @@
 
 \begin{titlepage}
 \input{../common/logo}
-\Huge Architektur
+\Huge Abschlussbericht
 
 \setcounter{footnote}{0}
 \end{titlepage}
@@ -86,10 +86,15 @@ Netzwerk konfiguriert werden kann.
 
 \section{Anforderungen}
 
+\section{Entwicklungsphilosophie}
+
+- GPL
+- Transparenz
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektergebnisse}
 
-\section{Programmierumgebung}
+\section{Programmierumgebung Offener Antrieb}
 \subsection{Merkmale}
 
 \section{Dokumente}
@@ -109,24 +114,230 @@ Auftraggeber, Auftragnehmer
 
 \section{Das Team}
 
+Das Team bestand aus sieben Studenten der Software-Technik, die zu
+Beginn des Projekts im sechsten Semester studierten. 
+
 \subsection{Rollen}
+
+Formale Rollen wurden mangels Notwendigkeit nur wenige Festgelegt. 
+
+\subsubsection{Projektleiter}
+
+Der Projektleiter war für den Kontakt mit dem Kunden und für die
+Koordination des Teams zuständig. 
+
+Die Rolle des Projektleiters wurde von Steffen Pingel übernommen.
+
+\subsubsection{Konfiguationsmanager}
+
+Der Konfiguationsmanager war für die Verwaltung des zentralen
+Repositories in dem sowohl die Dokumente als auch der Quellcode
+gespeichert wurde zuständig. 
+
+Desweiteren wurden vom Konfiguationsmanager Richtlinien zur
+Formatierung des Quellcodes und zur Benutzung des Repositories
+erstellt. 
+
+Die Rolle des Konfiguationsmanagers wurde von Anselm Garbe übernommen.
+
+\subsubsection{Entwickler}
+
+Die Aufgabe der Entwickler war die Erstellung des Quellcodes und das
+Verfassen der Dokumente.
+
+Die Rolle der Entwickler wurde von allen Teilnehmern belegt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektablauf}
 
 \section{Prozessmodell}
+
+Als Prozessmodell wurde ein iteratives Phasenmodell gewählt wobei
+nicht alle Phasen in den einzelnen Iterationen ausgeführt wurden. Die
+Anforderungsanalyse-, Spezifikations- und Entwurfsphase wurden nur zu
+Beginn des Projekts einmalig durchlaufen. Auch ein Gesammttest wurde
+nur zum Ende des Projekts ausgeführt. 
+
+Die einzelnen Iterationen, genannt Sprints, bestanden jeweils aus
+einer Anforderungsanalyse-, Entwurfs- und Kodierungsphase, die von
+einem kontinuierlichen Regressionstest begleitet wurde. Zu Ende jeder
+Iteration wurde das weiter entwickelte Produkt ausgeliefert und vom
+Kunden einem Akzeptanztest unterzogen. 
+
+Das Prozessmodell wurde gewählt, um dem Forschungscharakter des
+Projekts gerecht zu werden. Zu Begin des Projekts war unklar, wie
+stark sich die Anforderungen während des Projekts ändern
+würden. Deswegen wurde zu Beginn jeder Iteration
+
 \section{Projektplan}
+
+Der ursprünglich im Angebot vorgesehe Zeitplan diente als grobe
+Orientierung für den Projektverlauf. Die Planung und Ausführung war im
+wesentlichen von einer Hausmesse am ISW und dem Ablauf der Semesters
+geprägt. 
+
+Die ursprünglich geplanten fünf Sprints wurden auf drei Reduziert. Zum
+Einen stellte sich während des Projekts heraus, das die Anforderungen
+abgesehen von kleinen zusätzlichen funktionalen Anforderungen
+weitgehend stabil waren. Zum Anderen war der zeitliche Aufwand,
+bedingt durch organisatorische Tätigkeiten wie eine
+Produktpräsentation am Ende jedes Sprints höher als erwartet. 
+
+Die vereinbarten Meilensteine wurde eingehalten bzw. im mit dem
+Einverständnis des Kunden geringfügig verschoben. 
+
+Als Schwierig erwiess sich die Koordination der individuellen
+Wochenpläne. Bedingt durch unterschiedlich gewählte Vorlesungen,
+andere Studienprojekte, Urlaubsplanung, Krankheit und
+Nebenbeschäftigungen war es kaum Möglich gemeinsame Termin zu finden.
+Dennoch wurde sowohl während Entwicklung des Prototypen in der
+Vorlesungsfreienzeit und während der Sprints in der Vorlesungszeit
+Kernarbeitszeiten eingeführt, die die Kommunikation stark erleichtert
+haben.
+
+Die Kernarbeitszeiten wurden während des Projekts durch Treffen des
+Teams in entspannter Athmosphäre ergänzt. Während der Treffen wurde
+von den Teilnehmern über den Fortschritt berichtet und anstehende
+Aufgaben verteilt. 
+
+\subsubsection{Ursprünglicher Zeitplan}
+
+\begin {center}
+  \begin {tabular}[l]{rlrll}
+    \multicolumn{1}{c}{\bf ID} & \multicolumn{1}{c}{\bf Bezeichnung} &
+    \multicolumn{1}{c}{\bf Aufwand} & \multicolumn{1}{c}{\bf Termin} &
+    \multicolumn{1}{c}{\bf Meilenstein} \\
+    \multicolumn{2}{c}{} &
+    \multicolumn{1}{c}{(in Mh)} \\
+    \hline
+     1 & Analyse und Angebot & 200 & KW 25 & M1: Angebot \\
+     2 & Spezifikation & 300 & & \\
+     3 & Entwurf & 300 & & \\
+     4 & Prototyp Messe & 300 & 1.10.2003 & M2: Prototyp Messe \\
+     5 & Prototyp Erweitert & 300 & 10.11.2003 & M3: Prototyp Erweitert \\
+     6 & Sprint 1 & & KW 48 - 51 & \\
+     7 & Sprint 2 & & KW 2 - 6 & \\
+     8 & Sprint 3 & & KW 8 - 12 & \\
+     9 & Auslieferung und Präsentation & & 1.4.2004 & M4: Auslieferung\\
+    \hline
+       & & 1400\\
+  \end {tabular}
+\end {center}
+
+\subsubsection{Projektablauf}
+
+\begin {center}
+  \begin {tabular}[l]{rlrll}
+    \multicolumn{1}{c}{\bf ID} & \multicolumn{1}{c}{\bf Bezeichnung} &
+    \multicolumn{1}{c}{\bf Aufwand} & \multicolumn{1}{c}{\bf Termin} &
+    \multicolumn{1}{c}{\bf Meilenstein} \\
+    \multicolumn{2}{c}{} &
+    \multicolumn{1}{c}{(in Mh)} \\
+    \hline
+     1 & Analyse und Angebot & 200 & KW 25 & M1: Angebot \\
+     2 & Spezifikation & 300 & & \\
+     3 & Entwurf & 300 & & \\
+     4 & Prototyp Messe & 300 & 1.10.2003 & M2: Prototyp Messe \\
+     6 & Sprint 1 & & KW 48 - 51 & \\
+     7 & Sprint 2 & & KW 2 - 6 & \\
+     9 & Auslieferung & & 26.3.2004 & M4: Auslieferung\\
+     9 & Nachbesserung & & 19.4.2004 & \\
+     9 & Abschlusspräsentation & & 1.6.2004 & \\
+    \hline
+       & & 1400\\
+  \end {tabular}
+\end {center}
+
 \subsection{Anforderungsanalyse}
+
+Während der Anforderungsanalyse wurde Anforderungen des Kunden
+ermittelt. Die Ergebnisse wurden in einem Angebot dokumentiert, das
+dem Kunden zur Abnahme vorgelegt wurde. Das Angebot beinhaltete
+ausserdem eine Zeitplan und eine Beschreibung des geplanten
+Projektablaufs. 
+
 \subsection{Spezifikation}
+
+Die Spezifikation beinhaltete Benutzungsfälle und wurde als internes
+Dokument zur Erstellung der Benutzungsoberfläche verwendet.
+
 \subsection{Entwurf}
+
+Im Grobentwurf wurde die Architektur festgelegt und die Schnittstellen
+des Datenmodells in Form von Headerdateien entwickelt.
+
 \subsection{Prototyp}
-\subsection{Erste Iterationen}
-\subsection{Zweite Iterationen}
+
+Der Prototyp wurde für eine Hausmesse am ISW entwickelt. Der Prototyp
+wurde für die Präsentation des Offenen Antriebs verwendet. Der Focus
+lag auf der Entwicklung der graphischen Benutzungsoberfläche, die
+teilweise funktionslosse Dialoge beinhaltete. 
+
+Die zeitgemässe Auslieferung des Prototypen und die damit verbundene
+Erreichung des zweiten Meilensteins war auch ein erster Test, ob die
+Umsetzung der Anforderungen mit den Vorstellung des Kunden
+übereinstimmte. Da sich die Rückmeldungen des Kunden als sehr positiv
+erwies, wurde die Entscheidung getroffen den Prototyp nicht zu
+verwerfen, sondern als Basis weiter zu verwenden. Somit kann die
+Entwicklung des Prototypen als erste Iteration bezeichnet werden. 
+
+\subsection{Sprint 1}
+
+Zu Beginn des ersten Sprints wurde ein Refaktorisierung des Quellcodes
+vorgenommen, um die während der Entwicklung des Prototypen entdeckten
+Schwachstellen des Entwurfs zu beseitigen. 
+
+Desweiteren wurden Funktionalitäten, die im Prototypen nur als Dialoge
+zur Verfügung standen implementiert. 
+
+Zum Ende des erstens Sprints wurde das bisher nur unter Linux
+entwickelte Produkt auf Microsoft Windows portiert. Neben einigen
+syntaktischen Korrekturen, die in Unterschieden zwischen den
+verwendeten Compilern begründet sind, mussten kleinere
+platformspezifische Eigenheiten von QT umschifft werden.
+
+Die Portierung, die oben beschriebene Refaktorisierung und die
+zweiwöchigen Weihnachtsferiern haben zu der Ausdehnung der Iteration
+bis in den Januar geführt. 
+
+\subsection{Zweite Iteration}
+
+
+
+\subsection{Auslieferung}
+
 \subsection{GCover Unterprojekt}
 
-\section{Meilensteine}
+\section{Werkzeuge}
 
-\section{Aufwand}
+Für die Entwicklung wurden zahlreiche Werkzeuge eingesetzt. Die Wahl
+war den Entwicklern freigestellt solange die vereinbarten Richtlinien
+eingehalten wurden. Bei der Wahl von Dokumentenformaten wurde darauf
+geachtet, dass für alle eingesetzten Platformen freie Werkzeuge zur
+Bearbeitung verfügbar waren.
+
+Besondere Erwähnung soll das Werkzeug Maven finden. Maven wurde für
+die Generierung der Projektseite im Internet benutzt. Maven bietet
+die Möglichkeit eine anschauliche Projektdokumentation auf einfache
+Art und Weise zu erstellen. Die Dokumentation enthält unter anderem
+Informationenn über die Entwickler, den Quellcode und die
+Projektablauf. Damit konnte sowohl für den Kunden als auch für die
+Entwickler eine hohe Transparenz erreicht werden.
+
+Verwaltet wurde das Projekt auf der Open-Source Platform Berlios, die
+vom Frauenhofer Institut betrieben wird. Berlios bietet vielfältige
+Unterstützung wie z.B. eine Internetseite, einen Downloadbereich,
+Mailinglisten und ein Repository. Zu dem Bedauern des Teams ließ die
+Verfügbarkeit von Berlios in den letzten Wochen des Projekts stark zu
+wünschen übrig und erschwerte so den Informationsaustausch.
+
+Die Tracker Funktionalität von Berlios wurde nicht
+benutzt. Stattdessen wurde Jira von Atlassian eingesetzt, die
+freundlicherweise eine kostenlose Lizens für das POA Projekt zur
+Verfügung stellten. Jira ermöglicht eine detailierte Erfassung von
+Aufgaben und Fehlerberichten inklusive einer Zeitabschätzung und
+Fortschrittserfassung. Letzters war sehr hilfreich bei der Planung und
+Kontrolle der Sprints.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Statistische Analyse}

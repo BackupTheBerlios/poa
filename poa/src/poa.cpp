@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.6 2004/01/29 15:15:36 squig Exp $
+ * $Id: poa.cpp,v 1.7 2004/01/30 12:51:54 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -169,7 +169,8 @@ QString formatTimeProperly(int ns)
     int unit = 0;
 
     // unicode: µ == "\u00B5"
-    QString UNITS[4] = {"ns", "\u00B5s", "ms", "s"};
+    //QString UNITS[4] = {"ns", "\u00B5s", "ms", "s"};
+    QString UNITS[4] = {"ns", "micros", "ms", "s"};
 
     for (; unit < 4 - 1 && time >= 1000; unit++) {
         time /= 1000;

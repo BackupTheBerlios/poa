@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.10 2003/09/18 13:06:22 garbeam Exp $
+ * $Id: codemanager.h,v 1.11 2003/09/18 16:32:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -56,7 +56,27 @@ public:
     /**
      * Returns path to the CPU specific top level directory.
      */
+    QString cpuPath(CpuModel *model);
+
+    /**
+     * Returns path to the CPU specific source directory.
+     */
     QString sourcePath(CpuModel *model);
+
+    /**
+     * Returns path to the CPU specific library directory.
+     */
+    QString libPath(CpuModel *model);
+
+    /**
+     * Returns path to the CPU specific inclusion directory.
+     */
+    QString incPath(CpuModel *model);
+
+   /**
+     * Returns filename of the source file of this cpu.
+     */
+    QString fileName(CpuModel *model);
 
     /**
      * Executes the compiler and returns it's return code.

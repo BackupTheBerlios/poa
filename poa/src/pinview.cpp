@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.17 2003/09/18 10:19:03 garbeam Exp $
+ * $Id: pinview.cpp,v 1.18 2003/09/18 16:32:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,8 +34,8 @@
 #include <qevent.h>
 
 PinView::PinView(PinModel *model, BlockView *block,
-                 PinView::DockPosition dockPosition)
-    : QCanvasRectangle(block->canvas())
+        PinView::DockPosition dockPosition)
+: QCanvasRectangle(block->canvas())
 {
     model_ = model;
     connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
@@ -73,16 +73,16 @@ LineDirection reverse(LineDirection dir)
 {
     switch (dir) {
     case LEFT:
-	return RIGHT;
+        return RIGHT;
     case RIGHT:
-	return LEFT;
+        return LEFT;
     case UP:
-	return DOWN;
+        return DOWN;
     case DOWN:
-	return UP;
+        return UP;
     default:
-	Q_ASSERT(false);
-	return UNKNOWN;
+        Q_ASSERT(false);
+        return UNKNOWN;
     }
 }
 
@@ -113,27 +113,27 @@ LineDirection PinView::connectorDirection()
     LineDirection dir;
     switch (dockPosition_) {
     case PIN_TOP:
-	dir = DOWN;
-	break;
+        dir = DOWN;
+        break;
     case PIN_LEFT:
-	dir = RIGHT;
-	break;
+        dir = RIGHT;
+        break;
     case PIN_RIGHT:
-	dir = LEFT;
-	break;
+        dir = LEFT;
+        break;
     case PIN_BOTTOM:
-	dir = UP;
-	break;
+        dir = UP;
+        break;
     default:
-	Q_ASSERT(false);
-	break;
+        Q_ASSERT(false);
+        break;
     }
     if (model_->type() == PinModel::OUTPUT) {
-	// FIX: need special treatment for episodic pins
-	return reverse(dir);
+        // FIX: need special treatment for episodic pins
+        return reverse(dir);
     }
     else {
-	return dir;
+        return dir;
     }
 }
 
@@ -186,8 +186,8 @@ QString PinView::tip()
     }
 
     return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
-                   "<b>Address:</b> 0x%4<br>" \
-                   "<b>Width:</b>%5 bits")
+            "<b>Address:</b> 0x%4<br>" \
+            "<b>Width:</b>%5 bits")
         .arg(pinModel()->id())
         .arg(pinModel()->name())
         .arg(pt)
@@ -197,5 +197,5 @@ QString PinView::tip()
 
 void PinView::deleteView()
 {
-        delete this;
+    delete this;
 }

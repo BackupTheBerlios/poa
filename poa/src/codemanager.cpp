@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.7 2003/09/18 13:06:22 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.8 2003/09/18 16:32:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 
 #include <qfileinfo.h>
 #include <qprocess.h>
+#include <qstringlist.h>
 
 /**
  * The singleton instance.
@@ -53,18 +54,38 @@ CodeManager *CodeManager::instance()
     return instance_;
 }
 
-QString CodeManager::sourcePath(CpuModel *model)
+QString CodeManager::cpuPath(CpuModel *model)
 {
     return QString("%1/CPU_%2_sdk")
         .arg(*(model->projectPath()))
         .arg(model->cpuId());
 }
 
+QString CodeManager::sourcePath(CpuModel *model)
+{
+    return QString("%1/src").arg(cpuPath(model));
+}
+
+QString CodeManager::libPath(CpuModel *model)
+{
+    return QString("%1/lib").arg(cpuPath(model));
+}
+
+QString CodeManager::incPath(CpuModel *model)
+{
+    return QString("%1/inc").arg(cpuPath(model));
+}
+
+QString CodeManager::fileName(CpuModel *model)
+{
+    return QString("cpu_%1.c").arg(model->cpuId());
+}
+
 QString CodeManager::sourceFilePath(CpuModel *model)
 {
-    return QString("%1/src/cpu_%2.c")
+    return QString("%1/%2")
         .arg(sourcePath(model))
-        .arg(model->cpuId());
+        .arg(fileName(model));
 }
 
 int CodeManager::compile(CpuModel *model)
@@ -72,13 +93,28 @@ int CodeManager::compile(CpuModel *model)
     Settings* s = Settings::instance();
 
     QProcess *proc = new QProcess(this);
-    proc->addArgument("xterm");
-    proc->addArgument("-c");
-    proc->addArgument("/bin/bash");
-//    proc->addArgument(s->terminalCmd());
-//    proc->addArgument(s->compilerCmd());
-    proc->addArgument(sourceFilePath(model));
-    //proc->setWorkingDirectory(QDir(*(model->projectPath())));
+
+    // create arguments
+    QStringList args;
+    QStringList currArgs = QStringList::split(QChar(' '), s->terminalCmd());
+
+    for (unsigned i = 0; i < currArgs.size(); i++)
+    {
+        args.append(*(currArgs.at(i)));
+    }
+
+    currArgs.clear();
+    currArgs = QStringList::split(QChar(' '), s->compilerCmd());
+    for (unsigned i = 0; i < currArgs.size(); i++)
+    {
+        args.append(*(currArgs.at(i)));
+    }
+    //args.append(QString("./%1").arg(fileName(model)));
+    args.append(sourceFilePath(model));
+
+    // init process
+    proc->setArguments(args);
+    proc->setWorkingDirectory(sourcePath(model));
 
     proc->launch("");
 
@@ -95,8 +131,10 @@ void CodeManager::edit(CpuModel *model)
     }
 
     QProcess *proc = new QProcess(this);
-    proc->addArgument(s->editorCmd());
-    proc->addArgument(source.name());
+    QStringList args = QStringList::split(QChar(' '), s->editorCmd());
+    args.append(source.name());
+
+    proc->setArguments(args);
     proc->setWorkingDirectory(QDir(sourcePath(model)));
 
     proc->launch("");
@@ -108,10 +146,10 @@ void CodeManager::save(CpuModel *model)
     Settings* s = Settings::instance();
 
     // check directory structure
-    QDir cpuDir(sourcePath(model));
-    QDir srcDir(sourcePath(model) + QString("/src"));
-    QDir libDir(sourcePath(model) + QString("/lib"));
-    QDir incDir(sourcePath(model) + QString("/inc"));
+    QDir cpuDir(cpuPath(model));
+    QDir srcDir(sourcePath(model));
+    QDir libDir(libPath(model));
+    QDir incDir(incPath(model));
 
     if (!cpuDir.exists()) {
         cpuDir.mkdir(cpuDir.absPath());
@@ -140,14 +178,14 @@ void CodeManager::save(CpuModel *model)
         }
         // TODO: Copy template.
     }
-    // Else: Don't care, the user has to save all changes
+    // else: don't care, the user has to save all changes
     // with his editor.
 }
 
 void CodeManager::remove(CpuModel *model)
 {
     // check directory structure
-    QDir cpuDir(sourcePath(model));
+    QDir cpuDir(cpuPath(model));
 
     if (!Util::removeDir(&cpuDir)) {
         // TODO: pop up error dialog.

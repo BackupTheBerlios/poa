@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.1 2003/09/18 13:06:22 garbeam Exp $
+ * $Id: util.h,v 1.2 2003/09/18 16:32:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,12 +27,13 @@
 
 #include <qdir.h>
 #include <qfile.h>
+#include <qstringlist.h>
 
 /**
  * Provides utilities for
  * <ul>
  *   <li>file/directory manipulation</li>
- *   <li>etc.</li>
+ *   <li>string manipulation</li>
  * </ul>
  */
 class Util
@@ -63,7 +64,6 @@ public:
      * @param subDir the directory to be removed.
      */
     static bool removeDir(QDir *subDir);
-
 
 };
 

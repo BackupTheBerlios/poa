@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.3 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: connectorview.h,v 1.4 2003/08/28 18:09:24 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,34 +26,65 @@
 #ifndef POA_CONNECTORVIEW_H
 #define POA_CONNECTORVIEW_H
 
-
-//#include <qcanvasitem.h>
 #include <qcanvas.h>
-#include <qpointarray.h>
 
-#include "pinmodel.h"
+class ConnectorModel;
+class PinView;
 
+
+class ConnectorView;
+
+/**
+ * A <code>ConnectorView</code> can dock onto another connector view
+ * or onto a pin.
+ */
+union ConnectorDocking {
+    ConnectorView *connector;
+    PinView *pin;
+};
 
 /*****************************************************************************
- * Definition of a connector view.
+ * Definition of a connector view. Connector views are doubly linked linear
+ * lists of <code>ConnectorView</code>s. The first item in that list is
+ * considered the view-object and listens to changes in the model.
+ *
+ * Each item in the list represents either a horizontal or a vertical line.
+ * The entire list connects the source pin to the target pin.
+ *
+ * Each item in the list propagates changes to itself along the list. During
+ * propagation some items may be removed or new items may be inserted into
+ * the list.
  */
-class ConnectorView: public QCanvas//Item // probably QCanvasPolygon??
+class ConnectorView: public QCanvasLine
 {
-
-private:
-
-    ConnectorModel *connectorModel_;
-    QPointArray points_;
 
 public:
 
-    QPoint getPoint(int index);
-    void setPoint(QPoint point, uint index);
-    void addPoint(QPoint point, uint after = 0);
-    void removePoint (uint index);
+    ConnectorView(PinView *from, ConnectorView *to, QCanvas *canvas);
+    ConnectorView(ConnectorView *from, PinView *to, QCanvas *canvas);
+    ConnectorView(PinView *from, PinView *to, QCanvas *canvas);
+    ConnectorView(ConnectorView *from, ConnectorView *to, QCanvas *canvas);
 
+    virtual ~ConnectorView();
+
+    /*************************************************************************
+     * Returns <code>this</code>'s model
+     */
     ConnectorModel *model();
-    void setModel(ConnectorModel *connectorModel);
+
+private:
+
+    /** model for <code>this</code> */
+    ConnectorModel *model_;
+
+    /** true if <code>this</code> has a pin as source, false else */
+    bool first_;
+    /** true if <code>this</code> has a pin as target, false else */
+    bool last_;
+    /** <code>this</code>'s source item */
+    ConnectorDocking prev_;
+    /** <code>this</code>'s target item */
+    ConnectorDocking next_;
 
 };
 

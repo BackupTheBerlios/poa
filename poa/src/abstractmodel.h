@@ -18,9 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.6 2003/08/26 23:27:11 vanto Exp $
+ * $Id: abstractmodel.h,v 1.7 2003/08/28 18:09:24 keulsn Exp $
  *
  *****************************************************************************/
+
+
 #ifndef ABSTRACTMODEL_H
 #define ABSTRACTMODEL_H
 
@@ -53,7 +55,7 @@ public:
     virtual void deserialize(QDomElement element);
 
     /*************************************************************************
-     * Creates the corresponding view object.
+     * Creates the corresponding view objects.
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
 

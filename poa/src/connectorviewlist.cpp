@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.19 2003/12/03 16:06:20 squig Exp $
+ * $Id: connectorviewlist.cpp,v 1.20 2003/12/16 11:00:14 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,6 @@
 #include "grid.h"
 #include "gridcanvas.h"
 #include "pinmodel.h"
-#include "reachedpoint.h"
 
 #include <qcanvas.h>
 #include <qpoint.h>

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.1 2003/08/21 13:01:28 squig Exp $
+ * $Id: librarywindow.cpp,v 1.2 2003/08/21 20:29:20 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -34,8 +34,8 @@
 /*****************************************************************************
  * Constructs the window.
  */
-LibraryWindow::LibraryWindow(Place p = InDock, QWidget * parent = 0, 
-                             const char* name = 0, WFlags f = 0 )
+LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name, 
+							 WFlags f)
     : QDockWindow(p, parent, name, f)
 {
     setCloseMode(Always);

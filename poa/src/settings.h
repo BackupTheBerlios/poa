@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.3 2003/08/21 15:59:57 squig Exp $
+ * $Id: settings.h,v 1.4 2003/08/21 20:29:20 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -40,30 +40,38 @@ class Settings : QObject
     Q_OBJECT
     
 public:
+    static const char* prefix;
+
     static Settings *instance();
 
-/* 	bool snapToGrid(); */
-/* 	int gridSize(); */
-    QString Settings::get(const QString &key);
-    void set(const QString &key, const QString &value);
-/* 	void setSnapToGrid(bool snapToGrid); */
-/* 	void setGridSize(int gridSize); */
+    QString get(const QString &key);
+    bool getBool(const QString &key);
+    int getNum(const QString &key);
+
+    bool set(const QString &key, const QString &value);
+	bool set(const QString &key, bool value);
+	bool set(const QString &key, int value);
+
+	// the following settings emit an additional signal
+	int gridSize();
+	bool snapToGrid();
+	void setGridSize(int gridSize);
+	void setSnapToGrid(bool snapToGrid);
 
 signals:
 	void settingChanged(const QString &key);
-/* 	void snapToGrid(bool alignOnGrid); */
-/*     void gridSize(int gridSize); */
-
+	void snapToGridChanged(bool snapToGrid);
+	void gridSizeChanged(int gridSize);
+   
 private :
     Settings();
     Settings(const Settings &);
     ~Settings();
 
-    static const char* prefix;
 	static Settings* instance_;
 
-/* 	bool snapToGrid_; */
-/* 	int gridSize_; */
+	void setDefault(QSettings* settings, const QString &key, 
+					const QString &value);
 };
 
 #endif // SETTINGS_H

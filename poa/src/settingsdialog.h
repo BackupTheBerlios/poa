@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.2 2003/08/21 13:07:43 papier Exp $
+ * $Id: settingsdialog.h,v 1.3 2003/08/21 20:29:20 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -46,10 +46,6 @@ public:
 				   bool modal = FALSE, WFlags fl = 0 );
     ~SettingsDialog();
 
-    QPushButton* downloadPushButton;
-    QPushButton* cTemplatePushButton;
-    QPushButton* compilerPushButton;
-    QPushButton* editorPushButton;
     QLineEdit* compilerLineEdit;
     QLineEdit* cTemplateLineEdit;
     QLineEdit* downloadLineEdit;
@@ -64,7 +60,7 @@ public slots:
 
 private :
 	QWidget *createPathTab();
-
+    void setup(); 
 };
 
 #endif // SETTINGSDIALOG_H

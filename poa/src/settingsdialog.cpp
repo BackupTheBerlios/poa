@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.3 2003/08/21 15:59:57 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.4 2003/08/21 20:29:20 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -31,6 +31,7 @@
 #include <qlineedit.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qsettings.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 
@@ -48,6 +49,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 	setHelpButton();
 
 	this->addTab(createPathTab(), tr("Paths"));
+	setup();
 
     resize(sizeHint());//resize(400, 400); 
 
@@ -67,34 +69,33 @@ SettingsDialog::~SettingsDialog()
  */
 QWidget *SettingsDialog::createPathTab()
 {
+    QPushButton *button;
 	QWidget *tab = new QWidget(this);
 	QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
 
 	grid->addWidget(new QLabel(tr("External Editor"), tab), 0, 0);
-	editorLineEdit = new QLineEdit(Settings::instance()->get("Editor"), tab);
+	editorLineEdit = new QLineEdit(tab);
 	grid->addWidget(editorLineEdit, 0, 1);
-    QPushButton *button = new QPushButton("...", tab);
+    button = new QPushButton("...", tab);
 	grid->addWidget(button, 0, 2);
 	connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalEditor()));
 
 	grid->addWidget(new QLabel(tr("External Compiler"), tab), 1, 0);
-	compilerLineEdit = new QLineEdit(Settings::instance()->get("Compiler"), tab);
+	compilerLineEdit = new QLineEdit(tab);
 	grid->addWidget(compilerLineEdit, 1, 1);
     button = new QPushButton("...", tab);
 	grid->addWidget(button, 1, 2);
 	connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
 
 	grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 2, 0);
-	cTemplateLineEdit = new QLineEdit(Settings::instance()->
-					     get("Template Path"), tab);
+	cTemplateLineEdit = new QLineEdit(tab);
 	grid->addWidget(cTemplateLineEdit, 2, 1);
 	button = new QPushButton("...", tab);
 	grid->addWidget(button, 2, 2);
 	connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
 
 	grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
-	downloadLineEdit = new QLineEdit(Settings::instance()->
-					     get("Download Tool"), tab);
+	downloadLineEdit = new QLineEdit(tab);
 	grid->addWidget(downloadLineEdit, 3, 1);
 	button = new QPushButton("...", tab);
 	grid->addWidget(button, 3, 2);
@@ -103,9 +104,26 @@ QWidget *SettingsDialog::createPathTab()
 	return tab;
 }
 
+/*****************************************************************************
+ * Reads and sets the default settings from QSettings.
+ */
+void SettingsDialog::setup()
+{
+     Settings* s = Settings::instance();
+
+	// path tab
+	editorLineEdit->setText(s->get("Editor"));
+	compilerLineEdit->setText(s->get("Compiler"));
+	cTemplateLineEdit->setText(s->get("Template Path"));
+	downloadLineEdit->setText(s->get("Download Path"));	
+}
+
+/*****************************************************************************
+ * Stores the settings to QSettings.
+ */
 void SettingsDialog::applySettings()
 {
-	Settings *s = Settings::instance();
+	Settings* s = Settings::instance();
 	s->set("Editor", editorLineEdit->text());
 	s->set("Compiler", compilerLineEdit->text());
 	s->set("Template Path", cTemplateLineEdit->text());

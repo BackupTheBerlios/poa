@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.19 2003/08/21 20:12:53 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.20 2003/08/21 20:29:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "moduleconfdialog.h"
+#include "settings.h"
 #include "settingsdialog.h"
 
 #include <qaction.h>
@@ -57,7 +58,6 @@
 MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     : QMainWindow( parent, name, fl )
 {
-
     // load toolbar icons/items
     QPixmap image_compile(ICON_PATH + "compile.png");
     QPixmap image_configure(ICON_PATH + "configure.png");
@@ -80,8 +80,11 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     if (!name) {
         setName("MainWindow");
     }
-    resize(520, 480); 
-    setCaption(trUtf8("POA"));
+    setCaption(tr("POA"));
+
+	Settings * s = Settings::instance();
+    move(s->getNum("MainWindow/X"), s->getNum("MainWindow/Y"));
+    resize(s->getNum("MainWindow/Width"),s->getNum("MainWindow/Height"));
 
     // initialize status bar implicitly
     (void)statusBar();
@@ -227,6 +230,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     fileMenu = new QPopupMenu(this); 
     fileNewAction->addTo(fileMenu);
     fileOpenAction->addTo(fileMenu);
+	fileMenu->insertSeparator();
     fileSaveAction->addTo(fileMenu);
     fileSaveAsAction->addTo(fileMenu);
     fileMenu->insertSeparator();
@@ -352,7 +356,7 @@ void MainWindow::tileHorizontal()
     }
 }
 
-void MainWindow::closeEvent( QCloseEvent *e )
+void MainWindow::closeEvent(QCloseEvent *e)
 {
     QWidgetList windows = ws->windowList();
     if ( windows.count() ) {
@@ -365,7 +369,14 @@ void MainWindow::closeEvent( QCloseEvent *e )
         }
     }
 
-    QMainWindow::closeEvent( e );
+	// save settings
+	Settings *s = Settings::instance();
+	s->set("MainWindow/X", x());
+	s->set("MainWindow/Y", y());
+	s->set("MainWindow/Width", width());
+	s->set("MainWindow/Height", height());
+
+	e->accept();
 }
 
 
@@ -451,11 +462,11 @@ MdiWindow* MainWindow::newDoc()
 
     // FIX: remove: create dummy items
     QCanvasPolygonalItem *i
-        = new QCanvasRectangle( rand()%doc->width(),rand()%doc->height(),
+        = new QCanvasRectangle( 255%doc->width(),255%doc->height(),
                                 doc->width()/5,doc->width()/5,doc);
-    int z = rand()%256;
+    int z = 255%256;
     i->setBrush( QColor(z,z,z) );
-    i->setPen( QPen(QColor(rand()%32*8,rand()%32*8,rand()%32*8), 6) );
+    i->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );
     i->setZ(z);
     i->show();
 

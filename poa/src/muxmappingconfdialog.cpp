@@ -18,10 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.7 2004/01/29 16:30:05 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.8 2004/01/29 19:42:27 garbeam Exp $
  *
  *****************************************************************************/
 
+#include <qgroupbox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -35,6 +36,29 @@
 #include "pinlistviewitem.h"
 #include "pinmodel.h"
 #include "poa.h"
+
+PinItemComboBox::PinItemComboBox(QWidget *parent) 
+    : QComboBox(parent)
+{
+}
+
+PinItemComboBox::~PinItemComboBox() {
+}
+
+void PinItemComboBox::insertItem(PinListViewItem *item) {
+    if (items_.size() <= items_.count()) {
+        items_.resize(items_.count() + 1);
+    }
+    unsigned pos = items_.count();
+    QComboBox::insertItem(item->text(1), pos);
+    items_.insert(pos, item);
+}
+
+PinListViewItem *PinItemComboBox::selectedItem() {
+    return items_.at(currentItem());
+}
+
+//////////////////////////////////////////////////////////////////////////////
 
 MuxMappingConfDialog::MuxMappingConfDialog(
         QListViewItemIterator iter,
@@ -70,56 +94,59 @@ void MuxMappingConfDialog::initLayout() {
     QBoxLayout *ioLayout
         = new QHBoxLayout(ioWidget, WIDGET_SPACING);
 
-    QWidget *comboInputWidget = new QWidget(ioWidget);
-    QBoxLayout *comboInputLayout
-        = new QHBoxLayout(comboInputWidget, WIDGET_SPACING);
-    QWidget *comboOutputWidget = new QWidget(ioWidget);
-    QBoxLayout *comboOutputLayout
-        = new QHBoxLayout(comboOutputWidget, WIDGET_SPACING);
+    QGroupBox *inputGroupBox = new QGroupBox(tr("Input"), ioWidget);
+    QBoxLayout *inputLayout
+        = new QVBoxLayout(inputGroupBox, 5 * WIDGET_SPACING);
 
-    inputComboBox_ = new QComboBox(comboInputWidget);
-    outputComboBox_ = new QComboBox(comboOutputWidget);
+    QGroupBox *outputGroupBox = new QGroupBox(tr("Output"), ioWidget);
+    QBoxLayout *outputLayout
+        = new QVBoxLayout(outputGroupBox, 5 * WIDGET_SPACING);
+
+    inputComboBox_ = new PinItemComboBox(inputGroupBox);
+    outputComboBox_ = new PinItemComboBox(outputGroupBox);
     inputComboBox_->setEditable(true);
     outputComboBox_->setEditable(true);
     inputComboBox_->setAutoCompletion(true);
     outputComboBox_->setAutoCompletion(true);
 
-    comboInputLayout->add(new QLabel(tr("Inputs "), comboInputWidget));
-    comboInputLayout->add(inputComboBox_);
-    comboOutputLayout->add(new QLabel(tr("Outputs"), comboOutputWidget));
-    comboOutputLayout->add(outputComboBox_);
+    // inputs range widget
+    QWidget *inputRangeWidget = new QWidget(inputGroupBox);
+    QBoxLayout *inputRangeLayout
+        = new QHBoxLayout(inputRangeWidget, WIDGET_SPACING);
 
-    ioLayout->addWidget(comboInputWidget);
-    ioLayout->addWidget(comboOutputWidget);
+    firstInputBitSpinBox_ = new QSpinBox(inputRangeWidget);
+    lastInputBitSpinBox_ = new QSpinBox(inputRangeWidget);
 
-    // range widget
-    QWidget *rangeWidget = new QWidget(this);
-    QBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget, WIDGET_SPACING);
+    inputRangeLayout->addWidget(
+        new QLabel(tr("first bit: "), inputRangeWidget));
+    inputRangeLayout->addWidget(firstInputBitSpinBox_);
+    inputRangeLayout->addWidget(
+        new QLabel(tr("last bit: "), inputRangeWidget));
+    inputRangeLayout->addWidget(lastInputBitSpinBox_);
 
-    firstInputBitSpinBox_ =
-        new QSpinBox(rangeWidget, "firstInputBitSpinBox");
-    lastInputBitSpinBox_ =
-        new QSpinBox(rangeWidget, "lastInputBitSpinBox");
+    // outputs range widget
+    QWidget *outputRangeWidget = new QWidget(outputGroupBox);
+    QBoxLayout *outputRangeLayout
+        = new QHBoxLayout(outputRangeWidget, WIDGET_SPACING);
 
-    rangeLayout->addWidget(
-        new QLabel(tr("first input bit"), rangeWidget));
-    rangeLayout->addWidget(firstInputBitSpinBox_);
-    rangeLayout->addWidget(
-        new QLabel(tr("last input bit"), rangeWidget));
-    rangeLayout->addWidget(lastInputBitSpinBox_);
+    firstOutputBitSpinBox_ = new QSpinBox(outputRangeWidget);
+    lastOutputBitSpinBox_ = new QSpinBox(outputRangeWidget);
 
-    firstOutputBitSpinBox_ =
-        new QSpinBox(rangeWidget, "firstOutputBitSpinBox");
-    lastOutputBitSpinBox_ =
-        new QSpinBox(rangeWidget, "lastOutputBitSpinBox");
+    outputRangeLayout->addWidget(
+        new QLabel(tr("first bit: "), outputRangeWidget));
+    outputRangeLayout->addWidget(firstOutputBitSpinBox_);
+    outputRangeLayout->addWidget(
+        new QLabel(tr("last bit: "), outputRangeWidget));
+    outputRangeLayout->addWidget(lastOutputBitSpinBox_);
 
-    rangeLayout->addWidget(
-        new QLabel(tr("first output bit"), rangeWidget));
-    rangeLayout->addWidget(firstOutputBitSpinBox_);
-    rangeLayout->addWidget(
-        new QLabel(tr("last output bit"), rangeWidget));
-    rangeLayout->addWidget(lastOutputBitSpinBox_);
+    // layouts
+    inputLayout->addWidget(inputComboBox_);
+    inputLayout->addWidget(inputRangeWidget);
+    outputLayout->addWidget(outputComboBox_);
+    outputLayout->addWidget(outputRangeWidget);
 
+    ioLayout->addWidget(inputGroupBox);
+    ioLayout->addWidget(outputGroupBox);
 
     // buttons
     QWidget *buttonWidget = new QWidget(this);
@@ -142,22 +169,7 @@ void MuxMappingConfDialog::initLayout() {
 
     // base layout
     baseLayout->add(ioWidget);
-    baseLayout->add(rangeWidget);
     baseLayout->add(buttonWidget);
-}
-
-PinListViewItem *MuxMappingConfDialog::pinListViewItemForString(
-    QString name)
-{
-    QListViewItemIterator it = itemIter_;
-    for (; it.current(); ++it) {
-        PinListViewItem *item = (PinListViewItem *)it.current();
-        if (item->text(1) == name) {
-            // found
-            return item;
-        }
-    }
-    return 0; // not found
 }
 
 void MuxMappingConfDialog::sync() {
@@ -168,10 +180,10 @@ void MuxMappingConfDialog::sync() {
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->type() == PinModel::INPUT) {
-            inputComboBox_->insertItem(item->text(1));
+            inputComboBox_->insertItem(item);
         }
         else if (item->type() == PinModel::OUTPUT) {
-            outputComboBox_->insertItem(item->text(1));
+            outputComboBox_->insertItem(item);
         }
     }
     inputComboBox_->setCurrentText(muxMappingItem_->text(0));
@@ -185,10 +197,8 @@ void MuxMappingConfDialog::sync() {
 
 void MuxMappingConfDialog::commit() {
 
-    muxMappingItem_->setInputPinListViewItem(
-        pinListViewItemForString(inputComboBox_->currentText()));
-    muxMappingItem_->setOutputPinListViewItem(
-        pinListViewItemForString(outputComboBox_->currentText()));
+    muxMappingItem_->setInputPinListViewItem(inputComboBox_->selectedItem());
+    muxMappingItem_->setOutputPinListViewItem(outputComboBox_->selectedItem());
     muxMappingItem_->setFirstInputBit(firstInputBitSpinBox_->value());
     muxMappingItem_->setFirstOutputBit(firstOutputBitSpinBox_->value());
     muxMappingItem_->setLastInputBit(lastInputBitSpinBox_->value());

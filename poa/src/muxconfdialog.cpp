@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.43 2004/01/29 16:30:05 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.44 2004/01/29 19:42:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -73,22 +73,16 @@ MuxMapping *MuxMappingListViewItem::mapping() const {
 }
 
 void MuxMappingListViewItem::update() {
-    if (mapping_ != 0) {
-        setText(0, mapping_->input()->name());
-        setText(1, QString::number(mapping_->firstInputBit()) + " - "
-                   + QString::number(mapping_->lastInputBit()));
-        setText(2, mapping_->output()->name());
-        setText(3, QString::number(mapping_->firstOutputBit()) + " - "
-                   + QString::number(mapping_->lastOutputBit()));
-    }
-    else {
+    if (input_) {
         setText(0, input_->text(1));
-        setText(1, QString::number(firstInputBit_) + " - "
-                   + QString::number(lastInputBit_));
-        setText(2, output_->text(1));
-        setText(3, QString::number(firstOutputBit_) + " - "
-                   + QString::number(lastOutputBit_));
     }
+    setText(1, QString::number(firstInputBit_) + " - "
+            + QString::number(lastInputBit_));
+    if (output_) {
+        setText(2, output_->text(1));
+    }
+    setText(3, QString::number(firstOutputBit_) + " - "
+            + QString::number(lastOutputBit_));
 }
 
 void MuxMappingListViewItem::setInputPinListViewItem(
@@ -300,8 +294,10 @@ void MuxConfDialog::sync() {
                 blockConfWidget_->pinListViewItemForPin(mapping->input());
             PinListViewItem *output =
                 blockConfWidget_->pinListViewItemForPin(mapping->output());
-            new MuxMappingListViewItem(mappingListView, input, output,
-                                       0, mapping);
+            Q_ASSERT(input != 0);
+            Q_ASSERT(output != 0);
+            new MuxMappingListViewItem(mappingListView, 0, input, output,
+                                       mapping);
         }
     }
 }
@@ -327,11 +323,20 @@ void MuxConfDialog::commit() {
         MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
         MuxMapping *mapping = item->mapping();
         if (!mapping) { // new Mapping
-            // determine Pins
-//LAST            mapping = new MuxMapping(item->inp);
+            mapping = new MuxMapping(
+                        item->inputPinListViewItem()->pin(),
+                        item->outputPinListViewItem()->pin(),
+                        item->firstInputBit(), item->firstOutputBit(),
+                        item->lastInputBit(), item->lastOutputBit());
+            model_->addMuxMapping(mapping);
         }
         else {
-            // determine Pins, etc.
+            mapping->setInput(item->inputPinListViewItem()->pin());
+            mapping->setOutput(item->outputPinListViewItem()->pin());
+            mapping->setFirstInputBit(item->firstInputBit());
+            mapping->setLastInputBit(item->lastInputBit());
+            mapping->setFirstOutputBit(item->firstOutputBit());
+            mapping->setLastOutputBit(item->lastOutputBit());
         }
     }
 

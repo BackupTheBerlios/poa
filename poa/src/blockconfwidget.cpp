@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.13 2004/01/29 16:30:05 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.14 2004/01/29 19:42:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -370,10 +370,6 @@ void BlockConfWidget::ioSelectionChanged() {
 }
 
 PinListViewItem *BlockConfWidget::pinListViewItemForPin(PinModel *pin) {
-
-    if (!pin) {
-        return 0;
-    }
 
     for (QListViewItemIterator it(ioListView_); it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();

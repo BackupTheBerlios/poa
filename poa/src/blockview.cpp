@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.70 2004/01/28 18:00:56 squig Exp $
+ * $Id: blockview.cpp,v 1.71 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -128,25 +128,6 @@ void BlockView::addPins(const QValueList<PinModel *> pins)
     }
 }
 
-//  void BlockView::addPinViewsTo(QCanvasItemList &list)
-//  {
-//      for (QValueList<PinView*>::iterator current1 = leftPins_.begin();
-//           current1 != leftPins_.end(); ++current1) {
-
-//          list.prepend(*current1);
-//      }
-//      for (QValueList<PinView*>::iterator current2 = rightPins_.begin();
-//           current2 != rightPins_.end(); ++current2) {
-
-//          list.prepend(*current2);
-//      }
-//      for (QValueList<PinView*>::iterator current3 = bottomPins_.begin();
-//           current3 != bottomPins_.end(); ++current3) {
-
-//          list.prepend(*current3);
-//      }
-//  }
-
 void addToList(QValueList<ConnectorViewList*> &list,
            QValueList<PinView*> *pins)
 {
@@ -158,19 +139,6 @@ void addToList(QValueList<ConnectorViewList*> &list,
             list.prepend(connector);
         }
     }
-}
-
-void BlockView::arrangeConnectors()
-{
-//     GridCanvas *ownCanvas = dynamic_cast<GridCanvas*>(canvas());
-//     if (ownCanvas != 0) {
-//     QValueList<ConnectorViewList*> list;
-
-//     addToList(list, &leftPins_);
-//     addToList(list, &rightPins_);
-//     addToList(list, &bottomPins_);
-//     ownCanvas->reRoute(list);
-//     }
 }
 
 void BlockView::arrangePins()

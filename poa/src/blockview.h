@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.48 2004/01/24 16:50:53 squig Exp $
+ * $Id: blockview.h,v 1.49 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -159,11 +159,6 @@ public slots:
 protected:
 
     virtual void drawShape (QPainter &p);
-
-    /**
-     * Forces rerouting of all incident connector views.
-     */
-    virtual void arrangeConnectors();
 
     /**
      * Recalculates height and rearranges all pins.

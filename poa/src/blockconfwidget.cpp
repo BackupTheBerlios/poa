@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.5 2004/01/28 18:00:56 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.6 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,6 @@ BlockConfWidget::BlockConfWidget(BlockModel *model, QWidget* parent) :
 {
     model_ = model;
     inputRoot_ = outputRoot_ = episodicRoot_ = 0;
-    newPinSortOrder_ = false;
 
     initLayout();
     ioSelectionChanged();
@@ -133,10 +132,6 @@ void BlockConfWidget::initLayout() {
     // put everything together
     baseLayout->add(editWidget);
     baseLayout->add(orderButtonWidget);
-}
-
-bool BlockConfWidget::newPinSortOrder() {
-    return newPinSortOrder_;
 }
 
 QListView *BlockConfWidget::ioListView() const {
@@ -235,7 +230,6 @@ void BlockConfWidget::updatePositions(PinModel::PinType type) {
     ioListView_->setSorting(0);
     ioListView_->sort();
     ioListView_->setSorting(10);
-    newPinSortOrder_ = true;
 }
 
 void BlockConfWidget::mouseButtonClicked(int button,

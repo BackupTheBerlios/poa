@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.60 2004/01/28 16:35:51 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.61 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -287,10 +287,7 @@ bool BlockConfDialog::commit()
     blockConfWidget_->commit();
 
     // notify model about update to repaint views
-    if (blockConfWidget_->newPinSortOrder()) {
-        model_->updatePerformed();
-    }
-
+    model_->updatePerformed();
 
     // sync again
     sync();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.39 2004/01/28 15:39:12 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.40 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -322,9 +322,7 @@ void MuxConfDialog::commit() {
 
     // Notify model about update, so the view will be
     // repaint.
-    if (blockConfWidget_->newPinSortOrder()) {
-        ((AbstractModel *)model_)->updatePerformed();
-    }
+    model_->updatePerformed();
 
     // sync again
     sync();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.3 2004/01/28 17:35:17 squig Exp $
+ * $Id: blockconfwidget.h,v 1.4 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -61,9 +61,6 @@ public:
     void commit();
 
     QListView *ioListView() const;
-
-    /** Returns <code>true</code> if pin order changed. */
-    bool newPinSortOrder();
 
 private:
     QListView *ioListView_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.35 2004/01/28 18:00:56 squig Exp $
+ * $Id: pinview.cpp,v 1.36 2004/01/28 18:16:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -91,12 +91,9 @@ void PinView::moveBy(double dx, double dy) {
     if (connector() != 0 && (dx != 0 || dy != 0)) {
         GridCanvas *gridCanvas = dynamic_cast<GridCanvas*>(canvas());
         if (gridCanvas != 0) {
+            // reroute connector
             gridCanvas->route(connector());
         }
-
-        // FIX: someone needs to be notified, the connection needs
-        // some rerouting
-        //connector()->pinMoved(this);
     }
 }
 

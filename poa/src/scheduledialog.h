@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.23 2004/01/22 13:11:10 vanto Exp $
+ * $Id: scheduledialog.h,v 1.24 2004/01/25 14:29:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -270,6 +270,15 @@ class FitCanvasView : public QCanvasView
 
 };
 
+/**
+ * Provides decorated (3d styled) rectangles.
+ */
+class FancyRectangle : public QCanvasRectangle
+{
 
+ public:
+    FancyRectangle(QRect, QCanvas *canvas);
+    void drawShape(QPainter &p);
+};
 
 #endif // POA_SCHEDULEDIALOG_H

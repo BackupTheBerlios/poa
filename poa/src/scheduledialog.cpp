@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.43 2004/01/22 15:20:07 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.44 2004/01/25 14:29:41 vanto Exp $
  *
  *****************************************************************************/
 
@@ -56,7 +56,7 @@
 
 const int CANVAS_WIDTH = 800;       // Canvas width
 const int X_ORIGIN = 50;            // Blocks start at this origin
-const int BOX_HEIGHT = 10;          // Height of one box in diagram
+const int BOX_HEIGHT = 12;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
 const int BLOCKS_PER_CANVAS = 10;
@@ -350,7 +350,7 @@ void ScheduleDialog::drawTimings(BlockNode* node)
     while (X < canvas->width()) {
         // draw block
         QRect thisBlock = calcBlockPosition(node, t);
-        QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);
+        QCanvasRectangle* box = new FancyRectangle(thisBlock, canvas);
         box->setBrush(QBrush(white));
         box->setZ(2);
         box->show();
@@ -671,4 +671,29 @@ void FitCanvasView::resizeEvent(QResizeEvent *)
         canvas()->resize(canvas()->width(),
                          viewareaHeight);
     }
+}
+
+FancyRectangle::FancyRectangle(QRect rect, QCanvas *canvas)
+    : QCanvasRectangle(rect, canvas)
+{
+}
+
+void FancyRectangle::drawShape(QPainter &p)
+{
+    // draws the rectangle
+    p.setPen(QPen(QColor(118, 118, 118), 1));
+    p.drawRect(x(), y(), width(), height());
+
+    // draws decorations
+    p.setPen(QPen(QColor(192, 192, 192), 1));
+    p.drawPoint(x(), y());
+    p.drawPoint(x(), y() + height() - 1);
+    p.drawPoint(x() + width() - 1, y());
+    p.drawPoint(x() + width() - 1, y() + height() - 1);
+
+    p.setPen(QPen(QColor(196, 194, 205), 1));
+    p.drawLine(x() + 1, y() + height() - 2,
+               x() + width() - 2, y() + height() - 2);
+    p.drawLine(x() + width() - 2, y() + height() - 1,
+               x() + width() - 2, y() + 1);
 }

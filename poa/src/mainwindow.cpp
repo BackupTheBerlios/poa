@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.3 2003/08/20 09:28:40 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.4 2003/08/20 10:33:16 squig Exp $
  *
  *****************************************************************************/
 
 #include "mainwindow.h"
+#include "aboutdialog.h"
 #include "moduleconfdialog.h"
 
 #include <qvariant.h>
@@ -298,7 +299,8 @@ void MainWindow::helpContents()
 
 void MainWindow::helpAbout()
 {
-    qWarning( "MainWindow::helpAbout(): Not implemented yet!" );
+	AboutDialog *dialog = new AboutDialog();
+	dialog->show();
 }
 
 void MainWindow::openModuleConfDialog()

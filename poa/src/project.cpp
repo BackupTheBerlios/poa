@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.34 2003/12/03 18:44:32 vanto Exp $
+ * $Id: project.cpp,v 1.35 2003/12/09 10:27:24 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -77,13 +77,9 @@ bool Project::open()
             setModified(false);
             return true;
         }
-        else {
-            file.close();
-            setModified(false);
-            return false;
-        }
         file.close();
     }
+    // FIX: what if the previously opened file was modified?
     setModified(false);
     return false;
 }

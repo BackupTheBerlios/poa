@@ -18,21 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.20 2003/11/24 16:37:41 squig Exp $
+ * $Id: librarywindow.cpp,v 1.21 2003/12/09 10:27:24 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
 #include "abstractmodel.h"
 #include "cpumodel.h"
+#include "modelfactory.h"
 #include "muxmodel.h"
 #include "pinmodel.h"
+#include "util.h"
 
-#include <qvariant.h>
+#include <qdir.h>
+#include <qdom.h>
 #include <qdragobject.h>
+#include <qfileinfo.h>
 #include <qlayout.h>
 #include <qsplitter.h>
 #include <qtextbrowser.h>
+#include <qvariant.h>
 
 /**
  * Constructs the window.
@@ -84,53 +89,53 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    // NIOS 32
-    BlockModel *model = new CpuModel("NIOS 32", "NIOS 32-bit CPU");
-    PinModel *pin = new PinModel(model, "in1");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "out1");
-    pin->setType(PinModel::OUTPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "clock");
-    pin->setType(PinModel::EPISODIC);
-    model->addPin(pin);
-    pin = new PinModel(model, "reset");
-    pin->setType(PinModel::EPISODIC);
-    model->addPin(pin);
-    new LibraryListViewItem(cpuListViewItem, model);
+    BlockModel *model;
+    PinModel *pin;
 
-    // NIOS 16
-    model = new CpuModel("NIOS 16", "NIOS 16-bit CPU");
+//      // NIOS 32
+//      BlockModel *model = new CpuModel("NIOS 32", "NIOS 32-bit CPU");
+//      PinModel *pin = new PinModel(model, "in1");
+//      pin->setType(PinModel::INPUT);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "out1");
+//      pin->setType(PinModel::OUTPUT);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "clock");
+//      pin->setType(PinModel::EPISODIC);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "reset");
+//      pin->setType(PinModel::EPISODIC);
+//      model->addPin(pin);
+//      new LibraryListViewItem(cpuListViewItem, model);
+
+//      // NIOS 16
+//      model = new CpuModel("NIOS 16", "NIOS 16-bit CPU");
+//      pin = new PinModel(model, "in1");
+//      pin->setType(PinModel::INPUT);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "out1");
+//      pin->setType(PinModel::OUTPUT);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "clock");
+//      pin->setType(PinModel::EPISODIC);
+//      model->addPin(pin);
+//      pin = new PinModel(model, "reset");
+//      pin->setType(PinModel::EPISODIC);
+//      model->addPin(pin);
+//      new LibraryListViewItem(cpuListViewItem, model);
+
+    // core
+    model = new BlockModel("Core", "Default core");
     pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
     model->addPin(pin);
     pin = new PinModel(model, "out1");
-    pin->setType(PinModel::OUTPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "clock");
-    pin->setType(PinModel::EPISODIC);
-    model->addPin(pin);
-    pin = new PinModel(model, "reset");
-    pin->setType(PinModel::EPISODIC);
-    model->addPin(pin);
-    new LibraryListViewItem(cpuListViewItem, model);
-
-    // full adder
-    model = new BlockModel("Full Adder", "Fast binary adder");
-    pin = new PinModel(model, "in1");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "in2");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "result");
     pin->setType(PinModel::OUTPUT);
     model->addPin(pin);
     new LibraryListViewItem(coreListViewItem, model);
 
     // input
-    model = new BlockModel("Input", "Static input block");
+    model = new BlockModel("Input", "Default input block");
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
     model->setHasRuntime(false);
@@ -146,7 +151,7 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(ioListViewItem, model);
 
     // output
-    model = new BlockModel("Output", "Static output block");
+    model = new BlockModel("Output", "Default output block");
     model->setHasEpisodicPins(false);
     model->setHasOutputPins(false);
     model->setHasRuntime(false);
@@ -166,6 +171,33 @@ void LibraryWindow::initializeLibrary()
                             new MuxModel("Mux", "Multiplexer"));
     new LibraryListViewItem(muxListViewItem,
                             new MuxModel("Demux", "Demultiplexer"));
+
+    // read library file
+    // FIX: this is copy & paste code from project.cpp
+    QFile file(Util::findResource("library.xml"));
+    if (file.open(IO_ReadOnly)) {
+	QDomDocument document;
+        if (document.setContent(&file)) {
+	    QDomNodeList mList = document.elementsByTagName("model");
+	    if (mList.count() == 1) {
+		QDomNodeList bList
+		    = mList.item(0).toElement().elementsByTagName("blocks");
+		if (bList.count() == 1) {
+		    // create model instances
+		    QDomElement element = bList.item(0).toElement();
+		    QValueList<AbstractModel *> l
+			= ModelFactory::generate(element);
+		    for (QValueList<AbstractModel *>::Iterator it = l.begin();
+			 it != l.end(); ++it) {
+			// FIX: should sort items into appropriate category
+			new LibraryListViewItem(coreListViewItem, *it);
+		    }
+		}
+	    }
+	}
+	file.close();
+    }	    
+
 }
 
 /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.110 2004/02/05 13:53:07 kilgus Exp $
+ * $Id: mainwindow.cpp,v 1.111 2004/02/15 03:56:24 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -708,9 +708,8 @@ void MainWindow::fileOpen()
 void MainWindow::filePrint()
 {
     if (activeView() != 0) {
-        PrintManager printer(activeView()->canvas(), 
-        	activeView()->project()->name());
-        printer.print();
+        PrintManager printer(activeView()->project()->name());
+        printer.print(activeView()->canvas());
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.cpp,v 1.4 2004/02/06 14:33:20 vanto Exp $
+ * $Id: printmanager.cpp,v 1.5 2004/02/15 03:56:24 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -34,8 +34,7 @@
 int HEADER_SPACE = 20;
 int FONT_HEIGHT = 12;
 
-PrintManager::PrintManager(QCanvas *canvas, QString title)
-    : canvas_(canvas)
+PrintManager::PrintManager(QString title)
 {
     FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
     HEADER_SPACE = 2 * FONT_HEIGHT;
@@ -48,35 +47,46 @@ PrintManager::~PrintManager()
 {
 }
 
-void PrintManager::print()
+bool PrintManager::setup()
 {
-    QPrinter printer;
     // doesnt work in GS-Pool
     //printer.setOptionEnabled(QPrinter::PrintSelection, false);
     //printer.setOptionEnabled(QPrinter::PrintPageRange, false);
+    return printerSetup_ = printer_.setup();
+}
 
-    if (printer.setup()) {
+QPaintDeviceMetrics *PrintManager::getMetrics()
+{
+    if (!printerSetup_) return NULL;
+    return new QPaintDeviceMetrics(&printer_);
+}
+
+void PrintManager::print(QCanvas *canvas)
+{
+    if (!printerSetup_)
+        setup();
+    if (printerSetup_) {
         // disable grid for printing
         bool oldValue = Settings::instance()->showGrid();
         Settings::instance()->setShowGrid(false);
 
-        QPainter painter(&printer);
+        QPainter painter(&printer_);
         QFont f = QApplication::font();
         QFontMetrics fm(f);
 
-        QPaintDeviceMetrics metrics(&printer);
+        QPaintDeviceMetrics metrics(&printer_);
         int pageWidth = metrics.width();
         int pageHeight = metrics.height() - HEADER_SPACE;
 
-        for (int copies = 0; copies < printer.numCopies(); copies++) {
+        for (int copies = 0; copies < printer_.numCopies(); copies++) {
             int page = 1;
             int y = 0;
-            while (y < canvas_->height()) {
+            while (y < canvas->height()) {
                 int x = 0;
-                while (x < canvas_->width()) {
+                while (x < canvas->width()) {
                     QRect rect(x, y, pageWidth, pageHeight);
 
-                    QCanvasItemList items = canvas_->collisions(rect);
+                    QCanvasItemList items = canvas->collisions(rect);
                     if (items.empty()) {
                         x += pageWidth;
                         painter.translate(-pageWidth, 0);
@@ -84,7 +94,7 @@ void PrintManager::print()
                     }
 
                     if (!(x == 0 && y == 0)) {
-                        printer.newPage();
+                        printer_.newPage();
                         page++;
                     }
 
@@ -100,7 +110,7 @@ void PrintManager::print()
                     // Draw graphics (clip to leave header space out)
                     painter.setClipRect(0, HEADER_SPACE, pageWidth, pageHeight);
                     painter.translate(0, HEADER_SPACE);
-                    canvas_->drawArea(rect, &painter, false);
+                    canvas->drawArea(rect, &painter, false);
                     painter.translate(0, -HEADER_SPACE);
                     painter.setClipping(false);
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.57 2004/02/13 00:38:15 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.58 2004/02/15 03:56:24 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@
 #include <qtooltip.h>
 #include <qimage.h>
 #include <qpainter.h>
+#include <qpaintdevicemetrics.h> 
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qslider.h>
@@ -57,7 +58,7 @@
 #include "printmanager.h"
 
 const int CANVAS_WIDTH = 800;       // Canvas width
-const int PRINT_CANVAS_WIDTH = 700; // Same for printer
+//const int PRINT_CANVAS_WIDTH = 600; // Same for printer
 const int PRINT_ITEM_HEIGHT = 20;   // Table item height
 const int PRINT_NAME_WIDTH = 100;   // Width of name space left of graph
 const int PRINT_SPACING = 5;        // Space e.g. between lines and text
@@ -513,6 +514,13 @@ void ScheduleDialog::autoSchedule()
 
 void ScheduleDialog::print()
 {
+    PrintManager printer(project_->name());
+    if (!printer.setup()) return;
+
+    QPaintDeviceMetrics *metrics = printer.getMetrics();    
+    int PRINT_CANVAS_WIDTH = metrics->width();
+    delete metrics;
+
     int tableHeight = (blocks_.count() + 1) * PRINT_ITEM_HEIGHT;
     QCanvas *printCanvas = new QCanvas(PRINT_CANVAS_WIDTH, 
         tableHeight + PRINT_ITEM_HEIGHT + canvas->height());
@@ -525,7 +533,7 @@ void ScheduleDialog::print()
                    PRINT_CANVAS_WIDTH * 4/10, 
                    PRINT_CANVAS_WIDTH * 6/10, 
                    PRINT_CANVAS_WIDTH * 8/10,
-                   PRINT_CANVAS_WIDTH};
+                   PRINT_CANVAS_WIDTH - 1};
 
     QCanvasLine *line = new QCanvasLine(printCanvas);
     line->setPoints(xOfs[0], y, xOfs[5], y);
@@ -604,8 +612,7 @@ void ScheduleDialog::print()
     }
 
     // finally print canvas
-    PrintManager printer(printCanvas, project_->name());
-    printer.print();
+    printer.print(printCanvas);
 }
 
 void ScheduleDialog::updateHighlighter(int row, int)

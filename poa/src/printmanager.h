@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.h,v 1.2 2004/02/05 13:53:07 kilgus Exp $
+ * $Id: printmanager.h,v 1.3 2004/02/15 03:56:24 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define POA_PRINTMANAGER_H
 
 #include <qstring.h> 
+#include <qprinter.h>
 
 class QCanvas;
 
@@ -36,18 +37,28 @@ class PrintManager
 {
 
 public:
-    PrintManager(QCanvas *canvas, QString title);
+    PrintManager(QString title);
     ~PrintManager();
 
     /**
-     * Shows the print dialog and prints the canvas.
+     * Shows the print dialog.
      */
-    void print();
+	bool setup();
+
+    /**
+     * Get device metrics of printer.
+     */
+	QPaintDeviceMetrics *getMetrics();
+
+    /**
+     * Shows the print dialog if not already done and prints the canvas.
+     */
+    void print(QCanvas *canvas);
 
 private:
-    QCanvas *canvas_;
 	QString title_;
-
+    QPrinter printer_;
+	bool printerSetup_;
 };
 
 #endif // POA_PRINTMANAGER_H

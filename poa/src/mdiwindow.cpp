@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.26 2004/01/28 23:34:14 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.27 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -72,9 +72,9 @@ void MdiWindow::closeEvent(QCloseEvent *e)
 {
     if (view()->project()->isModified()) {
         int ans = QMessageBox::information
-            (this, "POA", "The document contains unsaved changes\n"
-             "Do you want to save the changes before exiting?",
-             "&Save", "&Discard", "Cancel",
+            (this, "POA", tr("The document contains unsaved changes\n"
+             "Do you want to save the changes before exiting?"),
+             tr("&Save"), tr("&Discard"), tr("Cancel"),
              0, // Enter == button 0
              2); // Escape == button 2
         switch(ans) {

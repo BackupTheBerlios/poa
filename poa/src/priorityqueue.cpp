@@ -18,13 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.10 2004/01/30 12:29:04 keulsn Exp $
+ * $Id: priorityqueue.cpp,v 1.11 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
 
+#include <qapplication.h>
 #include <utility>
 #include <qvaluelist.h>
+#include <qstring.h>
 
 #include "poa.h"
 #include "priorityqueue.h"
@@ -269,7 +271,9 @@ QString PriorityQueue::checkIntegrity()
     QString defects = QString::null;
     if (head != 0) {
         if  (!head->isHead()) {
-            defects += "\nQueue's head is not heap's root item";
+            defects += 
+	      qApp->translate("priorityqueue",
+			      "\nQueue's head is not heap's root item");
         }
 
         unsigned wrongPrio = 0;
@@ -309,20 +313,25 @@ QString PriorityQueue::checkIntegrity()
             }
         }
         if (wrongPrio != 0) {
-            defects += "\nHeap condition is violated " +
-                QString::number(wrongPrio) + " times.";
+            defects += qApp->translate("priorityqueue",
+				       "\nHeap condition is violated ") +
+                QString::number(wrongPrio) + qApp->translate("priorityqueue",
+							     " times.");
         }
         if (wrongParent != 0) {
-            defects += "\n" + QString::number(wrongParent) + " item(s) have"
-                + " incorrect parent set.";
+	  defects += "\n" + QString::number(wrongParent) 
+	    + qApp->translate("priorityqueue"," item(s) have")
+	    + qApp->translate("priorityqueue"," incorrect parent set.");
         }
         if (wrongSize != 0) {
-            defects += "\n" + QString::number(wrongSize) + " item(s) have"
-                + " incorrect size.";
+	  defects += "\n" + QString::number(wrongSize) 
+	    + qApp->translate("priorityqueue"," item(s) have")
+	    + qApp->translate("priorityqueue"," incorrect size.");
         }
 
         if (defects != QString::null) {
-            defects = QString("Queue's size = ") +
+            defects = QString(qApp->translate("priorityqueue",
+					      "Queue's size = ")) +
                 QString::number(head->size()) + defects + "\n";
         }
     }

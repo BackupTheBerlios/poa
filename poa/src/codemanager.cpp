@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.17 2004/02/04 10:29:37 papier Exp $
+ * $Id: codemanager.cpp,v 1.18 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -109,7 +109,7 @@ void CodeManager::createDirectory(const QDir &path)
     if (!path.exists()) {
         if (!path.mkdir(path.absPath())) {
             throw PoaException
-	      (QString("Could not create directory: %1").arg(path.absPath()));
+	      (QString(qApp->translate("codemanager","Could not create directory: %1")).arg(path.absPath()));
         }
     }
 }
@@ -135,7 +135,7 @@ void CodeManager::copyTemplate()
         Util::copyFile(&cpuTemplate, &source);
     }
     else {
-        throw PoaException(QString("Could not copy code template: %1 does not exist.").arg(Settings::instance()->templatePath()));
+        throw PoaException(QString(qApp->translate("codemanager","Could not copy code template: %1 does not exist.")).arg(Settings::instance()->templatePath()));
     }
 }
 

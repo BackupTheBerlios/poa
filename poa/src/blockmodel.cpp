@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.47 2004/01/28 18:23:49 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.48 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -267,17 +267,17 @@ void BlockModel::setRuntime(const unsigned int runtime)
 
 QString BlockModel::tip()
 {
-    QString s = QString("<u>%2</u> (%3)<br>" \
+    QString s = QString(tr("<u>%2</u> (%3)<br>" \
                         "<i>%4</i><hr>"
                         "<b>Clock:</b> %5<br>" \
-                        "<b>Offset:</b> %6<br>")
+			   "<b>Offset:</b> %6<br>"))
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())
         .arg(formatTimeProperly(this->clock()))
         .arg(toTip(this->autoOffset(), this->offset()));
     if (hasRuntime()) {
-        s.append(QString("<b>Execution time:</b> %1")
+      s.append(QString(tr("<b>Execution time:</b> %1"))
                  .arg(formatTimeProperly(this->runtime())));
     }
 

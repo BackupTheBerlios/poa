@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.40 2004/01/29 11:28:01 squig Exp $
+ * $Id: librarywindow.cpp,v 1.41 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -109,7 +109,7 @@ void LibraryWindow::addDefaultItems()
     BlockModel *model;
 
     // cpu
-    model = new CpuModel("CPU", "Default CPU");
+    model = new CpuModel("CPU", tr("Default CPU"));
     model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
     model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
     model->addPin(new PinModel(model, "clock", 0, 32, PinModel::EPISODIC, 1));
@@ -117,13 +117,13 @@ void LibraryWindow::addDefaultItems()
     add(model);
 
     // core
-    model = new BlockModel("Core", "Default core");
+    model = new BlockModel("Core",tr("Default core"));
     model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
     model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
     add(model);
 
     // input
-    model = new BlockModel("Input", "Default input block");
+    model = new BlockModel("Input", tr("Default input block"));
     model->setType("I/O");
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
@@ -134,7 +134,7 @@ void LibraryWindow::addDefaultItems()
     add(model);
 
     // output
-    model = new BlockModel("Output", "Default output block");
+    model = new BlockModel("Output", tr("Default output block"));
     model->setType("I/O");
     model->setHasEpisodicPins(false);
     model->setHasOutputPins(false);
@@ -145,7 +145,7 @@ void LibraryWindow::addDefaultItems()
     add(model);
 
     // mux
-    MuxModel *muxModel = new MuxModel("Mux", "Multiplexer / Demultiplexer");
+    MuxModel *muxModel = new MuxModel("Mux", tr("Multiplexer / Demultiplexer"));
     PinModel *in1 = new PinModel(muxModel, "in1", 0, 32, PinModel::INPUT, 1);
     PinModel *in2 = new PinModel(muxModel, "in2", 32, 32, PinModel::INPUT, 2);
     PinModel *out1 = new PinModel(muxModel, "out1", 0, 64, PinModel::OUTPUT, 1);
@@ -167,7 +167,7 @@ void LibraryWindow::changeTypeOfSelected()
         QStringList typeNames = types();
         bool ok;
         QString type = QInputDialog::getItem
-            ("POA", "Select a type", typeNames,
+            ("POA", tr("Select a type"), typeNames,
              typeNames.findIndex(item->data().type()), true, &ok, this);
         if (ok) {
             item->data().setType(type);
@@ -327,7 +327,7 @@ void LibraryWindow::save(QFile *file)
         modified_ = false;
     }
     else {
-        qWarning(QString("Could not save library to %1").arg(file->name()));
+        qWarning(QString(tr("Could not save library to %1")).arg(file->name()));
     }
 }
 

@@ -153,6 +153,17 @@ Soll die existierende Datei überschrieben werden?</translation>
     </message>
 </context>
 <context>
+    <name>BlockModel</name>
+    <message>
+        <source>&lt;u&gt;%2&lt;/u&gt; (%3)&lt;br&gt;&lt;i&gt;%4&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Clock:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Execution time:&lt;/b&gt; %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CanvasView</name>
     <message>
         <source>&amp;Route</source>
@@ -165,6 +176,24 @@ Soll die existierende Datei überschrieben werden?</translation>
     <message>
         <source>Annotate</source>
         <translation>Kommentar</translation>
+    </message>
+</context>
+<context>
+    <name>ConnectorViewList</name>
+    <message>
+        <source>&lt;b&gt;Connector&lt;/b&gt;&lt;br&gt;&lt;hr&gt;&lt;b&gt;Source:&lt;/b&gt; &lt;u&gt;%1&lt;/u&gt;::%2&lt;br&gt;&lt;b&gt;Target:&lt;/b&gt; &lt;u&gt;%3&lt;/u&gt;::%4&lt;br&gt;&lt;b&gt;Width:&lt;/b&gt; %5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Source and target have different widths!</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CpuModel</name>
+    <message>
+        <source>&lt;u&gt;%1&lt;/u&gt; (%2)&lt;br&gt;&lt;i&gt;%3&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Id on CPLD:&lt;/b&gt; %4&lt;br&gt;&lt;b&gt;Clock:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;&lt;b&gt;Execution time:&lt;/b&gt; %7</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -219,10 +248,60 @@ Soll die existierende Datei überschrieben werden?</translation>
     </message>
 </context>
 <context>
+    <name>DifferentClockReport</name>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 has a different clock than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected blocks should have the same clock.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set %1 clock to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DifferentWidthReport</name>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 has a different width than %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connected blocks need to have the same number of bits. You can use a Mux in order to connect blocks with different widhts.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set %1 bits to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DisconnectedPinReport</name>
     <message>
         <source>&amp;Delete Pin</source>
         <translation>Pin &amp;löschen</translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 is not connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disconnected pins are considered bad style.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -273,6 +352,34 @@ Soll die existierende Datei überschrieben werden?</translation>
     <message>
         <source>Remove</source>
         <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>Default CPU</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default core</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default input block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default output block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Multiplexer / Demultiplexer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select a type</source>
+        <translation type="unfinished">Typ wählen</translation>
+    </message>
+    <message>
+        <source>Could not save library to %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -630,6 +737,26 @@ Soll fortgefahren werden?</translation>
     </message>
 </context>
 <context>
+    <name>MdiWindow</name>
+    <message>
+        <source>The document contains unsaved changes
+Do you want to save the changes before exiting?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation type="unfinished">&amp;Speichern</translation>
+    </message>
+    <message>
+        <source>&amp;Discard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+</context>
+<context>
     <name>MuxConfDialog</name>
     <message>
         <source>Mux configuration</source>
@@ -713,6 +840,44 @@ Soll fortgefahren werden?</translation>
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>PinModel</name>
+    <message>
+        <source>Unkown type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Input pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Output pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Episodic pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Pin %1&lt;/b&gt;&lt;br&gt;&lt;u&gt;%2&lt;/u&gt; (%3)&lt;hr&gt;&lt;b&gt;Address:&lt;/b&gt; 0x%4&lt;br&gt;&lt;b&gt;Width:&lt;/b&gt;%5 bits</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProblemReportItem</name>
+    <message>
+        <source>Fixed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -932,6 +1097,96 @@ Soll fortgefahren werden?</translation>
     <message>
         <source>The new language settings will take effect after restart of poa.</source>
         <translation>Die neuen Spracheinstellungen werden nach dem Neustart von POA übernommen.</translation>
+    </message>
+</context>
+<context>
+    <name>codemanager</name>
+    <message>
+        <source>Could not create directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Could not copy code template: %1 does not exist.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>colormanager</name>
+    <message>
+        <source>Clocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>connectaction</name>
+    <message>
+        <source>The pins have different widths
+Do you want to change the width?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Set %1 bits to %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+</context>
+<context>
+    <name>priorityqueue</name>
+    <message>
+        <source>
+Queue&apos;s head is not heap&apos;s root item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+Heap condition is violated </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> times.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> item(s) have</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> incorrect parent set.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> incorrect size.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Queue&apos;s size = </source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>problemmanager</name>
+    <message>
+        <source>Problem Reports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 Reports</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
     </message>
 </context>
 </TS>

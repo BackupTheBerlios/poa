@@ -1,4 +1,4 @@
-/*****************************************************************************
+#/*****************************************************************************
  * POA - Programmierumgebung Offener Antrieb
  *
  * Copyright (C) 2003 Necati Aydin, Anselm Garbe, Stefan Hauser,
@@ -18,13 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.9 2004/02/04 14:12:43 kilgus Exp $
+ * $Id: poa.cpp,v 1.10 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
 
 #include "poa.h"
-
 
 QString image(QPoint p)
 {

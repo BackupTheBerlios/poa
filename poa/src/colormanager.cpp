@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.22 2004/01/28 18:23:49 vanto Exp $
+ * $Id: colormanager.cpp,v 1.23 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -26,14 +26,16 @@
 #include "poa.h"
 #include "settings.h"
 
+#include <qapplication.h>
 #include <qintdict.h>
 #include <qpainter.h>
+#include <qstring.h>
 
 const int ColorManager::RTTI = 1003;
 const int VSPACE = 5;
 const int HSPACE = 5;
 const int SAMPLE_SIZE = 12;
-const QString LEGEND_TITLE = "Clocks";
+const QString LEGEND_TITLE = qApp->translate("colormanager","Clocks");
 int ColorManager::FONT_HEIGHT = 12;
 
 ColorManager::ColorManager(QCanvas *canvas, Palette *palette)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.40 2004/01/28 18:23:49 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.41 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -129,12 +129,12 @@ QString CpuModel::source()
 
 QString CpuModel::tip()
 {
-    return QString("<u>%1</u> (%2)<br>"
-                   "<i>%3</i><hr>" \
-                   "<b>Id on CPLD:</b> %4<br>" \
-                   "<b>Clock:</b> %5<br>" \
-                   "<b>Offset:</b> %6<br>" \
-                   "<b>Execution time:</b> %7")
+    return QString(tr("<u>%1</u> (%2)<br>"
+		      "<i>%3</i><hr>" \
+		      "<b>Id on CPLD:</b> %4<br>" \
+		      "<b>Clock:</b> %5<br>" \
+		      "<b>Offset:</b> %6<br>" \
+		      "<b>Execution time:</b> %7"))
         .arg(this->name())
         .arg(this->type())
         .arg(this->description())

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coreview.cpp,v 1.2 2003/09/18 14:54:32 vanto Exp $
+ * $Id: coreview.cpp,v 1.3 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -28,8 +28,8 @@
 QString CoreView::tip()
 {
     CoreModel *m = (CoreModel*)model();
-    return QString("<b>Core</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
-                   "<b>Execution time:</b> %7")
+    return QString(tr("<b>Core</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
+		      "<b>Execution time:</b> %7"))
         .arg(m->name())
         .arg(m->type())
         .arg(m->description())

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.40 2004/01/19 11:23:07 squig Exp $
+ * $Id: pinmodel.cpp,v 1.41 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -239,22 +239,22 @@ PinModel *PinModel::clone()
 
 QString PinModel::tip()
 {
-    QString pt("Unkown type");
+    QString pt(tr("Unkown type"));
     switch (type()) {
     case PinModel::INPUT:
-        pt = "Input pin";
+        pt = tr("Input pin");
         break;
     case PinModel::OUTPUT:
-        pt = "Output pin";
+        pt = tr("Output pin");
         break;
     case PinModel::EPISODIC:
-        pt = "Episodic pin";
+        pt = tr("Episodic pin");
         break;
     }
 
-    return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
-            "<b>Address:</b> 0x%4<br>" \
-            "<b>Width:</b>%5 bits")
+    return QString(tr("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
+		      "<b>Address:</b> 0x%4<br>" \
+		      "<b>Width:</b>%5 bits"))
         .arg(position())
         .arg(name())
         .arg(pt)

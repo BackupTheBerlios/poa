@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.28 2004/01/30 14:24:59 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.29 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -134,17 +134,17 @@ QValueList<QPoint> ConnectorViewList::points()
 
 QString ConnectorViewList::tip()
 {
-    return QString("<b>Connector</b><br><hr>" \
+    return QString(tr("<b>Connector</b><br><hr>" \
                    "<b>Source:</b> <u>%1</u>::%2<br>" \
                    "<b>Target:</b> <u>%3</u>::%4<br>" \
-                   "<b>Width:</b> %5")
+		      "<b>Width:</b> %5"))
         .arg(source()->model()->name())
         .arg(source()->model()->parent()->name())
         .arg(target()->model()->name())
         .arg(target()->model()->parent()->name())
         .arg((target()->model()->bits() != source()->model()->bits())
              // patched by garbeam: ambigious overload (gcc-2.95/Qt-3.2.x)
-             ? QString("Source and target have different widths!")
+             ? QString(tr("Source and target have different widths!"))
              : QString::number(target()->model()->bits()));
 }
 

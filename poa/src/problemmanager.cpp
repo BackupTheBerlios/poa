@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.5 2004/01/21 10:28:10 kilgus Exp $
+ * $Id: problemmanager.cpp,v 1.6 2004/02/05 14:00:23 papier Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,10 @@
 #include "pinmodel.h"
 #include "problemmanager.h"
 
+#include <qapplication.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
+#include <qstring.h>
 
 //--- ProblemReportItem ---
 
@@ -60,7 +62,7 @@ void ProblemReportItem::setFixed(const bool fixed)
 {
     fixed_ = fixed;
     if (fixed) {
-        setStatus("Fixed");
+        setStatus(tr("Fixed"));
         emit updated();
     }
 }
@@ -79,10 +81,10 @@ void ProblemReportItem::setStatus(const QString status)
 {
     setText(1, status);
 
-    if (status == "Warning") {
+    if (status == tr("Warning")) {
         setPixmap(0, QMessageBox::standardIcon(QMessageBox::Warning));
     }
-    else if (status == "Critical") {
+    else if (status == tr("Critical")) {
         setPixmap(0, QMessageBox::standardIcon(QMessageBox::Critical));
     }
     else {
@@ -104,13 +106,13 @@ QString ProblemReportItem::status() const
 
 DisconnectedPinReport::DisconnectedPinReport(QListViewItem *parent,
                                              PinModel *pin)
-    : ProblemReportItem(parent, "Warning")
+  : ProblemReportItem(parent, tr("Warning"))
 {
     // FIX: connect to deleted signal
     pin_ = pin;
 
-    setShortDescription(QString("%1 is not connected").arg(pin->absName()));
-    setLongDescription("Disconnected pins are considered bad style.");
+    setShortDescription(QString(tr("%1 is not connected")).arg(pin->absName()));
+    setLongDescription(tr("Disconnected pins are considered bad style."));
 }
 
 void DisconnectedPinReport::addWidgets(QWidget *widget)
@@ -133,27 +135,27 @@ void DisconnectedPinReport::deletePin()
 
 DifferentWidthReport::DifferentWidthReport(QListViewItem *parent,
                                            PinModel *source, PinModel *target)
-    : ProblemReportItem(parent, "Critical")
+    : ProblemReportItem(parent, tr("Critical"))
 {
     source_ = source;
     target_ = target;
 
-    setShortDescription(QString("%1 has a different width than %2")
+    setShortDescription(QString(tr("%1 has a different width than %2"))
                         .arg(source->absName()).arg(target->absName()));
-    setLongDescription("Connected blocks need to have the same number of bits. "
-                       "You can use a Mux in order to connect blocks with different widhts.");
+    setLongDescription(tr("Connected blocks need to have the same number of bits. "
+                       "You can use a Mux in order to connect blocks with different widhts."));
 }
 
 void DifferentWidthReport::addWidgets(QWidget *widget)
 {
     QPushButton *adjustSourceButton = new QPushButton(widget);
     adjustSourceButton->setText
-        (QString("Set %1 bits to %2").arg(source_->name()).arg(target_->bits()));
+        (QString(tr("Set %1 bits to %2")).arg(source_->name()).arg(target_->bits()));
     connect(adjustSourceButton, SIGNAL(clicked()), this, SLOT(adjustSource()));
 
     QPushButton *adjustTargetButton = new QPushButton(widget);
     adjustTargetButton->setText
-        (QString("Set %1 bits to %2").arg(target_->name()).arg(source_->bits()));
+        (QString(tr("Set %1 bits to %2")).arg(target_->name()).arg(source_->bits()));
     connect(adjustTargetButton, SIGNAL(clicked()), this, SLOT(adjustTarget()));
 }
 
@@ -175,27 +177,27 @@ void DifferentWidthReport::adjustTarget()
 
 DifferentClockReport::DifferentClockReport(QListViewItem *parent,
                                            BlockModel *source, BlockModel *target)
-    : ProblemReportItem(parent, "Warning")
+    : ProblemReportItem(parent, tr("Warning"))
 {
     // FIX: connect to deleted signals
     source_ = source;
     target_ = target;
 
-    setShortDescription(QString("%1 has a different clock than %2")
+    setShortDescription(QString(tr("%1 has a different clock than %2"))
                         .arg(source->name()).arg(target->name()));
-    setLongDescription("Connected blocks should have the same clock.");
+    setLongDescription(tr("Connected blocks should have the same clock."));
 }
 
 void DifferentClockReport::addWidgets(QWidget *widget)
 {
     QPushButton *adjustSourceButton = new QPushButton(widget);
     adjustSourceButton->setText
-        (QString("Set %1 clock to %2").arg(source_->name()).arg(target_->clock()));
+        (QString(tr("Set %1 clock to %2")).arg(source_->name()).arg(target_->clock()));
     connect(adjustSourceButton, SIGNAL(clicked()), this, SLOT(adjustSource()));
 
     QPushButton *adjustTargetButton = new QPushButton(widget);
     adjustTargetButton->setText
-        (QString("Set %1 clock to %2").arg(target_->name()).arg(source_->clock()));
+        (QString(tr("Set %1 clock to %2")).arg(target_->name()).arg(source_->clock()));
     connect(adjustTargetButton, SIGNAL(clicked()), this, SLOT(adjustTarget()));
 }
 
@@ -218,11 +220,15 @@ void DifferentClockReport::adjustTarget()
 ProblemManager::ProblemManager(Project *project, QListView *listView)
     : project_(project)
 {
-    QListViewItem *root = new QListViewItem(listView, "Problem Reports");
+    QListViewItem *root = new QListViewItem(listView, 
+					    qApp->translate("problemmanager",
+							    "Problem Reports"));
     root->setOpen(true);
 
-    connectionRoot_ = new QListViewItem(root, "Connections");
-    blockRoot_ = new QListViewItem(root, "Blocks");
+    connectionRoot_ = new QListViewItem(root, qApp->translate("problemmanager",
+							      "Connections"));
+    blockRoot_ = new QListViewItem(root, qApp->translate("problemmanager",
+							 "Blocks"));
 }
 
 ProblemManager::~ProblemManager()
@@ -296,6 +302,7 @@ void ProblemManager::updateRoot(QListViewItem *item)
 {
     item->setText(1,
                   (item->childCount() > 0)
-                  ? QString("%1 Reports").arg(item->childCount())
-                  : QString("OK"));
+                  ? QString(qApp->translate("problemmanager",
+					    "%1 Reports")).arg(item->childCount())
+                  : QString(qApp->translate("problemmanager","OK")));
 }

@@ -1,19 +1,55 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.1 2003/05/31 16:16:29 garbeam Exp $
+%% $Id: anforderungen.tex,v 1.2 2003/05/31 16:44:11 garbeam Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Anforderungen
-\section{Anforderungen}
-Dieses Dokument beschreibt die Anforderungen des Kunden an das
+\chapter{Anforderungen}
+Dieses Kapitel beschreibt die Anforderungen des Kunden an das
 Studienprojekt B, ''Programmierumgebung Offener Antrieb'' (POA).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hintergrund
+\section{Hintergrund}
+Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen gemacht.
+Viele dieser Entwicklungen beinhalten neue Kinematiken, wie z.B. die
+Parallelkinematiken und Sensoren (z.B. den Ferraris 
+Relativbeschleunigungssensor).\par
+Dadurch entstehen neue Anforderungen an die Antriebsregelung. Zusättzliche
+Sensor-Signale müssen in den Reglerstrukturen berücksichtigt werden - oder
+sogar völlig neue Reglerstrukturen werden benötigt.\par
+Die momentan auf dem Markt erhältlichen Reglersysteme erlauben meist
+weder die Berücksichtigung neuartiger Sensoren, noch bieten sie die
+Möglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
+Daher wird am ISW eine Plattform für die Antriebsregelung entwickelt,
+auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalitäten
+zu integrieren. Diese Plattform wird am ISW kurz als ``Offener Antrieb''
+bezeichnet.  \par
+Die hardwaretechnische Realisierung erfolgt in Form einer PC-Einsteckplatine.
+Zentrales Element des Offenen Antriebes ist der Altera ``APEX''Baustein. Es
+handelt sich dabei um einen CPLD\footnote{Complex Programmable Logic Device},
+der sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
+Funktion des Bausteins seinen Bdürfnissen anzupassen.\par
+Um die Offenheit für jeden Anwender nutzbar zu machen, wird für den CPLD eine
+Architektur festgelegt, die es ermöglicht, einzelne Funktionalitäten in Form
+von Modulen zu implementieren. Diese Modlue können aus festprogrammierten
+Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Modul kann
+auf die Signale aller anderen Module zugreifen und stellt seine eigenen
+Ausgangsignale allen anderen Modulen zur Verfügung.\par
+Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
+von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
+Netzwerk konfiguriert werden kann. Es soll in der grafischen Oberfläche
+erkennbar sein, welche Ein- und Ausgänge die einzelnen CPUs und Cores
+haben. Des Weiteren sollen den CPUs C-Sourcen zugeordnet werden und diese
+für die CPU kompiliert und auf das offene Antriebsboard heruntergeladen
+werden können.
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GUI
-\subsection{GUI}
+\section{GUI}
 
 Die Oberfläche von POA untergliedert sich in folgende Teilbereiche:
 \begin{itemize}
@@ -29,7 +65,7 @@ Die Oberfläche von POA untergliedert sich in folgende Teilbereiche:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Hauptfenster
-\subsubsection{Hauptfenster}
+\subsection{Hauptfenster}
 Im Hauptfenster werden die Funktionsblöcke (CPU, Cores, E/A-Blöcke) sowie
 Signalleitungen in einem rasterisiertem Layout dargestellt und mit Maus- und
 Tastatureingaben bearbeitet.\par
@@ -44,7 +80,7 @@ geöffnet. Alle Dialoge sind über die Toolbar und Menüleiste aufrufbar.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Modulbibliothek
-\subsubsection{Modulbibliothek}
+\subsection{Modulbibliothek}
 Befindet sich angedockt am Rand des Hauptfensters und stellt eine Liste aller
 in der Bibliothek enthaltenen CPU- und Coreblöcke dar. Die Darstellung der
 CPUs und Cores in dieser Liste (Baumdiagramm CPU/Cores?) ist noch ungeklärt.
@@ -52,7 +88,7 @@ Die CPU- und Coreblöcke können via Drag\&Drop ins Hauptfenster gezogen werden.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Funktionsblockkonfigurationsdialog
-\subsubsection{Funktionsblockkonfigurationsdialog}
+\subsection{Funktionsblockkonfigurationsdialog}
 Folgende Funktionsblockparameter können in diesem Dialog konfiguriert werden:
 \begin{itemize}
 \item Anzahl der Signal-Ein/Ausgänge (Bezeichner?) 
@@ -64,14 +100,14 @@ Folgende Funktionsblockparameter können in diesem Dialog konfiguriert werden:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Externer Editor
-\subsubsection{Externer Editor}
+\subsection{Externer Editor}
 Bietet Editierung des zum CPU-Block gehörenden Sourcecodes an. Durch
 Einbindung einer Template-Sourcecode Datei wird bei erstmaliger Editierung
 ein vorgenerierter Rahmencode erzeugt und im Editor dargestellt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Optimierungsdialog
-\subsubsection{Optimierungsdialog}
+\subsection{Optimierungsdialog}
 Dieser Dialog bietet die Ausführung der folgenden Schritte an:
 \begin{itemize}
 \item Plausibilitätsprüfung der Signalverknüpfungen
@@ -81,26 +117,26 @@ Dieser Dialog bietet die Ausführung der folgenden Schritte an:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% externen Compilierterminal
-\subsubsection{externes Compilierterminal}
+\subsection{externes Compilierterminal}
 Der Compiliervorgang der CPLD-Konfiguration wird in einem externen Terminal
 aus einer Menüfunktion heraus gestartet.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CPLD-Download Dialog
-\subsubsection{CPLD-Download Dialog}
+\subsection{CPLD-Download Dialog}
 Bietet Auswahl downloadbarer (vorkompilierter) Funktionsblöcke an und startet
 den Downloadvorgang in externem Terminal.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Konfigurationsdialog
-\subsubsection{Konfigurationsdialog}
+\subsection{Konfigurationsdialog}
 Der Konfigurationsdialog bietet die Konfiguration von POA an, u.a. Einstellung
 des externen Editors, des Compilers, des externes Terminals, des C-Sourcecode-
 Templates und des CPLD-Downloads.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Interfaces
-\subsection{Interfaces}
+\section{Interfaces}
 
 POA unterstützt folgende Interfaces:
 \begin{itemize}
@@ -112,29 +148,29 @@ POA unterstützt folgende Interfaces:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% externer Editor
-\subsubsection{externer Editor}
+\subsection{externer Editor}
 Schnittstelle zum Betriebssystem über temporäre Sourcedatei.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Signallaufzeitbestimmung
-\subsubsection{Signallaufzeitbestimmung}
+\subsection{Signallaufzeitbestimmung}
 Schnittstelle zum Betriebssystem über spezielles Programm und evtl.
 temporäre Resultatdatei (noch ungeklärt).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Compiler
-\subsubsection{Compiler}
+\subsection{Compiler}
 Schnittstelle zum Betriebssystem über Compilerprogramm (gcc?).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% CPLD-Download
-\subsubsection{CPLD-Download}
+\subsection{CPLD-Download}
 Schnittstelle zum Betriebssystem über spezielles Downloadprogramm für
 serielle Schnitstelle (näheres noch ungeklärt).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Algorithmen
-\subsection{Algorithmen}
+\section{Algorithmen}
 
 POA enthält folgende erwähnenswerte zu entwickelnde/einzubindende Algorithmen:
 \begin{itemize}
@@ -145,7 +181,7 @@ POA enthält folgende erwähnenswerte zu entwickelnde/einzubindende Algorithmen:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Formate
-\subsection{Formate}
+\section{Formate}
 
 POA nutzt folgende Formate:
 
@@ -162,54 +198,17 @@ POA nutzt folgende Formate:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% XML
-\subsubsection{XML}
+\subsection{XML}
 Ein spezielles XML Format wird zum Speichern und Öffnen von
 CPLD-Layout-Konfigurationen verwendet.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Sourcecode der CPU-Blöcke
-\subsubsection{Sourcecode der CPU-Blöcke}
+\subsection{Sourcecode der CPU-Blöcke}
 Es wird ein vorkonfigurierbares C-Template als Vorlage für
 Rahmencodeerzeugung der CPU-Blöcke verwendet. Der Sourcecode von CPU-Blöcken
 wird in einer geeigneten Verzeichnisstruktur abgelegt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Background
-\subsection{Background}
 
-Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen
-gemacht. Viele dieser Entwicklungen beinhalten neue Kinematiken, wie
-z. B. die Parallelkinematiken, und Sensoren, wie z. B. den Ferraris 
-Relativbeschleunigungssensor.\par
-Dadurch entstehen neue Anforderungen an die
-Antriebsregelung. Zust\"atzliche Sensor-Signale m\"ussen in den
-Reglerstrukturen ber\"ucksichtigt werden - oder sogar v\"ollig neue
-Reglerstrukturen werden ben\"otigt.\par
-Die momentan auf dem Markt erh\"altlichen Reglersysteme erlauben meist
-weder die Ber\"ucksichtigung neuartiger Sensoren nooch bieten sie die
-M\"oglichkeit, eigene anwenderspezifische Reglerstrukturen zu 
-implementieren.\par
-Daher wirde am ISW eine Plattform f\"ur die Antrebsregelung
-entwickelt, auf der es dem Anwender in jeder Hinsicht offen steht,
-eigene Funktionalit\"aten zu inegrieren. Diese Plattform wird hier
-kurz ``Offener Antrieb'' bezeichnet. Die hardwaretechnische
-Realisierung erfolgt in Form einer PC-Einsteckplatine.\par
-Zentrales Elemnet des Offenen Antriebs ist der Altera
-``APEX''Baustein. Es handelt sich dabei um einen CPLD der sich frei
-programmieren l\"asst. Der Anwender hat die M\"oglichkeit, die
-Funktion des Bausteins seinen Bd\"urfnissen anzupassen.\par
-Um die Offenheit f\"ur jeden Anwender nutzbar zu machen, wird f\"ur
-den CPLD eine Architektur festgelegt, die es erm\"oglicht, einzelne
-Funktionalit\"aten in Form von Modulen zu implementieren. Diese Modlue
-k\"onnen aus festprogrammierten Schaltungen (Cores) und
-freiprogrammierbaren CPUs bestehen. Jedes Modul kann auf die Signale
-aller anderen Module zugreifen und stellt seine eigenen Ausgangsignale
-allen andernen Modulen zur Verf\"ugung.\par
-Ziel dieses Projekts ist es, eine Programmierumgebung f\"ur das
-Netzwerk von CPUs und Cores zu schaffen, in dem ein bereits auf dme
-CPLD vorhandenes Netzwerk konfiguriert werden kann. Es soll in der
-grafischen Oberfl\"ache erkennbar sein, welche Ein- und Ausg\"ange die
-einzelnen CPUs und Cores haben. Des Weiteren sollen den CPUs C-Sourcen
-zugeordnet werden und diese f\"ur die CPU kompiliert und auf das
-offene Antriebsboard heruntergeladen werden k\"onnen.
- 

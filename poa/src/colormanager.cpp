@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.10 2004/01/25 18:47:45 vanto Exp $
+ * $Id: colormanager.cpp,v 1.11 2004/01/26 16:50:27 squig Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,6 @@ const int SAMPLE_SIZE = 12;
 const QString LEGEND_TITLE = "Clocks";
 int ColorManager::FONT_HEIGHT = 12;
 
-
 ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
     : QCanvasRectangle(canvas),
       palette_(palette),
@@ -42,6 +41,7 @@ ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
 {
     setBrush(white);
     FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
+    Q_ASSERT(FONT_HEIGHT >= SAMPLE_SIZE);
 }
 
 ColorManager::~ColorManager()
@@ -95,8 +95,6 @@ void ColorManager::updateMap()
 {
     BlockModel *model;
 
-    int width = QFontMetrics(QApplication::font()).width(tr(LEGEND_TITLE));
-
     // actually existing clocks
     QValueList<int> reqNs;
 
@@ -113,11 +111,6 @@ void ColorManager::updateMap()
         if (!nsToPalIndex_.contains(model->clock())) {
             nsToPalIndex_.insert(model->clock(), palPosition_++);
         }
-
-        // calculate max width
-        width = QMAX(width, QFontMetrics(QApplication::font())
-                     .width(QString::number(model->clock()) + " ns")
-                     + SAMPLE_SIZE + (3 * HSPACE));
     }
 
     // remove unused map entries
@@ -128,12 +121,7 @@ void ColorManager::updateMap()
         }
     }
 
-    // calculate height
-    int height = ((nsToPalIndex_.count() + 1) * (FONT_HEIGHT + VSPACE))
-        + (2* VSPACE);
-
-    setSize(width, height);
-    update();
+    recalculateSize();
     canvas()->update();
 }
 
@@ -153,6 +141,30 @@ QPoint ColorManager::dragBy(int dx, int dy)
 QCanvasItem *ColorManager::item()
 {
     return this;
+}
+
+void ColorManager::recalculateSize()
+{
+    QFont headerFont = QApplication::font();
+    headerFont.setBold(true);
+    int width = QFontMetrics(headerFont).width(LEGEND_TITLE) + 2 * HSPACE;
+
+    QFontMetrics metrics(QApplication::font());
+    for (QMap<int,int>::iterator it = nsToPalIndex_.begin();
+         it != nsToPalIndex_.end(); it++) {
+
+        // calculate max width
+        width = QMAX(width, metrics.width(QString::number(*it) + " ns")
+                     + SAMPLE_SIZE + 3 * HSPACE);
+
+    }
+
+    // calculate height
+    int height = (nsToPalIndex_.count() + 1) * (FONT_HEIGHT + VSPACE)
+        + 2 * VSPACE;
+
+    setSize(width, height);
+    update();
 }
 
 int ColorManager::rtti() const
@@ -176,8 +188,6 @@ QDomElement ColorManager::serialize(QDomDocument *document)
 
 void ColorManager::deserialize(QDomElement element)
 {
-    int width = QFontMetrics(QApplication::font()).width(tr(LEGEND_TITLE));
-
     // pal entries
     QDomNodeList mappingElements = element.elementsByTagName("mapping");
     for (unsigned int k = 0; k < mappingElements.count(); k++) {
@@ -186,26 +196,14 @@ void ColorManager::deserialize(QDomElement element)
             nsToPalIndex_.insert(mappingElement.attribute("ns", "0").toUInt(),
                                  mappingElement.attribute("pal-entry", "0")
                                  .toUInt());
-
-            // calculate max width
-            width = QMAX(width, QFontMetrics(QApplication::font())
-                         .width(mappingElement.attribute("ns", "0") + " ns")
-                         + SAMPLE_SIZE + (3 * HSPACE));
-
         }
     }
-
-    // calculate height
-    int height = ((nsToPalIndex_.count() + 1) * (FONT_HEIGHT + VSPACE))
-        + (2* VSPACE);
-
-    setSize(width, height);
-    update();
-    //canvas()->update();
 
     // position
     moveBy(element.attribute("x", "0").toUInt(),
            element.attribute("y", "0").toUInt());
+
+    recalculateSize();
 }
 
 void ColorManager::drawShape(QPainter &p)
@@ -217,7 +215,7 @@ void ColorManager::drawShape(QPainter &p)
                    width(),
                    FONT_HEIGHT);
 
-    QFont f = p.font();
+    QFont f = QApplication::font();
 
     f.setBold(true);
     p.setFont(f);
@@ -233,7 +231,7 @@ void ColorManager::drawShape(QPainter &p)
          it != nsToPalIndex_.end(); it++) {
 
         p.fillRect(lx,
-                   ly,
+                   ly + ((FONT_HEIGHT - SAMPLE_SIZE) / 2),
                    SAMPLE_SIZE,
                    SAMPLE_SIZE,
                    QBrush(palette_->color(it.data())));

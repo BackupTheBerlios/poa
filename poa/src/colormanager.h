@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.7 2004/01/25 18:18:09 vanto Exp $
+ * $Id: colormanager.h,v 1.8 2004/01/26 16:50:27 squig Exp $
  *
  *****************************************************************************/
 
@@ -125,9 +125,9 @@ class ColorManager : public QObject,
  private:
 
     /**
-     * Updates the widget size when new legend entries were added.
+     * Resizes the widget according to the currently displayed colors.
      */
-    void updateWigetSize(int clock);
+    void recalculateSize();
 
     /** current palette */
     Palette *palette_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.12 2003/09/11 17:53:41 garbeam Exp $
+ * $Id: pinmodel.h,v 1.13 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -168,6 +168,11 @@ public:
      * Deserializes an xml subtree and sets this' properties
      */
     void deserialize(QDomElement element);
+
+    /**
+     * Clones this model.
+     */
+    PinModel *clone();
 
 private:
 

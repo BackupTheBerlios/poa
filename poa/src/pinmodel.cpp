@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.9 2003/09/11 17:53:41 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.10 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -164,4 +164,9 @@ void PinModel::deserialize(QDomElement element)
     id_ = element.attribute("id","0").toUInt();
     address_ = element.attribute("address","0").toUInt();
     bits_ = element.attribute("bits", "0").toUInt();
+}
+
+PinModel *PinModel::clone()
+{
+    return new PinModel(parent_, id_, name_, address_, bits_, type_);
 }

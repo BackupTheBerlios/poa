@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.5 2003/09/12 08:58:42 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.6 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -201,6 +201,24 @@ private:
     void addPins(PinVector pins, PinListViewItem *root);
 
 private slots:
+
+    /**
+     * Cancels all changes, deletes all cloned data and closes
+     * this dialog.
+     */
+    void cancel();
+
+    /**
+     * Applies all changes to the model.
+     */
+    void apply();
+
+    /**
+     * Applies all changes, deletes all cloned data and closes
+     * this dialog.
+     */
+    void ok();
+
     /**
      * Adds a new I/O item to the dedicated I/O group.
      */

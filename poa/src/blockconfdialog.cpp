@@ -18,12 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.7 2003/09/12 08:58:41 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.8 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockconfdialog.h"
+#include "cpumodel.h"
+#include "coremodel.h"
+#include "inputmodel.h"
+#include "outputmodel.h"
 #include "pinvector.h"
+#include "poa.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
@@ -41,8 +46,6 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
-
-#define EPISODIC_IO_TEXT "episodic inputs"
 
 PinListViewItem::PinListViewItem(QListView *parent,
                                  QListViewItem *after,
@@ -97,6 +100,8 @@ bool PinListViewItem::isRoot() {
     return isOpen();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
                                  const char* name, bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
@@ -131,9 +136,15 @@ void BlockConfDialog::initLayout()
 
     initListView();
     initBlockWidget();
-    initOffsetWidget();
-    initRuntimeWidget();
-    initCompileEditButtonWidget();
+
+    if (!(INSTANCEOF(model_, InputModel) || INSTANCEOF(model_, OutputModel))) {
+        initOffsetWidget();
+        initRuntimeWidget();
+    }
+
+    if (INSTANCEOF(model_, CpuModel)) {
+        initCompileEditButtonWidget();
+    }
 
     topLayout->addWidget(leftWidget);
     topLayout->addWidget(rightWidget);
@@ -276,7 +287,7 @@ void BlockConfDialog::initBottomWidget()
     okPushButton = new QPushButton(bottomWidget, "okPushButton");
     okPushButton->setText(tr("&OK"));
     okPushButton->setDefault(TRUE);
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
 
     // help button
     helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
@@ -285,11 +296,12 @@ void BlockConfDialog::initBottomWidget()
     // apply button
     applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
     applyPushButton->setText(tr("&Apply"));
+    connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     // cancel button
     cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
     cancelPushButton->setText(tr("&Cancel"));
-    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
     bottomLayout->addWidget(okPushButton);
     bottomLayout->addWidget(helpPushButton);
@@ -311,17 +323,28 @@ void BlockConfDialog::initListView()
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
 
-    // inputs root
-    inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
-    inputRoot_->setText(0, tr("inputs"));
+    if (INSTANCEOF(model_, CpuModel) || INSTANCEOF(model_, CoreModel)
+        || INSTANCEOF(model_, InputModel))
+    {
+        // inputs root
+        inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
+        inputRoot_->setText(0, tr("inputs"));
+    }
 
-    // outputs root
-    outputRoot_ = new PinListViewItem(ioListView, inputRoot_, PinModel::OUTPUT);
-    outputRoot_->setText(0, tr("outputs"));
+    if (INSTANCEOF(model_, CpuModel) || INSTANCEOF(model_, CoreModel)
+        || INSTANCEOF(model_, OutputModel))
+    {
+        // outputs root
+        outputRoot_ = new PinListViewItem(ioListView, inputRoot_, PinModel::OUTPUT);
+        outputRoot_->setText(0, tr("outputs"));
+    }
 
-    // episodic root
-    episodicRoot_ = new PinListViewItem(ioListView, outputRoot_, PinModel::EPISODIC);
-    episodicRoot_->setText(0, tr(EPISODIC_IO_TEXT));
+    if (!(INSTANCEOF(model_, InputModel) || INSTANCEOF(model_, OutputModel))) {
+        // episodic root
+        episodicRoot_ =
+            new PinListViewItem(ioListView, outputRoot_, PinModel::EPISODIC);
+        episodicRoot_->setText(0, tr("episodic inputs"));
+    }
 
     leftLayout->addWidget(ioListView);
 
@@ -376,12 +399,8 @@ void BlockConfDialog::initListView()
 void BlockConfDialog::addPins(PinVector pins, PinListViewItem *root) {
 
     for (unsigned i = 0; i < pins.size(); ++i) {
-        // clone original pin
-        PinModel *pin = new PinModel(model_, pins[i]->id(),
-                                    pins[i]->name(), pins[i]->address(),
-                                    pins[i]->bits(), pins[i]->type());
         PinListViewItem *child =
-            new PinListViewItem((QListViewItem *)root, pin);
+            new PinListViewItem((QListViewItem *)root, pins[i]->clone());
         child->setVisible(true);
     }
 }
@@ -413,7 +432,7 @@ void BlockConfDialog::updateModel() {
         PinListViewItem *item = (PinListViewItem *)ioListView->firstChild();
         while (item != 0) {
             if (!item->isRoot()) {
-                model_->addPin(item->data());
+                model_->addPin(item->data()->clone());
             }
             item = (PinListViewItem *)item->nextSibling();
         }
@@ -425,7 +444,7 @@ void BlockConfDialog::updateModel() {
  */
 BlockConfDialog::~BlockConfDialog()
 {
-    // no need to delete child widgets, Qt does it all for us
+    ioListView->clear();
 }
 
 void BlockConfDialog::newIo()
@@ -436,7 +455,7 @@ void BlockConfDialog::newIo()
         while (!item->isRoot()) {
             item = (PinListViewItem *)item->parent();
         }
-        int childCount = item->childCount();
+        int childCount = item->childCount() + 1;
         PinModel *pin = new PinModel(model_, childCount,
                 "data" + QString::number(childCount),
                 childCount * 100, 32, item->type());
@@ -514,4 +533,20 @@ void BlockConfDialog::toggleManualOffset() {
 
 void BlockConfDialog::toggleManualRuntime() {
     runtimeSpinBox->setEnabled(runtimeRadioButton->isChecked());
+}
+
+void BlockConfDialog::cancel()
+{
+    reject();
+}
+
+void BlockConfDialog::apply()
+{
+    updateModel();
+}
+
+void BlockConfDialog::ok()
+{
+    updateModel();
+    accept();
 }

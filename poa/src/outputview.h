@@ -18,30 +18,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockview.h,v 1.5 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: outputview.h,v 1.1 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_INPUTBLOCKVIEW_H
-#define POA_INPUTBLOCKVIEW_H
+#ifndef POA_OUTPUTVIEW_H
+#define POA_OUTPUTVIEW_H
 
-#include "inputblockmodel.h"
+#include "outputmodel.h"
 #include "blockview.h"
 
 /**
- * Definition of a input block view.
+ * Definition of a ouput block view.
  */
-class InputBlockView/**: public BlockView*/
+class OutputView/**: public BlockView*/
 {
 
 private:
 
-    InputBlockModel *inputBlockModel_;
+    OutputModel *outputModel_;
 
 public:
 
-    InputBlockModel *model();
-    void setModel(InputBlockModel *cpuModel);
+    OutputModel *model();
+    void setModel(OutputModel *model);
 
 };
 

@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockmodel.h,v 1.5 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: inputmodel.h,v 1.1 2003/09/12 10:09:26 garbeam Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_OUTPUTBLOCKMODEL_H
-#define POA_OUTPUTBLOCKMODEL_H
+#ifndef POA_INPUTMODEL_H
+#define POA_INPUTMODEL_H
 
 
 #include "blockmodel.h"
@@ -32,15 +32,14 @@
 
 
 /**
- * A block receiving outputs from the system and transmitting those outputs
- * to the environment.
+ * A block providing inputs into the system.
  */
-class OutputBlockModel: public BlockModel
+class InputModel: public BlockModel
 {
   public:
-    OutputBlockModel(QString name, QString description, QString type);
-    void addInputPin (PinModel *pin, PinModel *successor = 0);
-    void removeInputPin (PinModel *pin);
+    InputModel(QString name, QString description, QString type);
+    void addOutputPin (PinModel *pin, PinModel *successor = 0);
+    void removeOutputPin (PinModel *pin);
 
 };
 

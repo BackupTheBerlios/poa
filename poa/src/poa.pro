@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.32 2003/09/11 12:43:11 garbeam Exp $
+# $Id: poa.pro,v 1.33 2003/09/12 10:09:26 garbeam Exp $
 #
 ###############################################################################
 
@@ -46,8 +46,8 @@ HEADERS += coremodel.h
 HEADERS += coreview.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h
-HEADERS += inputblockmodel.h
-HEADERS += inputblockview.h
+HEADERS += inputmodel.h
+HEADERS += inputview.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
@@ -58,8 +58,8 @@ HEADERS += moveaction.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
-HEADERS += outputblockmodel.h
-HEADERS += outputblockview.h
+HEADERS += outputmodel.h
+HEADERS += outputview.h
 HEADERS += pinmodel.h
 HEADERS += pinvector.h
 HEADERS += pinview.h

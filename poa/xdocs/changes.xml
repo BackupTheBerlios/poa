@@ -67,7 +67,7 @@
       <action type="fix">All block models including I/O blocks now have a runtime</action>
       <action type="fix">Enlarge canvas size when loading a project to
       ensure visiblity of all items</action>
-      <action type="fix">Canvas can not be moved out of the canvas anymore</action>
+      <action type="fix">Items can not be moved out of the canvas anymore</action>
       <action type="fix">Errors when deleting or updating new
       pins in the block configuration dialog have been fixed</action>
       <action type="fix">ms have been replaced by ns in the tooltips</action>

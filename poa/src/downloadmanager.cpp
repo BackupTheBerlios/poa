@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.13 2004/02/01 21:59:49 squig Exp $
+ * $Id: downloadmanager.cpp,v 1.14 2004/06/03 13:30:39 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -46,6 +46,7 @@ DownloadManager::DownloadManager(const QString &filename)
     filesize_ = 0;
 
     records_.setAutoDelete(true);
+    strings_.setAutoDelete(true);
 
     readFile(filename);
 }
@@ -57,12 +58,12 @@ DownloadManager::~DownloadManager()
 
 void DownloadManager::initializeAndOpen(QextSerialPort &port)
 {
-    // 8N1, 9600 Baud
+    // 8N1, 115200 Baud
     port.setFlowControl(FLOW_OFF);
     port.setParity(PAR_NONE);
     port.setDataBits(DATA_8);
     port.setStopBits(STOP_1);
-    port.setBaudRate(BAUD9600);
+    port.setBaudRate(BAUD115200);
 
     if (!port.open()) {
         throw PoaException(tr("Could not open serial port"));
@@ -78,11 +79,19 @@ void DownloadManager::readFile(const QString &filename)
         while (!file.atEnd()) {
             int length = file.readLine(line, 514);
             if (length >= 0) {
-                // we only care about S1 records
+/*                // we only care about S1 records
                 if (line[0] == 'S' && line[1] == '1') {
                     SRecord *record = new SRecord(line, length);
                     records_.append(record);
                     filesize_ += record->dataSize();
+                }*/
+
+                // Seperate last string (used for running the program)
+                if (line[0] == 'S' && line[1] == '8') {
+                    lastString_ = new QString(line);
+                } else {
+                    strings_.append(new QString(line));
+                    filesize_ += strlen(line);
                 }
             }
         }
@@ -103,7 +112,7 @@ bool DownloadManager::run(const char* portname)
     QextSerialPort port(portname);
     initializeAndOpen(port);
 
-    // send header
+/*    // send header
     sendChar(port, 0xff);
 
     // send adress
@@ -114,7 +123,14 @@ bool DownloadManager::run(const char* portname)
     sendChar(port, 0x00);
 
     // send command, 0x05 = RUN
-    sendChar(port, 0x05);
+    sendChar(port, 0x05);*/
+
+    // send last record (which runs the whole thing)
+    QString *str = lastString_; 
+    for (unsigned int i = 0; i < str->length(); i++) {
+        port.putch(str->at(i).latin1());
+        port.flush(); 
+    }
 
     port.close();
     return true;
@@ -125,7 +141,7 @@ bool DownloadManager::download(const char* portname, QProgressDialog *monitor)
     QextSerialPort port(portname);
     initializeAndOpen(port);
 
-    // send header
+/*    // send header
     sendChar(port, 0xff);
 
     // send adress
@@ -138,6 +154,9 @@ bool DownloadManager::download(const char* portname, QProgressDialog *monitor)
     // send command: 0x01 = LOAD
     sendChar(port, 0x01);
 
+    // Enter command mode
+    sendChar(port, 0x0d);
+
     int total = 0;
     if (monitor != 0) {
         monitor->setTotalSteps(filesize());
@@ -149,9 +168,38 @@ bool DownloadManager::download(const char* portname, QProgressDialog *monitor)
         record = *it;
         const unsigned char *data = record->data();
         int length = record->dataSize();
+
         for (int i = 0; i < length; i++) {
             port.putch(data[i]);
-            port.flush();
+            port.flush(); 
+
+            if (monitor != 0) {
+                monitor->setProgress(++total);
+            }
+            qApp->processEvents(4);
+
+            if (monitor != 0 && monitor->wasCancelled()) {
+                port.close();
+                return false;
+            }
+        }
+    }*/
+   
+    // Enter command mode
+    sendChar(port, 0x0d);
+
+    int total = 0;
+    if (monitor != 0) {
+        monitor->setTotalSteps(filesize());
+    }
+
+    QString *str;
+    for (QPtrListIterator<QString> it(strings_); *it != 0; ++it) {
+        str = *it;
+
+        for (unsigned int i = 0; i < str->length(); i++) {
+            port.putch(str->at(i).latin1());
+            port.flush(); 
 
             if (monitor != 0) {
                 monitor->setProgress(++total);

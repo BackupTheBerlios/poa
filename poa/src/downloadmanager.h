@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.10 2004/02/03 04:40:31 kilgus Exp $
+ * $Id: downloadmanager.h,v 1.11 2004/06/03 13:30:39 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -62,7 +62,7 @@ public:
      * @return true, if the run command was sent; false, if the
      * operation was cancelled
      */
-    static bool run(const char* portName);
+    bool run(const char* portName);
 
     static void sendChar(QextSerialPort &port, const unsigned char data);
 
@@ -71,6 +71,8 @@ private:
 
     void readFile(const QString &filename);
 
+	QString *lastString_;
+	QPtrList<QString> strings_;
     QPtrList<SRecord> records_;
     unsigned long filesize_;
 };

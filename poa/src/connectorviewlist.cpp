@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.13 2003/09/26 14:19:00 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.14 2003/09/26 22:00:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -39,10 +39,12 @@
 #include <qvaluelist.h>
 
 #include <queue>
+#include <vector>
 
 
-typedef priority_queue<ReachedPoint,
-		       vector<ReachedPoint>,
+// std added because of gcc 3.2 issues
+typedef std::priority_queue<ReachedPoint,
+               std::vector<ReachedPoint>,
 		       CompareReachedPoints> ReachedQueue;
 
 

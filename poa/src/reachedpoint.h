@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: reachedpoint.h,v 1.1 2003/09/26 14:19:00 keulsn Exp $
+ * $Id: reachedpoint.h,v 1.2 2003/09/26 22:00:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -153,7 +153,7 @@ public:
      * Returns <code>left.betterThan(&right)</code>
      */
     bool operator()(const ReachedPoint &left, const ReachedPoint &right)
-	{ left.betterThan(&right); }
+	{ return left.betterThan(&right); }
 
 };
 

@@ -267,7 +267,7 @@ Sollen die Änderungen gespeichert werden?</translation>
     </message>
     <message>
         <source>%1 has a different clock than %2</source>
-        <translation>%1 hhat einen anderen Takt als %2</translation>
+        <translation>%1 hat einen anderen Takt als %2</translation>
     </message>
     <message>
         <source>Connected blocks should have the same clock.</source>
@@ -290,7 +290,7 @@ Sollen die Änderungen gespeichert werden?</translation>
     </message>
     <message>
         <source>Connected blocks need to have the same number of bits. You can use a Mux in order to connect blocks with different widhts.</source>
-        <translation>Verrbundene Blöcke müssen die gleiche Bandbreite haben. Man kann Multipexer / Demultplexer verwenden um Blöcke unterschiedlicher Bandbreite zu verbinden.</translation>
+        <translation>Verbundene Blöcke müssen die gleiche Bandbreite haben. Man kann Multipexer verwenden, um Blöcke unterschiedlicher Bandbreite zu verbinden.</translation>
     </message>
     <message>
         <source>Set %1 bits to %2</source>

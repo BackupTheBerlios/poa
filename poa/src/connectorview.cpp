@@ -18,163 +18,90 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.5 2003/09/20 10:05:34 squig Exp $
+ * $Id: connectorview.cpp,v 1.15 2003/09/20 10:05:34 squig Exp $
  *
  *****************************************************************************/
 
 
-#include "connectorviewlist.h"
+#include <math.h>
 
-#include <qcanvas.h>
-
-#include "blockmodel.h"
-#include "connectorviewsegment.h"
+#include "connectorview.h"
 #include "grid.h"
-#include "gridcanvas.h"
 #include "pinmodel.h"
+#include "blockmodel.h"
 
-ConnectorViewList::ConnectorViewList(PinView *source,
-                                     PinView *target,
-                                     GridCanvas *canvas)
+
+ConnectorView::ConnectorView(PinView *from,
+                             PinView *to,
+                             QCanvas *canvas)
+    : QCanvasLine(canvas)
 {
-    source_ = source;
-    target_ = target;
+    from_ = from;
+    to_ = to;
+    connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(to->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    first_ = true;
+    last_ = true;
+    prev_.pin = 0;
+    next_.pin = 0;
 
-    connect(source, SIGNAL(deleted(PinView*)),
-            this, SLOT(deleteView(PinView*)));
-    connect(target, SIGNAL(deleted(PinView*)),
-            this, SLOT(deleteView(PinView*)));
+    QValueList<QPoint> *list = routeConnector(from->connectorPoint(),
+                                              from->connectorDirection(),
+                                              to->connectorPoint(),
+                                              to->connectorDirection());
+    applyPointList(list, to);
+    setPen(QPen(Qt::black, 2));
 
-    QValueList<QPoint> *points = routeConnector(source->connectorPoint(),
-                                                source->connectorDirection(),
-                                                target->connectorPoint(),
-                                                target->connectorDirection());
-    applyPointList(*points, canvas);
-    delete points;
 }
 
-ConnectorViewList::ConnectorViewList(PinView *source,
-                                     PinView *target,
-                                     const QValueList<QPoint> &points,
-                                     GridCanvas *canvas)
+ConnectorView::ConnectorView(PinView *source, PinView *target,
+                 QPoint to,
+                 LineDirection toDir,
+                 QCanvas *canvas)
+    : QCanvasLine(canvas)
 {
-    source_ = source;
-    target_ = target;
+    from_ = source;
+    to_ = target;
+    connect(source->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(target->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    first_ = true;
+    last_ = true;
+    prev_.pin = 0;
+    next_.pin = 0;
 
-    connect(source, SIGNAL(deleted(PinView*)),
-            this, SLOT(deleteView(PinView*)));
-    connect(target, SIGNAL(deleted(PinView*)),
-            this, SLOT(deleteView(PinView*)));
+    QValueList<QPoint> *list = /*FIX: missing*/ 0;
+    applyPointList(list);
+    setPen(QPen(Qt::black, 2));
 
-    applyPointList(points, canvas);
 }
 
-ConnectorViewList::~ConnectorViewList()
+
+ConnectorView::ConnectorView(PinView *source, PinView *target,
+                 QPoint first,
+                 QPoint second,
+                 QCanvas *canvas)
+    : QCanvasLine(canvas)
 {
-    emit deleted(this);
-    deleteAllConnectorViews();
+    from_ = source;
+    to_ = target;
+    connect(source->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(target->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    first_ = true;
+    prev_.pin = 0;
+    last_ = true;
+    next_.pin = 0;
+    setPoints(first.x(), first.y(), second.x(), second.y());
+    setPen(QPen(Qt::black, 2));
 }
 
-PinView *ConnectorViewList::source()
+ConnectorView::~ConnectorView()
 {
-    return source_;
-}
-
-PinView *ConnectorViewList::target()
-{
-    return target_;
-}
-
-const QCanvasItemList ConnectorViewList::allSegments()
-{
-    return segments_;
-}
-
-QValueList<QPoint> ConnectorViewList::points()
-{
-    QValueList<QPoint> list;
-    QValueList<QPoint>::iterator point = list.end();
-    QCanvasItemList::iterator segment = segments_.begin();
-    while (segment != segments_.end()) {
-        ConnectorViewSegment *current = (ConnectorViewSegment*) *segment;
-        list.insert(point, current->startPoint());
-        ++point;
-        ++segment;
+    if (first_ && prev_.pin != 0) {
+        // FIX: notify prev_.pin
     }
-    if (!segments_.isEmpty()) {
-        ConnectorViewSegment *last = (ConnectorViewSegment*) segments_.last();
-        list.insert(point, last->endPoint());
+    if (last_ && next_.pin != 0) {
+        // FIX: notify next_.pin
     }
-    return list;
-}
-
-QString ConnectorViewList::tip()
-{
-    return QString("<b>Connector</b><br><hr>" \
-                   "<b>Source:</b> <u>%1</u>::%2<br>" \
-                   "<b>Target:</b> <u>%3</u>::%4<br>" \
-                   "<b>Width:</b> %5")
-        .arg(source()->pinModel()->name())
-        .arg(source()->pinModel()->parent()->name())
-        .arg(target()->pinModel()->name())
-        .arg(target()->pinModel()->parent()->name())
-        .arg((unsigned)target()->pinModel()->bits());
-}
-
-void ConnectorViewList::serialize()
-{
-}
-
-void ConnectorViewList::applyPointList(const QValueList<QPoint> &list,
-                                       QCanvas *canvas)
-{
-    Q_ASSERT(list.size() >= 2);
-
-    QValueList<QPoint>::const_iterator point = list.begin();
-    QValueListIterator<QCanvasItem*> it = segments_.begin();
-
-    QPoint second = *point;
-    ++point;
-    QPoint first;
-
-    while (point != list.end()) {
-        first = second;
-        second = *point;
-        ++point;
-
-        ConnectorViewSegment *current;
-        if (it != segments_.end()) {
-            current = (ConnectorViewSegment*) *it;
-            current->setPoints(first.x(), first.y(), second.x(), second.y());
-        }
-        else {
-            current = new ConnectorViewSegment(first, second, canvas, this);
-            it = segments_.insert(it, current);
-        }
-        ++it;
-    }
-
-    while (it != segments_.end()) {
-        ConnectorViewSegment *current = (ConnectorViewSegment*) *it;
-        it = segments_.erase(it);
-        delete current;
-    }
-}
-
-void ConnectorViewList::deleteAllConnectorViews()
-{
-    QValueListIterator<QCanvasItem*> it = segments_.begin();
-
-    while (it != segments_.end()) {
-        QCanvasItem *view = *it;
-        delete view;
-        it = segments_.erase(it);
-    }
-}
-
-void ConnectorViewList::deleteView(PinView *)
-{
-    delete this;
 }
 
 
@@ -293,10 +220,11 @@ QString image(QPoint p)
     return "(" + QString::number(p.x()) + ", " + QString::number(p.y()) + ")";
 }
 
-QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
-                                                      LineDirection fromDir,
-                                                      QPoint to,
-                                                      LineDirection toDir)
+
+QValueList<QPoint> *ConnectorView::routeConnector(QPoint from,
+                                                  LineDirection fromDir,
+                                                  QPoint to,
+                                                  LineDirection toDir)
 {
     Q_ASSERT(fromDir != UNKNOWN);
 
@@ -305,14 +233,13 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
     Grid grid(from, to, 10);
     grid.getGridDistance(from, to, x, y);
     Q_ASSERT(grid.move(from, x, y) == to);
-    //qDebug("from == " + image(from));
-    //qDebug("to   == " + image(to));
-    //qDebug("closestGridPoint(from) == " +
-    //       image(grid.closestGridPoint(from)));
-    //qDebug("closestGridPoint(to)   == " + image(grid.closestGridPoint(to)));
-    //qDebug("move(from, " + QString::number(x) + ", " +
-    //       QString::number(y) + " ) == " + image(grid.move(from, x, y)));
-    //qDebug("move((0, 0), 1, 1) == " + image(grid.move(QPoint(0, 0), 1, 1)));
+    qDebug("from == " + image(from));
+    qDebug("to   == " + image(to));
+    qDebug("closestGridPoint(from) == " + image(grid.closestGridPoint(from)));
+    qDebug("closestGridPoint(to)   == " + image(grid.closestGridPoint(to)));
+    qDebug("move(from, " + QString::number(x) + ", " +
+           QString::number(y) + " ) == " + image(grid.move(from, x, y)));
+    qDebug("move((0, 0), 1, 1) == " + image(grid.move(QPoint(0, 0), 1, 1)));
 
     int fromDist = distInDir(fromDir, x, y);
     LineDirection fromAlternateDir = alternateDir(fromDir, x, y);
@@ -422,4 +349,135 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
 
     list->append(to);
     return list;
+}
+
+
+void ConnectorView::applyPointList(QValueList<QPoint> *list,
+                                   PinView *targetPin)
+{
+    ConnectorView *current = this;
+    QPoint first;
+    QPoint second = list->front();
+    list->pop_front();
+    // if only one point is on list, then this point must be used.
+    setPoints(second.x(), second.y(), second.x(), second.y());
+    while (!list->isEmpty()) {
+        first = second;
+        second = list->front();
+        list->pop_front();
+        current->setPoints(first.x(), first.y(), second.x(), second.y());
+        if (!list->isEmpty()) {
+            if (!current->last_) {
+                current = current->next_.connector;
+            }
+            else {
+                ConnectorView *newOne = new ConnectorView(from_, to_,
+                                                          first,
+                                                          second,
+                                                          canvas());
+                newOne->setNextPin(current->next_.pin);
+                newOne->setPrevConnector(current);
+                current->setNextConnector(newOne);
+                current = newOne;
+            }
+        }
+    }
+    current->destroySuccessors();
+    if (current->next_.pin != targetPin) {
+        current->setNextPin(targetPin);
+    }
+    delete list;
+}
+
+void ConnectorView::destroySuccessors()
+{
+    if (!this->last_) {
+        PinView *targetPin = 0;
+        ConnectorView *current = this->next_.connector;
+        while (current != 0) {
+            ConnectorView *prev = current;
+            if (!prev->last_) {
+                current = prev->next_.connector;
+            }
+            else {
+                targetPin = prev->next_.pin;
+                current = 0;
+            }
+            delete prev;
+        }
+
+        setNextPin(targetPin);
+    }
+}
+
+
+QCanvasItemList ConnectorView::allSegments()
+{
+    QCanvasItemList list;
+    ConnectorView *current = this;
+
+    while (current != 0) {
+    list.prepend(current);
+    if (current->last_) {
+        current = 0;
+    } else {
+        current = current->next_.connector;
+    }
+    }
+    return list;
+}
+
+
+void ConnectorView::setPrevConnector(ConnectorView *prev)
+{
+    first_ = prev == 0;
+    prev_.connector = prev;
+}
+
+void ConnectorView::setNextConnector(ConnectorView *next)
+{
+    last_ = next == 0;
+    next_.connector = next;
+}
+
+void ConnectorView::setPrevPin(PinView *source)
+{
+    first_ = true;
+    prev_.pin = source;
+}
+
+void ConnectorView::setNextPin(PinView *target)
+{
+    last_ = true;
+    next_.pin = target;
+}
+
+QString ConnectorView::tip()
+{
+    return QString("<b>Connector</b><br><hr>" \
+                   "<b>Source:</b> <u>%1</u>::%2<br>" \
+                   "<b>Target:</b> <u>%3</u>::%4<br>" \
+                   "<b>Width:</b> %5")
+        .arg(from()->pinModel()->name())
+        .arg(from()->pinModel()->parent()->name())
+        .arg(to()->pinModel()->name())
+        .arg(to()->pinModel()->parent()->name())
+        .arg((unsigned)to()->pinModel()->bits());
+}
+
+
+PinView *ConnectorView::to()
+{
+    return to_;
+}
+
+
+PinView *ConnectorView::from()
+{
+    return from_;
+}
+
+void ConnectorView::deleteView()
+{
+    delete this;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.7 2004/01/21 10:28:10 kilgus Exp $
+ * $Id: blockgraph.cpp,v 1.8 2004/01/28 10:14:08 squig Exp $
  *
  *****************************************************************************/
 
@@ -279,9 +279,9 @@ void BlockGraph::addBlockNeighbour(PinNode *source, PinNode *target,
         }
     }
     else {
-        qDebug(QString("added connection %1 -> %2")
-               .arg(source->parent()->model()->name())
-               .arg(target->parent()->model()->name()));
+//         qDebug(QString("added connection %1 -> %2")
+//                .arg(source->parent()->model()->name())
+//                .arg(target->parent()->model()->name()));
         source->parent()->addNeighbour(target->parent());
     }
 }

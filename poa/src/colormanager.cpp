@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.16 2004/01/27 15:37:08 vanto Exp $
+ * $Id: colormanager.cpp,v 1.17 2004/01/27 16:12:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -72,10 +72,6 @@ QColor ColorManager::color(AbstractModel *model)
         // connect to delete event
         connect(bm, SIGNAL(deleted(BlockModel *)),
                 this, SLOT(deleteModel(BlockModel *)));
-
-        // update widget size
-        recalculateSize();
-        canvas()->update();
     }
 
     if (bm->clock() == 0) {
@@ -90,6 +86,10 @@ QColor ColorManager::color(AbstractModel *model)
             }
 
             nsToPalIndex_.insert(bm->clock(), palPosition_++);
+
+            // update widget size
+            recalculateSize();
+            canvas()->update();
         }
         return palette_->color(nsToPalIndex_[bm->clock()]);
     }

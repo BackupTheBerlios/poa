@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.8 2004/02/19 13:04:33 neco Exp $
+%% $Id: handbuch.tex,v 1.9 2004/03/03 17:07:38 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.8 $
-\RCSdef $Date: 2004/02/19 13:04:33 $
+\RCSdef $Revision: 1.9 $
+\RCSdef $Date: 2004/03/03 17:07:38 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -71,8 +71,9 @@ weder die Ber"ucksichtigung neuartiger Sensoren, noch bieten sie die
 M"oglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
 Daher wird am ISW eine Plattform f"ur die Antriebsregelung entwickelt,
 auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalit"aten
-zu integrieren. Diese Plattform wird am ISW\footnote{Institut f"ur Steuerungstechnik der Werkzeugmaschinen und Fertigungseinrichtungen} an der Universität Stuttgart kurz als ``Offener Antrieb''
-bezeichnet.  \par
+zu integrieren. Diese Plattform wird am ISW\footnote{Institut f"ur Steuerungstechnik
+der Werkzeugmaschinen und Fertigungseinrichtungen} an der Universität Stuttgart kurz
+als ``Offener Antrieb'' bezeichnet.  \par
 Die hardwaretechnische Realisierung erfolgt in Form einer Einsteckplatine.
 Zentrales Element des Offenen Antriebes ist der Altera ``APEX'' Baustein. Es
 handelt sich dabei um ein CPLD\footnote{Complex Programmable Logic Device},
@@ -106,7 +107,8 @@ Netzwerk konfiguriert werden kann.\newpage
 \item Konfiguration der Programmeigenschaften
 \item Zusammenarbeit mit externen Programmen
 \end{itemize}
-Auf die Einzelheiten der wesentlichen Funktionalit"aten wird in den folgenden Abschnitten eingegangen.
+Auf die Einzelheiten der wesentlichen Funktionalit"aten wird in den folgenden
+Abschnitten eingegangen.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -135,7 +137,7 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 
 \begin{center}
 
-\includegraphics[width=10cm]{Mainwindow1}
+\includegraphics[width=15cm]{Mainwindow1}
 
 \caption{Mainwindow}\label{test}
 
@@ -157,7 +159,7 @@ Unter View ist es m"oglich den Inhalt im Arbeitsfenster anzuzoomen.
 \item {\bf Tools:} 	Configuration, Route, Scheduling, Deploy Project\newline
 Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren.
 \item {\bf Settings:}	Show Grid, Configure POA\newline
-Unter Settings k"onnen Grundeinstellungen an POA vorgenommen werden.
+Unter Settings k"onnen Grundeinstellungen an POA vorgenommen werden. Hier kann z.B. das Raster, die Programmsprache eingestellt und externe Tools (Editor, Compiler, ...) eingebunden werden.
 \item {\bf Windows:} 	Tile, Tile Horizotal, Cascade\newline
 Hier k"onnen, falls mehrere Projekte gleichzeitig ge"offnet sind, die Arbeitsfenster je nach Wunsch nebeneinander, "ubereinander oder kaskardiert angezeigt werden.
 \item {\bf Help:} 	Contens, About\newline
@@ -278,7 +280,7 @@ Um einen Download Tool einzubinden, w"ahlt man unter dem Dateireiter {\bf Paths}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{C Source Template Pfad angeben}
 Mit dem C Source Template wird der Rahmencode f"ur den Quellcode der CPU vorgegeben.
-Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf Paths} das Textfeld neben {\bf C Source Template Path} aus und gibt hier den korrekten Pfad ein. Alternativ dazu kann man auch mit dem Button neben dem Textfeld im Verzeichnisbaum nach dem gew"unschten Pfad suchen. \par
+Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf Paths} das Textfeld neben {\bf C Source Template Path} aus und gibt hier das korrekte Verzeichnis an. Alternativ dazu kann man auch mit dem Button neben dem Textfeld im Verzeichnisbaum nach dem gew"unschten Pfad suchen. \par
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -313,9 +315,9 @@ F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann 
 \end{figure}
 
 \subsection{Neues Projekt anlegen}
-Durch anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man den Pfad f"ur das neue Projekt anlegen kann.\par
-
-Ein neues Projekt kann auch durch einen Mausklick auf das Symbol {\bf New} in der Symbolleiste angelegt werden.
+Durch anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann.\newline
+Ein neues Projekt kann auch durch einen Mausklick auf das Symbol {\bf New} in der Symbolleiste angelegt werden.\newline
+Es kann nur ein Projekt pro Verzeichnis angelegt werden.\par
 Wird ein neues Projekt angelegt, dann wird dadurch auch das Arbeitsfenster im Hauptfenster aktiviert.
 
 
@@ -378,7 +380,6 @@ Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber di
 
 \end{figure}
 
-D
 \subsubsection{Blockname "andern}
 Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekräftigen Namen zu geben.\par
 Im Textfeld {\bf Name} kann man den neuen Namen des Blocks eingeben.
@@ -393,7 +394,7 @@ Dazu w"ahlt man in der Pinbibliothek den zu l"oschende Pin aus. Der {\bf Remove}
 \subsubsection{"Anderungen an Pins vornehmen}
 Dazu w"ahlt man in der Pinbibliothek den zu "andernde Pin aus.\par
 Unter der Spalte {\bf Name} kann man dem Pin einen Namen geben oder einen vorhandenen Namen "andern.\par
-Unter der Spalte {\bf Bits} kann die Anzahl der Bits f"ur ein Pin "andern werden.\par
+Unter der Spalte {\bf Bits} kann die Anzahl der Bits, d.h. die Bitbreite, f"ur ein Pin ge"andert werden. Es ist M"oglich eine Bitbreite von 0 bis 64 anzugeben.\par
 Unter der Spalte {\bf Address} kann eine Adressierung f"ur die Input-Pins und Output-Pins vornehmen werden.\par
 \subsubsection{Offset eingeben}
 Um das Offset an dem Block einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Offset} klicken und die Offsetzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
@@ -437,7 +438,7 @@ Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 
 \end{figure}
 \subsubsection{ID eingeben}
-Jeder CPU muss eine ID (d.h. eine Nummer von 0 - 99) vergeben werden, dazu kann man entweder direkt mit der Maus ins Textfeld {\bf ID} klicken und die Nummer eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.
+Jeder CPU muss eine ID (d.h. eine Nummer von 0 - 99) vergeben werden, dazu kann man entweder direkt mit der Maus ins Textfeld {\bf ID} klicken und die Nummer eingeben oder man benutzt die Pfeiltasten neben dem Textfeld. Falls eine schon vergebene ID ausgew"ahlt wird, erscheint rechts neben dem Textfeld {\bf ID} ein Warnsignal.
 
 \subsubsection{Die CPU-Programmcode schreiben}
 Zum Schreiben von CPU-Programmcode wird ein externer Editor aufgerufen, wenn im Konfigurationsdialog der Button {\bf Edit Code} gedr"uckt wird. Beim "Offnen des des Editors wird automatisch ein C-Source Template geladen, der einen generierten Rahmencode f"ur die CPU in der Programmiersprache C vorgibt. Im Editor kann dann der restliche Quellcode f"ur die CPU niederschreiben und abspeichern.
@@ -474,32 +475,51 @@ Zum Kompilieren des erzeugten CPU-Programmcodes wird ein externer Compiler gesta
 
 \end{figure}
 
-Multiplexer dienen dazu mehrere Eingangssignale auf ein Ausgangssignal zu reduzieren.
+Multiplexer dienen dazu mehrere Eingangssignale auf ein Ausgangssignal zu reduzieren oder umgekehrt ein  Eingangssignal auf mehrere Ausgangssignale zu verteilen.
+Im {\bf Mapping}Bereich des Konfigurationsdialogs wird die aktuelle Zuordnung der Bits des Eingangspins auf die des Ausgangspins angezeigt.\par
+Um eine neue Zuordnung zu erstellen, muss man auf den Button {\bf New} klicken. Dabei wird ein neuer Dialog ge"offnet. In diesem Dialog (Mux mapping configuration) hat man die M"oglichkeit den Eingangsbits bestimmte Ausgangsbits zuzuordnen. Dazu w"ahltnewline man in der Auswahlbox {\bf Input} den Eingangspin und in der Auswahlbox {\bf Output} den Ausgangspin des Multiplexers. In den Textfeldern {\bf first bit} und {\bf last bit} kann die Zuordnung zwischen Eingangsbits und Ausgangsbits vorgenommen werden.\par
+
+Um eine vorhandene Zuordnung zu ver"andern, muss der entsprechende Eintrag in der Mappingtabelle markiert werden. Dabei werden die Buttons {\bf Update} und {\bf Remove} aktiviert.\newline
+Mit {\bf Update} wird der Dialog {\bf Mux mapping configuration} ge"offnet. Hier kann man wie oben beschrieben, die "Anderungen in der Zuordnung vornehmen.\newline
+
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{Muxzuordnung}
+
+\caption{Mux mapping configuration}\label{test}
+
+\end{center}
+
+\end{figure}
+
+Mit {\bf Remove} kann man die ausgew"ahlte Zuordnung l"oschen.\par
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bl"ocke in Arbeitsfenster verschieben}
-W"ahlen Sie das Block mit der linken Maustaste aus, lassen Sie Taste gedr"uckt und verschieben das Block in Arbeitsfenster bis Sie die gew"unschte Position haben. Dabei werden die Verbindungen, die an diesem Block h"angen automatisch mitgeroutet.
+\subsection{Block in Arbeitsfenster verschieben}
+Zum Verschieben eines Blocks, w"ahlt man den Block mit der linken Maustaste aus, l"a"st die Taste gedr"uckt und verschiebt den Block in Arbeitsfenster bis man die gew"unschte Position hat. Dabei werden die Verbindungen, die an diesem Block h"angen automatisch mitgeroutet.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block kopieren und einf"ugen}
-Wenn Sie mehrere identische Bl"ocke f"ur Ihr Layout ben"otigen eignet sich dazu die "'copy and paste"' Funktion. Hierzu w"ahlen Sie das Block mit der rechten Maustaste aus. Im KontextMen"u w"ahlen Sie den Eintrag {\bf Copy}. Wenn Sie nun mit der linken Maustaste auf ein freies Feld in Arbeitsfenster
-klicken, k"onnen Sie im KontextMen"u den Eintrag {\bf Paste} w"ahlen, um eine Kopie des ausgew"ahlten Blocks zu erzeugen.
-Die Kopie wird automatisch im linken oberen Rand des Arbeitsfensters positioniert.\par
-Altenativ k"onnen Sie diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausf"uhren.
+Wenn man mehrere identische Bl"ocke f"ur das Layout in einem oder in verschiedenen Projekten ben"otigt, eignet sich dazu die "'copy and paste"' Funktion. Hierzu w"ahlt man den Block mit der rechten Maustaste aus. Im Kontextmen"u w"ahlt man den Eintrag {\bf Copy}. Wenn man nun mit der linken Maustaste auf ein freies Feld im Arbeitsfenster klickt, kann man im Kontextmen"u den Eintrag {\bf Paste} w"ahlen, um eine Kopie des ausgew"ahlten Blocks zu erzeugen.
+Die Kopie wird automatisch im linken oberen Rand des Arbeitsfensters positioniert.\newline
+Altenativ kann diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausgef"uhrt werden.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block ausschneiden und einf"ugen}
-Hierbei gehen Sie wie zuvor im Abschnitt "'Bl"ocke kopieren und einf"ugen"' vor, mit der Aunahme, dass Sie statt der Aktion {\bf Copy} die Aktion {\bf Cut} w"ahlen. \par
-Wenn ein Block ausgeschnitten wird, werden alle Verbindungen mit diesem Block unwiderruflich gel"oscht.
+Hierbei geht man wie zuvor im Abschnitt "'Block kopieren und einf"ugen"' vor, mit der Aunahme, dass statt der Aktion {\bf Copy} die Aktion {\bf Cut} w"ahlt wird. \par
+Wenn ein Block ausgeschnitten wird, werden alle Verbindungen zu diesem Block unwiderruflich gel"oscht.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block l"oschen}
-W"ahlen Sie das zul"oschende Block mit der rechten Maustaste aus. Im KontextMen"u w"ahlen Sie den Eintrag {\bf Remove} und das Block wird unwiderruflich gel"oscht.\par
-Altenativ k"onnen Sie f"ur das ausgew"ahlte Block diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausf"uhren.\par
-Wenn ein Block gel"oscht wird, werden alle Verbindungen mit diesem Block auch unwiderruflich gel"oscht.
+Um ein Block zu l"oschen, w"ahlt man den Block mit der rechten Maustaste aus. Im Kontextmen"u wird der Eintrag {\bf Remove} aktiv. Bei Auswahl von {\bf Remove} wird der Block unwiderruflich gel"oscht.\newline
+Altenativ kann f"ur den ausgew"ahlten Block diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausgef"uhrt werden.\newline
+Wenn ein Block gel"oscht wird, werden alle Verbindungen zu diesem Block auch unwiderruflich gel"oscht.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -508,7 +528,21 @@ Wenn ein Block gel"oscht wird, werden alle Verbindungen mit diesem Block auch un
 \subsection{Verbindung routen}
 
 \subsubsection{Bl"ocke miteinander verbinden}
-Hierzu klicken Sie mit der linken Maustaste auf den Pin des Blocks und lassen Sie die Maustaste gedr"uckt. Die Verbindungsm"oglichkeiten werden nun gr"un angezeigt. Sie k"onnen jetzt mit dem Mauszeiger an ein Pin eines anderen Blocks andocken. Dabei muss die linke Maustaste immer gedr"uckt bleiben. Nachdem Sie am Pin angedockt haben, k"onnen Sie die Maustaste wieder los lassen und die Verbindung (Connector) wird nun automatisch gezogen. Verbindungen k"onnen nur durch senkrechte oder waagrechte Linien dargestellt werden.
+Hierzu klickt man mit der linken Maustaste auf den Pin des Blocks und l"a"st die Maustaste gedr"uckt. Die Verbindungsm"oglichkeiten werden nun gr"un angezeigt. Man kann jetzt mit dem Mauszeiger an ein Pin eines anderen Blocks andocken. Dabei muss die linke Maustaste immer gedr"uckt bleiben. Nachdem man am Pin angedockt hat, kann man die Maustaste wieder los lassen und die Verbindung (Connector) wird nun automatisch gezogen. Verbindungen k"onnen nur durch senkrechte oder waagrechte Linien dargestellt werden.\par
+Wenn eine Verbindung zwischen zwei Pins unterschiedlicher Bitbreite gezogen wird, wird die Verbindung rot markiert und ein Dialog wird ge"offnet. Im Dialog wird auf das Problem hingewiesen, und man hat hier die M"oglichkeit die Bitbreiten zu "andern. Indem man die Pins angleicht, d.h. entweder der Ausgangspin des einen Blocks "ubernimmt die Bitbreite des Eingangspins des Anderen oder umgekehrt, je nach dem welche {\bf Set} Taste bet"atigt wird. Nach dem Angleichen der Pins werden die "Anderungen an den Pins gespeichert, der Dialog wird geschlossen und die Verbindung standardm"a"sig blau gef"arbt.\newline
+Wird die Taste {\bf Cancel} gedr"uckt, bleiben die Pins unver"andert und die Verbindung bleibt rot (Konfliktfarbe).
+
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{Pin}
+
+\caption{POA Dialog}\label{test}
+
+\end{center}
+
+\end{figure}
 
 \subsubsection{Verbindung automatisch routen}
 Es gibt zwei verschiedene M"oglichkeiten des automatischen Routens:
@@ -516,21 +550,25 @@ Es gibt zwei verschiedene M"oglichkeiten des automatischen Routens:
 \item der Default Router ist der Standartrouter der automatisch beim erzeugen einer Verbindung benutzt wird.
 \item der Smart Router kann nach Erzeugung einer Verbindung eingesetzt werden, um eventuell "uberlappende Verbindungen "uberlappungsfrei darzustellen.
 \end{itemize}
-Wenn Sie eine Verbindung automatisch routen m"ochten, w"ahlen Sie die Verbindung mit rechten Maustaste aus,w"ahlen Sie im KontextMen"u den Eintrag {\bf Routen} und klicken Sie unter {\bf Routen} auf den gew"unschte Router ({\bf Default Router} oder {\bf Smart Router}).
+Wenn man eine Verbindung automatisch routen m"ochte, w"ahlt man die Verbindung mit rechten Maustaste aus. Im Kontextmen"u den Eintrag {\bf Routen} w"ahlen und unter {\bf Routen} auf den gew"unschten Router ({\bf Default Router} oder {\bf Smart Router}) klicken.\newline
+Der Smart Router kann auch durch ein Doppelkilck auf die Verbindung gestartet werden.
 
 \subsubsection{Verbindung manuell routen}
-Zum manuellen Routen m"ussen Sie die Verbindung mit der linken Maustaste ausw"ahlen. Nun k"onnen Sie mit gedr"uckter Maustaste einen Verbindungsabschnitt entweder horizontal oder vertikal verschieben. Das hei"st ein horizontaler Verbindungsabschnitt kann nur vertikal verschoben werden und ein vertikaler Verbindungsabschnitt nur horizontal. Beim Verschieben der einzelnen Abschnitte werden die anh"angenden Linien automatisch nachgezogen, sodass eine Verbindung immer bestehen bleibt.
+Zum manuellen Routen muss man die Verbindung mit der linken Maustaste ausw"ahlen. Nun kann man mit gedr"uckter Maustaste einen Verbindungsabschnitt entweder horizontal oder vertikal verschieben. Das hei"st ein horizontaler Verbindungsabschnitt kann nur vertikal verschoben werden und ein vertikaler Verbindungsabschnitt nur horizontal. Beim Verschieben der einzelnen Abschnitte werden die anh"angenden Linien automatisch nachgezogen, sodass eine Verbindung immer bestehen bleibt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Verbindung l"oschen}
-W"ahlen Sie die zul"oschende Verbindung mit der rechten Maustaste aus. Im KontextMen"u w"ahlen Sie nun den Eintrag {\bf Remove} und die Verbindung wird unwiderruflich gel"oscht.
-Alternativ k"onnen Sie die zul"oschende Verbindung mit der linken Maustaste ausw"ahlen und danach das Symbol {\bf l"oschen} in der Symbolleiste oder die {\bf Enfernen} Taste dr"ucken.
+Die zul"oschende Verbindung mit der rechten Maustaste ausw"ahlen. Im Kontextmen"u w"ahlt man nun den Eintrag {\bf Remove} und die Verbindung wird unwiderruflich gel"oscht.
+Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ahlen und danach das Symbol {\bf L"oschen} in der Symbolleiste bzw. den Eintrag {\bf Remove} in der Men"uleiste anklicken oder die {\bf Enfernen} Taste auf der Tastatur dr"ucken.
 
 
 \section{Scheduling}
 \section{Deploy Project}
+{\bf Deploy Projekt} erm"oglicht dem Benutzer eine Plausibilit"atspr"ufung durchzuf"uhren.
 \section{Allgemein}
 \subsection{Farbgebung}
 \subsection{Beschriftung des Layouts}
 \subsection{Zoomen}
+
+\include{definitionen}
 \end{document}

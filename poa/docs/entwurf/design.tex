@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.4 2004/06/04 19:28:54 squig Exp $
+%% $Id: design.tex,v 1.5 2004/06/04 21:05:19 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -45,6 +45,16 @@ zwischen zwei Objekten wird mittels der connect Methode hergestellt.
 In POA wird an meheren Stellen gebrauch von dem Signal-Slot
 Mechanismus gemacht.
 
+\subsection{Strategie}
+
+Das Strategiemuster ermöglicht den Algorithmus für eine Problemlösung
+austauschbar zu machen. 
+
+In POA wurde die Routing Schnittstelle für die Verbindungen zwischen
+den Blöcken abstrakt definiert und konkret mit zwei verschiedenen
+Algorithmen implementiert. Die Algorithmen haben unterschiedliche
+Eigenschaften in Bezug auf die Laufzeit und Qualität des Ergebnisses. 
+
 \subsection{Singleton}
 
 Das Singleton Muster wird verwendet, wenn ein Objekt nur genau einmal
@@ -53,12 +63,11 @@ objekt-orientierten Systemen, äquivalent zu globalen Variablen in
 imperativen Systemen, global verfügbare Objekte realisieren,
 die über eine definierte Schnittstelle angesprochen werden können. 
 
-In POA wird nur an e
-
+In POA ist lediglich die Settings Klasse als Singleton implementiert.
 
 \section{Module}
 
-Die Architektur von POA lässt sich gut in stark zusammenhängende
+Die Architektur von POA lässt sich in stark zusammenhängende
 Module aufteilen, die eine gerine Kopplung aufweisen. In den folgenden
 Abschnitten sind diese Module im Detail beschrieben.
 
@@ -68,7 +77,7 @@ Software-Architektur anhand der Schattierung ersichtlich.
 
 \subsection{Datenmodell (Model)}
 
-Die Klassen in dem 
+In den Model-Klassen 
 
 \subsection{View}
 
@@ -80,11 +89,49 @@ Das Scheduling Modul
 
 \subsection{Routing}
 
+Die Routing Schnittstelle ist sehr abstrakt definiert. Es wird
+lediglich die Verbindung zweier Punkte auf einem GridCanvas gefordert.
+Zwei Routing Algorithmen mit sehr unterschiedlichen Eigenschaften
+implementieren diese Schnittstelle.
+
+Der DirectRouter stellt die Verbindung anhand von Fallunterscheidungen
+mit der geringsten Anzahl von Knickpunkten her ohne Überschneidungen
+zu berücksichtigen. Der Algorithmus ist ausreichend schnell, um die
+Verbindungen während des Verschiebens von Blöcken simultan
+neuzuberechnen. 
+
+Der Dijkstrarouter benutzt den Dijkstra Algorithmuss um eine optimale
+Route mit möglichst wenig Knickpunkten und Überschneidungen zu finden.
+Auf Grund der Vielzahl der möglichen Wege beträgt die Laufzeit des
+Algorithmus in der Regel ein vielfaches des DirectRouter.
+
+Durch Ableitung der ConnectorRouter Klasse und Erweiterung der
+GridCanvas Klasse ist jederzeit eine Implementierung von zusätzlichen
+Routing Algorithmen möglich. 
+
 \subsection{Problemreport}
+
+Die Klasse ProblemReportManager validiert ein Projekt und stellt eine
+Baumansicht mit den Ergebnissen zur Verfügung. Im ersten Schritt
+werden alle Blöcke sequentiell geprüft. Im zweiten Schritt werden die
+Verbindungen zwischen den Blöcken geprüft. Die Validierung erfolgt in
+der report() Methode und checkBlock() Methode. Hier können weitere
+Prüfungen eingefügt werden. Für jeden Fehler wird ein Objekt vom Typ
+ProblemReportItem erzeugt.
 
 \subsection{Querschnittsmodule}
 
+Einige Klassen können keinem Modul zugeordnet werden, da diese von
+vielen Modulen benutzt werden. Einige dieser Querschnittsklassen sind
+im folgenden beschrieben.
 
+\subsubsection{Einstellungen (Settings)}
+
+In den Settings werden globale Einstellungen wie Farben, Schriftarten
+und Pfade verwaltet, die zum Teil auch über den Einstellungsdialog vom
+Benutzer geändert werden können. Änderungen von Einstellungen, die
+direkt in der Anwendung sichtbar gemacht werden sollen, werden über
+entsprechende Signale bekannt gemacht.
 
 \section{Persistenz}
 

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.12 2004/06/15 07:33:58 keulsn Exp $
+%% $Id: design.tex,v 1.13 2004/06/15 09:09:58 vanto Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -177,9 +177,122 @@ Software-Architektur anhand der Schattierung ersichtlich.
 \label{model}
 
 In den Model-Klassen wird das Datenmodell eines Projekts
-repräsentiert. In POA werden Daten in Objekten der Klassen BlockModel
-und PinModel, sowie abgeleiteter Klassen gespeichert. Die Klasse
-Projekt stellt den Zusammenhalt zwischen den einzelnen Models her.
+repräsentiert. In POA werden Daten in Objekten der Klassen {\bf BlockModel}
+und {\bf PinModel}, sowie abgeleiteter Klassen gespeichert. Die Klasse
+{\bf Projekt} stellt den Zusammenhalt zwischen den einzelnen Models her und
+stellt das Projektmanagement zur Verfügung. Dafür gibt es die Methoden
+\emph{open()}, \emph{save()} und \emph{saveAs(OString path)}. Der
+Dateiname für die POA-Projektdatei für \emph{open()} und \emph{save()}
+wird dem Projekt über den Konstruktor mitgeteilt, aber nicht
+automatisch geladen. \emph{save()} erstellt über einen Aufruf von
+\emph{serialize()} ein XML Document, welches dann in die Datei
+geschrieben wird. Umgekehrt analog geht \emph{open()} vor. Der
+Mechanismus zum Erstellen des XML Dokuments bzw. des Datenmodells aus
+einem XML Dokument ist auf jede einzelne Klasse des Modells
+verteilt. So ist es zum Einen möglich, jedes Objekt auch unabhängig
+vom Gesamtmodell zu serialisieren, zum Anderen vereinfacht es die
+Wartbarkeit - so müssen bei Erweiterungen des Models nur die Methoden
+des {\bf Serialize}-Interfaces angepasst werden, der Code im {\bf
+  Project} bleibt gleich. Wichtig ist hier, dass bei abgeleiteten
+Klassen immer die serialize/deserialize-Methoden der Superklasse
+aufgerufen werden, da sich der Mechanismus auf die gesamte
+Klassenhierarchie verteilt. Um anhand der Model-Typenbezeichnung in
+dem XML Dokument die richtige Klasse zu instanziieren, wird die Klasse
+{\bf ModelFactory} verwendet. Sie liest das XML-Attribut
+''block-type'' aus und wählt so die Implementierung aus.
+Über die Methoden \emph{addBlock()} und \emph{removeBlock()} werden
+dem Projekt neue Modellblöcke bekannt gemacht bzw. wieder entfernt.
+Die {\bf Project}-Klasse erlaubt es auch, mehrere View-Instanzen zu
+verwalten. Dieser Mechanismus ist bisher aber nicht vollständig in die
+anderen Klassen integriert. So wird bisher immer der erste Canvas aus
+\emph{canvasList()} verwendet und angezeigt.
+Wird ein Projekt verändert, d.h. ein Block hinzugefügt oder entfernt,
+oder die Methode \emph{setModified()} aufgerufen, so wird das Signal
+\emph{modified(bool)} aufgerufen. Darüber können andere Klassen über
+die Veränderung benachrichtigt werden.
+
+Die Modelklassen basieren alle auf der abstrakten Klasse {\bf
+  AbstractModel}. In ihr werden nur die grundlegensten Felder wie
+  \emph{id}, \emph{name}, \emph{description}, \emph{type}
+  definiert. Das letztere Feld ist die Kategorie-Bezeichnung in der
+  Library. Diese Daten werden auch über die Serialize-Methoden
+  persistierbar gemacht. Die Methode \emph{createView(GridCanvas*)}
+  erzeugt für das Modell die korrespondierende View-Instanz, die
+  Methode \emph{updatePerformed()} benachrichtigt das View von
+  signifikanten Änderungen am Modell und sollte aufgerufen werden,
+  wenn die Taktraten eines Blocks geändert wurden.
+
+Die Klasse {\bf BlockModel} ist die erste Implementierung der
+abstrakten Klasse und gibt dem Modell die Möglichkeit, Blöcke mit Pins
+zu repräsentieren. Ausserdem werden in ihr Informationen zum
+Laufzeitverhalten der Blöcke abgelegt.
+Über die Methoden \emph{addPin(PinModel*)}
+bzw. \emph{deletePin(PinModel*)} wird dem Block ein Pin hinzugefügt
+bzw. wieder entfernt. Beim deserialisieren wird dieser Vorgang
+automatisch propagiert. Mittels \emph{pins()} kann eine Liste der Pins
+abgefragt werden. Zusätzlich enthält diese Klasse einige Methoden um
+Informationen über den Typ der Pins zu erhalten, ob der Block
+Input-Pins, Output-Pins und/oder Episodic-Pins hat.
+Das Laufzeitverhalten wird über die Felder \emph{offset, autoOffset,
+  runtime} und \emph{hasRuntime} spezifiziert und kann über die
+entsprechenden get- bzw. set-Methoden abgefragt bzw modifziert
+werden. Die Methode \emph{tip()} stellt objektspezifische
+Informationen zur Verfügung, die dann als Tooltip angezeigt werden.
+Zur Benachrichtigung anderer Klassen, stellt {\bf BlockModel} zwei
+Singale zur Verfügung: \emph{pinAdded(PinModel*)} notifiziert andere
+Klassen und das View-Pendant über neue Pins, das
+\emph{deleted(BlockModel*)}-Signal wird ausgelöst, bevor der Block
+gelöscht wird.
+
+Die nächste Verfeinerung der Hierarchie ermöglicht die Spezialisierung
+auf CPUs und Muxer, die es ermöglichen, Verbindungen zwischen Blöcken
+zu multiplexen.
+Ein CPU-Block ({\bf CpuModel}) erhält die neuen Felder
+\emph{autoRuntime, cpuId} und \emph{source}. Diese Felder ermöglichen
+die automatische Laufzeitdauerberechnung, die Erfassung der Id, die
+die CPU auf dem CPLD identifiziert sowie der C-Quellcode der NIOS-CPU.
+Ein Mux-Block ({\bf MuxModel}) wird mit einem Container für {\bf
+  MuxMapping}s ausgestattet. In diesen wird das Mapping von Pins auf
+Pins mit unterschiedlichen Bitbreiten ermöglicht.
+
+Instanzen der Klasse {\bf PinModel} repräsentieren die einzelnen Pins
+eines Blocks. Wenn eine Verbindung zwischen zwei Blöcken hergestellt
+wird, so müssen auch die Pins über darüber benachrichtigt werden. Das
+geschieht über einen Aufruf der Methode \emph{attach(PinModel*
+  connectTo)}. Wurde ein Verbindung erstellt, gibt die Methode
+\emph{connected()} gibt den Pin des anderen Blocks zurück. Ausserdem
+haben Pins einen Namen (\emph{name}), eine Adresse (\emph{address}),
+eine Bitbreite (\emph{bits}), eine Id (\emph{id}), sowie eine
+Position (\emph{position}), die die Reihenfolge der Pins
+wiederspiegelt. Der Typ eines Pins kann die Werte
+\emph{PinType::INPUT}, \emph{PinType::OUTPUT} und
+\emph{PinType::EPISODIC} annehmen. Über den Konstruktor wird dem Pin
+der Vaterblock mitgeteilt. Dieser kann über \emph{parent()} abgefragt
+werden.
+Die Signale \emph{deleted(), detached()} und \emph{updated()}
+benachtigten interessierte Klassen wenn ein Pin entfernt werden soll,
+wenn eine Verbindung gelöst wurde und wenn Eigenschaften des Pins
+verändert wurden. In der derzeitige Implementierung hören nur die {\bf
+  BlockView}-Instanzen auf diese Signale.
+
+Zum visuellen erzeugen von Blöcken wird bei POA die Drag\&Drop-Idee
+verwendet. Dazu zieht der Benutzer ein Objekt aus der Blockbibliothek
+in den Arbeitsbereich ({\bf GridCanvas}). Umgekehrt können auch Blöcke
+aus dem Arbeitsbereich in die Bibliothekt gezogen werden. Unter der
+Haube werden die Objekte beim Herausziehen aus der Bibliothek über die
+Serialisierungsmethoden in einen XML-String umgewandelt und beim
+''fallen lassen'' über die {\bf ModelFactory} instanziert, von
+Bibliotheksinformationen bereinigt und in das Projekt eingefügt. Das
+dazugehörige View-Objekt wird an den aktuellen Maus-Koordinaten
+erstellt.
+Das Einfügen in die Bibliothek funktioniert analog dazu.
+Die Zwischenablagefuntionen sind genauso implementiert. Beim Kopieren
+eines Objekts werden die Daten serialisiert und in die Zwischenablage
+kopiert und beim Einfügen wieder deserialisiert. Da z.B. bei CPUs der
+Sourcecode mitkopiert werden soll, ist für die
+Copy\&Paste-Funktionalität eine erweiterte Serialisierung
+notwendig. Daher sieht die abstrakte Superklasse für die
+Serialisierung für die Zwischenablage eine eigene Methode vor: \emph{serializeCopy()}.
 
 \subsection{View}
 \label{view}

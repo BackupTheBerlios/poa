@@ -18,34 +18,70 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.3 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: codemanager.h,v 1.4 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
-
 
 #ifndef POA_CODEMANAGER_H
 #define POA_CODEMANAGER_H
 
+#include "abstractmodel.h"
 
 #include <qstring.h>
-
 
 /**
  * Manages a portion of source code.
  */
-class CodeManager
+class CodeManager : public QObject
 {
-  public:
 
-    CodeManager();
-    virtual ~CodeManager();
+    Q_OBJECT
 
-    QString *getSource () const;
-    void setSource (QString &source);
+public:
 
-    virtual int compile ();
+    /**
+     * Basic constructor.
+     */
+    CodeManager(AbstractModel *parent);
+
+    /**
+     * Destructs this CodeManager and removes all related data
+     * physically (e.g. the Source code) {@link remove()}.
+     */
+    ~CodeManager();
+
+    /**
+     * Returns path to the source file.
+     * If the project was not saved, the source file will be
+     * the standard template. Otherwise it will be managed implicitly.
+     */
+    QString sourcePath();
+
+    /**
+     * Executes the compiler and returns it's return code.
+     */
+    int compile();
+
+    /**
+     * Saves the source template into a structure as follows:
+     * CPU_nn_sdk
+     *  src/cpu_nn.c
+     *  lib/
+     *  inc/
+     */
+    void save();
+
+
+private:
+    AbstractModel *model_;
+
+public slots:
+    /**
+     * Removes the source template structure created by save().
+     * Called by the destructor.
+     */
+    void remove();
 
 };
 
-
-#endif
+#endif // POA_CODEMANAGER_H

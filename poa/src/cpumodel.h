@@ -18,15 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.17 2003/09/16 10:18:04 garbeam Exp $
+ * $Id: cpumodel.h,v 1.18 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
 #include "blockmodel.h"
+#include "codemanager.h"
 
 #include <qdom.h>
+
 
 class QCanvas;
 class QCanvasItemList;
@@ -51,6 +53,11 @@ class CpuModel: public BlockModel
     CpuModel(QDomElement cpuElement);
 
     /**
+     * Basic destructor.
+     */
+    ~CpuModel();
+
+    /**
      * Returns the cpu id. This id is used to upload <code>code()</code> to
      * corresponding cpu on the cpld board
      */
@@ -62,16 +69,10 @@ class CpuModel: public BlockModel
     void setCpuId(const int cpuId);
 
     /**
-     * Returns a representation (filename or what? //TODO) of the sourcecode
-     * associated with this CpuModel
+     * Returns the code manager of this CpuModel which is created
+     * implicitly by the contructor of this CpuModel.
      */
-    QString code() const;
-
-    /**
-     * Sets code
-     * {@link #code()}
-     */
-    void setCode(const QString &code);
+    CodeManager *code();
 
     /**
      * Indicates if the automatic execution time calculator should be used
@@ -122,8 +123,21 @@ class CpuModel: public BlockModel
      */
     void deserialize(QDomElement element);
 
+    /**
+     * Sets the project path.
+     * Used by CodeManager to save its sources.
+     */
+    void setProjectPath(QString *path);
+
+    /**
+     * Returns the project path.
+     */
+    QString *projectPath();
+
+
  private:
-    QString code_;
+    CodeManager *code_;
+    QString *path_;
     int cpuId_;
     bool autoExecTime_;
     unsigned long offset_;

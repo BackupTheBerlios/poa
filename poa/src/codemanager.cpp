@@ -18,29 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.cpp,v 1.2 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.1 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
 
-#include "cpuview.h"
-#include "cpumodel.h"
 
-QString CpuView::tip()
+#include "codemanager.h"
+#include "cpumodel.h"
+#include "settings.h"
+
+CodeManager::CodeManager(AbstractModel *parent)
 {
-    CpuModel *m = (CpuModel*)model();
-    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><br><hr>" \
-                   "<b>Id on CPLD:</b> %4<br>" \
-                   "<b>Clock:</b> %5 ms<br>" \
-                   "<b>Offset:</b> %6<br>" \
-                   "<b>Execution time:</b> %7<br>" \
-                   "<b>Source:</b> %8")
-        .arg(m->name())
-        .arg(m->type())
-        .arg(m->description())
-        //        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
-        .arg((m->cpuId()==65535)?"not defined":QString::number(m->cpuId()))
-        .arg(m->clock())
-        .arg((m->autoOffset())?"auto":QString::number(m->offset())+" ms")
-        .arg((m->autoExecTime())?"auto":QString::number(m->execTime())+" ms")
-        .arg(m->code()->sourcePath());
+    model_ = parent;
+}
+
+CodeManager::~CodeManager()
+{
+}
+
+QString CodeManager::sourcePath()
+{
+    CpuModel *model = (CpuModel *)model_;
+    return QString("%1/CPU_%2_sdk").arg(*(model->projectPath()))
+                                   .arg(model->id());
+}
+
+int CodeManager::compile()
+{
+
+    return 0;
+}
+
+void CodeManager::save()
+{
+
+}
+
+void CodeManager::remove()
+{
+
 }

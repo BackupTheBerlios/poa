@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.16 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: project.h,v 1.17 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -88,6 +88,11 @@ public:
     QString name();
 
     /**
+     * Returns the <code>project</code>s path
+     */
+    QString path();
+
+    /**
      * Creates a new Canvas with the given name
      * @param name canvas' name
      */
@@ -124,6 +129,8 @@ private:
     uint currentBlockId_;
     /** The filename for serialization. */
     QString filename_;
+    /** The project path (without project file) for serialization */
+    QString path_;
 };
 
 #endif // PROJECT_H

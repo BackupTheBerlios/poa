@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.18 2003/09/16 10:18:04 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.19 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@ CpuModel::CpuModel(QString type, QString description)
     clock_ = 0;
     offset_ = 0;
     autoOffset_ = true;
-    code_ = QString::null;
+    code_ = 0;
 
     // FIX: remove
     PinModel *pin = new PinModel(this, QString("Input1"));
@@ -62,16 +62,17 @@ CpuModel::CpuModel(QDomElement cpuElem)
     if (!cpuElem.isNull()) {
         deserialize(cpuElem);
     }
+    code_ = new CodeManager(this);
 }
 
-QString CpuModel::code() const
+CpuModel::~CpuModel()
+{
+    delete code_;
+}
+
+CodeManager *CpuModel::code()
 {
   return code_;
-}
-
-void CpuModel::setCode(const QString &code)
-{
-  code_ = code;
 }
 
 int CpuModel::cpuId()
@@ -130,7 +131,7 @@ QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
     root.setAttribute("block-type", "cpu");
-    root.setAttribute("srcfile", code_);
+    root.setAttribute("srcfile", code_ != 0 ? code_->sourcePath() : "");
     root.setAttribute("cpuid", (unsigned int) cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
@@ -153,5 +154,14 @@ void CpuModel::deserialize(QDomElement element) {
     // FALSE otherwise.
     autoExecTime_ =
         element.attribute("autotime", "true").contains("true", false);
-    setCode(element.attribute("srcfile",QString::null));
+}
+
+void CpuModel::setProjectPath(QString *path)
+{
+    path_ = path;
+}
+
+QString *CpuModel::projectPath()
+{
+    return path_;
 }

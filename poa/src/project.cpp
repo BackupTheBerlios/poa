@@ -18,11 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.17 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: project.cpp,v 1.18 2003/09/16 15:18:13 garbeam Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
+#include "cpumodel.h"
 #include "pinmodel.h"
+#include "poa.h"
 #include "project.h"
 #include "gridcanvas.h"
 #include "modelfactory.h"
@@ -51,6 +53,10 @@ void Project::addBlock(AbstractModel *item)
         item->setId(++currentBlockId_);
     } else if (item->id() > currentBlockId_) {
         currentBlockId_ = item->id();
+    }
+    if (INSTANCEOF(item, CpuModel))
+    {
+        ((CpuModel *)item)->setProjectPath(&path_);
     }
 
     blocks_.append(item);
@@ -82,6 +88,11 @@ QString Project::filename()
 QString Project::name()
 {
     return name_;
+}
+
+QString Project::path()
+{
+    return path_;
 }
 
 GridCanvas *Project::newCanvas(const QString name)

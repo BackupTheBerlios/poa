@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.6 2003/08/26 23:27:11 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.7 2003/08/27 10:50:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -139,19 +139,19 @@ QDomElement BlockModel::serialize(QDomDocument *document)
     root.setAttribute("clock", (unsigned int)clock_);
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
-    QDomElement pinElem = inputPins_->at(i)->serialize(document);
-    pinElem.setAttribute("type","input");
+        QDomElement pinElem = inputPins_->at(i)->serialize(document);
+        pinElem.setAttribute("type","input");
         root.appendChild(pinElem);
     }
     for (unsigned i = 0; i < outputPins_->size(); i++) {
         QDomElement pinElem = outputPins_->at(i)->serialize(document);
-    pinElem.setAttribute("type","output");
-    root.appendChild(pinElem);
+        pinElem.setAttribute("type","output");
+        root.appendChild(pinElem);
     }
     for (unsigned i = 0; i < episodicPins_->size(); i++) {
         QDomElement pinElem = episodicPins_->at(i)->serialize(document);
-    pinElem.setAttribute("type","episodic");
-    root.appendChild(pinElem);
+        pinElem.setAttribute("type","episodic");
+        root.appendChild(pinElem);
     }
 
     return root;
@@ -160,8 +160,20 @@ QDomElement BlockModel::serialize(QDomDocument *document)
 void BlockModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
-    autoOffset_ = (element.attribute("auto-offset","false") == "true");
-    offset_ = (unsigned int)element.attribute("offset","0").toUInt();
-    clock_ = (unsigned int)element.attribute("clock","0").toUInt();
-    // TODO: pins
+    setAutoOffset( (element.attribute("auto-offset","false") == "true") );
+    setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
+    setClock( (unsigned int)element.attribute("clock","0").toUInt() );
+    // pins
+    inputPins_->clear();
+    outputPins_->clear();
+    episodicPins_->clear();
+
+    QDomNode node = element.firstChild();
+    while ( !node.isNull() ) {
+        if (node.isElement() && node.nodeName() == "pin" ) {
+            qWarning("pin");
+        }
+        node = node.nextSibling();
+     }
+
 }

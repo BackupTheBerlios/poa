@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.32 2003/08/22 22:47:49 squig Exp $
+ * $Id: mainwindow.cpp,v 1.33 2003/08/27 10:50:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -417,7 +417,10 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
-    qWarning( "MainWindow::fileSave(): Not implemented yet!" );
+    if (project_) {
+        qWarning((project_->serialize()).toString());
+    }
+    //qWarning( "MainWindow::fileSave(): Not implemented yet!" );
 }
 
 void MainWindow::fileSaveAs()

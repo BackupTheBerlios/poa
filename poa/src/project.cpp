@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.2 2003/08/26 23:27:11 vanto Exp $
+ * $Id: project.cpp,v 1.3 2003/08/27 10:50:22 vanto Exp $
  *
  *****************************************************************************/
 #include "project.h"
@@ -38,9 +38,22 @@ void Project::add(AbstractModel *item, int x, int y)
     emit modelAdded(item, x, y);
 }
 
-QDomDocument serialize()
+QDomDocument Project::serialize()
 {
     QDomDocument doc;
+    QDomElement proj = doc.createElement("project");
+    doc.appendChild(proj);
+    QDomElement mlist = doc.createElement("models");
+    proj.appendChild(mlist);
+    QDomElement vlist = doc.createElement("views");
+    proj.appendChild(vlist);
+
+    // create model list
+    AbstractModel *model;
+    for (model = items_.first(); model; model = items_.next()) {
+        mlist.appendChild(model->serialize(&doc));
+    }
+    return doc;
     //TODO doc.appendChild(items[i
 }
 

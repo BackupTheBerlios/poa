@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.4 2003/08/22 15:27:43 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.5 2003/08/22 15:30:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,18 +30,18 @@
 #include <qrect.h>
 #include <qsize.h>
 
-// size of tiles
+// space between grid crosses
 #define GRID_SPACING 20
 
 GridCanvas::GridCanvas() {
 
     // create grid pixmap
     QRect r(0, 0, 1000, 1000);
-    tile = new QPixmap(r.size());
-    tile->fill(white);
+    gridTile= new QPixmap(r.size());
+    gridTile->fill(white);
 
     QPen pen(gray, 1);
-    QPainter p(tile);
+    QPainter p(gridTile);
     p.setPen(pen);
 
     for (int x = 0; x <= 1000; x += GRID_SPACING) {
@@ -67,9 +67,5 @@ GridCanvas::GridCanvas() {
 
 void GridCanvas::redrawGrid() {
 
-//    int w = size().width();
-  //  int h = size().height();
-
-    setBackgroundPixmap(*tile);
-    //setTiles(*tile, w, h, 1000, 1000);
+    setBackgroundPixmap(*gridTile);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.12 2003/08/29 21:27:46 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.13 2003/08/29 23:51:08 vanto Exp $
  *
  *****************************************************************************/
 
@@ -71,24 +71,35 @@ PinVector *BlockModel::outputPins()
     return outputPins_;
 }
 
-
-
-void BlockModel::setClock(unsigned long clock)
+void BlockModel::setClock(unsigned int clock)
 {
     clock_ = clock;
 }
 
-void BlockModel::setOffset(unsigned long offset)
+unsigned int BlockModel::clock()
+{
+    return clock_;
+}
+
+void BlockModel::setOffset(unsigned int offset)
 {
     offset_ = offset;
 }
 
+unsigned int BlockModel::offset()
+{
+    return offset_;
+}
 
 void BlockModel::setAutoOffset(bool autoOffset)
 {
     autoOffset_ = autoOffset;
 }
 
+bool BlockModel::autoOffset()
+{
+    return autoOffset_;
+}
 
 void BlockModel::addInputPin(PinModel *pin, PinModel *successor)
 {
@@ -204,9 +215,6 @@ void BlockModel::deserialize(QDomElement element)
     while ( !node.isNull() ) {
         if (node.isElement() && node.nodeName() == "pin" ) {
             QDomElement pin = node.toElement();
-            //PinModel *pinModel = new PinModel(this, pin.attribute("name","unknown"));
-                        //pinModel->setAddress((unsigned int)pin.attribute("address","0").toUInt());
-                        //            pinModel->setBits((unsigned int)pin.attribute("bits","0").toUInt());
             PinModel *pinModel = new PinModel(this, pin);
             if (pin.attribute("type", "") == "input") {
                 addInputPin(pinModel);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.13 2003/08/28 18:04:35 vanto Exp $
+ * $Id: blockview.h,v 1.14 2003/08/29 23:51:08 vanto Exp $
  *
  *****************************************************************************/
 
@@ -55,6 +55,9 @@ public:
      */
     BlockView(BlockModel *model, QCanvas *canvas);
 
+    /*************************************************************************
+     * Default destructor
+     */
     virtual ~BlockView();
 
     /*************************************************************************
@@ -82,13 +85,20 @@ public:
 
     virtual int rtti() const;
 
-    /**
+    /*************************************************************************
      * Sets the brush to red if Pin is selected, otherwise black
      */
     virtual void setSelected(bool yes);
 
-
+    /*************************************************************************
+     * Serializes this instance to a xml subtree
+     * @param document the main QDomDocument instance. Needed to create elements
+     */
     QDomElement serialize(QDomDocument *document);
+
+    /*************************************************************************
+     * Deserializes an xml subtree and sets this' properties
+     */
     void deserialize(QDomElement element);
 
 protected:

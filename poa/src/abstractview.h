@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.2 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: abstractview.h,v 1.3 2003/08/29 23:51:08 vanto Exp $
  *
  *****************************************************************************/
 #ifndef ABSTRACTVIEW_H
@@ -33,6 +33,9 @@ class QPopupMenu;
 class AbstractView
 {
 public:
+    /*
+     * Return the context menu
+     */
     virtual QPopupMenu *popupMenu() { return 0; };
 
 };

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.8 2003/08/29 14:34:41 vanto Exp $
+ * $Id: abstractmodel.h,v 1.9 2003/08/29 23:51:08 vanto Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,7 @@ public:
                   QString description = QString::null,
                   uint id = 0);
 
-    /*
+    /*************************************************************************
      * Returns the description of the model.
      * This value contains different content
      * - in the library: the description of the generic block
@@ -52,31 +52,31 @@ public:
      */
     virtual QString description() const;
 
-    /*
+    /*************************************************************************
      * Returns the type of this block, eg. NIOS16-CPU
      */
     virtual QString type() const;
 
-    /*
+    /*************************************************************************
      * Returns the project-wide id of this block.
      * This property should be set in Project::add(),
      * for library items id should be 0
      */
     virtual uint id() const;
 
-    /*
+    /*************************************************************************
      * Sets the block description
      * {@link #description}
      */
     virtual void setDescription(const QString &description);
 
-    /*
+    /*************************************************************************
      * Sets the block type
      * {@link #type}
      */
     virtual void setType(const QString &type);
 
-    /*
+    /*************************************************************************
      * Sets the project-wide id
      * {@see #id}
      */
@@ -84,9 +84,14 @@ public:
     virtual void setId(uint id);
 
     /*************************************************************************
-     * Returns an XML representation of this instance.
+     * Serializes this instance to a xml subtree
+     * @param document the main QDomDocument instance. Needed to create elements
      */
     virtual QDomElement serialize(QDomDocument *document);
+
+    /*************************************************************************
+     * Deserializes an xml subtree and sets this' properties
+     */
     virtual void deserialize(QDomElement element);
 
     /*************************************************************************

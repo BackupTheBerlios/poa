@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.19 2003/09/11 16:30:24 squig Exp $
+ * $Id: mainwindow.h,v 1.20 2003/09/17 16:20:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -115,7 +115,7 @@ public slots:
     virtual void openProject(QString filename);
     virtual void openRecentProject(int index);
     virtual void openSettings();
-    virtual void saveProject();
+    //    virtual void saveProject();
     virtual void windowActivated(QWidget *w);
     virtual void zoomTo(const QString &level);
     virtual void zoomIn();

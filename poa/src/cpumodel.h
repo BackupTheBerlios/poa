@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.19 2003/09/17 13:08:29 garbeam Exp $
+ * $Id: cpumodel.h,v 1.20 2003/09/17 16:16:40 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -39,6 +39,7 @@ class QCanvasItemList;
  */
 class CpuModel: public BlockModel
 {
+    Q_OBJECT
 
  public:
     /**
@@ -143,6 +144,10 @@ class CpuModel: public BlockModel
     unsigned long offset_;
     bool autoOffset_;
     bool isProducer_;
+
+ signals:
+    void serialized(CpuModel *);
+
 };
 
 #endif

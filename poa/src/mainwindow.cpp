@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.46 2003/09/17 15:39:59 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.47 2003/09/17 16:16:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -462,6 +462,7 @@ void MainWindow::fileNew()
     project_ = new Project(projDir.path());
 
     if (QFileInfo(fileName).exists()) {
+        qDebug("open!");
         project_->open();
     }
     else {
@@ -491,6 +492,22 @@ void MainWindow::fileNew()
 
 void MainWindow::fileOpen()
 {
+    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+    fd->setMode( QFileDialog::AnyFile );
+    fd->setFilter("POA project (project.xml)");
+    fd->setSelection("project.xml");
+    fd->setCaption("Select/Create project directory");
+
+    QString fileName;
+    if ( fd->exec() == QDialog::Accepted ) {
+        fileName = fd->selectedFile();
+    }
+
+    delete fd;
+
+    QDir projDir(fileName);
+    projDir.cdUp();
+
     QString filename
         = QFileDialog::getOpenFileName(QString::null, QString::null, this);
     if (!filename.isEmpty()) {
@@ -501,7 +518,11 @@ void MainWindow::fileOpen()
 void MainWindow::fileSave()
 {
     if (project_) {
-        saveProject();
+        if (!project_->save()) {
+            QMessageBox::warning
+                (this, tr("File error"),
+                 tr("Cannot save project %1").arg(project_->name()));
+        }
     }
 }
 
@@ -677,16 +698,6 @@ void MainWindow::updateRecentProjectsMenu()
     }
     recentProjectsMenu->setEnabled(i > 0);
 }
-
-void MainWindow::saveProject()
-{
-    if (!project_->save()) {
-        QMessageBox::warning
-            (this, tr("File error"),
-             tr("Cannot save project %1").arg(project_->name()));
-    }
-}
-
 
 QAction *MainWindow::showGridAction()
 {

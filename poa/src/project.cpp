@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.19 2003/09/17 15:39:59 vanto Exp $
+ * $Id: project.cpp,v 1.20 2003/09/17 16:16:40 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -88,6 +88,7 @@ bool Project::save()
         QTextStream ts(&file);
         serialize().save(ts, 2);
         file.close();
+
         return true;
     }
     return false;

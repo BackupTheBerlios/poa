@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.20 2003/09/17 13:08:29 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.21 2003/09/17 16:16:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -64,13 +64,16 @@ CpuModel::CpuModel(QDomElement cpuElem)
         deserialize(cpuElem);
     }
     isProducer_ = false;
+
+    connect(this, SIGNAL(serialized(CpuModel *)),
+            CodeManager::instance(), SLOT(save(CpuModel*)));
 }
 
 CpuModel::~CpuModel()
 {
 }
 
-bool CpuModel::isProducer() 
+bool CpuModel::isProducer()
 {
     return isProducer_;
 }
@@ -140,6 +143,8 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
     root.setAttribute("offset", (unsigned int)offset_);
     root.setAttribute("clock", (unsigned int)clock_);
+
+    emit serialized(this);
 
     return root;
 }

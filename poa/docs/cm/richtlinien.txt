@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.11 2003/06/21 18:38:39 garbeam Exp $
+$Id: richtlinien.txt,v 1.12 2003/06/21 18:46:40 garbeam Exp $
 
 Richtlinien zur POA-Entwicklung
 ===============================
@@ -221,7 +221,7 @@ beschrieben.
 3. C++ Codierrichtlinien
 
 
-Die Codierrichtlinien liegen als HTML-Dokument im POA-Wiki und in diesem
+Die Codierrichtlinien liegen als HTML-Dokument auf der POA Page und in diesem
 Verzeichnis vor:
 
 ./poa_guidelines.html

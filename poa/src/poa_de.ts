@@ -98,6 +98,10 @@ Apply changes?</source>
         <translation>Die Blockkonfiguration wurde geändert, jedoch nicht gespeichert.
 Sollen die Änderungen gespeichert werden?</translation>
     </message>
+    <message>
+        <source>This ID is already in use</source>
+        <translation type="unfinished">Diese ID wird bereits verwendet</translation>
+    </message>
 </context>
 <context>
     <name>BlockConfWidget</name>
@@ -1011,6 +1015,23 @@ Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     <message>
         <source>Invalid checksum</source>
         <translation>Ungültige Prüfsumme</translation>
+    </message>
+</context>
+<context>
+    <name>SameCpuIdReport</name>
+    <message>
+        <source>Critical</source>
+        <translation type="unfinished">Kritisch</translation>
+    </message>
+    <message>
+        <source>%1 does not have an unique CPU-ID</source>
+        <translation type="unfinished">%1 hat keine eindeutige CPU-ID</translation>
+    </message>
+    <message>
+        <source>All CPUs should have an unique ID.
+%1 has the same ID (=%2) as %3</source>
+        <translation type="unfinished">Alle CPUs müssen unterschiedliche IDs haben.
+%1 hat die gleiche ID (=%2) wie %3</translation>
     </message>
 </context>
 <context>

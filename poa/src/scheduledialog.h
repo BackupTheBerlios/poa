@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.7 2004/01/09 22:42:47 squig Exp $
+ * $Id: scheduledialog.h,v 1.8 2004/01/11 13:11:01 vanto Exp $
  *
  *****************************************************************************/
 
@@ -82,6 +82,8 @@ private:
 
     Project *project_;
     QPtrList<BlockTree> inputBlocks;
+    QPtrList<BlockTree> blocks_;
+    QMap<BlockModel*, BlockTree*> blocksToTree_;
 
     void buildBranch(BlockTree *bt);
     void buildTree();

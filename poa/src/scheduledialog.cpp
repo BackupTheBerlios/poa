@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.9 2004/01/09 23:06:39 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.10 2004/01/11 13:11:01 vanto Exp $
  *
  *****************************************************************************/
 
@@ -97,20 +97,27 @@ void ScheduleDialog::buildBranch(BlockTree *bt)
                     if (!(*muxit)->connected()) continue;
                     block = (*muxit)->connected()->parent();
                     // Only add model recursively if not already in tree
-                    if (!bt->contains(block)) {
-                        buildBranch(bt->addBranch(block));
-                    } else {
-                        // Add back reference only and stop recursion
+
+                    if (blocksToTree_.contains(block)) {
+                        // add back reference only and stop recursion.
                         bt->addBranch(block)->setBackReference(true);
+                    } else {
+                        BlockTree *lb = bt->addBranch(block);
+                        blocksToTree_.insert(block, lb);
+                        blocks_.append(lb);
+                        buildBranch(lb);
                     }
                 }
             } else {    // No mux, straight connection
-                // Only add model recursively if not already in tree
-                if (!bt->contains(block)) {
-                    buildBranch(bt->addBranch(block));
-                } else {
-                    // Add back reference only and stop recursion
+
+                if (blocksToTree_.contains(block)) {
+                    // add back reference only and stop recursion.
                     bt->addBranch(block)->setBackReference(true);
+                } else {
+                    BlockTree *lb = bt->addBranch(block);
+                    blocksToTree_.insert(block, lb);
+                    blocks_.append(lb);
+                    buildBranch(lb);
                 }
             }
         }
@@ -126,11 +133,15 @@ void ScheduleDialog::buildTree()
             if (!bm->hasInputPins() && !bm->hasEpisodicPins()) {
                 BlockTree* bt = new BlockTree(bm);
                 inputBlocks.append(bt);
+                if (!blocks_.contains(bt)) {
+                    blocks_.append(bt);
+                }
             }
         }
     }
 
     // Then built the trees from the input blocks on
+    blocksToTree_.clear();
     for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
         buildBranch(*inpit);
     }
@@ -160,11 +171,6 @@ void ScheduleDialog::fillTimingTable(BlockTree* bt)
 
     QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::OFFSET);
     timingTable->setItem(i, 3, i4);
-
-    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
-        if (!(*it)->getBackReference())
-            fillTimingTable(*it);
-    }
 }
 
 void ScheduleDialog::initLayout()
@@ -207,7 +213,7 @@ void ScheduleDialog::initTimingWidget()
     connect(timingTable->verticalHeader(), SIGNAL(indexChange(int, int, int)),
             this, SLOT(rowMoved(int, int, int)));
 
-    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         fillTimingTable(*it);
     }
     topLayout->addWidget(timingTable);
@@ -248,7 +254,7 @@ void ScheduleDialog::initGraphWidget()
 void ScheduleDialog::initCanvas()
 {
     int Y = BOX_YSPACING;
-    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         int time = 0;
         drawTimings(*it, &Y, &time);
     }
@@ -327,9 +333,9 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 
     *Y += BOX_HEIGHT + BOX_YSPACING;
 
-    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
+    /*    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
         drawTimings(*it, Y, time);
-    }
+        }*/
 
     return true;
 }

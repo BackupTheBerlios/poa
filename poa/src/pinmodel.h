@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.4 2003/08/26 23:27:11 vanto Exp $
+ * $Id: pinmodel.h,v 1.5 2003/08/27 12:28:24 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,6 +51,12 @@ public:
 
     QString name();
     void setName(QString &name);
+
+    unsigned int address();
+    void setAddress(unsigned int address);
+
+    unsigned int bits();
+    void setBits(unsigned int bits);
 
     PinView *createView(BlockView *block,
             PinView::DockPosition dockPosition);

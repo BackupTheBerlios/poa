@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.7 2003/08/27 10:50:22 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.8 2003/08/27 12:28:24 vanto Exp $
  *
  *****************************************************************************/
 
@@ -171,7 +171,18 @@ void BlockModel::deserialize(QDomElement element)
     QDomNode node = element.firstChild();
     while ( !node.isNull() ) {
         if (node.isElement() && node.nodeName() == "pin" ) {
-            qWarning("pin");
+            QDomElement pin = node.toElement();
+            PinModel *pinModel = new PinModel(pin.attribute("name","unknown"));
+            pinModel->setAddress((unsigned int)pin.attribute("address","0").toUInt());
+            pinModel->setBits((unsigned int)pin.attribute("bits","0").toUInt());
+            if (pin.attribute("type", "") == "input") {
+                addInputPin(pinModel);
+            } else if (pin.attribute("type","") == "output") {
+                addOutputPin(pinModel);
+            } else if (pin.attribute("type","") == "episodic") {
+                addEpisodicPin(pinModel);
+            }
+
         }
         node = node.nextSibling();
      }

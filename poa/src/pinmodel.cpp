@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.3 2003/08/26 23:27:11 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.4 2003/08/27 12:28:24 vanto Exp $
  *
  *****************************************************************************/
 
@@ -55,8 +55,8 @@ void PinModel::attach(ConnectorModel *connector)
 void PinModel::detach()
 {
     if (connector_ != 0) {
-	connector_ = 0;
-	// FIX: update views
+    connector_ = 0;
+    // FIX: update views
     }
 }
 
@@ -73,8 +73,28 @@ void PinModel::setName(QString &name)
 }
 
 
+void PinModel::setAddress(unsigned int address)
+{
+    address_ = address;
+}
+
+unsigned int PinModel::address()
+{
+    return address_;
+}
+
+void PinModel::setBits(unsigned int bits)
+{
+    bits_ = bits;
+}
+
+unsigned int PinModel::bits()
+{
+    return bits_;
+}
+
 PinView *PinModel::createView(BlockView *block,
-			      PinView::DockPosition dockPosition)
+                  PinView::DockPosition dockPosition)
 {
     PinView *view = new PinView(this, block, dockPosition);
     return view;

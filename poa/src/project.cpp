@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.3 2003/08/27 10:50:22 vanto Exp $
+ * $Id: project.cpp,v 1.4 2003/08/27 12:28:24 vanto Exp $
  *
  *****************************************************************************/
 #include "project.h"
@@ -54,6 +54,5 @@ QDomDocument Project::serialize()
         mlist.appendChild(model->serialize(&doc));
     }
     return doc;
-    //TODO doc.appendChild(items[i
 }
 

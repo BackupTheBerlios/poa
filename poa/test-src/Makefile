@@ -17,16 +17,29 @@ all: poa main
 .cpp.o:
 	$(CC) $(CFLAGS) -c $(INCLUDES) -o $@ $<
 
-main: $(TESTOBJECTS) main.o
+../cppunit/lib/libcppunit.so:
+	ln -s libcppunit-1.9.so.11.0.0 ../cppunit/lib/libcppunit.so
+
+../cppunit/lib/libcppunit-1.9.so.11:
+	ln -s libcppunit-1.9.so.11.0.0 ../cppunit/lib/libcppunit-1.9.so.11
+
+../cppunit/lib/libqttestrunner.so:
+	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so
+
+../cppunit/lib/libqttestrunner.so.1:
+	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so.1
+
+main: ../cppunit/lib/libcppunit.so $(TESTOBJECTS) main.o
 	$(CC) -o main $(LDFLAGS) $(OBJECTS) main.o
 
-mainqt: $(TESTOBJECTS) mainqt.o
+mainqt: ../cppunit/lib/libcppunit.so ../cppunit/lib/libqttestrunner.so $(TESTOBJECTS) mainqt.o
 	$(CC) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
 
-check: all
-	test -L ../cppunit/lib/libcppunit-1.8.so.0 \
-	 || ln -s libcppunit.so ../cppunit/lib/libcppunit-1.8.so.0
+check: ../cppunit/lib/libcppunit-1.9.so.11 all
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./main
+
+checkqt: ../cppunit/lib/libcppunit-1.9.so.11 ../cppunit/lib/libqttestrunner.so.1 all
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./mainqt
 
 clean:
 	rm *.o
@@ -37,6 +50,8 @@ depend:
 
 poa:
 	make -C ../src	
+
+preparecheck:
 
 ifeq ($(shell test -r Makefile.depend && echo "true"),true)
   include Makefile.depend

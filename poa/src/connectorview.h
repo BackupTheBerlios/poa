@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.6 2003/08/30 18:37:33 vanto Exp $
+ * $Id: connectorview.h,v 1.7 2003/09/04 14:45:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,7 @@ class ConnectorModel;
 class ConnectorView;
 
 
-/*****************************************************************************
+/**
  * Definition of a connector view. Connector views are doubly linked linear
  * lists of <code>ConnectorView</code>s. The first item in that list is
  * considered the view-object and listens to changes in the model.
@@ -51,8 +51,8 @@ class ConnectorView: public QCanvasLine
 {
 
 public:
-    /*****************************************************************************
-     * Creates a connector view on the given <code>canvas</code> and draws a 
+    /**
+     * Creates a connector view on the given <code>canvas</code> and draws a
      * routed line from <code>from</code> pin to <code>to</code> pin for the
      * given <code>model</code>
      */
@@ -61,19 +61,19 @@ public:
           PinView *to,
           QCanvas *canvas);
 
-    /*****************************************************************************
+    /**
      * Default destructor
      */
     virtual ~ConnectorView();
 
-    /*************************************************************************
+    /**
      * Returns <code>this</code>'s model. Note that only the first
      * <code>ConnectorView</code> of a list has a model all others do not.
      * @return 0 or the model
      */
     ConnectorModel *model();
 
-    /*************************************************************************
+    /**
      * Returns a list including <code>this</code> and all succeeding view
      * objects. That is the list of all objects that make up a connector
      * view on a canvas.
@@ -87,13 +87,13 @@ public:
      */
     enum LineOrientation {UNKNOWN, HORIZONTAL, VERTICAL};
 
-    /*************************************************************************
+    /**
      * Returns the orientation orthogonal to <code>orientation</code> or
      * <code>UNKNOWN</code> if <code>orientation == UNKNOWN</code>
      */
     static LineOrientation inflection(LineOrientation orientation);
 
-    /*************************************************************************
+    /**
      * Returns the orientation of this view.
      */
     LineOrientation orientation();
@@ -123,10 +123,10 @@ protected:
     void dockToTarget(PinView *target);
 
     void dockToTarget(ConnectorView *to);
-    
+
     void setOrientation(LineOrientation orientation);
 
-    /*************************************************************************
+    /**
      * Calculates the next point to be used in a multi line connector view.
      * Supposes a connector view exists until the point <code>start</code>
      * and the last segment has the orientation <code>orientation</code>.
@@ -140,7 +140,7 @@ protected:
      * @param start The <code>ConnectorView</code> exists until this point
      * @param orientation Orientation of the line that reaches
      *        <code>start</code>
-     * @param end The point to be reached (usually 
+     * @param end The point to be reached (usually
      *        {@link PinView#connectorPoint})
      * @param dock The direction in which the last line must dock onto
      *        <code>end</code>
@@ -173,7 +173,7 @@ private:
 
     /**
      * true if <code>this</code> has a pin as source or no source,
-     * false else 
+     * false else
      */
 
     bool first_;
@@ -187,14 +187,14 @@ private:
      * <code>this</code>'s source item or 0 if <code>this</code> has no
      * source
      */
-     
+
     ConnectorDocking prev_;
     /**
      * <code>this</code>'s target item or 0 if <code>this</code> has no target
      */
-     
+
     ConnectorDocking next_;
-    
+
     /** Orientation of this view */
     LineOrientation orientation_;
 

@@ -10,7 +10,7 @@ SOURCES  = $(shell ls *.cpp)
 TESTOBJECTS = $(shell echo $(SOURCES) | sed 's/main\.cpp//;s/mainqt\.cpp//;s/\.cpp/.o/g')
 OBJECTS = $(TESTOBJECTS) $(shell find ../src -name "*.o" -not -name "main.o" -not -name "mainqt.o")
 
-all: poa main
+all: main
 
 .PHONY : all clean check
 
@@ -29,10 +29,10 @@ all: poa main
 ../cppunit/lib/libqttestrunner.so.1:
 	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so.1
 
-main: ../cppunit/lib/libcppunit.so $(TESTOBJECTS) main.o
+main: poa ../cppunit/lib/libcppunit.so $(TESTOBJECTS) main.o
 	$(CC) -o main $(LDFLAGS) $(OBJECTS) main.o
 
-mainqt: ../cppunit/lib/libcppunit.so ../cppunit/lib/libqttestrunner.so $(TESTOBJECTS) mainqt.o
+mainqt: poa ../cppunit/lib/libcppunit.so ../cppunit/lib/libqttestrunner.so $(TESTOBJECTS) mainqt.o
 	$(CC) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
 
 check: ../cppunit/lib/libcppunit-1.9.so.11 all
@@ -42,6 +42,7 @@ checkqt: ../cppunit/lib/libcppunit-1.9.so.11 ../cppunit/lib/libqttestrunner.so.1
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./mainqt
 
 clean:
+	rm ../src/*.o	
 	rm *.o
 
 depend:

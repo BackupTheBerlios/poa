@@ -10,6 +10,5 @@ NSUPP=high
 
 while true
 do
-    sh fetch.sh $HOST $SIZE $SAT $BR $BACKL $SAT $SHARP $NSUPP south-`date +%s`.jpg
-    sleep 1
+    ./fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-`date +%s`.jpg
 done

@@ -10,7 +10,7 @@ function usage() {
 }
 
 if [ "$#" == 9 ]; then
-    $FETCH_CMD http://$1/cgi-bin/image.jpg?camera=right&size=$2&automatic=$3&brightness=$4&backlight=$5&saturation=$6&sharpen=$7&darknoisesuppress=$8&date=0&textdisplay=disable
+    $FETCH_CMD "http://$1/cgi-bin/image.jpg?camera=right&size=$2&automatic=$3&brightness=$4&backlight=$5&saturation=$6&sharpen=$7&darknoisesuppress=$8&date=0&textdisplay=disable&config=off"
 else
     usage;
 fi

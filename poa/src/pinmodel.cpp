@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.42 2004/02/16 16:24:01 squig Exp $
+ * $Id: pinmodel.cpp,v 1.43 2004/03/23 23:14:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -49,6 +49,7 @@ PinModel::PinModel(BlockModel *parent, const QString &name,
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
 {
     parent_ = parent;
+    bits_ = 1;
     position_ = 0;
     connected_ = 0;
 
@@ -167,6 +168,9 @@ unsigned int PinModel::address()
 
 void PinModel::setBits(unsigned int bits)
 {
+    if (bits == 0) {
+        bits = 1;
+    }
     bits_ = bits;
 }
 
@@ -208,7 +212,7 @@ void PinModel::deserialize(QDomElement element)
     name_ =element.attribute("name","unknown");
     id_ = element.attribute("id","0").toUInt();
     address_ = element.attribute("address","0").toUInt();
-    bits_ = element.attribute("bits", "0").toUInt();
+    bits_ = element.attribute("bits", "1").toUInt();
     position_ = element.attribute("position","0").toUInt();
     if (element.attribute("type", "") == "input") {
         setType(PinModel::INPUT);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.38 2004/03/19 16:10:33 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.39 2004/03/23 23:14:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -120,9 +120,9 @@ void MuxMapping::deserialize(MuxModel *parent, QDomElement element) {
     id = element.attribute("output-id", 0).toUInt();
     output_ = parent->findPinById(id);
     firstInputBit_ = element.attribute("first-input-bit", 0).toUInt();
-    lastInputBit_ = element.attribute("last-input-bit", 0).toUInt();
+    lastInputBit_ = element.attribute("last-input-bit", 1).toUInt();
     firstOutputBit_ = element.attribute("first-output-bit", 0).toUInt();
-    lastOutputBit_ = element.attribute("last-output-bit", 0).toUInt();
+    lastOutputBit_ = element.attribute("last-output-bit", 1).toUInt();
 }
 
 unsigned MuxMapping::id() {

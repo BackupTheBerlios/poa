@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.47 2004/03/19 16:10:33 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.48 2004/03/23 23:14:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -66,8 +66,8 @@ MuxMappingListViewItem::MuxMappingListViewItem(
     else {
         firstInputBit_ = 0;
         firstOutputBit_ = 0;
-        lastInputBit_ = 0;
-        lastOutputBit_ = 0;
+        lastInputBit_ = 1;
+        lastOutputBit_ = 1;
     }
 
     update();

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.48 2003/09/26 14:19:00 keulsn Exp $
+# $Id: poa.pro,v 1.49 2003/10/01 15:24:06 squig Exp $
 #
 ###############################################################################
 
@@ -27,6 +27,13 @@ CONFIG += debug thread
 
 TEMPLATE = app
 INCLUDEPATH += .
+
+TARGET = poa
+QMAKE_TARGET_DESTDIR = poa-0.1.0
+QMAKE_DEL_DIR = rm -rf
+#QMAKE_CXXFLAGS = -DVERSION=0.1.0
+
+DISTFILES += BUGS COPYING README TODO icons/*.xpm icons/*.png
 
 include(poa.local)
 
@@ -111,6 +118,4 @@ SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp
 SOURCES += deployprojectwizard.cpp
-
-TARGET = poa
 

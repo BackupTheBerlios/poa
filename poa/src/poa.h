@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.19 2004/02/11 09:51:39 squig Exp $
+ * $Id: poa.h,v 1.20 2004/02/20 17:31:44 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,8 @@
 #ifndef rint
 #define rint(a) (floor((a)+0.5))
 #endif
+
+static const double PI = 3.14159265358979;
 
 static const unsigned MAX_RECENT_PROJECTS = 5;
 static const unsigned WIDGET_SPACING = 5;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.cpp,v 1.6 2004/02/17 01:08:51 kilgus Exp $
+ * $Id: printmanager.cpp,v 1.7 2004/02/20 17:31:44 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,7 @@ PrintManager::PrintManager(QString title)
     title_ = title;
     title_.append(" - ");
     title_.append(QDateTime::currentDateTime().toString());
+    printerSetup_ = false;
 }
 
 PrintManager::~PrintManager()
@@ -44,7 +45,7 @@ PrintManager::~PrintManager()
 
 bool PrintManager::setup()
 {
-    // doesnt work in GS-Pool
+    //Following options unfortunatelly only available from QT3.1 onwards
     //printer.setOptionEnabled(QPrinter::PrintSelection, false);
     //printer.setOptionEnabled(QPrinter::PrintPageRange, false);
     printerSetup_ = printer_.setup();
@@ -53,15 +54,15 @@ bool PrintManager::setup()
 
 QPaintDeviceMetrics *PrintManager::getMetrics()
 {
-    if (!printerSetup_) return NULL;
+    if (!printerSetup_) return 0;
     return new QPaintDeviceMetrics(&printer_);
 }
 
 void PrintManager::print(QCanvas *canvas)
 {
-
-    if (!printerSetup_)
+    if (!printerSetup_) {
         setup();
+    }
     if (printerSetup_) {
         // disable grid for printing
         bool oldGridState = Settings::instance()->showGrid();
@@ -87,32 +88,29 @@ void PrintManager::print(QCanvas *canvas)
                     QRect rect(x, y, pageWidth, pageHeight);
 
                     QCanvasItemList items = canvas->collisions(rect);
-                    if (items.empty()) {
-                        x += pageWidth;
-                        painter.translate(-pageWidth, 0);
-                        continue;
-                    }
+                    if (!items.empty()) {
+                        if (page > 1) {
+                            printer_.newPage();
+                        }
 
-                    if (!(x == 0 && y == 0)) {
-                        printer_.newPage();
+                        // Draw header
+                        QString pageString("Page ");
+                        pageString.append(QString::number(page));
+                        painter.setFont(f);
+                        painter.setPen(QPen(Qt::black));
+                        painter.drawText(x, y + fontHeight, title_);
+                        painter.drawText(x + pageWidth - fm.width(pageString),
+                            y + fontHeight, pageString);
+
+                        // Draw graphics (clip to leave header space out)
+                        painter.setClipRect(0, headerSpace, 
+                            pageWidth, pageHeight);
+                        painter.translate(0, headerSpace);
+                        canvas->drawArea(rect, &painter, false);
+                        painter.translate(0, -headerSpace);
+                        painter.setClipping(false);
                         page++;
                     }
-
-                    // Draw header
-                    QString pageString("Page ");
-                    pageString.append(QString::number(page));
-                    painter.setFont(f);
-                    painter.setPen(QPen(Qt::black));
-                    painter.drawText(x, y + fontHeight, title_);
-                    painter.drawText(x + pageWidth - fm.width(pageString),
-                        y + fontHeight, pageString);
-
-                    // Draw graphics (clip to leave header space out)
-                    painter.setClipRect(0, headerSpace, pageWidth, pageHeight);
-                    painter.translate(0, headerSpace);
-                    canvas->drawArea(rect, &painter, false);
-                    painter.translate(0, -headerSpace);
-                    painter.setClipping(false);
 
                     x += pageWidth;
                     painter.translate(-pageWidth, 0);

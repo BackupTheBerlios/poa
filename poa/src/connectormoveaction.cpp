@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.6 2004/02/16 03:16:39 kilgus Exp $
+ * $Id: connectormoveaction.cpp,v 1.7 2004/02/20 17:31:44 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -30,18 +30,19 @@
 #include "gridcanvas.h"
 #include "settings.h"
 
-ConnectorMoveAction::ConnectorMoveAction(CanvasView *view, QMouseEvent *e, ConnectorViewSegment *item)
-    : CanvasViewAction(view), item_(item)
+ConnectorMoveAction::ConnectorMoveAction(CanvasView *view, QMouseEvent *e,
+    ConnectorViewSegment *item): CanvasViewAction(view)
 {
+    item_ = item;
     startPoint_ = view->inverseWorldMatrix().map(e->pos());
 }
 
 // Convert cartesian coordinates into an angle (DEG)
-int getAngle(int x, int y)
+int cart2deg(int x, int y)
 {
     if (x == 0) return 90;
 
-    return (int)(atan(y / x) * 360 / 2 * 3.14159265358979);
+    return (int)(atan(y / x) * 360 / 2 * PI);
 }
 
 QPoint ConnectorMoveAction::dragBy(int dx, int dy)
@@ -61,7 +62,6 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
     // Copy old point list into new and move our start and end-point.
     // Create new point if needed (segment is on a pin).
     QValueList<QPoint>::Iterator it;
-    QValueList<QPoint>::Iterator lastIt = points.begin();
     for (it = points.begin(); it != points.end(); ++it ) {
         if ((*it == startP) || (*it == endP)) {
             // Translate point using delta
@@ -70,15 +70,13 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
             // Point was first in list (= connects to pin), so first create
             // another point that still connects to the pin
             if (*it == *points.begin())
-            	newPoints.append(*it);
+                newPoints.append(*it);
             newPoints.append(newPoint);     // Insert translated point
             if (*it == *(--points.end()))   // Same as before, but last in list
-            	newPoints.append(*it);
+                newPoints.append(*it);
 
         } else
             newPoints.append(*it);          // Just copy all other points
-
-        lastIt = it;
     }
 
     // Update our start and end points (later used to re-find our segment)
@@ -88,19 +86,20 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
     // Clean up unneccesary points (points that lie on a line)
     // We use the line angle to check this
     int angle, lastAngle;
-    int state = 0;      	// "State machine", helps our initialisation process
+    int state = 0;          // "State machine", helps our initialisation process
     QPoint firstPoint;
     for (it = newPoints.begin(); it != newPoints.end(); ++it) {
         state++;
         if (state > 1) {
-            // If this is a dublicate point, remove it
+            // If this is a duplicate point, remove it
             if (*it == *lastIt) {
-            	newPoints.remove(it);
-                it = lastIt;      		// it got invalid after the remove
+                newPoints.remove(it);
+                it = lastIt;        // it got invalid after the remove
                 state--;
                 continue;
             }
-            angle = getAngle((*lastIt).x() - (*it).x(), (*lastIt).y() - (*it).y());
+            angle = cart2deg((*lastIt).x() - (*it).x(), 
+                             (*lastIt).y() - (*it).y());
 
             if ((state > 2) && (lastAngle == angle)) {
                 // Check if the point to be removed is one of our segment
@@ -125,10 +124,10 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
     QCanvasItemList::iterator itemIt;
     for (itemIt = itemList.begin(); itemIt != itemList.end(); ++itemIt) {
         if ((((ConnectorViewSegment*)(*itemIt))->startPoint() == startP) &&
-        	(((ConnectorViewSegment*)(*itemIt))->endPoint() == endP))
-        {					
+            (((ConnectorViewSegment*)(*itemIt))->endPoint() == endP))
+        {
             item_ = (ConnectorViewSegment*)*itemIt;         // Got it
-            break;			
+            break;
         }
     }
 
@@ -169,12 +168,12 @@ void ConnectorMoveAction::mouseMoveEvent(QMouseEvent *e)
         dy = -minY;
     }
     int maxX = QMAX(item_->startPoint().x(), item_->endPoint().x());
-    if (maxX + dx > view()->canvas()->width()) {
-        dx = view()->canvas()->width() - maxX;
+    if (maxX + dx >= view()->canvas()->width()) {
+        dx = view()->canvas()->width() - maxX - 1;
     }
     int maxY = QMAX(item_->startPoint().y(), item_->endPoint().y());
-    if (maxY + dy > view()->canvas()->height()) {
-        dy = view()->canvas()->height() - maxY;
+    if (maxY + dy >= view()->canvas()->height()) {
+        dy = view()->canvas()->height() - maxY - 1;
     }
 
     if (dx != 0 || dy != 0) {

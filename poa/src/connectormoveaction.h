@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.h,v 1.1 2004/01/28 01:49:37 kilgus Exp $
+ * $Id: connectormoveaction.h,v 1.2 2004/02/20 17:31:44 kilgus Exp $
  *
  *****************************************************************************/
 
-#ifndef CONNECTORMOVEACTION_H
-#define CONNECTORMOVEACTION_H
+#ifndef POA_CONNECTORMOVEACTION_H
+#define POA_CONNECTORMOVEACTION_H
 
 #include "canvasviewaction.h"
 class CanvasView;
@@ -38,7 +38,8 @@ class QMouseEvent;
 class ConnectorMoveAction : public CanvasViewAction
 {
 public:
-    ConnectorMoveAction(CanvasView *view, QMouseEvent *e, ConnectorViewSegment *item);
+    ConnectorMoveAction(CanvasView *view, QMouseEvent *e,
+        ConnectorViewSegment *item);
 
     /**
      * Moves the item to the new position.
@@ -62,4 +63,4 @@ private:
     QPoint startPoint_;
 };
 
-#endif // CONNECTORMOVEACTION_H
+#endif // POA_CONNECTORMOVEACTION_H

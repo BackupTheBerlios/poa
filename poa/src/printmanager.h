@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.h,v 1.4 2004/02/17 01:08:51 kilgus Exp $
+ * $Id: printmanager.h,v 1.5 2004/02/20 17:31:44 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -36,10 +36,10 @@ class QCanvas;
 class PrintManager
 {
 public:
-	/**
-	 * Create PrintManager object.
+    /**
+     * Create PrintManager object.
      * @param title String to be printed in the header.
-	 */
+     */
     PrintManager(QString title);
 
     /**
@@ -49,15 +49,16 @@ public:
 
     /**
      * Shows the print dialog.
+     * @return true if user hit "OK" button, false otherwise.
      */
-	bool setup();
+    bool setup();
 
     /**
      * Get device metrics of printer.
-	 *
-	 * Returns NULL if printer has not been setup.
+     *
+     * Returns NULL if printer has not been setup.
      */
-	QPaintDeviceMetrics *getMetrics();
+    QPaintDeviceMetrics *getMetrics();
 
     /**
      * Shows the print dialog if not already done and prints the canvas.
@@ -65,9 +66,9 @@ public:
     void print(QCanvas *canvas);
 
 private:
-	QString title_;
+    QString title_;
     QPrinter printer_;
-	bool printerSetup_;
+    bool printerSetup_;
 };
 
 #endif // POA_PRINTMANAGER_H

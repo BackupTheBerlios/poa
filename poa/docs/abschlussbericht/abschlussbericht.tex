@@ -1,12 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.11 2004/06/05 21:33:13 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.12 2004/06/06 00:57:19 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.11 $
-\RCSdef $Date: 2004/06/05 21:33:13 $
+\RequirePackage{hhline}
+
+\RCSdef $Revision: 1.12 $
+\RCSdef $Date: 2004/06/06 00:57:19 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -125,6 +127,7 @@ umgesetzt:
 \item Öffnen mehrerer Projekte zur gleichen Zeit mit
   Datenaustauschmöglichkeiten über die Zwischenablage
 \item Anzeige der Taktfrequzenzen mittels Einfärbung der Blöcke
+\item Lokalisierung in Deutsch und Englisch
 \item Lauffähigkeit unter Microsoft Windows und Linux
 \end{itemize}
 
@@ -141,7 +144,11 @@ der linken Seite können vorgefertigt konfigurierte Blöcke auf die
 Arbeitsoberfläche gezogen werden und in einem Dialog konfiguriert
 werden. 
 
-\includegraphics[width=15cm]{bspprojekt1}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{poa}
+  \caption{Hauptfenster}
+\end{figure}
 
 Einstellbar sind Parameter wie die Taktrate, Laufzeit und die Anzahl
 der Pins über die andere Blöcke vernetzt werden können. CPUs bieten
@@ -150,6 +157,12 @@ Quellcode zu Hinterlegen, der auf der CPU ausgeführt wird, nachdem der
 Download des Projekts auf den CPLD erfolgt ist. Wenn mehrere Blöcke
 auf der Arbeitsoberfläche plaziert wurden, können diese mit der Maus
 an ihren Pins verbunden werden.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{blockconfiguration}
+  \caption{Block Konfigurationsdialog}
+\end{figure}
 
 Sobald ein Projekt fertig gestellt ist, kann die Laufzeit eines oder
 mehrerer Signale nach einer priorisierten Liste optimiert werden. Ein
@@ -160,6 +173,12 @@ Berechnung eines optimalen Offsets für die Taktung eines Blocks kann
 nun erreicht werden, dass ein bestimmtes Signal in kürzest möglicher
 Zeit das Netzwerk durchläuft.
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{scheduling}
+  \caption{Scheduling Dialog}
+\end{figure}
+
 Nach der Optimierung der Signallaufzeiten kann das Projekt auf einen
 CPLD übertragen werden. Bisher ist nur der Download des kompilierten
 Quellcodes einer einzelnen CPU möglich, da hardwareseitig bisher keine
@@ -167,7 +186,7 @@ Unterstützung für mehrere CPUs vorgesehen ist.
 
 Vor der Übertragung wird das Projekt auf Konsistenz geprüft
 
-Eine Vollständige Beschreibung von POA befindet sich im Handbuch.
+Eine vollständige Beschreibung von POA befindet sich im Handbuch.
 
 \subsection{Technische Umsetzung}
 
@@ -189,17 +208,75 @@ Singletonmuster benutzt.
 
 \section{Dokumente}
 
-Während des Projekts
+\subsubsection{Angebot}
 
-\subsection{Angebot}
-\subsection{Handbuch}
-\subsection{Interne Dokumente}
+Neben der Programmierumgebung sind ist im Laufe des Projekts
+Dokumentation entstanden. In einem knapp 20-seitigen Angebot wurden
+die Anforderungen und ein Projektablaufplan mit dem Auftraggeber
+vereinbart. 
 
-Entwurf, Spezifikation
+\subsubsection{Entwurf}
+
+Der Entwurf der ersten Version entstand in Form von Quellcode Dateien,
+die Klassendeklarationen ohne Programmlogik enthielten. Zum Ende des
+Projekts wurde die Architektur der letzten Version in einem Form eines
+Dokuments beschrieben. Dieses Dokument soll bei einer möglichen
+Weiterentwicklung der Software als Orientierungsshilfe dienen. Das
+Entwurfsdokument wird durch ein A0 Poster, das die gesammte
+Klassenstruktur als UML Diagramm zeigt, ergänzt.
+
+\subsubsection{Handbuch}
+
+Dem Benutzer steht ein 40-seitiges mit Bildschirmfotos illustriertes
+Handbuch zur Verfügung. Das Handbuch enthält einen Referenzteil, der
+der die Programmdialoge beschreibt und ein Tutorial, das dem
+unerfahrenen Benutzer anhand eines Beispeils einen leichten Einstieg
+in die Bedienung von POA ermöglicht.
+
+\subsubsection{Interne Dokumente}
+
+Einige Dokumente wurden nur innerhalb des Teams verwendet und nicht an
+den Auftraggeber ausgeliefert. Zu nennen ist hier eine Spezifikation,
+die in Form von Benutzungsfällen den Funktionsumfang der ersten
+Version beschreibt, Kodierungsrichtlinen im Rahmen des
+Konfigurationsmanagements und der Testbericht des Systemtests.
 
 \section{Weitere Ergenisse}
+\label{gcover}
 
-- GCover
+\subsection{GCover}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{gcover}
+  \caption{HTML-Ausgabe von GCover}
+\end{figure}
+
+Im Rahmen des POA Projekts entstand als Nebenprodukt eine Software zur
+Auswertung der von dem Werkzeug gcov ermittelten Testüberdeckung. Gcov
+ist Teil der GNU gcc Kompilersuite, die zur Übersetzung von POA
+verwendet wurde. Gcov annotiert im wesentlichen die einzelnen
+Quellcodezeilen mit einer Zahl, die angibt wie oft die Zeile
+ausgeführt wurde. Zusätzlich wird auf der Konsole pro Datei ausgegeben
+wie hoch die Zweigüberdeckung ist. Die Auswertung der gcov Ausgabe ist
+umständlich und wird deswegen von Entwicklern oft gemieden. 
+
+Um die Ergebnisse anschaulich und einfach verfügbar zu machen, wurde
+gcover in der Sprache Java entwickelt. GCover wertet die Ausgabe von
+gcov aus und stellt die Anweisungsüberdeckung in einem HTML Frameset
+ähnlich des verbreiteten JavaDoc von Sun dar.
+
+GCover generiert eine Übersichtsseite, die die Anweisungs- und
+Zweigüberdeckung aller Dateien anzeigt. Bei Auswahl einer Datei wird
+der Quellcode der Datei angezeigt. Die Zahl in der linken Spalte gibt
+die Zeilennummer und die Anzahl der Ausführungen der jeweiligen Zeile
+an. Nicht überdeckte Zeilen werden rot unterlegt.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{gcover-file}
+  \caption{Anweisungsüberdeckung einer einzelnen Datei}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektorganisation}
@@ -443,11 +520,19 @@ bis in den Januar geführt.
 
 Die Zeitaufwände der einzelnen Entwickler waren homogen verteilt.
 
-\includegraphics[width=15cm]{zeitverteilung}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{zeitverteilung}
+  \caption{Zeitliche Aufwandsverteiung auf die Entwickler}
+\end{figure}
 
 Bei den Tätigkeiten überwiegt der Anteil der Implementierung. 
 
-\includegraphics[width=15cm]{phasenverteilung}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{phasenverteilung}
+  \caption{Zeitliche Aufwandsverteiung auf die Phasen}
+\end{figure}
 
 \section{Werkzeuge}
 
@@ -457,6 +542,8 @@ eingehalten wurden. Bei der Wahl von Dokumentenformaten wurde darauf
 geachtet, dass für alle eingesetzten Platformen freie Werkzeuge zur
 Bearbeitung verfügbar waren.
 
+\subsubsection{Maven}
+
 Besondere Erwähnung soll das Werkzeug Maven finden. Maven wurde für
 die Generierung der Projektseite im Internet benutzt. Maven bietet
 die Möglichkeit eine anschauliche Projektdokumentation auf einfache
@@ -465,12 +552,16 @@ Informationenn über die Entwickler, den Quellcode und die
 Projektablauf. Damit konnte sowohl für den Kunden als auch für die
 Entwickler eine hohe Transparenz erreicht werden.
 
+\subsubsection{Berlios}
+
 Verwaltet wurde das Projekt auf der Open-Source Platform Berlios, die
 vom Frauenhofer Institut betrieben wird. Berlios bietet vielfältige
 Unterstützung wie z.B. eine Internetseite, einen Downloadbereich,
 Mailinglisten und ein Repository. Zu dem Bedauern des Teams ließ die
 Verfügbarkeit von Berlios in den letzten Wochen des Projekts stark zu
 wünschen übrig und erschwerte so den Informationsaustausch.
+
+\subsubsection{Jira}
 
 Die Tracker Funktionalität von Berlios wurde nicht
 benutzt. Stattdessen wurde Jira von Atlassian eingesetzt, die
@@ -480,12 +571,71 @@ Aufgaben und Fehlerberichten inklusive einer Zeitabschätzung und
 Fortschrittserfassung. Letzters war sehr hilfreich bei der Planung und
 Kontrolle der Sprints.
 
+\subsubsection{StatCVS-XML}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Statistische Analyse}
 
+
+
 \section{Versions Kontrolle}
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{loc}
+  \caption{Quellcode Zeilenanzahl über die Zeit}
+\end{figure}
+
+Das Diagramm zeigt die gesammte Zeilenanzahl inklusive aller
+Kommentarzeilen über die Laufzeit des Projekts. Die vertikalen
+gestrichelten Linien geben die Versionsmarkierungen an, zu diesem
+Zeitpunkt wurde jeweils eine lauffähige POA Version an den
+Auftraggeber ausgeliefert.
+
+An dem Diagramm lassen sich sehr gut die Iterationen ablesen. 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{size_by_module}
+  \caption{Verteilung der Quellcode Zeilenanzahl auf die Module}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \begin {tabular}[l]{ll}
+    \hline
+    Dateiname & Entwickleranzahl \\
+    \hline
+    src/poa.cpp & 6 \\
+    src/mainwindow.cpp & 6 \\
+    src/librarywindow.cpp & 6 \\
+    src/blockmodel.cpp & 6 \\
+    src/settings.h & 5 \\
+    src/scheduledialog.cpp & 5 \\
+    src/project.h & 5 \\
+    src/project.cpp & 5 \\
+    src/poa.h & 5 \\
+    src/pinview.h & 5 \\
+    \hline
+  \end {tabular}
+  \caption{Anzahl Entwickler pro Datei (Top 10)}
+\end{figure}
+
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{commit_by_hour}
+  \caption{Uhrzeiten der CVS Repository Aktivitäten}
+\end{figure}
+
+
 \subsection{Evolution}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=20cm]{evolution}
+  \caption{Änderungshistorie der Versionen}
+\end{figure}
 
 \section{Metriken}
 
@@ -496,8 +646,6 @@ Kontrolle der Sprints.
 
 \section{Necati Aydin}
 \section{Anselm Garbe}
-
-Draft :-)
 
 \subsection{Tätigkeiten}
 Seit Projektbeginn war ich neben den allgemeinen
@@ -820,72 +968,80 @@ Vorgehens in der praktischen Anwendung auseinader zu setzen.
 
 \section{Marcel Kilgus}
 \subsection{Aufgaben}
-Aufgrund meiner weit über 10 Jahre Erfahrung mit Maschinencode und der Emulation 
-von Prozessoren oblag mir das Seminarthema der Laufzeitmessung von Altera NIOS 
-CPUs. Dazu wurden verschiedene Verfahren evaluiert, vom einfachen Profiling bis zum 
-Schreiben eines kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen 
-einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies nicht mit 
-vertretbarem Aufwand und vor allem nicht in der benötigten Präzision möglich war. 
-Die einzig verbleibende Option einer hardwaregestützten Instrumentierung des Codes 
-inklusive Ausführung auf einem realen CPLD konnte im Rahmen des Projekts leider
-nicht weiter verfolgt werden.
+Aufgrund meiner weit über 10 Jahre Erfahrung mit Maschinencode und der
+Emulation von Prozessoren oblag mir das Seminarthema der
+Laufzeitmessung von Altera NIOS CPUs. Dazu wurden verschiedene
+Verfahren evaluiert, vom einfachen Profiling bis zum Schreiben eines
+kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen
+einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies
+nicht mit vertretbarem Aufwand und vor allem nicht in der benötigten
+Präzision möglich war.  Die einzig verbleibende Option einer
+hardwaregestützten Instrumentierung des Codes inklusive Ausführung auf
+einem realen CPLD konnte im Rahmen des Projekts leider nicht weiter
+verfolgt werden.
 
-Der Kunde verlangte von uns primär eine Windows Applikation, mit der Option
-später auf Linux wechseln zu können. Zu diesem Zweck wurde die Qt Bibliothek
-von Trolltech als Basis für POA bestimmt. POA an sich wurde größtenteils unter 
-Linux entwickelt, als einzigem mit Erfahrung in der der Windows Programmierung im 
-Team oblag es mir die ``Redmond''\footnote{Für die nicht Eingeweihten: Firmensitz 
-der Microsoft Corporation} Kompatibiltät des Codes sicherzustellen. Zuerst wurde 
-dies erreicht mit der Hilfe des MinGW Compilers, einem GCC Port für Windows. Da 
-aber nur Microsoft Visual C++ offiziell von Trolltech für Windows unterstützt 
-wird und dieser Compiler auch noch andere Vorteile mit sich bringt (IDE mit 
-integriertem Debugger, schnellerer Übersetzer, kompakterer Code), lag es an 
-mir die Unterschiede der beiden Compiler zu bestimmen und den vorhandenen 
-Code in einer Art anzupassen, die auf beiden Plattformen lauffähig ist.
+Der Kunde verlangte von uns primär eine Windows Applikation, mit der
+Option später auf Linux wechseln zu können. Zu diesem Zweck wurde die
+Qt Bibliothek von Trolltech als Basis für POA bestimmt. POA an sich
+wurde größtenteils unter Linux entwickelt, als einzigem mit Erfahrung
+in der der Windows Programmierung im Team oblag es mir die
+``Redmond''\footnote{Für die nicht Eingeweihten: Firmensitz der
+  Microsoft Corporation} Kompatibiltät des Codes sicherzustellen.
+Zuerst wurde dies erreicht mit der Hilfe des MinGW Compilers, einem
+GCC Port für Windows. Da aber nur Microsoft Visual C++ offiziell von
+Trolltech für Windows unterstützt wird und dieser Compiler auch noch
+andere Vorteile mit sich bringt (IDE mit integriertem Debugger,
+schnellerer Übersetzer, kompakterer Code), lag es an mir die
+Unterschiede der beiden Compiler zu bestimmen und den vorhandenen Code
+in einer Art anzupassen, die auf beiden Plattformen lauffähig ist.
 
-Auch im weiteren Verlauf der Entwicklung habe ich neue Codeblöcke und Code
-Änderungen evaluiert und gegebenenfalls wieder an Visual C++ angepasst. 
-Dies umfasste sowohl kleinere Syntaxänderungen als auch Änderungen an 
-Objektstrukturen (einige Abstürze unter Windows konnte ich auf Probleme 
-mit der RTTI\footnote{Runtime Type Information} zurückführen).
+Auch im weiteren Verlauf der Entwicklung habe ich neue Codeblöcke und
+Code Änderungen evaluiert und gegebenenfalls wieder an Visual C++
+angepasst.  Dies umfasste sowohl kleinere Syntaxänderungen als auch
+Änderungen an Objektstrukturen (einige Abstürze unter Windows konnte
+ich auf Probleme mit der RTTI\footnote{Runtime Type Information}
+zurückführen).
 
-Ich habe einen ersten Prototyp des Scheduling Dialog erstellt, den dann
-Tammo aus damaligen zeitlichen Engpässen weiterentwickelt hat.
+Ich habe einen ersten Prototyp des Scheduling Dialog erstellt, den
+dann Tammo aus damaligen zeitlichen Engpässen weiterentwickelt hat.
 
-Weiterhin zeichnete ich mich für die Druckfunktionalität sowohl für die 
-Netzwerke als auch für die Scheduling Übersicht verantwortlich.
+Weiterhin zeichnete ich mich für die Druckfunktionalität sowohl für
+die Netzwerke als auch für die Scheduling Übersicht verantwortlich.
 
-Außerdem oblag es mir das manuelle Routen von Verbindungen zu implementieren.
-Nach einigen mehr oder weniger komplizierten Versuchen habe ich dafür eine
-im Detail trickreich zu entwickelnde aber erstaunlich einfach zu bedienende 
-Möglichkeit gefunden, die sich nahtlos in das vorhandene Konzept eingegliedert
-hat.
+Außerdem oblag es mir das manuelle Routen von Verbindungen zu
+implementieren.  Nach einigen mehr oder weniger komplizierten
+Versuchen habe ich dafür eine im Detail trickreich zu entwickelnde
+aber erstaunlich einfach zu bedienende Möglichkeit gefunden, die sich
+nahtlos in das vorhandene Konzept eingegliedert hat.
 
-Dafüber hinaus habe ich meine langjährige Erfahrung in der Entwicklung und 
-nicht zuletzt auch Fehlerbereinigung von Software eingebracht um im 
-gesamten Projekt kleinere beobachtete Bugs aufzuspüren und gleich zu 
-beseitigen (``I've got a debugger and I'm not afraid to use it!'').
+Dafüber hinaus habe ich meine langjährige Erfahrung in der Entwicklung
+und nicht zuletzt auch Fehlerbereinigung von Software eingebracht um
+im gesamten Projekt kleinere beobachtete Bugs aufzuspüren und gleich
+zu beseitigen (``I've got a debugger and I'm not afraid to use it!'').
 
-Last and probably least war ich partiell an der Einführung von CPPUnit,
-der Erstellung des Handbuchs sowie des Abschlussberichts beteiligt.
+Last and probably least war ich partiell an der Einführung von
+CPPUnit, der Erstellung des Handbuchs sowie des Abschlussberichts
+beteiligt.
 
 \subsection{Team}
-Das Team hat sich erfreulicherweise als überaus kompetent erwiesen, eine
-Eigenschaft die leider auch in höheren Semestern der Softwaretechnik nicht
-immer selbstverständlich ist. Auch Zwischenmenschlich sind mir keinerlei
-Probleme aufgefallen, im Gegenteil. Die Team-Grüße war der Aufgabenstellung
-angemessen.
+Das Team hat sich erfreulicherweise als überaus kompetent erwiesen,
+eine Eigenschaft die leider auch in höheren Semestern der
+Softwaretechnik nicht immer selbstverständlich ist. Auch
+Zwischenmenschlich sind mir keinerlei Probleme aufgefallen, im
+Gegenteil. Die Team-Grüße war der Aufgabenstellung angemessen.
 
-Das Team war größtenteils sehr motiviert und auch das Projekt Management hat 
-sehr gut funktioniert. Alles in allem eine sehr willkommene Abwechslung zu 
-meinem in fast all diesen Punkten etwas gescheitertem StuPro A.
+Das Team war größtenteils sehr motiviert und auch das Projekt
+Management hat sehr gut funktioniert. Alles in allem eine sehr
+willkommene Abwechslung zu meinem in fast all diesen Punkten etwas
+gescheitertem StuPro A.
 
 \subsection{Fazit}
-Meine Erachtens war das Projekt ein voller Erfolg, die Vorgaben wurden laut
-des Kunden zur vollsten Zufriedenheit erfüllt. Das Arbeitsklima war durchweg
-angenehm und der verwendete Software-Prozess war den leicht ungenauen, 
-aufgrund der weitergehenden Forschung teilweise auch dem Kunden noch nicht 
-hundertprozentig bekannten Anforderungen gewachsen.
+Meine Erachtens war das Projekt ein voller Erfolg, die Vorgaben wurden
+laut des Kunden zur vollsten Zufriedenheit erfüllt. Das Arbeitsklima
+war durchweg angenehm und der verwendete Software-Prozess war den
+leicht ungenauen, aufgrund der weitergehenden Forschung teilweise auch
+dem Kunden noch nicht hundertprozentig bekannten Anforderungen
+gewachsen.
 
 \section{Steffen Pingel}
 
@@ -895,20 +1051,25 @@ Ich habe vielfältige Aufgaben während des POA Projekts übernommen. In
 erster Linie war ich als Projektleiter für das Management des Projekts
 und dessen erfolgreichen Abschluss verantwortlich. Ich habe mich
 bemüht, im Sinne des Management-By-Objectives, Ziele zu setzen, das
-Team zu koordinieren und nur zu führen, wenn es Notwendig war.
+Team zu koordinieren und nur zu führen, wenn es notwendig war. In
+diesem Zusammenhang habe ich mich in meinem Seminarvortrag zu dem
+Thema ``Extreme Programming'' mit agilen Vorgehensmodellen beschäftigt
+und viele Ideen und Konzepte in die Umsetzung des POA Projekts
+einfließen lassen.
 
-Das Team war aus sehr unterschiedlichen Mitgliedern zusammen
-gesetzt. Mir waren zu Projektbeginn nur zwei Mitglieder persönlich
-bekannt. Die Fähigkeiten, Stärken und sehr unterschiedlichen
-Arbeitsweisen der anderen lernte ich erst während des Projekts
-kennen. Erschwerend kam hinzu, dass der Erfahrungshorizont innerhalb
-des Teams sehr unterschiedlich ausgeprägt war. Vier von den sieben
-Mitgliedern hatte zu Beginn des POA Projekts noch kein, wie im
-Studienplan eigentlich ausdrücklich gefordert, Studienprojekt
-begonnen.
+Das Team war aus sehr unterschiedlichen Mitgliedern zusammen gesetzt.
+Mir waren zu Projektbeginn nur zwei Mitglieder persönlich bekannt. Die
+Fähigkeiten, Stärken und sehr unterschiedlichen Arbeitsweisen der
+anderen Teilnehmer lernte ich erst während des Projekts kennen.
+Erschwerend kam hinzu, dass der Erfahrungshorizont innerhalb des Teams
+sehr unterschiedlich ausgeprägt war. Vier von den sieben Mitgliedern
+hatte zu Beginn des POA Projekts noch kein, wie im Studienplan
+eigentlich ausdrücklich gefordert, Studienprojekt begonnen. Wohingegen
+die anderen drei zu denen auch ich gehörte bereits ein Studienprojekt
+zur Hälfte absolviert hatte. 
 
 Desweiteren erwiess sich die Koordination der individuellen
-Wochenpläne als Schwierig. Bedingt durch unterschiedlich gewählte
+Wochenpläne als schwierig. Bedingt durch unterschiedlich gewählte
 Vorlesungen, andere Studienprojekte, Urlaubsplanung, Krankheit und
 Nebenbeschäftigungen war es kaum Möglich einen gemeinsamen Termin zu
 finden, der für alle Teilnehmer passend war. Dennoch haben wir sowohl
@@ -916,14 +1077,36 @@ während der Vorlesungsfreien Zeit als auch während der Vorlesungszeit
 Kernarbeitszeiten eingeführt, die die Kommunikation stark erleichtert
 haben. 
 
+Die Organisation umfasste sowohl die Vereinbarung von gemeinsamen Team
+Terminen als auch die Kommunikation mit den einzelnen Entwicklern. Die
+Verteilung der Aufgaben und die Kontrolle der Umsetzung wurde
+gemeinsam bei Treffen des Teams vorgenommen. Jeder Entwickler hat zu
+Anfang des Treffens ein kurzen Überblick über den Fortschritt seit dem
+letzten Treffen gegeben und eine Einschätzung abgegeben wie viel Zeit
+bis zur Erfüllung der Aufgabe vorraussichtlich noch benötigt
+wurde. Diese persönlichen Zeitschätzungen waren vor allem zu Anfang
+des Projekts oft zu optimistisch, wurden aber zunehmend besser, so
+dass die Planung zu Ende des Projekts präziser vorgenommen werden
+konnte. 
+
 Im Laufe des Projekts habe ich neben der Organisation zahlreiche
 produktive Tätigkeiten übernommen. Ich habe mich an der Verfassung des
-Angebots beteiligt sowie den Entwurf mitgestaltet. Während der
+Angebots beteiligt, sowie den Entwurf mitgestaltet. Während der
 einzelnen Iterationen habe ich bemüht meinen Anteil an der Kodierung
 möglichst weit einzuschränken. Zum einen stand eine ausreichende Anzahl
 von guten Entwicklern im Team zur Verfügung und zum anderen war der
 organisatorische Anteil, den ich zum größten Teil erledigt habe, höher
 als erwartet. 
+
+Die größte einzelne Komponente die ich entwickelt habe, ist die
+Konsistenzprüfung eines Projekts. Dazu war es notwendig mittels
+einfachem rekursivem Abstieg die Verbindungen zwischen den Blöcken zu
+prüfen und einen Ergebnissbericht zu erzeugen. Desweiteren habe ich
+die Settings Klasse implementiert, die globale Einstellungen der
+Anwendung verwaltet. Die von mir erstellte Bibliothek zur Speicherung
+von vorgefertigten Blöcken macht starken Gebrauch der bereits für die
+Projektverwaltung implementierten Serialisierung, so daß ich hier im
+wesentlichen die graphische Schnittstelle erstellt habe. 
 
 Maßgeblich habe ich mich um die Umsetzung des Tests bemüht. Das
 Interesse der Entwickler an Tests war erwatungsgemäß nicht besonders
@@ -934,14 +1117,15 @@ erstellt wurden. Die Qualität der Tests wurde anhand der
 Anweisungsüberdeckung mit dem Werkzeug gcov gemessen.
 
 Die Ausgabe von gcov wurde mit gcover grafisch als HTML Seiten
-aufbereitet. Gcover ist als Teilprojekt von POA entstanden und
-orientiert sich an anderen Werkzeugen zur Messung der Testüberdeckung,
-von denen allerdings kein kostenloses zur Auswertung der gcov Asugabe
-zur Verfügung stand. 
-
-FIX:
-- Reviews
-- Seminarthema
+aufbereitet. GCover ist als Teilprojekt von POA entstanden (siehe auch
+\ref{gcover} und orientiert sich an anderen Werkzeugen zur Messung der
+Testüberdeckung, von denen allerdings kein kostenloses zur Auswertung
+der gcov Asugabe zur Verfügung stand. Ich habe GCover zusammen mit
+Tammo van Lessen entwickelt. Tammo van Lessen und ich haben bereits in
+anderen Softwareprojekten erfolgreich zusammen gearbeitet und verfügen
+beide über eine fundierte Erfahrung mit der Sprache Java. Dadurch
+konnten wir GCover in kurzer Zeit fertigstellen ohne unsere
+Kernaufgaben innerhalb des POA Projekts zu vernachlässigen.
 
 \subsection{Fazit}
 
@@ -955,10 +1139,11 @@ beachten.
 Abschliessend beurteile ich das Projekt als Erfolg. Alle Team
 Mitglieder haben sich bemüht das im Studium erworbene Wissen praktisch
 umzusetzen. Im Verlaufe des Projekts hat sich eine produktive
-Teamdynamik entwickelt. Das gewählte Vorgehensmodell erscheint mir den
-besonderen Anforderungen eines Studienprojekts gerecht zu werden. Das
-entstandene Produkt erfüllt die Anforderungen des Kunden und ist
-qualitativ zufriedenstellend.
+Teamdynamik entwickelt, die sich auch in sozialen Aktivitäten
+außerhalb der Universität äußert. Das gewählte Vorgehensmodell
+erscheint mir den besonderen Anforderungen eines Studienprojekts
+gerecht zu werden. Das entstandene Produkt erfüllt die Anforderungen
+des Kunden und ist qualitativ gut.
 
 \section{Tammo van Lessen}
 
@@ -967,11 +1152,25 @@ qualitativ zufriedenstellend.
 \chapter{Erklärung gemäß Prüfungsordnung}
 
 Ich erkläre hiermit, daß ich im Rahmen meiner Mitarbeit am
-Studienprojekt B - Programmierumgebung Offener Antrieb außer von den
+Studienprojekt B ``Programmierumgebung Offener Antrieb'' außer von den
 Betreuern vorgesehenen bzw. genehmigten Hilfsmitteln keine unzuläßige
 Hilfe in Anspruch genommen habe.
-\vspace{5cm}
-Stuttgart, den xx. Mai 2004
-\vspace{5cm}
+
+\vspace{2cm}
+Stuttgart, den 17. Juni 2004
+\vspace{2cm}
+
+\begin{center}
+\begin{tabular}{ccc}
+  \hspace{5cm} & \hspace{5cm} & \hspace{5cm} \\
+  \hhline{-~-} Necati Aydin & & Anselm Garbe \\
+  \vspace{2cm} \\
+  \hhline{-~-} Stefan Hauser & & Steffen Keul \\
+  \vspace{2cm} \\
+  \hhline{-~-} Marcel Kilgus & & Steffen Pingel \\
+  \vspace{2cm} \\
+  \hhline{-~~} Tammo van Lessen \\
+\end{tabular}
+\end{center}
 
 \end{document}

@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.8 2004/01/09 22:42:47 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.9 2004/01/09 23:06:39 squig Exp $
  *
  *****************************************************************************/
 
 #include <qvariant.h>
+#include <qapplication.h>
 #include <qcanvas.h>
 #include <qheader.h>
 #include <qlabel.h>
@@ -215,7 +216,7 @@ void ScheduleDialog::initTimingWidget()
 void ScheduleDialog::initGraphWidget()
 {
     labelCanvas = new QCanvas();
-    labelCanvas->setBackgroundColor(QObject::lightGray);
+    labelCanvas->setBackgroundColor(lightGray);
     labelCanvasView = new QCanvasView(labelCanvas, middleWidget);
     labelCanvasView->setVScrollBarMode(QScrollView::AlwaysOff);
     labelCanvasView->setHScrollBarMode(QScrollView::AlwaysOn);
@@ -256,7 +257,7 @@ void ScheduleDialog::initCanvas()
     highlightCanvasRectangle = new QCanvasRectangle(canvas);
     highlightCanvasRectangle->setSize(canvas->width(),
                                       BOX_HEIGHT + BOX_YSPACING);
-    highlightCanvasRectangle->setBrush(QBrush(lightGray));
+    highlightCanvasRectangle->setBrush(QBrush(qApp->palette().active().highlight()));
     highlightCanvasRectangle->setPen(QPen(white));
     highlightCanvasRectangle->move(0, BOX_YSPACING / 2);
     highlightCanvasRectangle->setZ(0);

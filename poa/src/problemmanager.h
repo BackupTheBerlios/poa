@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.h,v 1.1 2004/01/19 11:23:07 squig Exp $
+ * $Id: problemmanager.h,v 1.2 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,23 +26,91 @@
 #define POA_PROBLEMMANAGER_H
 
 #include <qlistview.h>
+#include <qobject.h>
 #include <qvaluelist.h>
+class QWidget;
 
-class ProblemReportItem : public QListViewItem
+#include "pinmodel.h"
+#include "project.h"
+
+class ProblemReportItem : public QObject, public QListViewItem
 {
+    Q_OBJECT
+
 public:
 
-    ProblemReportItem(QListViewItem *parent, QString shortDescription);
+    ProblemReportItem(QListViewItem *parent, QString status = "Error",
+                      QString shortDescription = QString::null);
 
-    QString longDescription();
-    void setLongDescription(QString longDescription);
-    QString shortDescription();
+    /**
+     * Invoked when the report is displayed on screen. Does
+     * nothing. Sub classes should overwrite this method.
+     */
+    virtual void addWidgets(QWidget *widget);
 
-    //QValueList<QAction*> actions();
+    bool isFixed() const;
+    QString longDescription() const;
+    void setLongDescription(const QString longDescription);
+    void setShortDescription(const QString shortDescription);
+    void setStatus(const QString status);
+    QString shortDescription() const;
+    QString status() const;
+
+signals:
+
+    void updated();
+
+protected:
+
+    void setFixed(const bool fixed);
 
 private:
 
+    bool fixed_;
     QString longDescription_;
+};
+
+class DisconnectedPinReport : public ProblemReportItem
+{
+    Q_OBJECT
+
+public:
+
+    DisconnectedPinReport(QListViewItem *parent, PinModel *pin);
+
+    virtual void addWidgets(QWidget *widget);
+
+public slots:
+
+    void deletePin();
+
+private:
+
+     PinModel *pin_;
+
+};
+
+class DifferentWidthReport : public ProblemReportItem
+{
+    Q_OBJECT
+
+public:
+
+    DifferentWidthReport(QListViewItem *parent, PinModel *source,
+                         PinModel *target);
+
+    virtual void addWidgets(QWidget *widget);
+
+public slots:
+
+    void adjustSource();
+    void adjustTarget();
+
+private:
+
+     PinModel *source_;
+     PinModel *target_;
+
 };
 
 /**
@@ -59,6 +127,7 @@ public:
 
 protected:
 
+    void checkBlock(BlockModel *block);
     void checkConnected(PinModel *pin);
     void checkConnectionBits(PinModel *pin);
     void updateRoot(QListViewItem *item);

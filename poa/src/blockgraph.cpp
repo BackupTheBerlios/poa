@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.4 2004/01/19 11:23:07 squig Exp $
+ * $Id: blockgraph.cpp,v 1.5 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 
@@ -220,8 +220,7 @@ PinNode *BlockGraph::addOutput(PinModel *pin)
     nodeByModel_[pin] = node;
 
     PinModel *target = pin->connected();
-    if (target != 0) {
-        parent->addNeighbour(addBlock(target->parent()));
+    if (target != 0 && target->type() == PinModel::INPUT) {
         node->addNeighbour(addInput(target));
     }
 

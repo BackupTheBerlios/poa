@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.29 2004/01/12 14:35:50 squig Exp $
+ * $Id: librarywindow.cpp,v 1.30 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -82,9 +82,6 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
             this, SLOT(setOrientation(Orientation)));
 }
 
-/**
- * Destroys the window.
- */
 LibraryWindow::~LibraryWindow()
 {
     // no need to delete child widgets, Qt does it all for us
@@ -219,17 +216,11 @@ void LibraryWindow::initializeLibrary()
 
 }
 
-/**
- * Sets the description
- */
 void LibraryWindow::setDescription(QListViewItem* item)
 {
     descriptionTextBrowser->setText(item->text(1));
 }
 
-/**
- * Sets the orientation of the splitter to the reverse value of orientation.
- */
 void LibraryWindow::setOrientation(Qt::Orientation orientation)
 {
     splitter->setOrientation(orientation);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.7 2004/01/19 11:23:07 squig Exp $
+ * $Id: deployprojectwizard.h,v 1.8 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include "blockmodel.h"
 #include "pinmodel.h"
 
+class ProblemReportItem;
 class QVBoxLayout;
 class QHBoxLayout;
 class QGridLayout;
@@ -40,9 +41,10 @@ class QLabel;
 class QListView;
 class QListViewItem;
 class QProgressBar;
-class QTextEdit;
+class QTextBrowser;
 class QWidget;
 class Project;
+class QHBox;
 
 class DeployProjectWizard : public QWizard
 {
@@ -58,14 +60,15 @@ public:
 public slots:
     void setDownloadProgressBarLength(int totalSteps);
     void increaseDownloadProgressBar();
-
+    void setProblemReportItem(QListViewItem* item);
+    void updateProblemReport();
 
 protected:
-    QWidget*       CheckPage;
-    QGroupBox*     ErrorsGroupBox;
-    QTextEdit*     ErrorsTextEdit;
-    QListView*     CheckListView;
-    QListViewItem* CheckListItem;
+    QGroupBox* problemReportDetailsGroupBox_;
+    QTextBrowser* problemReportDescriptionTextBrowser_;
+    QWidget* problemReportButtonBox_;
+    ProblemReportItem *currentProblemReport_;
+
     QWidget*       CompilePage;
     QListView*     CompileListView;
     QListViewItem* CompileListItem;
@@ -99,6 +102,7 @@ protected:
 private:
 
     Project *project_;
+
 };
 
 #endif // DEPLOYPROJECTWIZARD_H

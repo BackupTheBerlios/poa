@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.10 2004/01/19 11:23:07 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.11 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include "problemmanager.h"
 #include "project.h"
 
+#include <qpushbutton.h>
 #include <qvariant.h>
 #include <qgroupbox.h>
 #include <qheader.h>
@@ -48,6 +49,10 @@
 #include <qptrlist.h>
 #include <qfileinfo.h>
 #include <qdatetime.h>
+#include <qsplitter.h>
+#include <qtextbrowser.h>
+#include <qhbox.h>
+#include <qvgroupbox.h>
 
 /*
  *  Constructs the DeployProjectWizard.
@@ -63,6 +68,8 @@ DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
     resize(600, 400);
     setCaption(tr("Deploy Project"));
 
+    currentProblemReport_ = 0;
+
     setupCheckPage();
     setupCompilePage();
     setupSchedulingPage();
@@ -76,25 +83,26 @@ DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
 
 void DeployProjectWizard::setupCheckPage()
 {
-    CheckPage = new QWidget(this);
+    QSplitter* splitter = new QSplitter(QSplitter::Vertical, this);
 
-    CheckListView = new QListView(CheckPage);
-    CheckListView->addColumn(trUtf8("Description"));
-    CheckListView->addColumn(trUtf8("Result"));
+    QListView *listView = new QListView(splitter);
+    listView->addColumn(trUtf8("Description"));
+    listView->addColumn(trUtf8("Status"));
 
-    CheckListView->setGeometry( QRect( 0, 0, 580, 270 ) );
+    problemReportDetailsGroupBox_ = new QVGroupBox(splitter);
+    problemReportDetailsGroupBox_->setTitle(trUtf8("Details"));
 
-    ErrorsGroupBox = new QGroupBox( CheckPage, "ErrorsGroupBox" );
-    ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) );
-    ErrorsGroupBox->setTitle( trUtf8( "Errors:" ) );
+    problemReportDescriptionTextBrowser_
+        = new QTextBrowser(problemReportDetailsGroupBox_);
+    problemReportButtonBox_ = 0;
 
-    ErrorsTextEdit = new QTextEdit( ErrorsGroupBox, "ErrorsTextEdit" );
-    ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) );
-
-    ProblemManager manager(project_, CheckListView);
+    ProblemManager manager(project_, listView);
     manager.report();
 
-    addPage( CheckPage, trUtf8( "Plausibility checkup" ) );
+    connect(listView, SIGNAL(selectionChanged(QListViewItem *)),
+            this, SLOT(setProblemReportItem(QListViewItem *)));
+
+    addPage(splitter, trUtf8("Plausibility checkup"));
 }
 
 void DeployProjectWizard::setupCompilePage()
@@ -186,10 +194,7 @@ void DeployProjectWizard::showPage(QWidget* page)
 {
   QWizard::showPage(page);
 
-  if (page == CheckPage){
-
-  }
-  else if (page == CompilePage){
+  if (page == CompilePage){
 
   }
   else if (page == SchedulingPage){
@@ -229,7 +234,7 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
  * binary is actual, if not it will be compiled
  */
 
-bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
+bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> /*blocks*/){
   /*
   CodeManager *cm = CodeManager::instance();
 
@@ -276,3 +281,39 @@ DeployProjectWizard::~DeployProjectWizard()
     // no need to delete child widgets, Qt does it all for us
 }
 
+void DeployProjectWizard::setProblemReportItem(QListViewItem* item)
+{
+    if (problemReportButtonBox_ != 0) {
+        delete problemReportButtonBox_;
+        problemReportButtonBox_ = 0;
+    }
+
+    ProblemReportItem *report = dynamic_cast<ProblemReportItem*>(item);
+    if (report != 0) {
+        if (currentProblemReport_ != 0) {
+            currentProblemReport_->disconnect(this);
+        }
+        currentProblemReport_ = report;
+
+        connect(report, SIGNAL(updated()), this, SLOT(updateProblemReport()));
+
+        problemReportDescriptionTextBrowser_->setText(report->longDescription());
+
+        if (!report->isFixed()) {
+            problemReportButtonBox_ = new QWidget(problemReportDetailsGroupBox_);
+            QHBoxLayout *layout = new QHBoxLayout(problemReportButtonBox_);
+            layout->setAutoAdd(true);
+            report->addWidgets(problemReportButtonBox_);
+            layout->addStretch(1);
+            problemReportButtonBox_->show();
+        }
+    }
+    else {
+        problemReportDescriptionTextBrowser_->setText("");
+    }
+}
+
+void DeployProjectWizard::updateProblemReport()
+{
+    setProblemReportItem(currentProblemReport_);
+}

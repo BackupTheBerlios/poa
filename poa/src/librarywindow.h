@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.7 2003/12/17 13:49:51 squig Exp $
+ * $Id: librarywindow.h,v 1.8 2004/01/19 13:56:18 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -93,13 +93,14 @@ class LibraryWindow : public QDockWindow
 public:
 
     /**
-     * Creates a library window an docks it to the given place on the given widget
+     * Creates a library window an docks it to the given place on the
+     * given widget
      */
     LibraryWindow(Place p = InDock, QWidget * parent = 0,
                   const char* name = 0, WFlags f = 0 );
 
     /**
-     * Default destructor
+     * Does nothing.
      */
     ~LibraryWindow();
 
@@ -115,8 +116,16 @@ private :
 
     void initializeLibrary();
 
-private slots :
+private slots:
+
+    /**
+     * Sets the description
+     */
     void setDescription(QListViewItem* item);
+
+    /**
+     * Sets the orientation of the splitter to the reverse value of orientation.
+     */
     void setOrientation(Qt::Orientation orientation);
 
 };

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.1 2003/09/25 17:25:19 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.2 2003/09/29 19:10:05 papier Exp $
  *
  *****************************************************************************/
 
@@ -53,9 +53,17 @@ DeployProjectWizard::DeployProjectWizard( QWidget* parent,  const char* name, bo
     resize( 600, 480 ); 
     setCaption( trUtf8( "Deploy Project" ) );
 
-    page = new QWidget( this, "page" );
+    setupCheckPage();
+    setupCompilePage();
+    setupSchedulingPage();
+    setupDownloadPage();
+}
 
-    ErrorsGroupBox = new QGroupBox( page, "ErrorsGroupBox" );
+void DeployProjectWizard::setupCheckPage()
+{
+    CheckPage = new QWidget( this, "CheckPage" );
+
+    ErrorsGroupBox = new QGroupBox( CheckPage, "ErrorsGroupBox" );
     ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) ); 
     ErrorsGroupBox->setTitle( trUtf8( "Errors:" ) );
 
@@ -63,80 +71,96 @@ DeployProjectWizard::DeployProjectWizard( QWidget* parent,  const char* name, bo
     ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) ); 
     ErrorsTextEdit->setText( trUtf8( "pin xy is not connected" ) );
 
-    CheckupListView = new QListView( page, "CheckupListView" );
-    CheckupListView->addColumn( trUtf8( "Checkup" ) );
-    CheckupListView->addColumn( trUtf8( "Correct?" ) );
-    QListViewItem * item = new QListViewItem( CheckupListView, 0 );
-    item->setText( 0, trUtf8( "pin connections" ) );
-    item->setText( 1, trUtf8( "all pins connected" ) );
+    CheckListView = new QListView( CheckPage, "CheckupListView" );
+    CheckListView->addColumn( trUtf8( "Checkup" ) );
+    CheckListView->addColumn( trUtf8( "Correct?" ) );
+    QListViewItem * CheckListItem = new QListViewItem( CheckListView, 0 );
+    CheckListItem->setText( 0, trUtf8( "pin connections" ) );
+    CheckListItem->setText( 1, trUtf8( "all pins connected" ) );
 
-    item = new QListViewItem( CheckupListView, item );
-    item->setText( 0, trUtf8( "other checks" ) );
+    CheckListItem = new QListViewItem( CheckListView, CheckListItem );
+    CheckListItem->setText( 0, trUtf8( "other checks" ) );
 
-    CheckupListView->setGeometry( QRect( 0, 0, 580, 270 ) ); 
-    addPage( page, trUtf8( "Plausibility checkup" ) );
+    CheckListView->setGeometry( QRect( 0, 0, 580, 270 ) ); 
+    addPage( CheckPage, trUtf8( "Plausibility checkup" ) );
+}
 
-    page_2 = new QWidget( this, "page_2" );
+void DeployProjectWizard::setupCompilePage()
+{
+    CompilePage = new QWidget( this, "CompilePage" );
 
-    CompileListView = new QListView( page_2, "CompileListView" );
+    CompileListView = new QListView( CompilePage, "CompileListView" );
     CompileListView->addColumn( trUtf8( "CPU" ) );
     CompileListView->addColumn( trUtf8( "Compile" ) );
-    item = new QListViewItem( CompileListView, 0 );
-    item->setText( 0, trUtf8( "CPU 1" ) );
-    item->setText( 1, trUtf8( "done" ) );
+    QListViewItem * CompileListItem = new QListViewItem( CompileListView, 0 );
+    CompileListItem->setText( 0, trUtf8( "CPU 1" ) );
+    CompileListItem->setText( 1, trUtf8( "done" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU 2" ) );
-    item->setText( 1, trUtf8( "in progress" ) );
+    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU 2" ) );
+    CompileListItem->setText( 1, trUtf8( "in progress" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU 3" ) );
+    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU 3" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU 4" ) );
+    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU 4" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU 5" ) );
-    item->setText( 1, trUtf8( "done" ) );
+    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU 5" ) );
+    CompileListItem->setText( 1, trUtf8( "done" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU 6" ) );
-    item->setText( 1, trUtf8( "done" ) );
+    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU 6" ) );
+    CompileListItem->setText( 1, trUtf8( "done" ) );
 
-    item = new QListViewItem( CompileListView, item );
-    item->setText( 0, trUtf8( "CPU x" ) );
+    CompileListItem = new QListViewItem( CompileListView,CompileListItem );
+    CompileListItem->setText( 0, trUtf8( "CPU x" ) );
 
     CompileListView->setGeometry( QRect( 0, 0, 580, 410 ) ); 
-    addPage( page_2, trUtf8( "Compile" ) );
+    addPage( CompilePage, trUtf8( "Compile" ) );
+}
 
-    page_3 = new QWidget( this, "page_3" );
+void DeployProjectWizard::setupSchedulingPage()
+{
+    SchedulingPage = new QWidget( this, "SchedulingPage" );
 
-    SchedulingListView = new QListView( page_3, "SchedulingListView" );
+    SchedulingListView = new QListView( SchedulingPage, "SchedulingListView" );
     SchedulingListView->addColumn( trUtf8( "Block" ) );
     SchedulingListView->addColumn( trUtf8( "Runtime" ) );
     SchedulingListView->addColumn( trUtf8( "Offset" ) );
-    item = new QListViewItem( SchedulingListView, 0 );
-    item->setText( 0, trUtf8( "New Item" ) );
+    QListViewItem * SchedulingListItem = 
+      new QListViewItem( SchedulingListView, 0 );
+    SchedulingListItem->setText( 0, trUtf8( "New Item" ) );
 
     SchedulingListView->setGeometry( QRect( 0, 0, 580, 410 ) ); 
-    addPage( page_3, trUtf8( "Scheduling" ) );
+    addPage( SchedulingPage, trUtf8( "Scheduling" ) );
+}
 
-    page_4 = new QWidget( this, "page_4" );
+void DeployProjectWizard::setupDownloadPage()
+{
+    DownloadPage = new QWidget( this, "DownloadPage" );
 
-    CompileTextLabel = new QLabel( page_4, "CompileTextLabel" );
+    CompileTextLabel = new QLabel( DownloadPage, "CompileTextLabel" );
     CompileTextLabel->setGeometry( QRect( 140, 70, 161, 31 ) ); 
     CompileTextLabel->setText( trUtf8( "Compiling..." ) );
 
-    DownloadProgressBar = new QProgressBar( page_4, "DownloadProgressBar" );
+    DownloadProgressBar = new QProgressBar( DownloadPage, "DownloadProgressBar" );
     DownloadProgressBar->setGeometry( QRect( 140, 280, 280, 31 ) ); 
 
-    DownloadTextLabel = new QLabel( page_4, "DownloadTextLabel" );
+    DownloadTextLabel = new QLabel( DownloadPage, "DownloadTextLabel" );
     DownloadTextLabel->setGeometry( QRect( 140, 230, 161, 31 ) ); 
     DownloadTextLabel->setText( trUtf8( "Downloading..." ) );
 
-    CompileProgressBar = new QProgressBar( page_4, "CompileProgressBar" );
+    CompileProgressBar = new QProgressBar( DownloadPage, "CompileProgressBar" );
     CompileProgressBar->setGeometry( QRect( 140, 120, 280, 31 ) ); 
-    addPage( page_4, trUtf8( "Compile and download Project" ) );
+    addPage( DownloadPage, trUtf8( "Compile and download Project" ) );
+    
+}
+
+void DeployProjectWizard::showPage(QWidget* page)
+{
+  QWizard::showPage(page);
 }
 
 /*  

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.58 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.59 2003/09/29 19:10:05 papier Exp $
  *
  *****************************************************************************/
 
@@ -732,10 +732,11 @@ void MainWindow::openSettings()
     dialog->show();
 }
 
-void MainWindow::openDeployProject()
+int MainWindow::openDeployProject()
 {
-    DeployProjectWizard *wizard = new DeployProjectWizard(this);
-    wizard->show();
+  //    DeployProjectWizard *wizard = new DeployProjectWizard(this);
+  DeployProjectWizard wizard;
+  return wizard.exec();
 }
 
 QAction *MainWindow::pasteAction()

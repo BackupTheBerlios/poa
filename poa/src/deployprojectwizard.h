@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.1 2003/09/25 17:25:19 papier Exp $
+ * $Id: deployprojectwizard.h,v 1.2 2003/09/29 19:10:05 papier Exp $
  *
  *****************************************************************************/
 
@@ -46,21 +46,30 @@ public:
     DeployProjectWizard( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
     ~DeployProjectWizard();
 
-    QWidget* page;
-    QGroupBox* ErrorsGroupBox;
-    QTextEdit* ErrorsTextEdit;
-    QListView* CheckupListView;
-    QWidget* page_2;
-    QListView* CompileListView;
-    QWidget* page_3;
-    QListView* SchedulingListView;
-    QWidget* page_4;
-    QLabel* CompileTextLabel;
-    QProgressBar* DownloadProgressBar;
-    QLabel* DownloadTextLabel;
-    QProgressBar* CompileProgressBar;
+    void showPage(QWidget* page);
 
-
+protected:
+    QWidget*       CheckPage;
+    QGroupBox*     ErrorsGroupBox;
+    QTextEdit*     ErrorsTextEdit;
+    QListView*     CheckListView;
+    QListViewItem* CheckListItem;
+    QWidget*       CompilePage;
+    QListView*     CompileListView;
+    QListViewItem* CompileListItem;
+    QWidget*       SchedulingPage;
+    QListView*     SchedulingListView;
+    QListViewItem* SchedulingListItem;
+    QWidget*       DownloadPage;
+    QLabel*        CompileTextLabel;
+    QProgressBar*  DownloadProgressBar;
+    QLabel*        DownloadTextLabel;
+    QProgressBar*  CompileProgressBar;
+    
+    void setupCheckPage();
+    void setupCompilePage();
+    void setupSchedulingPage();
+    void setupDownloadPage();
 };
 
 #endif // DEPLOYPROJECTWIZARD_H

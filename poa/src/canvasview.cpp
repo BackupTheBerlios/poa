@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.19 2003/08/29 21:27:46 vanto Exp $
+ * $Id: canvasview.cpp,v 1.20 2003/08/30 13:42:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,7 @@
 #include "project.h"
 #include "mainwindow.h"
 #include "modelfactory.h"
+#include "settings.h"
 
 #include <qvariant.h>
 #include <qapplication.h>
@@ -154,7 +155,20 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
         QPoint p = inverseWorldMatrix().map(e->pos());
         movingItem_->moveBy(p.x() - movingStartPoint_.x(),
                             p.y() - movingStartPoint_.y());
-        movingStartPoint_ = p;
+
+        QPoint sp(0,0);
+
+        // snap to grid
+        if (Settings::instance()->snapToGrid() &&
+            !(e->stateAfter() & Qt::ControlButton)) {
+
+            BlockView *bm = dynamic_cast<BlockView *>(movingItem_);
+            if (bm) {
+                sp = bm->snapToGrid(Settings::instance()->gridSize());
+            }
+        }
+
+        movingStartPoint_ = QPoint(p.x()+sp.x(), p.y()+sp.y());
         canvas()->update();
     }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.16 2003/08/29 14:34:41 vanto Exp $
+ * $Id: blockview.cpp,v 1.17 2003/08/30 13:42:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -143,6 +143,7 @@ void BlockView::moveBy(double dx, double dy)
 {
     QCanvasRectangle::moveBy(dx, dy);
     arrangeVerticalPins();
+
     /*    QValueVector<PinView*>::iterator current = leftPins_.begin();
     while (current != leftPins_.end()) {
     (*current)->moveBy(dx, dy);
@@ -160,6 +161,27 @@ void BlockView::moveBy(double dx, double dy)
     }*/
 }
 
+
+QPoint BlockView::snapToGrid(unsigned gridsize)
+{
+    double remx = (int)x() % (unsigned)gridsize;
+    double remy = (int)y() % (unsigned)gridsize;
+
+    double tempx = x() - remx;
+    double tempy = y() - remy;
+
+    if (remx > gridsize / 2) {
+        tempx += gridsize;
+    }
+
+    if (remy > gridsize / 2) {
+        tempy += gridsize;
+    }
+    QPoint dp((int)(tempx-x()), (int)(tempy-y()));
+    setX(tempx);
+    setY(tempy);
+    return dp;
+}
 
 int BlockView::rtti() const
 {

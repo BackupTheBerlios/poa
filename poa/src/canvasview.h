@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.15 2003/08/28 18:04:35 vanto Exp $
+ * $Id: canvasview.h,v 1.16 2003/08/30 13:42:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@ class PinView;
 class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
+class QKeyEvent;
 class QPoint;
 
 /*****************************************************************************
@@ -105,6 +106,7 @@ protected:
      * based on.
      */
     virtual void dropEvent(QDropEvent *e);
+
 
     /*************************************************************************
      * Transforms window-coordinates to canvas-coodinates

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.14 2003/08/29 23:51:08 vanto Exp $
+ * $Id: blockview.h,v 1.15 2003/08/30 13:42:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -82,6 +82,12 @@ public:
      * @see #addPinViewsTo
      */
     virtual void moveBy(double dx, double dy);
+
+    /*
+     * Snaps this View to the given grid and returns the
+     * a point which contains the snap delta.
+     */
+    virtual QPoint snapToGrid(unsigned gridsize);
 
     virtual int rtti() const;
 

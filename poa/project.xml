@@ -116,7 +116,7 @@
     <report>maven-developer-activity-plugin</report>
     <report>maven-file-activity-plugin</report>
     <report>maven-license-plugin</report>
-	<report>maven-statcvs-xml-plugin</report>
+	<report>maven-statcvs-plugin</report>
   </reports>  
 </project>
 

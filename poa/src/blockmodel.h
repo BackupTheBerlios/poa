@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.26 2003/09/19 15:16:22 vanto Exp $
+ * $Id: blockmodel.h,v 1.27 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -95,16 +95,6 @@ public:
     void setClock(const unsigned int clock);
 
     /**
-     * Returns the name of this block.
-     */
-    QString name() const;
-
-    /**
-     * Sets the name of this block.
-     */
-    void setName(QString name);
-
-    /**
      * Adds an pin to this block model.
      */
     void addPin(PinModel *pin, PinModel *successor = 0,
@@ -145,7 +135,6 @@ protected:
     unsigned currentPinId_;
     unsigned int execTime_;
     unsigned int clock_;
-    QString name_;
 
 signals:
     /**

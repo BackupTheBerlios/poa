@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.4 2003/09/22 10:43:33 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.5 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -145,12 +145,12 @@ void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
     mappings_.append(mapping);
 }
 
-void MuxModel::removeMuxMappings(PinModel *input)
+void MuxModel::removeMuxMappings(PinModel *pin)
 {
     for (QPtrListIterator<MuxMapping> it(mappings_); it.current() != 0; ++it) {
         MuxMapping *mapping = (*it);
 
-        if (mapping->input() == input) {
+        if (mapping->input() == pin || mapping->output() == pin) {
 
             PinModel *output = mapping->output();
             unsigned bits = mapping->end() - mapping->begin();

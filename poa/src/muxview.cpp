@@ -18,39 +18,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.h,v 1.4 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: muxview.cpp,v 1.1 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MUXVIEW_H
-#define POA_MUXVIEW_H
-
+#include "muxview.h"
 #include "muxmodel.h"
-#include "blockview.h"
-#include "tooltipable.h"
 
-/**
- * Definition of a mux view.
- */
-class MuxView: public BlockView, public Tooltipable
+MuxView::MuxView(MuxModel *model, QCanvas *canvas)
+    : BlockView(
 {
+    model_ = model;
 
-public:
+}
 
-    /**
-     * Creates a new MuxView on the given canvas.
-     */
-    MuxView(MuxModel *model, QCanvas *canvas);
-
-    /**
-     * Returns the tooltip text.
-     */
-    QString tip();
-
-private:
-
-    MuxModel *model_;
-
-};
-
-#endif // POA_MUXVIEW_H
+QString CpuView::tip()
+{
+    CodeManager *codeManager = CodeManager::instance();
+    CpuModel *m = (CpuModel*)model();
+    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
+                   "<b>Id on CPLD:</b> %4<br>" \
+                   "<b>Clock:</b> %5 ms<br>" \
+                   "<b>Offset:</b> %6<br>" \
+                   "<b>Execution time:</b> %7<br>" \
+                   "<b>Source:</b> %8")
+        .arg(m->name())
+        .arg(m->type())
+        .arg(m->description())
+        //        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
+        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
+        .arg(m->clock())
+        .arg((m->autoOffset())?"auto":QString::number(m->offset())+" ms")
+        .arg((m->autoExecTime())?"auto":QString::number(m->execTime())+" ms")
+        .arg(codeManager->sourceFilePath(m));
+}

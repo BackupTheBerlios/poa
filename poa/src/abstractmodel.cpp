@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.8 2003/09/16 12:17:50 garbeam Exp $
+ * $Id: abstractmodel.cpp,v 1.9 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -50,6 +50,16 @@ QString AbstractModel::type() const
 uint AbstractModel::id() const
 {
     return id_;
+}
+
+QString AbstractModel::name() const
+{
+    return name_;
+}
+
+void AbstractModel::setName(QString name)
+{
+    name_ = name;
 }
 
 /**

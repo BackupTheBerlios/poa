@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.16 2003/09/16 16:03:31 squig Exp $
+ * $Id: abstractmodel.h,v 1.17 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -102,6 +102,19 @@ public:
      * Creates the corresponding view objects.
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
+
+    /**
+     * Returns the name of this model.
+     */
+    virtual QString name() const;
+
+    /**
+     * Sets the name of this model.
+     */
+    virtual void setName(QString name);
+
+protected:
+    QString name_;
 
 private:
     QString type_;

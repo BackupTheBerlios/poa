@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.34 2003/09/20 21:14:48 squig Exp $
+ * $Id: blockview.cpp,v 1.35 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,7 @@
 #include "pinmodel.h"
 #include "pinvector.h"
 #include "pinview.h"
+#include "poa.h"
 #include "settings.h"
 #include "util.h"
 
@@ -50,7 +51,7 @@ int BlockView::DEFAULT_FONT_HEIGHT = 12;
   }*/
 
 
-BlockView::BlockView(BlockModel *model, QCanvas *canvas)
+BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
     : QCanvasRectangle(canvas)
 {
     model_ = model;
@@ -60,15 +61,18 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     setBrush(white);
     setPen(QPen(Settings::instance()->defaultColor(), 2));
 
-    connect(model_, SIGNAL(pinAdded(PinModel *)),
-            this, SLOT(addPin(PinModel *)));
-    connect(model_, SIGNAL(updated()), this, SLOT(updateView()));
-    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
+    if (INSTANCEOF(model_, BlockModel)) {
+        BlockModel *blockModel = (BlockModel *)model_;
+        connect(blockModel, SIGNAL(pinAdded(PinModel *)),
+                this, SLOT(addPin(PinModel *)));
+        connect(blockModel, SIGNAL(updated()), this, SLOT(updateView()));
+        connect(blockModel, SIGNAL(deleted()), this, SLOT(deleteView()));
 
-    // create pin views
-    addPins(*model->inputPins());
-    addPins(*model->outputPins());
-    addPins(*model->episodicPins());
+        // create pin views
+        addPins(*blockModel->inputPins());
+        addPins(*blockModel->outputPins());
+        addPins(*blockModel->episodicPins());
+    }
 
     arrangePins();
 }

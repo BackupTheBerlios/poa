@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.24 2003/09/19 15:16:22 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.25 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -105,15 +105,7 @@ unsigned int BlockModel::clock()
 {
     return clock_;
 }
-QString BlockModel::name() const
-{
-    return name_;
-}
 
-void BlockModel::setName(QString name)
-{
-    name_ = name;
-}
 
 void BlockModel::addPin(PinModel *pin, PinModel *successor, bool emitSignal)
 {

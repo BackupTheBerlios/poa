@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.9 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: cpuview.h,v 1.10 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -45,9 +45,9 @@ class CpuView: public BlockView, public Tooltipable
 
 public:
     /**
-     * Creates a new CpuView on the given canvas
+     * Creates a new CpuView on the given canvas.
      */
-    CpuView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
+    CpuView(BlockModel *model, QCanvas *canvas) : BlockView(model, canvas) {};
 
     /**
      * Returns the tooltip text

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.7 2003/09/22 10:43:33 garbeam Exp $
+ * $Id: muxmodel.h,v 1.8 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -148,11 +148,13 @@ public:
     PinModel *addPin(PinModel::PinType type);
 
     /**
-     * Removes alle MuxMappings which are related to <code>input</code>
-     * pin. If the involved output pin has more bits than the specific
-     * mapping, it will be shrinked, otherwise it will be removed.
+     * Removes all MuxMappings which are related to <code>pin</code>.
+     * If <code>pin</code> is an ouput pin and has more bits than
+     * the specific mapping, it will be shrinked, otherwise it will
+     * be removed.
+     * If <code>pin</code> is an pinput pin, it won't be deleted.
      */
-    void removeMuxMappings(PinModel *input);
+    void removeMuxMappings(PinModel *pin);
 
     /**
      * Removes the given pin from this MuxModel and any related

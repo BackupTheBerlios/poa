@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.30 2003/09/20 21:14:48 squig Exp $
+ * $Id: blockview.h,v 1.31 2003/09/23 09:53:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@
 #include <qdom.h>
 
 #include "abstractview.h"
-class BlockModel;
+class AbstractModel;
 class PinModel;
 class PinVector;
 class PinView;
@@ -57,7 +57,7 @@ public:
      * <code>model</code>. Use the member {@link #addPinViewsTo} to get a
      * list of the pin views that were created.
      */
-    BlockView(BlockModel *model, QCanvas *canvas);
+    BlockView(AbstractModel *model, QCanvas *canvas);
 
     /**
      * Default destructor
@@ -194,7 +194,7 @@ private:
      */
     void updateProperties();
 
-    BlockModel *model_;
+    AbstractModel *model_;
 
     QValueList<PinView *> leftPins_;
     QValueList<PinView *> rightPins_;

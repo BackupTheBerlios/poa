@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.12 2003/09/30 10:22:59 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.13 2003/09/30 17:18:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -238,7 +238,6 @@ private:
     MuxModel *model_;
 
     QPtrList<MapToComboBoxItem> mappedToIos_;
-    QPtrList<MuxMapping> deletedMappings_;
     QPtrList<MuxPin> deletedMuxPins_;
 
 private slots:

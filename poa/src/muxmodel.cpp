@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.22 2003/09/30 16:51:27 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.23 2003/09/30 17:18:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -327,13 +327,6 @@ void MuxModel::addMuxMapping(MuxMapping *mapping) {
     if (!outputPins_.containsRef(output)) {
         addOutput(output);
     }
-}
-
-void MuxModel::removeMuxMapping(MuxMapping *mapping) {
-
-    MuxPin *pin = mapping->muxPin();
-    QPtrList<MuxMapping> *mappings = pin->mappings();
-    mappings->remove(mapping);
 }
 
 PinModel *MuxModel::outputForName(QString name) {

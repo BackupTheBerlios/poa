@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.21 2003/09/30 16:51:27 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.22 2003/09/30 17:18:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -367,7 +367,6 @@ void MuxConfDialog::updateModel() {
             }
             else {
                 // new pin
-                qDebug("new Output: " + currPin->name());
                 PinModel *newOuput = currPin->clone();
                 model_->addOutput(newOuput);
                 item->setOrigData(newOuput);
@@ -383,13 +382,6 @@ void MuxConfDialog::updateModel() {
             model_->removeMuxPin(pin);
         }
         deletedMuxPins_.clear();
-
-        QPtrListIterator<MuxMapping> delMapping(deletedMappings_);
-        MuxMapping *mapping;
-        while ((mapping = delMapping.current()) != 0) {
-            model_->removeMuxMapping(mapping);
-        }
-        deletedMappings_.clear();
 
         // Flush mux pin list. Already deleted MuxPins
         // won't resist anymore in the model, not deleted
@@ -683,6 +675,14 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
 
     MuxMapping *origMapping = item->origData();
 
+    QListViewItem *iter = (QListViewItem *)item;
+    // determine parent
+    while (!iter->isOpen()) {
+        iter = iter->parent();
+    }
+
+    MuxListViewItem *parentItem = (MuxListViewItem *)iter;
+
     if (origMapping != 0) {
         PinModel *origPin = origMapping->output();
         if (origPin != 0) {
@@ -698,7 +698,6 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
                 {
                 case 0: // The user clicked OK, so all related connections
                     // will be removed after applying changes.
-                    deletedMappings_.append(origMapping);
                     break;
                 case 1: // Cancel removal.
                     return;
@@ -707,14 +706,6 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
             }
         }
     }
-
-    QListViewItem *iter = (QListViewItem *)item;
-    // determine parent
-    while (!iter->isOpen()) {
-        iter = iter->parent();
-    }
-
-    MuxListViewItem *parentItem = (MuxListViewItem *)iter;
 
     // remove mapping also from current parent
     MuxMapping *mapping = item->data();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.22 2003/09/09 23:21:22 vanto Exp $
+ * $Id: blockview.h,v 1.23 2003/09/10 10:39:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,11 @@ public:
      * the BlockView.
      */
     virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
+
+    /**
+     * Opens the block model dialog for <code>view</code>.
+     */
+    virtual void mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e);
 
     /**
      * Moves <code>this</code> and the pin views that are connected to

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.25 2003/09/08 16:03:59 squig Exp $
+ * $Id: blockview.cpp,v 1.26 2003/09/10 10:39:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -148,6 +148,11 @@ AbstractModel *BlockView::model()
 void BlockView::mousePressEvent(CanvasView *view, QMouseEvent *e)
 {
     view->setAction(new MoveAction(view, e, this));
+}
+
+void BlockView::mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e)
+{
+    // TODO: view->setAction(new ConfDialogBlaFasel);
 }
 
 QPopupMenu *BlockView::popupMenu()

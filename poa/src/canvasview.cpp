@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.26 2003/09/09 23:21:22 vanto Exp $
+ * $Id: canvasview.cpp,v 1.27 2003/09/10 10:39:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -141,6 +141,7 @@ void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
         action_->mouseReleaseEvent(e);
     }
 }
+
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {

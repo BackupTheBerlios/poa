@@ -15,9 +15,9 @@ import java.util.List;
  * File
  * 
  * @author Tammo van Lessen
- * @version $Id: FileInfo.java,v 1.1 2003/07/15 18:06:32 vanto Exp $
+ * @version $Id: FileInfo.java,v 1.2 2004/01/11 12:09:30 squig Exp $
  */
-public class FileInfo {
+public class FileInfo implements Comparable {
 
 	private int executions = 0;
 	private String packageName;
@@ -70,7 +70,12 @@ public class FileInfo {
 	public double getCoverage() {
 		return (double)executedLines / (double)instrumentedLines;
 	}
-	
+
+	public int compareTo(Object o) 
+	{
+		return filename.compareTo(((FileInfo)o).filename);
+	}
+
 	public String toString() {
 		return packageName+":"+filename+" ("+ Formatter.formatNumber(getCoverage()*200,2) +"% covered)";
 	}

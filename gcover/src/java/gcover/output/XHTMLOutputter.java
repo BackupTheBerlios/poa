@@ -37,7 +37,7 @@ import org.apache.ecs.xhtml.*;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.7 2004/01/09 13:31:14 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.8 2004/01/11 12:09:30 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -96,7 +96,7 @@ public class XHTMLOutputter implements Outputter {
 		// prepare list of files
 		body content = new body();
 
-		for (int i=0; i<files.length; i++) {
+		for (int i=0; i < files.length; i++) {
 			// write file
 			output(files[i]);
 

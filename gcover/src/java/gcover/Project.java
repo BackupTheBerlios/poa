@@ -7,7 +7,7 @@
 package gcover;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  * Project
  * 
  * @author Tammo van Lessen
- * @version $Id: Project.java,v 1.1 2003/07/15 18:06:32 vanto Exp $
+ * @version $Id: Project.java,v 1.2 2004/01/11 12:09:30 squig Exp $
  */
 public class Project {
 
@@ -25,7 +25,9 @@ public class Project {
 	private int executedLines = 0;
 
 	public FileInfo[] getFiles() {
-		return (FileInfo[])files.toArray(new FileInfo[0]);
+		FileInfo[] array = (FileInfo[])files.toArray(new FileInfo[0]);
+		Arrays.sort(array);
+		return array;
 	}
 	
 	public void addFile(FileInfo file) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.7 2003/09/16 16:09:24 garbeam Exp $
+ * $Id: settingsdialog.cpp,v 1.8 2003/09/17 15:39:59 vanto Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -50,7 +50,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
     this->addTab(createPathTab(), tr("Paths"));
     setup();
 
-    resize(sizeHint());//resize(400, 400); 
+    resize(sizeHint());//resize(400, 400);
 
     connect(this, SIGNAL(applyButtonPressed()), this, SLOT(applySettings()));
 }
@@ -131,7 +131,7 @@ QWidget *SettingsDialog::createPathTab()
 void SettingsDialog::setup()
 {
     Settings* s = Settings::instance();
-    
+
     // general tab
     gridSizeSpinBox_->setValue(s->gridSize());
 
@@ -140,7 +140,7 @@ void SettingsDialog::setup()
     compilerLineEdit->setText(s->get("Compiler"));
     terminalLineEdit->setText(s->get("Terminal"));
     cTemplateLineEdit->setText(s->get("Template Path"));
-    downloadLineEdit->setText(s->get("Download Path")); 
+    downloadLineEdit->setText(s->get("Download Path"));
 }
 
 /**
@@ -196,10 +196,10 @@ void SettingsDialog::chooseExternalTerminal()
 
 void SettingsDialog::chooseTemplatePath()
 {
-  QString s = QFileDialog::getExistingDirectory(cTemplateLineEdit->text(),
+  QString s = QFileDialog::getOpenFileName(cTemplateLineEdit->text(),
+                        QString("Source files (*.c *.h)"),
                         this, "get existingdirectory",
-                        tr("Select C Source Template Path"),
-                        TRUE );
+                        tr("Select C Source Template Path"));
   if (s !=QString::null) {
     cTemplateLineEdit->setText(s);
   }

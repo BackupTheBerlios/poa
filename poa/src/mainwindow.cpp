@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.45 2003/09/17 15:03:36 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.46 2003/09/17 15:39:59 vanto Exp $
  *
  *****************************************************************************/
 
@@ -59,7 +59,9 @@
 #include <qvbox.h>
 #include <qwhatsthis.h>
 
-
+#include <qpushbutton.h>
+#include <qlabel.h>
+#include <qlineedit.h>
 /**
  * Constructs the main window.
  *
@@ -441,7 +443,31 @@ void MainWindow::fileNew()
         delete project_;
     }
 
-    project_ = new Project(tr("Unnamed"));
+    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+    fd->setMode( QFileDialog::AnyFile );
+    fd->setFilter("POA project (project.xml)");
+    fd->setSelection("project.xml");
+    fd->setCaption("Select/Create project directory");
+
+    QString fileName;
+    if ( fd->exec() == QDialog::Accepted ) {
+        fileName = fd->selectedFile();
+    }
+
+    delete fd;
+
+    QDir projDir(fileName);
+    projDir.cdUp();
+
+    project_ = new Project(projDir.path());
+
+    if (QFileInfo(fileName).exists()) {
+        project_->open();
+    }
+    else {
+        project_->save();
+    }
+
     GridCanvas *canvas = project_->newCanvas("1");
     CanvasView *view = new CanvasView(project_, canvas);
 
@@ -475,25 +501,20 @@ void MainWindow::fileOpen()
 void MainWindow::fileSave()
 {
     if (project_) {
-        if (project_->filename().isEmpty()) {
-            fileSaveAs();
-        }
-        else {
-            saveProject();
-        }
+        saveProject();
     }
 }
 
 void MainWindow::fileSaveAs()
 {
-    QString filename
+    /*    QString filename
         = QFileDialog::getSaveFileName(QString::null, QString::null, this);
     if (!filename.isEmpty()) {
         // FIX: check if file already exists
         project_->setFilename(filename);
         saveProject();
         Settings::instance()->addToRecentProjects(filename);
-    }
+        }*/
 }
 
 void MainWindow::fileExit()
@@ -587,7 +608,6 @@ void MainWindow::openBlockConf()
                 BlockConfDialog *dialog =
                     new BlockConfDialog((BlockModel *)model);
                 dialog->exec();
-
                 delete dialog;
             }
         }
@@ -604,31 +624,19 @@ void MainWindow::openProject(QString filename)
         delete project_;
     }
 
-    // FIX: wo ist die Fehlerbehandlung?
-    QFile file(filename);
-    if (file.open(IO_ReadOnly)) {
-        QDomDocument doc;
-        if (doc.setContent(&file)) {
-            project_ = new Project(filename, &doc);
-            project_->setFilename(filename);
-            //               GridCanvas *canvas = new GridCanvas(project_);
-            //                project_->addCanvas(canvas);
-            //                project_->deserialize(&doc);
-            //                MdiWindow *w = new MdiWindow(project_, ws, 0, WDestructiveClose);
-            GridCanvas *canvas = project_->canvasList()->getFirst();
-            CanvasView *view = new CanvasView(project_, canvas);
+    project_ = new Project(filename);
 
-            MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
-            w->showMaximized();
+    if (project_->open()) {
+        GridCanvas *canvas = project_->canvasList()->getFirst();
+        CanvasView *view = new CanvasView(project_, canvas);
 
-            Settings::instance()->addToRecentProjects(filename);
-        }
-        else {
-            QMessageBox::warning
-                (this, tr("File error"),
-                 tr("Cannot open project file: %1").arg(filename));
-        }
-        file.close();
+        MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
+        w->showMaximized();
+    }
+    else {
+        QMessageBox::warning
+            (this, tr("File error"),
+             tr("Cannot open project file: %1").arg(filename));
     }
 }
 
@@ -672,12 +680,10 @@ void MainWindow::updateRecentProjectsMenu()
 
 void MainWindow::saveProject()
 {
-    // FIX: wo ist die Fehlerbehandlung?
-    QFile file(project_->filename());
-    if (file.open(IO_WriteOnly)) {
-        QTextStream ts(&file);
-        project_->serialize().save(ts, 2);
-        file.close();
+    if (!project_->save()) {
+        QMessageBox::warning
+            (this, tr("File error"),
+             tr("Cannot save project %1").arg(project_->name()));
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.17 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: project.h,v 1.18 2003/09/17 15:39:59 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -49,7 +49,7 @@ public:
      * @param name will be showed in the mdiwindow title
      * @param document will be deserialized, if != 0
      */
-    Project(QString name, QDomDocument *document = 0);
+    Project(QString path);
 
     /**
      * Destroys the project
@@ -75,12 +75,6 @@ public:
      * @param target the target PinView.
      */
     void createConnectorViews(PinView *source, PinView *target);
-
-    /**
-     * Returns the project's filenname.
-     * @return QString::null, if no filename has been set
-     */
-    QString filename();
 
     /**
      * Returns the <code>project</code>'s name
@@ -109,9 +103,14 @@ public:
     QDomDocument serialize();
 
     /**
-     * Sets the project's filenname for serialization.
+     * Saves the project
      */
-    void setFilename(const QString &filename);
+    bool save();
+
+    /*
+     * Loads the project content
+     */
+    bool open();
 
 private:
     /**

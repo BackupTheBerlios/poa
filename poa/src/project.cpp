@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.18 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: project.cpp,v 1.19 2003/09/17 15:39:59 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -29,22 +29,68 @@
 #include "gridcanvas.h"
 #include "modelfactory.h"
 #include "canvasview.h"
+#include "settings.h"
 
 #include <qdom.h>
+#include <qdir.h>
+#include <qfileinfo.h>
 
-Project::Project(QString name, QDomDocument *document)
+Project::Project(QString path)
     : filename_(QString::null)
 {
     currentBlockId_ = 0;
-    name_ = name;
 
-    if (document != 0) {
+    QDir dir(path);
+    name_ = dir.path();
+    path_ = path;
+
+
+    /*    if (document != 0) {
         deserialize(document);
-    }
+        }*/
 }
 
 Project::~Project()
 {
+}
+
+bool Project::open()
+{
+    currentBlockId_ = 0;
+    blocks_.clear();
+    QDir dir(path_);
+    QFileInfo fi(dir, QString("project.xml"));
+    QFile file(fi.absFilePath());
+    if (file.open(IO_ReadOnly)) {
+        QDomDocument doc;
+        if (doc.setContent(&file)) {
+            deserialize(&doc);
+            Settings::instance()->addToRecentProjects(path_);
+            file.close();
+            return true;
+        }
+        else {
+            file.close();
+            return false;
+        }
+        file.close();
+    }
+    return false;
+}
+
+bool Project::save()
+{
+    //FIX: Fehlerbehandlung
+    QDir dir(path_);
+    QFileInfo fi(dir, QString("project.xml"));
+    QFile file(fi.absFilePath());
+    if (file.open(IO_WriteOnly)) {
+        QTextStream ts(&file);
+        serialize().save(ts, 2);
+        file.close();
+        return true;
+    }
+    return false;
 }
 
 void Project::addBlock(AbstractModel *item)
@@ -78,11 +124,6 @@ void Project::createViews(AbstractModel *item, int x, int y)
          (canvas = it.current()) != 0; ++it) {
         canvas->addView(item, x, y);
     }
-}
-
-QString Project::filename()
-{
-    return filename_;
 }
 
 QString Project::name()
@@ -145,11 +186,6 @@ QDomDocument Project::serialize()
         vlist.appendChild(vElem);
     }
     return doc;
-}
-
-void Project::setFilename(const QString &filename)
-{
-    filename_ = filename;
 }
 
 void Project::deserialize(QDomDocument *document) {

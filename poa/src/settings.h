@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.4 2003/08/21 20:29:20 squig Exp $
+ * $Id: settings.h,v 1.5 2003/08/22 10:08:54 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -49,29 +49,29 @@ public:
     int getNum(const QString &key);
 
     bool set(const QString &key, const QString &value);
-	bool set(const QString &key, bool value);
-	bool set(const QString &key, int value);
+    bool set(const QString &key, bool value);
+    bool set(const QString &key, int value);
 
-	// the following settings emit an additional signal
-	int gridSize();
-	bool snapToGrid();
-	void setGridSize(int gridSize);
-	void setSnapToGrid(bool snapToGrid);
+    // the following settings emit an additional signal
+    int gridSize();
+    bool snapToGrid();
+    void setGridSize(int gridSize);
+    void setSnapToGrid(bool snapToGrid);
 
 signals:
-	void settingChanged(const QString &key);
-	void snapToGridChanged(bool snapToGrid);
-	void gridSizeChanged(int gridSize);
+    void settingChanged(const QString &key);
+    void snapToGridChanged(bool snapToGrid);
+    void gridSizeChanged(int gridSize);
    
 private :
     Settings();
     Settings(const Settings &);
     ~Settings();
 
-	static Settings* instance_;
+    static Settings* instance_;
 
-	void setDefault(QSettings* settings, const QString &key, 
-					const QString &value);
+    void setDefault(QSettings* settings, const QString &key, 
+                    const QString &value);
 };
 
 #endif // SETTINGS_H

@@ -18,45 +18,44 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.2 2003/08/22 10:08:54 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.1 2003/08/22 10:08:54 garbeam Exp $
  *
  *****************************************************************************/
 
+#include "cpumodel.h"
 
-#ifndef POA_CPUMODEL_H
-#define POA_CPUMODEL_H
-
-
-#include "codemanager.h"
-#include "blockmodel.h"
+#include <qdom.h> // used to provide serialization
+#include <qtextstream.h>
+#include <iostream.h>
 
 
-#include <qcstring.h> // includes QByteArray
-
-/*****************************************************************************
- * A block that executes some source code everytime it is triggered.
- * A CpuModel-object can calculate its execution time based on its
- * source code.
- *
- * @author keulsn
- */
-class CpuModel: public BlockModel
+CpuModel::CpuModel(QString *name, unsigned short id, bool autoExecTime)
 {
+    name_ = name;
+    id_ = id;
+    autoExecTime_ = autoExecTime;
+}
 
- public:
-    CpuModel(QString *name, unsigned short id, bool autoExecTime);
+/**
+ * Produces the XML representation of this instance like:
+ *
+ * <cpu name="cpu_XY" id="nn" autotime="true"/>
+ */
+QByteArray *CpuModel::serialize()
+{
+    QDomDocumentFragment node;
+    QDomElement elem;
 
-    // Returns XML representation of this instance,
-    QByteArray *serialize();
+    elem.setTagName("cpu");
+    elem.setAttribute("name", *name_);
+    elem.setAttribute("id", (unsigned int) id_);
+    elem.setAttribute("autotime", autoExecTime_ ? "true" : "false");
 
+    node.appendChild(elem);
 
- private:
+    QByteArray *result = new QByteArray();
+    QTextStream ts(*result, IO_WriteOnly);
+    node.save(ts, 4);
 
-    QString *name_;
-    unsigned short id_;
-    CodeManager *code_;
-    bool autoExecTime_;
-
-};
-
-#endif
+    return result;
+}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.20 2003/08/21 20:29:20 squig Exp $
+ * $Id: mainwindow.cpp,v 1.21 2003/08/22 10:08:54 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -82,7 +82,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     }
     setCaption(tr("POA"));
 
-	Settings * s = Settings::instance();
+    Settings * s = Settings::instance();
     move(s->getNum("MainWindow/X"), s->getNum("MainWindow/Y"));
     resize(s->getNum("MainWindow/Width"),s->getNum("MainWindow/Height"));
 
@@ -208,7 +208,6 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop); 
     drawLineAction->addTo(drawToolBar);
     drawToolBar->addSeparator();
-    //TODO: QStrList for combo values
     zoomComboBox = new QComboBox(FALSE, drawToolBar);
     zoomComboBox->insertItem("10 %", 0);
     zoomComboBox->insertItem("25 %", 1);
@@ -230,7 +229,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     fileMenu = new QPopupMenu(this); 
     fileNewAction->addTo(fileMenu);
     fileOpenAction->addTo(fileMenu);
-	fileMenu->insertSeparator();
+    fileMenu->insertSeparator();
     fileSaveAction->addTo(fileMenu);
     fileSaveAsAction->addTo(fileMenu);
     fileMenu->insertSeparator();
@@ -302,17 +301,12 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
             this, SLOT(tileHorizontal()));
     connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
     connect(cascadeAction, SIGNAL(activated()), ws, SLOT(cascade()));
-
     connect(ws, SIGNAL(windowActivated(QWidget*)),
             this, SLOT(windowActivated(QWidget*)));
-
     connect(zoomComboBox, SIGNAL(activated(const QString&)),
             this, SLOT(zoomTo(const QString&)));
-
     connect(zoomNormalAction, SIGNAL(activated()), this, SLOT(zoomNormal()));
-
     connect(zoomOutAction, SIGNAL(activated()), this, SLOT(zoomOut()));
-
     connect(zoomInAction, SIGNAL(activated()), this, SLOT(zoomIn()));
 }
 
@@ -369,14 +363,14 @@ void MainWindow::closeEvent(QCloseEvent *e)
         }
     }
 
-	// save settings
-	Settings *s = Settings::instance();
-	s->set("MainWindow/X", x());
-	s->set("MainWindow/Y", y());
-	s->set("MainWindow/Width", width());
-	s->set("MainWindow/Height", height());
+    // save settings
+    Settings *s = Settings::instance();
+    s->set("MainWindow/X", x());
+    s->set("MainWindow/Y", y());
+    s->set("MainWindow/Width", width());
+    s->set("MainWindow/Height", height());
 
-	e->accept();
+    e->accept();
 }
 
 

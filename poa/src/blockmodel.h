@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: blockmodel.h,v 1.2 2003/08/22 10:08:54 garbeam Exp $
  *
  *****************************************************************************/
 
 
 #ifndef POA_BLOCKMODEL_H
 #define POA_BLOCKMODEL_H
-
 
 #include <qstring.h>
 
@@ -51,7 +50,7 @@ class BlockModel: public ModuleLibraryItem
      * project, but produce instances. Returns <code>false</code> if this
      * can be contained in a project.
      */
-    virtual bool isProducer() const;
+//    virtual bool isProducer() const;
 
     /*************************************************************************
      * Creates an instance that can be inserted into a project.
@@ -59,7 +58,7 @@ class BlockModel: public ModuleLibraryItem
      * Precondition:
      *   this->isProducer()
      */
-    virtual BlockModel *getInstance ();
+//   virtual BlockModel *getInstance ();
 
 
     void setName (QString &name);
@@ -69,6 +68,7 @@ class BlockModel: public ModuleLibraryItem
 
     void addEpisodicPin (PinModel *pin, PinModel *successor = 0);
     void removeEpisodicPin (PinModel *pin);
+
 
   private:
 
@@ -81,4 +81,4 @@ class BlockModel: public ModuleLibraryItem
 };
 
 
-#endif
+#endif // POA_BLOCKMODEL_H

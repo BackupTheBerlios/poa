@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.6 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: pinlistviewitem.cpp,v 1.7 2004/01/28 16:59:03 squig Exp $
  *
  *****************************************************************************/
 
@@ -64,13 +64,13 @@ void PinListViewItem::update()
     if (isOpen()) {
         switch (type_) {
         case PinModel::INPUT:
-            setText(0, "input pins");
+            setText(0, "Input Pins");
             break;
         case PinModel::OUTPUT:
-            setText(0, "output pins");
+            setText(0, "Output Pins");
             break;
         case PinModel::EPISODIC:
-            setText(0, "episodic pins");
+            setText(0, "Episodic Pins");
             break;
         }
     }
@@ -178,6 +178,10 @@ void PinListViewItem::okRename(int col)
     }
 
     update();
+
+    if (col < 3) {
+        startRename(col + 1);
+    }
 }
 
 PinModel::PinType PinListViewItem::type() {

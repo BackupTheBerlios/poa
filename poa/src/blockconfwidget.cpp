@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.2 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.3 2004/01/28 16:59:03 squig Exp $
  *
  *****************************************************************************/
 
@@ -256,9 +256,11 @@ void BlockConfWidget::newIo() {
         while (!root->isOpen()) {
             root = (PinListViewItem *)root->parent();
         }
-        new PinListViewItem(root, item != root ? item : 0,
-                            root->type(), 0);
+        PinListViewItem *item
+            = new PinListViewItem(root, item != root ? item : 0,
+                                  root->type(), 0);
         updatePositions(root->type());
+        item->startRename(1);
     }
 }
 

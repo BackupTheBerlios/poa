@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.2 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: poa.cpp,v 1.3 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,11 @@
 QString image(QPoint p)
 {
     return "(" + QString::number(p.x()) + ", " + QString::number(p.y()) + ")";
+}
+
+QString image(QRect r)
+{
+    return "(" + image(r.topLeft()) + ", " + image(r.bottomRight()) + ")";
 }
 
 

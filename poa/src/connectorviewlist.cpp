@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.20 2003/12/16 11:00:14 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.21 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -169,6 +169,11 @@ QDomElement ConnectorViewList::serialize(QDomDocument *document)
         points.appendChild(point);
     }
     return root;
+}
+
+
+QCanvas *ConnectorViewList::canvas() const {
+    return canvas_;
 }
 
 void ConnectorViewList::deserialize(QDomElement *element)

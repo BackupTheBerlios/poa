@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.15 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: connectorviewlist.h,v 1.16 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -120,6 +120,12 @@ public:
      * <code>points</code>
      */
     void applyPointList(const QValueList<QPoint> &list);
+
+
+    /**
+     * Returns the canvas <code>this</code>'s segments are drawn onto.
+     */
+    QCanvas *canvas() const;
 
 protected:
 

@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.14 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: poa.h,v 1.15 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_POA_H
 #define POA_POA_H
 
+#include <qrect.h>
 #include <qpoint.h>
 
 /*
@@ -43,6 +44,8 @@ static const unsigned WIDGET_SPACING = 5;
  * Returns a string representation of <code>p</code>
  */
 QString image(QPoint p);
+
+QString image(QRect r);
 
 
 /** Direction of a line to be drawn on a canvas. */

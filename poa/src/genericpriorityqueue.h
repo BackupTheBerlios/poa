@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: genericpriorityqueue.h,v 1.1 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: genericpriorityqueue.h,v 1.2 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -45,7 +45,9 @@ public:
 
   bool isEmpty() const { return queue_.isEmpty(); }
 
-  unsigned size() const { return queue_.size(); }
+  unsigned size() { return queue_.size(); }
+
+  QString checkIntegrity() { return queue_.checkIntegrity(); }
 
 private:
     PriorityQueue queue_;

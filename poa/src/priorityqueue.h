@@ -18,13 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.2 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: priorityqueue.h,v 1.3 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
 
 #ifndef POA_PRIORITY_QUEUE_H
 #define POA_PRIORITY_QUEUE_H
+
+
+#include "poa.h"
 
 
 class PriorityItem;
@@ -80,7 +83,7 @@ public:
 
     /**
      * Returns a pointer to one of the highest-priority items. If there is
-     * more than one item having the highest priority the any of those is
+     * more than one item having the highest priority, then any of those is
      * chosen nondeterministically.
      * Returns 0 if the queue is empty.
      */
@@ -103,14 +106,22 @@ public:
     /**
      * Returns the number of items currently contained in this queue.
      */
-    unsigned size() const;
+    unsigned size();
+
+    QString checkIntegrity();
 
 private:
     /**
-     * Pointer to the root of the heap of <code>PriorityItem</code>-objects
+     * Pointer to an item in the heap of <code>PriorityItem</code>-objects
      * or 0 if this queue is empty.
      */
-    PriorityItem *head_;
+    PriorityItem *heap_;
+
+    /**
+     * Sets {@link #heap_} to the root item of the heap.
+     * Postcondition: <code>heap_ == 0 || heap_->isHead()</code>
+     */
+    void findHead();
 };
 
 

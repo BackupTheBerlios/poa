@@ -18,12 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.4 2003/12/16 16:30:22 keulsn Exp $
+ * $Id: priorityqueue.cpp,v 1.5 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
 
 #include "priorityqueue.h"
+
+#include <utility>
+
+#include <qvaluelist.h>
 
 #include "poa.h"
 
@@ -31,7 +35,7 @@
 
 PriorityQueue::PriorityQueue()
 {
-    head_ = 0;
+    heap_ = 0;
 }
 
 PriorityQueue::~PriorityQueue()
@@ -42,6 +46,8 @@ PriorityQueue::~PriorityQueue()
 void PriorityQueue::insert(PriorityItem *item)
 {
     Q_ASSERT(item != 0 && !item->isInQueue());
+    Q_ASSERT(item->left() == 0 && item->right() == 0);
+    findHead();
 
     PriorityItem *oldParent = 0;
     PriorityItem *oldLeft;
@@ -49,32 +55,32 @@ void PriorityQueue::insert(PriorityItem *item)
     PriorityItem *larger;
     PriorityItem *smaller;
     bool mustInsert = false;
-
-    if (head_ == 0) {
+    
+    if (heap_ == 0) {
 	item->parent_ = 0;
-	head_ = item;
+	heap_ = item;
     }
-    else if (!head_->higherPriority(item)) {
+    else if (!heap_->higherPriority(item)) {
 	// insert directly before head
-	oldLeft = head_->left();
-	oldRight = head_->right();
-	PriorityItem *newChild = head_;
+	oldLeft = heap_->left();
+	oldRight = heap_->right();
+	PriorityItem *newChild = heap_;
 
-	head_ = item;
-	head_->parent_ = 0;
+	heap_ = item;
+	heap_->parent_ = 0;
 	
 	// swap former head and item
 	item = newChild;
 	
 	if (oldLeft == 0) {
-	    head_->setRight(oldRight);
-	    head_->setLeft(newChild);
+	    heap_->setRight(oldRight);
+	    heap_->setLeft(newChild);
 	    newChild->setLeft(0);
 	    newChild->setRight(0);
 	}
 	else if (oldRight == 0) {
-	    head_->setLeft(oldLeft);
-	    head_->setRight(newChild);
+	    heap_->setLeft(oldLeft);
+	    heap_->setRight(newChild);
 	    newChild->setLeft(0);
 	    newChild->setRight(0);
 	}
@@ -87,7 +93,7 @@ void PriorityQueue::insert(PriorityItem *item)
 		larger = oldLeft;
 		smaller = oldRight;
 	    }
-	    oldParent = head_;
+	    oldParent = heap_;
 	    mustInsert = true;
 	}
     }
@@ -95,7 +101,7 @@ void PriorityQueue::insert(PriorityItem *item)
 	// sink into heap until both children (oldLeft and oldRight) have
 	// equal or less priority than item or until there are less than
 	// two children
-	oldParent = head_;
+	oldParent = heap_;
 	while (true) {
 	    oldLeft = oldParent->left();
 	    oldRight = oldParent->right();
@@ -109,8 +115,6 @@ void PriorityQueue::insert(PriorityItem *item)
 		break;
 	    }
 	    else {
-		PriorityItem *smaller;
-		PriorityItem *larger;
 		if (oldRight->size() < oldLeft->size()) {
 		    smaller = oldRight;
 		    larger = oldLeft;
@@ -129,6 +133,7 @@ void PriorityQueue::insert(PriorityItem *item)
 		    item->setLeft(oldLeft);
 		    item->setRight(oldRight);
 		    mustInsert = true;
+		    break;
 		}
 	    }
 	}
@@ -179,19 +184,21 @@ void PriorityQueue::insert(PriorityItem *item)
     }
 
     PriorityItem *newHead = item->updateSizeUpward();
-    Q_ASSERT(newHead == head_);
+    Q_ASSERT(newHead == heap_);
 }
 
 void PriorityQueue::remove(PriorityItem *item)
 {
     Q_ASSERT(item != 0 && item->isInQueue());
-    head_ = item->removeFromQueue();
+    heap_ = item->removeFromQueue();
 }
 
 
 void PriorityQueue::clear()
 {
-    PriorityItem *current = head_;
+    findHead();
+    PriorityItem *current = heap_;
+    heap_ = 0;
     while (current != 0) {
 	PriorityItem *left = current->left();
 	PriorityItem *right = current->right();
@@ -225,28 +232,116 @@ void PriorityQueue::clear()
 
 PriorityItem *PriorityQueue::head()
 {
-    return head_;
+    findHead();
+    return heap_;
 }
 
 PriorityItem *PriorityQueue::removeHead()
 {
-    Q_ASSERT(head_ != 0);
-    PriorityItem *oldHead = head_;
-    if (head_ != 0) {
-	head_ = head_->removeFromQueue();
+    Q_ASSERT(!isEmpty());
+    PriorityItem *oldHead = head();
+    if (oldHead != 0) {
+	heap_ = oldHead->removeFromQueue();
     }
     return oldHead;
 }
 
 bool PriorityQueue::isEmpty() const
 {
-    return head_ == 0;
+    return heap_ == 0;
 }
 
-unsigned PriorityQueue::size() const
+unsigned PriorityQueue::size()
 {
-    Q_ASSERT(head_ != 0);
-    return head_->size();
+    if (heap_ == 0) {
+	return 0;
+    }
+    else {
+	findHead();
+	return heap_->size();
+    }
+}
+
+void PriorityQueue::findHead()
+{
+    PriorityItem *next = heap_;
+    while (next != 0) {
+	heap_ = next;
+	next = heap_->parent();
+    }
+}
+
+QString PriorityQueue::checkIntegrity()
+{
+    findHead();
+    PriorityItem *head = heap_;
+    QString defects = QString::null;
+    if (head != 0) {
+	if  (!head->isHead()) {
+	    defects += "\nQueue's head is not heap's root item";
+	}
+
+	unsigned wrongPrio = 0;
+	unsigned wrongSize = 0;
+	unsigned wrongParent = 0;
+	typedef pair<PriorityItem*, PriorityItem*> ParentChild;
+	QValueList<ParentChild> list;
+	list.push_front(ParentChild(0, head));
+
+	while (!list.empty()) {
+	    ParentChild current = list.front();
+	    list.pop_front();
+	    PriorityItem *left = current.second->left();
+	    PriorityItem *right = current.second->right();
+	    PriorityItem *parent = current.second->parent();
+	    unsigned expectedItemSize = 1;
+
+	    if (left != 0) {
+		list.push_front(ParentChild(current.second, left));
+		expectedItemSize += left->size();
+	    }
+	    if (right != 0) {
+		list.push_front(ParentChild(current.second, right));
+		expectedItemSize += right->size();
+	    }
+
+	    if (current.first != 0 && 
+		current.second->higherPriority(current.first)) {
+
+		++wrongPrio;
+	    }
+	    if (parent != current.first) {
+		++wrongParent;
+	    }
+	    if (current.second->size() != expectedItemSize) {
+		++wrongSize;
+	    }
+	}
+	if (wrongPrio != 0) {
+	    defects += "\nHeap condition is violated " +
+		QString::number(wrongPrio) + " times.";
+	}
+	if (wrongParent != 0) {
+	    defects += "\n" + QString::number(wrongParent) + " item(s) have"
+		+ " incorrect parent set.";
+	}
+	if (wrongSize != 0) {
+	    defects += "\n" + QString::number(wrongSize) + " item(s) have"
+		+ "incorrect size.";
+	}
+
+	if (defects != QString::null) {
+	    defects = QString("Queue's size = ") +
+		QString::number(head->size()) + defects + "\n";
+	}
+    }
+    //    else {
+    //	if (expectedSize != 0) {
+    //	    defects += QString("\nQueue is empty, but should contain ")
+    //		+ QString::number(expectedSize) + " item(s).";
+    //	}
+    //    }
+    return defects;
 }
 
 
@@ -266,14 +361,11 @@ bool PriorityItem::isInQueue()
 PriorityItem *PriorityItem::maxPriority(PriorityItem *first,
 					PriorityItem *second)
 {
-    if (first == 0) {
+    if (first == 0 || (second != 0 && second->higherPriority(first))) {
 	return second;
-    }
-    else if (second == 0 || !second->higherPriority(first)) {
-	return first;
     }
     else {
-	return second;
+	return first;
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.cpp,v 1.3 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: dijkstrarouter.cpp,v 1.4 2004/01/09 16:09:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "dijkstrarouter.h"
 
 #include "blockview.h"
+#include "connectorviewlist.h"
 #include "connectorviewsegment.h"
 #include "genericpriorityqueue.h"
 #include "grid.h"
@@ -105,6 +106,7 @@ PossiblePoint::PossiblePoint(PossiblePoint *prev, Node node)
     prev_ = prev;
     Q_ASSERT(prev_ == 0 || isRightAngle(prev_->direction(), direction()));
     if (prev == 0) {
+	// first point
 	weight_ = 0;
     }
     else {
@@ -119,7 +121,12 @@ bool PossiblePoint::higherPriority(const PriorityItem *other) const
     const PossiblePoint *otherPoint =
 	dynamic_cast<const PossiblePoint*>(other);
     Q_ASSERT(otherPoint != 0);
-    return otherPoint->weight() >= this->weight();
+    return this->weight() < otherPoint->weight();
+}
+
+Node PossiblePoint::node() const
+{
+    return node_;
 }
 
 LineDirection PossiblePoint::direction() const
@@ -154,7 +161,8 @@ PossiblePoint *PossiblePoint::prev() const
 
 unsigned PossiblePoint::calcWeight(PossiblePoint *prev) const
 {
-    return prev->weight() + lineWeight(prev_->point(), point());
+    Q_ASSERT(prev != 0);
+    return prev->weight() + lineWeight(prev->point(), point());
 }
 
 void PossiblePoint::updateWeight()
@@ -168,13 +176,17 @@ void PossiblePoint::updateWeight()
 
 unsigned PossiblePoint::lineWeight(QPoint from, QPoint to) const
 {
-    unsigned value = 0;
     int left = QMIN(from.x(), to.x());
     int top = QMIN(from.y(), to.y());
+    unsigned width = QABS(from.x() - to.x());
+    unsigned height = QABS(from.y() - to.y());
+
+    unsigned value = width + height;
+
     QRect rect = QRect(left,
 		       top,
-		       QABS(from.x() - to.x()),
-		       QABS(from.y() - to.y()));
+		       width,
+		       height);
     if (rect.width() == 1) {
 	rect.setLeft(rect.left() - 1);
 	rect.setWidth(rect.width() + 1);
@@ -190,11 +202,14 @@ unsigned PossiblePoint::lineWeight(QPoint from, QPoint to) const
     for (current = newCollisions.begin();
 	 current != newCollisions.end(); ++current) {
 	
-	if (INSTANCEOF(*current, ConnectorViewSegment)) {
-	    value += 5000;
-	}
-	else if (INSTANCEOF(*current, BlockView)) {
+	QCanvasRectangle *blockTest =
+	    dynamic_cast<QCanvasRectangle*>(*current);
+
+	if (blockTest != 0) {
 	    value += 10000;
+	} else {
+	    qDebug("5000");
+	    value += 5000;
 	}
     }
 
@@ -223,8 +238,9 @@ void seeNode(Node node, PossiblePoint *predecessor,
 	unreached.insert(reachedPoint);
     }
     else {
-	// node already known, update weight
+	// node already known, update weight"
 	reachedPoint = (*pos).second;
+	Q_ASSERT(reachedPoint != 0);
 	reachedPoint->reach(predecessor);
     }
 }
@@ -242,7 +258,10 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     Grid grid(from, to, 10);
     int x, y;
     grid.getGridDistance(from, to, x, y);
-    int maxDist = QMAX(300, 2 * (QABS(x) + QABS(y)));
+    int minX = QMIN(from.x(), to.x()) - 30;
+    int minY = QMIN(from.y(), to.y()) - 30;
+    int maxX = QMAX(from.x(), to.x()) + 30;
+    int maxY = QMAX(from.y(), to.y()) + 30;
 
     Q_ASSERT(fromDir != UNKNOWN);
     Q_ASSERT(toDir != UNKNOWN);
@@ -253,20 +272,33 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     seen[endNode] = target;
     unreached.insert(target);
 
+    Q_ASSERT(unreached.size() == 2);
     PossiblePoint *current = unreached.removeHead();
+    Q_ASSERT(current->node() == startNode);
     while (current != target && !unreached.isEmpty()) {
 	for (int i = 1; true; ++i) {
+	    QString errors = unreached.checkIntegrity();
+	    if (errors != QString::null) {
+		qDebug(errors);
+	    }
+
 	    QPoint newPoint = grid.move(current->point(), 
 					current->direction(),
 					i);
 	    grid.getGridDistance(to, newPoint, x, y);
-	    if (QABS(x) + QABS(y) > maxDist) {
+	    //qDebug("(" + QString::number(x) + ", " + QString::number(y)
+	    //	   + "), " + image(current->direction()));
+	    if (newPoint.x() < minX || newPoint.y() < minY
+		|| newPoint.x() > maxX || newPoint.y() > maxY) {
+
 	        break;
 	    }
 
 	    Node newNode(newPoint, current->direction());
 	    if (newNode == endNode) {
+		qDebug("endNode seen");
 		seeNode(newNode, current, unreached, seen);
+		qDebug("done seeing.");
 	    }
 
 	    newNode = Node(newPoint, turnLeft(current->direction()));
@@ -286,11 +318,13 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
 	current = unreached.removeHead();
     }
 
+    qDebug("target reached");
     // extract point sequence if a minimum weight way was found
     QValueList<QPoint> *result;
     if (current == target) {
 	result = new QValueList<QPoint>;
 	while (current != 0) {
+	    qDebug(image(current->point()));
 	    result->prepend(current->point());
 	    current = current->prev();
 	}
@@ -311,10 +345,24 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
 
 void DijkstraRouter::route(ConnectorViewList *view)
 {
-    // FIX
+    PossiblePoint::canvas_ = view->canvas();
+
+    PinView *source = view->source();
+    PinView *target = view->target();
+    QValueList<QPoint> *points = routeOne(source->connectorPoint(),
+					  source->connectorSourceDir(),
+					  target->connectorPoint(),
+					  target->connectorTargetDir());
+    if (points != 0) {
+	view->applyPointList(*points);
+	delete points;
+    }
 }
 
 void DijkstraRouter::route(QValueList<ConnectorViewList*>& items)
 {
-    // FIX
+    QValueList<ConnectorViewList*>::iterator it;
+    for (it = items.begin(); it != items.end(); ++it) {
+	route(*it);
+    }
 }

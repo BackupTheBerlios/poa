@@ -48,7 +48,7 @@ public:
     {
         QRect rect(-5, 5, 10, -10);
 
-        CPPUNIT_ASSERT(image(rect) == "((-5, 5), (10, -10))");
+        CPPUNIT_ASSERT(image(rect) == "((-5, 5), (5, -5))");
     }
 
     void testLineDirection()
@@ -107,8 +107,8 @@ public:
 
         CPPUNIT_ASSERT(!isRightAngle(UNKNOWN, UP));
         CPPUNIT_ASSERT(!isRightAngle(UNKNOWN, DOWN));
-        CPPUNIT_ASSERT(isRightAngle(UNKNOWN, LEFT));
-        CPPUNIT_ASSERT(isRightAngle(UNKNOWN, RIGHT));
+        CPPUNIT_ASSERT(!isRightAngle(UNKNOWN, LEFT));
+        CPPUNIT_ASSERT(!isRightAngle(UNKNOWN, RIGHT));
 
         CPPUNIT_ASSERT(!isRightAngle(LEFT, UNKNOWN));
         CPPUNIT_ASSERT(!isRightAngle(RIGHT, UNKNOWN));
@@ -139,8 +139,8 @@ public:
 
         CPPUNIT_ASSERT(!isTurn(UP, LEFT));
         CPPUNIT_ASSERT(!isTurn(UP, RIGHT));
-        CPPUNIT_ASSERT(isTurn(UP, UP));
-        CPPUNIT_ASSERT(!isTurn(DOWN, DOWN));
+        CPPUNIT_ASSERT(!isTurn(UP, UP));
+        CPPUNIT_ASSERT(isTurn(UP, DOWN));
 
         CPPUNIT_ASSERT(!isTurn(DOWN, LEFT));
         CPPUNIT_ASSERT(!isTurn(DOWN, RIGHT));

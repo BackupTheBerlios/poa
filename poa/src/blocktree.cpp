@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.cpp,v 1.5 2004/01/09 22:52:54 vanto Exp $
+ * $Id: blocktree.cpp,v 1.6 2004/01/17 17:35:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,7 +29,7 @@ BlockTree::BlockTree(BlockModel* bm)
 {
     block_ = bm;
     parent_ = NULL;
-    runtime_ = bm->execTime();
+    runtime_ = bm->runtime();
     clock_ = bm->clock();
     offset_ = bm->offset();
     backReference_ = false;
@@ -124,7 +124,7 @@ bool BlockTree::getBackReference()
 void BlockTree::commit()
 {
     // commit local properties
-    block_->setExecTime(runtime_);
+    block_->setRuntime(runtime_);
     block_->setClock(clock_);
     block_->setOffset(offset_);
 

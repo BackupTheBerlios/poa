@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.47 2004/01/17 15:05:59 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.48 2004/01/17 17:35:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -49,6 +49,7 @@
 #include "mainwindow.h"
 #include "pinlistviewitem.h"
 #include "poa.h"
+#include "runtimemanager.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -69,8 +70,6 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     // disable widgets, if neccessary
     syncModel();
     ioSelectionChanged();
-    toggleManualOffset();
-    toggleManualRuntime();
 }
 
 BlockConfDialog::~BlockConfDialog()
@@ -93,13 +92,9 @@ void BlockConfDialog::initLayout()
     initBlockWidget();
 
     if (INSTANCEOF(model_, CpuModel)) {
-        initOffsetWidget();
-        initRuntimeWidget();
         initCompileEditButtonWidget();
     }
 
-//     rightLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Maximum,
-//                                           QSizePolicy::Minimum));
     rightLayout->addStretch(1);
     topLayout->addWidget(leftWidget);
     topLayout->addWidget(rightWidget);
@@ -131,115 +126,32 @@ void BlockConfDialog::initBlockWidget()
 
     blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
     blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
-    blockClockSpinBox = new QSpinBox(blockGroupBox, "blockClockSpinBox");
-    blockClockSpinBox->setRange(0, INT_MAX);
+    offsetSpinBox = new QSpinBox(blockGroupBox, "offsetSpinBox");
+    offsetSpinBox->setRange(-1, INT_MAX);
+    offsetSpinBox->setSuffix(tr(" ns"));
+    clockSpinBox = new QSpinBox(blockGroupBox, "clockSpinBox");
+    clockSpinBox->setRange(0, INT_MAX);
+    clockSpinBox->setSuffix(tr(" ns"));
 
     blockLayout->addWidget(new QLabel(tr("Name"), blockGroupBox), 1, 0);
     blockLayout->addWidget(blockNameLineEdit, 1, 1);
     blockLayout->addWidget(new QLabel(tr("Description"), blockGroupBox), 2, 0);
     blockLayout->addWidget(blockDescrLineEdit, 2, 1);
-    blockLayout->addWidget(new QLabel(tr("Clock"), blockGroupBox), 3, 0);
-    blockLayout->addWidget(blockClockSpinBox, 3, 1);
-    blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 3, 2);
+    blockLayout->addWidget(new QLabel(tr("Offset"), blockGroupBox), 3, 0);
+    blockLayout->addWidget(offsetSpinBox, 3, 1);
+    blockLayout->addWidget(new QLabel(tr("Clock"), blockGroupBox), 4, 0);
+    blockLayout->addWidget(clockSpinBox, 4, 1);
 
-    if (model_->hasRuntime() && !INSTANCEOF(model_, CpuModel)) {
+    if (model_->hasRuntime()) {
         runtimeSpinBox = new QSpinBox(blockGroupBox, "runtimeSpinBox");
         runtimeSpinBox->setRange(0, INT_MAX);
+        runtimeSpinBox->setSuffix(tr(" ns"));
 
-        blockLayout->addWidget(new QLabel(tr("Runtime"), blockGroupBox), 4, 0);
-        blockLayout->addWidget(runtimeSpinBox, 4, 1);
-        blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 4, 2);
+        blockLayout->addWidget(new QLabel(tr("Runtime"), blockGroupBox), 5, 0);
+        blockLayout->addWidget(runtimeSpinBox, 5, 1);
     }
 
     rightLayout->addWidget(blockGroupBox);
-}
-
-void BlockConfDialog::initOffsetWidget()
-{
-
-    // offset widget
-    QButtonGroup *offsetButtonGroup =
-        new QButtonGroup(rightWidget, "offsetButtonGroup" );
-    offsetButtonGroup->setTitle(tr("Offset"));
-
-    QGridLayout *offsetLayout
-        = new QGridLayout(offsetButtonGroup, 2, 3, 11 + WIDGET_SPACING,
-                          WIDGET_SPACING);
-
-    offsetAutoCalcRadioButton =
-        new QRadioButton(offsetButtonGroup, "offsetAutoCalcRadioButton");
-    offsetAutoCalcRadioButton->setText(tr("Automatic Calculation"));
-    offsetAutoCalcRadioButton->setChecked(TRUE);
-    connect(offsetAutoCalcRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualOffset()));
-
-    offsetRadioButton =
-        new QRadioButton(offsetButtonGroup, "offsetRadioButton");
-    offsetRadioButton->setText(tr("Manual Offset"));
-    connect(offsetRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualOffset()));
-
-    offsetSpinBox = new QSpinBox(offsetButtonGroup, "offsetSpinBox");
-    offsetSpinBox->setRange(0, INT_MAX);
-
-    offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
-    offsetLayout->addWidget(offsetRadioButton, 1, 0);
-    offsetLayout->addWidget(offsetSpinBox, 1, 1);
-    offsetLayout->addWidget(new QLabel(tr("ns"), offsetButtonGroup), 1, 2);
-
-    rightLayout->addWidget(offsetButtonGroup);
-}
-
-void BlockConfDialog::initRuntimeWidget()
-{
-
-    // runtime widget
-    QButtonGroup *runtimeButtonGroup =
-        new QButtonGroup(rightWidget, "runtimeButtonGroup");
-    runtimeButtonGroup->setTitle(tr("Runtime"));
-
-    runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
-    runtimeSpinBox->setRange(0, INT_MAX);
-
-    QGridLayout *runtimeLayout
-        = new QGridLayout(runtimeButtonGroup, 2, 3, 11 + WIDGET_SPACING,
-                          WIDGET_SPACING);
-    runtimeAutoCalcRadioButton =
-        new QRadioButton(runtimeButtonGroup, "runtimeAutoCalcRadioButton");
-    runtimeAutoCalcRadioButton->setText(tr("Automatic Calculation"));
-    runtimeAutoCalcRadioButton->setChecked(TRUE);
-    connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualRuntime()));
-
-    runtimeRadioButton =
-        new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
-    runtimeRadioButton->setText(tr("Manual Runtime"));
-    connect(runtimeRadioButton, SIGNAL(clicked()),
-            this, SLOT(toggleManualRuntime()));
-    runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
-    runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
-    runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
-    runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeButtonGroup), 1, 2);
-    rightLayout->addWidget(runtimeButtonGroup);
-//     }
-//     else {
-//         // runtime widget for non cpu blocks (redundancy because of
-//         // aestetic reasons)
-//         QGroupBox *runtimeGroupBox =
-//             new QGroupBox(rightWidget, "runtimeGroupBox");
-//         runtimeGroupBox->setTitle(tr("Runtime"));
-
-//         runtimeSpinBox = new QSpinBox(runtimeGroupBox, "runtimeSpinBox");
-
-//         // Note: For some Qt specific reasons, a spacing of 5px within
-//         // QBoxLayout produces overlapping labels. So WIDGET_SPACING
-//         // isn't used here.
-//         QBoxLayout *runtimeLayout = new QHBoxLayout(runtimeGroupBox, 15);
-//         runtimeLayout->addWidget(new QLabel(tr("Runtime"), runtimeGroupBox));
-//         runtimeLayout->addWidget(runtimeSpinBox);
-//         runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeGroupBox));
-//         rightLayout->addWidget(runtimeGroupBox);
-//     }
 }
 
 void BlockConfDialog::initCompileEditButtonWidget()
@@ -251,18 +163,25 @@ void BlockConfDialog::initCompileEditButtonWidget()
     QBoxLayout *compileEditButtonsLayout =
         new QHBoxLayout(compileEditButtonsWidget, WIDGET_SPACING);
 
-    editCodePushButton =
+    QPushButton *editCodePushButton =
         new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
     editCodePushButton->setText(tr("&Edit Code"));
     connect(editCodePushButton, SIGNAL(clicked()), this, SLOT(edit()));
 
-    compilePushButton =
+    QPushButton *compilePushButton =
         new QPushButton(compileEditButtonsWidget, "compilePushButton");
     compilePushButton->setText(tr("Co&mpile"));
     connect(compilePushButton, SIGNAL(clicked()), this, SLOT(compile()));
 
+    QPushButton *calcRuntimePushButton =
+        new QPushButton(compileEditButtonsWidget, "calcRuntimeButton");
+    calcRuntimePushButton->setEnabled(false);
+    calcRuntimePushButton->setText(tr("Runtime"));
+    connect(calcRuntimePushButton, SIGNAL(clicked()), this, SLOT(calcRuntime()));
+
     compileEditButtonsLayout->addWidget(editCodePushButton);
     compileEditButtonsLayout->addWidget(compilePushButton);
+    compileEditButtonsLayout->addWidget(calcRuntimePushButton);
     compileEditButtonsLayout->addStretch(1);
 
     rightLayout->addWidget(compileEditButtonsWidget);
@@ -275,22 +194,24 @@ void BlockConfDialog::initBottomWidget()
     QBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget, WIDGET_SPACING);
 
     // ok button
-    okPushButton = new QPushButton(bottomWidget, "okPushButton");
+    QPushButton *okPushButton = new QPushButton(bottomWidget, "okPushButton");
     okPushButton->setText(tr("&OK"));
     okPushButton->setDefault(TRUE);
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
 
     // help button
-    helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
+    QPushButton *helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
     helpPushButton->setText(tr("&Help"));
 
     // apply button
-    applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
+    QPushButton *applyPushButton
+        = new QPushButton(bottomWidget, "applyPushButton");
     applyPushButton->setText(tr("&Apply"));
     connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     // cancel button
-    cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
+    QPushButton *cancelPushButton
+        = new QPushButton(bottomWidget, "cancelPushButton" );
     cancelPushButton->setText(tr("&Cancel"));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
@@ -381,100 +302,115 @@ void BlockConfDialog::syncModel() {
     episodicRoot_->setText(0, tr("Episodic Inputs"));
     episodicRoot_->setVisible(model_->hasEpisodicPins());
 
-    if (model_ != 0) {
-        blockNameLineEdit->setText(model_->name());
-        blockDescrLineEdit->setText(model_->description());
-        if (model_->hasRuntime()) {
-            runtimeSpinBox->setValue(model_->execTime());
-        }
-        blockClockSpinBox->setValue(model_->clock());
+    blockNameLineEdit->setText(model_->name());
+    blockDescrLineEdit->setText(model_->description());
+    clockSpinBox->setValue(model_->clock());
+    offsetSpinBox->setValue
+        (model_->autoOffset() ? -1 : (int)model_->offset());
+    offsetSpinBox->setSpecialValueText
+        (QString("Auto (%1 ns)").arg(model_->offset()));
 
-        if (INSTANCEOF(model_, CpuModel)) {
-            CpuModel *cpuModel = (CpuModel *)model_;
-            cpuIdSpinBox->setValue(cpuModel->cpuId());
-            offsetAutoCalcRadioButton->setChecked(cpuModel->autoOffset());
-            offsetRadioButton->setChecked(!cpuModel->autoOffset());
-            runtimeAutoCalcRadioButton->setChecked(cpuModel->autoExecTime());
-            runtimeRadioButton->setChecked(!cpuModel->autoExecTime());
-            offsetSpinBox->setValue(cpuModel->offset());
-        }
+    if (INSTANCEOF(model_, CpuModel)) {
+        CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
+        cpuIdSpinBox->setValue(cpuModel->cpuId());
+        runtimeSpinBox->setRange(-1, INT_MAX);
+        runtimeSpinBox->setSpecialValueText
+            (QString("Auto (%1 ns)").arg(cpuModel->runtime()));
+        qDebug(QString("bool: %1").arg(cpuModel->autoRuntime()));
+        runtimeSpinBox->setValue
+            (cpuModel->autoRuntime() ? -1 : (int)cpuModel->runtime());
+    }
+    else if (model_->hasRuntime()) {
+        runtimeSpinBox->setRange(0, INT_MAX);
+        runtimeSpinBox->setSpecialValueText("");
+        runtimeSpinBox->setValue(model_->runtime());
+    }
 
-        QValueList<PinModel *> pinList = model_->pins();
-        for (QValueList<PinModel *>::iterator it = pinList.begin();
-             it != pinList.end(); ++it)
-        {
-            PinModel *pin = (*it);
-            switch (pin->type()) {
-            case PinModel::INPUT:
-                new PinListViewItem(inputRoot_, 0, pin->clone(), pin);
-                break;
-            case PinModel::OUTPUT:
-                new PinListViewItem(outputRoot_, 0, pin->clone(), pin);
-                break;
-            case PinModel::EPISODIC:
-                new PinListViewItem(episodicRoot_, 0, pin->clone(), pin);
-                break;
-            }
+    QValueList<PinModel *> pinList = model_->pins();
+    for (QValueList<PinModel *>::iterator it = pinList.begin();
+         it != pinList.end(); ++it) {
+
+        PinModel *pin = (*it);
+        switch (pin->type()) {
+        case PinModel::INPUT:
+            new PinListViewItem(inputRoot_, 0, pin->clone(), pin);
+            break;
+        case PinModel::OUTPUT:
+            new PinListViewItem(outputRoot_, 0, pin->clone(), pin);
+            break;
+        case PinModel::EPISODIC:
+            new PinListViewItem(episodicRoot_, 0, pin->clone(), pin);
+            break;
         }
     }
+
     ioListView->setSorting(0);
     ioListView->sort();
     ioListView->setSorting(10);
 }
 
-void BlockConfDialog::updateModel() {
-
-    if (model_ != 0) {
-        model_->setName(blockNameLineEdit->text());
-        model_->setDescription(blockDescrLineEdit->text());
-        if (model_->hasRuntime()) {
-            model_->setExecTime(runtimeSpinBox->value());
-        }
-        model_->setClock(blockClockSpinBox->value());
-
-        if (INSTANCEOF(model_, CpuModel)) {
-            CpuModel *cpuModel = (CpuModel *)model_;
-            cpuModel->setCpuId(cpuIdSpinBox->value());
-            cpuModel->setAutoOffset(offsetAutoCalcRadioButton->isChecked());
-            cpuModel->setAutoExecTime(runtimeAutoCalcRadioButton->isChecked());
-            cpuModel->setOffset(offsetSpinBox->value());
-        }
-
-        // updated pins
-        for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
-            PinModel *pin = *uit;
-            PinModel *origPin = model_->findPinById(pin->id());
-            origPin->setName(pin->name());
-            origPin->setAddress(pin->address());
-            origPin->setBits(pin->bits());
-            origPin->setType(pin->type());
-            origPin->setPosition(pin->position());
-        }
-        updatedPins_.clear();
-
-        // deleted pins
-        for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
-            model_->deletePin(*dit);
-        }
-        deletedPins_.clear();
-
-        // new pins
-        for (QPtrListIterator<PinModel> nit(newPins_); nit != 0; ++nit) {
-            PinModel *pin = *nit;
-
-            model_->addPin(pin->clone());
-        }
-        newPins_.clear();
-
-        // clears list view
-        ioListView->clear();
-
-        // notify model about update to repaint views
-        model_->updatePerformed();
-
-        // sync again
-        syncModel();
+void BlockConfDialog::updateModel()
+{
+    model_->setName(blockNameLineEdit->text());
+    model_->setDescription(blockDescrLineEdit->text());
+    model_->setClock(clockSpinBox->value());
+    if (offsetSpinBox->value() != -1) {
+        model_->setOffset(offsetSpinBox->value());
+        model_->setAutoOffset(false);
     }
+    else {
+        model_->setAutoOffset(true);
+    }
+
+    if (INSTANCEOF(model_, CpuModel)) {
+        CpuModel *cpuModel = (CpuModel *)model_;
+        cpuModel->setCpuId(cpuIdSpinBox->value());
+        if (runtimeSpinBox->value() != -1) {
+            cpuModel->setRuntime(runtimeSpinBox->value());
+            cpuModel->setAutoRuntime(false);
+        }
+        else {
+            cpuModel->setAutoRuntime(true);
+        }
+    }
+    else if (model_->hasRuntime()) {
+        model_->setRuntime(runtimeSpinBox->value());
+    }
+
+    // updated pins
+    for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
+        PinModel *pin = *uit;
+        PinModel *origPin = model_->findPinById(pin->id());
+        origPin->setName(pin->name());
+        origPin->setAddress(pin->address());
+        origPin->setBits(pin->bits());
+        origPin->setType(pin->type());
+        origPin->setPosition(pin->position());
+    }
+    updatedPins_.clear();
+
+    // deleted pins
+    for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
+        model_->deletePin(*dit);
+    }
+    deletedPins_.clear();
+
+    // new pins
+    for (QPtrListIterator<PinModel> nit(newPins_); nit != 0; ++nit) {
+        PinModel *pin = *nit;
+
+        model_->addPin(pin->clone());
+    }
+    newPins_.clear();
+
+    // clears list view
+    ioListView->clear();
+
+    // notify model about update to repaint views
+    model_->updatePerformed();
+
+    // sync again
+    syncModel();
 }
 
 void BlockConfDialog::newIo()
@@ -599,18 +535,6 @@ void BlockConfDialog::ioSelectionChanged() {
     addressLineEdit->setText(isChild ? item->text(3) : QString(""));
 }
 
-void BlockConfDialog::toggleManualOffset() {
-    if (INSTANCEOF(model_, CpuModel)) {
-        offsetSpinBox->setEnabled(offsetRadioButton->isChecked());
-    }
-}
-
-void BlockConfDialog::toggleManualRuntime() {
-    if (INSTANCEOF(model_, CpuModel)) {
-        runtimeSpinBox->setEnabled(runtimeRadioButton->isChecked());
-    }
-}
-
 void BlockConfDialog::cancel()
 {
     reject();
@@ -625,6 +549,18 @@ void BlockConfDialog::ok()
 {
     updateModel();
     accept();
+}
+
+void BlockConfDialog::calcRuntime()
+{
+    if (INSTANCEOF(model_, CpuModel)) {
+        CpuModel *model = (CpuModel *)model_;
+        int runtime = RuntimeManager::calculateRuntime(model);
+        if (runtime != -1) {
+            model->setRuntime(runtime);
+        }
+    }
+
 }
 
 void BlockConfDialog::compile()

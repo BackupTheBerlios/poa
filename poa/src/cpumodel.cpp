@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.31 2004/01/14 13:30:29 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.32 2004/01/17 17:35:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,8 +35,7 @@
 CpuModel::CpuModel(QString type, QString description)
     : BlockModel(type, description)
 {
-    autoExecTime_ = true;
-    autoOffset_ = true;
+    autoRuntime_ = 0;
     cpuId_ = -1;
 
     saveSource_ = true;
@@ -54,6 +53,11 @@ CpuModel::~CpuModel()
 {
 }
 
+bool CpuModel::autoRuntime() const
+{
+    return autoRuntime_;
+}
+
 int CpuModel::cpuId()
 {
     return cpuId_;
@@ -64,36 +68,15 @@ void CpuModel::setCpuId(const int cpuId)
     cpuId_ = cpuId;
 }
 
-bool CpuModel::autoExecTime()
-{
-    return autoExecTime_;
-}
-
-void CpuModel::setAutoExecTime(const bool autoExecTime)
-{
-    autoExecTime_ = autoExecTime;
-}
-
-void CpuModel::setAutoOffset(bool autoOffset)
-{
-    autoOffset_ = autoOffset;
-}
-
-bool CpuModel::autoOffset()
-{
-    return autoOffset_;
-}
-
 /**
  * Produces the XML representation of this instance
  */
 QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
+    root.setAttribute("auto-runtime", autoRuntime() ? "true" : "false");
     root.setAttribute("block-type", "cpu");
     root.setAttribute("cpuid", cpuId_);
-    root.setAttribute("autotime", autoExecTime_  ? "true" : "false");
-    root.setAttribute("auto-offset", autoOffset_ ? "true" : "false");
 
     if (saveSource_) {
         CodeManager::instance()->save(this);
@@ -102,12 +85,17 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     return root;
 }
 
-void CpuModel::deserialize(QDomElement element) {
+void CpuModel::deserialize(QDomElement element)
+{
     BlockModel::deserialize(element);
 
-    setAutoExecTime((element.attribute("autotime", "true") == "true"));
-    setAutoOffset((element.attribute("auto-offset", "true") == "true"));
+    setAutoRuntime((element.attribute("auto-runtime", "true") == "true"));
     setCpuId(element.attribute("cpuid", "0").toInt());
+}
+
+void CpuModel::setAutoRuntime(const bool autoRuntime)
+{
+    autoRuntime_ = autoRuntime;
 }
 
 void CpuModel::setProjectPath(QString path)
@@ -142,6 +130,6 @@ QString CpuModel::tip()
         .arg((this->cpuId()==-1)?QString("not defined"):QString::number(this->cpuId()))
         .arg(this->clock())
         .arg((this->autoOffset())?QString("auto"):QString::number(this->offset())+" ns")
-        .arg((this->autoExecTime())?QString("auto"):QString::number(this->execTime())+" ns")
+        .arg(QString::number(this->runtime())+" ns")
         .arg(codeManager->sourceFilePath(this));
 }

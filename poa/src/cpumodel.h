@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.26 2004/01/13 00:28:29 squig Exp $
+ * $Id: cpumodel.h,v 1.27 2004/01/17 17:35:39 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -58,10 +58,9 @@ class CpuModel: public BlockModel
     ~CpuModel();
 
     /**
-     * Returns <code>true</code> if this model is a library item
-     * instance, <code>false</code> otherwise.
+     * Returns true, if the automatic runtime calculation should be used.
      */
-/*      bool isProducer(); */
+    virtual bool autoRuntime() const;
 
     /**
      * Returns the cpu id. This id is used to upload <code>code()</code> to
@@ -73,26 +72,6 @@ class CpuModel: public BlockModel
      * Sets the cpu id
      */
     void setCpuId(const int cpuId);
-
-    /**
-     * Indicates if the automatic execution time calculator should be used
-     */
-    bool autoExecTime();
-
-    /**
-     * Toggles the usage of the automatic execution time calculator
-     */
-    void setAutoExecTime(const bool autoExecTime);
-
-    /**
-     * Toggles the automatic offset calculation.
-     */
-    void setAutoOffset(bool autoOffset);
-
-    /**
-     * Indicates if the automatic offset calculation should be used.
-     */
-    bool autoOffset();
 
     /**
      * Toggles the save source property.
@@ -111,6 +90,11 @@ class CpuModel: public BlockModel
     void deserialize(QDomElement element);
 
     /**
+     * Sets the automatic runtime calculation.
+     */
+    virtual void setAutoRuntime(const bool autoRuntime);
+
+    /**
      * Sets the project path.
      * Used by CodeManager to save its sources.
      */
@@ -127,10 +111,9 @@ class CpuModel: public BlockModel
     virtual QString tip();
 
  private:
-    QString path_;
+    bool autoRuntime_;
     int cpuId_;
-    bool autoExecTime_;
-    bool autoOffset_;
+    QString path_;
     bool saveSource_;
 
 };

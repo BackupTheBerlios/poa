@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.21 2003/12/17 11:31:54 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.22 2004/01/17 17:35:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -59,12 +59,7 @@ public:
 private:
     QListView *ioListView;
 
-    QRadioButton *offsetAutoCalcRadioButton;
-    QRadioButton *offsetRadioButton;
-    QRadioButton *runtimeAutoCalcRadioButton;
-    QRadioButton *runtimeRadioButton;
-
-    QSpinBox *blockClockSpinBox;
+    QSpinBox *clockSpinBox;
     QSpinBox *offsetSpinBox;
     QSpinBox *runtimeSpinBox;
     QSpinBox *cpuIdSpinBox;
@@ -84,15 +79,9 @@ private:
     QWidget *rightWidget;
     QWidget *bottomWidget;
 
-    QPushButton *applyPushButton;
-    QPushButton *compilePushButton;
-    QPushButton *editCodePushButton;
-    QPushButton *helpPushButton;
-    QPushButton *cancelPushButton;
     QPushButton *newIoPushButton;
     QPushButton *updateIoPushButton;
     QPushButton *removeIoPushButton;
-    QPushButton *okPushButton;
 
     PinListViewItem *inputRoot_;
     PinListViewItem *outputRoot_;
@@ -174,6 +163,11 @@ private slots:
     void ok();
 
     /**
+     * Calculates the runtime of a cpu.
+     */
+    void calcRuntime();
+
+    /**
      * Adds a new I/O item to the dedicated I/O group.
      */
     void newIo();
@@ -196,12 +190,6 @@ private slots:
     void ioSelectionChanged();
 
     /**
-     * Disables/enables offset spin box, if the manual
-     * offset setting is enabled.
-     */
-    void toggleManualOffset();
-
-    /**
      * Invokes compiler on the current cpuModel.
      */
     void compile();
@@ -211,11 +199,6 @@ private slots:
      */
     void edit();
 
-    /**
-     * Disables/enables runtime spin box, if the manual
-     * runtime setting is enabled.
-     */
-    void toggleManualRuntime();
 };
 
 #endif // POA_BLOCKCONFDIALOG_H

@@ -10,14 +10,19 @@
     <projectName>POA</projectName>
     <outputDir>xdocs/statcvs-xml</outputDir>
     <renderer>xdoc</renderer>
+	<sliceMinValue>2</sliceMinValue>
+
 
     <include>doc/**/*.tex;src/**/*.cpp;src/**/*.h;test-src/**/*.cpp;test-src/**/*.h</include>
     <exclude>src/qextserialport/**;src/design/**;src/examples/**</exclude>
-
     <modules type="map">
-      <setting key="GUI">src/*dialog*;src/*window*;src/*widget*;src/*action*</setting>
       <setting key="Model">src/*model*</setting>
+      <setting key="Project">src/project*;src/serializable*</setting>
       <setting key="View">src/*view*</setting>
+      <setting key="Routing">src/*router*;src/blockgraph*</setting>
+      <setting key="Scheduling">src/schedule*;src/blockgraph*;src/path*</setting>
+      <setting key="Download">src/download*;src/code*;src/srecord*;src/runtime*</setting>
+      <setting key="GUI">src/*dialog*;src/*window*;src/*widget*;src/*action*</setting>
       <setting key="Test">test-src/**</setting>
     </modules>
   </settings>

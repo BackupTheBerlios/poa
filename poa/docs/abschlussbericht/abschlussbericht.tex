@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.16 2004/06/07 01:41:01 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.17 2004/06/07 16:41:07 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.16 $
-\RCSdef $Date: 2004/06/07 01:41:01 $
+\RCSdef $Revision: 1.17 $
+\RCSdef $Date: 2004/06/07 16:41:07 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -767,19 +767,32 @@ FIX: fehlt noch
   \caption{Quellcode Zeilenanzahl über die Zeit}
 \end{figure}
 
-Das Diagramm zeigt die gesammte Zeilenanzahl inklusive aller
-Kommentarzeilen über die Laufzeit des Projekts. Die vertikalen
+Das Diagramm zeigt die gesammte Zeilenanzahl des Quellcodes inklusive
+aller Kommentarzeilen über die Laufzeit des Projekts. Die vertikalen
 gestrichelten Linien geben die Versionsmarkierungen an, zu diesem
 Zeitpunkt wurde jeweils eine lauffähige POA Version an den
 Auftraggeber ausgeliefert.
 
-An dem Diagramm lassen sich sehr gut die Iterationen ablesen. 
+An dem Diagramm lassen sich sehr gut die Iterationen ablesen. Die
+erste Iteration erstreckt sich vom Anfang des Diagramms bis zur ersten
+gestrichelten Linie. Der Sprung am Anfang ist durch die Übernahme der
+während des Entwurfs enstandenen Headerdateien zu erklären. Die
+Leerlaufphase im Oktober ist durch die Hausmesse und den Anfang des
+Semesters bedingt. Nach der Überprüfung des Quellcodes ist die
+Refaktorisierung deutlich erkennbar. Ende November wurde zeitweise
+mehr Quellcode entfernt als eingefügt. Im folgenden ist die zunahme
+der Quellcodezeilen nach der Weihnachtspause wieder linear bis zur
+Fertigstellung von POA.
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=15cm]{size_by_module}
   \caption{Verteilung der Quellcode Zeilenanzahl auf die Module}
 \end{figure}
+
+Dieses Diagramm zeigt den Anteil den hohen Anteil der graphischen
+Benutzeroberfläche (GUI, View). Wobei auch anderen Modulen wie
+Scheduling und Download Benutzerschnittstellen enthalten sind.
 
 \label{developer by file}
 \begin{figure}[h!]
@@ -803,6 +816,10 @@ An dem Diagramm lassen sich sehr gut die Iterationen ablesen.
   \caption{Anzahl Entwickler pro Datei (Top 10)}
 \end{figure}
 
+Diese Tabelle zeigt zu einer Liste von Quellcode Dateien, die Anzahl
+von Entwicklern die jeweils gemeinsam an einer Datei gearbeitet
+haben. Es sind nur die Top zehn Dateien angegeben, aber weniger als
+zwei Bearbeiter würde auf keine der Dateien zutreffen.
 
 \begin{figure}[h!]
   \centering
@@ -810,6 +827,21 @@ An dem Diagramm lassen sich sehr gut die Iterationen ablesen.
   \caption{Uhrzeiten der CVS Repository Aktivitäten}
 \end{figure}
 
+Das Diagramm zeigt die Uhrzeiten der Aktivitäten im Quellcode
+Repository. Eine höhere Anzahl Commits bedeutet eine höhere
+Aktivität. Typisch ist die erhöhte Aktivität zwischen 15 und 18 Uhr,
+die auch bei anderen Studienprojekten zu beobachten
+ist. Offensichtlich ist das eine übliche Zeit das Arbeitsergebnis z.B.
+zum Ende der Kernarbeitszeit in das Repository zu
+comitten. Bemerkenswert sind die Aktivitäten nach 22 Uhr, die bis in
+die Morgenstunden reichen. Vollkommen atypisch die Commits um zwischen
+7 und 8 Uhr. Es könnte vermutet werden, dass hier ein Frühaufsteher am
+Werk war. Die näherere Betrachtung des POA Teams läßt diese Vermutung
+allerdings sehr unwahrscheinlich erscheinen. Es gibt eine ausgeprägte
+Bandbreite von bevorzugten Arbeitszeiten wobei die Nachtarbeiter
+eindeutig die Mehrheit im Team stellen. 
+
+Der Versuch Teammeetings vormittags 14.00 Uhr 
 
 \subsection{Evolution}
 

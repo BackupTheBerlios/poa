@@ -31,7 +31,7 @@
       opened</action>
     </release>
 
-	<release version="0.2.1" date="2003-01-16">
+	<release version="0.2.1" date="2004-01-16">
       <action type="fix">MS VC++ compile error fixes</action>
     </release>
 
@@ -80,5 +80,29 @@
       <action type="fix">The port settings combo box is now editable</action>
       <action type="fix">Auto scrolling in the canvas has been accelerated</action>
     </release>
+
+	<release version="1.0.0" date="2004-03-26">
+      <action type="add">Printing has been implemented for the
+      scheduling dialog</action>
+      <action type="add">The internationalization has been finished
+      and the application has been localized to German</action>
+      <action type="add">Automatic optimization of signal runtime has
+      been added</action>
+      <action type="add">Substitution of pin addresses in CPU source
+      code has been added</action>
+      <action type="update">The download code has been
+      refactored</action>
+      <action type="fix">The saving of settings has been fixed</action>
+    </release>
+
+	<release version="1.0.1" date="2004-06-16">
+      <action type="update">The download code has been changed to work
+      with test board</action>
+      <action type="fix">The border around the buttons in the auto
+      scheduling dialog have been removed.</action>
+      <action type="fix">The icons of the problem report wizard have
+      been converted to PNG to fix issues on Windows.</action>
+    </release>
+
   </body>
 </document>

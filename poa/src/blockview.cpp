@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.28 2003/09/11 13:17:14 squig Exp $
+ * $Id: blockview.cpp,v 1.29 2003/09/15 18:09:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,7 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
         BlockView::DEFAULT_HEADER_SPACING;
 
     if (model != 0) {
+        connect(model_, SIGNAL(updated()), this, SLOT(updateView()));
         // name
         height += BlockView::DEFAULT_FONT_HEIGHT;
 
@@ -297,4 +298,9 @@ void BlockView::deserialize(QDomElement element)
 {
     setX(element.attribute("x","0").toDouble());
     setY(element.attribute("y","0").toDouble());
+}
+
+void BlockView::updateView()
+{
+    arrangeVerticalPins();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.24 2003/09/11 13:17:14 squig Exp $
+ * $Id: blockview.h,v 1.25 2003/09/15 18:09:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,7 @@ class PinView;
  */
 class BlockView: public AbstractView, public QCanvasRectangle
 {
+    Q_OBJECT
 
 public:
 
@@ -172,6 +173,9 @@ private:
     QValueVector<PinView*> bottomPins_;
 
     static const int RTTI = 1000;
+
+public slots:
+    void updateView();
 };
 
 #endif // POA_BLOCKVIEW_H

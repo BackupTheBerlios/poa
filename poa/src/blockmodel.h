@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.19 2003/09/12 08:58:42 garbeam Exp $
+ * $Id: blockmodel.h,v 1.20 2003/09/15 18:09:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,8 @@ class PinModel;
  */
 class BlockModel: public AbstractModel
 {
+    Q_OBJECT
+
 public:
 
     /**
@@ -123,6 +125,8 @@ public:
      */
     PinModel *findPinById(const unsigned id);
 
+    void updatePerformed();
+
     /**
      * Serializes this instance to a xml subtree
      * @param document the main QDomDocument instance. Needed to create elements
@@ -148,6 +152,9 @@ private:
     unsigned currentPinId_;
     unsigned int execTime_;
     QString name_;
+
+signals:
+    void updated();
 };
 
 

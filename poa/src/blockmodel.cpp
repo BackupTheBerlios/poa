@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.19 2003/09/13 11:42:59 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.20 2003/09/15 18:09:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -196,4 +196,9 @@ void BlockModel::deserialize(QDomElement element)
         node = node.nextSibling();
      }
 
+}
+
+void BlockModel::updatePerformed()
+{
+    emit(updated());
 }

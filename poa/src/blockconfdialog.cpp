@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.17 2003/09/15 17:38:51 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.18 2003/09/15 18:09:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -488,6 +488,9 @@ void BlockConfDialog::updateModel() {
                 }
             }
         }
+        // Notify model about update, so the view will be
+        // repaint.
+        model_->updatePerformed();
     }
 }
 

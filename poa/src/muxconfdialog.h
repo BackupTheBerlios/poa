@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.19 2004/01/09 14:40:32 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.20 2004/01/15 14:47:18 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -31,9 +31,8 @@
 #include <qptrlist.h>
 
 #include "pinmodel.h"
+#include "muxmodel.h"
 
-class MuxMapping;
-class MuxModel;
 class PinListViewItem;
 
 class QBoxLayout;

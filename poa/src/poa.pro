@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.71 2004/01/13 15:13:24 squig Exp $
+# $Id: poa.pro,v 1.72 2004/01/15 14:47:18 kilgus Exp $
 #
 ###############################################################################
 
@@ -149,4 +149,5 @@ unix:DEFINES  = _TTY_POSIX_
 
 win32:HEADERS += qextserialport/win_qextserialport.h
 win32:SOURCES += qextserialport/win_qextserialport.cpp
+win32:DEFINES = _TTY_WIN_
 

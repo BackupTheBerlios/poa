@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.15 2004/01/12 17:06:24 squig Exp $
+ * $Id: settings.cpp,v 1.16 2004/01/15 14:47:18 kilgus Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -30,7 +30,7 @@
  */
 Settings* Settings::instance_ = 0;
 
-Settings::Settings(QString prefix = "/POA/POA/")
+Settings::Settings(QString prefix)
 {
     this->prefix = prefix;
 }
@@ -42,7 +42,7 @@ Settings::~Settings()
 Settings *Settings::instance()
 {
     if (instance_ == 0) {
-        instance_ = new Settings();
+        instance_ = new Settings("/POA/POA/");
     }
 
     return instance_;

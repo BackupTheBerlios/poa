@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.cpp,v 1.5 2004/01/12 02:37:27 keulsn Exp $
+ * $Id: dijkstrarouter.cpp,v 1.6 2004/01/15 14:47:18 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -192,7 +192,7 @@ Weighting::Weighting(QPoint from, QPoint to, QCanvas *canvas):
     origin_ = topLeft;
 
     int x, y;
-    weighting_ = new (unsigned*)[height];
+    weighting_ = new unsigned*[height];
     for (y = 0; y < height; ++y) {
 	weighting_[y] = new unsigned[width];
 	for (x = 0; x < width; ++x) {

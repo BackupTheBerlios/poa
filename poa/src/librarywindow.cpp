@@ -18,14 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.15 2003/09/11 16:30:21 garbeam Exp $
+ * $Id: librarywindow.cpp,v 1.16 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
+#include "abstractmodel.h"
 #include "cpumodel.h"
 #include "coremodel.h"
-#include "abstractmodel.h"
+#include "muxmodel.h"
 #include "pinmodel.h"
 
 #include <qvariant.h>
@@ -57,6 +58,9 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
     coreListViewItem->setOpen(TRUE);
     ioListViewItem = new QListViewItem(moduleListView, tr("I/O"));
     ioListViewItem->setOpen(TRUE);
+    muxListViewItem = new QListViewItem(moduleListView, tr("Mux"));
+    muxListViewItem->setOpen(TRUE);
+
 
     descriptionTextBrowser = new QTextBrowser(splitter);
 
@@ -97,6 +101,10 @@ void LibraryWindow::initializeLibrary()
                             new CpuModel("NIOS 16", "NIOS 16-Bit Cpu"));
     new LibraryListViewItem(coreListViewItem,
                             new CoreModel("InputBlock", "Coredump"));
+    new LibraryListViewItem(muxListViewItem,
+                            new MuxModel("mux", "Demultiplexer"));
+    new LibraryListViewItem(muxListViewItem,
+                            new MuxModel("demux", "Demultiplexer"));
 }
 
 /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.h,v 1.4 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: muxview.h,v 1.5 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,10 +46,6 @@ public:
      * Returns the tooltip text.
      */
     QString tip();
-
-private:
-
-    MuxModel *model_;
 
 };
 

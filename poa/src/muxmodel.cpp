@@ -18,11 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.5 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.6 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "muxmodel.h"
+
+#include "muxview.h"
 
 MuxMapping::MuxMapping(PinModel *input, PinModel *output,
                        unsigned begin, unsigned end)
@@ -77,11 +79,26 @@ void MuxMapping::deleteMapping()
     delete this;
 }
 
+QDomElement MuxMapping::serialize(QDomDocument *document)
+{
+    QDomElement root = document->createElement("muxmapping");
+    root.setAttribute("input-id", input_->id());
+    root.setAttribute("output-id", output_->id());
+    root.setAttribute("begin", begin_);
+    root.setAttribute("end", end_);
+    return root;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MuxModel::MuxModel(QString type, QString description)
     : AbstractModel(type, description)
 {
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
+    setType(type);
+    setName(QString("new %1").arg(type));
+    setDescription(description);
 }
 
 MuxModel::MuxModel(QDomElement coreElement)
@@ -186,18 +203,19 @@ void MuxModel::removePin(PinModel *pin)
 
 QCanvasItemList MuxModel::createView(QCanvas *canvas)
 {
-    // TODO
-    // only to prevent compiler warning until MuxView is implemented
-    // on Monday or Sunday
-    canvas->isWidgetType();
-    
     QCanvasItemList l;
+    MuxView *view = new MuxView(this, canvas);
+    l.append(view);
+    view->addPinViewsTo(l);
+
     return l;
 }
 
 QDomElement MuxModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
+    root.setAttribute("name", name());
+    root.setAttribute("mux-type", type());
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
         QDomElement pinElem = inputPins_->at(i)->serialize(document);
@@ -208,6 +226,11 @@ QDomElement MuxModel::serialize(QDomDocument *document)
         QDomElement pinElem = outputPins_->at(i)->serialize(document);
         pinElem.setAttribute("type","output");
         root.appendChild(pinElem);
+    }
+    for (unsigned i = 0; i < mappings_.count(); i++) {
+        QDomElement mappingElem = mappings_.at(i)->serialize(document);
+        mappingElem.setAttribute("type", "muxmapping");
+        root.appendChild(mappingElem);
     }
 
     return root;

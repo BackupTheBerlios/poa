@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.44 2003/09/19 20:21:04 garbeam Exp $
+# $Id: poa.pro,v 1.45 2003/09/23 10:53:39 garbeam Exp $
 #
 ###############################################################################
 
@@ -96,6 +96,7 @@ SOURCES += blockconfdialog.cpp
 SOURCES += modelfactory.cpp
 SOURCES += moveaction.cpp
 SOURCES += muxmodel.cpp
+SOURCES += muxview.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinvector.cpp
 SOURCES += pinview.cpp

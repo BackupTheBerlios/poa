@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.cpp,v 1.1 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: muxview.cpp,v 1.2 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,29 +26,15 @@
 #include "muxmodel.h"
 
 MuxView::MuxView(MuxModel *model, QCanvas *canvas)
-    : BlockView(
+    : BlockView(model, canvas)
 {
-    model_ = model;
-
 }
 
-QString CpuView::tip()
+QString MuxView::tip()
 {
-    CodeManager *codeManager = CodeManager::instance();
-    CpuModel *m = (CpuModel*)model();
-    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
-                   "<b>Id on CPLD:</b> %4<br>" \
-                   "<b>Clock:</b> %5 ms<br>" \
-                   "<b>Offset:</b> %6<br>" \
-                   "<b>Execution time:</b> %7<br>" \
-                   "<b>Source:</b> %8")
+    MuxModel *m = (MuxModel *)model();
+    return QString("<b>Mux</b><br><u>%1</u> (%2)<br><i>%3</i><hr>")
         .arg(m->name())
         .arg(m->type())
-        .arg(m->description())
-        //        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
-        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
-        .arg(m->clock())
-        .arg((m->autoOffset())?"auto":QString::number(m->offset())+" ms")
-        .arg((m->autoExecTime())?"auto":QString::number(m->execTime())+" ms")
-        .arg(codeManager->sourceFilePath(m));
+        .arg(m->description());
 }

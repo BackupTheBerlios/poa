@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.8 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: muxmodel.h,v 1.9 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -83,6 +83,11 @@ public:
      * Sets the end of range bits.
      */
     void setEnd(unsigned end);
+
+    /**
+     * Serializes the MuxMapping.
+     */
+    QDomElement serialize(QDomDocument *document);
 
 private:
 

@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.11 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: modelfactory.cpp,v 1.12 2003/09/23 10:53:39 garbeam Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
 #include "cpumodel.h"
 #include "coremodel.h"
+#include "muxmodel.h"
 #include "project.h"
 #include <qdom.h>
 
@@ -49,6 +50,11 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
             }
             else if (element.attribute("block-type","") == "core") {
                 model = new CoreModel(element);
+            }
+            else if ((element.attribute("mux-type", "") == "mux") ||
+                     (element.attribute("mux-type", "") == "demux"))
+            {
+                model = new MuxModel(element);
             }
 
             if (model != 0) {

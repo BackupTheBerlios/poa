@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.16 2003/09/11 16:30:21 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.17 2003/09/11 16:38:25 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -87,8 +87,6 @@ void BlockModel::addPin(PinModel *pin, PinModel *successor = 0) {
         } else if (pin->id() > currentPinId_) {
             currentPinId_ = pin->id();
         }
-        pin->setType(PinModel::EPISODIC);
-
         switch (pin->type()) {
             case PinModel::INPUT:
                 inputPins_->addBefore(pin, successor);

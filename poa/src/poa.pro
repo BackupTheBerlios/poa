@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.23 2003/08/25 17:08:29 keulsn Exp $
+# $Id: poa.pro,v 1.24 2003/08/26 16:53:09 keulsn Exp $
 #
 ###############################################################################
 
@@ -83,6 +83,7 @@ SOURCES += mdiwindow.cpp
 SOURCES += moduleconfdialog.cpp
 SOURCES += modelfactory.cpp
 SOURCES += pinmodel.cpp
+SOURCES += pinvector.cpp
 SOURCES += pinview.cpp
 SOURCES += project.cpp
 SOURCES += settings.cpp

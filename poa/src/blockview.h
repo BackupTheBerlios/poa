@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.8 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: blockview.h,v 1.9 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -39,10 +39,12 @@ class PinView;
 class BlockView: public AbstractView, public QCanvasRectangle
 {
 
- public:
+public:
 
     BlockView(BlockModel *model, QCanvas *canvas);
     virtual ~BlockView();
+
+    void addPinViewsTo(QCanvasItemList &list);
 
     BlockModel *model();
     void setModel(BlockModel *model);
@@ -51,7 +53,7 @@ class BlockView: public AbstractView, public QCanvasRectangle
 
     virtual int rtti() const;
 
- protected:
+protected:
 
     virtual void drawShape (QPainter &p);
 
@@ -64,8 +66,7 @@ class BlockView: public AbstractView, public QCanvasRectangle
     static const int DEFAULT_BOTTOM_SPACING = 4;
     static const int DEFAULT_PIN_SEPARATION = 2;
 
- private:
-
+private:
 
     BlockModel *model_;
 

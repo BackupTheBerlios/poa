@@ -18,57 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.3 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: pinvector.cpp,v 1.1 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_PINMODEL_H
-#define POA_PINMODEL_H
-
-#include <qcanvas.h>
-
-class BlockView;
-class ConnectorModel;
-#include "pinview.h"
+#include "pinvector.h"
 
 
-class PinModel
+void PinVector::remove(PinModel *pin)
 {
+    unsigned i = 0;
+    bool found = at(i) == pin;
+    while (i < size() && !found) {
+	++i;
+	found = at(i) == pin;
+    }
+    if (found) {
+	erase(begin() + i);
+    }
+}
 
-public:
-
-    PinModel(const QString &name);
-
-    virtual ~PinModel();
-
-    void attach(ConnectorModel *connector);
-    void detach();
-
-    QString name();
-    void setName(QString &name);
-
-    PinView *createView(BlockView *block,
-			PinView::DockPosition dockPosition);
-
-    /*************************************************************************
-     * Returns an XML representation of this instance.
-     */
-    //    virtual QDomElement serialize(QDomDocument *document);
-
-private:
-
-    QString name_;
-    unsigned address_;
-    unsigned bits_;   // data type to be used in C source and width of pin
-                      // one pin can be wider than one bit.
-    ConnectorModel *connector_;
-
-//public slots:
-//
-//    void attach (Connector *connector);
-//    void deattach (Connector *connector);
-//
-};
-
-#endif // POA_PINMODEL_H
+void PinVector::addBefore(PinModel *pin, PinModel *successor = 0)
+{
+    unsigned i = 0;
+    while (i < size() && at(i) != successor) {
+	++i;
+    }
+    insert(begin() + i, pin);
+}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.8 2003/08/25 17:08:29 keulsn Exp $
+ * $Id: blockview.cpp,v 1.9 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -92,6 +92,26 @@ BlockView::~BlockView()
 }
 
 
+void BlockView::addPinViewsTo(QCanvasItemList &list)
+{
+    for (QValueVector<PinView*>::iterator current = leftPins_.begin();
+	 current != leftPins_.end(); ++current) {
+
+	list.prepend(*current);
+    }
+    for (QValueVector<PinView*>::iterator current = rightPins_.begin();
+	 current != rightPins_.end(); ++current) {
+
+	list.prepend(*current);
+    }
+    for (QValueVector<PinView*>::iterator current = bottomPins_.begin();
+	 current != bottomPins_.end(); ++current) {
+
+	list.prepend(*current);
+    }
+}
+
+
 BlockModel *BlockView::model()
 {
     return model_;
@@ -130,7 +150,6 @@ int BlockView::rtti() const
 {
     return BlockView::RTTI;
 }
-
 
 
 void BlockView::drawShape(QPainter &p)

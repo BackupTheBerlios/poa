@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.9 2003/08/26 15:59:23 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.10 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -27,12 +27,21 @@
 #include <qdom.h> // used to provide serialization
 #include <qtextstream.h>
 
+#include "pinmodel.h"
+
 CpuModel::CpuModel(unsigned short id, bool autoExecTime, QString name,
                    QString description)
     : BlockModel(name, description)
 {
     id_ = id;
     autoExecTime_ = autoExecTime;
+
+    // FIX: remove
+    PinModel *firstPin = new PinModel(QString("Input1"));
+    addInputPin(firstPin);
+    addInputPin(new PinModel("another Input"), firstPin);
+    addOutputPin(new PinModel("Output"));
+    // FIX: end remove
 }
 
 CpuModel::CpuModel(QDomElement cpuElem)

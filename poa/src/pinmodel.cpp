@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.1 2003/08/26 00:19:03 keulsn Exp $
+ * $Id: pinmodel.cpp,v 1.2 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,7 @@
 #include "connectormodel.h"
 
 
-PinModel::PinModel(QString &name)
+PinModel::PinModel(const QString &name)
 {
     name_ = name;
     connector_ = 0;

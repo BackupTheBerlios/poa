@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.6 2003/08/22 22:47:49 squig Exp $
+ * $Id: librarywindow.cpp,v 1.7 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
 #include "cpumodel.h"
 #include "abstractmodel.h"
+#include "pinmodel.h"
 
 #include <qvariant.h>
 #include <qdragobject.h>
@@ -79,9 +80,13 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
+    CpuModel *cpu = new CpuModel(0, TRUE, "NIOS32", "NIOS 32-Bit Cpu");
+    PinModel *firstPin = new PinModel("Input1");
+    cpu->addInputPin(firstPin);
+    cpu->addInputPin(new PinModel("Second Input"), firstPin);
+    cpu->addOutputPin(new PinModel("Output"));
     new LibraryListViewItem(cpuListViewItem,
-                            new CpuModel(0, TRUE, "NIOS32",
-                                         "NIOS 32-Bit Cpu"));
+                            cpu);
     new LibraryListViewItem(cpuListViewItem,
                             new CpuModel(0, TRUE, "NIOS16",
                                          "NIOS 16-Bit Cpu"));

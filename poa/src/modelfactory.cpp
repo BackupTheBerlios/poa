@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.3 2003/08/22 22:47:49 squig Exp $
+ * $Id: modelfactory.cpp,v 1.4 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -29,8 +29,6 @@
 
 /*****************************************************************************
  * Generates model objects from xml data.
- *
- * @author Steffen Pingel
  */
 QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
 {

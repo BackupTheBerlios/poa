@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.8 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: blockmodel.h,v 1.9 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -74,6 +74,12 @@ public:
     void setClock(unsigned long clock);
     void setOffset(unsigned long offset);
     void setAutoOffset(bool autoOffset);
+
+    void addInputPin(PinModel *pin, PinModel *successor = 0);
+    void removeInputPin(PinModel *pin);
+
+    void addOutputPin(PinModel *pin, PinModel *successor = 0);
+    void removeOutputPin(PinModel *pin);
 
     void addEpisodicPin(PinModel *pin, PinModel *successor = 0);
     void removeEpisodicPin(PinModel *pin);

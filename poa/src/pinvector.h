@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.h,v 1.3 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: pinvector.h,v 1.4 2003/08/26 16:53:09 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,11 @@ typedef QValueVector<PinModel*> PinPointerVector;
  */
 class PinVector: public PinPointerVector
 {
+
+public:
+    void addBefore(PinModel *pin, PinModel *successor = 0);
+    void remove(PinModel *pin);
+
 };
 
 

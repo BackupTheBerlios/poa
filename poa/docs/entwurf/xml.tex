@@ -1,0 +1,189 @@
+\section{Persistenz}
+
+\subsection{XML Format}
+Die POA-Datenmodelle werden im XML-Format im Projektverzeichnis abgelegt.
+
+Die Datei gliedert sich auf höchster Ebene in zwei Teile, die von dem
+Wurzelelement umschlossen werden. Der erste Teile repräsentiert das
+Datenmodell, der zweite Teil bezieht sich auf die Darstellung der
+Blöcke. Diese View-Elemente beziehen sich über eine ID auf den
+jeweiligen Block im Modell-Bereich. Eine Ausnahme bilden hier die
+Verbindungen zwischen Blöcken. Diese haben keine Modellinstanz sondern
+werden nur als View-Element abgespeichert.
+
+Die folgende Abbildung verdeutlicht den Aufbau der Projektdatei.
+
+\includegraphics[width=17cm]{poa-schema.png}
+
+\subsubsection{Struktur}
+Die Projektdatei wird durch die folgenden Elemente strukturiert.
+
+\begin{longtable}[c]{|p{5.466cm}|p{5.466cm}|p{5.466cm}|}
+\hline
+{\bf Element} & {\bf Unterelemente} & {\bf Beschreibung}\\\hline
+\endhead
+project      & model, view  & Wurzelelement \\\hline
+model        & blocks       & Leitet den Modellbereich ein\\\hline
+blocks       & model{}-item & Enth\"alt die Blockbeschreibungen\\\hline
+model{}-item & pin          & Repr\"asentiert einen Block\\\hline
+pin          &              & Repr\"asentiert einen Pin\\\hline
+views        & view         & Leitet den Viewbereich ein\\\hline
+view         & view{}-item, connector{}-view, palette{}-view &
+Erweitert das Datenmodell um Darstellungsinformationen \\\hline
+
+view{}-item  &              & Beschreibt die Position eines Blocks\\\hline
+connector{}-view & points   & Beschreibt eine Verbindungslinie
+zwischen zwei Bl\"ocken\\\hline
+
+points & point & Enth\"alt die Knickpunkte der Verbindung\\\hline
+point & & Repr\"asentiert einen Knickpunkt\\\hline
+palette{}-view & mapping & Beschreibt die Position und die Eintr\"age
+der Farbpalette \\\hline
+
+mapping & & Verkn\"upft eine Taktfrequenz mit einer Farbe\\\hline
+\end{longtable}
+
+
+\subsubsection{Daten}
+Die Projektdaten befinden sich in den Attributen der oben genannten Elemente.
+\begin{longtable}[c]{|p{2.809cm}p{4.9420004cm}p{3.46cm}p{4.986cm}}
+\hline
+\multicolumn{1}{|p{2.809cm}|}{{\bf Element}} &
+\multicolumn{1}{p{4.9420004cm}|}{{\bf Attribut}} &
+\multicolumn{1}{p{3.46cm}|}{{\bf Datentyp}} &
+\multicolumn{1}{p{4.986cm}|}{{\bf Beschreibung}}\\\hline
+\endhead
+model{}-item
+&
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+id & int & Eindeutige Identifikation des Blocks\\\hline
+name & String & Bezeichnung des Blocks\\\hline
+desc & String & Beschreibung des Blocks in der Blockbibliothek\\\hline
+hasOutputPins & boolean & Zeigt an, ob der Block Ausgangspins besitzt\\\hline
+hasInputPins  & boolean & Zeigt an, ob der Block Eingangspins besitzt.\\\hline
+hasEpisodicPins & boolean & Zeigt an, ob der Block episodische Pins
+besitzt.\\\hline
+
+clock & int & Taktrate des Blocks (ns)\\\hline
+type  & String & Name der Rubrik unter der der Block in der
+Blockbibliothek erscheint\\\hline
+offset & int & Zeitlicher Versatz (ns)\\\hline
+auto{}-offset & boolean & Zeigt an, ob der Versatz automatisch
+berechnet wird\\\hline 
+
+hasRuntime & boolean & Zeigt an, ob der Block eine Laufzeit besitzt.\\\hline
+runtime & int & Laufzeit des Blocks (ns)\\\hline
+block{}-type & \ {\quotedblbase}block``, {\quotedblbase}cpu`` &
+Definiert den Typ des Blocks. {\quotedblbase}block`` repr\"asentiert
+einen Core, {\quotedblbase}cpu`` eine CPU \\\hline
+cpuid & int & Nummer der CPU auf dem CPLD \\\hline
+\end{tabular}%\hspace*{-\tabcolsep}
+
+}\\\cline{1-1}
+
+pin&
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+
+id & int & Eindeutige Identifikation des Pins\\\hline
+name & String & Bezeichnung des Pins\\\hline
+address & int & Speicheradresse des Pins auf dem CPLD\\\hline
+bits & int & Bitbreite des Pins\\\hline
+type & {\quotedblbase}input``, {\quotedblbase}output``,
+{\quotedblbase}episodic`` & Definiert um welche Art von Pin es sich
+handelt\\\hline
+
+position & int & Bestimmt die Reihenfolge der Pins am Block\\\hline
+\end{tabular}\hspace*{-\tabcolsep}
+}\\\cline{1-1}
+\multicolumn{1}{|p{2.809cm}|}{
+view
+
+}&
+\multicolumn{1}{p{4.9420004cm}|}{
+name
+
+}&
+\multicolumn{1}{p{3.46cm}|}{
+String
+
+}&
+\multicolumn{1}{p{4.986cm}|}{
+Reserviert
+
+
+}\\\hline
+
+view{}-item
+
+
+&
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+
+
+x, y & int & Position des Blocks auf dem Arbeitsbereich\\\hline
+model{}-id & int & ID des {\textless}model{\textgreater}{}-Elements\\\hline
+\end{tabular}\hspace*{-\tabcolsep}
+}\\\cline{1-1}
+
+connector{}-view
+
+
+&
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+
+
+source{}-block, source{}-pin & int & Bestimmt Quell{}-Block und {}-Pin
+f\"ur die Verbindung \"uber die jeweiligen Ids aus den
+{\textless}model{\textgreater}{}-Elementen\\\hline
+
+target{}-block, target{}-pin & int & Bestimmt Ziel{}-Block und {}-Pin
+f\"ur die Verbindung \"uber die jeweiligen Ids aus den
+{\textless}model{\textgreater}{}-Elementen\\\hline
+\end{tabular}\hspace*{-\tabcolsep}
+}\\\cline{1-1}
+\multicolumn{1}{|p{2.809cm}|}{
+point
+
+
+}&
+\multicolumn{1}{p{4.9420004cm}|}{
+x, y
+
+
+}&
+\multicolumn{1}{p{3.46cm}|}{
+int
+
+
+}&
+\multicolumn{1}{p{4.986cm}|}{
+Position des Knickpunkts auf dem Arbeitsbereich
+
+
+}\\\hline
+
+palette{}-view
+
+
+&
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+
+
+x, y & int & Position der Palette auf dem Arbeitsbereich\\\hline
+last{}-pal{}-entry & int & Definiert die Index{}-Nummer auf der
+Farbpalette, die f\"ur die n\"achste Taktrate verwendet werden soll\\\hline
+
+name & String & Bezeichner der Palette (reserviert)\\\hline
+\end{tabular}\hspace*{-\tabcolsep}
+}\\\cline{1-1}
+
+mapping &
+\multicolumn{3}{p{13.788cm}}{\hspace*{-\tabcolsep}\begin{tabular}{|p{4.9420004cm}|p{3.46cm}|p{4.986cm}|}
+
+ns & int & Taktfrequenz in Nanosekunden.\\\hline
+
+pal{}-entry & int & Index{}-Nummer auf der Farbpalette.\\\hline
+\end{tabular}\hspace*{-\tabcolsep}
+}\\\cline{1-1}
+\end{longtable}
+

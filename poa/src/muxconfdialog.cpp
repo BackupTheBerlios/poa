@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.24 2003/11/26 15:52:45 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.25 2003/12/03 13:21:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -532,7 +532,7 @@ void MuxConfDialog::addIo() {
     unsigned id = mappingListView->childCount() + 1;
 
     PinModel *pin =
-        new PinModel(model_, id,
+        new PinModel(model_,
                     QString("%1 %2").arg(name).arg(id),
                     0, bits, type);
 
@@ -588,7 +588,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
         // so we create a new PinModel
 
         mapTo =
-            new PinModel(model_, id, mapToName, id * 100, 0, type);
+            new PinModel(model_, mapToName, id * 100, 0, type);
         mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
         ioComboBox_->insertItem(mapToName);
     }

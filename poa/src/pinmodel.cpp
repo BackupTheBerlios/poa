@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.30 2003/12/03 13:11:17 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.31 2003/12/03 13:21:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,31 +30,18 @@
 
 #include "blockview.h"
 
-PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
+PinModel::PinModel(BlockModel *parent, const QString &name,
                    unsigned address, unsigned bits, PinType type)
 {
     Q_ASSERT(name != 0);
     name_ = name;
     parent_ = parent;
-    id_ = id;
-    connected_ = 0;
     address_ = address;
     bits_ = bits;
     type_ = type;
-    position_ = 0;
-}
-
-
-PinModel::PinModel(BlockModel *parent, const QString &name)
-{
-    name_ = name;
-    parent_ = parent;
-    view_ = 0;
-    connected_ = 0;
     id_ = 0;
-    address_ = 0;
-    bits_ = 32;
     position_ = 0;
+    connected_ = 0;
 }
 
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
@@ -224,5 +211,9 @@ void PinModel::deserialize(QDomElement element)
 PinModel *PinModel::clone()
 {
     Q_ASSERT(parent_ != 0);
-    return new PinModel(parent_, id_, name_, address_, bits_, type_);
+
+    PinModel *pin = new PinModel(parent_, name_, address_, bits_, type_);
+    pin->setId(id_);
+
+    return pin;
 }

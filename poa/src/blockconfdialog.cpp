@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.34 2003/12/03 13:11:17 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.35 2003/12/03 13:21:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -549,7 +549,7 @@ void BlockConfDialog::newIo()
             item = (PinListViewItem *)item->parent();
         }
         int childCount = item->childCount() + 1;
-        PinModel *pin = new PinModel(model_, childCount,
+        PinModel *pin = new PinModel(model_,
                 "data" + QString::number(childCount),
                 childCount * 100, 32, item->type());
         PinListViewItem *child = new PinListViewItem(item, pin);
@@ -712,7 +712,7 @@ void BlockConfDialog::edit()
 
 void BlockConfDialog::updatePositions(PinModel::PinType type) {
 
-    //for (QPtrListIterator<
+//    for (QPtrListIterator<
 
 
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.49 2003/09/18 16:35:40 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.50 2003/09/18 17:35:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -438,7 +438,8 @@ QAction *MainWindow::blockConfAction()
 void MainWindow::fileNew()
 {
     QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
-    fd->setMode( QFileDialog::AnyFile );
+    //fd->setMode( QFileDialog::AnyFile );
+    fd->setMode(QFileDialog::Directory);
     fd->setFilter("POA project (project.xml)");
     fd->setSelection("project.xml");
     fd->setCaption("Select/Create project directory");
@@ -453,9 +454,8 @@ void MainWindow::fileNew()
         return;
     }
 
-
     QDir projDir(fileName);
-    projDir.cdUp();
+    //projDir.cdUp();
 
     // if project is new, create empty project and save it
     if (!QFileInfo(fileName).exists()) {
@@ -471,7 +471,7 @@ void MainWindow::fileNew()
 void MainWindow::fileOpen()
 {
     QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
-    fd->setMode( QFileDialog::AnyFile );
+    fd->setMode( QFileDialog::ExistingFile );
     fd->setFilter("POA project (project.xml)");
     fd->setSelection("project.xml");
     fd->setCaption("Select/Create project directory");

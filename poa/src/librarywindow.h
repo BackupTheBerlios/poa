@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.12 2004/01/21 17:51:49 squig Exp $
+ * $Id: librarywindow.h,v 1.13 2004/01/21 22:42:27 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -203,6 +203,8 @@ private :
     void renameTypeItem(QListViewItem *item, const QString &oldName,
                         const QString &newName);
 
+    friend class TypeListViewItem;
+
 private slots:
 
     /**
@@ -242,8 +244,6 @@ private slots:
      * Shows the popup menu at pos.
      */
     void showPopup(QListViewItem *item, const QPoint &pos, int col);
-
-    friend class TypeListViewItem;
 
 };
 

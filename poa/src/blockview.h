@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.43 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: blockview.h,v 1.44 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -130,6 +130,12 @@ public:
     virtual void moveBy(double dx, double dy);
 
     /**
+     * Returns a list of all pins. The list is a copy, so
+     * modifications of the list will have no effect on the BlockView.
+     */
+    QValueList<PinView *> pins();
+
+    /**
      * Invoked when the item is removed by the user.
      */
     virtual void remove(Project *project);
@@ -138,7 +144,7 @@ public:
      * Run Time Type Identification
      */
     virtual int rtti() const;
-	static const int RTTI;
+    static const int RTTI;
 
     /**
      * Sets the brush to red if Pin is selected, otherwise black

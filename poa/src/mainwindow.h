@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.27 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: mainwindow.h,v 1.28 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -91,6 +91,11 @@ public:
     QAction *cutAction();
 
     /**
+     * Returns the default route action.
+     */
+    QAction *defaultRouteAction();
+
+    /**
      * Returns the paste action.
      */
     QAction *pasteAction();
@@ -105,8 +110,14 @@ public:
      */
     QAction *showGridAction();
 
+    /**
+     * Returns the smart route action.
+     */
+    QAction *smartRouteAction();
+
 public slots:
     virtual void checkClipboardContent();
+    virtual void defaultRoute();
     virtual void fileNew();
     virtual void fileOpen();
     virtual void fileSave();
@@ -125,6 +136,7 @@ public slots:
     virtual void openSettings();
     virtual int openDeployWizard();
     //    virtual void saveProject();
+    virtual void smartRoute();
     virtual void windowActivated(QWidget *w);
     virtual void zoomTo(const QString &level);
     virtual void zoomIn();
@@ -162,6 +174,7 @@ private:
     QAction *editCopyAction;
     QAction *editPasteAction;
     QAction *editRemoveAction;
+    QAction *defaultRouteAction_;
     QAction *helpContentsAction;
     QAction *helpAboutAction;
     QAction *settingsShowGridAction_;
@@ -174,6 +187,7 @@ private:
     QAction *invokeDownloadAction;
     QAction *invokeDeployAction;
     QAction *openSettingsAction;
+    QAction *smartRouteAction_;
     QAction *tileHorizontalAction;
     QAction *cascadeAction;
     QAction *tileAction;

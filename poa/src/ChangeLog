@@ -1,5 +1,8 @@
 2004-01-09  Steffen Pingel  <squig@users.sourceforge.net>
 
+	* mainwindow.cpp (windowActivated): Disable actions when no
+	project is loaded.
+
 	* blockmodel.cpp (BlockModel): Moved offset property from cpu
 	model to this class.
 

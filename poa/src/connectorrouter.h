@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.h,v 1.3 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: connectorrouter.h,v 1.4 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,10 +29,11 @@
 #include "router.h"
 
 #include <qcanvas.h>
+#include <qptrdict.h>
 #include <qvaluelist.h>
 
+class BlockView;
 class ConnectorViewList;
-
 
 class ConnectorRouter : public Router
 {
@@ -51,6 +52,13 @@ public:
      * Routes a set of <code>ConnectorViewList</code>s
      */
     virtual void route(QValueList<ConnectorViewList*>& list) = 0;
+
+ private:
+    /**
+     * Adds the connectors of all pins of block to routeItems.
+     */
+    void add(QPtrDict<ConnectorViewList> *routeItems, BlockView *block);
+
 };
 
 #endif

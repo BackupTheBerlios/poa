@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.52 2003/12/20 16:06:23 kilgus Exp $
+ * $Id: blockview.cpp,v 1.53 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -331,7 +331,7 @@ void BlockView::drawShape(QPainter &p)
 
     // draw header
     int left = (int) x();
-    int right = left + width() - 1;
+    //int right = left + width() - 1;
     int currentY = (int) y() + BlockView::DEFAULT_TOP_SPACING;
     QRect textArea(left,
                    currentY,
@@ -477,25 +477,10 @@ void BlockView::arrangeVerticalPins()
     }
 }
 
-QDomElement BlockView::serialize(QDomDocument *document)
-{
-    QDomElement root = document->createElement("view-item");
-    root.setAttribute("x", x());
-    root.setAttribute("y", y());
-    return root;
-}
-
 void BlockView::deserialize(QDomElement element)
 {
     setX(element.attribute("x","0").toDouble());
     setY(element.attribute("y","0").toDouble());
-}
-
-void BlockView::updateView()
-{
-    arrangePins();
-    update();
-    canvas()->update();
 }
 
 void BlockView::deletePinView(PinView *pin)
@@ -508,8 +493,32 @@ void BlockView::deleteView()
     delete this;
 }
 
+QValueList<PinView *> BlockView::pins()
+{
+    QValueList<PinView *> list;
+    list += leftPins_;
+    list += rightPins_;
+    list += bottomPins_;
+    return list;
+}
+
 QString BlockView::tip()
 {
     return model_->tip();
+}
+
+QDomElement BlockView::serialize(QDomDocument *document)
+{
+    QDomElement root = document->createElement("view-item");
+    root.setAttribute("x", x());
+    root.setAttribute("y", y());
+    return root;
+}
+
+void BlockView::updateView()
+{
+    arrangePins();
+    update();
+    canvas()->update();
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.52 2004/01/09 14:05:29 squig Exp $
+ * $Id: canvasview.cpp,v 1.53 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -67,6 +67,10 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
 
     popupMenu = new QPopupMenu(this);
     MainWindow::instance()->blockConfAction()->addTo(popupMenu);
+    QPopupMenu *routeMenu = new QPopupMenu(popupMenu);
+    popupMenu->insertItem(tr("&Route"), routeMenu);
+    MainWindow::instance()->defaultRouteAction()->addTo(routeMenu);
+    MainWindow::instance()->smartRouteAction()->addTo(routeMenu);
     popupMenu->insertSeparator();
     MainWindow::instance()->cutAction()->addTo(popupMenu);
     MainWindow::instance()->copyAction()->addTo(popupMenu);
@@ -135,15 +139,15 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 
             selectItem(topItem);
 
-            // notify item that is has been clicked
             Moveable *item = dynamic_cast<Moveable*>(topItem);
             if (item != 0) {
                 setAction(new MoveAction(this, e, item));
             }
-
-            PinView *pinItem = dynamic_cast<PinView*>(topItem);
-            if (pinItem != 0 && !pinItem->isConnected()) {
-                setAction(new ConnectAction(this, e, pinItem));
+            else {
+                PinView *pinItem = dynamic_cast<PinView*>(topItem);
+                if (pinItem != 0 && !pinItem->isConnected()) {
+                    setAction(new ConnectAction(this, e, pinItem));
+                }
             }
 
             canvas()->update();

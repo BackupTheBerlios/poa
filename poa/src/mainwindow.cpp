@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.75 2004/01/05 15:48:49 kilgus Exp $
+ * $Id: mainwindow.cpp,v 1.76 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,10 +29,13 @@
 #include "blockview.h"
 #include "canvasview.h"
 #include "cpumodel.h"
+#include "connectorrouter.h"
 #include "connectorviewlist.h"
 #include "connectorviewsegment.h"
 #include "copyable.h"
 #include "deployprojectwizard.h"
+#include "dijkstrarouter.h"
+#include "directrouter.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "modelfactory.h"
@@ -146,6 +149,9 @@ void MainWindow::initializeActions()
     QPixmap image_zoomnormal(Util::findIcon("zoomnormal.png"));
     QPixmap image_zoomout(Util::findIcon("zoomout.png"));
 
+    defaultRouteAction_ = new QAction
+        (tr("Default Router"), QPixmap(Util::findIcon("defaultroute.png")),
+         tr("&Default Router"), 0, this, "defaultRouteAction");
     fileNewAction = new QAction
         (tr("New"), QPixmap(Util::findIcon("filenew.png")),
          tr("&New"), QKeySequence("Ctrl+N"), this, "fileNewAction");
@@ -218,6 +224,9 @@ void MainWindow::initializeActions()
                     QKeySequence(tr("Ctrl+G")), this, "editSettingsShowGrid",
                     true);
     settingsShowGridAction_->setOn(Settings::instance()->showGrid());
+    smartRouteAction_ = new QAction
+        (tr("Smart Router"), QPixmap(Util::findIcon("smartroute.png")),
+         tr("&Smart Router"), 0, this, "smartRouteAction");
 }
 
 void MainWindow::initializeToolbars()
@@ -301,6 +310,10 @@ void MainWindow::initializeMenu()
     toolsMenu = new QPopupMenu(this);
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
     openBlockConfAction->addTo(toolsMenu);
+    QPopupMenu *routeMenu = new QPopupMenu(toolsMenu);
+    toolsMenu->insertItem(tr("&Route"), routeMenu);
+    defaultRouteAction_->addTo(routeMenu);
+    smartRouteAction_->addTo(routeMenu);
     toolsMenu->insertSeparator();
     invokeSchedulingAction->addTo(toolsMenu);
     //invokeCompilerAction->addTo(toolsMenu);
@@ -417,6 +430,11 @@ void MainWindow::tileHorizontal()
     }
 }
 
+QAction *MainWindow::blockConfAction()
+{
+    return openBlockConfAction;
+}
+
 void MainWindow::checkClipboardContent()
 {
     QMimeSource *data = QApplication::clipboard()->data();
@@ -462,11 +480,6 @@ QAction *MainWindow::copyAction()
 QAction *MainWindow::cutAction()
 {
     return editCutAction;
-}
-
-QAction *MainWindow::blockConfAction()
-{
-    return openBlockConfAction;
 }
 
 QAction *MainWindow::removeAction()
@@ -535,59 +548,21 @@ void MainWindow::createNewProject(QString path)
     delete prj;
 }
 
-void MainWindow::fileOpen()
+void MainWindow::defaultRoute()
 {
-    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
-    fd->setMode( QFileDialog::ExistingFile );
-    fd->setFilter("POA project (project.xml)");
-    fd->setSelection("project.xml");
-    fd->setCaption("Select/Create project directory");
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
 
-    QString fileName;
-    if ( fd->exec() == QDialog::Accepted ) {
-        fileName = fd->selectedFile();
-        delete fd;
-    }
-    else {
-        delete fd;
-        return;
-    }
-
-    QDir projDir(fileName);
-    projDir.cdUp();
-
-    openProject(projDir.path());
-}
-
-void MainWindow::fileSave()
-{
-    if (project_) {
-        try {
-            project_->save();
-        } catch (const PoaException e) {
-            QMessageBox::warning
-                (this, tr("File error"),
-                 e.message());
-        }
+        DirectRouter *router = new DirectRouter();
+        dynamic_cast<ConnectorRouter *>(router)->route(items);
+        delete router;
     }
 }
 
-void MainWindow::fileSaveAs()
+QAction *MainWindow::defaultRouteAction()
 {
-    qWarning("Not implemented yet");
-   /*    QString filename
-        = QFileDialog::getSaveFileName(QString::null, QString::null, this);
-    if (!filename.isEmpty()) {
-        // FIX: check if file already exists
-        project_->setFilename(filename);
-        saveProject();
-        Settings::instance()->addToRecentProjects(filename);
-        }*/
-}
-
-void MainWindow::fileExit()
-{
-    qWarning( "MainWindow::fileExit(): Not implemented yet!" );
+    return defaultRouteAction_;
 }
 
 void MainWindow::editCut()
@@ -665,6 +640,61 @@ void MainWindow::editRemove()
         }
         view->canvas()->update();
     }
+}
+
+void MainWindow::fileOpen()
+{
+    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+    fd->setMode( QFileDialog::ExistingFile );
+    fd->setFilter("POA project (project.xml)");
+    fd->setSelection("project.xml");
+    fd->setCaption("Select/Create project directory");
+
+    QString fileName;
+    if ( fd->exec() == QDialog::Accepted ) {
+        fileName = fd->selectedFile();
+        delete fd;
+    }
+    else {
+        delete fd;
+        return;
+    }
+
+    QDir projDir(fileName);
+    projDir.cdUp();
+
+    openProject(projDir.path());
+}
+
+void MainWindow::fileSave()
+{
+    if (project_) {
+        try {
+            project_->save();
+        } catch (const PoaException e) {
+            QMessageBox::warning
+                (this, tr("File error"),
+                 e.message());
+        }
+    }
+}
+
+void MainWindow::fileSaveAs()
+{
+    qWarning("Not implemented yet");
+   /*    QString filename
+        = QFileDialog::getSaveFileName(QString::null, QString::null, this);
+    if (!filename.isEmpty()) {
+        // FIX: check if file already exists
+        project_->setFilename(filename);
+        saveProject();
+        Settings::instance()->addToRecentProjects(filename);
+        }*/
+}
+
+void MainWindow::fileExit()
+{
+    qWarning( "MainWindow::fileExit(): Not implemented yet!" );
 }
 
 void MainWindow::helpContents()
@@ -806,25 +836,46 @@ QAction *MainWindow::showGridAction()
     return settingsShowGridAction_;
 }
 
+void MainWindow::smartRoute()
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+
+        DijkstraRouter *router = new DijkstraRouter();
+        dynamic_cast<ConnectorRouter *>(router)->route(items);
+        delete router;
+    }
+}
+
+QAction *MainWindow::smartRouteAction()
+{
+    return smartRouteAction_;
+}
+
 void MainWindow::windowActivated(QWidget* w)
 {
     if (w != 0) {
         MdiWindow *m = (MdiWindow *)ws->activeWindow();
 
         checkClipboardContent();
+        //FIX: invokeDeployAction->setEnabled(true);
+        invokeSchedulingAction->setEnabled(true);
         zoomComboBox->setEnabled(true);
         zoomComboBox->setEditText
             (QString::number(m->zoomLevel() * 100.0) + "%");
-		invokeSchedulingAction->setEnabled(true);
+        invokeSchedulingAction->setEnabled(true);
     }
     else {
         editCutAction->setEnabled(false);
         editCopyAction->setEnabled(false);
         editPasteAction->setEnabled(false);
         editRemoveAction->setEnabled(false);
+        invokeDeployAction->setEnabled(false);
+        invokeSchedulingAction->setEnabled(false);
         openBlockConfAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
-		invokeSchedulingAction->setEnabled(false);
+        invokeSchedulingAction->setEnabled(false);
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.4 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: dijkstrarouter.h,v 1.5 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -36,7 +36,8 @@
 
 class DijkstraRouter : public ConnectorRouter
 {
-    
+public:
+
     /**
      * Routes one {@link ConnectorViewList}s with an egoistic routing
      * based on the single source all targets shortest path algorigm
@@ -53,9 +54,9 @@ class DijkstraRouter : public ConnectorRouter
 
 protected:
     virtual QValueList<QPoint> *routeOne(QPoint from,
-					 LineDirection fromDir,
-					 QPoint to,
-					 LineDirection toDir);
+                     LineDirection fromDir,
+                     QPoint to,
+                     LineDirection toDir);
 };
 
 

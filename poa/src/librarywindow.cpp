@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.27 2004/01/09 16:52:13 vanto Exp $
+ * $Id: librarywindow.cpp,v 1.28 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -35,6 +35,7 @@
 #include <qdom.h>
 #include <qdragobject.h>
 #include <qfileinfo.h>
+#include <qframe.h>
 #include <qlayout.h>
 #include <qpalette.h>
 #include <qsplitter.h>
@@ -69,7 +70,7 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
 
     descriptionTextBrowser = new QTextBrowser(splitter);
     QPalette palette = QApplication::palette();
-    descriptionTextBrowser->setFrameStyle(NoFrame);
+    descriptionTextBrowser->setFrameStyle(QFrame::NoFrame);
     descriptionTextBrowser->setPaper
             (palette.brush(QPalette::Normal, QColorGroup::Background));
 
@@ -244,7 +245,8 @@ LibraryListView::LibraryListView(QWidget *parent, const char *name,
 
 QDragObject *LibraryListView::dragObject()
 {
-    LibraryListViewItem *item = reinterpret_cast<LibraryListViewItem*>(selectedItem());
+    LibraryListViewItem *item
+        = reinterpret_cast<LibraryListViewItem*>(selectedItem());
 
     QDomDocument doc;
     QDomElement root = doc.createElement("model");

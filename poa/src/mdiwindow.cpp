@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.20 2003/12/03 18:26:12 vanto Exp $
+ * $Id: mdiwindow.cpp,v 1.21 2004/01/09 16:56:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,6 +35,7 @@
 #include <qcanvas.h>
 #include <qlayout.h>
 #include <qaction.h>
+#include <qframe.h>
 #include <qimage.h>
 #include <qmessagebox.h>
 #include <qpixmap.h>
@@ -48,7 +49,9 @@ MdiWindow::MdiWindow(CanvasView *view, QWidget* parent,
 {
     zoomLevel_ = 1.0;
 
-    view_->reparent(this,0,QPoint());
+    view_->reparent(this, 0, QPoint());
+    view->setFrameStyle(QFrame::NoFrame);
+
     setCentralWidget(view_);
     setCaption(view->project()->name()+" - "+view->canvas()->name());
     setIcon(Util::findIcon("document.xpm"));

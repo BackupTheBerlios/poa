@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.23 2004/01/11 17:37:15 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.24 2004/01/12 00:27:00 squig Exp $
  *
  *****************************************************************************/
 
@@ -302,7 +302,7 @@ void ScheduleDialog::drawRuler()
 
     text->show();
     while (x < canvas->width()) {
-        x += PIX_PER_NS * zoom_ * RULER_TICK;
+        x += (int)(PIX_PER_NS * zoom_ * RULER_TICK);
         // draw short line
         QCanvasLine *tick = new QCanvasLine(canvas);
         tick->setPoints(x, 0, x, 10);
@@ -327,34 +327,35 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
     text->show();
 
     // resize canvas if label doesn't fit.
-    if (text->boundingRect().width() +
-        (2 * WIDGET_SPACING) > labelCanvas->width()) {
+    if (text->boundingRect().width() + 2 * WIDGET_SPACING
+        > labelCanvas->width()) {
+
         labelCanvas->resize(text->boundingRect().width()
                             + (2 * WIDGET_SPACING), labelCanvas->height());
     }
 
     // draw blocks
     int t = bt->getOffset();
-    int X = rint(t * PIX_PER_NS);
+    double X = t * PIX_PER_NS;
     while (X < canvas->width()) {
 
         // is block configured?
         if (bt->getClock() <= 0) {
             // no, draw info and skip
-            QCanvasRectangle *box = new QCanvasRectangle(canvas);
-            box->setSize(canvas->width(),
-                         BOX_HEIGHT + BOX_YSPACING);
-            box->setBrush(red);
-            box->setPen(white);
-            box->move(0, RULER_HEIGHT - BOX_YSPACING
-                      / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
-            box->setZ(1);
-            box->show();
+//              QCanvasRectangle *box = new QCanvasRectangle(canvas);
+//              box->setSize(canvas->width(),
+//                           BOX_HEIGHT + BOX_YSPACING);
+//              box->setBrush(darkGray);
+//              box->setPen(white);
+//              box->move(0, RULER_HEIGHT - BOX_YSPACING
+//                        / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
+//              box->setZ(0);
+//              box->show();
 
-            QCanvasText *text = new QCanvasText(tr("Please configure this block properly."), canvas);
+            QCanvasText *text = new QCanvasText(tr("Missing clock value."), canvas);
             text->move(WIDGET_SPACING, y);
-            text->setColor(white);
-            text->setZ(2);
+            text->setColor(black);
+            text->setZ(1);
             text->show();
             return;
         }

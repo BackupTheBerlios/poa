@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.28 2004/01/09 16:56:24 squig Exp $
+ * $Id: mainwindow.h,v 1.29 2004/01/12 00:27:00 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 #include "mdiwindow.h"
 class CanvasView;
+class ConnectorRouter;
 class Project;
 
 #include <qvariant.h>
@@ -151,6 +152,7 @@ private:
     void initializeActions();
     void initializeMenu();
     void initializeToolbars();
+    void routeSelected(ConnectorRouter *router);
     void zoomStepwise(int step);
     /** Creates a new project, stores it to the given location and deletes it reference. */
     void createNewProject(QString path);

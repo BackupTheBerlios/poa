@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.77 2004/01/09 21:40:38 squig Exp $
+ * $Id: mainwindow.cpp,v 1.78 2004/01/12 00:26:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -553,14 +553,7 @@ void MainWindow::createNewProject(QString path)
 
 void MainWindow::defaultRoute()
 {
-    CanvasView *view = activeView();
-    if (view != 0) {
-        QCanvasItemList items = view->selectedItems();
-
-        DirectRouter *router = new DirectRouter();
-        dynamic_cast<ConnectorRouter *>(router)->route(items);
-        delete router;
-    }
+    routeSelected(new DirectRouter());
 }
 
 QAction *MainWindow::defaultRouteAction()
@@ -818,6 +811,18 @@ QAction *MainWindow::pasteAction()
     return editPasteAction;
 }
 
+void MainWindow::routeSelected(ConnectorRouter *router)
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+
+        router->route(items);
+        activeView()->canvas()->update();
+    }
+    delete router;
+}
+
 void MainWindow::updateRecentProjectsMenu()
 {
     recentProjectsMenu->clear();
@@ -841,14 +846,7 @@ QAction *MainWindow::showGridAction()
 
 void MainWindow::smartRoute()
 {
-    CanvasView *view = activeView();
-    if (view != 0) {
-        QCanvasItemList items = view->selectedItems();
-
-        DijkstraRouter *router = new DijkstraRouter();
-        dynamic_cast<ConnectorRouter *>(router)->route(items);
-        delete router;
-    }
+    routeSelected(new DijkstraRouter());
 }
 
 QAction *MainWindow::smartRouteAction()
@@ -944,4 +942,3 @@ void MainWindow::zoomTo(const QString& level)
         }
     }
 }
-

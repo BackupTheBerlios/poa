@@ -18,20 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poaexception.h,v 1.5 2004/01/21 23:38:21 squig Exp $
+ * $Id: poaexception.h,v 1.6 2004/02/01 21:59:49 squig Exp $
  *
  *****************************************************************************/
 
 #include <qstring.h>
 
+/**
+ * Provides a general exception with a Unicode QString message.
+ */
 class PoaException
 {
- public:
+public:
+
+    /**
+     * Constructs an exception.
+     *
+     * @param msg the message
+     */
     PoaException(const QString msg = QString::null);
 
+    /**
+     * Returns the message.
+     */
     QString message() const;
 
- private:
+private:
+
     QString msg_;
 
 };

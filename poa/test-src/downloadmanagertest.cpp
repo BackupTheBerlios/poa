@@ -12,6 +12,7 @@ class DownloadManagerTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testDownload);
     CPPUNIT_TEST(testFilesize);
     CPPUNIT_TEST_EXCEPTION(testInvalidFile, PoaException);
+    CPPUNIT_TEST_EXCEPTION(testInvalidPort, PoaException);
     CPPUNIT_TEST(testRun);
     CPPUNIT_TEST_SUITE_END();
 
@@ -64,6 +65,11 @@ public:
     void testInvalidFile()
     {
         DownloadManager("downloadmanagertest.cpp.doesnotexist");
+    }
+
+    void testInvalidPort()
+    {
+        DownloadManager::run("downloadmanagertest.cpp.doesnotexist/foobaz");
     }
 
     void testRun()

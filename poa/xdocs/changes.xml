@@ -35,7 +35,7 @@
       <action type="fix">MS VC++ compile error fixes</action>
     </release>
 
-	<release version="0.3.0" date="2004-01-29">
+	<release version="0.3.0" date="2004-02-01">
       <action type="add">Multiple projects can now be opened at once</action>
       <action type="add">A menu to switch and arrange windows has been
       added</action>
@@ -64,6 +64,9 @@
       be shown in senseful units</action>
       <action type="update">The block and mux configuration dialog have been
       redesigned to provide more intuitive and consistent handling</action>
+      <action type="update">The performance of the smart router has
+      been improved</action>
+      <action type="update">Icons have been added to the library</action>
       <action type="fix">All block models including I/O blocks now have a runtime</action>
       <action type="fix">Enlarge canvas size when loading a project to
       ensure visiblity of all items</action>

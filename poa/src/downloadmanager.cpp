@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.12 2004/02/01 21:37:04 squig Exp $
+ * $Id: downloadmanager.cpp,v 1.13 2004/02/01 21:59:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -140,7 +140,7 @@ bool DownloadManager::download(const char* portname, QProgressDialog *monitor)
 
     int total = 0;
     if (monitor != 0) {
-        monitor->setTotalSteps(0);
+        monitor->setTotalSteps(filesize());
     }
 
     // send data

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.19 2004/02/01 21:37:04 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.20 2004/02/01 21:59:49 squig Exp $
  *
  *****************************************************************************/
 
@@ -201,8 +201,8 @@ void DeployProjectWizard::cpuSelected(int index)
     QFileInfo srecFileInfo(srecFilename);
 
     cpuDetailsLabel_->setText
-        (QString("Soure Filename: %1\nSource Last Modified:%2\n"
-                 "SRec Filename: %2\nSRec Last Modified:%3\n")
+        (QString("<p>Soure File: %1<br>Last Modified: <b>%2</b>"
+                 "<p>Binary File: %2<br>Last Modified: <b>%3</b>")
          .arg(sourceFilename).arg(sourceFileInfo.lastModified().toString())
          .arg(srecFilename).arg(srecFileInfo.lastModified().toString()));
 }

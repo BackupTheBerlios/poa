@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.71 2004/01/28 18:16:52 squig Exp $
+ * $Id: blockview.cpp,v 1.72 2004/02/15 03:24:51 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -419,7 +419,9 @@ void BlockView::arrangeVerticalPins()
     unsigned slotCount = QMAX(leftSize, rightSize);
 
     if (slotCount > 0 && bottom > top) {
-        unsigned height = (bottom - top + 1) / slotCount;
+// this method does not produce a constant value for all different blocks
+//        unsigned height = (bottom - top + 1) / slotCount;
+        unsigned height = BlockView::DEFAULT_FONT_HEIGHT;
         top += BlockView::DEFAULT_FONT_HEIGHT / 2;
 
         for (unsigned i = 0; i < slotCount; ++i) {

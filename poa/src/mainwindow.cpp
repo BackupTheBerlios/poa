@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.47 2003/09/17 16:16:40 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.48 2003/09/17 16:49:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -435,14 +435,6 @@ QAction *MainWindow::blockConfAction()
 
 void MainWindow::fileNew()
 {
-    // close current project
-    if (!closeAll()) {
-        return;
-    }
-    if (project_) {
-        delete project_;
-    }
-
     QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
     fd->setMode( QFileDialog::AnyFile );
     fd->setFilter("POA project (project.xml)");
@@ -452,42 +444,26 @@ void MainWindow::fileNew()
     QString fileName;
     if ( fd->exec() == QDialog::Accepted ) {
         fileName = fd->selectedFile();
+        delete fd;
+    }
+    else {
+        delete fd;
+        return;
     }
 
-    delete fd;
 
     QDir projDir(fileName);
     projDir.cdUp();
 
-    project_ = new Project(projDir.path());
-
-    if (QFileInfo(fileName).exists()) {
-        qDebug("open!");
-        project_->open();
-    }
-    else {
-        project_->save();
+    // if project is new, create empty project and save it
+    if (!QFileInfo(fileName).exists()) {
+        Project *prj = new Project(projDir.path());
+        prj->newCanvas("1");
+        prj->save();
+        delete prj;
     }
 
-    GridCanvas *canvas = project_->newCanvas("1");
-    CanvasView *view = new CanvasView(project_, canvas);
-
-    MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
-    w->showMaximized();
-
-    // connect to signals
-    connect(view, SIGNAL(selectionChanged(bool)), editCutAction,
-            SLOT(setEnabled(bool)));
-    connect(view, SIGNAL(selectionChanged(bool)), editCopyAction,
-            SLOT(setEnabled(bool)));
-
-    // show the very first window in maximized mode
-//      if (ws->windowList().isEmpty()) {
-//          w->showMaximized();
-//      }
-//      else {
-//          w->show();
-//      }
+    openProject(projDir.path());
 }
 
 void MainWindow::fileOpen()
@@ -501,18 +477,17 @@ void MainWindow::fileOpen()
     QString fileName;
     if ( fd->exec() == QDialog::Accepted ) {
         fileName = fd->selectedFile();
+        delete fd;
     }
-
-    delete fd;
+    else {
+        delete fd;
+        return;
+    }
 
     QDir projDir(fileName);
     projDir.cdUp();
 
-    QString filename
-        = QFileDialog::getOpenFileName(QString::null, QString::null, this);
-    if (!filename.isEmpty()) {
-        openProject(filename);
-    }
+    openProject(projDir.path());
 }
 
 void MainWindow::fileSave()
@@ -528,7 +503,8 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
-    /*    QString filename
+    qWarning("Not implemented yet");
+   /*    QString filename
         = QFileDialog::getSaveFileName(QString::null, QString::null, this);
     if (!filename.isEmpty()) {
         // FIX: check if file already exists
@@ -635,7 +611,7 @@ void MainWindow::openBlockConf()
     }
 }
 
-void MainWindow::openProject(QString filename)
+void MainWindow::openProject(QString path)
 {
     if (!closeAll()) {
         return;
@@ -645,7 +621,7 @@ void MainWindow::openProject(QString filename)
         delete project_;
     }
 
-    project_ = new Project(filename);
+    project_ = new Project(path);
 
     if (project_->open()) {
         GridCanvas *canvas = project_->canvasList()->getFirst();
@@ -653,11 +629,17 @@ void MainWindow::openProject(QString filename)
 
         MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
         w->showMaximized();
+
+        // connect to signals
+        connect(view, SIGNAL(selectionChanged(bool)), editCutAction,
+                SLOT(setEnabled(bool)));
+        connect(view, SIGNAL(selectionChanged(bool)), editCopyAction,
+                SLOT(setEnabled(bool)));
     }
     else {
         QMessageBox::warning
             (this, tr("File error"),
-             tr("Cannot open project file: %1").arg(filename));
+             tr("Cannot open project %1").arg(path));
     }
 }
 

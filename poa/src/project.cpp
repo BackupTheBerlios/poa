@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.52 2004/01/28 16:35:51 squig Exp $
+ * $Id: project.cpp,v 1.53 2004/01/28 23:09:56 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -287,6 +287,7 @@ void Project::deserialize(QDomDocument *document) {
         if (paletteElements.count() > 0) {
             QDomElement paletteElement = paletteElements.item(0).toElement();
             canvas->colorManager()->deserialize(paletteElement);
+            canvas->ensureVisibility(canvas->colorManager());
         }
 
         // create view items

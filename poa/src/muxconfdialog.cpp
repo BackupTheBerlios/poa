@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.40 2004/01/28 18:16:52 squig Exp $
+ * $Id: muxconfdialog.cpp,v 1.41 2004/01/28 23:09:56 squig Exp $
  *
  *****************************************************************************/
 
+#include <qvariant.h>
 #include <qbuttongroup.h>
 #include <qcombobox.h>
-#include <qgroupbox.h>
 #include <qheader.h>
 #include <qimage.h>
 #include <qlabel.h>
@@ -36,7 +36,7 @@
 #include <qradiobutton.h>
 #include <qspinbox.h>
 #include <qtooltip.h>
-#include <qvariant.h>
+#include <qvgroupbox.h>
 #include <qwhatsthis.h>
 
 #include "muxconfdialog.h"
@@ -157,7 +157,7 @@ void MuxConfDialog::initTopWidget() {
 
     nameLineEdit = new QLineEdit(topWidget, "nameLineEdit");
 
-    topLayout->addWidget(new QLabel(tr("name"), topWidget));
+    topLayout->addWidget(new QLabel(tr("Name"), topWidget));
     topLayout->addWidget(nameLineEdit);
 
     dialogLayout_->addWidget(topWidget);
@@ -166,17 +166,20 @@ void MuxConfDialog::initTopWidget() {
 
 void MuxConfDialog::initMappingWidget() {
 
-    QGroupBox *mappingGroupBox = new QGroupBox(this, "mappingGroupBox");
+    QVGroupBox *mappingGroupBox = new QVGroupBox(this, "mappingGroupBox");
     mappingGroupBox->setTitle(tr("Mappings"));
-    QBoxLayout *mappingLayout = new QVBoxLayout(mappingGroupBox, 3 * WIDGET_SPACING);
 
-    QWidget *boxWidget = new QWidget(mappingGroupBox);
-    QBoxLayout *boxLayout = new QVBoxLayout(boxWidget, WIDGET_SPACING);
+    // prepare mapping ListView
+    mappingListView = new QListView(mappingGroupBox, "mappingsListView");
+    mappingListView->setAllColumnsShowFocus(TRUE);
+    mappingListView->addColumn(tr("Input"));
+    mappingListView->addColumn(tr("Range"));
+    mappingListView->addColumn(tr("Output"));
+    mappingListView->addColumn(tr("Range"));
 
     // prepare buttons to put into grid layout
-    QWidget *buttonWidget = new QWidget(boxWidget);
-    QBoxLayout *buttonLayout =
-        new QHBoxLayout(buttonWidget, WIDGET_SPACING);
+    QWidget *buttonWidget = new QWidget(mappingGroupBox);
+    QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
 
     QPushButton *newMappingButton = new QPushButton(buttonWidget);
     newMappingButton->setText(tr("&New"));
@@ -198,20 +201,6 @@ void MuxConfDialog::initMappingWidget() {
     buttonLayout->addWidget(updateMappingButton);
     buttonLayout->addWidget(removeMappingButton);
     buttonLayout->addStretch(1);
-
-    // prepare mapping ListView
-    mappingListView = new QListView(boxWidget, "mappingsListView");
-    mappingListView->setAllColumnsShowFocus(TRUE);
-    mappingListView->addColumn(tr("Input"));
-    mappingListView->addColumn(tr("Range"));
-    mappingListView->addColumn(tr("Output"));
-    mappingListView->addColumn(tr("Range"));
-
-    // finish mapping layout
-    boxLayout->addWidget(mappingListView);
-    boxLayout->addWidget(buttonWidget);
-
-    mappingLayout->addWidget(boxWidget);
 
     dialogLayout_->addWidget(mappingGroupBox);
 }

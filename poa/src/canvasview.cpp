@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.60 2004/01/28 16:35:51 squig Exp $
+ * $Id: canvasview.cpp,v 1.61 2004/01/28 23:09:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -223,6 +223,10 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 
 void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
 {
+    if (e->button() == LeftButton) {
+        MainWindow::instance()->statusBar()->message(QString::null);
+    }
+
     if (autoScrollTimerId != 0) {
         killTimer(autoScrollTimerId);
         autoScrollTimerId = 0;
@@ -235,11 +239,13 @@ void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {
-    QPoint pos = toCanvas(e->pos());
-    ((MainWindow *)qApp->mainWidget())->statusBar()->message
-        (QString::number(pos.x()) + ":" + QString::number(pos.y()));
+    if (e->button() == LeftButton) {
+        QPoint pos = toCanvas(e->pos());
+        MainWindow::instance()->statusBar()->message
+            (QString::number(pos.x()) + ":" + QString::number(pos.y()));
 
-    doAutoScroll();
+        doAutoScroll();
+    }
 
     if (action_) {
         action_->mouseMoveEvent(e);

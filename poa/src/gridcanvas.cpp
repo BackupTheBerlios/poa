@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.36 2004/01/28 18:00:56 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.37 2004/01/28 23:09:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -154,10 +154,10 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
 void GridCanvas::ensureVisibility(QCanvasItem *item)
 {
     QRect rect = item->boundingRect();
-    QSize newSize = size().expandedTo(QSize((int)(item->x() + rect.width()),
-                                            (int)(item->y() + rect.height())));
-    if (newSize.width() > width() || newSize.height() > height()) {
-        resize(newSize.width(), newSize.height());
+    int newWidth = QMAX((int)item->x() + rect.width(), width());
+    int newHeight = QMAX((int)item->y() + rect.height(), height());
+    if (newWidth > width() || newHeight > height()) {
+        resize(newWidth, newHeight);
     }
 }
 

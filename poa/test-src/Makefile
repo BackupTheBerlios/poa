@@ -1,6 +1,6 @@
 CFLAGS   = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
 CXXFLAGS = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
-CPPUNIT_PATH = $(shell hostname && grep gspc && echo ../cppunit/lib/gspc54 || ../cppunit/lib)
+CPPUNIT_PATH = $(shell hostname | grep gspc >/dev/null && echo ../cppunit/lib/gspc54 || ../cppunit/lib)
 CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L$(CPPUNIT_PATH) -lcppunit)
 LDFLAGS  = $(CPPUNIT_LDFLAGS) -L$(QTDIR)/lib  -L/usr/X11R6/lib -lqt-mt -lpthread -lXext -lX11 -lm
 CPPUNIT_INCLUDES = $(shell cppunit-config --cflags || echo -I../cppunit/include)

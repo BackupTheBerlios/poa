@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.56 2004/01/26 15:57:17 squig Exp $
+ * $Id: canvasview.cpp,v 1.57 2004/01/27 05:51:39 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -258,7 +258,7 @@ void CanvasView::doAutoScroll()
     }
     else if (p.y() > visibleHeight() - AUTOSCROLL_MARGIN) {
         // scroll down
-        dy = p.y() - visibleHeight() - AUTOSCROLL_MARGIN;
+        dy = p.y() - (visibleHeight() - AUTOSCROLL_MARGIN);
     }
 
     if ( p.x() < AUTOSCROLL_MARGIN ) {
@@ -266,7 +266,7 @@ void CanvasView::doAutoScroll()
         dx = -(AUTOSCROLL_MARGIN - p.x());
     } else if ( p.x() > visibleWidth() - AUTOSCROLL_MARGIN) {
         // scroll rigth
-        dx = p.x() - visibleWidth() - AUTOSCROLL_MARGIN;
+        dx = p.x() - (visibleWidth() - AUTOSCROLL_MARGIN);
     }
 
     if (dx != 0 || dy != 0) {

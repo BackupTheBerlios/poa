@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.h,v 1.5 2004/02/13 16:23:00 vanto Exp $
+ * $Id: problemmanager.h,v 1.6 2004/06/04 15:13:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -127,7 +127,8 @@ public:
      *
      * @param the disconnected pin
      */
-    DisconnectedPinReport(QListViewItem *parent, PinModel *pin);
+    DisconnectedPinReport(QListViewItem *parent, Project *project,
+                          PinModel *pin);
 
     virtual void addWidgets(QWidget *widget);
 
@@ -137,7 +138,8 @@ public slots:
 
 private:
 
-     PinModel *pin_;
+    Project *project_;
+    PinModel *pin_;
 
 };
 

@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.9 2004/02/13 16:35:52 squig Exp $
+ * $Id: problemmanager.cpp,v 1.10 2004/06/04 15:13:42 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockgraph.h"
 #include "blockmodel.h"
+#include "codemanager.h"
 #include "pinmodel.h"
 #include "problemmanager.h"
 #include "util.h"
@@ -109,11 +110,13 @@ QString ProblemReportItem::status() const
 //--- DisconnectedPinReport ---
 
 DisconnectedPinReport::DisconnectedPinReport(QListViewItem *parent,
+                                             Project *project,
                                              PinModel *pin)
   : ProblemReportItem(parent, tr("Warning"))
 {
     // FIX: connect to deleted signal
     pin_ = pin;
+    project_ = project;
 
     setShortDescription(QString(tr("%1 is not connected")).arg(pin->absName()));
     setLongDescription(tr("Disconnected pins are considered bad style."));
@@ -130,6 +133,13 @@ void DisconnectedPinReport::deletePin()
 {
     if (pin_ != 0) {
         pin_->parent()->deletePin(pin_);
+        if (INSTANCEOF(pin_->parent(), CpuModel)) {
+            CodeManager codeManager(project_, (CpuModel *)pin_->parent());
+            if (!codeManager.templateIsSubstitutable()) {
+                codeManager.prependSubstitutionMarkers();
+            }
+            codeManager.substitute();
+        }
         pin_ = 0;
         setFixed(true);
     }
@@ -316,7 +326,7 @@ void ProblemManager::checkBlock(BlockModel *block)
 
         // check if pin is connected at all
         if (pin->connected() == 0) {
-            new DisconnectedPinReport(blockRoot_, pin);
+            new DisconnectedPinReport(blockRoot_, project_, pin);
         }
         else {
             // check if pin is connected to pin with the same width

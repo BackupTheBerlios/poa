@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.2 2003/08/22 10:27:00 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.3 2003/08/22 10:44:52 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,6 @@
 
 #include <qdom.h> // used to provide serialization
 #include <qtextstream.h>
-#include <iostream.h>
 
 
 CpuModel::CpuModel(QString *name, unsigned short id, bool autoExecTime)
@@ -44,22 +43,16 @@ CpuModel::CpuModel(QString *name, unsigned short id, bool autoExecTime)
 QByteArray *CpuModel::serialize()
 {
     QDomDocument doc("cpu");
-    QDomElement root = doc.createElement( "cpu" );
+    QDomElement root = doc.createElement("cpu");
+    root.setAttribute("id", (unsigned int) id_);
+    root.setAttribute("autotime", autoExecTime_ ? "TRUE" : "FALSE");
     doc.appendChild(root);
 
-    QDomElement tag = doc.createElement("name");
-    root.appendChild(tag);
-
     QDomText t = doc.createTextNode(*name_);
-    tag.appendChild(t);
+    root.appendChild(t);
 
-    QString xml = doc.toString();
+    QCString *result = new QCString(doc.toCString());
 
-    cout << xml;
-
-    QByteArray *result = new QByteArray();
-    QTextStream ts(*result, IO_WriteOnly);
-    ts << xml;
-
-    return result;
+    // QCString inherits QByteArray
+    return (QByteArray*)result;
 }

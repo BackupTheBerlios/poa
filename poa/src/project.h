@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.26 2003/12/17 15:33:07 vanto Exp $
+ * $Id: project.h,v 1.27 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -117,7 +117,7 @@ public:
     bool isModified();
 
     /**
-     * Serializes this project to xml
+     * Serializes this project to xml.
      */
     QDomDocument serialize();
 
@@ -126,8 +126,18 @@ public:
      */
     void save();
 
+    /**
+     * Saves the project in another directory.
+     */
+    void saveAs(QString path);
+
+    /**
+     * Returns the current project path.
+     */
+    QString projectPath();
+
     /*
-     * Loads the project content
+     * Loads the project content.
      */
     void open();
 
@@ -136,7 +146,7 @@ signals:
 
 private:
     /**
-     * Deserializes the given xml document to this project
+     * Deserializes the given xml document to this project.
      */
     void deserialize(QDomDocument *document);
 

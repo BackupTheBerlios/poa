@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.27 2004/01/17 17:35:39 squig Exp $
+ * $Id: cpumodel.h,v 1.28 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
 #include "blockmodel.h"
+#include "project.h"
 
 #include <qdom.h>
 
@@ -40,6 +41,7 @@ class QCanvasItemList;
 class CpuModel: public BlockModel
 {
  public:
+
     /**
      * Creates a CpuModel instance for the library
      * <code>isProducer_</code> will be <code>true</code>.
@@ -95,15 +97,15 @@ class CpuModel: public BlockModel
     virtual void setAutoRuntime(const bool autoRuntime);
 
     /**
-     * Sets the project path.
+     * Sets the project.
      * Used by CodeManager to save its sources.
      */
-    void setProjectPath(QString path);
+    void setProject(Project *project);
 
     /**
-     * Returns the project path.
+     * Returns the project.
      */
-    QString projectPath() const;
+    Project *project() const;
 
     /**
      * Returns the tooltip text.
@@ -113,7 +115,7 @@ class CpuModel: public BlockModel
  private:
     bool autoRuntime_;
     int cpuId_;
-    QString path_;
+    Project *project_;
     bool saveSource_;
 
 };

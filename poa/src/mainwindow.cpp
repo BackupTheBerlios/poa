@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.86 2004/01/20 16:55:17 squig Exp $
+ * $Id: mainwindow.cpp,v 1.87 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -179,8 +179,7 @@ void MainWindow::initializeActions()
                     QKeySequence("Ctrl+S"), this, "fileSaveAction");
     fileSaveAsAction =
         new QAction("Save As...", "Save &As...", 0, this, "fileSaveAsAction");
-    // FIX
-    fileSaveAsAction->setEnabled(false);
+
     fileExitAction =
         new QAction("Exit", "E&xit", 0, this, "fileExitAction");
     editCutAction =
@@ -692,16 +691,71 @@ void MainWindow::fileSave()
         try {
             project_->save();
         } catch (const PoaException e) {
-            QMessageBox::warning
-                (this, tr("File error"),
-                 e.message());
+            QMessageBox::warning(this,
+                                 tr("File error"),
+                                 e.message());
         }
     }
 }
 
 void MainWindow::fileSaveAs()
 {
-    qWarning("Not implemented yet");
+    if (project_) {
+        QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+        fd->setMode(QFileDialog::Directory);
+        fd->setFilter("POA project (project.xml)");
+        fd->setSelection("project.xml");
+        fd->setCaption("Save As - Select/Create project directory");
+
+        QString fileName;
+        if ( fd->exec() == QDialog::Accepted ) {
+            fileName = fd->selectedFile();
+            delete fd;
+        }
+        else {
+            delete fd;
+            return;
+        }
+
+        QDir projDir(fileName);
+
+        // if project dir already exists, ask.
+        if ( QFileInfo(projDir, "project.xml").exists() &&
+             QMessageBox::warning(
+                                   this,
+                                   tr("POA - Overwrite File?"),
+                                   tr("A project directory called %1 already"
+                                      " exists.\nDo you want to overwrite it?")
+                                   .arg( projDir.path() ),
+                                   tr("&Yes"), tr("&No"),
+                                   QString::null, 0, 1 )
+             ) {
+            return;
+        }
+
+        // if project is new, create empty project and save it
+        /*        if (QFileInfo(projDir, "project.xml").exists()) {
+            QMessageBox mb( "POA",
+                            "The choosen project directory already exists.\n" \
+                            "Do you want to replace it?",
+                            QMessageBox::Warning,
+                            QMessageBox::Yes | QMessageBox::Default,
+                            QMessageBox::No | QMessageBox::Escape);
+
+            if (mb.exec() == QMessageBox::Yes) {
+                return;
+            }
+            }*/
+        try {
+            project_->saveAs(projDir.path());
+        }
+        catch (const PoaException e) {
+            QMessageBox::warning(this,
+                                 tr("File error"),
+                                 e.message());
+        }
+    }
+
    /*    QString filename
         = QFileDialog::getSaveFileName(QString::null, QString::null, this);
     if (!filename.isEmpty()) {
@@ -910,6 +964,7 @@ void MainWindow::windowActivated(QWidget* w)
         zoomComboBox->setEditText
             (QString::number(m->zoomLevel() * 100.0) + "%");
         invokeSchedulingAction->setEnabled(true);
+        fileSaveAsAction->setEnabled(true);
     }
     else {
         editCutAction->setEnabled(false);
@@ -921,6 +976,7 @@ void MainWindow::windowActivated(QWidget* w)
         openBlockConfAction->setEnabled(false);
         fileSaveAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
+        fileSaveAsAction->setEnabled(false);
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.12 2004/01/12 21:59:48 squig Exp $
+ * $Id: codemanager.cpp,v 1.13 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -57,8 +57,10 @@ CodeManager *CodeManager::instance()
 
 QString CodeManager::cpuPath(CpuModel *model)
 {
+    // model must belong to a project!
+    Q_ASSERT(model->project() != 0);
     return QString("%1/CPU_%2_sdk")
-        .arg(model->projectPath())
+        .arg(model->project()->projectPath())
         .arg(model->cpuId());
 }
 

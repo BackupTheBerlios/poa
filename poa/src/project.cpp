@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.44 2004/01/18 23:15:12 squig Exp $
+ * $Id: project.cpp,v 1.45 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -106,6 +106,18 @@ void Project::save()
     }
 }
 
+void Project::saveAs(QString path)
+{
+    path_ = path;
+    save();
+    Settings::instance()->addToRecentProjects(path_);
+}
+
+QString Project::projectPath()
+{
+    return path_;
+}
+
 void Project::addBlock(AbstractModel *item)
 {
     if (item->id() == 0) {
@@ -116,7 +128,7 @@ void Project::addBlock(AbstractModel *item)
     if (INSTANCEOF(item, CpuModel))
     {
         ((CpuModel *)item)->setCpuId(currentBlockId_);
-        ((CpuModel *)item)->setProjectPath(path_);
+        ((CpuModel *)item)->setProject(this);
     }
 
     blocks_.append(item);

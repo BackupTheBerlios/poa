@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.33 2004/01/18 23:31:02 squig Exp $
+ * $Id: cpumodel.cpp,v 1.34 2004/01/20 17:46:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,7 @@ CpuModel::CpuModel(QString type, QString description)
 {
     autoRuntime_ = true;
     cpuId_ = -1;
+    project_ = 0;
 
     saveSource_ = true;
 }
@@ -45,7 +46,7 @@ CpuModel::CpuModel(QDomElement element)
     : BlockModel(QString::null, QString::null)
 {
     deserialize(element);
-
+    project_ = 0;
     saveSource_ = true;
 }
 
@@ -98,14 +99,14 @@ void CpuModel::setAutoRuntime(const bool autoRuntime)
     autoRuntime_ = autoRuntime;
 }
 
-void CpuModel::setProjectPath(QString path)
+void CpuModel::setProject(Project *project)
 {
-    path_ = path;
+    project_ = project;
 }
 
-QString CpuModel::projectPath() const
+Project *CpuModel::project() const
 {
-    return path_;
+    return project_;
 }
 
 void CpuModel::setSaveSource(const bool saveSource)

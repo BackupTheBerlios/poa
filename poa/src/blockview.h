@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.9 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: blockview.h,v 1.10 2003/08/27 13:56:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -65,6 +65,8 @@ protected:
     static const int DEFAULT_HEADER_SPACING = 4;
     static const int DEFAULT_BOTTOM_SPACING = 4;
     static const int DEFAULT_PIN_SEPARATION = 2;
+    static const int DEFAULT_LEFT_BORDER = 3;
+    static const int DEFAULT_RIGHT_BORDER = 5;
 
 private:
 

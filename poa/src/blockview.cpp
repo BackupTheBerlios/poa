@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.10 2003/08/27 12:48:39 keulsn Exp $
+ * $Id: blockview.cpp,v 1.11 2003/08/27 13:56:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -49,7 +49,10 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     setBrush(white);
     setPen(QPen(black, 2));
 
-    unsigned height = 10;
+    unsigned height = BlockView::DEFAULT_TOP_SPACING +
+	BlockView::DEFAULT_HEADER_SPACING +
+	BlockView::DEFAULT_HEADER_SPACING;
+    
     if (model != 0) {
         // name
         height += BlockView::DEFAULT_FONT_HEIGHT;
@@ -81,6 +84,7 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 	}
     }
 
+    height += BlockView::DEFAULT_BOTTOM_SPACING;
     setSize(BlockView::DEFAULT_WIDTH, height);
     arrangeVerticalPins();
     // FIX: arrangeHorizontalPins
@@ -128,7 +132,8 @@ void BlockView::setModel(BlockModel *model)
 void BlockView::moveBy(double dx, double dy)
 {
     QCanvasRectangle::moveBy(dx, dy);
-    QValueVector<PinView*>::iterator current = leftPins_.begin();
+    arrangeVerticalPins();
+    /*    QValueVector<PinView*>::iterator current = leftPins_.begin();
     while (current != leftPins_.end()) {
 	(*current)->moveBy(dx, dy);
 	++current;
@@ -142,7 +147,7 @@ void BlockView::moveBy(double dx, double dy)
     while (current != bottomPins_.end()) {
 	(*current)->moveBy(dx, dy);
 	++current;
-    }
+	}*/
 }
 
 
@@ -170,9 +175,10 @@ void BlockView::drawShape(QPainter &p)
     p.drawLine(left, currentY, right, currentY);
     currentY += BlockView::DEFAULT_HEADER_SPACING;
 
-    textArea = QRect(left, 
+    textArea = QRect(left + BlockView::DEFAULT_LEFT_BORDER, 
 		     currentY,
-		     width(),
+		     width() - BlockView::DEFAULT_LEFT_BORDER
+		             - BlockView::DEFAULT_RIGHT_BORDER,
 		     BlockView::DEFAULT_FONT_HEIGHT);
 
     PinVector *leftPinModels = model_->inputPins();
@@ -182,7 +188,12 @@ void BlockView::drawShape(QPainter &p)
     unsigned slotCount = max(leftSize, rightSize);
 
     if (slotCount > 0) {
-	unsigned pinHeight = height() / slotCount;
+	unsigned pinHeight = (height() - BlockView::DEFAULT_TOP_SPACING
+			               - BlockView::DEFAULT_FONT_HEIGHT
+			               - BlockView::DEFAULT_HEADER_SPACING
+			               - BlockView::DEFAULT_HEADER_SPACING
+			               - BlockView::DEFAULT_BOTTOM_SPACING)
+	    / slotCount;
 
 	for (unsigned i = 0; i < slotCount; ++i) {
 	    
@@ -209,6 +220,7 @@ void BlockView::arrangeVerticalPins()
 {
     int top = ((int) y()) + BlockView::DEFAULT_TOP_SPACING +
 	BlockView::DEFAULT_FONT_HEIGHT +
+	BlockView::DEFAULT_HEADER_SPACING +
 	BlockView::DEFAULT_HEADER_SPACING;
     int bottom = ((int) y()) + height() - BlockView::DEFAULT_BOTTOM_SPACING;
 	
@@ -221,18 +233,16 @@ void BlockView::arrangeVerticalPins()
 	top += BlockView::DEFAULT_FONT_HEIGHT / 2;
 
 	for (unsigned i = 0; i < slotCount; ++i) {
-	    
 	    if (i < leftSize) {
-		QRect pinBounds = leftPins_[i]->boundingRect();
-		leftPins_[i]->setX(x() - pinBounds.width() - 1);
-		leftPins_[i]->setY(top - pinBounds.height() / 2);
+		QSize pinSize = leftPins_[i]->size();
+		leftPins_[i]->move(x() - pinSize.width() - 1,
+				   top - pinSize.height() / 2);
 	    }
-	    top += height;
 	    
 	    if (i < rightSize) {
-		QRect pinBounds = rightPins_[i]->boundingRect();
-		rightPins_[i]->setX(x() + pinBounds.width());
-		rightPins_[i]->setY(top - pinBounds.height() / 2);
+		QSize pinSize = rightPins_[i]->size();
+		rightPins_[i]->move(x() + width(),
+				    top - pinSize.height() / 2);
 	    }
 	    top += height;
 	}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.55 2004/01/20 17:59:42 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.56 2004/01/20 19:25:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,7 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
+#include <qvgroupbox.h>
 
 #include "blockconfdialog.h"
 #include "canvasview.h"
@@ -110,44 +111,46 @@ void BlockConfDialog::initBlockWidget()
 {
 
     // block widget
-    QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
+    QGroupBox *blockGroupBox = new QVGroupBox(rightWidget, "blockGroupBox");
     blockGroupBox->setTitle(tr(model_->type()));
 
-    // the margin is calculated relative to the outer border of blockGroupBox
-    // so we need to include an offset of about 11 pixels for the border
-    QGridLayout *blockLayout =
-        new QGridLayout(blockGroupBox, 4, 3, 11 + WIDGET_SPACING,
-                        WIDGET_SPACING);
+    // add a container, because the layout of the blockGroupBox cannot
+    // be changed
+    QWidget *blockWidget = new QWidget(blockGroupBox);
+    QGridLayout *blockLayout
+        = new QGridLayout(blockWidget, WIDGET_SPACING, WIDGET_SPACING,
+                          WIDGET_SPACING, WIDGET_SPACING);
+
     if (INSTANCEOF(model_, CpuModel)) {
-        cpuIdSpinBox = new QSpinBox(blockGroupBox, "cpuIdSpinBox");
-        blockLayout->addWidget(new QLabel(tr("ID"), blockGroupBox), 0, 0);
+        cpuIdSpinBox = new QSpinBox(blockWidget, "cpuIdSpinBox");
+        blockLayout->addWidget(new QLabel(tr("ID"), blockWidget), 0, 0);
         blockLayout->addWidget(cpuIdSpinBox, 0, 1);
     }
 
-    blockNameLineEdit = new QLineEdit(blockGroupBox, "blockNameLineEdit" );
-    blockDescrLineEdit = new QLineEdit(blockGroupBox, "blockDescrLineEdit");
-    offsetSpinBox = new QSpinBox(blockGroupBox, "offsetSpinBox");
+    blockNameLineEdit = new QLineEdit(blockWidget, "blockNameLineEdit" );
+    blockDescrLineEdit = new QLineEdit(blockWidget, "blockDescrLineEdit");
+    offsetSpinBox = new QSpinBox(blockWidget, "offsetSpinBox");
     offsetSpinBox->setRange(-1, INT_MAX);
     offsetSpinBox->setSuffix(tr(" ns"));
-    clockSpinBox = new QSpinBox(blockGroupBox, "clockSpinBox");
+    clockSpinBox = new QSpinBox(blockWidget, "clockSpinBox");
     clockSpinBox->setRange(0, INT_MAX);
     clockSpinBox->setSuffix(tr(" ns"));
 
-    blockLayout->addWidget(new QLabel(tr("Name"), blockGroupBox), 1, 0);
+    blockLayout->addWidget(new QLabel(tr("Name"), blockWidget), 1, 0);
     blockLayout->addMultiCellWidget(blockNameLineEdit, 1, 1, 1, 2);
-    blockLayout->addWidget(new QLabel(tr("Description"), blockGroupBox), 2, 0);
+    blockLayout->addWidget(new QLabel(tr("Description"), blockWidget), 2, 0);
     blockLayout->addMultiCellWidget(blockDescrLineEdit, 2, 2, 1, 2);
-    blockLayout->addWidget(new QLabel(tr("Offset"), blockGroupBox), 3, 0);
+    blockLayout->addWidget(new QLabel(tr("Offset"), blockWidget), 3, 0);
     blockLayout->addWidget(offsetSpinBox, 3, 1);
-    blockLayout->addWidget(new QLabel(tr("Clock"), blockGroupBox), 4, 0);
+    blockLayout->addWidget(new QLabel(tr("Clock"), blockWidget), 4, 0);
     blockLayout->addWidget(clockSpinBox, 4, 1);
 
     if (model_->hasRuntime()) {
-        runtimeSpinBox = new QSpinBox(blockGroupBox, "runtimeSpinBox");
+        runtimeSpinBox = new QSpinBox(blockWidget, "runtimeSpinBox");
         runtimeSpinBox->setRange(0, INT_MAX);
         runtimeSpinBox->setSuffix(tr(" ns"));
 
-        blockLayout->addWidget(new QLabel(tr("Runtime"), blockGroupBox), 5, 0);
+        blockLayout->addWidget(new QLabel(tr("Runtime"), blockWidget), 5, 0);
         blockLayout->addWidget(runtimeSpinBox, 5, 1);
     }
 

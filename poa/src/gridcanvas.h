@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.19 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: gridcanvas.h,v 1.20 2003/09/18 14:24:36 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,8 @@
 
 #include <qcanvas.h>
 #include <qpixmap.h>
+#include "connectorviewlist.h"
+
 class Project;
 class QString;
 class AbstractModel;
@@ -81,6 +83,7 @@ private:
      * an equal z value
      */
     unsigned currentZ_;
+    QPtrList<ConnectorViewList> connectors_;
 
 };
 

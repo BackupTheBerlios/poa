@@ -18,15 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.2 2003/09/18 13:07:49 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.3 2003/09/18 14:24:36 vanto Exp $
  *
  *****************************************************************************/
 
 
 #include "connectorviewlist.h"
+#include "gridcanvas.h"
 
-
-ConnectorViewList::ConnectorViewList(PinView *source, PinView *target)
+ConnectorViewList::ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas)
 {
     source_ = source;
     target_ = target;
@@ -34,9 +34,9 @@ ConnectorViewList::ConnectorViewList(PinView *source, PinView *target)
     // TODO: create new parts of ConnectorViews
 }
 
-ConnectorViewList::ConnectorViewList(PinView *source, 
-				     PinView *target,
-				     const QValueList<QPoint> &points)
+ConnectorViewList::ConnectorViewList(PinView *source,
+                     PinView *target,
+                     const QValueList<QPoint> &points, GridCanvas *canvas)
 {
     source_ = source;
     target_ = target;

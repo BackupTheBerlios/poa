@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.40 2003/09/18 13:06:22 garbeam Exp $
+# $Id: poa.pro,v 1.41 2003/09/18 14:24:36 vanto Exp $
 #
 ###############################################################################
 
@@ -41,6 +41,7 @@ HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
 HEADERS += connectaction.h
 HEADERS += connectorview.h
+HEADERS += connectorviewlist.h
 HEADERS += coremodel.h
 HEADERS += coreview.h
 HEADERS += cpumodel.h
@@ -79,6 +80,7 @@ SOURCES += canvasviewaction.cpp
 SOURCES += codemanager.cpp
 SOURCES += connectaction.cpp
 SOURCES += connectorview.cpp
+SOURCES += connectorviewlist.cpp
 SOURCES += coremodel.cpp
 SOURCES += coreview.cpp
 SOURCES += cpumodel.cpp

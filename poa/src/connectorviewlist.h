@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.2 2003/09/18 13:07:49 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.3 2003/09/18 14:24:36 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,8 @@
 
 #include <qcanvas.h>
 #include <qobject.h>
+
+class GridCanvas;
 
 /**
  * Definition of a doubly linked connector view list which is used to manage
@@ -52,13 +54,14 @@ public:
      * routed line from <code>source</code> pin to <code>target</code> pin for the
      * given <code>model</code>.
      */
-    ConnectorViewList(PinView *source, PinView *target);
+    ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas);
 
     /**
      */
     ConnectorViewList(PinView *source,
-		      PinView *target,
-		      const QValueList<QPoint> &points);
+                      PinView *target,
+                      const QValueList<QPoint> &points,
+                      GridCanvas *canvas);
 
     /**
      * Default destructor

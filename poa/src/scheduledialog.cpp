@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.17 2004/01/11 16:01:29 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.18 2004/01/11 16:17:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -240,15 +240,11 @@ void ScheduleDialog::initGraphWidget()
             labelCanvasView, SLOT(setContentsPos(int, int)));
 
     // determine canvas size
-    int cnt = 0;
-    //int worstTime = 0;
-    for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
-        cnt += (*inpit)->count();
+    int cnt = blocks_.count();
 
-    }
     canvas->resize(CANVAS_WIDTH,
-                   BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
-    labelCanvas->resize(50, BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
+                   RULER_TICK + cnt * (BOX_HEIGHT + BOX_YSPACING));
+    labelCanvas->resize(50, RULER_TICK + cnt * (BOX_HEIGHT + BOX_YSPACING));
 
     initCanvas();
 }
@@ -337,7 +333,8 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
     while (X < canvas->width()) {
 
         if (bt->getClock() <= 0) {
-            return false;
+            //return false;
+            continue;
         }
 
         QRect thisBlock = calcBlockPosition(bt, t);

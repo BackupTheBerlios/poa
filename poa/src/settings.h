@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.15 2003/09/11 13:17:14 squig Exp $
+ * $Id: settings.h,v 1.16 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -63,6 +63,8 @@ public:
     QColor selectedColor();
     bool snapToGrid();
     bool showGrid();
+
+public slots:
     void setGridSize(int gridSize);
     void setSnapToGrid(bool snapToGrid);
     void setShowGrid(bool showGrid);

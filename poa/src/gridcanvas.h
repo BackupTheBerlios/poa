@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.16 2003/09/07 19:07:46 squig Exp $
+ * $Id: gridcanvas.h,v 1.17 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ public:
     QPoint toGrid(QPoint p);
 
 public slots:
-    void setGridSize(int gridSize);
+    void updateAll();
 
 protected:
 

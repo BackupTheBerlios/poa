@@ -1,3 +1,7 @@
+2003-09-11  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* mainwindow.cpp (showGridAction): Added show grid action.
+
 2003-09-10  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* settings.cpp (addToRecentProjects): Added recent project stuff.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.42 2003/09/11 14:38:38 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.43 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -186,6 +186,11 @@ void MainWindow::initializeActions()
         new QAction("Tile", "&Tile", 0, this, "tileAction");
     cascadeAction =
         new QAction("Cascade", "&Cascade", 0, this, "cascadeAction");
+    settingsShowGridAction_ =
+        new QAction(tr("Show Grid"), tr("&Show Grid"),
+                    QKeySequence(tr("Ctrl+G")), this, "editSettingsShowGrid",
+                    true);
+    settingsShowGridAction_->setOn(Settings::instance()->showGrid());
 }
 
 void MainWindow::initializeToolbars()
@@ -273,6 +278,8 @@ void MainWindow::initializeMenu()
     // settings
     settingsMenu = new QPopupMenu(this);
     menuBar()->insertItem(tr("&Settings"), settingsMenu);
+    settingsShowGridAction_->addTo(settingsMenu);
+    settingsMenu->insertSeparator();
     openSettingsAction->addTo(settingsMenu);
 
     // window
@@ -310,6 +317,10 @@ void MainWindow::connectActions()
             this, SLOT(openBlockConf()));
     connect(openSettingsAction, SIGNAL(activated()),
             this, SLOT(openSettings()));
+    connect(settingsShowGridAction_, SIGNAL(toggled(bool)),
+            Settings::instance(), SLOT(setShowGrid(bool)));
+    connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
+            settingsShowGridAction_, SLOT(setOn(bool)));
     connect(tileHorizontalAction, SIGNAL(activated()),
             this, SLOT(tileHorizontal()));
     connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
@@ -672,6 +683,12 @@ void MainWindow::saveProject()
         project_->serialize().save(ts, 2);
         file.close();
     }
+}
+
+
+QAction *MainWindow::showGridAction()
+{
+    return settingsShowGridAction_;
 }
 
 void MainWindow::windowActivated(QWidget* w)

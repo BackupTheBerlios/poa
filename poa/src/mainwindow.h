@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.18 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: mainwindow.h,v 1.19 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -75,6 +75,11 @@ public:
     static MainWindow *instance();
 
     /**
+     * Returns the block configure dialog.
+     */
+    QAction *blockConfAction();
+
+    /**
      * Returns the copy action.
      */
     QAction *copyAction();
@@ -89,11 +94,10 @@ public:
      */
     QAction *pasteAction();
 
-
     /**
-     * Returns the block configure dialog.
+     * Returns the show grid action.
      */
-    QAction *blockConfAction();
+    QAction *showGridAction();
 
 public slots:
     virtual void checkClipboardContent();
@@ -148,7 +152,7 @@ private:
     QAction *editPasteAction;
     QAction *helpContentsAction;
     QAction *helpAboutAction;
-
+    QAction *settingsShowGridAction_;
     QAction *zoomInAction;
     QAction *zoomOutAction;
     QAction *zoomNormalAction;

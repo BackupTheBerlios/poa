@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.30 2003/09/11 14:38:38 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.31 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,7 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     tooltip_ = new CanvasToolTip(this);
 
     backgroundPopupMenu = new QPopupMenu();
+    MainWindow::instance()->showGridAction()->addTo(backgroundPopupMenu);
 
     blockViewPopupMenu = new QPopupMenu();
     MainWindow::instance()->blockConfAction()->addTo(blockViewPopupMenu);

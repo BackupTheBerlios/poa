@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.16 2003/09/08 13:35:04 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.17 2003/09/11 16:30:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -37,11 +37,12 @@ GridCanvas::GridCanvas(QString name)
 {
     setName(name);
     currentZ_ = 0;
-    setGridSize(Settings::instance()->gridSize());
     setDoubleBuffering(TRUE);
 
     connect(Settings::instance(), SIGNAL(gridSizeChanged(int)),
-            this, SLOT(setGridSize(int)));
+            this, SLOT(updateAll()));
+    connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
+            this, SLOT(updateAll()));
 }
 
 void GridCanvas::addView(AbstractModel *item, int x, int y)
@@ -81,33 +82,29 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
     // clear background
     painter.fillRect(clip, QBrush (Qt::white));
 
-    int gridSize = Settings::instance()->gridSize();
+    if (Settings::instance()->showGrid()) {
+        int gridSize = Settings::instance()->gridSize();
 
-    // draw grid
-    painter.setPen(QPen(Qt::lightGray));
+        // draw grid
+        painter.setPen(QPen(Qt::lightGray));
 
-    int minX = coordToGridHigher(clip.left(), gridSize);
-    int minY = coordToGridHigher(clip.top(), gridSize);
-    int maxX = coordToGridLower(clip.right(), gridSize);
-    int maxY = coordToGridLower(clip.bottom(), gridSize);
+        int minX = coordToGridHigher(clip.left(), gridSize);
+        int minY = coordToGridHigher(clip.top(), gridSize);
+        int maxX = coordToGridLower(clip.right(), gridSize);
+        int maxY = coordToGridLower(clip.bottom(), gridSize);
 
-    // for some reason qt does not draw a line onto the pixels specified.
-    // therefore we must subtract 1 at top and left coodinate and add 1 at
-    // bottom and right coordinate.
+        // for some reason qt does not draw a line onto the pixels specified.
+        // therefore we must subtract 1 at top and left coodinate and add 1 at
+        // bottom and right coordinate.
 
-    for (int x = minX; x <= maxX; x += gridSize) {
-        painter.drawLine(x, clip.top() - 1, x, clip.bottom() + 1);
+        for (int x = minX; x <= maxX; x += gridSize) {
+            painter.drawLine(x, clip.top() - 1, x, clip.bottom() + 1);
+        }
+
+        for (int y = minY; y <= maxY; y += gridSize) {
+            painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
+        }
     }
-
-    for (int y = minY; y <= maxY; y += gridSize) {
-        painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
-    }
-}
-
-void GridCanvas::setGridSize(int)
-{
-    setAllChanged();
-    update();
 }
 
 QPoint GridCanvas::toGrid(QPoint p)
@@ -122,4 +119,10 @@ QPoint GridCanvas::toGrid(QPoint p)
         y += gridSize;
     }
     return QPoint(x, y);
+}
+
+void GridCanvas::updateAll()
+{
+    setAllChanged();
+    update();
 }

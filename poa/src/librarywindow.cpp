@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.24 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: librarywindow.cpp,v 1.25 2003/12/19 22:14:08 kilgus Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -232,7 +232,7 @@ LibraryListView::LibraryListView(QWidget *parent, const char *name,
 
 QDragObject *LibraryListView::dragObject()
 {
-    LibraryListViewItem *item = reinterpret_cast<LibraryListViewItem*>(selectedItem());
+    LibraryListViewItem *item = dynamic_cast<LibraryListViewItem*>(selectedItem());
 
     QDomDocument doc;
     QDomElement root = doc.createElement("model");

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.12 2004/01/26 19:17:18 vanto Exp $
+ * $Id: colormanager.cpp,v 1.13 2004/01/27 06:50:32 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -112,12 +112,16 @@ void ColorManager::updateMap()
     }
 
     // remove unused map entries
-    for (QMap<int,int>::iterator it = nsToPalIndex_.begin();
-         it != nsToPalIndex_.end(); it++) {
-        if (!reqNs.contains(it.key())) {
-            nsToPalIndex_.remove(it);
-        }
-    }
+	QMap<int,int>::iterator it = nsToPalIndex_.begin();
+	while (it != nsToPalIndex_.end()) {
+		// Advance iterator NOW because we might want to delete the current entry
+		QMap<int,int>::iterator it2 = it;
+		it++;
+
+        if (!reqNs.contains(it2.key())) {
+            nsToPalIndex_.remove(it2);
+		}
+	}
 
     recalculateSize();
     canvas()->update();

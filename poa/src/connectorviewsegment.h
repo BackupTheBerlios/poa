@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.1 2003/09/19 19:05:22 keulsn Exp $
+ * $Id: connectorviewsegment.h,v 1.2 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,7 @@
 #include "tooltipable.h"
 #include "pinview.h"
 #include "poa.h"
-
+#include "settings.h"
 
 class ConnectorViewList;
 
@@ -43,8 +43,8 @@ class ConnectorViewList;
  * An entire list connects the source pin to the target pin.
  */
 class ConnectorViewSegment: public QObject,
-			    public QCanvasLine,
-			    public Tooltipable
+                public QCanvasLine,
+                public Tooltipable
 {
     Q_OBJECT
 
@@ -55,17 +55,17 @@ public:
      * point.
      */
     ConnectorViewSegment(QPoint from,
-			 QPoint to,
-			 QCanvas *canvas,
-			 ConnectorViewList *viewList);
+             QPoint to,
+             QCanvas *canvas,
+             ConnectorViewList *viewList);
 
     /**
-     * Default destructor
+     * Default destructor.
      */
     virtual ~ConnectorViewSegment();
 
     /**
-     * Returns the tooltip text
+     * Returns the tooltip text.
      */
     QString tip();
 
@@ -75,12 +75,24 @@ public:
      */
     ConnectorViewList *viewList();
 
+    /*
+     * Selects this connector.
+     */
+    void setSelected(bool);
+
 private:
     /** List of all segments */
     ConnectorViewList *viewList_;
 
+    /**
+     * Sets the pen according to the selection and hover state.
+     */
+    void updateProperties();
+
     /*public slots:
       void deleteView();*/
+public slots:
+    void select(bool);
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.1 2003/09/19 19:05:22 keulsn Exp $
+ * $Id: connectorviewsegment.cpp,v 1.2 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,14 +31,13 @@
 #include "connectorviewlist.h"
 
 ConnectorViewSegment::ConnectorViewSegment(QPoint from,
-					   QPoint to,
-					   QCanvas *canvas,
-					   ConnectorViewList *viewList)
+                       QPoint to,
+                       QCanvas *canvas,
+                       ConnectorViewList *viewList)
     : QCanvasLine(canvas)
 {
     viewList_ = viewList;
     setPoints(from.x(), from.y(), to.x(), to.y());
-    setPen(QPen(Qt::black, 2));
 }
 
 ConnectorViewSegment::~ConnectorViewSegment()
@@ -53,6 +52,32 @@ QString ConnectorViewSegment::tip()
 ConnectorViewList *ConnectorViewSegment::viewList()
 {
     return viewList_;
+}
+
+void ConnectorViewSegment::setSelected(bool yes)
+{
+    viewList_->setSelected(yes);
+}
+
+/* SLOT */
+void ConnectorViewSegment::select(bool yes)
+{
+    QCanvasLine::setSelected(yes);
+    updateProperties();
+}
+
+void ConnectorViewSegment::updateProperties()
+{
+    if (isActive()) {
+        setPen(QPen(Settings::instance()->activatedColor(), 2));
+    }
+    else if (isSelected()) {
+        setPen(QPen(Settings::instance()->selectedColor(), 2));
+    }
+    else {
+        setPen(QPen(Settings::instance()->defaultColor(), 2));
+    }
+
 }
 
 /*void ConnectorViewSegment::deleteView()

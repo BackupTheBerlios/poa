@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.52 2003/09/19 16:17:46 keulsn Exp $
+ * $Id: mainwindow.cpp,v 1.53 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "cpuview.h"
 #include "blockview.h"
 #include "canvasview.h"
+#include "connectorviewlist.h"
 #include "connectorviewsegment.h"
 #include "project.h"
 #include "gridcanvas.h"
@@ -470,7 +471,7 @@ void MainWindow::fileNew()
     //projDir.cdUp();
 
     // if project is new, create empty project and save it
-    if (!QFileInfo(fileName).exists()) {
+    if (!QFileInfo(projDir, "project.xml").exists()) {
         Project *prj = new Project(projDir.path());
         prj->newCanvas("1");
         prj->save();
@@ -590,6 +591,7 @@ void MainWindow::editRemove()
     CanvasView *view = activeView();
     if (view != 0) {
         QCanvasItemList items = view->selectedItems();
+        view->deselectAll();
         if (!items.isEmpty()) {
             for (QCanvasItemList::iterator current = items.begin();
                  current != items.end(); ++current) {
@@ -599,7 +601,18 @@ void MainWindow::editRemove()
                         project_->removeBlock(item->model());
                     }
                     else Q_ASSERT("Irgensoeinanderesding removed");
-                    //else if (INSTANCEOF(item, Connector
+                }
+                else {
+                    ConnectorViewSegment *conn = dynamic_cast<ConnectorViewSegment *>(*current);
+                    if (conn != 0 && conn->viewList() != 0) {
+                        // delete segment from list and mem
+                        ConnectorViewList *l = conn->viewList();
+                        l->deleteSegment(conn);
+                        // if list is empty, delete it
+                        if (l->allSegments().empty()) {
+                            delete l;
+                        }
+                    }
                 }
             }
         }
@@ -614,7 +627,7 @@ void MainWindow::helpContents()
 
 void MainWindow::helpAbout()
 {
-    AboutDialog *dialog = new AboutDialog();
+    AboutDialog *dialog = new AboutDialog(this);
     dialog->show();
 }
 
@@ -686,7 +699,7 @@ void MainWindow::openRecentProject(int i)
 
 void MainWindow::openSettings()
 {
-    SettingsDialog *dialog = new SettingsDialog();
+    SettingsDialog *dialog = new SettingsDialog(this);
     dialog->show();
 }
 
@@ -743,7 +756,9 @@ void MainWindow::selectionChanged(QCanvasItem *item)
         editRemoveAction->setEnabled(true);
     }
     else if (INSTANCEOF(item, ConnectorViewSegment)) {
-        //TODO
+        editCutAction->setEnabled(false);
+        editCopyAction->setEnabled(false);
+        editRemoveAction->setEnabled(true);
     }
     else {
         editCutAction->setEnabled(false);

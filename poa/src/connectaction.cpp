@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.7 2003/09/19 20:21:04 garbeam Exp $
+ * $Id: connectaction.cpp,v 1.8 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -53,7 +53,7 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     QCanvasItemList allItems = view->canvas()->allItems();
     for (QCanvasItemList::iterator it = allItems.begin();
          it != allItems.end(); ++it) {
-        if (INSTANCEOF(*it, PinView) && *it != source 
+        if (INSTANCEOF(*it, PinView) && *it != source
             && (((PinView *)*it)->parent() != source->parent()))
         {
             PinView *pv = (PinView *)(*it);
@@ -106,11 +106,6 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
             // add connector views
             view()->project()->createConnectorViews(source_, target);
 
-            qDebug("Connect: "
-                     + QString(source_->pinModel()->parent()->name())
-                     + ":" + QString(source_->pinModel()->name()) + "\n"
-                     + "to " + QString(target->pinModel()->parent()->name())
-                     + ":" + QString(target->pinModel()->name()));
             view()->deselectAll();
         }
     }

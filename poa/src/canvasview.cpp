@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.36 2003/09/19 15:16:22 vanto Exp $
+ * $Id: canvasview.cpp,v 1.37 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include "blockconfdialog.h"
 #include "canvasviewaction.h"
 #include "connectaction.h"
+#include "connectorviewsegment.h"
 #include "cpumodel.h"
 #include "pinmodel.h"
 #include "pinview.h"
@@ -62,12 +63,12 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     setDragAutoScroll(true);
     tooltip_ = new CanvasToolTip(this);
 
-    backgroundPopupMenu = new QPopupMenu();
+    backgroundPopupMenu = new QPopupMenu(this);
     MainWindow::instance()->showGridAction()->addTo(backgroundPopupMenu);
     backgroundPopupMenu->insertSeparator();
     MainWindow::instance()->pasteAction()->addTo(backgroundPopupMenu);
 
-    blockViewPopupMenu = new QPopupMenu();
+    blockViewPopupMenu = new QPopupMenu(this);
     MainWindow::instance()->blockConfAction()->addTo(blockViewPopupMenu);
     blockViewPopupMenu->insertSeparator();
     MainWindow::instance()->cutAction()->addTo(blockViewPopupMenu);
@@ -76,7 +77,10 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     blockViewPopupMenu->insertSeparator();
     MainWindow::instance()->removeAction()->addTo(blockViewPopupMenu);
 
-    pinViewPopupMenu = new QPopupMenu();
+    pinViewPopupMenu = new QPopupMenu(this);
+
+    connectorViewPopupMenu = new QPopupMenu(this);
+    MainWindow::instance()->removeAction()->addTo(connectorViewPopupMenu);
 }
 
 CanvasView::~CanvasView()
@@ -170,6 +174,10 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             }
             else if (INSTANCEOF(topItem, PinView)) {
                 pinViewPopupMenu->exec
+                    (contentsToViewport(mapToGlobal(e->pos())));
+            }
+            else if (INSTANCEOF(topItem, ConnectorViewSegment)) {
+                connectorViewPopupMenu->exec
                     (contentsToViewport(mapToGlobal(e->pos())));
             }
         }

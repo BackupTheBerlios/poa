@@ -1,3 +1,19 @@
+2003-09-21  Tammo van Lessen  <vanto@users.sourceforge.net>
+
+	* connectorviewsegment.cpp (setSelected): make connectors 
+	selectable and removable
+
+	* mainwindow.cpp: playing Haldenspezialist
+	(fileNew): file new fixed.
+
+	* aboutdialog.cpp (addFileTab): playing Haldenspezialist
+
+	* connectorviewlist.cpp (ConnectorViewList): Connect to the
+	PinModel's delete signal.
+
+	* canvasview.cpp (CanvasView): Add connector popup, 
+	assure that qt deletes the popupmenus automaticaly
+
 2003-09-19  Tammo van Lessen  <vanto@users.sourceforge.net>
 
 	* mainwindow.cpp (editRemove): Cut and Remove for Blocks

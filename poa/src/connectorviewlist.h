@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.5 2003/09/20 21:14:48 squig Exp $
+ * $Id: connectorviewlist.h,v 1.6 2003/09/21 21:05:51 vanto Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,11 @@ public:
     const QCanvasItemList allSegments();
 
     /**
+     * Removes and frees a segment
+     */
+    void deleteSegment(ConnectorViewSegment *);
+
+    /**
      * Returns the points connected by all segments in <code>this</code> list.
      */
     QValueList<QPoint> points();
@@ -97,6 +102,11 @@ public:
      * Returns the tool tip text for this connector view.
      */
     QString tip();
+
+    /**
+     * Selects/Deselects this connector (all connector segments)
+     */
+    void setSelected(bool);
 
     /**
      */
@@ -138,10 +148,13 @@ public slots:
     void deleteAllConnectorViews();
 
     /**
-     * To be called when one of the pin views is destroyed
+     * To be called when one of the pin is destroyed
      */
-    void deleteView(PinView *);
+    void deleteView();
 
+ signals:
+    void select(bool);
+    void hover(bool);
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.4 2003/08/21 20:29:20 squig Exp $
+ * $Id: settings.cpp,v 1.5 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -36,11 +36,12 @@ Settings* Settings::instance_ = 0;
 
 Settings::Settings()
 {
-	QSettings settings;
-	settings.insertSearchPath(QSettings::Windows, "/POA");
+    QSettings settings;
+    settings.insertSearchPath(QSettings::Windows, "/POA");
 
-	setDefault(&settings, "MainWindow/Height", "480");
-	setDefault(&settings, "MainWindow/Width", "640");
+    setDefault(&settings, "Grid Size", "10");
+    setDefault(&settings, "MainWindow/Height", "480");
+    setDefault(&settings, "MainWindow/Width", "640");
 }
 
 Settings::~Settings()
@@ -49,90 +50,100 @@ Settings::~Settings()
 
 Settings *Settings::instance()
 {
-	if (instance_ == 0) {
-	    instance_ = new Settings();
-	}
+    if (instance_ == 0) {
+        instance_ = new Settings();
+    }
 
-	return instance_;
+    return instance_;
 }
 
 QString Settings::get(const QString &key)
 {
-	QSettings settings;
-	return settings.readEntry(prefix + key);
+    QSettings settings;
+    return settings.readEntry(prefix + key);
 }
 
 bool Settings::getBool(const QString &key)
 {
-	QSettings settings;
-	return settings.readBoolEntry(prefix + key);
+    QSettings settings;
+    return settings.readBoolEntry(prefix + key);
 }
 
 
 int Settings::getNum(const QString &key)
 {
-	QSettings settings;
-	return settings.readNumEntry(prefix + key);
+    QSettings settings;
+    return settings.readNumEntry(prefix + key);
 }
 
 
 bool Settings::set(const QString &key, const QString &value)
 {
-	QString oldValue = get(key);
-	if (oldValue != value) {
-		QSettings settings;
-		settings.writeEntry(prefix + key, value);
-		emit settingChanged(key);
-		return TRUE;
-	}
-	return FALSE;
+    QString oldValue = get(key);
+    if (oldValue != value) {
+        QSettings settings;
+        settings.writeEntry(prefix + key, value);
+        emit settingChanged(key);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 bool Settings::set(const QString &key, bool value)
 {
-	bool oldValue = getBool(key);
-	if (oldValue != value) {
-		QSettings settings;
-		settings.writeEntry(prefix + key, value);
-		emit settingChanged(key);
-		return TRUE;
-	}
-	return FALSE;
+    bool oldValue = getBool(key);
+    if (oldValue != value) {
+        QSettings settings;
+        settings.writeEntry(prefix + key, value);
+        emit settingChanged(key);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 bool Settings::set(const QString &key, int value)
 {
-	int oldValue = getNum(key);
-	if (oldValue != value) {
-		QSettings settings;
-		settings.writeEntry(prefix + key, value);
-		emit settingChanged(key);
-		return TRUE;
-	}
-	return FALSE;
+    int oldValue = getNum(key);
+    if (oldValue != value) {
+        QSettings settings;
+        settings.writeEntry(prefix + key, value);
+        emit settingChanged(key);
+        return TRUE;
+    }
+    return FALSE;
 }
 
-void Settings::setDefault(QSettings* settings, const QString &key, 
-						  const QString &value)
+void Settings::setDefault(QSettings* settings, const QString &key,
+                          const QString &value)
 {
     bool success;
-	settings->readEntry(prefix + key, QString::null, &success);
-	if (!success) {
-		// key does not exists
-		settings->writeEntry(prefix + key, value);
-	}
+    settings->readEntry(prefix + key, QString::null, &success);
+    if (!success) {
+        // key does not exists
+        settings->writeEntry(prefix + key, value);
+    }
+}
+
+int Settings::gridSize()
+{
+    return getNum("Grid Size");
 }
 
 void Settings::setGridSize(int gridSize)
 {
-	if (set("Grid Size", gridSize)) {
-		emit gridSizeChanged(gridSize);
-	}
+    if (set("Grid Size", gridSize)) {
+        emit gridSizeChanged(gridSize);
+    }
+}
+
+bool Settings::snapToGrid()
+{
+    return getBool("Snap To Grid");
 }
 
 void Settings::setSnapToGrid(bool snapToGrid)
 {
-	if (set("Snap To Grid", snapToGrid)) {
-		emit snapToGridChanged(snapToGrid);
-	}
+    if (set("Snap To Grid", snapToGrid)) {
+        emit snapToGridChanged(snapToGrid);
+    }
 }

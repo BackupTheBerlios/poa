@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.18 2003/08/22 15:06:11 squig Exp $
+# $Id: poa.pro,v 1.19 2003/08/22 16:50:51 squig Exp $
 #
 ###############################################################################
 
@@ -49,12 +49,14 @@ HEADERS += coremodel.h
 # HEADERS += coreview.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h
+HEADERS += document.h
 HEADERS += inputblockmodel.h
 HEADERS += inputblockview.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
+HEADERS += modelfactory.h
 HEADERS += moduleconfdialog.h 
 HEADERS += muxmodel.h
 HEADERS += muxview.h
@@ -72,12 +74,14 @@ SOURCES += aboutdialog.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += cpumodel.cpp
+SOURCES += document.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp
 SOURCES += main.cpp
 SOURCES += mainwindow.cpp
 SOURCES += mdiwindow.cpp
 SOURCES += moduleconfdialog.cpp
+SOURCES += modelfactory.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.28 2003/08/22 15:52:38 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.29 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #include "aboutdialog.h"
 #include "cpuview.h"
 #include "blockview.h"
+#include "document.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "moduleconfdialog.h"
@@ -442,10 +443,10 @@ void MainWindow::openSettings()
 
 MdiWindow* MainWindow::newDoc()
 {
-    GridCanvas *doc = new GridCanvas();
-    doc->setDoubleBuffering(TRUE);
+    Document *doc = new Document();
+    GridCanvas *canvas = new GridCanvas(doc);
 
-    MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
+    MdiWindow* w = new MdiWindow(canvas, ws, 0, WDestructiveClose);
     w->setCaption("unnamed layout");
     w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
     w->resize(w->sizeHint());
@@ -467,14 +468,14 @@ MdiWindow* MainWindow::newDoc()
     i->show();*/
 
     // FIX: remove: another one
-    BlockView *view = new BlockView(0, doc);
+    BlockView *view = new BlockView(0, canvas);
     int z = 255%256;
     view->setBrush( QColor(z,0,z) );
     view->setPen( QPen(QColor(255%32*8,255%32*8,255%32*8), 6) );
     view->setZ(z);
     view->show();
 
-    doc->update();
+    canvas->update();
 
     return w;
 }

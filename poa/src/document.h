@@ -18,55 +18,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.13 2003/08/22 16:50:51 squig Exp $
+ * $Id: document.h,v 1.1 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
+#ifndef DOCUMENT_H
+#define DOCUMENT_H
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#include "abstractmodel.h"
 
-class GridCanvas;
-
-#include <qmainwindow.h>
-#include <qcanvas.h>
-class QCanvasView;
+#include <qptrlist.h>
 
 /*****************************************************************************
- * Defines MDI windows.
+ * Basic map container for BlockModel objects.
+ * Used by NetworkCanvas to store its BlockModelView items.
  * @author garbeam
  */
-class MdiWindow : public QMainWindow
+class Document : QObject
 {
     Q_OBJECT
 
 public:
-    MdiWindow(GridCanvas* canvas, QWidget* parent = 0, const char* name = 0,
-              WFlags f = WType_TopLevel);
-    ~MdiWindow();
+    Document();
+    ~Document();
 
-    QCanvas *canvas();
-    void setCanvas(QCanvas *);
-
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-    double zoomLevel();
-    void resizeCanvas();
-
-public slots:
-    void setZoomLevel(double zoomLevel);
-
-protected:
-    void closeEvent( QCloseEvent * );
-    virtual void resizeEvent(QResizeEvent *e);
-
-private:
-    QCanvasView* view_;
-    double zoomLevel_;
+    void add(AbstractModel *item, int x, int y);
 
 signals:
-    void message(const QString&, int );
+    void modelAdded(AbstractModel *item, int x, int y);
+
+private:
+    QPtrList<AbstractModel> items_;
 
 };
 
-#endif // POA_MDIWINDOW_H
+#endif // DOCUMENT_H

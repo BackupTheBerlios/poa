@@ -18,27 +18,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.6 2003/08/22 15:27:43 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.7 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
 
 #include "cpumodel.h"
+#include "document.h"
+#include "mainwindow.h"
+#include "modelfactory.h"
 
 #include <qvariant.h>
+#include <qapplication.h>
 #include <qdom.h>
 #include <qpoint.h>
 #include <qwmatrix.h>
 #include <qpainter.h>
+#include <qstatusbar.h>
 
 /*****************************************************************************
  * Constructs the view.
  */
-CanvasView::CanvasView(QCanvas *canvas, QWidget *parent, const char* name,
-                       WFlags fl)
-    : QCanvasView(canvas, parent, name, fl)
+CanvasView::CanvasView(Document *document, QCanvas *canvas, QWidget *parent,
+                       const char* name, WFlags fl)
+    : QCanvasView(canvas, parent, name, fl), document_(document)
 {
     setAcceptDrops(TRUE);
+
+    // listen to
 }
 
 /*****************************************************************************
@@ -71,6 +78,10 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
         movingStartPoint = p;
         canvas()->update();
     }
+
+    QPoint pos = inverseWorldMatrix().map(viewportToContents(e->pos()));
+    ((MainWindow *)qApp->mainWidget())->statusBar()->message
+        (QString::number(pos.x()) + ":" + QString::number(pos.y()));
 }
 
 void CanvasView::dragEnterEvent(QDragEnterEvent *e)
@@ -82,8 +93,10 @@ void CanvasView::dropEvent(QDropEvent *e)
 {
     QByteArray data = e->encodedData("text/xml");
     if (data) {
-        QDomDocument *doc = new QDomDocument("cpu");
-        if (doc->setContent(QString(data))) {
+        QDomDocument doc;
+        if (doc.setContent(QString(data))) {
+            ModelFactory::generate(doc, document_);
+
             // FIX: remove: create dummy items
             QPoint pos = viewportToContents(e->pos());
             QCanvasPolygonalItem *i
@@ -95,3 +108,5 @@ void CanvasView::dropEvent(QDropEvent *e)
         }
     }
 }
+
+void modelAdded(AbstractModel *item, int x, int y);

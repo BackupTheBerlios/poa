@@ -18,55 +18,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.13 2003/08/22 16:50:51 squig Exp $
+ * $Id: modelfactory.cpp,v 1.1 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
+#include "modelfactory.h"
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#include "cpumodel.h"
+#include "document.h"
 
-class GridCanvas;
-
-#include <qmainwindow.h>
-#include <qcanvas.h>
-class QCanvasView;
+#include <qdom.h>
 
 /*****************************************************************************
- * Defines MDI windows.
- * @author garbeam
+ * Generates model objects from xml data.
+ *
+ * @author Steffen Pingel
  */
-class MdiWindow : public QMainWindow
+void ModelFactory::generate(const QDomNode &node, Document *document)
 {
-    Q_OBJECT
-
-public:
-    MdiWindow(GridCanvas* canvas, QWidget* parent = 0, const char* name = 0,
-              WFlags f = WType_TopLevel);
-    ~MdiWindow();
-
-    QCanvas *canvas();
-    void setCanvas(QCanvas *);
-
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-    double zoomLevel();
-    void resizeCanvas();
-
-public slots:
-    void setZoomLevel(double zoomLevel);
-
-protected:
-    void closeEvent( QCloseEvent * );
-    virtual void resizeEvent(QResizeEvent *e);
-
-private:
-    QCanvasView* view_;
-    double zoomLevel_;
-
-signals:
-    void message(const QString&, int );
-
-};
-
-#endif // POA_MDIWINDOW_H
+    QDomNodeList children = node.childNodes();
+    for (uint i = 0; i < children.length(); i++) {
+        QDomNode item = children.item(i);
+        if (item.isElement() && item.nodeName() == "cpu") {
+            document->add(new CpuModel(&item.toElement()), 0, 0);
+        }
+    }
+}

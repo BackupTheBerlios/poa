@@ -18,11 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.6 2003/08/22 15:35:36 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.7 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 
 #include "gridcanvas.h"
+
+#include "document.h"
+#include "settings.h"
 
 #include <qcanvas.h>
 #include <qpainter.h>
@@ -30,35 +33,51 @@
 #include <qrect.h>
 #include <qsize.h>
 
-// space between grid crosses
-#define GRID_SPACING 20
+GridCanvas::GridCanvas(Document *document)
+    : document_(document)
+{
+    setGridSize(Settings::instance()->gridSize());
+    setDoubleBuffering(TRUE);
 
-GridCanvas::GridCanvas() {
+    connect(Settings::instance(), SIGNAL(gridSizeChanged(int)),
+            this, SLOT(setGridSize(int)));
+}
 
+Document *GridCanvas::document()
+{
+    return document_;
+}
+
+void GridCanvas::setGridSize(int gridSize)
+{
+    int stretch = 10;
     // create grid pixmap
-    QRect r(0, 0, 1000, 1000);
-    QPixmap *gridTile = new QPixmap(r.size());
-    gridTile->fill(white);
+    QRect r(0, 0, stretch *  gridSize, stretch * gridSize);
+    QPixmap tile(r.size());
+    tile.fill(white);
 
-    QPen pen(gray, 1);
-    QPainter p(gridTile);
-    p.setPen(pen);
+    QPainter p(&tile);
+    p.setPen(QPen(gray, 1));
 
-    for (int x = 0; x <= 1000; x += GRID_SPACING) {
-        for (int y = 0; y <= 1000; y += GRID_SPACING) {
-
-            p.drawLine(x + (GRID_SPACING / 2) /* x1 */,
-                       y + ((GRID_SPACING / 2) - 2) /* y1 */,
-                       x + (GRID_SPACING / 2) /* x2 */,
-                       y + ((GRID_SPACING / 2) + 3) /* y2 */);
-            p.drawLine(x + ((GRID_SPACING / 2) - 2) /* x1 */,
-                       y + (GRID_SPACING / 2) /* y1 */,
-                       x + ((GRID_SPACING / 2) + 3) /* x2 */,
-                       y + (GRID_SPACING / 2) /* y2 */);
-        }
+    for (int i = 1; i <= stretch; i++) {
+        p.drawLine(0,
+                   i * gridSize - 2,
+                   r.size().width(),
+                   i * gridSize - 2);
+        p.drawLine(i * gridSize - 2,
+                   0,
+                   i * gridSize - 2,
+                   r.size().height());
     }
+//             p.drawLine(x + (gridSize / 2) /* x1 */,
+//                        y + ((gridSize / 2) - 2) /* y1 */,
+//                        x + (gridSize / 2) /* x2 */,
+//                        y + ((gridSize / 2) + 3) /* y2 */);
+//             p.drawLine(x + ((gridSize / 2) - 2) /* x1 */,
+//                        y + (gridSize / 2) /* y1 */,
+//                        x + ((gridSize / 2) + 3) /* x2 */,
+//                        y + (gridSize / 2) /* y2 */);
     p.end();
 
-    resize(1000, 1000);
-    setBackgroundPixmap(*gridTile);
+    setBackgroundPixmap(tile);
 }

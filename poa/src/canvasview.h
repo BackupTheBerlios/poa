@@ -18,18 +18,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.5 2003/08/22 15:27:43 garbeam Exp $
+ * $Id: canvasview.h,v 1.6 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
 #define CANVASVIEW_H
 
+class Document;
+
 #include <qvariant.h>
 #include <qcanvas.h>
-
 class QDragEnterEvent;
 class QDropEvent;
-
 class QMouseEvent;
 class QPoint;
 
@@ -43,8 +43,8 @@ class CanvasView : public QCanvasView
     Q_OBJECT
 
 public:
-    CanvasView(QCanvas *canvas, QWidget *parent = 0, const char* name = 0,
-               WFlags fl = 0);
+    CanvasView(Document *document, QCanvas *canvas, QWidget *parent = 0,
+               const char* name = 0, WFlags fl = 0);
     ~CanvasView();
 
     void contentsMousePressEvent(QMouseEvent *e);
@@ -53,9 +53,9 @@ public:
     void dropEvent(QDropEvent *e);
 
 private:
-    QCanvasItem* movingItem;
+    Document *document_;
+    QCanvasItem * movingItem;
     QPoint movingStartPoint;
-
 };
 
 #endif // CANVASVIEW_H

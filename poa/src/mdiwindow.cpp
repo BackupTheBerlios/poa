@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.13 2003/08/22 15:27:43 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.14 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
 
 #include "mdiwindow.h"
 
 #include "canvasview.h"
+#include "gridcanvas.h"
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -35,14 +36,13 @@
 #include <qsize.h>
 #include <qwmatrix.h>
 
-
-MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent,
+MdiWindow::MdiWindow(GridCanvas* canvas, QWidget* parent,
                      const char* name, WFlags f)
     : QMainWindow(parent, name, f)
 {
     zoomLevel_ = 1.0;
 
-    view_ = new CanvasView(canvas, this);
+    view_ = new CanvasView(canvas->document(), canvas, this);
     setCentralWidget(view_);
 }
 

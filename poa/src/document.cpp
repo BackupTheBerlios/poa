@@ -18,55 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.13 2003/08/22 16:50:51 squig Exp $
+ * $Id: document.cpp,v 1.1 2003/08/22 16:50:51 squig Exp $
  *
  *****************************************************************************/
+#include "document.h"
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
-
-class GridCanvas;
-
-#include <qmainwindow.h>
-#include <qcanvas.h>
-class QCanvasView;
-
-/*****************************************************************************
- * Defines MDI windows.
- * @author garbeam
- */
-class MdiWindow : public QMainWindow
+Document::Document()
 {
-    Q_OBJECT
 
-public:
-    MdiWindow(GridCanvas* canvas, QWidget* parent = 0, const char* name = 0,
-              WFlags f = WType_TopLevel);
-    ~MdiWindow();
+}
 
-    QCanvas *canvas();
-    void setCanvas(QCanvas *);
+Document::~Document()
+{
+}
 
-    void load( const QString& fn );
-    void save();
-    void saveAs();
-    double zoomLevel();
-    void resizeCanvas();
+void Document::add(AbstractModel *item, int x, int y)
+{
+    items_.append(item);
+    emit modelAdded(item, x, y);
+}
 
-public slots:
-    void setZoomLevel(double zoomLevel);
 
-protected:
-    void closeEvent( QCloseEvent * );
-    virtual void resizeEvent(QResizeEvent *e);
 
-private:
-    QCanvasView* view_;
-    double zoomLevel_;
-
-signals:
-    void message(const QString&, int );
-
-};
-
-#endif // POA_MDIWINDOW_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.40 2003/09/30 16:40:31 keulsn Exp $
+ * $Id: blockview.cpp,v 1.41 2003/10/01 14:50:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,7 @@
 #include <qbrush.h>
 #include <qcanvas.h>
 #include <qpainter.h>
+#include <qptrlist.h>
 
 #include <math.h>
 
@@ -83,6 +84,20 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
                 this, SLOT(addPin(PinModel *)));
         connect(muxModel, SIGNAL(updated()), this, SLOT(updateView()));
         connect(muxModel, SIGNAL(deleted()), this, SLOT(deleteView()));
+
+        for (QPtrListIterator<MuxPin> it(*muxModel->muxPins());
+             it != 0; ++it)
+        {
+            MuxPin *muxPin = it.current();
+            addPin(muxPin->model());
+        }
+
+        for (QPtrListIterator<PinModel> it(*muxModel->outputPins());
+             it != 0; ++it)
+        {
+            PinModel *pin = it.current();
+            addPin(pin);
+        }
     }
 
     arrangePins();

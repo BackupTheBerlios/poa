@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.60 2003/09/29 20:19:28 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.61 2003/10/01 14:50:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -193,10 +193,10 @@ void MainWindow::initializeActions()
                     QKeySequence("F7"), this, "invokeDownloadAction");
     invokeSchedulingAction =
         new QAction("Scheduling", image_scheduling, "&Scheduling",
-		    QKeySequence("F6"), this, "invokeSchedulingAction");
+            QKeySequence("F6"), this, "invokeSchedulingAction");
     invokeDeployAction =
         new QAction("Deploy Project", image_deploy, "Deploy &Project",
-		    QKeySequence("F5"), this, "invokeDeployAction");
+            QKeySequence("F5"), this, "invokeDeployAction");
     openSettingsAction =
         new QAction("Configure POA", "Configure &POA...", 0,
                     this, "openSettingsAction");

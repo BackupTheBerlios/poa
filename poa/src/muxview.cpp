@@ -18,22 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.cpp,v 1.2 2003/09/23 10:53:39 garbeam Exp $
+ * $Id: muxview.cpp,v 1.3 2003/10/01 14:50:43 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "muxview.h"
 #include "muxmodel.h"
 
-MuxView::MuxView(MuxModel *model, QCanvas *canvas)
-    : BlockView(model, canvas)
-{
-}
-
 QString MuxView::tip()
 {
     MuxModel *m = (MuxModel *)model();
-    return QString("<b>Mux</b><br><u>%1</u> (%2)<br><i>%3</i><hr>")
+    return QString("<b>Mux</b><br><u>%1</u> (%2)<br><i>%3</i>")
         .arg(m->name())
         .arg(m->type())
         .arg(m->description());

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.20 2003/09/30 16:51:27 garbeam Exp $
+ * $Id: muxmodel.h,v 1.21 2003/10/01 14:50:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,8 @@
 
 #include <qptrlist.h>
 
-// forward declaration for MuxMapping
+// forward declaration for MuxMapping/MuxPin
+class MuxModel;
 class MuxPin;
 
 /**
@@ -42,6 +43,11 @@ class MuxMapping
 {
 
 public:
+
+    /**
+     * Dom constructor.
+     */
+    MuxMapping(MuxPin *parent, PinModel *output, QDomElement mapElement);
 
     /**
      * Basic constructor.
@@ -97,6 +103,11 @@ public:
     QDomElement serialize(QDomDocument *document);
 
     /**
+     * Deserializes the MuxMapping.
+     */
+    void deserialize(QDomElement element);
+
+    /**
      * Returns clone of <code>this</code>. 
      * @param muxPin the muxPin which should be used for cloning.
      * Mostly, also the MuxPin has been cloned, so all the cloned
@@ -125,6 +136,8 @@ class MuxPin
 
 public:
 
+    MuxPin(MuxModel *parent, QDomElement muxPinElement);
+
     MuxPin(PinModel *model);
     ~MuxPin();
 
@@ -143,6 +156,10 @@ public:
      */
     QDomElement serialize(QDomDocument *document);
 
+    /**
+     * Desirializes this MuxPin an its MuxMappings.
+     */
+    void deserialize(MuxModel *parent, QDomElement element);
     /**
      * Returns clone of <code>this</code>
      */

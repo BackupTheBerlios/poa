@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.27 2003/09/30 21:54:18 vanto Exp $
+ * $Id: project.cpp,v 1.28 2003/10/01 14:50:43 garbeam Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -285,7 +285,7 @@ void Project::deserialize(QDomDocument *document) {
                 }
             }
 
-            Q_ASSERT(spv != 0 && tpv!=0);
+            //Q_ASSERT(spv != 0 && tpv!=0);
 
             if (spv != 0 && tpv != 0) {
                 spv->pinModel()->attach(tpv->pinModel());

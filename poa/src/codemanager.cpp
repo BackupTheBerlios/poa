@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.1 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.2 2003/09/16 16:09:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,9 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "settings.h"
+
+#include <qprocess.h>
+#include <qdir.h>
 
 CodeManager::CodeManager(AbstractModel *parent)
 {
@@ -39,14 +42,26 @@ CodeManager::~CodeManager()
 QString CodeManager::sourcePath()
 {
     CpuModel *model = (CpuModel *)model_;
-    return QString("%1/CPU_%2_sdk").arg(*(model->projectPath()))
-                                   .arg(model->id());
+    return QString("%1/CPU_%2_sdk/cpu_%3_.c")
+        .arg(*(model->projectPath()))
+        .arg(model->id())
+        .arg(model->id());
 }
 
 int CodeManager::compile()
 {
+    Settings* s = Settings::instance();
+    CpuModel *model = (CpuModel *)model_;
 
-    return 0;
+    QProcess *proc = new QProcess(this);
+    proc->addArgument(s->get("Terminal"));
+    proc->addArgument(s->get("Compiler"));
+    proc->addArgument(sourcePath());
+    proc->setWorkingDirectory(QDir(*(model->projectPath())));
+
+    proc->launch("");
+
+    return proc->exitStatus();
 }
 
 void CodeManager::save()

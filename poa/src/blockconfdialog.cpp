@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.21 2003/09/16 16:03:31 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.22 2003/09/16 16:09:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -301,6 +301,8 @@ void BlockConfDialog::initCompileEditButtonWidget()
     compilePushButton =
         new QPushButton(compileEditButtonsWidget, "compilePushButton");
     compilePushButton->setText(tr("Co&mpile"));
+    connect(compilePushButton, SIGNAL(clicked()),
+            ((CpuModel *)model_)->code(), SLOT(compile()));
 
 
     compileEditButtonsLayout->addWidget(editCodePushButton);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.6 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: settingsdialog.cpp,v 1.7 2003/09/16 16:09:24 garbeam Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -37,22 +37,22 @@
  * Constructs the dialog.
  */
 SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
-							   WFlags fl)
-	: QTabDialog(parent, name, modal, fl)
+                               WFlags fl)
+    : QTabDialog(parent, name, modal, fl)
 {
     setCaption(tr("Settingss"));
-	setApplyButton();
-	setCancelButton();
-	setOkButton();
-	setHelpButton();
+    setApplyButton();
+    setCancelButton();
+    setOkButton();
+    setHelpButton();
 
-	this->addTab(createGeneralTab(), tr("General"));
-	this->addTab(createPathTab(), tr("Paths"));
-	setup();
+    this->addTab(createGeneralTab(), tr("General"));
+    this->addTab(createPathTab(), tr("Paths"));
+    setup();
 
     resize(sizeHint());//resize(400, 400); 
 
-	connect(this, SIGNAL(applyButtonPressed()), this, SLOT(applySettings()));
+    connect(this, SIGNAL(applyButtonPressed()), this, SLOT(applySettings()));
 }
 
 /**
@@ -68,14 +68,14 @@ SettingsDialog::~SettingsDialog()
  */
 QWidget *SettingsDialog::createGeneralTab()
 {
-	QWidget *tab = new QWidget(this);
-	QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
+    QWidget *tab = new QWidget(this);
+    QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
 
-	grid->addWidget(new QLabel(tr("Grid Size"), tab), 0, 0);
-	gridSizeSpinBox_ = new QSpinBox(1, 100, 1, tab);
-	grid->addWidget(gridSizeSpinBox_, 0, 1);
+    grid->addWidget(new QLabel(tr("Grid Size"), tab), 0, 0);
+    gridSizeSpinBox_ = new QSpinBox(1, 100, 1, tab);
+    grid->addWidget(gridSizeSpinBox_, 0, 1);
 
-	return tab;
+    return tab;
 }
 
 /**
@@ -84,38 +84,45 @@ QWidget *SettingsDialog::createGeneralTab()
 QWidget *SettingsDialog::createPathTab()
 {
     QPushButton *button;
-	QWidget *tab = new QWidget(this);
-	QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
+    QWidget *tab = new QWidget(this);
+    QGridLayout *grid = new QGridLayout(tab, 5, 3, 5, 5);
 
-	grid->addWidget(new QLabel(tr("External Editor"), tab), 0, 0);
-	editorLineEdit = new QLineEdit(tab);
-	grid->addWidget(editorLineEdit, 0, 1);
+    grid->addWidget(new QLabel(tr("External Editor"), tab), 0, 0);
+    editorLineEdit = new QLineEdit(tab);
+    grid->addWidget(editorLineEdit, 0, 1);
     button = new QPushButton("...", tab);
-	grid->addWidget(button, 0, 2);
-	connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalEditor()));
+    grid->addWidget(button, 0, 2);
+    connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalEditor()));
 
-	grid->addWidget(new QLabel(tr("External Compiler"), tab), 1, 0);
-	compilerLineEdit = new QLineEdit(tab);
-	grid->addWidget(compilerLineEdit, 1, 1);
+    grid->addWidget(new QLabel(tr("External Compiler"), tab), 1, 0);
+    compilerLineEdit = new QLineEdit(tab);
+    grid->addWidget(compilerLineEdit, 1, 1);
     button = new QPushButton("...", tab);
-	grid->addWidget(button, 1, 2);
-	connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
+    grid->addWidget(button, 1, 2);
+    connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
 
-	grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 2, 0);
-	cTemplateLineEdit = new QLineEdit(tab);
-	grid->addWidget(cTemplateLineEdit, 2, 1);
-	button = new QPushButton("...", tab);
-	grid->addWidget(button, 2, 2);
-	connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
+    grid->addWidget(new QLabel(tr("External Terminal"), tab), 2, 0);
+    terminalLineEdit = new QLineEdit(tab);
+    grid->addWidget(terminalLineEdit, 2, 1);
+    button = new QPushButton("...", tab);
+    grid->addWidget(button, 2, 2);
+    connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalTerminal()));
 
-	grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
-	downloadLineEdit = new QLineEdit(tab);
-	grid->addWidget(downloadLineEdit, 3, 1);
-	button = new QPushButton("...", tab);
-	grid->addWidget(button, 3, 2);
-	connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
+    grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 3, 0);
+    cTemplateLineEdit = new QLineEdit(tab);
+    grid->addWidget(cTemplateLineEdit, 3, 1);
+    button = new QPushButton("...", tab);
+    grid->addWidget(button, 3, 2);
+    connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
 
-	return tab;
+    grid->addWidget(new QLabel(tr("External Download Tool"), tab), 4, 0);
+    downloadLineEdit = new QLineEdit(tab);
+    grid->addWidget(downloadLineEdit, 4, 1);
+    button = new QPushButton("...", tab);
+    grid->addWidget(button, 4, 2);
+    connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
+
+    return tab;
 }
 
 /**
@@ -123,16 +130,17 @@ QWidget *SettingsDialog::createPathTab()
  */
 void SettingsDialog::setup()
 {
-	Settings* s = Settings::instance();
-	
-	// general tab
-	gridSizeSpinBox_->setValue(s->gridSize());
+    Settings* s = Settings::instance();
+    
+    // general tab
+    gridSizeSpinBox_->setValue(s->gridSize());
 
-	// path tab
-	editorLineEdit->setText(s->get("Editor"));
-	compilerLineEdit->setText(s->get("Compiler"));
-	cTemplateLineEdit->setText(s->get("Template Path"));
-	downloadLineEdit->setText(s->get("Download Path"));	
+    // path tab
+    editorLineEdit->setText(s->get("Editor"));
+    compilerLineEdit->setText(s->get("Compiler"));
+    terminalLineEdit->setText(s->get("Terminal"));
+    cTemplateLineEdit->setText(s->get("Template Path"));
+    downloadLineEdit->setText(s->get("Download Path")); 
 }
 
 /**
@@ -140,46 +148,58 @@ void SettingsDialog::setup()
  */
 void SettingsDialog::applySettings()
 {
-	Settings* s = Settings::instance();
+    Settings* s = Settings::instance();
 
-	// general tab
-	s->setGridSize(gridSizeSpinBox_->value());
+    // general tab
+    s->setGridSize(gridSizeSpinBox_->value());
 
-	// path tab
-	s->set("Editor", editorLineEdit->text());
-	s->set("Compiler", compilerLineEdit->text());
-	s->set("Template Path", cTemplateLineEdit->text());
-	s->set("Download Tool", downloadLineEdit->text());
+    // path tab
+    s->set("Editor", editorLineEdit->text());
+    s->set("Compiler", compilerLineEdit->text());
+    s->set("Terminal", terminalLineEdit->text());
+    s->set("Template Path", cTemplateLineEdit->text());
+    s->set("Download Tool", downloadLineEdit->text());
 }
 
 void SettingsDialog::chooseExternalEditor()
 {
-	QString s = QFileDialog::getOpenFileName(editorLineEdit->text(),
-											 QString::null,
-											 this, "open file dialog",
-											 tr("Select External Editor"));
-	if (s != QString::null) {
-		editorLineEdit->setText(s);
-	}
+    QString s = QFileDialog::getOpenFileName(editorLineEdit->text(),
+                                             QString::null,
+                                             this, "open file dialog",
+                                             tr("Select External Editor"));
+    if (s != QString::null) {
+        editorLineEdit->setText(s);
+    }
 }
 
 void SettingsDialog::chooseExternalCompiler()
 {
-	QString s = QFileDialog::getOpenFileName(compilerLineEdit->text(),
-											 QString::null,
-											 this, "open file dialog",
-											 tr("Select External Compiler"));
-	if (s != QString::null) {
-		compilerLineEdit->setText(s);
-	}
+    QString s = QFileDialog::getOpenFileName(compilerLineEdit->text(),
+                                             QString::null,
+                                             this, "open file dialog",
+                                             tr("Select External Compiler"));
+    if (s != QString::null) {
+        compilerLineEdit->setText(s);
+    }
+}
+
+void SettingsDialog::chooseExternalTerminal()
+{
+    QString s = QFileDialog::getOpenFileName(terminalLineEdit->text(),
+                                             QString::null,
+                                             this, "open file dialog",
+                                             tr("Select External Terminal"));
+    if (s != QString::null) {
+        terminalLineEdit->setText(s);
+    }
 }
 
 void SettingsDialog::chooseTemplatePath()
 {
   QString s = QFileDialog::getExistingDirectory(cTemplateLineEdit->text(),
-						this, "get existingdirectory",
-						tr("Select C Source Template Path"),
-						TRUE );
+                        this, "get existingdirectory",
+                        tr("Select C Source Template Path"),
+                        TRUE );
   if (s !=QString::null) {
     cTemplateLineEdit->setText(s);
   }
@@ -188,9 +208,9 @@ void SettingsDialog::chooseTemplatePath()
 void SettingsDialog::chooseDownloadTool()
 {
   QString s= QFileDialog::getOpenFileName(downloadLineEdit->text(),
-					 QString::null,
-					 this, "open file dialog",
-					 tr("Select External Download Tool"));
+                     QString::null,
+                     this, "open file dialog",
+                     tr("Select External Download Tool"));
   if (s != QString::null) {
     downloadLineEdit->setText(s);
   }

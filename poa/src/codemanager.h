@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.4 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: codemanager.h,v 1.5 2003/09/16 16:09:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -58,11 +58,6 @@ public:
     QString sourcePath();
 
     /**
-     * Executes the compiler and returns it's return code.
-     */
-    int compile();
-
-    /**
      * Saves the source template into a structure as follows:
      * CPU_nn_sdk
      *  src/cpu_nn.c
@@ -81,6 +76,12 @@ public slots:
      * Called by the destructor.
      */
     void remove();
+
+    /**
+     * Executes the compiler and returns it's return code.
+     */
+    int compile();
+
 
 };
 

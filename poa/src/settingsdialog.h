@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.6 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: settingsdialog.h,v 1.7 2003/09/16 16:09:24 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -42,25 +42,27 @@ class SettingsDialog : public QTabDialog
 
 public:
     SettingsDialog(QWidget* parent = 0, const char* name = 0, 
-				   bool modal = FALSE, WFlags fl = 0 );
+                   bool modal = FALSE, WFlags fl = 0 );
     ~SettingsDialog();
 
     QLineEdit* compilerLineEdit;
+    QLineEdit* terminalLineEdit;
     QLineEdit* cTemplateLineEdit;
     QLineEdit* downloadLineEdit;
     QLineEdit* editorLineEdit;
-	QSpinBox* gridSizeSpinBox_;
+    QSpinBox* gridSizeSpinBox_;
 
 public slots:
-	void applySettings();
-	void chooseExternalEditor();
-	void chooseExternalCompiler();
-	void chooseTemplatePath();
-	void chooseDownloadTool();
+    void applySettings();
+    void chooseExternalEditor();
+    void chooseExternalCompiler();
+    void chooseExternalTerminal();
+    void chooseTemplatePath();
+    void chooseDownloadTool();
 
 private :
-	QWidget *createGeneralTab();
-	QWidget *createPathTab();
+    QWidget *createGeneralTab();
+    QWidget *createPathTab();
     void setup(); 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.6 2004/02/18 03:41:31 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.7 2004/03/03 04:51:04 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -71,16 +71,16 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph, Path **result)
     gridLayout->addWidget(targetBlock_, 1, 1);
 
     connect(sourceBlock_, SIGNAL(activated(int)),
-	    this, SLOT(sourceBlockActivated(int)));
+            this, SLOT(sourceBlockActivated(int)));
     connect(sourcePin_, SIGNAL(activated(int)),
-	    this, SLOT(sourcePinActivated(int)));
+            this, SLOT(sourcePinActivated(int)));
     connect(targetBlock_, SIGNAL(activated(int)),
-	    this, SLOT(targetBlockActivated(int)));
+            this, SLOT(targetBlockActivated(int)));
     connect(targetPin_, SIGNAL(activated(int)),
-	    this, SLOT(targetPinActivated(int)));
+            this, SLOT(targetPinActivated(int)));
 
     topPane->addItem(new QSpacerItem(0, 5, QSizePolicy::Minimum,
-				     QSizePolicy::Fixed));
+                                     QSizePolicy::Fixed));
 
     pathChooser_ = new QListBox(this);
     QLabel *pathLabel = new QLabel(pathChooser_, tr("&Available Paths"), this);
@@ -111,23 +111,23 @@ void PathChooserDialog::loadBlocks()
     int i = 0;
     blocks_[i] = 0;
     for (QValueList<BlockNode*>::iterator node = blockList.begin();
-	 node != blockList.end(); node++) {
+         node != blockList.end(); node++) {
 
-	blocks_[++i] = *node;
+        blocks_[++i] = *node;
     }
     // sort?
     //sourceBlock_->sort();
     //targetBlock_->sort();
     // insert texts into listboxes
     for (i = 0; i < blockCount; ++i) {
-	if (blocks_[i] == 0) {
-	    sourceBlock_->insertItem(tr("<none>"), i);
-	    targetBlock_->insertItem(tr("<none>"), i);
-	}
-	else {
-	    sourceBlock_->insertItem(blocks_[i]->model()->name(), i);
-	    targetBlock_->insertItem(blocks_[i]->model()->name(), i);
-	}
+        if (blocks_[i] == 0) {
+            sourceBlock_->insertItem(tr("<none>"), i);
+            targetBlock_->insertItem(tr("<none>"), i);
+        }
+        else {
+            sourceBlock_->insertItem(blocks_[i]->model()->name(), i);
+            targetBlock_->insertItem(blocks_[i]->model()->name(), i);
+        }
     }
 }
 
@@ -135,13 +135,13 @@ void PathChooserDialog::loadBlocks()
 PathChooserDialog::~PathChooserDialog()
 {
     if (blocks_ != 0) {
-	delete [] blocks_;
+        delete [] blocks_;
     }
     if (inPins_ != 0) {
-	delete [] inPins_;
+        delete [] inPins_;
     }
     if (outPins_ != 0) {
-	delete [] outPins_;
+        delete [] outPins_;
     }
     freePaths();
 }
@@ -149,66 +149,66 @@ PathChooserDialog::~PathChooserDialog()
 void PathChooserDialog::freePaths()
 {
     if (paths_ != 0) {
-	for (unsigned i = 0; i < pathsCount_; ++i) {
-	    delete paths_[i];
-	}
-	delete [] paths_;
-	paths_ = 0;
-	pathsCount_ = 0;
+        for (unsigned i = 0; i < pathsCount_; ++i) {
+            delete paths_[i];
+        }
+        delete [] paths_;
+        paths_ = 0;
+        pathsCount_ = 0;
     }
 }
 
 void PathChooserDialog::updatePinCombo(QComboBox *box,
-				       BlockNode *block,
-				       PinModel::PinType type,
-				       PinModel ***array)
+                                       BlockNode *block,
+                                       PinModel::PinType type,
+                                       PinModel ***array)
 {
     // clear the combo box and delete array
     if (*array != 0) {
-	while (box->count()) box->removeItem(0);
-	delete [] (*array);
-	*array = 0;
+        while (box->count()) box->removeItem(0);
+        delete [] (*array);
+        *array = 0;
     }
 
     if (block != 0) {
-	const QValueList<PinModel*> pins = block->model()->pins();
-	QValueList<PinModel*> filtered;
-	QValueList<PinModel*>::const_iterator it = pins.begin();
-	while (it != pins.end()) {
-	    PinModel *current = *it;
-	    if (current->type() == type) {
-		filtered.prepend(current);
-	    }
-	    ++it;
-	}
+        const QValueList<PinModel*> pins = block->model()->pins();
+        QValueList<PinModel*> filtered;
+        QValueList<PinModel*>::const_iterator it = pins.begin();
+        while (it != pins.end()) {
+            PinModel *current = *it;
+            if (current->type() == type) {
+                filtered.prepend(current);
+            }
+            ++it;
+        }
 
-	// create new array and insert into combo box
-	int filterCount = filtered.count() + 1;
-	*array = new PinModel*[filterCount];
-	int i = 0;
-	(*array)[i++] = 0;
-	box->insertItem(tr("<none>"), -1);
-	it = filtered.end();
-	while (i < filterCount) {
-	    --it;
-	    PinModel *current = *it;
-	    (*array)[i++] = current;
-	    box->insertItem(current->name(), -1);
-	}
-	box->setCurrentItem(0);
+        // create new array and insert into combo box
+        int filterCount = filtered.count() + 1;
+        *array = new PinModel*[filterCount];
+        int i = 0;
+        (*array)[i++] = 0;
+        box->insertItem(tr("<none>"), -1);
+        it = filtered.end();
+        while (i < filterCount) {
+            --it;
+            PinModel *current = *it;
+            (*array)[i++] = current;
+            box->insertItem(current->name(), -1);
+        }
+        box->setCurrentItem(0);
     }
 }
 
 void PathChooserDialog::updateInPins()
 {
     updatePinCombo(targetPin_, blocks_[targetBlock_->currentItem()],
-		   PinModel::INPUT, &inPins_);
+                   PinModel::INPUT, &inPins_);
 }
 
 void PathChooserDialog::updateOutPins()
 {
     updatePinCombo(sourcePin_, blocks_[sourceBlock_->currentItem()],
-		   PinModel::OUTPUT, &outPins_);
+                   PinModel::OUTPUT, &outPins_);
 }
 
 void PathChooserDialog::updatePaths()
@@ -222,56 +222,56 @@ void PathChooserDialog::updatePaths()
     int fromPinIndex = sourcePin_->currentItem();
     int toPinIndex = targetPin_->currentItem();
     if (fromIndex > 0 && toIndex > 0) {
-	PathQueue queue;
-	PinModel *fromPin = 0;
-	PinModel *toPin = 0;
-	if (fromPinIndex > 0) {
-	    fromPin = outPins_[fromPinIndex];
-	}
-	if (toPinIndex > 0) {
-	    toPin = inPins_[toPinIndex];
-	}
-	BlockNode *from = blocks_[fromIndex];
-	BlockNode *to = blocks_[toIndex];
-	Path::allPaths(queue, from, to);
-	// filter paths not beginning or ending with correct pin
-	while (!queue.isEmpty()) {
-	    Path *path = queue.removeHead();
-	    bool legal = true;
-	    if (path->length() > 1) {
-		if (legal && fromPin != 0) {
-		    PinModel *secondPin = fromPin->connected();
-		    legal = (secondPin != 0)
-			&& (secondPin->parent() == path->front(+1)->model());
-		}
-		if (legal && toPin != 0) {
-		    PinModel *preLastPin = toPin->connected();
-		    legal = (preLastPin != 0)
-			&& (preLastPin->parent() == path->end(-1)->model());
-		}
-	    }
+        PathQueue queue;
+        PinModel *fromPin = 0;
+        PinModel *toPin = 0;
+        if (fromPinIndex > 0) {
+            fromPin = outPins_[fromPinIndex];
+        }
+        if (toPinIndex > 0) {
+            toPin = inPins_[toPinIndex];
+        }
+        BlockNode *from = blocks_[fromIndex];
+        BlockNode *to = blocks_[toIndex];
+        Path::allPaths(queue, from, to);
+        // filter paths not beginning or ending with correct pin
+        while (!queue.isEmpty()) {
+            Path *path = queue.removeHead();
+            bool legal = true;
+            if (path->length() > 1) {
+                if (legal && fromPin != 0) {
+                    PinModel *secondPin = fromPin->connected();
+                    legal = (secondPin != 0)
+                        && (secondPin->parent() == path->front(+1)->model());
+                }
+                if (legal && toPin != 0) {
+                    PinModel *preLastPin = toPin->connected();
+                    legal = (preLastPin != 0)
+                        && (preLastPin->parent() == path->end(-1)->model());
+                }
+            }
 
-	    if (legal) {
-		pathList.prepend(path);
-	    }
-	    else {
-		delete path;
-	    }
-	}
+            if (legal) {
+                pathList.prepend(path);
+            }
+            else {
+                delete path;
+            }
+        }
     }
 
     pathsCount_ = pathList.size();
     paths_ = new Path*[pathsCount_];
     for (i = 0; i < pathsCount_; ++i) {
-	paths_[i] = pathList.front();
-	pathList.pop_front();
+        paths_[i] = pathList.front();
+        pathList.pop_front();
     }
 
     while (pathChooser_->count() > 0) {
-	pathChooser_->removeItem(0);
+        pathChooser_->removeItem(0);
     }
     for (i = 0; i < pathsCount_; ++i) {
-	pathChooser_->insertItem(paths_[i]->getText(), i);
+        pathChooser_->insertItem(paths_[i]->getText(), i);
     }
 }
 
@@ -301,16 +301,16 @@ void PathChooserDialog::accept()
 {
     int index = pathChooser_->currentItem();
     if (index >= 0 && index < (int) pathsCount_) {
-	*result_ = paths_[index];
-	--pathsCount_;
-	for (int i = index; i < (int) pathsCount_; ++i) {
-	    paths_[i] = paths_[i + 1];
-	}
-	paths_[pathsCount_] = 0;	
-	pathChooser_->removeItem(index);
-	QDialog::accept();
+        *result_ = paths_[index];
+        --pathsCount_;
+        for (int i = index; i < (int) pathsCount_; ++i) {
+            paths_[i] = paths_[i + 1];
+        }
+        paths_[pathsCount_] = 0;        
+        pathChooser_->removeItem(index);
+        QDialog::accept();
     }
     else {
-	return;
+        return;
     }
 }

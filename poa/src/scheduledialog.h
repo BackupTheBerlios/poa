@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.29 2004/02/18 03:41:31 keulsn Exp $
+ * $Id: scheduledialog.h,v 1.30 2004/03/03 04:51:04 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -48,8 +48,8 @@ class QSlider;
 class QSplitter;
 
 typedef struct {
-	int width, height;
-	int x, y;
+        int width, height;
+        int x, y;
     int nameWidth;
     double pixPerNs;
     QCanvas *canvas;
@@ -186,7 +186,7 @@ private slots:
     /**
      * Print table and graph
      */
-	void print();
+        void print();
 
     /**
      * Highlightes the same row in the graph widget as in the table.

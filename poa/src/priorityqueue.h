@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.8 2004/01/30 12:29:04 keulsn Exp $
+ * $Id: priorityqueue.h,v 1.9 2004/03/03 04:51:04 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -40,7 +40,7 @@ class PriorityItem;
  */
 class PriorityQueue
 {
-public:
+ public:
 
     /**
      * Constructs an empty priority queue.
@@ -119,7 +119,7 @@ public:
      */
     int checkEqualDistribution();
 
-protected:
+ protected:
 
     /**
      *
@@ -134,11 +134,11 @@ protected:
      *                       !(*smaller)->higherPriority(*larger)</code>
      */
     void separateSmallerLarger(PriorityItem *left,
-			       PriorityItem *right,
-			       PriorityItem **smaller,
-			       PriorityItem **larger);
+                               PriorityItem *right,
+                               PriorityItem **smaller,
+                               PriorityItem **larger);
 
-private:
+ private:
     /**
      * Pointer to an item in the heap of <code>PriorityItem</code>-objects
      * or 0 if this queue is empty.
@@ -164,7 +164,7 @@ private:
  */
 class PriorityItem
 {
-public:
+ public:
 
     PriorityItem();
 
@@ -193,7 +193,7 @@ public:
     static PriorityItem *maxPriority(PriorityItem *first,
                                      PriorityItem *second);
 
-protected:
+ protected:
 
     /**
      * MUST be called everytime after the priority of <code>*this</code>
@@ -202,7 +202,7 @@ protected:
      */
     void updatePriority();
 
-private:
+ private:
 
     /**
      * Removes <code>*this</code> from a priority queue if any.

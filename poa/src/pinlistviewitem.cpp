@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.3 2004/01/09 14:40:32 garbeam Exp $
+ * $Id: pinlistviewitem.cpp,v 1.4 2004/01/20 16:55:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,21 +31,21 @@ PinListViewItem::PinListViewItem(QListView *parent,
                                  PinModel::PinType type)
     : QListViewItem(parent, after)
 {
-    setOpen(true);
     type_ = type;
     clone_ = origin_ = 0;
+
+    setOpen(true);
 }
 
 PinListViewItem::PinListViewItem(QListView *parent, QListViewItem *after,
                                  PinModel *clone, PinModel *origin)
     : QListViewItem(parent, after)
 {
-    setOpen(false);
     type_ = clone->type();
     clone_ = clone;
     origin_ = origin;
 
-    update();
+    initialize();
 }
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,
@@ -53,16 +53,25 @@ PinListViewItem::PinListViewItem(QListViewItem *parent,
                                  PinModel *clone, PinModel *origin)
     : QListViewItem(parent, after)
 {
-    setOpen(false);
     type_ = clone->type();
     clone_ = clone;
     origin_ = origin;
 
+    initialize();
+}
+
+void PinListViewItem::initialize()
+{
+    setOpen(false);
+    setRenameEnabled(1, true);
+    setRenameEnabled(2, true);
+    setRenameEnabled(3, true);
+
     update();
 }
 
-void PinListViewItem::update() {
-
+void PinListViewItem::update()
+{
     if (clone_ != 0) {
         setText(0, QString::number(clone_->position(), 10));
         setText(1, clone_->name());

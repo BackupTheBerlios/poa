@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.53 2004/01/20 15:45:01 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.54 2004/01/20 16:55:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -234,6 +234,7 @@ void BlockConfDialog::initListView()
     ioListView->setAllColumnsShowFocus(TRUE);
     ioListView->setMinimumWidth(300);
     ioListView->setSorting(10); // 10 > number of columns
+    ioListView->setDefaultRenameAction(QListView::Accept);
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
 
@@ -565,6 +566,11 @@ void BlockConfDialog::calcRuntime()
         }
     }
 
+}
+
+void BlockConfDialog::editItem(QListViewItem *item)
+{
+    item->startRename(0);
 }
 
 void BlockConfDialog::compile()

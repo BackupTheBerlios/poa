@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.85 2004/01/20 16:16:09 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.86 2004/01/20 16:55:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -102,9 +102,6 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
 
     // restore window settings
     Settings *s = Settings::instance();
-    move(s->getNum("MainWindow/X", 0), s->getNum("MainWindow/Y", 0));
-    resize(s->getNum("MainWindow/Width", 640),
-           s->getNum("MainWindow/Height", 480));
 
     // create $HOME/.poa if it does not exist
     QDir confDir(s->confPath());
@@ -117,6 +114,10 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     if (!libDir.exists()) {
         libDir.mkdir(libPath);
     }
+
+    move(s->getNum("MainWindow/X", 0), s->getNum("MainWindow/Y", 0));
+    resize(s->getNum("MainWindow/Width", 640),
+           s->getNum("MainWindow/Height", 480));
 
     // initialize status bar implicitly
     (void)statusBar();

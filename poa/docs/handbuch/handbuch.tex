@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.11 2004/03/04 02:20:24 neco Exp $
+%% $Id: handbuch.tex,v 1.12 2004/03/04 19:29:00 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.11 $
-\RCSdef $Date: 2004/03/04 02:20:24 $
+\RCSdef $Revision: 1.12 $
+\RCSdef $Date: 2004/03/04 19:29:00 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -157,7 +157,7 @@ Unter diesem Men"upunkt kann man die Aktionen Ausschneiden, Kopieren und Einf"ug
 \item {\bf View:}	Zoom in, Zoom normal, Zoom out\newline
 Unter View ist es m"oglich den Inhalt im Arbeitsfenster anzuzoomen.
 \item {\bf Tools:} 	Configuration, Route, Scheduling, Deploy Project\newline
-Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren, CPU-Prgrammcode zu kompilieren und es auf das Board herunterzuladen.
+Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren, CPU-Prgrammcode zu kompilieren und es auf das CPLD-Board herunterzuladen.
 \item {\bf Settings:}	Show Grid, Configure POA\newline
 Unter Settings k"onnen Grundeinstellungen an POA vorgenommen werden. Hier kann z.B. das Raster, die Programmsprache eingestellt und externe Tools (Editor, Compiler, ...) eingebunden werden.
 \item {\bf Windows:} 	Tile, Tile Horizontal, Cascade\newline
@@ -209,15 +209,31 @@ Die wichtigsten Aktionen k"onnen auch mit den Befehlsbuttons in der Symbolleiste
 
 \section{Allgemein}
 \subsection{Farbgebung}
+POA bietet durch die F"arbung der Bl"ocke nach Ihrer Taktzahl eine komfortabele "Ubersicht "uber die Bl"ocke. D.h. gleichgetaktete Bl"ocke werden auch in der gleiche Farbe angezeigt.\newline
+In der {\bf Takttabelle}, standardm"a"sig in oberen linken Rand des Layouts, sind die Farben und die dazugeh"origen Taktzeiten aufgelistet. Die {\bf Takttabelle} kann frei verschoben werden, indem man die Tabelle mit der linken Maustaste ausw"ahlt und mit gedr"uckter Taste den Mauszeiger im Arbeitsfenster bewegt.\par
+Markierte Objekte werden immer grau gef"arbt.\newline
+Verbindungen werden immer blau gezeichnet, es sei denn es besteht ein Konflikt zwischen den Pins. Dann wird die Verbindung rot markiert.
 
+
+\subsection{Tooltip}
+Mit der Tooltipfunktion bietet POA eine komfortabele L"osung, um Kurzinformationen "uber die Objekte im Arbeitsfenster zu erhalten. Um eine Tooltipinformation von einer Verbindung oder einem Block zu erhalten, muss man mit dem Mauszeiger auf das Objekt zeigen. Nach kurzer Zeit erscheint dann die Tooltipinformation in Form eines gelben K"astchens.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Beschriftung des Layouts}
-Um im Layout Beschriftungen vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Anutate} in der Symbolleiste klicken. Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Anutate} w"ahlen. Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, "offnet sich ein Textfeld, in den man den gewünschten Text eingeben kann.\par
+\subsubsection{Layoutbeschriftung setzen}
+Um im Layout Beschriftungen (z.B. Kommentare) vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Annotate} in der Symbolleiste klicken. Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Annotate} w"ahlen. Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, wird ien Dialog mi einem Textfeld "offnet, in den man den gew"unschten Text eingeben kann. Bei Best"atigung mit {\bf OK} wird der Dialog geschlossen und der Text wird an die gew"unschte Stelle gesetzt.\par
 Um dem Cursermodus verlassen zu k"onnen, muss man nur das Symbol {\bf Mauszeiger} in der Symbolleiste anklicken.
+\subsubsection{Layoutbeschriftung verschieben}
+Zum Verschieben der Layoutbeschriftung, muss man die Beschriftung mit der linken Maustaste ausw"ahlen und die Taste dabei ger"uckt lassen. Jetzt kann man die Layoutbeschriftung frei im Arbeitsfenster auf die gew"unchte Position verschieben. Beim Loslassen der Maustaste wird die Beschriftung an diese Stelle gesetzt.
+\subsubsection{Layoutbeschriftung l"oschen}
+Um eine Beschriftung im Layout zu l"oschen, muss man den zu l"oschenden Text im Layout mit der rechten Maustaste ausw"ahlen und im Kontextmen"u den Eintrag {\bf Remove} w"ahlen. Altenativ kann man auch das Symbol {\bf Remove} in der Symbolleiste anklicken.
+Dabei wird die Beschriftung an dieser Stelle unwiderruflich gel"oscht.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Zoomen}
+Die Zoomfunktion hat man die M"oglichkeit das Layout heran- oder wegzuzommem. POA unterst"utzt das Zoomen zwischen 10{\%} und 500{\%}. Die Standardeinstellung, d.h. die Normalansicht, ist bei einem Zoomfaktor von 100\%.\newline
+Zum "Andern des Zoomfaktors, kann man entweder die Zoomsymbole in der Symbolleiste oder die Eintr"age im Men"u {\bf View} w"ahlen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -241,6 +257,7 @@ Die Taste {\bf Help} ist in dieser Version von POA nicht belegt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{POA konfigurieren}
 
 \subsection{Raster einstellen}
@@ -289,9 +306,11 @@ Um einen Editor einzubinden, w"ahlt man unter dem Dateireiter {\bf Paths} das Te
 Um einen Compiler einzubinden, w"ahlt man unter dem Dateireiter {\bf Paths} das Textfeld neben {\bf External Compiler} aus und gibt hier den korrekten Pfad des Compilers ein. Alternativ dazu kann man auch mit dem Button neben dem Textfeld im Verzeichnisbaum nach dem gew"unschten Compiler suchen.\par
 \subsubsection{Externen Download Tool einbinden}
 Um einen Download Tool einzubinden, w"ahlt man unter dem Dateireiter {\bf Paths} das Textfeld neben {\bf External Download Tool} aus und gibt hier den korrekten Pfad des Download Tool ein. Alternativ dazu kann man auch mit dem Button neben dem Textfeld im Verzeichnisbaum nach dem gew"unschten Download Tool suchen. \par
-\newpage
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \subsection{C Source Template Pfad angeben}
 Mit dem C Source Template wird der Rahmencode f"ur den Quellcode der CPU vorgegeben.
 Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf Paths} das Textfeld neben {\bf C Source Template Path} aus und gibt hier das korrekte Verzeichnis an. Alternativ dazu kann man auch mit dem Button neben dem Textfeld im Verzeichnisbaum nach dem gew"unschten Pfad suchen. \par
@@ -312,9 +331,10 @@ Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf
 \end{figure}
 F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann man in der Auswahlbox den Seriellen Port, an dem das Board angeschlossen ist, einstellen.\par
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Ein Projekt anlegen, "offnen, speichern}
 \begin{figure}[htbp]
 
@@ -329,7 +349,7 @@ F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann 
 \end{figure}
 
 \subsection{Neues Projekt anlegen}
-Durch Anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann.\newline
+Durch Anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann. Dazu kann man im Verzeichnisbaum das Verzeichnis suchen, in dem der Zielordner angelegt wird. Zum Erstellen des Zielordners klickt man auf das Symbol {\bf Create New Folder}. Es wird ein neuer Ordner angelegt, dem nun ein Name vergeben werden kann. Um das neue Projekt hier anzulegen, muss den Zielordner "offnen und auf {\bf OK} klicken.\newline
 Ein neues Projekt kann auch durch einen Mausklick auf das Symbol {\bf New} in der Symbolleiste angelegt werden.\newline
 Es kann nur ein Projekt pro Verzeichnis angelegt werden.\par
 Wird ein neues Projekt angelegt, dann wird dadurch auch das Arbeitsfenster im Hauptfenster aktiviert.
@@ -372,6 +392,7 @@ Mit {\bf Cancel} werden die Einstellungen verworfen.\par
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Bl"ocke}
 
 \subsection{Bl"ocke erzeugen}
@@ -398,7 +419,7 @@ Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber di
 Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekr"aftigen Namen zu geben.\par
 Im Textfeld {\bf Name} kann man den neuen Namen des Blocks eingeben.
 \subsubsection{Block beschreiben}
-Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben.\par
+Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben. Diese erscheinen im Tooltip, wenn man mit dem Mauszeiger auf den Block zeigt oder im der Infobox, wenn der in die Blockbibliothek aufgenommen ist.\par
 Die Blockbeschreibung hat den Vorteil, dass man sp"ater auch noch leicht nachvollziehen kann, wof"ur dieser Block gut ist.\par
 Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Neue Pins erzeugen}
@@ -513,18 +534,24 @@ Mit {\bf Remove} kann man die ausgew"ahlte Zuordnung l"oschen.\par
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Blockbibliothek}
+Die Blockbibliothek verwaltet standardm"a"sig die von POA vorgegeben Standardbl"ocke.
 Bl"ocke, die einmal konfiguriert worden sind und oft wiederverwendet werden sollen, 
-k"onnen in der Blockbibliothek verwaltet werden. Dadurch wird die Wiederverwendung 
+k"onnen in der Blockbibliothek auch verwaltet werden. Dadurch wird die Wiederverwendung
 von Bl"ocken erleichtert und die Bl"ocke f"ur andere Projekte zur Verf"ugung gestellt.\par
-Um ein Block in die Bibliothek aufzunehmen, klickt man mit der linken Maustaste 
-auf den Block und l"a"st die Taste gedr"uckt. Je nach Art des Blocks kann man den Block
-in die entsprechende Kategorie verschieben. Wenn die Maustaste wieder losgelassen
-wird, wird dieser Block in der Blockbibliothek aufgenommen.\newline
+In der Infobox unter der Blockbibliothek werden Informationen zu den ausgew"ahlten Bl"ocken aus der Bibliothek angezeigt. Die Informationen kommen aus der Beschreibung der Bl"ocke in der Blockkonfiguration.
+\subsubsection{Block in die Blockbibliothek aufnehmen}
+Um ein Block in die Bibliothek aufzunehmen, klickt man mit der rechten Maustaste
+auf den Block und w"ahlt im Kontextmen"u den Eintrag {\bf Save To Library}. Je nach Art des Blocks kann man den Block in die entsprechende Kategorie setzten. Dazu w"ahlt man im ge"offneten Dialog den Blocktyp in der Auswahlbox aus. Nach den Best"atigen mit {\bf OK}, wird dieser Block in der Blockbibliothek aufgenommen.\newline
 Bl"ocke, die in die Bibliothek aufgenommen werden, werden projektunabh"angig gespeichert
-und stehen bei jedem Neustart von POA zur Verf"ugung.\par
+und stehen bei jedem Neustart von POA zur Verf"ugung.
+\subsubsection{Blocktyp in der Blockbibliothek "andern}
+Dazu muss man den Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den Eintrag {\bf Change Type} w"ahlen. Im geo"ffneten Dialog kann man in der Auswahlbox gen gew"unschten Blocktyp ausw"ahlen und mit {\bf OK} best"atigen. Der Block wird nun in die gew"unschten Kategorie verschoben.
+\subsubsection{Block in der Blockbibliothek umbenennen}
+Dazu muss man den Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den Eintrag {\bf Rename} w"ahlen. Der nun gehighlightete Name kann "uberschrieben und mit der Eingabebest"atigung gespeichert werden.
+\subsubsection{Block aus der Blockbibliothek entfernen}
 Bl"ocke k"onnen auch wieder aus der Bibliothek entfernt werden. Dazu muss man den
-Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den 
-Eintrag {\bf Remove} w"ahlen. Der ausgew"ahlte Block wird dabei unwiderruflich gel"oscht. 
+Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den
+Eintrag {\bf Remove} w"ahlen. Der ausgew"ahlte Block wird dabei unwiderruflich aus der Blockbibliothek entfernt.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block in Arbeitsfenster verschieben}
@@ -553,6 +580,7 @@ Wenn ein Block gel"oscht wird, werden alle Verbindungen zu diesem Block auch unw
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Verbindungen}
 \subsection{Verbindung routen}
 
@@ -593,6 +621,7 @@ Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ah
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Scheduling}
 \begin{figure}[htbp]
 
@@ -605,13 +634,43 @@ Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ah
 \end{center}
 \end{figure}
 
+Durch das Scheduling kann man eine Optimierung der Gesamtlaufzeit f"ur das CPLD-Board erreichen, indem man zum Beispiel die Offsetzeit der einzelnen Bl"ocke variiert oder Taktzeiten und Laufzeiten "andert, falls diese nicht schon festgelegt sind.\par
+Den Scheduling Dialog kann man entweder "uber die Men"uleiste (Tools -> Scheduling) oder mit einem Kilck auf {\bf Scheduling} Symbol in der Symbolleiste "offnen.
+Die aktuelle Konfiguration der Bl"ocke wird im Scheduling Dialog in der oberen Tabelle, in der alle Bl"ocke aufgelistet sind, angezeigt. Man hat die M"oglichkeit hier die Konfiguration (Laufzeit, Takt, Offset) der Bl"ocke zu "andern. Mit einem Doppelkick in Zelle der Tabelle kann man nun entweder direkt "uber die Tastertur oder mit den Pfeiltasten in der Zelle die Ver"anderungen vornehmen.\par
+Die Reihenfolge in der Tabelle bestimmt auch die Reihenfolge des Ablaufgraphen im unteren Teil des Dialogs. Aufgrund "Ubersichtlichkeit im Ablaufgraphen ist es von Vorteil die Reihenfolge der Bl"ocke "andern zu k"onnen. Dazu muss man den Block mit der Maus markieren. Den markierten Block kann man nun mit den gr"unen Pfeiltasten nach oben oder unten verschieben. Mit dem Schieberegler kann man die "Ubersichtlichkeit im Ablaufgraphen weiter verbessern, indem man den Schieberegler nach rechts zieht und dadurch die Scalierung vergr"o"sert.\par
 
+F"ur die manuelle Optimierung m"ussen die Offsets in der Tabelle per Hand eingegeben werden. Komfortabler geht die Optimierung, wenn man den {\bf Auto} Button dr"uckt. Dabei wird der {\bf Auto Scheduling} Dialog ge"offnet.
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=8cm]{AutoScheduling}
+
+\caption{Auto Scheduling}\label{test}
+
+\end{center}
+\end{figure}
+Hier kann man priorisierte Pfade angeben, wonach die Optimierung abl"auft. Um einen priorisierten Pfad anzugeben oder hinzuzuf"ugen, klickt man auf den {\bf Add} Button. Dabei wird der Dialog {\bf Path Chooser} ge"offnet, indem man den Pfad angeben kann. Dazu muss man in der Auswahlbox {\bf Source Block} den Quellblock (z.B. ein Inputblock) und in der Auswahlbox {\bf Target Block} den Zielblock (z.B. ein Outputblock) angeben. Wenn man den Ausgangs- und Eingangspin der ausgew"ahlten Bl"ocke nicht angibt, werden alle M"oglichen Pfade zwischen den beiden Bl"ocken in einer Liste angezeigt, sonst nur die Pfade mit den entsprechenden Ausgangs- und Eingangspins.
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=8cm]{SchedulingPathChooser}
+
+\caption{Path Chooser}\label{test}
+
+\end{center}
+\end{figure}
+W"ahlt man nun aus der Liste einen priorisierten Pfad aus und best"atigt mit {\bf OK}, wird der Dialog geschlossen und man befindet sich wieder im {\bf Auto Scheduling} Dialog. Der ausgew"ahlte Pfad wird hier in die Priorit"atsliste hinzugef"ugt. Wenn man meherere priorisierte Pfade angegeben hat, kann man deren Reihenfolge (oben h"ochte Priorit"at) mit den gr"unen Pfeilen "andern. Mit der Best"adigung durch {\bf OK} wird die Optimierung in Abh"angigkeit der Priorit"aten durchf"uhrt.\newline
+Wenn kein Pfad ausgew"ahlt und der {\bf OK} Button gedr"uckt wird, optimiert POA willkurlich, d.h. ohne Priorit"aten.\newline
+Mit {\bf Remove} kann man einen zuvor ausgew"ahlten Pfad aus der Priorit"atenliste l"oschen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Deploy Project}
-{\bf Deploy Project} erm"oglicht dem Benutzer eine Plausibilit"atspr"ufung durchzuf"uhren, um eventuelle Fehler vor dem Downloadvorgang zu beseitigen. Bei der Pr"ufung des Projekt wird nach Inkonsistenz in den Bl"ocken und Verbindungen gesucht. Wird ein Probleme bzw. Fehler entdeckt, so bekommt dieser einen Status (kritical, warning). Wenn keine Fehler entdeckt werden, wird der Status der Bl"ocke oder Verbindungen auf {\bf OK} gesetzt.\newline
-Au"ser Plausibilit"atspr"ufung kan man unter {\bf Deploy Project} den Programmcode der CPUs kompilieren und einzeln auf das CPLD-Board herunterladen.
+Mit {\bf Deploy Project} kann der Benutzer eine Plausibilit"atspr"ufung durchzuf"uhren, um eventuelle Fehler vor dem Downloadvorgang zu beseitigen. Bei der Pr"ufung des Projekt wird nach Inkonsistenz in den Bl"ocken und Verbindungen gesucht. Inkonsitenzen k"onnen sein , zum Beispiel: ID der CPU ist schon vergeben; verbundene Bl"ocke haben verschiedene Taktzeiten; Pins sind nicht verbunden; Verschiedene Bitbreiten bei einer Verbindung;... Wird ein Probleme bzw. Fehler entdeckt, so bekommt dieser einen Status (kritical, warning). Wenn keine Fehler entdeckt werden, wird der Status der Bl"ocke oder Verbindungen auf {\bf OK} gesetzt.\newline
+Nach der Plausibilit"atspr"ufung kan man unter {\bf Deploy Project} den Programmcode der CPUs kompilieren und einzeln auf das CPLD-Board herunterladen.
 \begin{figure}[htbp]
 
 \begin{center}

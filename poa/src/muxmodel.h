@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.19 2003/09/29 18:59:12 garbeam Exp $
+ * $Id: muxmodel.h,v 1.20 2003/09/30 16:51:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -263,6 +263,12 @@ public:
      * <code>pinAdded(output)</code> signal will be emitted.
      */
     void addOutput(PinModel *pin);
+
+    /**
+     * Updates all bit settings of output pins.
+     * Deletes output pins with 0 bit ranges.
+     */
+    void updateOutputs();
 
 private:
 

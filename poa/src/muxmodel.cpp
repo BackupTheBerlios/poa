@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.21 2003/09/29 18:59:12 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.22 2003/09/30 16:51:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -189,9 +189,54 @@ MuxModel::~MuxModel()
     emit deleted();
 }
 
+void MuxModel::updateOutputs() {
+
+    // reset all bit values to 0
+    QPtrListIterator<PinModel> outIt(outputPins_);
+    PinModel *pin;
+    while ((pin = outIt.current()) != 0) {
+        ++outIt;
+        pin->setBits(0);
+    }
+
+    // set all bit values to the current valid value
+    QPtrListIterator<MuxPin> muxIt(muxPins_);
+    MuxPin *muxPin;
+    while ((muxPin = muxIt.current()) != 0) {
+        ++muxIt;
+        MuxMapping *mapping;
+        QPtrListIterator<MuxMapping> mapIt(*muxPin->mappings());
+        while ((mapping = mapIt.current()) != 0) {
+            ++mapIt;
+            PinModel *output = mapping->output();
+            unsigned bits = mapping->end() - mapping->begin() + 1;
+            output->setBits(output->bits() + bits);
+        }
+    }
+
+    // seek for outputs which have bit range 0 and delete them
+    QPtrListIterator<PinModel> it(outputPins_);
+    while ((pin = it.current()) != 0) {
+        ++it;
+        if (pin->bits() == 0) { // still 0
+            outputPins_.remove(pin);
+            delete pin;
+        }
+    }
+}
+
 void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
 {
     muxPins_.append(pin);
+
+    // Reset output pin information for all mappings of this pin
+    QPtrListIterator<MuxMapping> it(*pin->mappings());
+    MuxMapping *mapping;
+    while ((mapping = it.current()) != 0) {
+        ++it;
+        PinModel *output = mapping->output();
+        mapping->setOutput(outputForName(output->name()));
+    }
 
     if (!suppressEmission) {
         emit pinAdded(pin->model());
@@ -278,8 +323,9 @@ void MuxModel::addMuxMapping(MuxMapping *mapping) {
     QPtrList<MuxMapping> *mappings = pin->mappings();
     mappings->append(mapping);
 
-    if (!outputPins_.containsRef(mapping->output())) {
-        addOutput(mapping->output());
+    PinModel *output = mapping->output();
+    if (!outputPins_.containsRef(output)) {
+        addOutput(output);
     }
 }
 
@@ -288,23 +334,15 @@ void MuxModel::removeMuxMapping(MuxMapping *mapping) {
     MuxPin *pin = mapping->muxPin();
     QPtrList<MuxMapping> *mappings = pin->mappings();
     mappings->remove(mapping);
-
-    PinModel *output = mapping->output();
-    if (output->bits() > (mapping->end() - mapping->begin())) {
-        output->setBits(output->bits() - (mapping->end() - mapping->begin()));
-    }
-    else {
-        // it was the last MuxMapping related to output
-        outputPins_.remove(output);
-        delete output; // Notifies also the dedicated view
-    }
 }
 
 PinModel *MuxModel::outputForName(QString name) {
-    for (unsigned i = 0; i < outputPins_.count(); i++) {
-        PinModel *model = outputPins_.at(i);
-        if (model->name() == name) {
-            return model;
+    QPtrListIterator<PinModel> it(outputPins_);
+    PinModel *pin;
+    while ((pin = it.current()) != 0) {
+        ++it;
+        if (pin->name() == name) {
+            return pin;
         }
     }
     return 0;

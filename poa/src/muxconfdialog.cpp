@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.20 2003/09/30 10:22:59 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.21 2003/09/30 16:51:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -305,31 +305,31 @@ void MuxConfDialog::syncModel() {
     if (model_ != 0) {
         nameLineEdit->setText(model_->name());
 
-        QPtrList<PinModel> *outputPins = model_->outputPins();
-        for (unsigned i = 0; i < outputPins->count(); i++) {
-            PinModel *pin = outputPins->at(i);
-
+        QPtrListIterator<PinModel> outputIter(*model_->outputPins());
+        PinModel *pin;
+        while ((pin = outputIter.current()) != 0) {
+            ++outputIter;
             mappedToIos_.append(new MapToComboBoxItem(pin->clone(), pin));
             ioComboBox_->insertItem(pin->name());
         }
 
-        QPtrList<MuxPin> *pins = model_->muxPins();
+        QPtrListIterator<MuxPin> pinIter(*model_->muxPins());
         QListViewItem *last = 0;
-
-        for (unsigned i = 0; i < pins->count(); i++) {
-            MuxPin *origPin = pins->at(i);
-
+        MuxPin *origPin;
+        while ((origPin = pinIter.current()) != 0) {
+            ++pinIter;
             MuxPin *clonedPin = origPin->clone();
 
             last = new MuxListViewItem(mappingListView, last,
                                        clonedPin, origPin);
 
-            QPtrList<MuxMapping> *clonedMappings = clonedPin->mappings();
-            QPtrList<MuxMapping> *origMappings = origPin->mappings();
+            QPtrListIterator<MuxMapping> clonedMapIter(*clonedPin->mappings());
+            QPtrListIterator<MuxMapping> origMapIter(*origPin->mappings());
 
-            for (unsigned j = 0; j < clonedMappings->count(); j++) {
-                MuxMapping *clonedMapping = clonedMappings->at(j);
-                MuxMapping *origMapping = origMappings->at(j);
+            while (clonedMapIter != 0 && origMapIter != 0) {
+                MuxMapping *clonedMapping = clonedMapIter.current();
+                MuxMapping *origMapping = origMapIter.current();
+                ++clonedMapIter; ++origMapIter;
                 new MuxMappingListViewItem(last, clonedMapping, origMapping);
             }
         }
@@ -349,8 +349,10 @@ void MuxConfDialog::updateModel() {
         // so this is used only for new Outputs!
         QPtrList<PinModel> *pinModels = model_->outputPins();
         pinModels->clear();
-        for (unsigned i = 0; i < mappedToIos_.count(); i++) {
-            MapToComboBoxItem *item = mappedToIos_.at(i);
+        QPtrListIterator<MapToComboBoxItem> iter(mappedToIos_);
+        MapToComboBoxItem *item;
+        while ((item = iter.current()) != 0) {
+            ++iter;
             PinModel *origPin = item->origData();
             PinModel *currPin = item->data();
 
@@ -365,6 +367,7 @@ void MuxConfDialog::updateModel() {
             }
             else {
                 // new pin
+                qDebug("new Output: " + currPin->name());
                 PinModel *newOuput = currPin->clone();
                 model_->addOutput(newOuput);
                 item->setOrigData(newOuput);
@@ -373,14 +376,17 @@ void MuxConfDialog::updateModel() {
 
         //////////////////////////////////////////////////////////////
         // delete everything which was deleted by the user
-        for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
-            MuxPin *pin = deletedMuxPins_.at(i);
+        QPtrListIterator<MuxPin> delMux(deletedMuxPins_);
+        MuxPin *pin;
+        while ((pin = delMux.current()) != 0) {
+            ++delMux;
             model_->removeMuxPin(pin);
         }
         deletedMuxPins_.clear();
 
-        for (unsigned i = 0; i < deletedMappings_.count(); i++) {
-            MuxMapping *mapping = deletedMappings_.at(i);
+        QPtrListIterator<MuxMapping> delMapping(deletedMappings_);
+        MuxMapping *mapping;
+        while ((mapping = delMapping.current()) != 0) {
             model_->removeMuxMapping(mapping);
         }
         deletedMappings_.clear();
@@ -405,20 +411,22 @@ void MuxConfDialog::updateModel() {
                 if (origPin != 0) {
                     // use original MuxPin and change its mux mappings
                     // to the current model
-                    QPtrList<MuxMapping> *origMappings = origPin->mappings();
-                    for (unsigned i = 0; i < origMappings->count(); i++) {
-                        MuxMapping *mapping = origMappings->at(i);
-                        delete mapping;
+                    QPtrListIterator<MuxMapping> origMapIter(*origPin->mappings());
+                    MuxMapping *m;
+                    while ((m = origMapIter.current()) != 0) {
+                        ++origMapIter;
+                        delete m;
                     }
-                    origMappings->clear();
+                    origPin->mappings()->clear();
                     model_->addMuxPin(origPin, true);
-                    QPtrList<MuxMapping> *currMappings = currPin->mappings();
-                    for (unsigned i = 0; i < currMappings->count(); i++) {
-                        MuxMapping *mapping = currMappings->at(i);
+                    QPtrListIterator<MuxMapping> currMapIter(*currPin->mappings());
+                    while ((m = currMapIter.current()) != 0) {
+                        ++currMapIter;
                         PinModel *output =
-                            model_->outputForName(mapping->output()->name());
+                            model_->outputForName(m->output()->name());
+                        Q_ASSERT(output != 0);
                         MuxMapping *newMapping =
-                            mapping->clone(origPin, output);
+                            m->clone(origPin, output);
                         model_->addMuxMapping(newMapping);
                     }
                     newPin = origPin;
@@ -451,6 +459,9 @@ void MuxConfDialog::updateModel() {
 
             }
         }
+        // Reset outputs on model
+        model_->updateOutputs();
+
         // Notify model about update, so the view will be
         // repaint.
         ((AbstractModel *)model_)->updatePerformed();
@@ -495,10 +506,12 @@ PinModel *MuxConfDialog::ioForString(QString name) {
 
     // Note: dangerous if there exists several PinModels with
     // the same name. It'll return always first match.
-    for (unsigned i = 0; i < mappedToIos_.count(); i++) {
-        PinModel *model = mappedToIos_.at(i)->data();
-        if (model->name() == name) {
-            return model;
+    QPtrListIterator<MapToComboBoxItem> it(mappedToIos_);
+    while (it.current() != 0) {
+        PinModel *pin = it.current()->data();
+        ++it;
+        if (pin->name() == name) {
+            return pin;
         }
     }
 
@@ -701,8 +714,17 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
         iter = iter->parent();
     }
 
+    MuxListViewItem *parentItem = (MuxListViewItem *)iter;
+
+    // remove mapping also from current parent
+    MuxMapping *mapping = item->data();
+    MuxPin *pin = parentItem->data();
+    QPtrList<MuxMapping> *mappings = pin->mappings();
+    mappings->remove(mapping);
+
     // finally, we delete the item from the list
-    ((MuxListViewItem *)iter)->takeItem(item);
+    parentItem->takeItem(item);
+
 }
 
 void MuxConfDialog::removeIoOrMapping() {

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.70 2004/01/13 14:22:23 squig Exp $
+# $Id: poa.pro,v 1.71 2004/01/13 15:13:24 squig Exp $
 #
 ###############################################################################
 
@@ -58,6 +58,7 @@ HEADERS += connectaction.h
 HEADERS += connectorrouter.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
+HEADERS += copyable.h
 HEADERS += cpumodel.h
 HEADERS += dijkstrarouter.h
 HEADERS += directrouter.h
@@ -71,6 +72,7 @@ HEADERS += librarywindow.h
 HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
 HEADERS += modelfactory.h
+HEADERS += moveable.h
 HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
 HEADERS += muxmodel.h
@@ -82,6 +84,7 @@ HEADERS += poaexception.h
 HEADERS += priorityqueue.h
 HEADERS += processdialog.h
 HEADERS += project.h
+HEADERS += removeable.h
 HEADERS += router.h
 HEADERS += scheduledialog.h
 HEADERS += serializable.h

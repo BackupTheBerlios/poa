@@ -12,6 +12,7 @@
       <action type="icon_success_sml">Initial Release (prototype)</action>
     </release>
 	<release version="0.2.0" date="2004-01-13">
+      <action type="icon_success_sml">Ported source code to Windows</action>
       <action type="add">Added scheduling dialog. The scheduling
       dialog provides a list of all blocks and their timings as well as
       a graphical display of the block dependencies.</action>
@@ -23,7 +24,6 @@
       <action type="update">Changed unit of all timings from ms to ns</action>
       <action type="update">Warn if a project is saved to a directory
       that already contains a project file</action>
-      <action type="icon_success_sml">Ported source code to Windows</action>
       <action type="fix">Ask to save changed files on project close</action>
       <action type="fix">Fixed bug in project management that caused
       connections to be restored incorrectly when a saved project was

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.38 2004/01/12 14:35:50 squig Exp $
+ * $Id: blockmodel.cpp,v 1.39 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -233,7 +233,8 @@ PinModel *BlockModel::findPinById(unsigned id)
             return pin;
         }
         }*/
-    return pinById_[id];
+    QMap<uint, PinModel *>::const_iterator it = pinById_.find(id);
+    return (it != pinById_.end()) ? *it : 0;
 }
 
 QDomElement BlockModel::serialize(QDomDocument *document)
@@ -272,10 +273,10 @@ QDomElement BlockModel::serialize(QDomDocument *document)
      QMap<uint, PinModel *>::Iterator it;
      for ( it = pinById_.begin(); it != pinById_.end(); ++it ) {
          QDomElement pinElem = (*it)->serialize(document);
-        root.appendChild(pinElem);
+         root.appendChild(pinElem);
      }
 
-    return root;
+     return root;
 }
 
 void BlockModel::deserialize(QDomElement element)

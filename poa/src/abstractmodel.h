@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.17 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: abstractmodel.h,v 1.18 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -94,8 +94,9 @@ public:
     virtual void deserialize(QDomElement element);
 
     /**
-     * Emits updated() signal
-     */
+     * Needs to be invoked after the model properties have been
+     * changed. Emits the {@link updated()} signal to notify the views
+     * to repaint. */
     void updatePerformed();
 
     /**

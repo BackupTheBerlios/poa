@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.5 2003/12/08 00:54:35 squig Exp $
+ * $Id: util.cpp,v 1.6 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -86,23 +86,22 @@ QString Util::findResource(QString filename)
 bool Util::removeDir(QDir *subDir)
 {
     const QFileInfoList *filist = subDir->entryInfoList();
-    QFileInfoListIterator it(*filist);
-    QFileInfo *fi;
-    while ((fi = it.current()) != 0) {
-        ++it;
-        if (fi->isDir()) {
-            QDir *dir = new QDir(fi->filePath());
-            if (!removeDir(dir))
-            {
-                delete dir; // free
-                // error, directory is not empty!
-                return false;
+    if (filist != 0) {
+        QFileInfoListIterator it(*filist);
+        QFileInfo *fi;
+        while ((fi = it.current()) != 0) {
+            ++it;
+            if (fi->fileName() == "." || fi->fileName() == "..") {
+                continue;
             }
-            delete dir; // else
-        }
-        else {
-            if (!QFile(fi->filePath()).remove())
-            {
+            else if (fi->isDir()) {
+                QDir dir(fi->filePath());
+                if (!removeDir(&dir)) {
+                    // error, directory is not empty!
+                    return false;
+                }
+            }
+            else if (!QFile(fi->filePath()).remove()) {
                 return false;
             }
         }

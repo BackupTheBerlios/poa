@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.23 2004/01/09 14:05:29 squig Exp $
+ * $Id: cpumodel.h,v 1.24 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -111,12 +111,12 @@ class CpuModel: public BlockModel
      * Sets the project path.
      * Used by CodeManager to save its sources.
      */
-    void setProjectPath(QString *path);
+    void setProjectPath(QString path);
 
     /**
      * Returns the project path.
      */
-    QString *projectPath();
+    QString projectPath() const;
 
     /**
      * Returns the tooltip text.
@@ -124,7 +124,7 @@ class CpuModel: public BlockModel
     virtual QString tip();
 
  private:
-    QString *path_;
+    QString path_;
     int cpuId_;
     bool autoExecTime_;
     bool autoOffset_;

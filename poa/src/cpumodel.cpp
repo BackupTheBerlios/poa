@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.27 2004/01/12 11:24:51 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.28 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,10 +35,9 @@
 CpuModel::CpuModel(QString type, QString description)
     : BlockModel(type, description)
 {
-    cpuId_ = -1;
-    autoExecTime_ = 0;
-    clock_ = 0;
+    autoExecTime_ = true;
     autoOffset_ = true;
+    cpuId_ = -1;
     isProducer_ = true;
 }
 
@@ -106,7 +105,6 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("cpuid", cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
-    root.setAttribute("clock", (unsigned int)clock_);
 
     emit serialized(this);
 
@@ -127,12 +125,12 @@ void CpuModel::deserialize(QDomElement element) {
         element.attribute("autotime", "true").contains("true", false);
 }
 
-void CpuModel::setProjectPath(QString *path)
+void CpuModel::setProjectPath(QString path)
 {
     path_ = path;
 }
 
-QString *CpuModel::projectPath()
+QString CpuModel::projectPath() const
 {
     return path_;
 }

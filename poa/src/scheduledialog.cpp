@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.24 2004/01/12 00:27:00 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.25 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -327,7 +327,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
     text->show();
 
     // resize canvas if label doesn't fit.
-    if (text->boundingRect().width() + 2 * WIDGET_SPACING
+    if ((int)(text->boundingRect().width() + 2 * WIDGET_SPACING)
         > labelCanvas->width()) {
 
         labelCanvas->resize(text->boundingRect().width()
@@ -414,9 +414,9 @@ QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)
     int line = blocks_.find(bt);
     Q_ASSERT(line != -1);
 
-    int x = WIDGET_SPACING + rint(time * PIX_PER_NS * zoom_);
+    int x = (int)(WIDGET_SPACING + rint(time * PIX_PER_NS * zoom_));
     int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
-    int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS * zoom_));
+    int w = (int)QMAX(5, rint(bt->getRuntime() * PIX_PER_NS * zoom_));
     int h = BOX_HEIGHT;
 
     return QRect(x, y, w, h);

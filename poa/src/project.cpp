@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.40 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: project.cpp,v 1.41 2004/01/12 19:13:57 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -116,7 +116,7 @@ void Project::addBlock(AbstractModel *item)
     if (INSTANCEOF(item, CpuModel))
     {
         ((CpuModel *)item)->setCpuId(currentBlockId_);
-        ((CpuModel *)item)->setProjectPath(new QString(path_));
+        ((CpuModel *)item)->setProjectPath(path_);
     }
 
     blocks_.append(item);
@@ -257,7 +257,7 @@ void Project::deserialize(QDomDocument *document) {
     // create canvases
     QDomNodeList vList = document->elementsByTagName("view");
     for (unsigned int i = 0; i < vList.count(); i++) {
-		uint j;
+                uint j;
         QDomElement vEl = vList.item(i).toElement();
         QDomNodeList viList = vEl.elementsByTagName("view-item");
         QDomNodeList conList = vEl.elementsByTagName("connector-view");

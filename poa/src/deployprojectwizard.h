@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.10 2004/01/26 16:04:53 papier Exp $
+ * $Id: deployprojectwizard.h,v 1.11 2004/01/27 06:04:14 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,7 @@ class QWidget;
 #include "abstractmodel.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
-class CpuModel;
+#include "cpumodel.h"
 class ProblemReportItem;
 class Project;
 

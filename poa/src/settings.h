@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.1 2003/08/20 14:06:02 squig Exp $
+ * $Id: settings.h,v 1.2 2003/08/21 14:24:41 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -37,28 +37,28 @@
  */
 class Settings : QObject
 { 
-	Q_OBJECT
-	
+    Q_OBJECT
+    
 public:
-	static Settings *instance();
+    static Settings *instance();
 
-	QString Settings::get(const QString &key);
-	void set(const QString &key, const QString &value);
-	void write();
+    QString Settings::get(const QString &key);
+    void set(const QString &key, const QString &value);
+    void write();
 
 signals:
-	void settingChanged(const QString &key);
+    void settingChanged(const QString &key);
 
 private :
     Settings();
     Settings(const Settings &);
     ~Settings();
 
-	QSettings settings;
+    QSettings settings;
 
-	static Settings *instance_;
+    static Settings *instance_;
 
-	static const char *prefix;
+    static const char *prefix;
 };
 
 #endif // SETTINGS_H

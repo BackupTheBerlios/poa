@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.6 2003/08/20 15:33:30 garbeam Exp $
+ * $Id: main.cpp,v 1.7 2003/08/21 14:24:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -39,7 +39,6 @@
 #include "cpuview.h"
 #include "inputblockmodel.h"
 #include "inputblockview.h"
-#include "layoutcanvas.h"
 #include "layoutmanager.h"
 #include "mainwindow.h"
 #include "moduleconfdialog.h"

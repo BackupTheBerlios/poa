@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.15 2003/08/21 13:28:11 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.16 2003/08/21 14:24:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,6 @@
 #include "aboutdialog.h"
 #include "cpuview.h"
 #include "gridcanvas.h"
-#include "layoutcanvas.h"
 #include "librarywindow.h"
 #include "moduleconfdialog.h"
 #include "settingsdialog.h"

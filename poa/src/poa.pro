@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.10 2003/08/21 13:16:43 squig Exp $
+# $Id: poa.pro,v 1.11 2003/08/21 14:24:41 garbeam Exp $
 #
 ###############################################################################
 
@@ -43,7 +43,6 @@ HEADERS += cpumodel.h
 HEADERS += cpuview.h
 HEADERS += inputblockmodel.h
 HEADERS += inputblockview.h
-HEADERS += layoutcanvas.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
@@ -65,7 +64,6 @@ HEADERS += gridcanvas.h
 SOURCES += aboutdialog.cpp
 SOURCES += cpu.cpp
 SOURCES += gridcanvas.cpp
-SOURCES += layoutcanvas.cpp
 SOURCES += librarywindow.cpp
 SOURCES += main.cpp
 SOURCES += mainwindow.cpp

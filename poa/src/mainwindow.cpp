@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.97 2004/01/22 00:05:06 squig Exp $
+ * $Id: mainwindow.cpp,v 1.98 2004/01/22 10:26:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -873,14 +873,6 @@ void MainWindow::openBlockConf()
 
 void MainWindow::openProject(QString path)
 {
-//      if (!closeAll()) {
-//          return;
-//      }
-
-//      if (project_ != 0) {
-//          delete project_;
-//      }
-
     Project *project_ = new Project(path);
 
     try {
@@ -890,7 +882,12 @@ void MainWindow::openProject(QString path)
         CanvasView *view = new CanvasView(project_, canvas);
 
         MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
-        w->showMaximized();
+        if (ws->windowList().count() == 0) {
+            w->showMaximized();
+        }
+        else {
+            w->show();
+        }
 
         // connect to signals
         connect(view, SIGNAL(selectionChanged(QCanvasItem *)), this,

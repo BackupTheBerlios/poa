@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.1 2003/08/28 15:36:40 vanto Exp $
+ * $Id: poa.h,v 1.2 2003/08/28 16:29:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,6 @@
 #define POA_POA_H
 
 #define ICON_PATH QString("icons/")
-#define INSTANCEOF(ptr, class) ((ptr != 0) && (dynamic_cast<class>(ptr) != 0))
+#define INSTANCEOF(ptr,class) ((ptr != 0) && (dynamic_cast<class*>(ptr) != 0))
 
 #endif // POA_POA_H

@@ -18,9 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.13 2003/08/28 16:10:29 keulsn Exp $
+ * $Id: canvasview.h,v 1.14 2003/08/28 16:29:59 keulsn Exp $
  *
  *****************************************************************************/
+
 #ifndef CANVASVIEW_H
 #define CANVASVIEW_H
 
@@ -66,12 +67,20 @@ public:
      */
     Project *project();
 
+protected:
+
     /*************************************************************************
      * Called when a mouse button is pressed on <code>this</code>'s content.
      * If the mouse button is pressed on a descendant of {@link BlockView}
      * then sets that object as <code>movingItem_</code>.
      */
-    void contentsMousePressEvent(QMouseEvent *e);
+    virtual void contentsMousePressEvent(QMouseEvent *e);
+
+    /*************************************************************************
+     * Called when a mouse button is released on <code>this</code>'s content.
+     * Cleares the moving state, if an item exists that has movin state.
+     */
+    virtual void contentsMouseReleaseEvent(QMouseEvent *e);
 
     /*************************************************************************
      * Called when the mouse cursor is moved over <code>this</code>'s content.
@@ -79,13 +88,13 @@ public:
      * with the cursor. The current position is displayed in the
      * status bar.
      */
-    void contentsMouseMoveEvent(QMouseEvent *e);
+    virtual void contentsMouseMoveEvent(QMouseEvent *e);
 
     /*************************************************************************
      * Approves those <code>QDragEnterEvent</code> that may be passed to
      * {@link #dropEvent}.
      */
-    void dragEnterEvent(QDragEnterEvent *e);
+    virtual void dragEnterEvent(QDragEnterEvent *e);
 
     /*************************************************************************
      * Can only be used for those <code>QDropEvents</code> approved by
@@ -94,7 +103,7 @@ public:
      * for that model and adds that view to the canvas <code>this</code> is
      * based on.
      */
-    void dropEvent(QDropEvent *e);
+    virtual void dropEvent(QDropEvent *e);
 
     /*************************************************************************
      * Transforms window-coordinates to canvas-coodinates

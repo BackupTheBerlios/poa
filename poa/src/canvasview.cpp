@@ -18,14 +18,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.15 2003/08/28 16:10:29 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.16 2003/08/28 16:29:59 keulsn Exp $
  *
  *****************************************************************************/
+
+
 #include "canvasview.h"
 
 #include "abstractmodel.h"
 #include "abstractview.h"
+#include "blockview.h"
 #include "cpumodel.h"
+#include "poa.h"
 #include "project.h"
 #include "mainwindow.h"
 #include "modelfactory.h"
@@ -39,11 +43,7 @@
 #include <qpopupmenu.h>
 #include <qstatusbar.h>
 
-#include <typeinfo>
 
-/*****************************************************************************
- * Constructs the view.
- */
 CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
                        const char* name, WFlags fl)
     : QCanvasView(canvas, parent, name, fl), project_(project),
@@ -52,9 +52,6 @@ CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
     setAcceptDrops(TRUE);
 }
 
-/*****************************************************************************
- * Destroys the view.
- */
 CanvasView::~CanvasView()
 {
     // no need to delete child widgets, Qt does it all for us
@@ -65,14 +62,14 @@ Project *CanvasView::project()
     return project_;
 }
 
-void CanvasView::contentsMousePressEvent(QMouseEvent* e)
+void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 {
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
     if (e->button() == LeftButton) {
         if (!l.isEmpty()) {
             // first item is top item
-	    QCanvasItem topItem = l.first();
+	    QCanvasItem *topItem = l.first();
 	    if (INSTANCEOF(topItem, BlockView)) {
 		movingItem_ = topItem;
 		movingStartPoint_ = p;
@@ -93,7 +90,12 @@ void CanvasView::contentsMousePressEvent(QMouseEvent* e)
     }
 }
 
-void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
+void CanvasView::contentsMouseReleaseEvent(QMouseEvent *)
+{
+    movingItem_ = 0;
+}
+
+void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {
     if (movingItem_ != 0) {
         QPoint p = inverseWorldMatrix().map(e->pos());

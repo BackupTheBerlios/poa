@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.15 2004/01/11 15:11:15 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.16 2004/01/11 15:12:27 squig Exp $
  *
  *****************************************************************************/
 
@@ -347,7 +347,7 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
             // target block.
             QCanvasLine *line = new ArrowLine(canvas);
             line->setPoints(thisBlock.right(),
-                            thisBlock.y() + (BOX_HEIGHT / 2),
+                            thisBlock.y() + thisBlock.height(),
                             targetBlock.x(),
                             targetBlock.y());
             line->setZ(1);
@@ -533,16 +533,16 @@ void ArrowLine::drawShape(QPainter &p)
     QWMatrix m;
     int x, y;
     m.rotate(angle);
-    m.map(-4, -4, &x, &y);
+    m.map(-5, -2, &x, &y);
     pts.setPoint(0, x, y);
-    m.map(-2, 2, &x, &y);
+    m.map(-5, 2, &x, &y);
     pts.setPoint(1, x, y);
     m.map(0, 0, &x, &y);
     pts.setPoint(2, x, y);
 
     pts.translate(endPoint().x(), endPoint().y());
 
-    p.setBrush(QColor(white));
+    p.setBrush(QColor(darkGray));
     p.drawPolygon(pts);
 }
 

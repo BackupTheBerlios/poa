@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.23 2003/09/28 21:52:11 squig Exp $
+ * $Id: cpumodel.cpp,v 1.24 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -158,4 +158,24 @@ void CpuModel::setProjectPath(QString *path)
 QString *CpuModel::projectPath()
 {
     return path_;
+}
+
+QString CpuModel::tip()
+{
+    CodeManager *codeManager = CodeManager::instance();
+    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
+                   "<b>Id on CPLD:</b> %4<br>" \
+                   "<b>Clock:</b> %5 ms<br>" \
+                   "<b>Offset:</b> %6<br>" \
+                   "<b>Execution time:</b> %7<br>" \
+                   "<b>Source:</b> %8")
+        .arg(this->name())
+        .arg(this->type())
+        .arg(this->description())
+        //        .arg((this->cpuId()==-1)?"not defined":QString::number(this->cpuId()))
+        .arg((this->cpuId()==-1)?"not defined":QString::number(this->cpuId()))
+        .arg(this->clock())
+        .arg((this->autoOffset())?"auto":QString::number(this->offset())+" ms")
+        .arg((this->autoExecTime())?"auto":QString::number(this->execTime())+" ms")
+        .arg(codeManager->sourceFilePath(this));
 }

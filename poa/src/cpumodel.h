@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.20 2003/09/17 16:16:40 vanto Exp $
+ * $Id: cpumodel.h,v 1.21 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -136,6 +136,10 @@ class CpuModel: public BlockModel
      */
     QString *projectPath();
 
+    /**
+     * Returns the tooltip text.
+     */
+    virtual QString tip();
 
  private:
     QString *path_;

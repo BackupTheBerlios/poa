@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.52 2003/10/01 17:04:37 squig Exp $
+# $Id: poa.pro,v 1.53 2003/11/19 16:18:07 squig Exp $
 #
 ###############################################################################
 
@@ -58,7 +58,6 @@ HEADERS += cpumodel.h
 HEADERS += cpuview.h
 HEADERS += grid.h
 HEADERS += inputmodel.h
-HEADERS += inputview.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
@@ -71,7 +70,6 @@ HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
 HEADERS += outputmodel.h
-HEADERS += outputview.h
 HEADERS += pinmodel.h
 HEADERS += pinvector.h
 HEADERS += pinview.h

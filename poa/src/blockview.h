@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.33 2003/09/28 21:52:11 squig Exp $
+ * $Id: blockview.h,v 1.34 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include <qdom.h>
 
 #include "abstractview.h"
+#include "tooltipable.h"
 class AbstractModel;
 class PinModel;
 class PinVector;
@@ -45,7 +46,7 @@ class PinView;
  * <code>this->move</code> or <code>this->moveBy</code>) then all pin views
  * are moved as well. The pin views must not be moved separately.
  */
-class BlockView: public AbstractView, public QCanvasRectangle
+class BlockView: public AbstractView, public QCanvasRectangle, public Tooltipable
 {
     Q_OBJECT
 
@@ -133,6 +134,13 @@ public:
      * Deserializes an xml subtree and sets this' properties
      */
     void deserialize(QDomElement element);
+
+    /**
+     * Returns the tooltip text.
+     *
+     * @see BlockModel#tip()
+     */
+    virtual QString tip();
 
 public slots:
     void addPin(PinModel *);

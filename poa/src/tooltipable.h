@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: tooltipable.h,v 1.1 2003/09/09 23:21:22 vanto Exp $
+ * $Id: tooltipable.h,v 1.2 2003/11/19 16:18:07 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_TOOLTIPABLE_H
@@ -31,6 +31,7 @@ class Tooltipable
 {
 
  public:
+
     /**
      * Returns the tooltip text
      */

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.41 2003/10/01 14:50:43 garbeam Exp $
+ * $Id: blockview.cpp,v 1.42 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -472,3 +472,17 @@ void BlockView::deleteView()
 {
     delete this;
 }
+
+QString BlockView::tip()
+{
+    // FIX: model_ should be of type BlockModel
+    //return model()->tip();
+
+    if (INSTANCEOF(model_, BlockModel)) {
+        BlockModel *blockModel = (BlockModel *)model_;
+        return blockModel->tip();
+    }
+
+    return QString::null;
+}
+

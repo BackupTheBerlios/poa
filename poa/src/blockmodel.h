@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.28 2003/09/28 21:52:11 squig Exp $
+ * $Id: blockmodel.h,v 1.29 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -146,6 +146,11 @@ public:
      * Creates the CanvasItems for this.
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
+
+    /**
+     * Returns the tooltip text.
+     */
+    virtual QString tip();
 
 protected:
 

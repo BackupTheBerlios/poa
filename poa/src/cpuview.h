@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.10 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: cpuview.h,v 1.11 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,8 +28,6 @@
 #include "abstractview.h"
 #include "cpumodel.h"
 #include "blockview.h"
-#include "inputview.h"
-#include "outputview.h"
 #include "tooltipable.h"
 
 #include <qvariant.h>
@@ -40,7 +38,7 @@ class BlockModel;
 /**
  * Definition of a cpu view.
  */
-class CpuView: public BlockView, public Tooltipable
+class CpuView: public BlockView
 {
 
 public:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.27 2003/09/28 21:52:11 squig Exp $
+ * $Id: blockmodel.cpp,v 1.28 2003/11/19 16:18:06 squig Exp $
  *
  *****************************************************************************/
 
@@ -234,3 +234,13 @@ void BlockModel::deserialize(QDomElement element)
 
 }
 
+QString BlockModel::tip()
+{
+    return QString("<b>Core</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
+                   "<b>Execution time:</b> %4 ms")
+        .arg(this->name())
+        .arg(this->type())
+        .arg(this->description())
+        .arg(QString::number(this->execTime()));
+
+}

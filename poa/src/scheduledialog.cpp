@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.62 2004/03/01 12:07:36 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.63 2004/03/24 21:57:13 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,7 @@
 #include <qtooltip.h>
 #include <qimage.h>
 #include <qpainter.h>
-#include <qpaintdevicemetrics.h> 
+#include <qpaintdevicemetrics.h>
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qslider.h>
@@ -339,8 +339,8 @@ void ScheduleDialog::drawTimings(DrawProperties *p, BlockNode* node)
 
         // resize canvas if label doesn't fit.
         if ((int)(text->boundingRect().width() + 2 * WIDGET_SPACING)
-            > labelCanvas->width()) 
-        {    
+            > labelCanvas->width())
+        {
             labelCanvas->resize(text->boundingRect().width()
                                 + (2 * WIDGET_SPACING), labelCanvas->height());
             labelCanvasView->setFixedWidth(labelCanvas->width() + 4);
@@ -364,7 +364,7 @@ void ScheduleDialog::drawTimings(DrawProperties *p, BlockNode* node)
         box->setZ(2);
         box->show();
 
-        QCanvasText *text = new QCanvasText(tr("Missing clock value."), 
+        QCanvasText *text = new QCanvasText(tr("Missing clock value."),
             p->canvas);
         text->move(p->x + p->nameWidth, y);
         text->setColor(black);
@@ -412,7 +412,8 @@ void ScheduleDialog::drawTimings(DrawProperties *p, BlockNode* node)
             // draw a line with arrowhead between this block and the next
             // target block.
             QCanvasLine *line = new ArrowLine(p->canvas);
-            line->setPoints(thisBlock.right(),
+            int start = thisBlock.x() + (int)rint(node->runtime() * p->pixPerNs * zoom_);
+            line->setPoints(start,
                             thisBlock.y() + thisBlock.height(),
                             targetBlock.x(),
                             targetBlock.y());
@@ -427,7 +428,7 @@ void ScheduleDialog::drawTimings(DrawProperties *p, BlockNode* node)
     return;
 }
 
-QRect ScheduleDialog::calcBlockPosition(DrawProperties *p, 
+QRect ScheduleDialog::calcBlockPosition(DrawProperties *p,
     BlockNode *node, int time)
 {
     int line = blocks_.findIndex(node);
@@ -510,12 +511,12 @@ void ScheduleDialog::autoSchedule()
     int result = dialog->exec();
     delete dialog;
     if (result == QDialog::Accepted) {
-	int count = timingTable->numRows();
-	for (int i = 0; i < count; ++i) {
-	    static_cast<SpinBoxItem*>(timingTable->item(i, 3))->updateText();
-	}
-	clearCanvas();
-	initCanvas();
+    int count = timingTable->numRows();
+    for (int i = 0; i < count; ++i) {
+        static_cast<SpinBoxItem*>(timingTable->item(i, 3))->updateText();
+    }
+    clearCanvas();
+    initCanvas();
     }
 }
 
@@ -524,12 +525,12 @@ void ScheduleDialog::print()
     PrintManager printer(project_->name());
     if (!printer.setup()) return;
 
-    QPaintDeviceMetrics *metrics = printer.getMetrics();    
+    QPaintDeviceMetrics *metrics = printer.getMetrics();
     int printCanvasWidth = metrics->width();
     delete metrics;
 
     int tableHeight = (blocks_.count() + 1) * PRINT_ITEM_HEIGHT;
-    QCanvas *printCanvas = new QCanvas(printCanvasWidth, 
+    QCanvas *printCanvas = new QCanvas(printCanvasWidth,
         tableHeight + PRINT_ITEM_HEIGHT + canvas->height());
 
     // first draw timing table
@@ -537,15 +538,15 @@ void ScheduleDialog::print()
     Q_ASSERT(timingTable->numCols() == 4);
     int xOfs[6] = {0,       // x offsets of the columns
                    printCanvasWidth * 1/20,
-                   printCanvasWidth * 4/10, 
-                   printCanvasWidth * 6/10, 
+                   printCanvasWidth * 4/10,
+                   printCanvasWidth * 6/10,
                    printCanvasWidth * 8/10,
                    printCanvasWidth - 1};
 
     QCanvasLine *line = new QCanvasLine(printCanvas);
     line->setPoints(xOfs[0], y, xOfs[5], y);
     line->setPen(gray);
-    line->show();        
+    line->show();
 
     // print header and vertical lines
     for (int i = 0; i <= 5; i++) {
@@ -559,7 +560,7 @@ void ScheduleDialog::print()
         line = new QCanvasLine(printCanvas);
         line->setPoints(xOfs[i], y, xOfs[i], y + tableHeight);
         line->setPen(gray);
-        line->show();        
+        line->show();
     }
     y += PRINT_ITEM_HEIGHT;
 
@@ -596,7 +597,7 @@ void ScheduleDialog::print()
     line->show();
     y += PRINT_ITEM_HEIGHT;
 
-    // properties for the graph    
+    // properties for the graph
     DrawProperties p;
     p.nameWidth = PRINT_NAME_WIDTH;
     p.x = 0;
@@ -730,7 +731,7 @@ void SpinBoxItem::setContentFromEditor( QWidget *w )
 {
     if ( w->inherits( "QSpinBox" )) {
         setValue(((QSpinBox*)w)->value());
-	updateText();
+    updateText();
     } else {
         QTableItem::setContentFromEditor(w);
     }

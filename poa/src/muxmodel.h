@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.21 2003/10/01 14:50:43 garbeam Exp $
+ * $Id: muxmodel.h,v 1.22 2003/11/26 15:52:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,14 +26,9 @@
 #ifndef POA_MUXMODEL_H
 #define POA_MUXMODEL_H
 
-#include "abstractmodel.h"
-#include "pinmodel.h"
+#include "blockmodel.h"
 
 #include <qptrlist.h>
-
-// forward declaration for MuxMapping/MuxPin
-class MuxModel;
-class MuxPin;
 
 /**
  * Provides range mappings to an output
@@ -47,7 +42,7 @@ public:
     /**
      * Dom constructor.
      */
-    MuxMapping(MuxPin *parent, PinModel *output, QDomElement mapElement);
+    MuxMapping(PinModel *input, PinModel *output, QDomElement mapElement);
 
     /**
      * Basic constructor.
@@ -57,45 +52,55 @@ public:
      * @end the end of bit range (<code>input->bits() - 1</code>
      * for absolute end).
      */
-    MuxMapping(MuxPin *muxPin, PinModel *output,
-               unsigned begin, unsigned end);
+    MuxMapping(PinModel *input, PinModel *output,
+               unsigned firstInputBit, unsigned lastInputBit,
+               unsigned firstOutputBit, unsigned lastOutputBit);
 
     virtual ~MuxMapping();
 
     /**
      * Returns the input PinModel.
      */
-    MuxPin *muxPin();
+    PinModel *input() const;
 
     /**
      * Returns the output PinModel.
      */
-    PinModel *output();
+    PinModel *output() const;
+
+    /**
+     * Sets input pin.
+     */
+    void setInput(PinModel *output);
 
     /**
      * Sets output pin.
      */
     void setOutput(PinModel *output);
 
-    /**
-     * Returns the begin of range bits.
-     */
-    unsigned begin();
+    /** Returns the input range start bit. */
+    unsigned firstInputBit() const;
 
-    /**
-     * Sets the begin of range bits.
-     */
-    void setBegin(unsigned begin);
+    /** Returns the output range start bit. */
+    unsigned firstOutputBit() const;
 
-    /**
-     * Returns the end of range bits (at least <code>begin() + 1</code>).
-     */
-    unsigned end();
+    /** Returns the input range end bit. */
+    unsigned lastInputBit() const;
 
-    /**
-     * Sets the end of range bits.
-     */
-    void setEnd(unsigned end);
+    /** Returns the output range end bit. */
+    unsigned lastOutputBit() const;
+
+    /** Sets the input range start bit. */
+    void setFirstInputBit(unsigned firstInputBit);
+
+    /** Sets the output range start bit. */
+    void setFirstOutputBit(unsigned firstOutputBit);
+
+    /** Sets the input range end bit. */
+    void setLastInputBit(unsigned lastInputBit);
+
+    /** Sets the output range end bit. */
+    void setLastOutputBit(unsigned lastOutputBit);
 
     /**
      * Serializes the MuxMapping.
@@ -109,74 +114,21 @@ public:
 
     /**
      * Returns clone of <code>this</code>. 
-     * @param muxPin the muxPin which should be used for cloning.
-     * Mostly, also the MuxPin has been cloned, so all the cloned
-     * mappings should point to the cloned MuxPin instead of the
-     * original one.
-     * If you need for some reason the original MuxPin use this
-     * method like this: <code>mapping->clone(mapping->muxPin());</code>
-     * @param output equivalent to MuxPin, but this means the output
-     * or also called "map to" pin.
+     * @param input the input PinModel which should be used for cloning.
+     * If you need for some reason the original input pin use this
+     * method like this: <code>mapping->clone(mapping->input());</code>
      */
-    MuxMapping *clone(MuxPin *muxPin, PinModel *output);
+    MuxMapping *clone(PinModel *input, PinModel *output);
 
 private:
 
-    MuxPin *muxPin_;
+    PinModel *input_;
     PinModel *output_;
-    unsigned begin_;
-    unsigned end_;
 
-};
-
-//////////////////////////////////////////////////////////////////////////////
-
-class MuxPin 
-{
-
-public:
-
-    MuxPin(MuxModel *parent, QDomElement muxPinElement);
-
-    MuxPin(PinModel *model);
-    ~MuxPin();
-
-    /**
-     * Returns QPtrList of mux mappings.
-     */
-    QPtrList<MuxMapping> *mappings();
-
-    /**
-     * Returns the pin model.
-     */
-    PinModel *model();
-
-    /**
-     * Serializes this MuxPin.
-     */
-    QDomElement serialize(QDomDocument *document);
-
-    /**
-     * Desirializes this MuxPin an its MuxMappings.
-     */
-    void deserialize(MuxModel *parent, QDomElement element);
-    /**
-     * Returns clone of <code>this</code>
-     */
-    MuxPin *clone();
-
-    /**
-     * Returns equal MuxMapping if it exists, otherwise 0.
-     * Note: Equality means here not the same reference, but
-     * same values.
-     */
-    MuxMapping *findEqual(MuxMapping *mapping);
-
-private:
-
-    PinModel *model_;
-
-    QPtrList<MuxMapping> mappings_;
+    unsigned firstInputBit_;
+    unsigned firstOutputBit_;
+    unsigned lastInputBit_;
+    unsigned lastOutputBit_;
 
 };
 
@@ -186,7 +138,7 @@ private:
  * A block that has both: inputs and outputs. Outputs are directly dependent
  * on inputs and the production of outputs takes no time.
  */
-class MuxModel: public AbstractModel
+class MuxModel: public BlockModel
 {
 
     Q_OBJECT
@@ -212,20 +164,6 @@ public:
      * Creates a MuxModel instance for the project out of an xml subtree
      */
     MuxModel(QDomElement coreElement);
-
-    /**
-     * Adds mux pin.
-     * @param suppressEmission if <code>true</code> no pinAdded signal
-     * will be emitted. (This is used when updating an existing
-     * PinModel.)
-     */
-    void addMuxPin(MuxPin *pin, bool suppressEmission = false);
-
-    /**
-     * Removes the given pin from this MuxModel and any related
-     * Mappings(!). 
-     */
-    void removeMuxPin(MuxPin *pin);
 
     /**
      * Adds a new mux mapping.
@@ -259,56 +197,18 @@ public:
      */
     MuxType muxType();
 
-    /**
-     * Returns pointer of mux pin pointer list.
-     */
-    QPtrList<MuxPin> *muxPins();
+    /** Returns MuxMapping list. */
+    QPtrList<MuxMapping> *mappings();
 
-    /**
-     * Returns pointer of output pinmodel list.
-     */
-    QPtrList<PinModel> *outputPins();
-
-    /**
-     * Returns pin model with name <code>name</code> if it exists,
-     * otherwise <code>0</code>.
-     */
-    PinModel *outputForName(QString name);
-
-    /**
-     * Adds <code>output</code> to this model.
-     * <code>pinAdded(output)</code> signal will be emitted.
-     */
-    void addOutput(PinModel *pin);
-
-    /**
-     * Updates all bit settings of output pins.
-     * Deletes output pins with 0 bit ranges.
-     */
-    void updateOutputs();
 
 private:
 
-    /** Contains all I/O mappings */
-    QPtrList<MuxPin> muxPins_;
-
-    /** Contains all output pins */
-    QPtrList<PinModel> outputPins_;
+    /** MuxMapping's */
+    QPtrList<MuxMapping> mappings_;
 
     MuxType type_;
 
-signals:
-
-    /**
-     * Emitted when a mux pin or output pin was added.
-     */
-    void pinAdded(PinModel *pin);
-
-    /**
-     * Emitted by <code>this</code> destructor.
-     * Should be connected to View slots.
-     */
-    void deleted();
+// signals are inherited from BlockModel
 };
 
 

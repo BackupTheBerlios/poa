@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.43 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockview.cpp,v 1.44 2003/11/26 15:52:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -73,27 +73,6 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
         addPins(blockModel->inputPins());
         addPins(blockModel->outputPins());
         addPins(blockModel->episodicPins());
-    }
-    else if (INSTANCEOF(model_, MuxModel)) {
-        MuxModel *muxModel = (MuxModel *)model_;
-        connect(muxModel, SIGNAL(pinAdded(PinModel *)),
-                this, SLOT(addPin(PinModel *)));
-        connect(muxModel, SIGNAL(updated()), this, SLOT(updateView()));
-        connect(muxModel, SIGNAL(deleted()), this, SLOT(deleteView()));
-
-        for (QPtrListIterator<MuxPin> it(*muxModel->muxPins());
-             it != 0; ++it)
-        {
-            MuxPin *muxPin = it.current();
-            addPin(muxPin->model());
-        }
-
-        for (QPtrListIterator<PinModel> it(*muxModel->outputPins());
-             it != 0; ++it)
-        {
-            PinModel *pin = it.current();
-            addPin(pin);
-        }
     }
 
     arrangePins();

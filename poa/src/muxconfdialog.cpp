@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.23 2003/11/24 20:11:59 squig Exp $
+ * $Id: muxconfdialog.cpp,v 1.24 2003/11/26 15:52:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -74,15 +74,15 @@ void MuxMappingListViewItem::setOrigMapping(MuxMapping *mapping) {
 void MuxMappingListViewItem::update() {
     if (clone_ != 0) {
         setText(0, clone_->output()->name());
-        setText(1, QString::number(clone_->begin()));
-        setText(2, QString::number(clone_->end()));
+        //setText(1, QString::number(clone_->begin()));
+        //setText(2, QString::number(clone_->end()));
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
-                                 MuxPin *clone, MuxPin *origin)
+                                 PinModel *clone, PinModel *origin)
     : QListViewItem(parent, after)
 {
     setOpen(true);
@@ -98,21 +98,21 @@ MuxListViewItem::~MuxListViewItem() {
     }
 }
 
-MuxPin *MuxListViewItem::data() const {
+PinModel *MuxListViewItem::data() const {
     return clone_;
 }
 
-MuxPin *MuxListViewItem::origData() const {
+PinModel *MuxListViewItem::origData() const {
     return origin_;
 }
 
-void MuxListViewItem::setOrigData(MuxPin *pin) {
+void MuxListViewItem::setOrigData(PinModel *pin) {
     origin_ = pin;
 }
 
 void MuxListViewItem::update() {
     if (clone_ != 0) {
-        setText(0, clone_->model()->name());
+        setText(0, clone_->name());
     }
 }
 
@@ -161,9 +161,9 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
     }
 
     initLayout();
-    initConnections();
-    mappingSelectionChanged();
-    syncModel();
+    //initConnections();
+    //mappingSelectionChanged();
+    //syncModel();
 
 }
 
@@ -300,7 +300,7 @@ MuxConfDialog::~MuxConfDialog()
 }
 
 void MuxConfDialog::syncModel() {
-
+#if 0
     Q_ASSERT(model_ != 0);
     if (model_ != 0) {
         nameLineEdit->setText(model_->name());
@@ -313,18 +313,18 @@ void MuxConfDialog::syncModel() {
             ioComboBox_->insertItem(pin->name());
         }
 
-        QPtrListIterator<MuxPin> pinIter(*model_->muxPins());
+        QPtrListIterator<PinModel> pinIter(*model_->inputPins());
         QListViewItem *last = 0;
-        MuxPin *origPin;
+        PinModel *origPin;
         while ((origPin = pinIter.current()) != 0) {
             ++pinIter;
-            MuxPin *clonedPin = origPin->clone();
+            PinModel *clonedPin = origPin->clone();
 
             last = new MuxListViewItem(mappingListView, last,
                                        clonedPin, origPin);
 
-            QPtrListIterator<MuxMapping> clonedMapIter(*clonedPin->mappings());
-            QPtrListIterator<MuxMapping> origMapIter(*origPin->mappings());
+            QPtrListIterator<MuxMapping> clonedMapIter(*model_->mappings());
+            QPtrListIterator<MuxMapping> origMapIter(*model_->mappings());
 
             while (clonedMapIter != 0 && origMapIter != 0) {
                 MuxMapping *clonedMapping = clonedMapIter.current();
@@ -334,11 +334,12 @@ void MuxConfDialog::syncModel() {
             }
         }
     }
+#endif
 }
 
 
 void MuxConfDialog::updateModel() {
-
+#if 0
     Q_ASSERT(model_ != 0);
     if (model_ != 0) {
 
@@ -368,54 +369,53 @@ void MuxConfDialog::updateModel() {
             else {
                 // new pin
                 PinModel *newOuput = currPin->clone();
-                model_->addOutput(newOuput);
+                model_->addPin(newOuput);
                 item->setOrigData(newOuput);
             }
         }
 
         //////////////////////////////////////////////////////////////
         // delete everything which was deleted by the user
-        QPtrListIterator<MuxPin> delMux(deletedMuxPins_);
-        MuxPin *pin;
+        QPtrListIterator<PinModel> delMux(deletedPins_);
+        PinModel *pin;
         while ((pin = delMux.current()) != 0) {
             ++delMux;
-            model_->removeMuxPin(pin);
+            model_->removePin(pin);
         }
-        deletedMuxPins_.clear();
+        deletedPins_.clear();
 
-        // Flush mux pin list. Already deleted MuxPins
+        // Flush mux input pin list. Already deleted PinModels
         // won't resist anymore in the model, not deleted
-        // MuxPins will be restored in the next step.
-        QPtrList<MuxPin> *muxPins = model_->muxPins();
-        muxPins->clear();
+        // PinModels will be restored in the next step.
+        QPtrList<PinModel> *inputPins = model_->inputPins();
+        inputPins->clear();
 
         // rebuild mux pin list.
         QListViewItemIterator it(mappingListView);
         for ( ; it.current(); ++it) {
             QListViewItem *item = it.current();
-            if (item->isOpen()) { // only MuxPins are open
+            if (item->isOpen()) { // only input pins are open
                 MuxListViewItem *muxItem =  (MuxListViewItem *)item;
 
-                MuxPin *origPin = muxItem->origData();
-                MuxPin *currPin = muxItem->data();
-                MuxPin *newPin;
+                PinModel *origPin = muxItem->origData();
+                PinModel *currPin = muxItem->data();
+                PinModel *newPin;
 
                 if (origPin != 0) {
-                    // use original MuxPin and change its mux mappings
+                    // use original input pin and change its mux mappings
                     // to the current model
-                    QPtrListIterator<MuxMapping> origMapIter(*origPin->mappings());
+                    QPtrListIterator<MuxMapping> origMapIter(*model_->mappings());
                     MuxMapping *m;
                     while ((m = origMapIter.current()) != 0) {
                         ++origMapIter;
                         delete m;
                     }
-                    origPin->mappings()->clear();
-                    model_->addMuxPin(origPin, true);
-                    QPtrListIterator<MuxMapping> currMapIter(*currPin->mappings());
+                    //origPin->mappings()->clear();
+                    model_->addPin(origPin, true);
+                    QPtrListIterator<MuxMapping> currMapIter(*model_->mappings());
                     while ((m = currMapIter.current()) != 0) {
                         ++currMapIter;
-                        PinModel *output =
-                            model_->outputForName(m->output()->name());
+                        PinModel *output = 0; //model_->outputForName(m->output()->name());
                         Q_ASSERT(output != 0);
                         MuxMapping *newMapping =
                             m->clone(origPin, output);
@@ -424,11 +424,11 @@ void MuxConfDialog::updateModel() {
                     newPin = origPin;
                 }
                 else {
-                    // It's a new MuxPin, just add a cloned one
-                    MuxPin *muxPin = currPin->clone();
-                    model_->addMuxPin(muxPin);
-                    muxItem->setOrigData(muxPin);
-                    newPin = muxPin;
+                    // It's a new input pin, just add a cloned one
+                    PinModel *inputPin = currPin->clone();
+                    model_->addPin(inputPin);
+                    muxItem->setOrigData(inputPin);
+                    newPin = inputPin;
                 }
                 // Update listView MuxMapping items
                 QListViewItem *child = muxItem->firstChild();
@@ -437,7 +437,7 @@ void MuxConfDialog::updateModel() {
                     MuxMappingListViewItem *mapItem =
                         (MuxMappingListViewItem *)child;
 
-                    if (mapItem->data()->muxPin() == currPin) {
+                    if (mapItem->data()->input() == currPin) {
 
                         MuxMapping *currMapping = mapItem->data();
 
@@ -458,6 +458,7 @@ void MuxConfDialog::updateModel() {
         // repaint.
         ((AbstractModel *)model_)->updatePerformed();
     }
+#endif
 }
 
 void MuxConfDialog::mappingSelectionChanged() {
@@ -475,9 +476,9 @@ void MuxConfDialog::mappingSelectionChanged() {
 
 
     beginSpinBox->setValue(selectedChild ?
-            ((MuxMappingListViewItem *)item)->data()->begin() : 0);
+            ((MuxMappingListViewItem *)item)->data()->firstInputBit() : 0);
     endSpinBox->setValue(selectedChild ?
-            ((MuxMappingListViewItem *)item)->data()->end() : 0);
+            ((MuxMappingListViewItem *)item)->data()->lastInputBit() : 0);
     ioComboBox_->setCurrentText(selectedChild ?
             ((MuxMappingListViewItem *)item)->data()->output()->name() : "");
 
@@ -530,10 +531,10 @@ void MuxConfDialog::addIo() {
     unsigned bits = 32;
     unsigned id = mappingListView->childCount() + 1;
 
-    MuxPin *pin =
-        new MuxPin(new PinModel(model_, id,
+    PinModel *pin =
+        new PinModel(model_, id,
                     QString("%1 %2").arg(name).arg(id),
-                    0, bits, type));
+                    0, bits, type);
 
     new MuxListViewItem(mappingListView, 0, pin, 0);
 
@@ -592,22 +593,22 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
         ioComboBox_->insertItem(mapToName);
     }
 
-    MuxPin *currPin = item->data();
-    MuxPin *origPin = item->origData();
+    PinModel *currPin = item->data();
+    PinModel *origPin = item->origData();
     MuxMapping *mapping;
 
     if (origPin != 0) {
         mapping = new MuxMapping(origPin, mapTo,
                 beginSpinBox->value(),
-                endSpinBox->value());
+                endSpinBox->value(), 0, 0);
     }
     else {
         mapping = new MuxMapping(currPin, mapTo,
                 beginSpinBox->value(),
-                endSpinBox->value());
+                endSpinBox->value(), 0, 0);
     }
 
-    QPtrList<MuxMapping> *mappings = currPin->mappings();
+    QPtrList<MuxMapping> *mappings = model_->mappings();
     mappings->append(mapping);
 
     // update ListView
@@ -632,10 +633,10 @@ void MuxConfDialog::addIoOrMapping() {
 //
 void MuxConfDialog::removeIo(MuxListViewItem *item) {
 
-    MuxPin *origMuxPin = item->origData();
+    PinModel *origInputPin = item->origData();
     PinModel *connected = 0;
-    if (origMuxPin != 0) {
-        PinModel *origPin = origMuxPin->model();
+    if (origInputPin != 0) {
+        PinModel *origPin = 0; //origInputPin->model();
         if (origPin != 0) {
             connected = origPin->connected();
         }
@@ -656,15 +657,15 @@ void MuxConfDialog::removeIo(MuxListViewItem *item) {
         {
         case 0: // The user clicked OK, so all related connections
             // will be removed after applying changes.
-            deletedMuxPins_.append(origMuxPin);
+            deletedPins_.append(origInputPin);
             break;
         case 1: // Cancel removal.
             return;
             break;
         }
     }
-    else if (origMuxPin != 0) {
-        deletedMuxPins_.append(origMuxPin);
+    else if (origInputPin != 0) {
+        deletedPins_.append(origInputPin);
     }
 
     mappingListView->takeItem(item);
@@ -709,8 +710,8 @@ void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
 
     // remove mapping also from current parent
     MuxMapping *mapping = item->data();
-    MuxPin *pin = parentItem->data();
-    QPtrList<MuxMapping> *mappings = pin->mappings();
+    //PinModel *pin = 0; //parentItem->data();
+    QPtrList<MuxMapping> *mappings = model_->mappings();
     mappings->remove(mapping);
 
     // finally, we delete the item from the list
@@ -748,8 +749,8 @@ void MuxConfDialog::updateMapping() {
             MuxMapping *mapping = ((MuxMappingListViewItem *)item)->data();
 
             mapping->output()->setName(ioComboBox_->currentText());
-            mapping->setEnd(endSpinBox->value());
-            mapping->setBegin(beginSpinBox->value());
+            mapping->setLastInputBit(endSpinBox->value());
+            mapping->setFirstInputBit(beginSpinBox->value());
 
             ((MuxMappingListViewItem *)item)->update();
         }

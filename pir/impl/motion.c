@@ -2,7 +2,7 @@
 #pragma package <opencv>
 #endif
 
-#ifndef _EiC
+//#ifndef _EiC
 // motion templates sample code
 #include "cv.h"
 #include "highgui.h"
@@ -10,15 +10,17 @@
 #include <math.h>
 #include <ctype.h>
 #include <stdio.h>
-#endif
+//#endif
+
+#include <dirent.h>
 
 // various tracking parameters (in seconds)
-const double MHI_DURATION = 1;
+const double MHI_DURATION = 2;
 const double MAX_TIME_DELTA = 0.5;
 const double MIN_TIME_DELTA = 0.05;
 // number of cyclic frame buffer used for motion detection
 // (should, probably, depend on FPS)
-const int N = 4;
+const int N = 2;
 
 // ring image buffer
 IplImage **buf = 0;
@@ -33,11 +35,12 @@ CvMemStorage* storage = 0; // temporary storage
 
 // parameters:
 //  img - input video frame
+//  timestamp - timestamp of imp in seconds
 //  dst - resultant motion picture
 //  args - optional parameters
-void  update_mhi( IplImage* img, IplImage* dst, int diff_threshold )
+void  update_mhi( IplImage* img, double timestamp, IplImage* dst, IplImage* dst_mask,
+		  int diff_threshold )
 {
-    double timestamp = clock()/1000.; // get current time in seconds
     CvSize size = cvSize(img->width,img->height); // get current frame size
     int i, idx1 = last, idx2;
     IplImage* silh;
@@ -88,8 +91,8 @@ void  update_mhi( IplImage* img, IplImage* dst, int diff_threshold )
     // convert MHI to blue 8u image
     cvCvtScale( mhi, mask, 255./MHI_DURATION,
                 (MHI_DURATION - timestamp)*255./MHI_DURATION );
-    //    cvZero( dst );
-    //    cvCvtPlaneToPix( mask, 0, 0, 0, dst );
+    cvZero( dst_mask );
+    cvCvtPlaneToPix( mask, 0, 0, 0, dst_mask );
     cvCopy(img, dst);
 
     // calculate motion gradient orientation and valid orientation mask
@@ -138,6 +141,15 @@ void  update_mhi( IplImage* img, IplImage* dst, int diff_threshold )
         cvResetImageROI( mask );
         cvResetImageROI( silh );
 
+	cvRectangle( dst,
+                     cvPoint(comp_rect.x, comp_rect.y),
+                     cvPoint(comp_rect.x+comp_rect.width-1, comp_rect.y+comp_rect.height-1),
+		     CV_RGB(0,255,0) );
+	cvRectangle( dst_mask,
+                     cvPoint(comp_rect.x, comp_rect.y),
+                     cvPoint(comp_rect.x+comp_rect.width-1, comp_rect.y+comp_rect.height-1),
+		     CV_RGB(0,255,0) );
+
         // check for the case of little motion
         if( count < comp_rect.width*comp_rect.height * 0.05 )
             continue;
@@ -149,50 +161,83 @@ void  update_mhi( IplImage* img, IplImage* dst, int diff_threshold )
         cvCircle( dst, center, cvRound(magnitude*1.2), color, 3, CV_AA, 0 );
         cvLine( dst, center, cvPoint( cvRound( center.x + magnitude*cos(angle*CV_PI/180)),
                 cvRound( center.y - magnitude*sin(angle*CV_PI/180))), color, 3, CV_AA, 0 );
+        cvCircle( dst_mask, center, cvRound(magnitude*1.2), color, 3, CV_AA, 0 );
+        cvLine( dst_mask, center, cvPoint( cvRound( center.x + magnitude*cos(angle*CV_PI/180)),
+                cvRound( center.y - magnitude*sin(angle*CV_PI/180))), color, 3, CV_AA, 0 );
     }
+}
+
+
+double first_time_stamp = 0.0;
+bool first_time_stamp_initialized = false;
+
+double calcTimeStamp(const char *file_name)
+{
+    const char *s = file_name;
+    while ((*s != 0) && !(*s >= '0' && *s<='9')) ++s;
+    char *endptr;
+    double value = strtod(s, &endptr);
+    assert(endptr != 0 && endptr != s);
+
+    if (!first_time_stamp_initialized) {
+        first_time_stamp = value;
+	first_time_stamp_initialized = true;
+    }
+
+    return value - first_time_stamp;
 }
 
 
 int main(int argc, char** argv)
 {
     IplImage* motion = 0;
-    CvCapture* capture = 0;
+    IplImage* mask_motion=0;
     
-    if( argc == 1 || (argc == 2 && strlen(argv[1]) == 1 && isdigit(argv[1][0])))
-        capture = cvCaptureFromCAM( argc == 2 ? argv[1][0] - '0' : 0 );
-    else if( argc == 2 )
-        capture = cvCaptureFromAVI( argv[1] ); 
-
-    if( capture )
+    if( 1 )
     {
-        
+ 
         cvNamedWindow( "Motion", 1 );
-        
-        for(;;)
-        {
-            IplImage* image;
-            if( !cvGrabFrame( capture ))
-                break;
-            image = cvRetrieveFrame( capture );
+	cvNamedWindow( "Mask", 1 );
 
-            if( image )
-            {
-                if( !motion )
-                {
-                    motion = cvCreateImage( cvSize(image->width,image->height), 8, 3 );
-                    cvZero( motion );
-                    motion->origin = image->origin;
-                }
+	struct dirent **name_list;
+	int file_count = scandir(".", &name_list, 0, alphasort);
+	IplImage *image;
+	
+        for (int i = 0; i < file_count; ++i) {
+	    if (image = cvLoadImage(name_list[i]->d_name)) {
+
+	      double time_stamp = /*clock()/CLOCKS_PER_SEC;*/calcTimeStamp(name_list[i]->d_name);
+
+	        printf("Current file: %s, time: %fs\n", name_list[i]->d_name, time_stamp);
+
+		free(name_list[i]);
+		name_list[i] = 0;
+
+		// is motion and mask_motion allocated already?
+		if( !motion )
+		{
+		    motion = cvCreateImage( cvSize(image->width,image->height), 8, 3 );
+		    mask_motion = cvCreateImage( cvSize(image->width,image->height), 8, 3 );
+		    cvZero( motion );
+		    cvZero( mask_motion );
+		    motion->origin = image->origin;
+		    mask_motion->origin = image->origin;
+		}
+
+
+		update_mhi( image, time_stamp, motion, mask_motion, 5 );
+		cvShowImage( "Motion", motion );
+		cvShowImage( "Mask", mask_motion );
+
+		if( cvWaitKey(500) >= 0 )
+		  break;
             }
-
-            update_mhi( image, motion, 5 );
-            cvShowImage( "Motion", motion );
-
-            if( cvWaitKey(300) >= 0 )
-                break;
         }
-        cvReleaseCapture( &capture );
+
         cvDestroyWindow( "Motion" );
+	cvDestroyWindow( "Mask" );
+
+	free(name_list);
     }
 
     return 0;

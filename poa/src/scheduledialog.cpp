@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.29 2004/01/18 13:50:48 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.30 2004/01/18 17:20:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -58,8 +58,7 @@ const int X_ORIGIN = 50;            // Blocks start at this origin
 const int BOX_HEIGHT = 10;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
-const int RULER_TICK = 25;         // Shows every RULER_TICK ns a tick
-const double PIX_PER_NS = 1.0;      // Pixels per nanosecond
+const int BLOCKS_PER_CANVAS = 10;
 
 const double ArrowLine::RAD2DEG = 57.2958;
 
@@ -78,6 +77,7 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     project_ = pro;
     modified_ = false;
     zoom_ = 1.0;
+    pixPerNs_ = 1.0;
     initLayout();
 }
 
@@ -249,14 +249,22 @@ void ScheduleDialog::initGraphWidget()
     int cnt = blocks_.count();
 
     canvas->resize(CANVAS_WIDTH,
-                   RULER_TICK + cnt * (BOX_HEIGHT + BOX_YSPACING));
-    labelCanvas->resize(50, RULER_TICK + cnt * (BOX_HEIGHT + BOX_YSPACING));
+                   RULER_HEIGHT + cnt * (BOX_HEIGHT + BOX_YSPACING));
+    labelCanvas->resize(50, RULER_HEIGHT + cnt * (BOX_HEIGHT + BOX_YSPACING));
 
     initCanvas();
 }
 
 void ScheduleDialog::initCanvas()
 {
+    // calculate pix per ns (find block with highest clock to draw it
+    // BLOCKS_PER_CANVAS times.
+    int max_clock = 0;
+    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
+        max_clock = QMAX(max_clock, (*it)->getClock());
+    }
+    pixPerNs_ = (double)CANVAS_WIDTH / (max_clock * BLOCKS_PER_CANVAS);
+
     drawRuler();
     for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         drawTimings(*it);
@@ -297,14 +305,18 @@ void ScheduleDialog::drawRuler()
 {
     // draw ruler
     int x = WIDGET_SPACING;
-    QCanvasText *text = new QCanvasText(QString::number(RULER_TICK)+" ns",
+
+    double nsPer100 = 50.0 * (1.0 / (pixPerNs_ * zoom_));
+    int rulerTick = (((int)nsPer100 / 250)+1) * 250;
+
+    QCanvasText *text = new QCanvasText(QString::number(rulerTick)+" ns",
                                         canvas);
     text->move(x, 1);
     text->setColor(gray);
 
     text->show();
     while (x < canvas->width()) {
-        x += (int)(PIX_PER_NS * zoom_ * RULER_TICK);
+        x += (int)(pixPerNs_ * zoom_ * rulerTick);
         // draw short line
         QCanvasLine *tick = new QCanvasLine(canvas);
         tick->setPoints(x, 0, x, 10);
@@ -359,7 +371,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
 
     // draw blocks
     int t = bt->getOffset();
-    double X = t * PIX_PER_NS;
+    double X = t * pixPerNs_;
     while (X < canvas->width()) {
         // draw block
         QRect thisBlock = calcBlockPosition(bt, t);
@@ -388,6 +400,11 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
                 targetTime += target->getClock();
             }
 
+            // check if this block is the next source for the target block
+            if (t + (2 * bt->getRuntime()) + bt->getClock() <= targetTime  ) {
+                continue;
+            }
+
             // calculate position of the target block
             QRect targetBlock = calcBlockPosition(target, targetTime);
 
@@ -404,7 +421,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
         }
 
         t += bt->getClock();
-        X = rint(t * PIX_PER_NS);
+        X = rint(t * pixPerNs_);
     }
 
     return;
@@ -415,9 +432,9 @@ QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)
     int line = blocks_.find(bt);
     Q_ASSERT(line != -1);
 
-    int x = (int)(WIDGET_SPACING + rint(time * PIX_PER_NS * zoom_));
+    int x = (int)(WIDGET_SPACING + rint(time * pixPerNs_ * zoom_));
     int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
-    int w = (int)QMAX(5, rint(bt->getRuntime() * PIX_PER_NS * zoom_));
+    int w = (int)QMAX(5, rint(bt->getRuntime() * pixPerNs_ * zoom_));
     int h = BOX_HEIGHT;
 
     return QRect(x, y, w, h);

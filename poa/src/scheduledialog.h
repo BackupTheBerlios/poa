@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.15 2004/01/18 13:50:48 squig Exp $
+ * $Id: scheduledialog.h,v 1.16 2004/01/18 17:20:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -80,6 +80,8 @@ private:
 
     QSlider *zoomSlider;
     double zoom_;
+
+    double pixPerNs_;
 
     Project *project_;
     bool modified_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.3 2004/01/09 18:08:39 papier Exp $
+ * $Id: downloadmanager.cpp,v 1.4 2004/01/12 20:09:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -106,7 +106,7 @@ bool DownloadManager::download(QString filename, const char* portname)
     }
   }
   //set number of steps in DeployProject Download Processbar
-  //  emit setProgessBarLength((int)fileSize);
+  emit setProgressBarLength(fileSize);
   file.close();
 
   //send header

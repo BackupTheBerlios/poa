@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.3 2004/01/09 18:08:39 papier Exp $
+ * $Id: downloadmanager.h,v 1.4 2004/01/12 20:09:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -64,7 +64,7 @@ public slots:
 
 signals:
     void increaseProgressBar();
-    void setProgressBarLength(int totalSteps); 
+    void setProgressBarLength(int);
 
 
 };

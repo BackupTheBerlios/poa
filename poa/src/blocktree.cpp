@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.cpp,v 1.4 2004/01/09 22:39:44 vanto Exp $
+ * $Id: blocktree.cpp,v 1.5 2004/01/09 22:52:54 vanto Exp $
  *
  *****************************************************************************/
 
@@ -123,7 +123,14 @@ bool BlockTree::getBackReference()
 
 void BlockTree::commit()
 {
+    // commit local properties
     block_->setExecTime(runtime_);
     block_->setClock(clock_);
     block_->setOffset(offset_);
+
+    // commit leaves
+    QPtrList<BlockTree> bt = *getBranches();
+    for (QPtrListIterator<BlockTree> it(bt); it != 0; ++it) {
+        (*it)->commit();
+    }
 }

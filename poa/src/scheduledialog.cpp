@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.30 2004/01/18 17:20:02 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.31 2004/01/18 17:32:21 vanto Exp $
  *
  *****************************************************************************/
 
@@ -59,7 +59,8 @@ const int BOX_HEIGHT = 10;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
 const int BLOCKS_PER_CANVAS = 10;
-
+const int RULER_SNAP = 250;    // nanoseconds to snap the rulerbar to.
+const int RULER_INTERVAL = 50;      // show a rulerbar every X pixels (+snap)
 const double ArrowLine::RAD2DEG = 57.2958;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -306,8 +307,8 @@ void ScheduleDialog::drawRuler()
     // draw ruler
     int x = WIDGET_SPACING;
 
-    double nsPer100 = 50.0 * (1.0 / (pixPerNs_ * zoom_));
-    int rulerTick = (((int)nsPer100 / 250)+1) * 250;
+    double nsPer100 = RULER_INTERVAL * (1.0 / (pixPerNs_ * zoom_));
+    int rulerTick = (((int)nsPer100 / RULER_SNAP)+1) * RULER_SNAP;
 
     QCanvasText *text = new QCanvasText(QString::number(rulerTick)+" ns",
                                         canvas);

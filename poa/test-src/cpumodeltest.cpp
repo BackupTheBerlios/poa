@@ -58,8 +58,7 @@ public:
         cpu->setCpuId(1);
         cpu->setAutoRuntime(false);
         cpu->setAutoOffset(false);
-
-        cpu->setSaveSource(false);
+        cpu->setPartOfLibrary(true);
 
         QDomDocument document;
         QDomElement element = cpu->serialize(&document);

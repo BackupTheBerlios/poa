@@ -1,3 +1,7 @@
+2003-08-21  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* mdiwindow.cpp: Added zoom slots.
+
 2003-08-21  Stefan Alexander Hauser  <hausersn@gspc70.informatik.uni-stuttgart.de>
 
 	* settingsdialog.cpp (createPathTab): Completed the dialog.

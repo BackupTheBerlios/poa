@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.7 2003/08/21 14:09:32 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.8 2003/08/21 14:33:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,10 +31,13 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qsize.h>
+#include <qwmatrix.h>
 
 MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent, const char* name, WFlags f)
     : QMainWindow(parent, name, f)
 {
+	zoomLevel_ = 1.0;
+
     view_ = new QCanvasView(canvas, this);
     setCentralWidget(view_);
 }
@@ -80,6 +83,7 @@ void MdiWindow::resizeEvent(QResizeEvent *e)
 
     e = 0; // don't care
     QSize viewSize = view_->size();
+	viewSize /= zoomLevel_;
     QSize canvasSize = canvas()->size();
 
     // Resize the canvas only if its smaller than the current
@@ -90,3 +94,21 @@ void MdiWindow::resizeEvent(QResizeEvent *e)
         canvas()->resize(viewSize.width(), viewSize.height());
     }
 }
+
+void MdiWindow::setZoomLevel(double zoomLevel)
+{
+	if (zoomLevel != 0 && zoomLevel != zoomLevel_) {
+		QWMatrix m = view_->worldMatrix();
+		double diff = zoomLevel / zoomLevel_;
+		zoomLevel_ = zoomLevel;
+		m.scale(diff, diff);
+		view_->setWorldMatrix(m);
+		view_->update();
+	}
+}
+
+double MdiWindow::zoomLevel()
+{
+	return zoomLevel_;
+}
+

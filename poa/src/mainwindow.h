@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.9 2003/08/21 13:28:11 garbeam Exp $
+ * $Id: mainwindow.h,v 1.10 2003/08/21 14:33:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,7 @@ class QHBoxLayout;
 class QGridLayout; 
 class QAction;
 class QActionGroup;
+class QComboBox;
 class QToolBar;
 class QPopupMenu;
 
@@ -48,6 +49,7 @@ public:
                WFlags fl = WType_TopLevel);
     ~MainWindow();
 
+    QComboBox *zoomComboBox;
     QMenuBar *menubar;
     QPopupMenu *fileMenu;
     QPopupMenu *editMenu;
@@ -102,7 +104,9 @@ public slots:
     virtual void helpAbout();
     virtual void openModuleConf();
     virtual void openSettings();
-
+	void windowActivated(QWidget* w);
+	virtual void zoomTo(const QString& level);
+	
 private slots:
     MdiWindow* newDoc();
     void closeWindow();

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.2 2003/05/31 16:44:11 garbeam Exp $
+%% $Id: anforderungen.tex,v 1.3 2003/05/31 19:11:34 garbeam Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,7 +18,7 @@ Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen gemacht.
 Viele dieser Entwicklungen beinhalten neue Kinematiken, wie z.B. die
 Parallelkinematiken und Sensoren (z.B. den Ferraris 
 Relativbeschleunigungssensor).\par
-Dadurch entstehen neue Anforderungen an die Antriebsregelung. Zusättzliche
+Dadurch entstehen neue Anforderungen an die Antriebsregelung. Zusätzliche
 Sensor-Signale müssen in den Reglerstrukturen berücksichtigt werden - oder
 sogar völlig neue Reglerstrukturen werden benötigt.\par
 Die momentan auf dem Markt erhältlichen Reglersysteme erlauben meist
@@ -32,7 +32,7 @@ Die hardwaretechnische Realisierung erfolgt in Form einer PC-Einsteckplatine.
 Zentrales Element des Offenen Antriebes ist der Altera ``APEX''Baustein. Es
 handelt sich dabei um einen CPLD\footnote{Complex Programmable Logic Device},
 der sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
-Funktion des Bausteins seinen Bdürfnissen anzupassen.\par
+Funktion des Bausteins seinen Bedürfnissen anzupassen.\par
 Um die Offenheit für jeden Anwender nutzbar zu machen, wird für den CPLD eine
 Architektur festgelegt, die es ermöglicht, einzelne Funktionalitäten in Form
 von Modulen zu implementieren. Diese Modlue können aus festprogrammierten
@@ -41,174 +41,132 @@ auf die Signale aller anderen Module zugreifen und stellt seine eigenen
 Ausgangsignale allen anderen Modulen zur Verfügung.\par
 Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
 von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
-Netzwerk konfiguriert werden kann. Es soll in der grafischen Oberfläche
-erkennbar sein, welche Ein- und Ausgänge die einzelnen CPUs und Cores
-haben. Des Weiteren sollen den CPUs C-Sourcen zugeordnet werden und diese
-für die CPU kompiliert und auf das offene Antriebsboard heruntergeladen
-werden können.
- 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% GUI
-\section{GUI}
+Netzwerk konfiguriert werden kann.\par
+Die detaillierten Anforderungen der hiermit angebotenen Programmierumgebung
+``Offener Antrieb`` erschliessen sich nur aus dem Zusammenhang des im Folgenden
+dargelegten Kataloges der Funktionalen Anforderungen. 
 
-Die Oberfläche von POA untergliedert sich in folgende Teilbereiche:
-\begin{itemize}
-\item Grafisches Hauptfenster das alle Module des CPLD abbildet
-\item Modulbibliothek
-\item Funktionsblockkonfigurationsdialog 
-\item externer Editor
-\item Optimierungsdialog
-\item externes Compilierterminal
-\item CPLD-Download Dialog
-\item Konfigurationsdialog
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Hauptfenster
-\subsection{Hauptfenster}
-Im Hauptfenster werden die Funktionsblöcke (CPU, Cores, E/A-Blöcke) sowie
-Signalleitungen in einem rasterisiertem Layout dargestellt und mit Maus- und
-Tastatureingaben bearbeitet.\par
-Desweiteren werden Funktionsblöcke aus der Modulbibliothek via Drag\&Drop in
-das Hauptfenster gezogen oder entfernt. Die Verknüpfung zwischen den
-Funktionsblöcken geschieht durch ziehen von Signalleitungen (Linien) mit der
-Maus.\newline
-Durch Doppelklick auf einen Funktionsblock öffnet sich der
-Funktionsblockkonfigurationsdialog.\newline
-Im Menü des Hauptfensters wird ein konfiguriertes Layout gespeichert oder
-geöffnet. Alle Dialoge sind über die Toolbar und Menüleiste aufrufbar. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Modulbibliothek
-\subsection{Modulbibliothek}
-Befindet sich angedockt am Rand des Hauptfensters und stellt eine Liste aller
-in der Bibliothek enthaltenen CPU- und Coreblöcke dar. Die Darstellung der
-CPUs und Cores in dieser Liste (Baumdiagramm CPU/Cores?) ist noch ungeklärt.
-Die CPU- und Coreblöcke können via Drag\&Drop ins Hauptfenster gezogen werden.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Funktionsblockkonfigurationsdialog
-\subsection{Funktionsblockkonfigurationsdialog}
-Folgende Funktionsblockparameter können in diesem Dialog konfiguriert werden:
-\begin{itemize}
-\item Anzahl der Signal-Ein/Ausgänge (Bezeichner?) 
-\item Verknüpfungen an E/As?
-\item Zeitoffset einstellen
-\item Taktrate einstellen
-\item externen Editor aufrufen
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Externer Editor
-\subsection{Externer Editor}
-Bietet Editierung des zum CPU-Block gehörenden Sourcecodes an. Durch
-Einbindung einer Template-Sourcecode Datei wird bei erstmaliger Editierung
-ein vorgenerierter Rahmencode erzeugt und im Editor dargestellt.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Optimierungsdialog
-\subsection{Optimierungsdialog}
-Dieser Dialog bietet die Ausführung der folgenden Schritte an:
-\begin{itemize}
-\item Plausibilitätsprüfung der Signalverknüpfungen
-\item Signallaufzeitbestimmung
-\item Laufzeitoptimierung
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% externen Compilierterminal
-\subsection{externes Compilierterminal}
-Der Compiliervorgang der CPLD-Konfiguration wird in einem externen Terminal
-aus einer Menüfunktion heraus gestartet.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% CPLD-Download Dialog
-\subsection{CPLD-Download Dialog}
-Bietet Auswahl downloadbarer (vorkompilierter) Funktionsblöcke an und startet
-den Downloadvorgang in externem Terminal.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Konfigurationsdialog
-\subsection{Konfigurationsdialog}
-Der Konfigurationsdialog bietet die Konfiguration von POA an, u.a. Einstellung
-des externen Editors, des Compilers, des externes Terminals, des C-Sourcecode-
-Templates und des CPLD-Downloads.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Interfaces
-\section{Interfaces}
+%% Funktionale Anforderungen
+\section{Funktionale Anforderungen}
 
-POA unterstützt folgende Interfaces:
+Die Programmierumgebung ``Offener Antrieb`` soll eine grafisch Oberfläche
+mit folgenden wesentliche Funktionalitäten bieten:
 \begin{itemize}
-\item externer Editor
-\item Signallaufzeitbestimmung
-\item Compiler
-\item CPLD-Download Tool
+\item Darstellung und Manipulation rasterisierter CPLD Layouts
+\item Verwaltung und Editierung einer CPLD-Modulbibliothek zur CPLD-Layout
+      Manipulation
+\item Rahmencodegenerierung für eingebette CPU-Module in einem CPLD-Layout
+\item Plausibilitätsprüfung und Optimierung eines entworfenen CPLD-Layouts
+\item Compilieren und Herunterladen eines fertiggestellten CPLD Layouts
+\item Speichern und Öffnen von CPLD-Layouts und zugehörigen Sourcen
+\item Konfiguration der Programmeigenschaften
+\item Zusammenarbeit mit externen Programmen
 \end{itemize}
+Auf die Einzelheiten der wesentlichen Funktionalitäten und der Abgrenzung der
+aufgeworfenen Begriffe wird in den folgenden Abschnitten eingegangen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% externer Editor
-\subsection{externer Editor}
-Schnittstelle zum Betriebssystem über temporäre Sourcedatei.
+%% CPLD Layouts
+\subsection{CPLD Layouts}
+Ein CPLD Layout spiegelt ein virtuelles Abbild der realen Konfiguration
+(Vernetzung der CPLD-Funktionsblöcke) eines CPLD Hardware-Bausteins wider.
+Dabei besteht die virtuelle Abbildung aus Funktionsblöcken (CPU, Cores,
+E/A-Blöcke) und Signalleitungen.\par
+Im zu entwickelnden System soll ein CPLD Layout rasterisiert dargestellt
+werden und durch Maus- und Tastatureingaben manipulierbar sein. Dabei
+werden Funktionsblöcke mit der Maus in ein Raster eingebettet und durch
+einzelne Linien, die die Signalleitungen symbolisieren, verbunden.
+Die Funktionsblöcke selbst sollen konfigurierbar und editierbar sein.\par
+CPLD-Layouts sollen XML-basiert speicher- und ladbar sein. Sie werden
+zusammen mit dem zugehörigen Source- und evtl. vorhandenen Object-Code
+in einer geeigneten Verzeichnisstruktur abgelegt.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Signallaufzeitbestimmung
-\subsection{Signallaufzeitbestimmung}
-Schnittstelle zum Betriebssystem über spezielles Programm und evtl.
-temporäre Resultatdatei (noch ungeklärt).
+%% CPLD-Modulbibliothek
+\subsection{CPLD-Modulbibliothek}
+Die Modulbibliothek ist eine CPLD-Layout übergreifende Sammlung von
+Funktionsblöcken (CPU, Cores, E/A-Blöcke), die in CPLD-Layouts einbettbar
+sein sollen. Bereits vorhandene, in CPLD-Layout eingebettete Funktionsblöcke,
+die umkonfiguriert oder editiert wurden (z.B. spezieller Code in einem
+CPU-Block), und demnach noch nicht in der Modulbibliothek existieren,
+sollen in die Modulbibliothek exportierbar sein.\par
+Funktionsblöcke sollen CPLD-Layout-unabhängig aus der Modulbibliothek
+entferbar, editierbar und umkonfigurierbar sein (mit Ausnahme der drei
+Grundfunktionsblöcke).\par
+Die Modulbibliothek soll permanent gespeichert werden und bei jedem
+Systemaufruf automatisch geladen werden. Eine Verwaltung verschiedener
+Modulbibliotheken wird nicht angeboten.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Compiler
-\subsection{Compiler}
-Schnittstelle zum Betriebssystem über Compilerprogramm (gcc?).
+%% Funktionsblock
+\subsection{Funktionsblock}
+Ein Funktionsblock spiegelt ein virtuelles Abbild eines CPU-, Core- oder
+E/A-Bausteins auf einem CPLD wider. Dabei sollen an allen genannten
+Funktionsblöcken die Ein- und Ausgänge mit Signalleitungen verbunden
+werden können.\par
+Speziell bei CPU-Blöcken soll überdies die Anzahl der Ein- und Ausgänge,
+die Benennung der E/As, das Einstellen eines Zeitoffsets, das Setzen
+einer logischen Taktrate konfigurierbar sein und der auf dem jeweiligen
+CPU-Block auszuführende Sourcecode editierbar sein.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% CPLD-Download
-\subsection{CPLD-Download}
-Schnittstelle zum Betriebssystem über spezielles Downloadprogramm für
-serielle Schnitstelle (näheres noch ungeklärt).
+%% Rahmencodegenerierung
+\subsection{Rahmencodegenerierung}
+Zur Editierung von C-Sourcen für CPU-Blöcke soll ein (vom Kunden)
+vordefiniertes C-Template kontextabhängig für die existierende
+Konfiguration eines CPU-Blocks verwendet werden, um Rahmencode zu generieren.
+Dabei soll die Benamung der Signal-Ein- und Signal-Aus-gänge im C-Sourcecode
+eines einzelnen CPU-Blocks angepaßt werden. Hierzu wird lediglich ein
+einfacher Substitutionsalgorithmus ohne tierfergehende Logik angeboten.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Algorithmen
-\section{Algorithmen}
 
-POA enthält folgende erwähnenswerte zu entwickelnde/einzubindende Algorithmen:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Plausibilitätsprüfung
+\subsection{Plausibilitätsprüfung}
+Die Vernetzung von Funktionsblöcken in einem entworfenen CPLD-Layout soll
+auf ihre Plausibilität geprüft werden können, im Einzelnen:
 \begin{itemize}
-\item Laufzeitoptimierungsalgorithmus (Scheduling)
-\item Darstellungsalgorithmus des CPLD-Layouts
-\item Speichern und Öffnen von konfigurierten CPLD-Layouts und Sourcen via XML
+\item Prüfung auf unverknüpfte E/As
+\item Prüfung auf falsch verknüpfte E/As (E-E, etc.)
 \end{itemize}
+Sofern das entworfene CPLD-Layout Ungereimtheiten aufweist, soll eine
+Warnmeldung ausgegeben werden, die die fehlerhaften Verknüpfungen aufführt.\par
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Formate
-\section{Formate}
-
-POA nutzt folgende Formate:
-
-\begin{itemize}
-\item spezielles XML Format zum Speichern und Öffnen von CPLD-Layouts
-\item C-Sourcecode Dateien der CPU-Blöcke in geeigneter Verzeichnisstruktur
-\item Ergebnisse der Signallaufzeitbestimmung in externer Datei?
-      (noch ungeklärt)
-\item Object-Code (ELF?) für compilierte CPU-Blöcke
-\item spezielles Headerformat für CPLD-Download (noch ungeklärt)
-\item Output des Compilers (stdout)
-\item Output des CPLD-Downloads (stdout)
-\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% XML
-\subsection{XML}
-Ein spezielles XML Format wird zum Speichern und Öffnen von
-CPLD-Layout-Konfigurationen verwendet.
+%% Optimierung
+\subsection{Optimierung}
+Der Entwurf eines plausiblen CPLD-Layouts soll durch einen gekoppelten
+Signallaufzeitsermittlungs- und -optimierungs-Algorithmus optimiert werden
+können. Hierzu wird zur Laufzeitermittlung ein Laufzeitermittlungsprogramm
+für CPLD-CPU-Block Object-Code verwendet, das vom Kunden zu liefern ist.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Sourcecode der CPU-Blöcke
-\subsection{Sourcecode der CPU-Blöcke}
-Es wird ein vorkonfigurierbares C-Template als Vorlage für
-Rahmencodeerzeugung der CPU-Blöcke verwendet. Der Sourcecode von CPU-Blöcken
-wird in einer geeigneten Verzeichnisstruktur abgelegt.
+%% Compilieren und Herunterladen
+\subsection{Compilieren und Herunterladen}
+Einzelne Funktionsblöcke eines plausiblen CPLD-Layouts und gesamte plausible
+CPLD-Layouts sollen durch einen externen Compiler compiliert werden können,
+der vom Kunden zu liefern ist.\par
+Weiterhin soll ein plausibles und vollständig compiliertes CPLD-Layout auf
+den CPLD heruntergeladen werden können. Um diese Anforderung umsetzen zu 
+können, hat der Kunde die Schnittstelle sowie ein Beispielprogramm zu liefern.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Background
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Externe Programme
+\subsection{Externe Programme}
+Zur Editierung von Sourcecode, zum Compilieren von Sourcecode, zum
+Herunterladen von Object-Code und zur Laufzeitbestimmung sollen externe
+Programme eingesetzt werden.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Konfiguration
+\subsection{Konfiguration}
+Es soll der externe Editor, der externe Compiler der Pfad zum C-Souce
+Template und das externe Download-Tool konfigurierbar sein.
 

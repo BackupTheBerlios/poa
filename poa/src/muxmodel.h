@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.25 2003/12/10 15:35:23 garbeam Exp $
+ * $Id: muxmodel.h,v 1.26 2003/12/10 16:08:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -212,6 +212,9 @@ private:
 
     MuxType type_;
 
+signals:
+
+    void serialized(MuxModel *);
 // signals are inherited from BlockModel
 };
 

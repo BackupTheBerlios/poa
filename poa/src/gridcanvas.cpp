@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.23 2003/09/23 13:49:23 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.24 2003/09/26 15:40:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -63,7 +63,7 @@ void GridCanvas::addConnectorView(ConnectorViewList *viewList)
 
 void GridCanvas::addView(AbstractModel *item, int x, int y)
 {
-    double z = incZ();;
+    double z = incZ();
     QCanvasItemList l = item->createView(this);
     for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
         if (x || y) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.10 2003/08/22 10:14:19 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.11 2003/08/22 12:31:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,8 @@
 #include <qsize.h>
 #include <qwmatrix.h>
 
-MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent, const char* name, WFlags f)
+MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent,
+                     const char* name, WFlags f)
     : QMainWindow(parent, name, f)
 {
     zoomLevel_ = 1.0;
@@ -86,6 +87,7 @@ void MdiWindow::saveAs()
  */
 void MdiWindow::resizeCanvas()
 {
+
     QSize viewSize = view_->size();
     viewSize /= zoomLevel_;
     QSize canvasSize = canvas()->size();
@@ -97,6 +99,7 @@ void MdiWindow::resizeCanvas()
     {
         canvas()->resize(viewSize.width(), viewSize.height());
     }
+
 }
 
 void MdiWindow::resizeEvent(QResizeEvent *e)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.1 2003/08/22 10:14:19 squig Exp $
+ * $Id: canvasview.cpp,v 1.2 2003/08/22 12:31:14 garbeam Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -66,4 +66,14 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
         movingStartPoint = p;
         canvas()->update();
     }
+}
+
+void CanvasView::setGridPainter(QPainter *painter)
+{
+    gridPainter_ = painter;
+}
+
+QPainter* CanvasView::gridPainter()
+{
+    return gridPainter_;
 }

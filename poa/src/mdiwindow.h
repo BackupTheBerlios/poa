@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.11 2003/08/21 16:25:18 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.12 2003/08/22 12:31:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -57,7 +57,7 @@ public slots:
 
 protected:
     void closeEvent( QCloseEvent * );
-    virtual void MdiWindow::resizeEvent(QResizeEvent *e);
+    virtual void resizeEvent(QResizeEvent *e);
 
 private:
     QCanvasView* view_;

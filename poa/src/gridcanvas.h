@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.2 2003/08/21 13:18:30 garbeam Exp $
+ * $Id: gridcanvas.h,v 1.3 2003/08/22 12:31:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,6 @@ public slots:
 
 private:
     QPixmap *tile;
-
 };
 
 #endif // POA_GRIDCANVAS_H

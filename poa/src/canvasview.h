@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.1 2003/08/22 10:14:19 squig Exp $
+ * $Id: canvasview.h,v 1.2 2003/08/22 12:31:14 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
@@ -26,6 +26,8 @@
 
 #include <qvariant.h>
 #include <qcanvas.h>
+#include <qpainter.h>
+
 class QMouseEvent;
 class QPoint;
 
@@ -43,12 +45,15 @@ public:
                WFlags fl = 0);
     ~CanvasView();
 
-	void contentsMousePressEvent(QMouseEvent *e);
-	void contentsMouseMoveEvent(QMouseEvent *e);
+    void contentsMousePressEvent(QMouseEvent *e);
+    void contentsMouseMoveEvent(QMouseEvent *e);
+    void setGridPainter(QPainter *painter);
+    QPainter* gridPainter();
 
-private :
+private:
     QCanvasItem* movingItem;
     QPoint movingStartPoint;
+    QPainter *gridPainter_;
 
 };
 

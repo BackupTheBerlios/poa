@@ -12,7 +12,9 @@ class UtilTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(UtilTest);
     CPPUNIT_TEST(testCopyFile);
+    CPPUNIT_TEST(testFindIcon);
     CPPUNIT_TEST(testFindResource);
+    CPPUNIT_TEST(testRemoveDir);
     CPPUNIT_TEST(testSqueeze);
     CPPUNIT_TEST_SUITE_END();
 
@@ -68,17 +70,21 @@ public:
 
         CPPUNIT_ASSERT(Util::removeDir(&dir));
         CPPUNIT_ASSERT(!dir.exists());
+
+        //CPPUNIT_ASSERT(!Util::removeDir(&dir));
     }
 
     void testFindResource()
     {
-        QString path = Util::findResource("utiltest.cpp");
-        CPPUNIT_ASSERT(path == QFileInfo("utiltest.cpp").absFilePath());
+        CPPUNIT_ASSERT(Util::findResource("utiltest.cpp")
+                       == QFileInfo("utiltest.cpp").absFilePath());
+        CPPUNIT_ASSERT(Util::findResource("res.doesnotexist").isNull());
     }
 
     void testSqueeze()
     {
         CPPUNIT_ASSERT(Util::squeeze("abc", 0, QFont()) == "a...");
+        CPPUNIT_ASSERT(Util::squeeze("abc", 1000, QFont()) == "abc");
     }
 
 };

@@ -1,3 +1,14 @@
+2003-09-15  Anselm Garbe  <garbeam@users.berlios.de>
+
+	* connectormodel.h: removed
+
+	* connectormodel.cpp: removed
+
+	* gridcanvas.cpp (addConnectorView): added alternate method
+	to provide connectorview creation
+
+	* project.cpp (addConnectorViews): same as above
+
 2003-09-12  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* canvasview.cpp (maybeTip): Fixed jumping tooltips.

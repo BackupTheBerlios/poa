@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.26 2004/01/12 21:59:48 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.27 2004/01/13 14:03:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -342,15 +342,15 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
         // is block configured?
         if (bt->getClock() <= 0) {
             // no, draw info and skip
-//              QCanvasRectangle *box = new QCanvasRectangle(canvas);
-//              box->setSize(canvas->width(),
-//                           BOX_HEIGHT + BOX_YSPACING);
-//              box->setBrush(darkGray);
-//              box->setPen(white);
-//              box->move(0, RULER_HEIGHT - BOX_YSPACING
-//                        / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
-//              box->setZ(0);
-//              box->show();
+              QCanvasRectangle *box = new QCanvasRectangle(canvas);
+              box->setSize(canvas->width(),
+                           BOX_HEIGHT + BOX_YSPACING);
+              box->setBrush(white);
+              box->setPen(lightGray);
+              box->move(0, RULER_HEIGHT - BOX_YSPACING
+                        / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
+              box->setZ(0);
+              box->show();
 
             QCanvasText *text = new QCanvasText(tr("Missing clock value."), canvas);
             text->move(WIDGET_SPACING, y);

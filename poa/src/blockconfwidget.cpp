@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.10 2004/01/29 11:23:43 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.11 2004/01/29 14:27:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -358,4 +358,22 @@ void BlockConfWidget::ioSelectionChanged() {
 
     newIoPushButton_->setEnabled(enabled);
     removeIoPushButton_->setEnabled(isChild);
+}
+
+PinListViewItem *BlockConfWidget::pinListViewItemForPin(PinModel *pin) {
+
+    if (!pin) {
+        return 0;
+    }
+
+    for (QListViewItemIterator it(ioListView_); it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+
+        PinModel *p = item->pin();
+        if (p && p == pin) {
+            return item;
+        }
+    }
+
+    return 0;
 }

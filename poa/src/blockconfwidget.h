@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.6 2004/01/28 21:11:46 squig Exp $
+ * $Id: blockconfwidget.h,v 1.7 2004/01/29 14:27:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -61,6 +61,12 @@ public:
     void commit();
 
     QListView *ioListView() const;
+
+    /**
+     * Returns PinListViewItem for a given PinModel, if it exists,
+     * otherwise <code>0</code>.
+     */
+    PinListViewItem *pinListViewItemForPin(PinModel *pin);
 
 private:
     QListView *ioListView_;

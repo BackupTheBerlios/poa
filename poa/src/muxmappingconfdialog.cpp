@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.4 2004/01/28 15:39:12 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.5 2004/01/29 14:27:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
+#include <qstring.h>
 #include <qwidget.h>
 
 #include "muxmappingconfdialog.h"
@@ -79,6 +80,11 @@ void MuxMappingConfDialog::initLayout() {
 
     inputComboBox_ = new QComboBox(comboInputWidget);
     outputComboBox_ = new QComboBox(comboOutputWidget);
+    inputComboBox_->setEditable(true);
+    outputComboBox_->setEditable(true);
+    inputComboBox_->setAutoCompletion(true);
+    outputComboBox_->setAutoCompletion(true);
+
     comboInputLayout->add(new QLabel(tr("Inputs "), comboInputWidget));
     comboInputLayout->add(inputComboBox_);
     comboOutputLayout->add(new QLabel(tr("Outputs"), comboOutputWidget));
@@ -141,32 +147,36 @@ void MuxMappingConfDialog::initLayout() {
     baseLayout->add(buttonWidget);
 }
 
+PinListViewItem *MuxMappingConfDialog::pinListViewItemForString(
+    QString name)
+{
+    QListViewItemIterator it = *itemIter_;
+    for (; it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+        if (item->text(1) == name) {
+            // found
+            return item;
+        }
+    }
+    return 0; // not found
+}
+
 void MuxMappingConfDialog::sync() {
 
     inputComboBox_->clear();
     outputComboBox_->clear();
-    int inputIdx = 1, inputCount = 1;
-    int outputIdx = 1, outputCount = 1;
     QListViewItemIterator it = *itemIter_;
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->type() == PinModel::INPUT) {
             inputComboBox_->insertItem(item->text(1));
-            if (item->text(1) == muxMappingItem_->text(1)) {
-                inputIdx = inputCount;
-            } 
-            inputCount++;
         }
         else if (item->type() == PinModel::OUTPUT) {
             outputComboBox_->insertItem(item->text(1));
-            if (item->text(1) == muxMappingItem_->text(1)) {
-                outputIdx = outputCount;
-            } 
-            outputCount++;
         }
     }
-    inputComboBox_->setCurrentItem(inputIdx);
-    outputComboBox_->setCurrentItem(outputIdx);
+    inputComboBox_->setCurrentText(muxMappingItem_->text(0));
+    outputComboBox_->setCurrentText(muxMappingItem_->text(2));
 
     firstInputBitSpinBox_->setValue(muxMappingItem_->firstInputBit());
     firstOutputBitSpinBox_->setValue(muxMappingItem_->firstOutputBit());
@@ -176,16 +186,10 @@ void MuxMappingConfDialog::sync() {
 
 void MuxMappingConfDialog::commit() {
 
-    muxMappingItem_->setText(0, inputComboBox_->currentText());
-    muxMappingItem_->setText(2, inputComboBox_->currentText());
-    muxMappingItem_->setText(1,
-         QString::number(firstInputBitSpinBox_->value()) + " - "
-         + QString::number(lastInputBitSpinBox_->value()));
-    muxMappingItem_->setText(3,
-         QString::number(firstOutputBitSpinBox_->value()) + " - "
-         + QString::number(lastOutputBitSpinBox_->value()));
-
-
+    muxMappingItem_->setInputPinListViewItem(
+        pinListViewItemForString(inputComboBox_->currentText()));
+    muxMappingItem_->setOutputPinListViewItem(
+        pinListViewItemForString(outputComboBox_->currentText()));
     muxMappingItem_->setFirstInputBit(firstInputBitSpinBox_->value());
     muxMappingItem_->setFirstOutputBit(firstOutputBitSpinBox_->value());
     muxMappingItem_->setLastInputBit(lastInputBitSpinBox_->value());

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.24 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.25 2004/01/29 14:27:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -50,6 +50,8 @@ public:
      * Creates a MuxMapping list view item for the given abstract model
      */
     MuxMappingListViewItem(QListView *parent, QListViewItem *after,
+                           PinListViewItem *input,
+                           PinListViewItem *output,
                            MuxMapping *mapping = 0);
 
     /**
@@ -67,6 +69,14 @@ public:
      */
     void update();
 
+    /** I/O handling. */
+    void setInputPinListViewItem(PinListViewItem *input);
+    void setOutputPinListViewItem(PinListViewItem *output);
+
+    PinListViewItem *inputPinListViewItem();
+    PinListViewItem *outputPinListViewItem();
+
+    /* Ranges. */
     void setFirstInputBit(unsigned firstInputBit);
     void setFirstOutputBit(unsigned firstOutputBit);
     void setLastInputBit(unsigned lastInputBit);
@@ -77,9 +87,10 @@ public:
     unsigned lastInputBit();
     unsigned lastOutputBit();
 
-
 private:
     MuxMapping *mapping_;
+    PinListViewItem *input_;
+    PinListViewItem *output_;
     unsigned firstInputBit_;
     unsigned firstOutputBit_;
     unsigned lastInputBit_;
@@ -123,15 +134,6 @@ private:
     /** Commits all changes to the <code>model_</code>. */
     void commit();
 
-    /** Finds and returns PinModel by id. */
-//    PinModel *findPinById(PinModel::PinType, unsigned id);
-
-    /** Finds and returns PinListViewItem by PinModel. */
-//    PinListViewItem *findPinListViewItemByPinModel(PinModel *pin);
-
-    /** Rearranges all positions. */
-//    void updatePositions(QListView *lv);
-
     /** Updates all mappings after an I/O has been updated. */
     void updateMappings();
 
@@ -147,6 +149,9 @@ private:
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;
     QPushButton* applyPushButton;
+    QPushButton *newMappingButton;
+    QPushButton *updateMappingButton;
+    QPushButton *removeMappingButton;
     QListView* mappingListView;
     QBoxLayout *dialogLayout_;
 
@@ -158,7 +163,6 @@ private:
 private slots:
 
     /** Magic selection, button title changing. */
-    void listViewSelectionChanged();
     void mappingSelectionChanged();
 
     /** Adds a new MuxMapping. */

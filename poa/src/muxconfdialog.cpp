@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.41 2004/01/28 23:09:56 squig Exp $
+ * $Id: muxconfdialog.cpp,v 1.42 2004/01/29 14:27:22 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -49,12 +49,14 @@
 
 MuxMappingListViewItem::MuxMappingListViewItem(
         QListView *parent, QListViewItem *after,
+        PinListViewItem *input, PinListViewItem *output,
         MuxMapping *mapping)
     : QListViewItem(parent, after)
 {
     setOpen(false);
     mapping_ = mapping;
-
+    input_ = input;
+    output_ = output;
     firstInputBit_ = 0;
     firstOutputBit_ = 0;
     lastInputBit_ = 0;
@@ -78,19 +80,43 @@ void MuxMappingListViewItem::update() {
         setText(2, mapping_->output()->name());
         setText(3, QString::number(mapping_->firstOutputBit()) + " - "
                    + QString::number(mapping_->lastOutputBit()));
-
-        firstInputBit_ = mapping_->firstInputBit();
-        firstOutputBit_ = mapping_->firstOutputBit();
-        lastInputBit_ = mapping_->lastInputBit();
-        lastOutputBit_ = mapping_->lastOutputBit();
     }
+    else {
+        setText(0, input_->text(1));
+        setText(1, QString::number(firstInputBit_) + " - "
+                   + QString::number(lastInputBit_));
+        setText(2, output_->text(1));
+        setText(3, QString::number(firstOutputBit_) + " - "
+                   + QString::number(lastOutputBit_));
+    }
+}
+
+void MuxMappingListViewItem::setInputPinListViewItem(
+        PinListViewItem *input)
+{
+    input_ = input;
+}
+
+void MuxMappingListViewItem::setOutputPinListViewItem(
+        PinListViewItem *output)
+{
+    output_ = output;
+}
+
+PinListViewItem *MuxMappingListViewItem::inputPinListViewItem() {
+    return input_;
+}
+
+PinListViewItem *MuxMappingListViewItem::outputPinListViewItem() {
+    return output_;
 }
 
 void MuxMappingListViewItem::setFirstInputBit(unsigned firstInputBit) {
     firstInputBit_ = firstInputBit;
 }
 
-void MuxMappingListViewItem::setFirstOutputBit(unsigned firstOutputBit) {
+void MuxMappingListViewItem::setFirstOutputBit(unsigned firstOutputBit)
+{
     firstOutputBit_ = firstOutputBit;
 }
 
@@ -118,7 +144,6 @@ unsigned MuxMappingListViewItem::lastOutputBit() {
     return lastOutputBit_;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
@@ -135,7 +160,7 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
 
     initLayout();
     initConnections();
-    listViewSelectionChanged();
+    mappingSelectionChanged();
     sync();
 
 }
@@ -181,17 +206,17 @@ void MuxConfDialog::initMappingWidget() {
     QWidget *buttonWidget = new QWidget(mappingGroupBox);
     QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
 
-    QPushButton *newMappingButton = new QPushButton(buttonWidget);
+    newMappingButton = new QPushButton(buttonWidget);
     newMappingButton->setText(tr("&New"));
     connect(newMappingButton, SIGNAL(clicked()),
             this, SLOT(addMapping()));
 
-    QPushButton *updateMappingButton = new QPushButton(buttonWidget);
+    updateMappingButton = new QPushButton(buttonWidget);
     updateMappingButton->setText(tr("&Update"));
     connect(updateMappingButton, SIGNAL(clicked()),
             this, SLOT(updateMapping()));
 
-    QPushButton *removeMappingButton = new QPushButton(buttonWidget);
+    removeMappingButton = new QPushButton(buttonWidget);
     removeMappingButton->setText(tr("Remove"));
     connect(removeMappingButton, SIGNAL(clicked()),
             this, SLOT(removeMapping()));
@@ -263,6 +288,7 @@ void MuxConfDialog::ok() {
 void MuxConfDialog::sync() {
 
     Q_ASSERT(model_ != 0);
+    blockConfWidget_->sync();
     if (model_ != 0) {
         nameLineEdit->setText(model_->name());
 
@@ -270,10 +296,14 @@ void MuxConfDialog::sync() {
              it2 != 0; ++it2)
         {
             MuxMapping *mapping = *it2;
-            new MuxMappingListViewItem(mappingListView, 0, mapping);
+            PinListViewItem *input =
+                blockConfWidget_->pinListViewItemForPin(mapping->input());
+            PinListViewItem *output =
+                blockConfWidget_->pinListViewItemForPin(mapping->output());
+            new MuxMappingListViewItem(mappingListView, input, output,
+                                       0, mapping);
         }
     }
-    blockConfWidget_->sync();
 }
 
 
@@ -293,13 +323,12 @@ void MuxConfDialog::commit() {
         model_->removeMuxMapping(*dmit);
     }
 
-    // TODO: other mappings in listview
     for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
         MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
         MuxMapping *mapping = item->mapping();
         if (!mapping) { // new Mapping
             // determine Pins
-            //mapping = new MuxMapping(...);
+//LAST            mapping = new MuxMapping(item->inp);
         }
         else {
             // determine Pins, etc.
@@ -321,64 +350,12 @@ void MuxConfDialog::commit() {
 // List view selection stuff
 
 void MuxConfDialog::mappingSelectionChanged() {
-#if 0
     MuxMappingListViewItem *item =
         (MuxMappingListViewItem *)mappingListView->selectedItem();
     bool selectedMapping = (item != 0);
 
-    if (selectedMapping) {
-        PinListViewItem *pinItem =
-            findPinListViewItemByPinModel(item->data()->input());
-        inputListView->setSelected(pinItem, TRUE);
-        pinItem =
-            findPinListViewItemByPinModel(item->data()->output());
-        outputListView->setSelected(pinItem, TRUE);
-    }
-    listViewSelectionChanged();
-#endif
-}
-
-void MuxConfDialog::listViewSelectionChanged() {
-#if 0
-    MuxMappingListViewItem *item =
-        (MuxMappingListViewItem *)mappingListView->selectedItem();
-    bool selectedMapping = (item != 0);
-
-    updateMappingPushButton_->setEnabled(selectedMapping);
-    removeMappingPushButton_->setEnabled(selectedMapping);
-
-    addMappingPushButton_->setEnabled(inputListView->selectedItem() &&
-                                      outputListView->selectedItem());
-
-    PinListViewItem *inputPinItem =
-        (PinListViewItem *)inputListView->selectedItem();
-    PinListViewItem *outputPinItem =
-        (PinListViewItem *)inputListView->selectedItem();
-
-    if (inputPinItem) {
-        PinModel *pin = inputPinItem->data();
-        inputNameLineEdit->setText(pin->name());
-        inputBitsSpinBox->setValue(pin->bits());
-    }
-    else {
-        inputNameLineEdit->setText("");
-        inputBitsSpinBox->setValue(1);
-    }
-    if (outputPinItem) {
-        PinModel *pin = outputPinItem->data();
-        outputNameLineEdit->setText(pin->name());
-        outputBitsSpinBox->setValue(pin->bits());
-    }
-    else {
-        outputNameLineEdit->setText("");
-        outputBitsSpinBox->setValue(1);
-    }
-
-    updateInputPushButton_->setEnabled(inputPinItem);
-    removeInputPushButton_->setEnabled(inputPinItem);
-    updateOutputPushButton_->setEnabled(outputPinItem);
-    removeOutputPushButton_->setEnabled(outputPinItem);
-#endif
+    removeMappingButton->setEnabled(selectedMapping);
+    updateMappingButton->setEnabled(selectedMapping);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -388,7 +365,7 @@ void MuxConfDialog::listViewSelectionChanged() {
 void MuxConfDialog::addMapping() {
 
     MuxMappingListViewItem *item
-        = new MuxMappingListViewItem(mappingListView, 0, 0);
+        = new MuxMappingListViewItem(mappingListView, 0, 0, 0, 0);
     MuxMappingConfDialog *dialog
         = new MuxMappingConfDialog(
                 QListViewItemIterator(blockConfWidget_->ioListView()),

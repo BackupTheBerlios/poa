@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.9 2003/09/23 10:53:39 garbeam Exp $
+ * $Id: muxmodel.h,v 1.10 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -191,6 +191,14 @@ private:
     /** input and output pins */
     PinVector *inputPins_;
     PinVector *outputPins_;
+
+signals:
+
+    /**
+     * Emitted by <code>this</code> destructor.
+     * Should be connected to View slots.
+     */
+    void deleted();
 };
 
 

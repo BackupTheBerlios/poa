@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.11 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.12 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -113,6 +113,7 @@ public:
                     const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     ~BlockConfDialog();
 
+private:
     QListView *ioListView;
 
     QRadioButton *offsetAutoCalcRadioButton;
@@ -132,7 +133,6 @@ public:
     QLineEdit *addressLineEdit;
     QLineEdit *bitsLineEdit;
 
-private:
     QBoxLayout *dialogLayout;
     QBoxLayout *topLayout;
     QBoxLayout *leftLayout;

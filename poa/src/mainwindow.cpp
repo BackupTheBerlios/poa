@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.54 2003/09/23 17:28:44 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.55 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -655,7 +655,7 @@ void MainWindow::openBlockConf()
                 delete dialog;
             }
             else if (INSTANCEOF(model, MuxModel)) {
-                MuxConfDialog *dialog = new MuxConfDialog(/* TODO */);
+                MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
                 dialog->exec();
                 delete dialog;
             }

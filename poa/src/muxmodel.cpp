@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.7 2003/09/23 12:15:40 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.8 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -113,7 +113,23 @@ MuxModel::MuxModel(QDomElement coreElement)
 
 MuxModel::~MuxModel()
 {
+    PinVector::iterator it;
 
+    for (QPtrListIterator<MuxMapping> i(mappings_); i.current() != 0; ++i) {
+        delete (*i);
+    }
+
+    for(it = inputPins_->begin(); it != inputPins_->end(); ++it ) {
+        delete (*it);
+    }
+    delete inputPins_;
+
+    for(it = outputPins_->begin(); it != outputPins_->end(); ++it ) {
+        delete (*it);
+    }
+    delete outputPins_;
+
+    emit deleted();
 }
 
 PinModel *MuxModel::addPin(PinModel::PinType type)

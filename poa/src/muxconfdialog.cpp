@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.1 2003/09/23 17:10:59 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.2 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "muxconfdialog.h"
 
+#include "muxmodel.h"
 #include "poa.h"
 
 #include <qcombobox.h>
@@ -42,9 +43,11 @@
 #include <qwhatsthis.h>
 
 
-MuxConfDialog::MuxConfDialog(QWidget* parent, const char* name, bool modal, WFlags fl)
+MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
+                             const char* name, bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
+    model_ = model;
     if (!name) {
         setName( "MuxConfDialog" );
         resize(400, 500); 

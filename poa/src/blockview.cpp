@@ -18,28 +18,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.36 2003/09/23 13:49:23 squig Exp $
+ * $Id: blockview.cpp,v 1.37 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
 
 #include "blockview.h"
 
-#include <qaction.h>
-#include <qbrush.h>
-#include <qcanvas.h>
-#include <qpainter.h>
-
+#include "blockconfdialog.h"
 #include "blockmodel.h"
 #include "canvasview.h"
 #include "mainwindow.h"
-#include "blockconfdialog.h"
+#include "muxmodel.h"
 #include "pinmodel.h"
 #include "pinvector.h"
 #include "pinview.h"
 #include "poa.h"
 #include "settings.h"
 #include "util.h"
+
+#include <qaction.h>
+#include <qbrush.h>
+#include <qcanvas.h>
+#include <qpainter.h>
+
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
 
@@ -72,6 +74,10 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
         addPins(*blockModel->inputPins());
         addPins(*blockModel->outputPins());
         addPins(*blockModel->episodicPins());
+    }
+    else if (INSTANCEOF(model_, MuxModel)) {
+        MuxModel *muxModel = (MuxModel *)model_;
+        connect(muxModel, SIGNAL(deleted()), this, SLOT(deleteView()));
     }
 
     arrangePins();

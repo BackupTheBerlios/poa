@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.1 2003/09/23 17:10:59 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.2 2003/09/24 09:09:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,9 @@
 
 #include <qvariant.h>
 #include <qdialog.h>
+
+class MuxModel;
+
 class QBoxLayout;
 class QComboBox;
 class QGroupBox;
@@ -42,29 +45,11 @@ class MuxConfDialog : public QDialog
     Q_OBJECT
 
 public:
-    MuxConfDialog(QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0);
+    MuxConfDialog(MuxModel *model, QWidget* parent = 0,
+                  const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     ~MuxConfDialog();
 
-    QLineEdit* nameLineEdit;
-    QLabel* TextLabel1;
-    QPushButton* helpPushButton;
-    QPushButton* okPushButton;
-    QPushButton* cancelPushButton;
-    QPushButton* applyPushButton;
-    QGroupBox* GroupBox3;
-    QPushButton* addPushButton;
-    QPushButton* updatePushButton;
-    QPushButton* removePushButton;
-    QSpinBox* endSpinBox;
-    QLabel* TextLabel2;
-    QComboBox* ioComboBox_;
-    QSpinBox* beginSpinBox;
-    QLabel* TextLabel3;
-    QListView* mappingListView;
-
 private:
-    QBoxLayout *dialogLayout_;
-
     /** Initializes all Layouts */
     void initLayout();
 
@@ -76,6 +61,22 @@ private:
 
     /** Initializes bottom buttons. */
     void initBottomWidget();
+
+    QLineEdit* nameLineEdit;
+    QPushButton* helpPushButton;
+    QPushButton* okPushButton;
+    QPushButton* cancelPushButton;
+    QPushButton* applyPushButton;
+    QPushButton* addPushButton;
+    QPushButton* updatePushButton;
+    QPushButton* removePushButton;
+    QComboBox* ioComboBox_;
+    QSpinBox* endSpinBox;
+    QSpinBox* beginSpinBox;
+    QListView* mappingListView;
+    QBoxLayout *dialogLayout_;
+
+    MuxModel *model_;
 
 };
 

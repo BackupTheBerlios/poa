@@ -18,63 +18,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: viewmap.h,v 1.1 2003/08/19 14:19:38 garbeam Exp $
+ * $Id: project.h,v 1.1 2003/08/22 22:48:48 squig Exp $
  *
  *****************************************************************************/
+#ifndef PROJECT_H
+#define PROJECT_H
 
-#ifndef POA_VIEWMAP_H
-#define POA_VIEWMAP_H
+#include "abstractmodel.h"
 
-#include <qmap.h>
-
-#include "blockview.h"
-
+#include <qptrlist.h>
 
 /*****************************************************************************
  * Basic map container for BlockModel objects.
  * Used by NetworkCanvas to store its BlockModelView items.
  * @author garbeam
  */
-class ViewMap
+class Project : public QObject
 {
-
-private:
-
-//    QMap *map_; // template, needs constructor call
+    Q_OBJECT
 
 public:
+    Project();
+    ~Project();
 
-    void put(QString &key, BlockView *blockView);
-    BlockView *get(QString &key);
+    void add(AbstractModel *item, int x, int y);
+
+signals:
+    void modelAdded(AbstractModel *item, int x, int y);
+
+private:
+    QPtrList<AbstractModel> items_;
 
 };
 
-#endif // POA_VIEWMAP_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // PROJECT_H

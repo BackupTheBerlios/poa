@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.13 2004/01/11 17:06:55 vanto Exp $
+ * $Id: scheduledialog.h,v 1.14 2004/01/11 17:37:15 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -226,7 +226,7 @@ class ArrowLine : public QCanvasLine
     virtual void drawShape(QPainter &p);
 
  private:
-    static const double RAD2DEG = 57.2958;
+    static const double RAD2DEG;
     double computeAngle(int sx, int sy, int ex, int ey);
 
 };

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.22 2004/01/11 17:06:55 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.23 2004/01/11 17:37:15 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -60,6 +60,8 @@ const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
 const int RULER_TICK = 25;         // Shows every RULER_TICK ns a tick
 const double PIX_PER_NS = 1.0;      // Pixels per nanosecond
+
+const double ArrowLine::RAD2DEG = 57.2958;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -384,7 +386,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
                 targetTime += target->getClock();
             }
 
-            // calcualte position of the target block
+            // calculate position of the target block
             QRect targetBlock = calcBlockPosition(target, targetTime);
 
             // draw a line with arrowhead between this block and the next

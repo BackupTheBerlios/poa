@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.24 2003/09/29 20:19:28 garbeam Exp $
+ * $Id: mainwindow.h,v 1.25 2003/10/01 15:23:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -166,7 +166,6 @@ private:
     QAction *zoomInAction;
     QAction *zoomOutAction;
     QAction *zoomNormalAction;
-    QAction *drawLineAction;
     QAction *openBlockConfAction;
     QAction *invokeSchedulingAction;
     QAction *invokeCompilerAction;

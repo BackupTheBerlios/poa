@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.61 2003/10/01 14:50:43 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.62 2003/10/01 15:23:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -131,7 +131,6 @@ void MainWindow::initializeActions()
     QPixmap image_editpaste(ICON_PATH + "editpaste.png");
     QPixmap image_filesave(ICON_PATH + "filesave.png");
     QPixmap image_help(ICON_PATH + "help.png");
-    QPixmap image_line(ICON_PATH + "line.xpm");
     QPixmap image_scheduling(ICON_PATH + "scheduling.png");
     QPixmap image_zoomin(ICON_PATH + "zoomin.png");
     QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
@@ -173,9 +172,6 @@ void MainWindow::initializeActions()
         new QAction("Configuration", image_configure,
                     "&Configuration", 0, this,
                     "openBlockConfAction");
-    drawLineAction =
-        new QAction("Draw line", image_line, "&Draw line",
-                    QKeySequence("Ctrl+L"), this, "drawLineAction");
     zoomInAction =
         new QAction("Zoom in", image_zoomin, "Zoom &in",
                     QKeySequence("Ctrl++"), this, "zoomInAction");
@@ -232,7 +228,7 @@ void MainWindow::initializeToolbars()
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
     openBlockConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
-    invokeSchedulingAction->addTo(utilToolBar);
+    //invokeSchedulingAction->addTo(utilToolBar);
     invokeCompilerAction->addTo(utilToolBar);
     invokeDownloadAction->addTo(utilToolBar);
     invokeDeployAction->addTo(utilToolBar);
@@ -296,7 +292,7 @@ void MainWindow::initializeMenu()
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
     openBlockConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
-    invokeSchedulingAction->addTo(toolsMenu);
+    //invokeSchedulingAction->addTo(toolsMenu);
     invokeCompilerAction->addTo(toolsMenu);
     invokeDownloadAction->addTo(toolsMenu);
     invokeDeployAction->addTo(toolsMenu);

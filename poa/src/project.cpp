@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.28 2003/10/01 14:50:43 garbeam Exp $
+ * $Id: project.cpp,v 1.29 2003/10/01 15:23:00 garbeam Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -258,8 +258,10 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < conList.count(); j++) {
             QDomElement conEl = conList.item(j).toElement();
 
-            BlockModel *sb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("source-block","0").toUInt()]);
-            BlockModel *tb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("target-block","0").toUInt()]);
+            AbstractModel *sb = dynamic_cast<AbstractModel*>(
+                idMap[conEl.attribute("source-block","0").toUInt()]);
+            AbstractModel *tb = dynamic_cast<AbstractModel*>(
+                idMap[conEl.attribute("target-block","0").toUInt()]);
 
             if (sb == 0 && tb == 0) {
                 qWarning("Could not connect non-existent blocks.");

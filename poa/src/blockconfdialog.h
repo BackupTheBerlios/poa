@@ -18,20 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.14 2003/09/29 13:54:17 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.15 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_BLOCKCONFDIALOG_H
 #define POA_BLOCKCONFDIALOG_H
 
+#include <qdialog.h>
+#include <qlistview.h>
+#include <qptrlist.h>
+#include <qvariant.h>
+
 #include "blockmodel.h"
 #include "pinmodel.h"
-#include "pinvector.h"
 
-#include <qlistview.h>
-#include <qvariant.h>
-#include <qdialog.h>
 class QBoxLayout;
 class QVBoxLayout; 
 class QHBoxLayout; 
@@ -162,8 +163,7 @@ private:
     PinListViewItem *episodicRoot_;
 
     BlockModel *model_;
-    PinVector *deletedPins_;
-    PinVector *deletedConnections_;
+    QPtrList<PinModel> deletedPins_;
 
     /**
      * Initializes layout.
@@ -214,7 +214,7 @@ private:
     /**
      * Clones all pins of the model to the list view.
      */
-    void addPins(PinVector pins, PinListViewItem *root);
+    void addPins(QPtrList<PinModel> *pins, PinListViewItem *root);
 
 private slots:
 

@@ -18,10 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.42 2003/11/19 16:18:06 squig Exp $
+ * $Id: blockview.cpp,v 1.43 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
+#include <qaction.h>
+#include <qbrush.h>
+#include <qcanvas.h>
+#include <qpainter.h>
+
+#include <math.h> // why don't we use cmath?
 
 #include "blockview.h"
 
@@ -31,20 +37,10 @@
 #include "mainwindow.h"
 #include "muxmodel.h"
 #include "pinmodel.h"
-#include "pinvector.h"
 #include "pinview.h"
 #include "poa.h"
 #include "settings.h"
 #include "util.h"
-
-#include <qaction.h>
-#include <qbrush.h>
-#include <qcanvas.h>
-#include <qpainter.h>
-#include <qptrlist.h>
-
-#include <math.h>
-
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
 
@@ -74,9 +70,9 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
         connect(blockModel, SIGNAL(deleted()), this, SLOT(deleteView()));
 
         // create pin views
-        addPins(*blockModel->inputPins());
-        addPins(*blockModel->outputPins());
-        addPins(*blockModel->episodicPins());
+        addPins(blockModel->inputPins());
+        addPins(blockModel->outputPins());
+        addPins(blockModel->episodicPins());
     }
     else if (INSTANCEOF(model_, MuxModel)) {
         MuxModel *muxModel = (MuxModel *)model_;
@@ -139,10 +135,12 @@ void BlockView::addPin(PinModel *pin)
     pinList(pinView)->append(pinView);
 }
 
-void BlockView::addPins(const PinVector &pins)
+void BlockView::addPins(const QPtrList<PinModel> *pins)
 {
-    for (unsigned i = 0; i < pins.size(); ++i) {
-        addPin(pins[i]);
+
+    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
+        PinModel *pin = it.current();
+        addPin(pin);
     }
 }
 

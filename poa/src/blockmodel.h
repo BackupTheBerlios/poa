@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.30 2003/11/24 16:37:41 squig Exp $
+ * $Id: blockmodel.h,v 1.31 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,11 +26,12 @@
 #ifndef POA_BLOCKMODEL_H
 #define POA_BLOCKMODEL_H
 
+#include <qptrlist.h>
+
 class QDomElement;
 class QString;
 
 #include "abstractmodel.h"
-class PinVector;
 class PinModel;
 
 /**
@@ -73,7 +74,7 @@ public:
     /**
      * Returns a list of all episodic pins of this.
      */
-    PinVector *episodicPins();
+    QPtrList<PinModel> *episodicPins();
 
     /**
      * Returns true, if the block has episodic pins.
@@ -98,12 +99,12 @@ public:
     /**
      * Returns a list of all input pins of this.
      */
-    PinVector *inputPins();
+    QPtrList<PinModel> *inputPins();
 
     /**
      * Returns a list of all output pins of this.
      */
-    PinVector *outputPins();
+    QPtrList<PinModel> *outputPins();
 
     /**
      * Returns the runtime (in ms) of this block
@@ -148,8 +149,7 @@ public:
     /**
      * Adds an pin to this block model.
      */
-    void addPin(PinModel *pin, PinModel *successor = 0,
-                bool emitSignal = false);
+    void addPin(PinModel *pin, bool emitSignal = false);
 
     /**
      * Removes an input pin from this block model.
@@ -179,9 +179,9 @@ public:
 
 protected:
 
-    PinVector *episodicPins_;
-    PinVector *outputPins_;
-    PinVector *inputPins_;
+    QPtrList<PinModel> episodicPins_;
+    QPtrList<PinModel> outputPins_;
+    QPtrList<PinModel> inputPins_;
     unsigned currentPinId_;
     unsigned int execTime_;
     unsigned int clock_;

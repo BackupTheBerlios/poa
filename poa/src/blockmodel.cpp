@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.30 2003/11/24 20:11:58 squig Exp $
+ * $Id: blockmodel.cpp,v 1.31 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,16 +30,12 @@
 #include <qstring.h>
 
 #include "blockview.h"
-#include "pinvector.h"
+#include "pinmodel.h"
 
 
 BlockModel::BlockModel(QString type, QString description)
     : AbstractModel(type, description)
 {
-
-    episodicPins_ = new PinVector();
-    inputPins_ = new PinVector();
-    outputPins_ = new PinVector();
 
     setHasEpisodicPins(true);
     setHasInputPins(true);
@@ -53,32 +49,29 @@ BlockModel::BlockModel(QString type, QString description)
 
 BlockModel::BlockModel(QDomElement element)
 {
-    episodicPins_ = new PinVector();
-    inputPins_ = new PinVector();
-    outputPins_ = new PinVector();
-
     deserialize(element);
 }
 
 BlockModel::~BlockModel()
 {
 
-    PinVector::iterator it;
-
-    for(it = episodicPins_->begin(); it != episodicPins_->end(); ++it ) {
-        delete (*it);
+    for(QPtrListIterator<PinModel> it(episodicPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        delete pin;
     }
-    delete episodicPins_;
+    episodicPins_.clear();
 
-    for(it = inputPins_->begin(); it != inputPins_->end(); ++it ) {
-        delete (*it);
+    for(QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        delete pin;
     }
-    delete inputPins_;
+    inputPins_.clear();
 
-    for(it = outputPins_->begin(); it != outputPins_->end(); ++it ) {
-        delete (*it);
+    for(QPtrListIterator<PinModel> it(outputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        delete pin;
     }
-    delete outputPins_;
+    outputPins_.clear();
 
     emit deleted();
 }
@@ -92,9 +85,9 @@ QCanvasItemList BlockModel::createView(QCanvas *canvas)
     return list;
 }
 
-PinVector *BlockModel::episodicPins()
+QPtrList<PinModel> *BlockModel::episodicPins()
 {
-    return episodicPins_;
+    return &episodicPins_;
 }
 
 bool BlockModel::hasEpisodicPins()
@@ -117,15 +110,15 @@ bool BlockModel::hasRuntime()
     return hasRuntime_;
 }
 
-PinVector *BlockModel::inputPins()
+QPtrList<PinModel> *BlockModel::inputPins()
 {
-    return inputPins_;
+    return &inputPins_;
 }
 
 
-PinVector *BlockModel::outputPins()
+QPtrList<PinModel> *BlockModel::outputPins()
 {
-    return outputPins_;
+    return &outputPins_;
 }
 
 void BlockModel::setExecTime(unsigned int time)
@@ -168,7 +161,7 @@ unsigned int BlockModel::clock()
     return clock_;
 }
 
-void BlockModel::addPin(PinModel *pin, PinModel *successor, bool emitSignal)
+void BlockModel::addPin(PinModel *pin, bool emitSignal)
 {
 
     if (pin->id() == 0) {
@@ -180,13 +173,13 @@ void BlockModel::addPin(PinModel *pin, PinModel *successor, bool emitSignal)
 
     switch (pin->type()) {
     case PinModel::INPUT:
-        inputPins_->addBefore(pin, successor);
+        inputPins_.append(pin);
         break;
     case PinModel::OUTPUT:
-        outputPins_->addBefore(pin, successor);
+        outputPins_.append(pin);
         break;
     case PinModel::EPISODIC:
-        episodicPins_->addBefore(pin, successor);
+        episodicPins_.append(pin);
         break;
     }
 
@@ -199,13 +192,13 @@ void BlockModel::removePin(PinModel *pin)
 {
     switch (pin->type()) {
     case PinModel::INPUT:
-        inputPins_->remove(pin);
+        inputPins_.remove(pin);
         break;
     case PinModel::OUTPUT:
-        outputPins_->remove(pin);
+        outputPins_.remove(pin);
         break;
     case PinModel::EPISODIC:
-        episodicPins_->remove(pin);
+        episodicPins_.remove(pin);
         break;
     }
 }
@@ -213,12 +206,31 @@ void BlockModel::removePin(PinModel *pin)
 
 PinModel *BlockModel::findPinById(unsigned id)
 {
-    PinModel *pin = inputPins_->findById(id);
-    if (pin != 0) return pin;
-    pin = outputPins_->findById(id);
-    if (pin != 0) return pin;
-    pin = episodicPins_->findById(id);
-    return pin;
+    // seek in input pins
+    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        if (pin->id() == id) {
+            return pin;
+        }
+    }
+
+    // seek in output pins
+    for (QPtrListIterator<PinModel> it(outputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        if (pin->id() == id) {
+            return pin;
+        }
+    }
+
+    // seek in episodic pins
+    for (QPtrListIterator<PinModel> it(episodicPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        if (pin->id() == id) {
+            return pin;
+        }
+    }
+
+    return 0;
 }
 
 QDomElement BlockModel::serialize(QDomDocument *document)
@@ -233,18 +245,21 @@ QDomElement BlockModel::serialize(QDomDocument *document)
     root.setAttribute("name", name());
     root.setAttribute("exectime", (unsigned int)execTime_);
 
-    for (unsigned i = 0; i < inputPins_->size(); i++) {
-        QDomElement pinElem = inputPins_->at(i)->serialize(document);
+    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        QDomElement pinElem = pin->serialize(document);
         pinElem.setAttribute("type", "input");
         root.appendChild(pinElem);
     }
-    for (unsigned i = 0; i < outputPins_->size(); i++) {
-        QDomElement pinElem = outputPins_->at(i)->serialize(document);
+    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        QDomElement pinElem = pin->serialize(document);
         pinElem.setAttribute("type", "output");
         root.appendChild(pinElem);
     }
-    for (unsigned i = 0; i < episodicPins_->size(); i++) {
-        QDomElement pinElem = episodicPins_->at(i)->serialize(document);
+    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
+        PinModel *pin = it.current();
+        QDomElement pinElem = pin->serialize(document);
         pinElem.setAttribute("type", "episodic");
         root.appendChild(pinElem);
     }
@@ -263,9 +278,9 @@ void BlockModel::deserialize(QDomElement element)
     setHasRuntime(element.attribute("hasRuntime", "") == "true");
 
     // pins
-    inputPins_->clear();
-    outputPins_->clear();
-    episodicPins_->clear();
+    inputPins_.clear();
+    outputPins_.clear();
+    episodicPins_.clear();
 
     QDomNode node = element.firstChild();
     while ( !node.isNull() ) {

@@ -18,18 +18,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.31 2003/11/24 16:37:41 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.32 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
-
-#include "blockconfdialog.h"
-#include "canvasview.h"
-#include "blockmodel.h"
-#include "codemanager.h"
-#include "cpumodel.h"
-#include "mainwindow.h"
-#include "pinvector.h"
-#include "poa.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
@@ -39,6 +30,7 @@
 #include <qlineedit.h>
 #include <qlistview.h>
 #include <qmessagebox.h>
+#include <qptrlist.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
@@ -48,6 +40,14 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
+
+#include "blockconfdialog.h"
+#include "canvasview.h"
+#include "blockmodel.h"
+#include "codemanager.h"
+#include "cpumodel.h"
+#include "mainwindow.h"
+#include "poa.h"
 
 PinListViewItem::PinListViewItem(QListView *parent,
                                  QListViewItem *after,
@@ -127,7 +127,6 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     setCaption(tr("Block configuration"));
 
     model_ = model;
-    deletedPins_ = new PinVector();
 
     initLayout();
 
@@ -437,12 +436,12 @@ void BlockConfDialog::initListView()
     leftLayout->addWidget(editIoWidget);
 }
 
-void BlockConfDialog::addPins(PinVector pins, PinListViewItem *root) {
+void BlockConfDialog::addPins(QPtrList<PinModel> *pins, PinListViewItem *root) {
 
-    for (unsigned i = 0; i < pins.size(); ++i) {
+    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
+        PinModel *pin = it.current();
         PinListViewItem *child =
-            new PinListViewItem((QListViewItem *)root, pins[i]->clone(),
-            pins[i]);
+            new PinListViewItem((QListViewItem *)root, pin->clone(), pin);
         child->setVisible(true);
     }
 }
@@ -468,13 +467,13 @@ void BlockConfDialog::syncModel() {
         }
 
         if (model_->hasInputPins()) {
-            addPins(*(model_->inputPins()), inputRoot_);
+            addPins(model_->inputPins(), inputRoot_);
         }
         if (model_->hasOutputPins()) {
-            addPins(*(model_->outputPins()), outputRoot_);
+            addPins(model_->outputPins(), outputRoot_);
         }
         if (model_->hasEpisodicPins()) {
-            addPins(*(model_->episodicPins()), episodicRoot_);
+            addPins(model_->episodicPins(), episodicRoot_);
         }
     }
 }
@@ -498,12 +497,16 @@ void BlockConfDialog::updateModel() {
         }
 
         // clear and free deleted pins
-        deletedPins_->removeAllPins(true);
+        for (QPtrListIterator<PinModel> it(deletedPins_); it != 0; ++it) {
+            PinModel *pin = it.current();
+            delete pin;
+        }
+        deletedPins_.clear();
 
         // clear models
-        model_->inputPins()->removeAllPins(false);
-        model_->outputPins()->removeAllPins(false);
-        model_->episodicPins()->removeAllPins(false);
+        model_->inputPins()->clear();
+        model_->outputPins()->clear();
+        model_->episodicPins()->clear();
 
         QListViewItemIterator it(ioListView);
         for ( ; it.current(); ++it) {
@@ -518,12 +521,12 @@ void BlockConfDialog::updateModel() {
                     target->setBits(source->bits());
                     target->setType(source->type());
                     // use original pin
-                    model_->addPin(target, 0, false);
+                    model_->addPin(target, false);
                 }
                 else {
                     // new pin
                     PinModel *newPin = source->clone();
-                    model_->addPin(source->clone(), 0, true);
+                    model_->addPin(source->clone(), true);
                     item->setOrigPin(newPin);
                 }
             }
@@ -584,9 +587,7 @@ void BlockConfDialog::removeIo()
             if(origin->connected() == 0) {
                 // Save deleted pins, to clean up views
                 // if the changes will be applied.
-                // deletedPins_->append(item->origData()); // QT 3.1+
-                // specific
-                deletedPins_->addBefore(item->origData());
+                deletedPins_.append(item->origData());
             }
             else {
                 // there exists a connection between the selected pin
@@ -604,7 +605,7 @@ void BlockConfDialog::removeIo()
                 {
                     case 0: // The user clicked OK, so all related connections
                             // will be removed after applying changes.
-                        deletedPins_->addBefore(origin);
+                        deletedPins_.append(origin);
                         break;
                     case 1: // Cancel removal.
                         return;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.35 2003/11/24 20:11:58 squig Exp $
+ * $Id: blockview.h,v 1.36 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include <qdom.h>
 #include <qfontmetrics.h>
 #include <qobject.h>
+#include <qptrlist.h>
 #include <qvaluelist.h>
 
 #include "copyable.h"
@@ -38,7 +39,6 @@
 #include "tooltipable.h"
 class AbstractModel;
 class PinModel;
-class PinVector;
 class PinView;
 
 /**
@@ -148,7 +148,7 @@ public:
 
 public slots:
     void addPin(PinModel *);
-    void addPins(const PinVector &);
+    void addPins(const QPtrList<PinModel> *);
     void deletePinView(PinView *);
     void updateView();
     void deleteView();

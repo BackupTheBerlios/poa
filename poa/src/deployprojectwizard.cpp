@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.4 2003/10/01 10:23:52 garbeam Exp $
+ * $Id: deployprojectwizard.cpp,v 1.5 2003/11/26 11:09:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -187,14 +187,13 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
 
   /*  for (uint i=0; i < blocks.count(); ++i){
     if blocks.at(i).hasInputPins() {
-      for (PinVector::iterator j = blocks.at(i).inputPins().begin();
+    DON'T USE PINVECTORS ANYMORE!
 	   j != blocks.at(i).inputPins().end();
 	   ++j){
 	if (*j).*connected() == null {
 	  // pin is not connected!!
 	}
       }
-    }
     if blocks.take(i).hasOutputPins() {
     }
     //nessary?? Or are Episodic Pins always connected??

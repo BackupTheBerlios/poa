@@ -250,72 +250,81 @@ public:
 	    items[i] = new IntegerItem(i);
 	}
 	for (i = 1; i < 100; i += 2) {
-	    items[i] = new IntegerItem(i * 5);
+	    items[i] = new IntegerItem((i / 2 + 1) * 5);
 	}
 	for (i = 0; i < 100; ++i) {
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    queue_.insert(items[i]);
+	    CPPUNIT_ASSERT(items[i]->isInQueue());
 	}
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.size() == 100);
 	CPPUNIT_ASSERT(queue_.head() == items[0]);
-	
+
 	for (i = 10; i < 20; ++i) {
 	    queue_.remove(items[i]);
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    checkIntegrity();
 	}
 	CPPUNIT_ASSERT(queue_.size() == 90);
 	CPPUNIT_ASSERT(queue_.head() == items[0]);
 	for (i = 30; i < 40; ++i) {
 	    queue_.remove(items[i]);
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    checkIntegrity();
 	}
 	CPPUNIT_ASSERT(queue_.size() == 80);
 	CPPUNIT_ASSERT(queue_.head() == items[0]);
 	for (i = 99; i >= 80; --i) {
 	    queue_.remove(items[i]);
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    checkIntegrity();
 	}
-	CPPUNIT_ASSERT(queue_.size() == 70);
-	CPPUNIT_ASSERT(queue_.head() == items[0]);
+	CPPUNIT_ASSERT(queue_.size() == 60);
+	CPPUNIT_ASSERT(queue_.head() == items[0]); // 0
 	items[0]->change(17);
 	CPPUNIT_ASSERT(queue_.head() == items[2]);
 
 	for (i = 50; i < 60; ++i) {
 	    queue_.remove(items[i]);
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    checkIntegrity();
 	}
-	CPPUNIT_ASSERT(queue_.size() == 60);
-	CPPUNIT_ASSERT(queue_.head() == items[2]);
+	CPPUNIT_ASSERT(queue_.size() == 50);
+	CPPUNIT_ASSERT(queue_.head() == items[2]); // 2
 	items[2]->change(113);
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.head() == items[4]);
+	CPPUNIT_ASSERT(queue_.head() == items[4]); // 4
 	items[4]->change(7);
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.head() == items[1]);
+	CPPUNIT_ASSERT(queue_.head() == items[1]); // 5
 	queue_.removeHead();
+	CPPUNIT_ASSERT(!items[1]->isInQueue());
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.head() == items[6]);
+	CPPUNIT_ASSERT(queue_.head() == items[6]); // 6
 	items[6]->change(1);
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.head() == items[6]);
+	CPPUNIT_ASSERT(queue_.head() == items[6]); // 1
 	items[6]->change(8);
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.removeHead() == items[4]);
+	CPPUNIT_ASSERT(queue_.removeHead() == items[4]); // 7
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.head() == items[8] || queue_.head() == items[6]);
-	queue_.removeHead();
+	queue_.removeHead(); // 8
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.head() == items[8] || queue_.head() == items[6]);
-	queue_.removeHead();
+	queue_.removeHead(); // 8
 	checkIntegrity();
-	CPPUNIT_ASSERT(queue_.head() == items[2]);
-	CPPUNIT_ASSERT(queue_.size() == 56);
+	items[9]->change(19);
+	CPPUNIT_ASSERT(queue_.head() == items[3]); // 10
+	CPPUNIT_ASSERT(queue_.size() == 46);
 
 	queue_.clear();
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.size() == 0 && queue_.isEmpty());
        
 	for (i = 0; i < 100; ++i) {
+	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    delete items[i];
 	}
     }

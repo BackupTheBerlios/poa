@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.7 2004/01/09 22:16:27 squig Exp $
+ * $Id: priorityqueue.cpp,v 1.8 2004/01/13 16:10:46 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -324,7 +324,7 @@ QString PriorityQueue::checkIntegrity()
     }
     if (wrongSize != 0) {
         defects += "\n" + QString::number(wrongSize) + " item(s) have"
-        + "incorrect size.";
+        + " incorrect size.";
     }
 
     if (defects != QString::null) {
@@ -380,15 +380,15 @@ PriorityItem *PriorityItem::removeFromQueue()
     PriorityItem *oldLeft = this->left();
     PriorityItem *oldRight = this->right();
     if (oldParent != 0) {
-    if (oldParent->left() == this) {
-        installParent = &PriorityItem::setLeft;
+	if (oldParent->left() == this) {
+	    installParent = &PriorityItem::setLeft;
+	}
+	else {
+	    Q_ASSERT(oldParent->right() == this);
+	    installParent = &PriorityItem::setRight;
+	}
     }
-    else {
-        Q_ASSERT(oldParent->right() == this);
-        installParent = &PriorityItem::setRight;
-    }
-    }
-
+    
     this->parent_ = 0;
     this->left_ = 0;
     this->right_ = 0;
@@ -396,47 +396,51 @@ PriorityItem *PriorityItem::removeFromQueue()
 
     PriorityItem *greater;
     do {
-    // find greater subtree
-    greater = PriorityItem::maxPriority(oldLeft, oldRight);
+	// find greater subtree
+	greater = PriorityItem::maxPriority(oldLeft, oldRight);
 
-    // is there any subtree?
-    if (greater != 0) {
-        // install root of greater subtree under parent if parent exists
-        PriorityItem *oldGrandLeft = greater->left();
-        PriorityItem *oldGrandRight = greater->right();
-        if (oldParent != 0) {
-        (oldParent->*installParent)(greater);
-        }
-        else {
-        greater->parent_ = 0;
-        }
-        // install greater child under the parent and prepare an empty
-        // position for the greater grand child to be added in the
-        // next iteration
-        if (greater == oldLeft) {
-        greater->setLeft(0);
-        installParent = &PriorityItem::setLeft;
-        greater->setRight(oldRight);
-        }
-        else {
-        Q_ASSERT(greater == oldRight);
-        greater->setLeft(oldLeft);
-        greater->setRight(0);
-        installParent = &PriorityItem::setRight;
-        }
-        // perform next iteration on greater child's children, use
-        // greater child as parent
-        oldParent = greater;
-        oldLeft = oldGrandLeft;
-        oldRight = oldGrandRight;
-    }
+	// is there any subtree?
+	if (greater != 0) {
+	    // install root of greater subtree under parent if parent exists
+	    PriorityItem *oldGrandLeft = greater->left();
+	    PriorityItem *oldGrandRight = greater->right();
+	    if (oldParent != 0) {
+		(oldParent->*installParent)(greater);
+	    }
+	    else {
+		greater->parent_ = 0;
+	    }
+	    // install greater child under the parent and prepare an empty
+	    // position for the greater grand child to be added in the
+	    // next iteration
+	    if (greater == oldLeft) {
+		greater->setLeft(0);
+		installParent = &PriorityItem::setLeft;
+		greater->setRight(oldRight);
+	    }
+	    else {
+		Q_ASSERT(greater == oldRight);
+		greater->setLeft(oldLeft);
+		greater->setRight(0);
+		installParent = &PriorityItem::setRight;
+	    }
+	    // perform next iteration on greater child's children, use
+	    // greater child as parent
+	    oldParent = greater;
+	    oldLeft = oldGrandLeft;
+	    oldRight = oldGrandRight;
+	}
+	else if (oldParent != 0) {
+	    // greater == 0, no greater subtree --> remove this
+	    (oldParent->*installParent)(0);
+	}
     } while (greater != 0);
 
     if (oldParent != 0) {
-    return oldParent->updateSizeUpward();
+	return oldParent->updateSizeUpward();
     }
     else {
-    return 0;
+	return 0;
     }
 }
 

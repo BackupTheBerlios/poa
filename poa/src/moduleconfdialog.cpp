@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.9 2003/09/03 08:33:41 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.10 2003/09/03 08:40:16 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -116,9 +116,9 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     QWidget *ioButtonsWidget = new QWidget(leftWidget);
     QBoxLayout *ioButtonsLayout = new QHBoxLayout(ioButtonsWidget, 5);
 
-    addIoPushButton = new QPushButton(ioButtonsWidget, "addIoPushButton");
-    addIoPushButton->setText(tr("&Add"));
-    connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
+    newIoPushButton = new QPushButton(ioButtonsWidget, "newIoPushButton");
+    newIoPushButton->setText(tr("&New"));
+    connect(newIoPushButton, SIGNAL(clicked()), this, SLOT(newIo()));
 
     updateIoPushButton =
         new QPushButton(ioButtonsWidget, "updateIoPushButton");
@@ -131,7 +131,7 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     removeIoPushButton->setText(tr("&Remove"));
     connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
 
-    ioButtonsLayout->addWidget(addIoPushButton);
+    ioButtonsLayout->addWidget(newIoPushButton);
     ioButtonsLayout->addWidget(updateIoPushButton);
     ioButtonsLayout->addWidget(removeIoPushButton);
 
@@ -295,7 +295,7 @@ ModuleConfDialog::~ModuleConfDialog()
     // no need to delete child widgets, Qt does it all for us
 }
 
-void ModuleConfDialog::addIo()
+void ModuleConfDialog::newIo()
 {
     QListViewItem *root = ioListView->selectedItem();
 
@@ -359,7 +359,7 @@ void ModuleConfDialog::ioSelectionChanged() {
         isPeriodical = root->text(0).compare(tr(PERIODICAL_IO_TEXT)) == 0;
     }
 
-    addIoPushButton->setEnabled(enabled);
+    newIoPushButton->setEnabled(enabled);
     updateIoPushButton->setEnabled(isChild);
     removeIoPushButton->setEnabled(isChild);
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.7 2003/09/03 08:33:41 garbeam Exp $
+ * $Id: moduleconfdialog.h,v 1.8 2003/09/03 08:40:16 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -73,7 +73,7 @@ private:
     QPushButton *editCodePushButton;
     QPushButton *helpPushButton;
     QPushButton *cancelPushButton;
-    QPushButton *addIoPushButton;
+    QPushButton *newIoPushButton;
     QPushButton *updateIoPushButton;
     QPushButton *removeIoPushButton;
     QPushButton *okPushButton;
@@ -86,7 +86,7 @@ private slots:
     /**
      * Adds a new I/O item to the dedicated I/O group.
      */
-    void addIo();
+    void newIo();
 
     /**
      * Updates the currently selected I/O item with 

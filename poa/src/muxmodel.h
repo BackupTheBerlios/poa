@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.18 2003/09/29 10:59:39 garbeam Exp $
+ * $Id: muxmodel.h,v 1.19 2003/09/29 18:59:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -65,6 +65,11 @@ public:
      * Returns the output PinModel.
      */
     PinModel *output();
+
+    /**
+     * Sets output pin.
+     */
+    void setOutput(PinModel *output);
 
     /**
      * Returns the begin of range bits.
@@ -142,6 +147,13 @@ public:
      * Returns clone of <code>this</code>
      */
     MuxPin *clone();
+
+    /**
+     * Returns equal MuxMapping if it exists, otherwise 0.
+     * Note: Equality means here not the same reference, but
+     * same values.
+     */
+    MuxMapping *findEqual(MuxMapping *mapping);
 
 private:
 

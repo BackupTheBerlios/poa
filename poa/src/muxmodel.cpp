@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.20 2003/09/29 14:32:27 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.21 2003/09/29 18:59:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -48,6 +48,10 @@ MuxPin *MuxMapping::muxPin()
 PinModel *MuxMapping::output()
 {
     return output_;
+}
+
+void MuxMapping::setOutput(PinModel *output) {
+    output_ = output;
 }
 
 unsigned MuxMapping::begin()
@@ -137,6 +141,25 @@ MuxPin *MuxPin::clone() {
     return clonePin;
 }
 
+MuxMapping *MuxPin::findEqual(MuxMapping *mapping) {
+
+    for (unsigned i = 0; i < mappings_.count(); i++) {
+        MuxMapping *m = mappings_.at(i);
+
+        if ((m->begin() == mapping->begin()) &&
+            (m->end() == mapping->end()) &&
+            (m->output()->name() == mapping->output()->name()) &&
+            (m->muxPin()->model()->name() ==
+                 mapping->muxPin()->model()->name()))
+        {
+            // found equal mapping
+            return m;
+        }
+    }
+
+    return 0;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 MuxModel::MuxModel(QString type, QString description)
@@ -171,13 +194,6 @@ void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
     muxPins_.append(pin);
 
     if (!suppressEmission) {
-        QPtrList<MuxMapping> *mappings = pin->mappings();
-        if (mappings->count() > 0) {
-            // emit pinAdd signals for each mapping if needed
-            for (unsigned i = 0; i < mappings->count(); i++) {
-                emit pinAdded(mappings->at(i)->output());
-            }
-        }
         emit pinAdded(pin->model());
     }
 }
@@ -185,7 +201,6 @@ void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
 void MuxModel::removeMuxPin(MuxPin *pin)
 {
     muxPins_.remove(pin);
-    PinModel *model = pin->model();
     delete pin;
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.10 2003/09/29 13:54:17 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.11 2003/09/29 18:59:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -70,6 +70,11 @@ public:
      * Returns the origin MuxMapping, represented by this view item
      */
     MuxMapping *origData() const;
+
+    /**
+     * Sets original mapping.
+     */
+    void setOrigMapping(MuxMapping *mapping);
 
     /**
      * Updates the view with current contents of the MuxMapping.

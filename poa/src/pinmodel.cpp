@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.23 2003/09/29 14:32:27 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.24 2003/09/29 18:59:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -29,11 +29,11 @@
 #include <qdom.h>
 
 #include "blockview.h"
-#include "blockmodel.h"
 
 PinModel::PinModel(AbstractModel *parent, unsigned id, const QString &name,
                    unsigned address, unsigned bits, PinType type)
 {
+    Q_ASSERT(name != 0);
     name_ = name;
     parent_ = parent;
     id_ = id;

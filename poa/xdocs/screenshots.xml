@@ -11,20 +11,37 @@
           <section name="Screenshots">
                 
                 <p>
-                  Here are some screenshots of how POA will look like
-                  when it is finished.
+                  Here are some screenshots of the first POA release.
                 </p>
                   
                 <table>
                   <tr>
                         <td>
-                          <a href="images/concept-config.png"><img
-                                  src="images/concept-config-thumb.png"/></a>
+                          <a href="images/0.1.0/main-window.png"><img
+                                  src="images/0.1.0/main-window-thumb.png"/></a>
                         </td>
                         <td>
-                          Settings dialog
+                          Main window
                         </td>
                   </tr>
+                  <tr>
+                        <td>
+                          <a href="images/0.1.0/blockconf.png"><img
+                                  src="images/0.1.0/blockconf-thumb.png"/></a>
+                        </td>
+                        <td>
+                          CPU Module settings dialog
+                        </td>
+                  </tr>
+                </table>
+
+                <p>
+                  Here are some screenshots that were created during the
+                  design phase. The first version looks pretty
+                  similiar ;).
+                </p>
+                  
+                <table>
                   <tr>
                         <td>
                           <a href="images/concept-main-window.png"><img
@@ -41,6 +58,15 @@
                         </td>
                         <td>
                           CPU Module settings dialog
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>
+                          <a href="images/concept-config.png"><img
+                                  src="images/concept-config-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Settings dialog
                         </td>
                   </tr>
                 </table>

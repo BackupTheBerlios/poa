@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.13 2004/01/11 14:25:59 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.14 2004/01/11 14:53:54 vanto Exp $
  *
  *****************************************************************************/
 
@@ -332,6 +332,9 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
             /** <-- REVIEW ME! */
 
             // find next start time for the target block
+            if (target->getClock() <= 0) {
+                continue;
+            }
             int targetTime = target->getOffset();
             while (targetTime <= t + bt->getRuntime()) {
                 targetTime += target->getClock();
@@ -529,16 +532,16 @@ void ArrowLine::drawShape(QPainter &p)
     QWMatrix m;
     int x, y;
     m.rotate(angle);
-    m.map(-10, -5, &x, &y);
+    m.map(-4, -4, &x, &y);
     pts.setPoint(0, x, y);
-    m.map(-10, 5, &x, &y);
+    m.map(-2, 2, &x, &y);
     pts.setPoint(1, x, y);
     m.map(0, 0, &x, &y);
     pts.setPoint(2, x, y);
 
     pts.translate(endPoint().x(), endPoint().y());
 
-    p.setBrush(QColor(black));
+    //p.setBrush(QColor(black));
     p.drawPolygon(pts);
 }
 

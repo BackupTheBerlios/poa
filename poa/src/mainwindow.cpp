@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.17 2003/08/21 14:33:21 squig Exp $
+ * $Id: mainwindow.cpp,v 1.18 2003/08/21 16:25:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -298,11 +298,11 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
     connect(cascadeAction, SIGNAL(activated()), ws, SLOT(cascade()));
 
-	connect(ws, SIGNAL(windowActivated(QWidget*)),
-			this, SLOT(windowActivated(QWidget*)));
+    connect(ws, SIGNAL(windowActivated(QWidget*)),
+            this, SLOT(windowActivated(QWidget*)));
 
-	connect(zoomComboBox, SIGNAL(activated(const QString&)),
-			this, SLOT(zoomTo(const QString&)));
+    connect(zoomComboBox, SIGNAL(activated(const QString&)),
+            this, SLOT(zoomTo(const QString&)));
 }
 
 /**
@@ -461,31 +461,32 @@ MdiWindow* MainWindow::newDoc()
 
 void MainWindow::windowActivated(QWidget* w)
 {
-	if (w != 0) {
-	    MdiWindow *m = (MdiWindow *)ws->activeWindow();
-		zoomComboBox->setEnabled(TRUE);
-		zoomComboBox->setEditText(QString::number(m->zoomLevel() * 100.0) + "%");
-	}
-	else {
-		zoomComboBox->setEnabled(FALSE);
-	}
+    if (w != 0) {
+        MdiWindow *m = (MdiWindow *)ws->activeWindow();
+        zoomComboBox->setEnabled(TRUE);
+        zoomComboBox->setEditText(QString::number(m->zoomLevel() * 100.0) + "%");
+    }
+    else {
+        zoomComboBox->setEnabled(FALSE);
+    }
 }
 
 void MainWindow::zoomTo(const QString& level)
 {
-	QString level_ = level.stripWhiteSpace();
-	if (level_.endsWith("%")) {
-		level_.truncate(level_.length() - 1);
-	}
+    QString level_ = level.stripWhiteSpace();
+    if (level_.endsWith("%")) {
+        level_.truncate(level_.length() - 1);
+    }
 
-	bool success;
-	double zoom = level_.toInt(&success);
-	if (success) {
-		zoom /= 100.0;
-	    MdiWindow *m = (MdiWindow *)ws->activeWindow();
-		if (m != 0) {
-			m->setZoomLevel(zoom);
-		}
-	}
+    bool success;
+    double zoom = level_.toInt(&success);
+    if (success) {
+        zoom /= 100.0;
+        MdiWindow *m = (MdiWindow *)ws->activeWindow();
+        if (m != 0) {
+            m->setZoomLevel(zoom);
+            m->resizeCanvas();
+        }
+    }
 }
 

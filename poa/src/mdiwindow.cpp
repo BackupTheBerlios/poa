@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.8 2003/08/21 14:33:21 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.9 2003/08/21 16:25:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,7 +36,7 @@
 MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent, const char* name, WFlags f)
     : QMainWindow(parent, name, f)
 {
-	zoomLevel_ = 1.0;
+    zoomLevel_ = 1.0;
 
     view_ = new QCanvasView(canvas, this);
     setCentralWidget(view_);
@@ -78,12 +78,14 @@ void MdiWindow::saveAs()
 {
 }
 
-void MdiWindow::resizeEvent(QResizeEvent *e)
+/**
+ * Supplies resizing the canvas of this view.
+ * Used also from MainWindow.
+ */
+void MdiWindow::resizeCanvas()
 {
-
-    e = 0; // don't care
     QSize viewSize = view_->size();
-	viewSize /= zoomLevel_;
+    viewSize /= zoomLevel_;
     QSize canvasSize = canvas()->size();
 
     // Resize the canvas only if its smaller than the current
@@ -95,20 +97,26 @@ void MdiWindow::resizeEvent(QResizeEvent *e)
     }
 }
 
+void MdiWindow::resizeEvent(QResizeEvent *e)
+{
+    e = 0; // don't care
+    resizeCanvas();
+}
+
 void MdiWindow::setZoomLevel(double zoomLevel)
 {
-	if (zoomLevel != 0 && zoomLevel != zoomLevel_) {
-		QWMatrix m = view_->worldMatrix();
-		double diff = zoomLevel / zoomLevel_;
-		zoomLevel_ = zoomLevel;
-		m.scale(diff, diff);
-		view_->setWorldMatrix(m);
-		view_->update();
-	}
+    if (zoomLevel != 0 && zoomLevel != zoomLevel_) {
+        QWMatrix m = view_->worldMatrix();
+        double diff = zoomLevel / zoomLevel_;
+        zoomLevel_ = zoomLevel;
+        m.scale(diff, diff);
+        view_->setWorldMatrix(m);
+        view_->update();
+    }
 }
 
 double MdiWindow::zoomLevel()
 {
-	return zoomLevel_;
+    return zoomLevel_;
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.54 2004/01/20 16:55:17 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.55 2004/01/20 17:59:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -237,7 +237,10 @@ void BlockConfDialog::initListView()
     ioListView->setDefaultRenameAction(QListView::Accept);
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
-
+    connect(ioListView,
+            SIGNAL(mouseButtonClicked(int,QListViewItem *,const QPoint &,int)),
+            this,
+            SLOT(mouseButtonClicked(int,QListViewItem *,const QPoint &,int)));
 
     // I/O list view manipulation widget
     QWidget *editIoWidget = new QWidget(leftWidget);
@@ -568,9 +571,12 @@ void BlockConfDialog::calcRuntime()
 
 }
 
-void BlockConfDialog::editItem(QListViewItem *item)
+void BlockConfDialog::mouseButtonClicked(int button, QListViewItem *item,
+                                         const QPoint &, int c)
 {
-    item->startRename(0);
+    if (button == Qt::LeftButton && item != 0) {
+        item->startRename(c);
+    }
 }
 
 void BlockConfDialog::compile()

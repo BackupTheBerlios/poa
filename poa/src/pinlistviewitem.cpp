@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.4 2004/01/20 16:55:17 squig Exp $
+ * $Id: pinlistviewitem.cpp,v 1.5 2004/01/20 17:59:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -116,6 +116,31 @@ int PinListViewItem::compare(QListViewItem *i, int col, bool ascending ) const {
 PinModel *PinListViewItem::data() const
 {
     return clone_;
+}
+
+void PinListViewItem::okRename(int col)
+{
+    QListViewItem::okRename(col);
+
+    PinModel *pin = data();
+    if (pin != 0) {
+        pin->setName(text(1));
+        bool ok;
+        int value = text(2).toUInt(&ok, 10);
+        if (ok) {
+            pin->setBits(value);
+        }
+        value = text(3).toUInt(&ok, 16);
+        if (ok) {
+            pin->setAddress(value);
+        }
+    }
+//  if (item->origData() != 0) {
+//      updatedPins_.append(pin);
+//  }
+//  updatePositions(item->type());
+
+    update();
 }
 
 PinModel *PinListViewItem::origData() const

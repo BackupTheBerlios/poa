@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.24 2004/01/20 16:55:17 squig Exp $
+ * $Id: blockconfdialog.h,v 1.25 2004/01/20 17:59:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -170,7 +170,8 @@ private slots:
      */
     void calcRuntime();
 
-    void editItem(QListViewItem *item);
+    void mouseButtonClicked(int button, QListViewItem *item,
+                            const QPoint & pos, int c);
 
     /**
      * Adds a new I/O item to the dedicated I/O group.

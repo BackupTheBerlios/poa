@@ -18,18 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.3 2003/09/23 13:49:23 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.4 2003/09/23 14:25:38 squig Exp $
  *
  *****************************************************************************/
 
+#include "connectorviewlist.h"
 #include "connectorviewsegment.h"
-
-#include <math.h>
+#include "gridcanvas.h"
 
 #include <qcanvas.h>
-
-#include "connectorviewlist.h"
-#include "gridcanvas.h"
 
 ConnectorViewSegment::ConnectorViewSegment(QPoint from,
                        QPoint to,

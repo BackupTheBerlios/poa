@@ -31,7 +31,7 @@
 <H1>C++ Programming Style Guidelines of POA</H1>
 </CENTER>
 
-<CENTER><I>$Id: poa_guidelines.html,v 1.4 2003/06/22 14:26:04 garbeam Exp $</I></CENTER>
+<CENTER><I>$Id: poa_guidelines.html,v 1.5 2003/06/22 20:50:31 garbeam Exp $</I></CENTER>
 <br>
 <CENTER>This document is derived from 
 <A HREF="http://geosoft.no/style.html">http://geosoft.no/style.html</A>
@@ -487,7 +487,7 @@ using singleton objects instead.
 <TABLE BORDER WIDTH="100%" >
 <TR>
 <TD CLASS="recom">
-11. Private class variables should have underscore suffix.
+11. Private class variables could have m_ prefix.
 </TD>
 </TR>
 
@@ -495,7 +495,7 @@ using singleton objects instead.
 <TD><TT>
 class SomeClass {<BR>
 &nbsp; private:<BR>
-&nbsp;&nbsp;&nbsp; int&nbsp; length_;<BR>
+&nbsp;&nbsp;&nbsp; int&nbsp; m_length;<BR>
 }
 </TT></TD>
 </TR>
@@ -504,35 +504,11 @@ class SomeClass {<BR>
 <TD CLASS="rationale">
 
 Apart from its name and its type, the <em>scope</em> of a variable is its
-most important feature. Indicating class scope by using underscore makes it 
+most important feature. Indicating class scope by using m_ makes it 
 easy to distinguish class variables from local scratch variables. 
 This is important because class variables are considered to have higher
 significance than method variables, and should be treated with special care
 by the programmer.
-
-<P>
-A side effect of the underscore naming convention is that it nicely resolves
-the problem of finding reasonable variable names for setter methods and
-constructors:
-
-<P>
-<TT>
-void setDepth (int depth)<BR>
-{<BR>
-&nbsp; depth_ = depth;<BR>
-}
-</TT>
-
-<P>
-An issue is whether the underscore should be added as a prefix or as a suffix.
-Both practices are commonly used, but the latter is recommended because it
-seem to best preserve the readability of the name.  
-
-<P>
-It should be noted that scope identification in variables has been 
-a controversial issue for quite some time. It seems, though, that this
-practice now is gaining acceptance and that it is becoming more and 
-more common as a convention in the professional development community.
 
 </TD>
 </TR>
@@ -2202,9 +2178,10 @@ This is important for both the readability and performance.
 
 <TR>
 <TD><TT>
-if (isDone)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (isDone) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp; // NOT:&nbsp; if (isDone) doCleanup();<BR>
-&nbsp; doCleanup();
+&nbsp; doCleanup();<BR>
+}
 </TT></TD>
 </TR>
 

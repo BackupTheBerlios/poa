@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: path.cpp,v 1.3 2004/03/05 14:48:24 keulsn Exp $
+ * $Id: path.cpp,v 1.4 2004/03/07 17:39:40 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -247,7 +247,13 @@ void Path::optimize()
 bool Path::higherPriority(const PriorityItem *other) const {
     const Path *otherPath = dynamic_cast<const Path*>(other);
     Q_ASSERT(otherPath != 0);
-    return this->runtime_ > otherPath->runtime_;
+    if (this->runtime_ > otherPath->runtime_) {
+	return true;
+    }
+    else {
+	return this->runtime_ == otherPath->runtime_
+	    && this->getText() > otherPath->getText();
+    }
 }
 
 QString Path::getText() const

@@ -77,6 +77,7 @@ public:
 	    items[i] = new IntegerItem(i);
 	    queue_.insert(items[i]);
 	    checkIntegrity();
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	CPPUNIT_ASSERT(queue_.size() == 10);
 
@@ -98,6 +99,7 @@ public:
 	    items[i] = new IntegerItem(i);
 	    queue_.insert(items[i]);
 	    checkIntegrity();
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	CPPUNIT_ASSERT(queue_.size() == 10);
 
@@ -130,6 +132,7 @@ public:
 	    checkIntegrity();
 	    CPPUNIT_ASSERT(queue_.size() == (unsigned) i);
 	    queue_.insert(items[i]);
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.removeHead() == items[2]);
@@ -177,11 +180,13 @@ public:
 	    checkIntegrity();
 	    CPPUNIT_ASSERT(queue_.size() == (unsigned) i);
 	    queue_.insert(items[i]);
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	checkIntegrity();
 	for (i = 0; i < 10; ++i) {
 	    items[i]->change(i);
 	    checkIntegrity();
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	CPPUNIT_ASSERT(queue_.removeHead() == items[0]);
 	checkIntegrity();
@@ -218,6 +223,7 @@ public:
 	    CPPUNIT_ASSERT((int) queue_.size() == i);
 	    items[i] = new IntegerItem(i);
 	    queue_.insert(items[i]);
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	checkIntegrity();
 	
@@ -225,6 +231,7 @@ public:
             CPPUNIT_ASSERT((int) queue_.size() == 100);
 	    items[i]->change(2 * (100 - i));
 	    checkIntegrity();
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 
         i = 100;
@@ -256,6 +263,7 @@ public:
 	    CPPUNIT_ASSERT(!items[i]->isInQueue());
 	    queue_.insert(items[i]);
 	    CPPUNIT_ASSERT(items[i]->isInQueue());
+	    CPPUNIT_ASSERT(QABS(queue_.checkEqualDistribution()) <= 1);
 	}
 	checkIntegrity();
 	CPPUNIT_ASSERT(queue_.size() == 100);

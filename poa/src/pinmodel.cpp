@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.26 2003/11/26 16:02:58 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.27 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -177,6 +177,17 @@ QDomElement PinModel::serialize(QDomDocument *document)
     root.setAttribute("name", name());
     root.setAttribute("address", (unsigned int)address_);
     root.setAttribute("bits", (unsigned int)bits_);
+    switch (type()) {
+    case PinModel::INPUT:
+        root.setAttribute("type", "input");
+        break;
+    case PinModel::OUTPUT:
+        root.setAttribute("type", "output");
+        break;
+    case PinModel::EPISODIC:
+        root.setAttribute("type", "episodic");
+        break;
+    }
     return root;
 }
 
@@ -186,6 +197,15 @@ void PinModel::deserialize(QDomElement element)
     id_ = element.attribute("id","0").toUInt();
     address_ = element.attribute("address","0").toUInt();
     bits_ = element.attribute("bits", "0").toUInt();
+    if (element.attribute("type", "") == "input") {
+        setType(PinModel::INPUT);
+    }
+    else if (element.attribute("type","") == "output") {
+        setType(PinModel::OUTPUT);
+    }
+    else if (element.attribute("type","") == "episodic") {
+        setType(PinModel::EPISODIC);
+    }
 }
 
 PinModel *PinModel::clone()

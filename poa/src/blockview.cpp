@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.45 2003/11/26 16:27:10 squig Exp $
+ * $Id: blockview.cpp,v 1.46 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -70,9 +70,10 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
         connect(blockModel, SIGNAL(deleted()), this, SLOT(deleteView()));
 
         // create pin views
-        addPins(blockModel->inputPins());
-        addPins(blockModel->outputPins());
-        addPins(blockModel->episodicPins());
+        //        addPins(blockModel->inputPins());
+        //        addPins(blockModel->outputPins());
+        //        addPins(blockModel->episodicPins());
+        addPins(blockModel->pins());
     }
 
     arrangePins();
@@ -114,12 +115,16 @@ void BlockView::addPin(PinModel *pin)
     pinList(pinView)->append(pinView);
 }
 
-void BlockView::addPins(const QPtrList<PinModel> *pins)
+void BlockView::addPins(const QValueList<PinModel *> pins)
 {
 
-    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
+    /*    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
         PinModel *pin = it.current();
         addPin(pin);
+        }*/
+    QValueList<PinModel *>::const_iterator it;
+    for (it = pins.begin(); it != pins.end(); ++it) {
+        addPin(*it);
     }
 }
 

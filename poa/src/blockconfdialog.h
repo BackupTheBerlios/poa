@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.15 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.16 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,9 +34,9 @@
 #include "pinmodel.h"
 
 class QBoxLayout;
-class QVBoxLayout; 
-class QHBoxLayout; 
-class QGridLayout; 
+class QVBoxLayout;
+class QHBoxLayout;
+class QGridLayout;
 class QButtonGroup;
 class QGroupBox;
 class QLabel;
@@ -111,7 +111,7 @@ private:
 
 
 class BlockConfDialog : public QDialog
-{ 
+{
     Q_OBJECT
 
 public:
@@ -211,11 +211,6 @@ private:
      */
     void updateModel();
 
-    /**
-     * Clones all pins of the model to the list view.
-     */
-    void addPins(QPtrList<PinModel> *pins, PinListViewItem *root);
-
 private slots:
 
     /**
@@ -241,7 +236,7 @@ private slots:
     void newIo();
 
     /**
-     * Updates the currently selected I/O item with 
+     * Updates the currently selected I/O item with
      * modified values, BUT without any semantical check, yet.
      */
     void updateIo();

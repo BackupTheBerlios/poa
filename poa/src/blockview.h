@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.37 2003/11/26 16:27:10 squig Exp $
+ * $Id: blockview.h,v 1.38 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -159,7 +159,7 @@ public:
 
 public slots:
     void addPin(PinModel *);
-    void addPins(const QPtrList<PinModel> *);
+//    void addPins(const QValueList<PinModel *>);
     void deletePinView(PinView *);
     void updateView();
     void deleteView();
@@ -229,6 +229,9 @@ private:
     QValueList<PinView *> bottomPins_;
 
     static const int RTTI = 1000;
+
+
+    void addPins(const QValueList<PinModel *>);
 };
 
 #endif // POA_BLOCKVIEW_H

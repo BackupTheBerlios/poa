@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.32 2003/11/26 16:02:58 vanto Exp $
+ * $Id: blockmodel.h,v 1.33 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -74,7 +74,7 @@ public:
     /**
      * Returns a list of all episodic pins of this.
      */
-    QPtrList<PinModel> *episodicPins();
+    //QPtrList<PinModel> *episodicPins();
 
     /**
      * Returns true, if the block has episodic pins.
@@ -99,12 +99,12 @@ public:
     /**
      * Returns a list of all input pins of this.
      */
-    QPtrList<PinModel> *inputPins();
+    //QPtrList<PinModel> *inputPins();
 
     /**
      * Returns a list of all output pins of this.
      */
-    QPtrList<PinModel> *outputPins();
+    //QPtrList<PinModel> *outputPins();
 
     /**
      * Returns the runtime (in ms) of this block
@@ -157,6 +157,11 @@ public:
     void removePin(PinModel *pin);
 
     /**
+     * Returns all pins
+     */
+    QValueList<PinModel*> pins();
+
+    /**
      * Finds a pin according to its id
      */
     PinModel *findPinById(const unsigned id);
@@ -179,9 +184,9 @@ public:
 
 protected:
 
-    QPtrList<PinModel> episodicPins_;
-    QPtrList<PinModel> outputPins_;
-    QPtrList<PinModel> inputPins_;
+    //    QPtrList<PinModel> episodicPins_;
+    //    QPtrList<PinModel> outputPins_;
+    //    QPtrList<PinModel> inputPins_;
     unsigned currentPinId_;
     unsigned int execTime_;
     unsigned int clock_;
@@ -192,7 +197,7 @@ protected:
     bool hasOutputPins_;
     bool hasRuntime_;
 
-    QMap<uint, PinModel *> *idMap;
+    QMap<uint, PinModel *> pinById_;
 
 signals:
     /**

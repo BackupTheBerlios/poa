@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.32 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.33 2003/12/02 09:59:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -370,22 +370,20 @@ void BlockConfDialog::initListView()
 
     // add pin root list item
 
-    if (model_->hasInputPins()) {
-        inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
-        inputRoot_->setText(0, tr("Inputs"));
-    }
+    inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
+    inputRoot_->setText(0, tr("Inputs"));
+    inputRoot_->setVisible(model_->hasInputPins());
 
-    if (model_->hasOutputPins()) {
-        outputRoot_ = new PinListViewItem(ioListView, 0,
+    outputRoot_ = new PinListViewItem(ioListView, 0,
                                           PinModel::OUTPUT);
-        outputRoot_->setText(0, tr("Outputs"));
-    }
+    outputRoot_->setText(0, tr("Outputs"));
+    outputRoot_->setVisible(model_->hasOutputPins());
 
-    if (model_->hasEpisodicPins()) {
-        episodicRoot_ =
+    episodicRoot_ =
             new PinListViewItem(ioListView, 0, PinModel::EPISODIC);
-        episodicRoot_->setText(0, tr("Episodic Inputs"));
-    }
+    episodicRoot_->setText(0, tr("Episodic Inputs"));
+    episodicRoot_->setVisible(model_->hasEpisodicPins());
+
 
     // I/O list view manipulation widget
     QWidget *editIoWidget = new QWidget(leftWidget);
@@ -436,16 +434,6 @@ void BlockConfDialog::initListView()
     leftLayout->addWidget(editIoWidget);
 }
 
-void BlockConfDialog::addPins(QPtrList<PinModel> *pins, PinListViewItem *root) {
-
-    for (QPtrListIterator<PinModel> it(*pins); it != 0; ++it) {
-        PinModel *pin = it.current();
-        PinListViewItem *child =
-            new PinListViewItem((QListViewItem *)root, pin->clone(), pin);
-        child->setVisible(true);
-    }
-}
-
 void BlockConfDialog::syncModel() {
 
     if (model_ != 0) {
@@ -466,15 +454,25 @@ void BlockConfDialog::syncModel() {
             offsetSpinBox->setValue(cpuModel->offset());
         }
 
-        if (model_->hasInputPins()) {
-            addPins(model_->inputPins(), inputRoot_);
+        QValueList<PinModel*> pinList = model_->pins();
+        QValueList<PinModel*>::iterator it;
+        for (it = pinList.begin(); it != pinList.end(); ++it) {
+            //        for (QValueListIterator<PinModel*> it(model_->pins()); it != 0; ++it) {
+            PinModel *pin = (*it); //it.current();
+            qDebug(pin->name());
+            switch (pin->type()) {
+            case PinModel::INPUT:
+                new PinListViewItem(inputRoot_, pin->clone(), pin);
+                break;
+            case PinModel::OUTPUT:
+                new PinListViewItem(outputRoot_, pin->clone(), pin);
+                break;
+            case PinModel::EPISODIC:
+                new PinListViewItem(episodicRoot_, pin->clone(), pin);
+                break;
+            }
         }
-        if (model_->hasOutputPins()) {
-            addPins(model_->outputPins(), outputRoot_);
-        }
-        if (model_->hasEpisodicPins()) {
-            addPins(model_->episodicPins(), episodicRoot_);
-        }
+
     }
 }
 
@@ -504,9 +502,14 @@ void BlockConfDialog::updateModel() {
         deletedPins_.clear();
 
         // clear models
-        model_->inputPins()->clear();
-        model_->outputPins()->clear();
-        model_->episodicPins()->clear();
+        //        model_->inputPins()->clear();
+        //        model_->outputPins()->clear();
+        //        model_->episodicPins()->clear();
+        QValueList<PinModel*> pinList = model_->pins();
+        QValueList<PinModel*>::iterator cit;
+        for ( cit = pinList.begin(); cit != pinList.end(); ++cit ) {
+            model_->removePin(*cit);
+        }
 
         QListViewItemIterator it(ioListView);
         for ( ; it.current(); ++it) {

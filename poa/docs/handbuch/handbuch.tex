@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch
-%% $Id: handbuch.tex,v 1.13 2004/03/05 03:06:28 neco Exp $
+%% $Id: handbuch.tex,v 1.14 2004/03/05 12:19:38 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.13 $
-\RCSdef $Date: 2004/03/05 03:06:28 $
+\RCSdef $Revision: 1.14 $
+\RCSdef $Date: 2004/03/05 12:19:38 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -239,8 +239,8 @@ Mit der Tooltipfunktion bietet POA eine komfortabele L"osung, um Kurzinformation
 \subsection{Beschriftung des Layouts}
 \subsubsection{Layoutbeschriftung setzen}
 Um im Layout Beschriftungen (z.B. Kommentare) vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Annotate} in der Symbolleiste klicken.% Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Annotate} w"ahlen.%
-Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, wird ein Dialog mit einem Textfeld "offnet, in den man den gew"unschten Text eingeben kann. Bei Best"atigung mit {\bf OK} wird der Dialog geschlossen und der Text wird an die gew"unschte Stelle gesetzt.\par
-Um dem Cursermodus verlassen zu k"onnen, muss man nur das Symbol {\bf Mauszeiger} in der Symbolleiste anklicken.
+Der Mauszeiger wird zu einem Cursor, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Cursor an die Stelle, wo die Beschriftung hin soll, wird ein Dialog mit einem Textfeld "offnet, in den man den gew"unschten Text eingeben kann. Bei Best"atigung mit {\bf OK} wird der Dialog geschlossen und der Text wird an die gew"unschte Stelle gesetzt.\par
+Um dem Cursormodus verlassen zu k"onnen, muss man nur das Symbol {\bf Mauszeiger} in der Symbolleiste anklicken.
 \subsubsection{Layoutbeschriftung verschieben}
 Zum Verschieben der Layoutbeschriftung, muss man die Beschriftung mit der linken Maustaste ausw"ahlen und die Taste dabei gedr"uckt lassen. Jetzt kann man die Layoutbeschriftung frei im Arbeitsfenster auf die gew"unschte Position verschieben. Beim Loslassen der Maustaste wird die Beschriftung an diese Stelle gesetzt.
 \subsubsection{Layoutbeschriftung l"oschen}
@@ -476,7 +476,7 @@ Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 \subsection{Core konfigurieren}
 Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 
-
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{CPU konfigurieren}
 \begin{figure}[htbp]
@@ -496,6 +496,7 @@ Jeder CPU muss eine ID (d.h. eine Nummer von 0 - 99) vergeben werden, dazu kann 
 \subsubsection{Die CPU-Programmcode schreiben}
 Zum Schreiben von CPU-Programmcode wird ein externer Editor aufgerufen, wenn im Konfigurationsdialog der Button {\bf Edit Code} gedr"uckt wird. Beim "Offnen des des Editors wird automatisch ein C-Source Template geladen, der einen generierten Rahmencode f"ur die CPU in der Programmiersprache C vorgibt. Im Editor kann dann der restliche Quellcode f"ur die CPU niederschreiben und abspeichern.
 
+\newpage
 \subsubsection{CPU-Programmcode kompilieren}
 Zum Kompilieren des erzeugten CPU-Programmcodes wird ein externer Compiler gestartet, wenn im Konfigurationsdialog der Button {\bf Compile} gedr"uckt wird. Der Compiler kompiliert den CPU-Programmcode und gibt im {\bf POA Terminal} eine entsprechende Meldung aus.
 
@@ -510,11 +511,12 @@ Zum Kompilieren des erzeugten CPU-Programmcodes wird ein externer Compiler gesta
 \end{center}
 
 \end{figure}
-\newpage
+
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \subsection{Multiplexer konfigurieren}
 \begin{figure}[htbp]
 
@@ -655,7 +657,7 @@ Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ah
 Durch das Scheduling kann man eine Optimierung der Gesamtlaufzeit f"ur das CPLD-Board erreichen, indem man zum Beispiel die Offsetzeit der einzelnen Bl"ocke variiert oder Taktzeiten und Laufzeiten "andert, falls diese nicht schon festgelegt sind.\par
 Den Scheduling Dialog kann man entweder "uber die Men"uleiste (Tools -> Scheduling) oder mit einem Kilck auf {\bf Scheduling} Symbol in der Symbolleiste "offnen.
 Die aktuelle Konfiguration der Bl"ocke wird im Scheduling Dialog in der oberen Tabelle, in der alle Bl"ocke aufgelistet sind, angezeigt. Man hat die M"oglichkeit hier die Konfiguration (Laufzeit, Takt, Offset) der Bl"ocke zu "andern. Mit einem Doppelkick in die Zelle der Tabelle kann man nun entweder direkt "uber die Tastertur oder mit den Pfeiltasten in der Zelle die Ver"anderungen vornehmen.\par
-Die Reihenfolge in der Tabelle bestimmt auch die Reihenfolge des Ablaufgraphen im unteren Teil des Dialogs. Aufgrund der "Ubersichtlichkeit im Ablaufgraphen ist es von Vorteil die Reihenfolge der Bl"ocke "andern zu k"onnen. Dazu muss man den Block mit der Maus markieren. Den markierten Block kann man nun mit den gr"unen Pfeiltasten nach oben oder unten verschieben. Mit dem Schieberegler kann man die "Ubersichtlichkeit im Ablaufgraphen weiter verbessern, indem man den Schieberegler nach rechts zieht und dadurch die Scalierung vergr"o"sert.\par
+Die Reihenfolge in der Tabelle bestimmt auch die Reihenfolge des Ablaufgraphen im unteren Teil des Dialogs. Aufgrund der "Ubersichtlichkeit des Ablaufgraphen ist es von Vorteil die Reihenfolge der Bl"ocke "andern zu k"onnen. Dazu muss man den Block mit der Maus markieren. Den markierten Block kann man nun mit den gr"unen Pfeiltasten nach oben oder unten verschieben, so dass im Ablaufgraph weniger "Uberkreuzungen der Kanten gibt. Mit dem Schieberegler am unteren linken Rand des Dialogs kann man die "Ubersichtlichkeit im Ablaufgraphen weiter verbessern. Indem man den Schieberegler nach rechts zieht und dadurch die Scalierung vergr"o"sert, wird der Ablaufgraph gestreckt und dadurch die Kanten besser zuordbar.\par
 
 F"ur die manuelle Optimierung m"ussen die Offsets in der Tabelle per Hand eingegeben werden. Komfortabler geht die Optimierung, wenn man den {\bf Auto} Button dr"uckt. Dabei wird der {\bf Auto Scheduling} Dialog ge"offnet.
 \begin{figure}[htbp]
@@ -679,8 +681,8 @@ Hier kann man priorisierte Pfade angeben, wonach die Optimierung abl"auft. Um ei
 
 \end{center}
 \end{figure}
-W"ahlt man nun aus der Liste einen priorisierten Pfad aus und best"atigt mit {\bf OK}, wird der Dialog geschlossen und man befindet sich wieder im {\bf Auto Scheduling} Dialog. Der ausgew"ahlte Pfad wird hier in die Priorit"atsliste hinzugef"ugt. Wenn man meherere priorisierte Pfade angegeben hat, kann man deren Reihenfolge (oben h"ochte Priorit"at) mit den gr"unen Pfeilen "andern. Mit der Best"adigung durch {\bf OK} wird die Optimierung in Abh"angigkeit der Priorit"aten durchf"uhrt.\newline
-Wenn kein Pfad ausgew"ahlt und der {\bf OK} Button gedr"uckt wird, optimiert POA willkurlich, d.h. ohne Priorit"aten.\newline
+W"ahlt man nun aus der Liste einen priorisierten Pfad aus und best"atigt mit {\bf OK}, wird der Dialog geschlossen und man befindet sich wieder im {\bf Auto Scheduling} Dialog. Der ausgew"ahlte Pfad wird hier in die Priorit"atsliste hinzugef"ugt. Wenn man meherere priorisierte Pfade angegeben hat, kann man auch deren Reihenfolge (oben h"ochte Priorit"at) mit den gr"unen Pfeilen "andern. Mit der Best"adigung durch {\bf OK} wird die Optimierung in Abh"angigkeit der Priorit"aten durchf"uhrt.\newline
+Wenn kein Pfad ausgew"ahlt und der {\bf OK} Button gedr"uckt wird, optimiert POA willk"urlich, d.h. ohne Priorit"aten.\newline
 Mit {\bf Remove} kann man einen zuvor ausgew"ahlten Pfad aus der Priorit"atenliste l"oschen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -702,7 +704,7 @@ Nach der Plausibilit"atspr"ufung kan man unter {\bf Deploy Project} den Programm
 Um eine Plausibilit"atspr"ufung durchzuf"uhren, w"ahlt man im Men"u {\bf Tools} das Untermen"u {\bf Deploy Project}. Es wird der Dialog {\bf Deploy Project} ge"offnet, welcher die Befunde der Pr"ufung und deren Status kurz in einer Tabelle wiedergibt. Klickt man auf einen Eintrag in der Tabelle, so erscheint eine detailliertere Beschreibung des markierten Befunds.\par
 Mit {\bf Cancel} kann man den Dialog verlassen und eventuelle Fehler korrigieren, um danach mit der Pr"ufung fortzufahren.\newline
 Mit {\bf Next} kommt man in den n"achsten Dialog, in dem man den Programmcode der CPUs kompilieren und herunterladen kann. Dazu w"ahlt man in der Auswahlbox die CPU aus. Wenn man nun auf den Button {\bf Compile} dr"uckt, wird mit dem externe C-Compiler der zur CPU geh"orende Programmcode kompiliert. Dabei wird der {\bf POA Terminal} ge"offnet, um entsprechende Meldung auszugeben. Wird der {\bf Download} Button gedr"uckt, so wird das externe Download-Tool gestartet, um den kompilierten Code als {\bf Binary File} auf das CPLD-Board herunterzuladen.
-Im {\bf Details} Bereich wird das Verzeichnis des Quellcodes und das der Bin"ardatei angegeben. Au"serdem kann man hier noch das Datum der letzten "Anderung unter {\bf Last Modified} ersehen.
+Im {\bf Details} Bereich wird das Verzeichnis des Quellcodes und das der Bin"ardatei angegeben. Au"serdem kann man hier noch das Datum der letzten "Anderung unter {\bf Last Modified} ersehen.\par
 \begin{figure}[htbp]
 
 \begin{center}
@@ -713,6 +715,8 @@ Im {\bf Details} Bereich wird das Verzeichnis des Quellcodes und das der Bin"ard
 
 \end{center}
 \end{figure}
+Mit {\bf Back} kann man im Dialog zur"uck gehen, um eventuelle die Liste der Inkonsistenzen noch mal einzusehen.\par
+Mit {\bf Finish} wird der {\bf Deploy Project} Dialog geschlossen und die "Anderungen gespeichert.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \include{definitionen}

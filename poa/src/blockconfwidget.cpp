@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.14 2004/01/29 19:42:27 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.15 2004/02/04 09:30:30 squig Exp $
  *
  *****************************************************************************/
 
@@ -139,7 +139,9 @@ QListView *BlockConfWidget::ioListView() const {
     return ioListView_;
 }
 
-void BlockConfWidget::sync() {
+void BlockConfWidget::sync()
+{
+    cancelRename();
 
     if (inputRoot_) {
         delete inputRoot_;
@@ -272,10 +274,12 @@ void BlockConfWidget::newIo()
     }
 }
 
-void BlockConfWidget::removeIo() {
-
+void BlockConfWidget::removeIo()
+{
     PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
     if (item != 0) {
+        cancelRename();
+
         PinModel *pin = item->pin();
         if (pin != 0) {
             if (pin->connected() == 0) {

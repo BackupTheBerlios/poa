@@ -53,12 +53,13 @@ import org.apache.ecs.xhtml.tbody;
 import org.apache.ecs.xhtml.td;
 import org.apache.ecs.xhtml.th;
 import org.apache.ecs.xhtml.tr;
+import org.w3c.dom.html.HTMLElement;
 
 /**
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.12 2004/01/14 18:38:26 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.13 2004/01/14 20:18:54 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -155,9 +156,8 @@ public class XHTMLOutputter implements Outputter {
 		XhtmlDocument doc = createDocument("GCover - Code Coverage for "+file.getName());
 
 		// header
-		int cov = (int)(file.getCoverage()*100);
 		table headerView = new table();
-		headerView.setCellSpacing(0).setCellPadding(2).setClass("headerView");
+		headerView.setCellSpacing(0).setCellPadding(2).setWidth("100%").setClass("headerView");
 		headerView
 			.addElement(new tr()
 				.addElement(new td(new h1("GCover - Coverage Report"))
@@ -182,12 +182,14 @@ public class XHTMLOutputter implements Outputter {
 			.addElement(new tr()
 				.addElement(new td("Source file: ").setVAlign("top")
 					.addElement(new b(file.getName())))
-				.addElement(new td("Total: ").setVAlign("top")
-					.addElement(new b(Formatter.formatNumber(file.getCoverage()*100,2)+"%"))
-					.addElement(new br())
-					.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
-					.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
-					.setAlign("right")));
+				.addElement(new td()))
+			.addElement(new tr()
+				.addElement(new td("Total:").setVAlign("top")
+					.addElement(Entities.NBSP)
+					.addElement(new b(formatRate(file.getCoverage())))
+					.addElement(Entities.NBSP)
+					.addElement(createBar(file.getCoverage())))
+				.addElement(new td()));
 		doc.appendBody(new div().addElement(headerView).setClass("headerView"));
 		doc.appendBody(new br());
 
@@ -233,7 +235,7 @@ public class XHTMLOutputter implements Outputter {
 
 		// header
 		table headerView = new table();
-		headerView.setCellSpacing(0).setCellPadding(2).setClass("headerView");
+		headerView.setCellSpacing(0).setCellPadding(2).setWidth("100%").setClass("headerView");
 		headerView
 			.addElement(new tr()
 				.addElement(new td(new h1("GCover - Coverage Report"))
@@ -259,12 +261,12 @@ public class XHTMLOutputter implements Outputter {
 							.addElement(new td(new b("Executed")).setAlign("right"))
 							.addElement(new td(""+project.getExecutedLinesCount()).setAlign("left"))))))
 			.addElement(new tr()
-				.addElement(new td())
-				.addElement(new td("Total: ").setVAlign("top")
+				.addElement(new td("Total:").setVAlign("top")
+					.addElement(Entities.NBSP)
 					.addElement(new b(formatRate(project.getCoverage())))
-					.addElement(new br())
-					.addElement(createBar(project.getCoverage()))
-					.setAlign("right")));
+					.addElement(Entities.NBSP)
+					.addElement(createBar(project.getCoverage())))
+				.addElement(new td()));
 		doc.appendBody(new div().addElement(headerView).setClass("headerView"));
 		doc.appendBody(new br());
 
@@ -301,15 +303,15 @@ public class XHTMLOutputter implements Outputter {
 
 	public static Element createBar(double value) {
 		if (value <= 0.0) {
-			return new img().setSrc("red.png").setHeight(12).setWidth(barLength);
+			return new img().setSrc("red.png").setHeight(12).setWidth(barLength).setAlt("red");
 		}
 		else if (value >= 1.0) {
-			return new img().setSrc("green.png").setHeight(12).setWidth(barLength);
+			return new img().setSrc("green.png").setHeight(12).setWidth(barLength).setAlt("green");
 		}
 		else {
 			int greenWidth = (int)(value * barLength);
-			return new img().setSrc("green.png").setHeight(12).setWidth(greenWidth)
-				.addElement(new img().setSrc("red.png").setHeight(12).setWidth(barLength - greenWidth));
+			return new img().setSrc("green.png").setHeight(12).setWidth(greenWidth).setAlt("green")
+				.addElement(new img().setSrc("red.png").setHeight(12).setWidth(barLength - greenWidth).setAlt("red"));
 		}
 	}
 

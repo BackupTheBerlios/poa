@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.2 2003/09/11 14:38:38 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.3 2003/09/11 15:32:31 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,12 +41,29 @@
 #include <qpixmap.h>
 #include <qlayout.h>
 
-#define PERIODICAL_IO_TEXT "periodical inputs"
+#define EPISODIC_IO_TEXT "episodic inputs"
+
+PinListViewItem::PinListViewItem(QListView *parent,
+                                 QListViewItem *after,
+                                 PinModel::PinType type)
+    : QListViewItem(parent, after)
+{
+    setOpen(true);
+    type_ = type;
+    item_ = 0;
+    //setText(0, item->type());
+    //setText(1, item->description());
+}
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,
                                  PinModel *item)
-    : QListViewItem(parent), item_(item)
+    : QListViewItem(parent)
 {
+    setOpen(false);
+    if (item != 0) {
+        type_ = item->type();
+    }
+    item_ = item;
     //setText(0, item->type());
     //setText(1, item->description());
 }
@@ -56,9 +73,17 @@ PinListViewItem::~PinListViewItem()
     delete item_;
 }
 
-PinModel &PinListViewItem::data() const
+PinModel *PinListViewItem::data() const
 {
-    return *item_;
+    return item_;
+}
+
+PinModel::PinType PinListViewItem::type() {
+    return type_;
+}
+
+bool PinListViewItem::isRoot() {
+    return isOpen();
 }
 
 
@@ -96,19 +121,16 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
             this, SLOT(ioSelectionChanged()));
 
     // inputs root
-    inputRoot = new QListViewItem(ioListView, 0);
+    inputRoot = new PinListViewItem(ioListView, 0, PinModel::INPUT);
     inputRoot->setText(0, tr("inputs"));
-    inputRoot->setOpen(TRUE);
 
     // outputs root
-    outputRoot = new QListViewItem(ioListView, inputRoot);
+    outputRoot = new PinListViewItem(ioListView, inputRoot, PinModel::OUTPUT);
     outputRoot->setText(0, tr("outputs"));
-    outputRoot->setOpen(TRUE);
 
-    // periodical root
-    periodicalRoot = new QListViewItem(ioListView, outputRoot);
-    periodicalRoot->setText(0, tr(PERIODICAL_IO_TEXT));
-    periodicalRoot->setOpen(TRUE);
+    // episodic root
+    episodicRoot = new PinListViewItem(ioListView, outputRoot, PinModel::EPISODIC);
+    episodicRoot->setText(0, tr(EPISODIC_IO_TEXT));
 
     leftLayout->addWidget(ioListView);
 
@@ -329,7 +351,7 @@ void BlockConfDialog::newIo()
         child->setText(0, QString::number(root->childCount(), 10));
         child->setText(1, "data" + child->text(0));
         child->setText(3, "32");
-        if (root->text(0).compare(tr(PERIODICAL_IO_TEXT)) == 0) {
+        if (root->text(0).compare(tr(EPISODIC_IO_TEXT)) == 0) {
            child->setText(2, "");
         } else {
            child->setText(2,
@@ -377,7 +399,7 @@ void BlockConfDialog::ioSelectionChanged() {
         while (!root->isOpen()) {
             root = root->parent();
         }
-        isPeriodical = root->text(0).compare(tr(PERIODICAL_IO_TEXT)) == 0;
+        isPeriodical = root->text(0).compare(tr(EPISODIC_IO_TEXT)) == 0;
     }
 
     newIoPushButton->setEnabled(enabled);

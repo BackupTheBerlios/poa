@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.2 2003/09/11 14:38:38 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.3 2003/09/11 15:32:31 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -53,7 +53,13 @@ public:
     /**
      * Creates a IO list view item for the given abstract model
      */
-    PinListViewItem(QListViewItem *parent, PinModel *item);
+    PinListViewItem(QListView *parent, QListViewItem *after = 0,
+            PinModel::PinType type = PinModel::INPUT);
+
+    /**
+     * Creates a IO list view item for the given abstract model
+     */
+    PinListViewItem(QListViewItem *parent, PinModel *item = 0);
 
     /**
      * Default destructor
@@ -61,12 +67,26 @@ public:
     ~PinListViewItem();
 
     /**
-     * Returns the AbstractModel, represented by this view item
+     * Returns the PinModel, represented by this view item
      */
-    PinModel &data() const;
+    PinModel *data() const;
+
+    /**
+     * Returns type of this view item (used for items without
+     * models like root items.
+     */
+    PinModel::PinType type();
+
+    /**
+     * Returns <code>true</code>, if this is a root item,
+     * <code>false</code> otherwise.
+     */
+    bool isRoot();
 
 private:
     PinModel *item_;
+    PinModel::PinType type_;
+    bool root_;
 };
 
 
@@ -108,9 +128,9 @@ private:
     QPushButton *removeIoPushButton;
     QPushButton *okPushButton;
 
-    QListViewItem *inputRoot;
-    QListViewItem *outputRoot;
-    QListViewItem *periodicalRoot;
+    PinListViewItem *inputRoot;
+    PinListViewItem *outputRoot;
+    PinListViewItem *episodicRoot;
 
     BlockModel *model_;
 

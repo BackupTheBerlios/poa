@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.3 2003/08/22 16:59:27 keulsn Exp $
+ * $Id: blockview.cpp,v 1.4 2003/08/22 17:05:20 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -75,5 +75,9 @@ int BlockView::rtti() const
 void BlockView::drawShape(QPainter &p)
 {
     p.fillRect((int) x(), (int) y(), width(), height(), brush());
-    p.drawText(QRectrect(), Qt::AlignHCenter, model_->getName());
+    QRect textArea((int) x(),
+		   (int) y() + 3,
+		   width(),
+		   BlockView::DEFAULT_FONT_HEIGHT);
+    p.drawText(textArea, Qt::AlignHCenter, model_->getName());
 }

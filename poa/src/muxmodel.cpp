@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.37 2004/02/20 19:15:38 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.38 2004/03/19 16:10:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -147,6 +147,9 @@ MuxModel::MuxModel(QString type, QString description)
 MuxModel::MuxModel(QDomElement coreElement)
     : BlockModel(QString::null, QString::null)
 {
+    setHasEpisodicPins(false);
+    setHasRuntime(false);
+
     initIdCounter();
     deserialize(coreElement);
 }

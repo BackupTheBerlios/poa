@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.46 2004/02/10 09:55:12 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.47 2004/03/19 16:10:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -57,10 +57,18 @@ MuxMappingListViewItem::MuxMappingListViewItem(
     mapping_ = mapping;
     input_ = input;
     output_ = output;
-    firstInputBit_ = 0;
-    firstOutputBit_ = 0;
-    lastInputBit_ = 0;
-    lastOutputBit_ = 0;
+    if (mapping_) {
+        firstInputBit_ = mapping_->firstInputBit();
+        firstOutputBit_ = mapping_->firstOutputBit();
+        lastInputBit_ = mapping_->lastInputBit();
+        lastOutputBit_ = mapping_->lastOutputBit();
+    }
+    else {
+        firstInputBit_ = 0;
+        firstOutputBit_ = 0;
+        lastInputBit_ = 0;
+        lastOutputBit_ = 0;
+    }
 
     update();
 }
@@ -350,11 +358,11 @@ void MuxConfDialog::commit() {
 
     mappingListView->clear();
     deletedMappings_.clear();
-    blockConfWidget_->sync();
 
     // Notify model about update, so the view will be
     // repaint.
     model_->updatePerformed();
+    blockConfWidget_->sync();
 
     // sync again
     sync();

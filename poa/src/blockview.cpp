@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.9 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: blockview.cpp,v 1.10 2003/08/27 12:48:39 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -67,17 +67,17 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 	for (unsigned i = 0; i < leftPinModels.size(); ++i) {
 	    PinView *pinView = leftPinModels[i]->
 		createView(this, PinView::PIN_LEFT);
-	    leftPins_[i] = pinView;
+	    leftPins_.insert(leftPins_.end(), pinView);
 	}
 	for (unsigned i = 0; i < rightPinModels.size(); ++i) {
 	    PinView *pinView = rightPinModels[i]->
 		createView(this, PinView::PIN_RIGHT);
-	    rightPins_[i] = pinView;
+	    rightPins_.insert(rightPins_.end(), pinView);
 	}
 	for (unsigned i = 0; i < bottomPinModels.size(); ++i) {
 	    PinView *pinView = bottomPinModels[i]->
 		createView(this, PinView::PIN_BOTTOM);
-	    bottomPins_[i] = pinView;
+	    bottomPins_.insert(bottomPins_.end(), pinView);
 	}
     }
 
@@ -191,7 +191,6 @@ void BlockView::drawShape(QPainter &p)
 			   Qt::AlignLeft,
 			   leftPinModels->at(i)->name());
 	    }
-	    textArea.moveBy(0, pinHeight);
 	    
 	    if (i < rightSize) {
 		p.drawText(textArea,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.5 2003/08/27 21:12:45 vanto Exp $
+ * $Id: modelfactory.h,v 1.6 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
@@ -39,7 +39,6 @@ class ModelFactory
 {
 public:
     static QValueList<AbstractModel *> generate(const QDomNode &node);
-    static AbstractModel *generateSingle(QDomNode &node);
 };
 
 #endif // MODELFACTORY_H

@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.8 2003/08/29 14:34:41 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.9 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
 #include "cpumodel.h"
 #include "coremodel.h"
+#include "project.h"
 #include <qdom.h>
 
 /*****************************************************************************
@@ -45,6 +46,7 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
             } else if (element.attribute("block-type","") == "core") {
                 model = new CoreModel(element);
             }
+
             if (model != 0) {
                 model->setDescription(QString::null);
                 model->setId(0);
@@ -56,16 +58,3 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
 
     return l;
 }
-
-/*AbstractModel *ModelFactory::generateSingle(QDomNode &node)
-{
-    if (node.isElement() && node.nodeName() == "model-item") {
-        QDomElement element = node.toElement();
-        if (element.attribute("block-type","") == "cpu") {
-            return new CpuModel(element);
-        } else if (element.attribute("block-type","") == "core") {
-            return new CoreModel(element);
-        }
-    }
-    return 0;
-}*/

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.cpp,v 1.1 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: pinvector.cpp,v 1.2 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,11 +31,11 @@ void PinVector::remove(PinModel *pin)
     unsigned i = 0;
     bool found = at(i) == pin;
     while (i < size() && !found) {
-	++i;
-	found = at(i) == pin;
+    ++i;
+    found = at(i) == pin;
     }
     if (found) {
-	erase(begin() + i);
+    erase(begin() + i);
     }
 }
 
@@ -43,7 +43,16 @@ void PinVector::addBefore(PinModel *pin, PinModel *successor = 0)
 {
     unsigned i = 0;
     while (i < size() && at(i) != successor) {
-	++i;
+    ++i;
     }
     insert(begin() + i, pin);
+}
+
+PinModel *PinVector::findById(const unsigned id) {
+    for (unsigned i = 0; i < size(); i++) {
+        if (at(i)->id() == id) {
+            return at(i);
+        }
+    }
+    return 0;
 }

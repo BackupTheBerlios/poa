@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.cpp,v 1.3 2003/08/29 17:59:38 vanto Exp $
+ * $Id: connectormodel.cpp,v 1.4 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 
@@ -91,7 +91,7 @@ QCanvasItemList ConnectorModel::createView(QCanvas *canvas)
 QDomElement ConnectorModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
-    root.setAttribute("type","connector");
+    root.setTagName("connector");
     root.setAttribute("source-block-id", source_->parent()->id());
     root.setAttribute("target-block-id", target_->parent()->id());
     root.setAttribute("source-pin-id", source_->id());

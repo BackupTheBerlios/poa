@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.18 2003/08/29 17:59:38 vanto Exp $
+ * $Id: canvasview.cpp,v 1.19 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,7 @@
 #include <qpainter.h>
 #include <qpopupmenu.h>
 #include <qstatusbar.h>
+#include <qtooltip.h>
 
 
 CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.11 2003/08/29 17:59:38 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.12 2003/08/29 21:27:46 vanto Exp $
  *
  *****************************************************************************/
 
@@ -140,6 +140,16 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
 {
     episodicPins_->remove(pin);
     // FIX: update views
+}
+
+PinModel *BlockModel::findPinById(unsigned id)
+{
+    PinModel *pin = inputPins_->findById(id);
+    if (pin != 0) return pin;
+    pin = outputPins_->findById(id);
+    if (pin != 0) return pin;
+    pin = episodicPins_->findById(id);
+    return pin;
 }
 
 QCanvasItemList BlockModel::createView(QCanvas *canvas)

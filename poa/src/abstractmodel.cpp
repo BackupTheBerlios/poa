@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.5 2003/08/29 14:34:41 vanto Exp $
+ * $Id: abstractmodel.cpp,v 1.6 2003/09/01 18:48:05 squig Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
 
-AbstractModel::AbstractModel(QString type, QString description, uint id = 0)
+AbstractModel::AbstractModel(QString type, QString description, uint id)
     : type_(type), description_(description), id_(id)
 {
 }

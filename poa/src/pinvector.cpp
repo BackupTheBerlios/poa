@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.cpp,v 1.2 2003/08/29 21:27:46 vanto Exp $
+ * $Id: pinvector.cpp,v 1.3 2003/09/01 18:48:05 squig Exp $
  *
  *****************************************************************************/
 
@@ -39,7 +39,7 @@ void PinVector::remove(PinModel *pin)
     }
 }
 
-void PinVector::addBefore(PinModel *pin, PinModel *successor = 0)
+void PinVector::addBefore(PinModel *pin, PinModel *successor)
 {
     unsigned i = 0;
     while (i < size() && at(i) != successor) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.18 2003/08/30 18:37:33 vanto Exp $
+ * $Id: blockview.cpp,v 1.19 2003/09/01 18:48:05 squig Exp $
  *
  *****************************************************************************/
 
@@ -59,8 +59,8 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
         height += BlockView::DEFAULT_FONT_HEIGHT;
 
         // pins
-        unsigned numberOfPins = max (model->inputPins()->size(),
-                     model->outputPins()->size());
+        unsigned numberOfPins = QMAX(model->inputPins()->size(),
+                                     model->outputPins()->size());
         numberOfPins += model->episodicPins()->size();
         height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
 
@@ -221,7 +221,7 @@ void BlockView::drawShape(QPainter &p)
     unsigned leftSize = leftPinModels->size();
     PinVector *rightPinModels = model_->outputPins();
     unsigned rightSize = rightPinModels->size();
-    unsigned slotCount = max(leftSize, rightSize);
+    unsigned slotCount = QMAX(leftSize, rightSize);
 
     if (slotCount > 0) {
     unsigned pinHeight = (height() - BlockView::DEFAULT_TOP_SPACING
@@ -262,7 +262,7 @@ void BlockView::arrangeVerticalPins()
 
     unsigned leftSize = leftPins_.size();
     unsigned rightSize = rightPins_.size();
-    unsigned slotCount = max(leftSize, rightSize);
+    unsigned slotCount = QMAX(leftSize, rightSize);
 
     if (slotCount > 0 && bottom > top) {
     unsigned height = (bottom - top + 1) / slotCount;

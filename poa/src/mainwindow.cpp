@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.53 2003/09/21 21:05:51 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.54 2003/09/23 17:28:44 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,6 +35,8 @@
 #include "librarywindow.h"
 #include "modelfactory.h"
 #include "blockconfdialog.h"
+#include "muxconfdialog.h"
+#include "muxmodel.h"
 #include "poa.h"
 #include "project.h"
 #include "settings.h"
@@ -164,8 +166,8 @@ void MainWindow::initializeActions()
         new QAction("About", image_help, "&About...", 0,
                     this, "helpAboutAction" );
     openBlockConfAction =
-        new QAction("Block configuration", image_configure,
-                    "&Block configuration", 0, this,
+        new QAction("Configuration", image_configure,
+                    "&Configuration", 0, this,
                     "openBlockConfAction");
     drawLineAction =
         new QAction("Draw line", image_line, "&Draw line",
@@ -649,6 +651,11 @@ void MainWindow::openBlockConf()
             if (INSTANCEOF(model, BlockModel)) {
                 BlockConfDialog *dialog =
                     new BlockConfDialog((BlockModel *)model);
+                dialog->exec();
+                delete dialog;
+            }
+            else if (INSTANCEOF(model, MuxModel)) {
+                MuxConfDialog *dialog = new MuxConfDialog(/* TODO */);
                 dialog->exec();
                 delete dialog;
             }

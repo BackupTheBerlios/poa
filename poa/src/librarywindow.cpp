@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.10 2003/08/29 17:59:38 vanto Exp $
+ * $Id: librarywindow.cpp,v 1.11 2003/09/02 09:37:37 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -41,7 +41,7 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
                              WFlags f)
     : QDockWindow(p, parent, name, f)
 {
-    setCloseMode(Always);
+    setCloseMode(Never);
     setMovingEnabled(TRUE);
     setResizeEnabled(TRUE);
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.6 2004/01/12 02:37:27 keulsn Exp $
+ * $Id: dijkstrarouter.h,v 1.7 2004/01/17 12:03:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -55,10 +55,10 @@ public:
 
 protected:
     virtual QValueList<QPoint> *routeOne(QPoint from,
-					 LineDirection fromDir,
-					 QPoint to,
-					 LineDirection toDir,
-					 QCanvas *canvas);
+                     LineDirection fromDir,
+                     QPoint to,
+                     LineDirection toDir,
+                     QCanvas *canvas);
 };
 
 
@@ -156,8 +156,8 @@ public:
     void reach(PossiblePoint *prev, unsigned newWeight);
 
     static unsigned calcWeight(PossiblePoint *prev,
-			       QPoint next,
-			       Weighting *weighting);
+                   QPoint next,
+                   Weighting *weighting);
 
 private:
 

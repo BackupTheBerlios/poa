@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.37 2004/01/13 00:28:29 squig Exp $
+ * $Id: pinmodel.cpp,v 1.38 2004/01/17 12:03:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -105,6 +105,7 @@ PinModel *PinModel::connected()
 bool PinModel::isConnectable(PinModel *toPin)
 {
     return (this->connected_ == 0 && toPin->connected_ == 0
+            && this->bits() == toPin->bits()
             && (type() == EPISODIC
                 || toPin->type() == EPISODIC
                 || type() != toPin->type()));

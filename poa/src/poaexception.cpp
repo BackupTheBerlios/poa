@@ -18,14 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poaexception.cpp,v 1.1 2004/01/13 00:28:59 squig Exp $
+ * $Id: poaexception.cpp,v 1.2 2004/01/17 12:03:04 squig Exp $
  *
  *****************************************************************************/
 
 #include "poaexception.h"
 
 PoaException::PoaException(const QString& msg)
-    : msg_( msg )
+    : msg_(msg)
 {
 }
 

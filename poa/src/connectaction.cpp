@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.12 2004/01/13 00:28:29 squig Exp $
+ * $Id: connectaction.cpp,v 1.13 2004/01/17 12:03:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -53,9 +53,10 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     QCanvasItemList allItems = view->canvas()->allItems();
     for (QCanvasItemList::iterator it = allItems.begin();
          it != allItems.end(); ++it) {
-                if ((*it)->rtti() == PinView::RTTI && *it != source
-            && (((PinView *)*it)->parent() != source->parent()))
-        {
+        if ((*it)->rtti() == PinView::RTTI
+            && *it != source
+            && dynamic_cast<PinView *>(*it)->parent() != source->parent()) {
+
             PinView *pv = (PinView *)(*it);
             pv->setActive(source->model()->isConnectable(pv->model()));
         }

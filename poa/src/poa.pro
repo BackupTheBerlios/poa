@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.9 2003/08/21 13:01:28 squig Exp $
+# $Id: poa.pro,v 1.10 2003/08/21 13:16:43 squig Exp $
 #
 ###############################################################################
 
@@ -38,6 +38,7 @@ HEADERS += connectormodel.h
 HEADERS += connectorview.h
 HEADERS += coremodel.h
 HEADERS += coreview.h
+HEADERS += cpu.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h
 HEADERS += inputblockmodel.h
@@ -62,6 +63,7 @@ HEADERS += viewmap.h
 HEADERS += gridcanvas.h
 
 SOURCES += aboutdialog.cpp
+SOURCES += cpu.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += layoutcanvas.cpp
 SOURCES += librarywindow.cpp

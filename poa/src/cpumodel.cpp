@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.17 2003/09/11 16:30:21 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.18 2003/09/16 10:18:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -92,16 +92,6 @@ bool CpuModel::autoExecTime()
 void CpuModel::setAutoExecTime(const bool autoExecTime)
 {
     autoExecTime_ = autoExecTime;
-}
-
-void CpuModel::setClock(unsigned int clock)
-{
-    clock_ = clock;
-}
-
-unsigned int CpuModel::clock()
-{
-    return clock_;
 }
 
 void CpuModel::setOffset(unsigned int offset)

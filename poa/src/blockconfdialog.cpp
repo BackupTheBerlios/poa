@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.18 2003/09/15 18:09:21 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.19 2003/09/16 10:18:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -446,6 +446,16 @@ void BlockConfDialog::syncModel() {
         blockNameLineEdit->setText(model_->name());
         blockDescrLineEdit->setText(model_->description());
         runtimeSpinBox->setValue(model_->execTime());
+        blockClockSpinBox->setValue(model_->clock());
+
+        if (INSTANCEOF(model_, CpuModel)) {
+            CpuModel *cpuModel = (CpuModel *)model_;
+            offsetAutoCalcRadioButton->setChecked(cpuModel->autoOffset());
+            offsetRadioButton->setChecked(!cpuModel->autoOffset());
+            runtimeAutoCalcRadioButton->setChecked(cpuModel->autoExecTime());
+            runtimeRadioButton->setChecked(!cpuModel->autoExecTime());
+            offsetSpinBox->setValue(cpuModel->offset());
+        }
 
         addPins(*(model_->inputPins()), inputRoot_);
         addPins(*(model_->outputPins()), outputRoot_);
@@ -459,6 +469,14 @@ void BlockConfDialog::updateModel() {
         model_->setName(blockNameLineEdit->text());
         model_->setDescription(blockDescrLineEdit->text());
         model_->setExecTime(runtimeSpinBox->value());
+        model_->setClock(blockClockSpinBox->value());
+
+        if (INSTANCEOF(model_, CpuModel)) {
+            CpuModel *cpuModel = (CpuModel *)model_;
+            cpuModel->setAutoOffset(offsetAutoCalcRadioButton->isChecked());
+            cpuModel->setAutoExecTime(runtimeAutoCalcRadioButton->isChecked());
+            cpuModel->setOffset(offsetSpinBox->value());
+        }
 
         // clear and free deleted pins
         deletedPins_->removeAllPins(true);

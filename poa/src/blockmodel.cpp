@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.20 2003/09/15 18:09:21 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.21 2003/09/16 10:18:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -80,6 +80,15 @@ unsigned int BlockModel::execTime()
     return execTime_;
 }
 
+void BlockModel::setClock(unsigned int clock)
+{
+    clock_ = clock;
+}
+
+unsigned int BlockModel::clock()
+{
+    return clock_;
+}
 QString BlockModel::name() const
 {
     return name_;

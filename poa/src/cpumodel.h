@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.16 2003/09/09 23:21:22 vanto Exp $
+ * $Id: cpumodel.h,v 1.17 2003/09/16 10:18:04 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -84,18 +84,6 @@ class CpuModel: public BlockModel
     void setAutoExecTime(const bool autoExecTime);
 
     /**
-     * Sets the clock count in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    void setClock(unsigned int clock);
-
-    /**
-     * Returns the clock count in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    unsigned int clock();
-
-    /**
      * Sets the starting offset in milliseconds of this.
      * @todo Move this to CpuModel?
      */
@@ -138,7 +126,6 @@ class CpuModel: public BlockModel
     QString code_;
     int cpuId_;
     bool autoExecTime_;
-    unsigned long clock_;
     unsigned long offset_;
     bool autoOffset_;
 };

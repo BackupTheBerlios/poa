@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.20 2003/09/15 18:09:21 garbeam Exp $
+ * $Id: blockmodel.h,v 1.21 2003/09/16 10:18:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -101,6 +101,16 @@ public:
     void setExecTime(const unsigned int time);
 
     /**
+     * Returns the clock (in ms) of this block
+     */
+    unsigned int clock();
+
+    /**
+     * Sets the clock (in ms) of this block
+     */
+    void setClock(const unsigned int clock);
+
+    /**
      * Returns the name of this block.
      */
     QString name() const;
@@ -144,16 +154,20 @@ public:
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
 
-private:
+protected:
 
     PinVector *episodicPins_;
     PinVector *outputPins_;
     PinVector *inputPins_;
     unsigned currentPinId_;
     unsigned int execTime_;
+    unsigned int clock_;
     QString name_;
 
 signals:
+    /**
+     * Emitted when updatePerformed() was called.
+     */
     void updated();
 };
 

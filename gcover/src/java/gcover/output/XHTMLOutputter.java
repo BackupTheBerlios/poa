@@ -37,7 +37,7 @@ import org.apache.ecs.xhtml.*;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.4 2004/01/07 17:01:38 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.5 2004/01/07 17:42:17 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -47,6 +47,28 @@ public class XHTMLOutputter implements Outputter {
 		dir = new File(basedir);
 		if (!dir.exists()) {
 			dir.mkdirs();
+		}
+	}
+
+	private XhtmlDocument createDocument(String title)
+	{
+		XhtmlDocument doc = new XhtmlDocument();
+		doc.setDoctype(new XHtml10Strict());
+		doc.appendTitle(title);
+		doc.appendHead(new link().setType("text/css").setRel("Stylesheet").setHref("style.css"));
+		return doc;
+	}
+
+	private void writeDocument(XhtmlDocument doc, String filename)
+	{
+		try {
+			FileWriter fw = new FileWriter(dir.getAbsolutePath()+File.separatorChar+filename);
+			//doc.output(fw);
+			doc.getHtml().setPrettyPrint(true);
+			fw.write(doc.toString());
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -68,37 +90,41 @@ public class XHTMLOutputter implements Outputter {
 	 */
 	public void output(Project prj) {
 		FileInfo[] files = prj.getFiles();
-		XhtmlDocument doc = new XhtmlDocument();
-		doc.setDoctype(new XHtml10Strict());
-		doc.appendHead(new link().setType("text/css").setRel("Stylesheet").setHref("style.css"));
 
+		// prepare list of files
 		body content = new body();
-		doc.appendBody(content);
+
 		for (int i=0; i<files.length; i++) {
+			// write file
 			output(files[i]);
+
+			// append file to list of files
 			content.setBgColor("white");
-			content.addElement(new a(files[i].getName()+".html",files[i].getName()));
+			content.addElement(new a(files[i].getName()+".html", files[i].getName()).setTarget("classFrame"));
 			content.addElement(new StringElement("&nbsp;("+Formatter.formatNumber(files[i].getCoverage()*100,2)+"%)"));
 			content.addElement(new br());
 		}
-		try {
-			FileWriter fw = new FileWriter(dir.getAbsolutePath()+File.separatorChar+"files.html");
-			//doc.output(fw);
-			doc.getHtml().setPrettyPrint(true);
-			fw.write(doc.toString());
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		// write list of files
+		XhtmlDocument doc = createDocument("Files");
+		doc.appendBody(content);
+		writeDocument(doc, "files.html");
+
+		// write frame set
+		doc = createDocument("GCover - Coverage Report");
+		doc.getHtml().addElement((new frameset("", "20%,80%")
+								  .addElement(new frame("", "classListFrame", "files.html"))
+								  .addElement(new frame("", "classFrame", "overview-summary.html"))));
+//     <noframes>
+//       <h2>Frame Alert</h2>
+//       <p>You don't have frames. Go <a href="overview-summary.html">here</a></p>
+//     </noframes>
+		writeDocument(doc, "index.html");
 	}
 	
 	public void output(FileInfo file) {
-		try {
-			FileWriter fw = new FileWriter(dir.getAbsolutePath()+File.separatorChar+file.getName()+".html");
-			XhtmlDocument doc = new XhtmlDocument();
-			doc.setDoctype(new XHtml10Strict());
-			doc.appendTitle("GCover - Code Coverage for "+file.getName());
-			doc.appendHead(new link().setType("text/css").setRel("Stylesheet").setHref("style.css"));
+// 		try {
+			XhtmlDocument doc = createDocument("GCover - Code Coverage for "+file.getName());
 			table reportHeader = new table().setWidth("100%");
 			reportHeader.addElement(
 				new tr()
@@ -224,14 +250,11 @@ public class XHTMLOutputter implements Outputter {
 			}
 			
 			doc.appendBody(sourceView);
-			
-			//doc.output(fw);
-			doc.getHtml().setPrettyPrint(true);
-			fw.write(doc.toString());
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+			writeDocument(doc, file.getName()+".html");
+// 		} catch (IOException e) {
+// 			e.printStackTrace();
+// 		}
 		
 	}
 

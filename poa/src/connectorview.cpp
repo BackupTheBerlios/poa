@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.5 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: connectorview.cpp,v 1.6 2003/09/15 13:03:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,6 +89,7 @@ ConnectorView::ConnectorView(
     ConnectorView *nextSegment =
         new ConnectorView(nextPoint,
                   inflection(orientation_),
+                  from,
                   to,
                   canvas);
     dockToTarget(nextSegment);
@@ -106,6 +107,7 @@ ConnectorView::ConnectorView(
         ConnectorView *nextSegment =
         new ConnectorView(point,
                   inflection(orientation_),
+                  from,
                   to,
                   canvas);
         dockToTarget(nextSegment);
@@ -115,10 +117,13 @@ ConnectorView::ConnectorView(
 
 ConnectorView::ConnectorView(QPoint start,
                              LineOrientation orientation,
+                             PinView *from,
                              PinView *to,
                              QCanvas *canvas)
     : QCanvasLine(canvas)
 {
+    from_ = from;
+    to_ = to;
     orientation_ = orientation;
     first_ = true;
     prev_.pin = 0;
@@ -136,6 +141,7 @@ ConnectorView::ConnectorView(QPoint start,
     ConnectorView *nextSegment =
         new ConnectorView(point,
                   inflection(orientation_),
+                  from,
                   to,
                   canvas);
     dockToTarget(nextSegment);

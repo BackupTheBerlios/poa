@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.9 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: connectorview.h,v 1.10 2003/09/15 13:03:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -103,6 +103,7 @@ public:
 protected:
     ConnectorView(QPoint start,
           LineOrientation orientation,
+          PinView *from,
           PinView *to,
           QCanvas *canvas);
 

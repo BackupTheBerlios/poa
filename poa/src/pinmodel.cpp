@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.11 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.12 2003/09/15 13:03:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -86,6 +86,11 @@ void PinModel::detach()
         connected_ = 0;
     // FIX: update views
     }
+}
+
+PinModel *PinModel::connected()
+{
+    return connected_;
 }
 
 PinModel::PinType PinModel::type()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.14 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: pinmodel.h,v 1.15 2003/09/15 13:03:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -94,6 +94,11 @@ public:
      */
     void detach();
 
+    /**
+     * Returns the connected pin.
+     */
+    PinModel *connected();
+    
     /**
      * Returns the type of this pin
      */

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.14 2003/09/15 09:29:39 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.15 2003/09/15 13:03:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,7 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qlistview.h>
+#include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
@@ -533,15 +534,45 @@ void BlockConfDialog::removeIo()
         while (!root->isRoot()) {
             root = (PinListViewItem *)root->parent();
         }
-        root->takeItem(item);
-        if (item->origData() != 0) {
-            // Save deleted pins, to clean up views
-            // if the changes will be applied.
-            // deletedPins_->append(item->origData()); // QT 3.1+
-            // specific
-            deletedPins_->addBefore(item->origData());
+        PinModel *origin = item->origData();
+        bool remove = true;
+        if (origin != 0) {
+            if(origin->connected() == 0) {
+                // Save deleted pins, to clean up views
+                // if the changes will be applied.
+                // deletedPins_->append(item->origData()); // QT 3.1+
+                // specific
+                deletedPins_->addBefore(item->origData());
+            }
+            else {
+                // there exists a connection between the selected pin
+                // and another one
+                PinModel *connected = origin->connected();
+                switch(QMessageBox::warning(this, "POA",
+                            "The selected I/O is connected to I/O <i>id=" +
+                            QString::number(connected->id()) + " name=" +
+                            connected->name() + " of " +
+                            connected->parent()->name() + "</i>.\n\n"
+                            "The connection will be removed if you apply "
+                            "your changes.\n\n",
+                            "Ok",
+                            "Cancel", 0, 0, 1 ) )
+                {
+                    case 0: // The user clicked the Retry again button or pressed Enter
+                        // TODO: remove ConnectorView and connection
+                        deletedPins_->addBefore(item->origData());
+                        break;
+                    case 1: // Cancel removal.
+                        remove = false;
+                        break;
+                }
+            }
         }
-        delete item;
+
+        if (remove) {
+            root->takeItem(item);
+            delete item;
+        }
     }
 }
 

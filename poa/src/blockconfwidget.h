@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.8 2004/01/29 15:15:35 squig Exp $
+ * $Id: blockconfwidget.h,v 1.9 2004/02/10 09:55:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -67,6 +67,9 @@ public:
      * otherwise <code>0</code>.
      */
     PinListViewItem *pinListViewItemForPin(PinModel *pin);
+
+    /** Returns <code>true</code> if the specified item exists. */
+    bool contains(PinListViewItem *item);
 
 private:
     QListView *ioListView_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.16 2004/02/04 10:29:37 papier Exp $
+ * $Id: blockconfwidget.cpp,v 1.17 2004/02/10 09:55:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -201,6 +201,18 @@ void BlockConfWidget::cancelRename()
 //              currentItem->cancelRename();
 //          }
 //      }
+}
+
+bool BlockConfWidget::contains(PinListViewItem *item) {
+
+    QListViewItemIterator it(ioListView_);
+    for ( ; it.current(); ++it) {
+        PinListViewItem *itm = (PinListViewItem *)it.current();
+        if (itm == item) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void BlockConfWidget::commit() {

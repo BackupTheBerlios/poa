@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.4 2003/08/22 13:21:24 garbeam Exp $
+ * $Id: canvasview.h,v 1.5 2003/08/22 15:27:43 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
@@ -49,7 +49,6 @@ public:
 
     void contentsMousePressEvent(QMouseEvent *e);
     void contentsMouseMoveEvent(QMouseEvent *e);
-    void drawGrid();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
 

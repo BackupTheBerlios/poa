@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.3 2003/08/21 14:09:32 garbeam Exp $
+ * $Id: gridcanvas.cpp,v 1.4 2003/08/22 15:27:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,33 +31,45 @@
 #include <qsize.h>
 
 // size of tiles
-#define SPACING 20
-
+#define GRID_SPACING 20
 
 GridCanvas::GridCanvas() {
 
     // create grid pixmap
-    QRect r(0, 0, SPACING, SPACING);
+    QRect r(0, 0, 1000, 1000);
     tile = new QPixmap(r.size());
     tile->fill(white);
 
     QPen pen(gray, 1);
     QPainter p(tile);
     p.setPen(pen);
-    p.drawLine(SPACING / 2, (SPACING / 2) - 2, SPACING / 2, (SPACING / 2) + 3);
-    p.drawLine((SPACING / 2) - 2, SPACING / 2, (SPACING / 2) + 3, SPACING / 2);
+
+    for (int x = 0; x <= 1000; x += GRID_SPACING) {
+        for (int y = 0; y <= 1000; y += GRID_SPACING) {
+
+            p.drawLine(x + (GRID_SPACING / 2) /* x1 */,
+                       y + ((GRID_SPACING / 2) - 2) /* y1 */,
+                       x + (GRID_SPACING / 2) /* x2 */,
+                       y + ((GRID_SPACING / 2) + 3) /* y2 */);
+            p.drawLine(x + ((GRID_SPACING / 2) - 2) /* x1 */,
+                       y + (GRID_SPACING / 2) /* y1 */,
+                       x + ((GRID_SPACING / 2) + 3) /* x2 */,
+                       y + (GRID_SPACING / 2) /* y2 */);
+        }
+    }
     p.end();
 
     connect(this, SIGNAL(resized()), this, SLOT(redrawGrid()));
 
-    resize(400, 400);
+    resize(1000, 1000);
 
 }
 
 void GridCanvas::redrawGrid() {
 
-    int w = size().width();
-    int h = size().height();
+//    int w = size().width();
+  //  int h = size().height();
 
-    setTiles(*tile, w, h, SPACING, SPACING);
+    setBackgroundPixmap(*tile);
+    //setTiles(*tile, w, h, 1000, 1000);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.25 2003/08/22 13:31:37 keulsn Exp $
+ * $Id: mainwindow.cpp,v 1.26 2003/08/22 15:27:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -443,6 +443,7 @@ void MainWindow::openSettings()
 MdiWindow* MainWindow::newDoc()
 {
     GridCanvas *doc = new GridCanvas();
+    doc->setDoubleBuffering(TRUE);
 
     MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
     w->setCaption("unnamed layout");

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.1 2003/08/20 14:06:02 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.2 2003/08/21 13:07:43 papier Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -131,6 +131,22 @@ QWidget *SettingsDialog::createPathTab()
 	grid->addWidget(button, 1, 2);
 	connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
 
+	grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 2, 0);
+	cTemplateLineEdit = new QLineEdit(Settings::instance()->
+					     get("Template Path"), tab);
+	grid->addWidget(cTemplateLineEdit, 2, 1);
+	button = new QPushButton("...", tab);
+	grid->addWidget(button, 2, 2);
+	connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
+
+	grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
+	downloadLineEdit = new QLineEdit(Settings::instance()->
+					     get("Download Tool"), tab);
+	grid->addWidget(downloadLineEdit, 3, 1);
+	button = new QPushButton("...", tab);
+	grid->addWidget(button, 3, 2);
+	connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
+
 	return tab;
 }
 
@@ -139,6 +155,8 @@ void SettingsDialog::applySettings()
 	Settings *s = Settings::instance();
 	s->set("Editor", editorLineEdit->text());
 	s->set("Compiler", compilerLineEdit->text());
+	s->set("Template Path", cTemplateLineEdit->text());
+	s->set("Download Tool", downloadLineEdit->text());
 	s->write();
 }
 
@@ -162,4 +180,26 @@ void SettingsDialog::chooseExternalCompiler()
 	if (s != QString::null) {
 		compilerLineEdit->setText(s);
 	}
+}
+
+void SettingsDialog::chooseTemplatePath()
+{
+  QString s = QFileDialog::getExistingDirectory(cTemplateLineEdit->text(),
+						this, "get existingdirectory",
+						tr("Select C Source Template Path"),
+						TRUE );
+  if (s !=QString::null) {
+    cTemplateLineEdit->setText(s);
+  }
+}
+
+void SettingsDialog::chooseDownloadTool()
+{
+  QString s= QFileDialog::getOpenFileName(downloadLineEdit->text(),
+					 QString::null,
+					 this, "open file dialog",
+					 tr("Select External Download Tool"));
+  if (s != QString::null) {
+    downloadLineEdit->setText(s);
+  }
 }

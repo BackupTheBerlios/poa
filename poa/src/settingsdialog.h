@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.1 2003/08/20 14:06:02 squig Exp $
+ * $Id: settingsdialog.h,v 1.2 2003/08/21 13:07:43 papier Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -59,6 +59,8 @@ public slots:
 	void applySettings();
 	void chooseExternalEditor();
 	void chooseExternalCompiler();
+	void chooseTemplatePath();
+	void chooseDownloadTool();
 
 private :
 	QWidget *createPathTab();

@@ -1,24 +1,19 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.3 2005/02/02 13:54:44 garbeam Exp $
+% $Id: pir.tex,v 1.4 2005/02/09 14:19:49 garbeam Exp $
 
-\documentclass{ieee}
-
-%------------------------------------------------------------------------- 
-% 
-% Use \documentclass[pagenumbers]{ieee}
-%
-% to produce page numbers, bottom centered, in the output. Default is 
-% no page numbers for camera-ready copy.
-%
-%------------------------------------------------------------------------- 
-
+\documentclass{article}
+\usepackage[german]{babel} 
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
 \usepackage{times}
+\usepackage{url}
 
 \begin{document}
 
 \title{Fachstudie 'Personen im Raum'}
 \author{Steffen Keul, Marcel Kilgus, Anselm Garbe\\
-Universität Stuttgart, Institut für Informatik, Nexus Forschungsprojekt}
+\small Universität Stuttgart, Institut für Informatik, Nexus Forschungsprojekt}
 
 \maketitle
 \thispagestyle{empty}
@@ -26,10 +21,8 @@ Universität Stuttgart, Institut für Informatik, Nexus Forschungsprojekt}
 \begin{abstract}
 In dieser Studie werden Algorithmen zur Bilderkennung von Personen im
 Raum anhand von Receiver Operator Characteristic Curves
-gegenübergestellt und abschliessend eine Empfehlung ausgerpochen.
+gegenübergestellt und abschliessend eine Empfehlung ausgesprochen.
 \end{abstract}
-
-
 
 %------------------------------------------------------------------------- 
 \section{Einleitung}
@@ -39,57 +32,91 @@ gegenübergestellt und abschliessend eine Empfehlung ausgerpochen.
 %------------------------------------------------------------------------- 
 \section{Szenarien}
 
-Personen
+Untersucht wird die Bilderkennung von einer Person im Raum bei drei
+unterschiedlichen Bidlkontrasteinstellungen der verwendeten
+Kamera, Modell MOBOTIX M1, siehe auch \url{http://www.mobotix.com}.
 
-- keine Person
-- eine Person
-- Gruppe von Personen (verteilt im Raum, dichte Gruppe (Knäul))
+\begin{figure}[h]
+    \begin{center}
+        \begin{tabular}{l|l}
+        \textbf{Format:} & JPEG\\ \hline
+        \textbf{Kompression:} & Standard\\ \hline
+        \textbf{Auflösung (Pixel):} & 640x480\\ \hline
+        \textbf{Automatischer Lichtfilter:} & aus\\ \hline
+        \textbf{Rauschenunterdrückung:} & aus\\ \hline
+        \textbf{Bildschärfe (-2..20):} & 0\\
+        \end{tabular}
+    {\small \caption{Feste Bildeigenschaften}}
+    \end{center}
+\end{figure}
 
-Beleuchtung
+\subsection{Bildkontrasteinstellungen}
+Die drei im Szenario verwendeten Bildkontrasteinstellungen können grob
+in {\it hoch}, {\it normal} und {\it niedrig} eingestuft werden.
+Motivation für diese Wahl war die Vermutung, dass ein geringes
+Farbspektrum (niedriger Kontrast)
+bessere Erkennungsraten liefert, als ein hohes Farbspektrum.
 
-- Tageslicht (Mittag), ohne Raumbeleuchtung
-- Dämmerung
-- Elektrische in der Nacht
-- ohne Licht
+\begin{figure}[h!]
+    \begin{center}
+        \begin{tabular}{l|l}
+        \textbf{Helligkeit (-10..10):} & 5\\ \hline
+        \textbf{Sättigung (-10..10):} & 5\\
+        \end{tabular}
+    {\small \caption{Hoher Bildkontrast}}
+    \end{center}
+\end{figure}
 
-Kameroptionen
+\begin{figure}[h!]
+    \begin{center}
+        \begin{tabular}{l|l}
+        \textbf{Helligkeit (-10..10):} & 0\\ \hline
+        \textbf{Sättigung (-10..10):} & 0\\
+        \end{tabular}
+    {\small \caption{Hoher Bildkontrast}}
+    \end{center}
+\end{figure}
 
-- Beleuchgtungselimierung
+\begin{figure}[h!]
+    \begin{center}
+        \begin{tabular}{l|l}
+        \textbf{Helligkeit (-10..10):} & -5\\ \hline
+        \textbf{Sättigung (-10..10):} & -5\\
+        \end{tabular}
+    {\small \caption{Hoher Bildkontrast}}
+    \end{center}
+\end{figure}
 
-- hohem Kontrast (Farbenfroh)
-- normal
-- niedrigen Kontrast (grau)
 
-Algorithmen-Parametrisierung
+\subsection{Offene Fragen}
 
-
+Die Bilderkennung von mehreren Personen im Raum sowie von keiner Person
+wurde bis auf einzelne Feldversuche nicht genauer untersucht.
+Anzunehmen ist, dass die Erkennungsrate von mehreren Personen im Raum
+etwas höher liegt, als bei einer einzelnen Person im Raum.
+Die Erkennungsrate von Personen im Raum, obwohl sich keine Person im
+Raum aufhält, wird als sehr gering angenommen.
 
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
+
+Alle untersuchten Algorithmen basieren auf oder sind in der OpenCV \cite{opencv}
+Bibliothek der Intel Corp. enthalten.
+
+
 
 
 %------------------------------------------------------------------------- 
 \section{Receiver Operator Characteristic Curves}
 
-\begin{figure}[h]
-   \caption{Example of caption.}
-\end{figure}
-
-%\noindent
-Long captions should be set as in 
-\begin{figure}[h] 
-   \caption{Example of long caption requiring more than one line. It is 
-     not typed centered but aligned on both sides and indented with an 
-     additional margin on both sides of 1~pica.}
-\end{figure}
-
 %------------------------------------------------------------------------- 
-\section{Fazit}
+\section{Empfehlung}
+Im Rahmen dieser Fachstudie empfehlen wir die optische Flusserkennung
+nach \cite{KIL05}, die auch im Source Code im Anhang vorliegt.
 
-%------------------------------------------------------------------------- 
-\nocite{ex1,ex2}
-\bibliographystyle{ieee}
-\bibliography{ieee}
+\begin{thebibliography}{99}
+\bibitem{KIL05} Marcel Kilgus, Optische Flusserkennung mit 15 LOC, 2005.
+\bibitem{opencv} http://opencv.sf.net
+\end{thebibliography}
 
 \end{document}
-

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.36 2004/01/19 17:56:51 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.37 2004/01/19 18:08:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -527,7 +527,7 @@ SpinBoxItem::SpinBoxItem(QTable *t, EditType et, BlockNode *node,
                          NodeField field)
     : QTableItem(t, et, "0"), spinbox_(0), node_(node), field_(field)
 {
-    setText(QString::number(value()));
+    setText(value());
     // we do not want this item to be replaced
     setReplaceable(false);
 }
@@ -536,28 +536,41 @@ QWidget *SpinBoxItem::createEditor() const
 {
     // create a spinbox editor
     ((SpinBoxItem*)this)->spinbox_ = new QSpinBox(table()->viewport());
-    spinbox_->setValue(value());
-    spinbox_->setRange(0, INT_MAX);
+    spinbox_->setSuffix(" ns");
+    if (field_ == OFFSET) {
+        spinbox_->setRange(-1, INT_MAX);
+        spinbox_->setValue(node_->autoOffset() ? -1 : (int)node_->offset());
+        spinbox_->setSpecialValueText
+            (QString("Auto (%1 ns)").arg(node_->offset()));
+    }
+    else {
+        spinbox_->setValue(field_ == CLOCK
+                           ? node_->clock()
+                           : node_->runtime());
+        spinbox_->setRange(0, INT_MAX);
+    }
     return spinbox_;
 }
 
 void SpinBoxItem::setContentFromEditor( QWidget *w )
 {
     if ( w->inherits( "QSpinBox" )) {
-        setText(QString::number(((QSpinBox*)w)->value()));
         setValue(((QSpinBox*)w)->value());
+        setText(value());
     } else {
         QTableItem::setContentFromEditor(w);
     }
 }
 
-int SpinBoxItem::value() const
+QString SpinBoxItem::value() const
 {
     switch (field_) {
-    case RUNTIME: return node_->runtime();
-    case CLOCK: return node_->clock();
-    case OFFSET: return node_->offset();
-    default: return 0;
+    case RUNTIME: return QString::number(node_->runtime()) + " ns";
+    case CLOCK: return QString::number(node_->clock()) + " ns";
+    case OFFSET: return node_->autoOffset()
+                     ? QString("Auto (%1 ns)").arg(node_->offset())
+                     : QString::number(node_->offset()) + " ns";
+    default: return QString::null;
     }
 }
 
@@ -566,7 +579,15 @@ void SpinBoxItem::setValue(int value)
     switch (field_) {
     case RUNTIME: node_->setRuntime(value); break;
     case CLOCK: node_->setClock(value); break;
-    case OFFSET: node_->setOffset(value); break;
+    case OFFSET:
+        if (value != -1) {
+            node_->setOffset(value);
+            node_->setAutoOffset(false);
+        }
+        else {
+            node_->setAutoOffset(true);
+        }
+        break;
     }
 }
 

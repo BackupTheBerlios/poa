@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.19 2004/01/19 16:39:20 squig Exp $
+ * $Id: scheduledialog.h,v 1.20 2004/01/19 18:08:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -224,7 +224,7 @@ class SpinBoxItem : public QTableItem
     /**
      * Returns a value from the blocknode object, depending on the field.
      */
-    int value() const;
+    QString value() const;
 
 };
 

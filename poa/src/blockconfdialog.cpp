@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.28 2003/09/28 21:52:11 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.29 2003/09/29 13:54:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -102,6 +102,10 @@ PinModel *PinListViewItem::data() const
 PinModel *PinListViewItem::origData() const
 {
     return origin_;
+}
+
+void PinListViewItem::setOrigPin(PinModel *pin) {
+    origin_ = pin;
 }
 
 PinModel::PinType PinListViewItem::type() {
@@ -513,7 +517,10 @@ void BlockConfDialog::updateModel() {
                     model_->addPin(target, 0, false);
                 }
                 else {
+                    // new pin
+                    PinModel *newPin = source->clone();
                     model_->addPin(source->clone(), 0, true);
+                    item->setOrigPin(newPin);
                 }
             }
         }

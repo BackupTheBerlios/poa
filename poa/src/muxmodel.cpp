@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.18 2003/09/29 10:59:39 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.19 2003/09/29 13:54:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -167,9 +167,9 @@ MuxModel::~MuxModel()
 void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
 {
     muxPins_.append(pin);
-    QPtrList<MuxMapping> *mappings = pin->mappings();
 
     if (!suppressEmission) {
+        QPtrList<MuxMapping> *mappings = pin->mappings();
         if (mappings->count() > 0) {
             // emit pinAdd signals for each mapping if needed
             for (unsigned i = 0; i < mappings->count(); i++) {
@@ -183,6 +183,9 @@ void MuxModel::addMuxPin(MuxPin *pin, bool suppressEmission)
 void MuxModel::removeMuxPin(MuxPin *pin)
 {
     muxPins_.remove(pin);
+    PinModel *model = pin->model();
+    delete pin;
+    delete model;
 }
 
 QCanvasItemList MuxModel::createView(QCanvas *canvas)

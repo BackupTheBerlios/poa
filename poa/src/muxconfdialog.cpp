@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.15 2003/09/29 10:59:39 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.16 2003/09/29 13:54:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -100,6 +100,10 @@ MuxPin *MuxListViewItem::data() const {
 
 MuxPin *MuxListViewItem::origData() const {
     return origin_;
+}
+
+void MuxListViewItem::setOrigData(MuxPin *pin) {
+    origin_ = pin;
 }
 
 void MuxListViewItem::update() {
@@ -360,11 +364,13 @@ void MuxConfDialog::updateModel() {
         // delete everything which was deleted by the user
         for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
             MuxPin *pin = deletedMuxPins_.at(i);
+            deletedMuxPins_.remove(i);
             model_->removeMuxPin(pin);
         }
 
         for (unsigned i = 0; i < deletedMappings_.count(); i++) {
             MuxMapping *mapping = deletedMappings_.at(i);
+            deletedMappings_.remove(i);
             model_->removeMuxMapping(mapping);
         }
 
@@ -405,15 +411,13 @@ void MuxConfDialog::updateModel() {
                 else {
                     // It's a new MuxPin, just add a cloned one
                     model_->addMuxPin(currPin->clone());
+                    muxItem->setOrigData(currPin);
                 }
             }
         }
         // Notify model about update, so the view will be
         // repaint.
         ((AbstractModel *)model_)->updatePerformed();
-
-        // Note: Don't clear the mappingListView here, because the apply
-        // action uses also updateModel.
     }
 }
 
@@ -618,6 +622,9 @@ void MuxConfDialog::removeIo(MuxListViewItem *item) {
             return;
             break;
         }
+    }
+    else if (origMuxPin != 0) {
+        deletedMuxPins_.append(origMuxPin);
     }
 
     mappingListView->takeItem(item);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.9 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.10 2003/09/29 13:54:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -110,6 +110,11 @@ public:
      * Returns the origin MuxPin, represented by this view item.
      */
     MuxPin *origData() const;
+
+    /**
+     * Sets the origin pin.
+     */
+    void setOrigData(MuxPin *pin);
 
     /**
      * Updates the view with current contents of the <code>clone_</code> 

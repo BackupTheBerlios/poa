@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.13 2003/09/25 16:27:41 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.14 2003/09/29 13:54:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -78,6 +78,11 @@ public:
      * Returns the origin PinModel, represented by this view item
      */
     PinModel *origData() const;
+
+    /**
+     * Sets the original pin.
+     */
+    void PinListViewItem::setOrigPin(PinModel *pin);
 
     /**
      * Returns type of this view item (used for items without

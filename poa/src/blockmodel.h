@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.38 2004/01/17 17:35:39 squig Exp $
+ * $Id: blockmodel.h,v 1.39 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -82,6 +82,11 @@ public:
     unsigned int clock() const;
 
     /**
+     * Returns a list of all PinModels that are connected to input.
+     */
+    virtual QPtrList<PinModel> connectionsForInputPin(PinModel *input);
+
+    /**
      * Creates the CanvasItems for the block.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
@@ -112,11 +117,6 @@ public:
     virtual bool hasRuntime() const;
 
     /**
-     * Returns all pins
-     */
-    QValueList<PinModel*> pins() const;
-
-    /**
      * Finds a pin according to its id
      */
     PinModel *findPinById(const unsigned id);
@@ -125,6 +125,11 @@ public:
      * Returns the starting offset of the block.
      */
     unsigned int offset() const;
+
+    /**
+     * Returns all pins
+     */
+    QValueList<PinModel*> pins() const;
 
     /**
      * Returns the runtime of the block.

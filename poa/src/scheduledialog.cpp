@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.31 2004/01/18 17:32:21 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.32 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -148,7 +148,8 @@ void ScheduleDialog::buildTree()
         }
     }
 
-    //BlockGraph::build(graph_);
+    BlockGraph graph(project_);
+    graph.blocks();
 
     // Then built the trees from the input blocks on
     blocksToTree_.clear();

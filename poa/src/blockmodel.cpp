@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.43 2004/01/18 13:50:48 squig Exp $
+ * $Id: blockmodel.cpp,v 1.44 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -79,6 +79,20 @@ bool BlockModel::autoOffset() const
 unsigned int BlockModel::clock() const
 {
     return clock_;
+}
+
+QPtrList<PinModel> BlockModel::connectionsForInputPin(PinModel *)
+{
+    QValueList<PinModel*> pins = this->pins();
+    QPtrList<PinModel> connectedPins;
+    for (QValueList<PinModel*>::Iterator it = pins.begin(); it != pins.end();
+         ++it) {
+
+        if ((*it)->type() == PinModel::OUTPUT) {
+            connectedPins.append(*it);
+        }
+    }
+    return connectedPins;
 }
 
 QCanvasItemList BlockModel::createView(QCanvas *canvas)

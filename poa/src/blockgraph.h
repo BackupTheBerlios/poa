@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.h,v 1.1 2004/01/18 13:50:48 squig Exp $
+ * $Id: blockgraph.h,v 1.2 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@
 class AbstractModel;
 class BlockModel;
 class PinModel;
+class PinNode;
 class Project;
 
 class BlockNode
@@ -38,10 +39,12 @@ class BlockNode
 public:
 
     BlockNode(BlockModel* bm);
-    ~BlockNode();
+    virtual ~BlockNode();
 
 
     void addNeighbour(BlockNode *node);
+
+    //void addPin(PinNode *pin);
 
     /**
      * Returns true, if the automatic offset calculation should be used.
@@ -74,6 +77,8 @@ public:
      */
     unsigned int offset() const;
 
+    //QPtrList<PinNode> pins() const;
+
     /**
      * Returns the runtime of the block.
      */
@@ -102,6 +107,7 @@ public:
 private:
     BlockModel *block_;
     QPtrList<BlockNode> neighbours_;
+    QPtrList<PinNode> pins_;
 
     bool autoOffset_;
     int clock_;
@@ -113,14 +119,17 @@ class PinNode
 {
 public:
 
-    PinNode(PinModel *pin);
+    PinNode(BlockNode *parent, PinModel *pin);
+    virtual ~PinNode();
 
-    ~PinNode();
-
+    void addNeighbour(PinNode *neighbour);
     PinModel *model();
+    QPtrList<PinNode> neighbours() const;
 
 private:
 
+    QPtrList<PinNode> neighbours_;
+    BlockNode *parent_;
     PinModel *pin_;
 };
 
@@ -130,12 +139,20 @@ public:
 
     BlockGraph(Project *project);
 
+    QValueList<BlockNode*> blocks() const;
+
 private:
 
-    void add(BlockNode *node);
+    typedef QMap<PinModel*, PinNode*> ModelNodeMap;
 
-    QMap<AbstractModel*, BlockNode*> modelByNode_;
-    QPtrList<BlockNode> blocks_;
+    void addInputBlock(BlockModel *model);
+    PinNode *addInput(PinModel *pin);
+    PinNode *addOutput(PinModel *pin);
+    BlockNode *addBlock(BlockModel *block);
+
+    ModelNodeMap nodeByModel_;
+    QMap<BlockModel*, BlockNode*> nodeByBlock_;
+    QPtrList<BlockNode> inputBlocks_;
 };
 
 #endif // POA_BLOCKGRAPH_H

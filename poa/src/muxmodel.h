@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.29 2004/01/12 19:56:36 garbeam Exp $
+ * $Id: muxmodel.h,v 1.30 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -115,7 +115,7 @@ public:
     void deserialize(MuxModel *parent, QDomElement element);
 
     /**
-     * Returns clone of <code>this</code>. 
+     * Returns clone of <code>this</code>.
      * @param input the input PinModel which should be used for cloning.
      * If you need for some reason the original input pin use this
      * method like this: <code>mapping->clone(mapping->input());</code>
@@ -210,7 +210,7 @@ public:
     QPtrList<MuxMapping> *mappings();
 
     /** Returns list pointer of all PinModels which are connected by input. */
-    QPtrList<PinModel> connectionsForInputPin(PinModel *input);
+    virtual QPtrList<PinModel> connectionsForInputPin(PinModel *input);
 
 
 private:

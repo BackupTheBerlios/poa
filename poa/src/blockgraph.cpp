@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.1 2004/01/18 13:50:48 squig Exp $
+ * $Id: blockgraph.cpp,v 1.2 2004/01/18 17:33:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,7 +45,10 @@ BlockNode::~BlockNode()
 
 void BlockNode::addNeighbour(BlockNode* neighbour)
 {
-    neighbours_.append(neighbour);
+    // FIX: this is called frequently, better use a hashmap
+    if (!neighbours_.contains(neighbour)) {
+        neighbours_.append(neighbour);
+    }
 }
 
 
@@ -108,8 +111,9 @@ void BlockNode::setRuntime(const unsigned int runtime)
     runtime_ = runtime;
 }
 
-PinNode::PinNode(PinModel *pin)
+PinNode::PinNode(BlockNode *parent, PinModel *pin)
 {
+    parent_ = parent;
     pin_ = pin;
 }
 
@@ -117,77 +121,134 @@ PinNode::~PinNode()
 {
 }
 
+void PinNode::addNeighbour(PinNode *neighbour)
+{
+    neighbours_.append(neighbour);
+}
+
 PinModel *PinNode::model()
 {
     return pin_;
 }
 
+QPtrList<PinNode> PinNode::neighbours() const
+{
+    return neighbours_;
+}
+
 BlockGraph::BlockGraph(Project *project)
 {
-    QPtrList<BlockNode> inputBlocks;
-
     // First look for all input blocks
+    QPtrList<BlockNode> inputBlocks;
     for (QPtrListIterator<AbstractModel> it(*project->blocks()); it != 0;
          ++it) {
 
-        if (INSTANCEOF(*it, BlockModel))  {
-            BlockModel* bm = dynamic_cast<BlockModel*>(*it);
-            if (!bm->hasInputPins() && !bm->hasEpisodicPins()) {
-                BlockNode* node = new BlockNode(bm);
-                inputBlocks.append(node);
+        BlockModel* block = dynamic_cast<BlockModel*>(*it);
+        if (block != 0)  {
+            if (!block->hasInputPins() && !block->hasEpisodicPins()) {
+                addInputBlock(block);
             }
+        }
+    }
+}
+
+// Recursively build tree
+void BlockGraph::addInputBlock(BlockModel *model)
+{
+    inputBlocks_.append(addBlock(model));
+
+    QValueList<PinModel*> pins = model->pins();
+    for (QValueList<PinModel*>::Iterator it = pins.begin(); it != pins.end();
+         ++it) {
+        addOutput(*it);
+    }
+}
+
+PinNode *BlockGraph::addInput(PinModel *pin)
+{
+    Q_ASSERT(pin->type() == PinModel::INPUT);
+
+    ModelNodeMap::const_iterator nodeIt = nodeByModel_.find(pin);
+    if (nodeIt != nodeByModel_.end()) {
+        return *nodeIt;
+    }
+
+    PinNode *node = new PinNode(addBlock(pin->parent()), pin);
+    nodeByModel_[pin] = node;
+
+    // Check all output pins for this input pin
+    QPtrList<PinModel> pins = pin->parent()->connectionsForInputPin(pin);
+    for (QPtrListIterator<PinModel> it(pins); it != 0; ++it) {
+        node->addNeighbour(addOutput(*it));
+    }
+
+    return node;
+}
+
+PinNode *BlockGraph::addOutput(PinModel *pin)
+{
+    Q_ASSERT(pin->type() == PinModel::OUTPUT);
+
+    ModelNodeMap::const_iterator nodeIt = nodeByModel_.find(pin);
+    if (nodeIt != nodeByModel_.end()) {
+        return *nodeIt;
+    }
+
+    BlockNode *parent = addBlock(pin->parent());
+    PinNode *node = new PinNode(parent, pin);
+    nodeByModel_[pin] = node;
+
+    PinModel *target = pin->connected();
+    if (target != 0) {
+        parent->addNeighbour(addBlock(target->parent()));
+        node->addNeighbour(addInput(target));
+    }
+
+    return node;
+}
+
+BlockNode *BlockGraph::addBlock(BlockModel *block)
+{
+    if (nodeByBlock_.contains(block)) {
+        return nodeByBlock_[block];
+    }
+    else {
+        BlockNode *node = new BlockNode(block);
+        nodeByBlock_[block] = node;
+        return node;
+    }
+}
+
+QValueList<BlockNode*> BlockGraph::blocks() const
+{
+    QPtrList<PinNode> seen;
+    QPtrList<PinNode> pending;
+
+    for (QPtrListIterator<BlockNode> it(inputBlocks_); it != 0; ++it) {
+        QValueList<PinModel*> pins = (*it)->model()->pins();
+        for (QValueList<PinModel*>::Iterator it2 = pins.begin();
+             it2 != pins.end(); ++it2) {
+            qDebug("Push: " + (*it2)->name());
+            pending.append(nodeByModel_[*it2]);
         }
     }
 
 
-    for (QPtrListIterator<BlockNode> it2(inputBlocks); it2 != 0; ++it2) {
-        add(*it2);
+    while (!pending.isEmpty()) {
+        PinNode *node = pending.first();
+        pending.removeFirst();
+        seen.append(node);
+
+        qDebug("Name: " + node->model()->name());
+
+        QPtrList<PinNode> pins = node->neighbours();
+        for (QPtrListIterator<PinNode> it(pins); it != 0; ++it) {
+            if (!seen.contains(*it)) {
+                pending.append(*it);
+            }
+        }
     }
 
+    return nodeByBlock_.values();
 }
 
-// Recursively build tree
-void BlockGraph::add(BlockNode *node)
-{
-    QValueList<PinModel*> pins = node->model()->pins();
-//      for (QValueList<PinModel*>::Iterator pin = pins.begin(); pin != pins.end();
-//           ++pin) {
-
-//          if (((*pin)->type() == PinModel::OUTPUT) && (*pin)->connected()) {
-//              BlockModel* target = (*pin)->connected()->parent();
-
-//              // In case of Mux get list of connecting blocks from Mux
-//              if (INSTANCEOF(target, MuxModel)) {
-//                  QPtrList<PinModel> pins =
-//                      ((MuxModel*)block)->connectionsForInputPin((*pin)->connected());
-//                  // Check all output pins for this input pin
-//                  for (QPtrListIterator<PinModel> muxit(pins); muxit != 0; ++muxit) {
-//                      if (!(*muxit)->connected()) continue;
-//                      block = (*muxit)->connected()->parent();
-//                      // Only add model recursively if not already in tree
-
-//                      if (blocksToTree_.contains(block)) {
-//                          // add back reference only and stop recursion.
-//                          bt->addBranch(block)->setBackReference(true);
-//                      } else {
-//                          BlockTree *lb = bt->addBranch(block);
-//                          blocksToTree_.insert(block, lb);
-//                          blocks_.append(lb);
-//                          buildBranch(lb);
-//                      }
-//                  }
-//              } else {    // No mux, straight connection
-
-//                  if (blocksToTree_.contains(block)) {
-//                      // add back reference only and stop recursion.
-//                      bt->addBranch(block)->setBackReference(true);
-//                  } else {
-//                      BlockTree *lb = bt->addBranch(block);
-//                      blocksToTree_.insert(block, lb);
-//                      blocks_.append(lb);
-//                      buildBranch(lb);
-//                  }
-//              }
-//          }
-//      }
-}

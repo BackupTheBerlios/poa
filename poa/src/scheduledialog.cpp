@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.42 2004/01/22 13:11:10 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.43 2004/01/22 15:20:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -663,7 +663,7 @@ FitCanvasView::FitCanvasView(QCanvas *canvas, QWidget *parent, int height)
 
 }
 
-void FitCanvasView::resizeEvent(QResizeEvent)
+void FitCanvasView::resizeEvent(QResizeEvent *)
 {
     int viewareaHeight = height() - horizontalScrollBar()->height();
     qDebug("--");

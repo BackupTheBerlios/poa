@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.5 2003/09/03 14:57:43 keulsn Exp $
+ * $Id: abstractview.h,v 1.6 2003/09/04 12:44:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -61,7 +61,7 @@ public:
      * @return The distance <code>this</code> has really moved. Does not
      *         have to be equal to <code>QSize (dx, dy)</code>.
      */
-    virtual QSize dragBy(double dx, double dy) { return QSize(0, 0); }
+    virtual QSize dragBy(double, double) { return QSize(0, 0); }
 
 };
 #endif

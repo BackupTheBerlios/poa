@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.17 2004/01/29 13:33:48 vanto Exp $
+ * $Id: poa.h,v 1.18 2004/01/29 13:43:16 vanto Exp $
  *
  *****************************************************************************/
 
@@ -57,9 +57,7 @@ enum LineDirection {UNKNOWN, UP, DOWN, LEFT, RIGHT};
  */
 LineDirection reverse(LineDirection dir);
 
-/**
- *
- */
+
 int distInDir(LineDirection dir, int x, int y);
 
 

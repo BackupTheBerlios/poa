@@ -1,13 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: angebot.tex,v 1.4 2003/06/12 21:23:24 squig Exp $
+%% $Id: angebot.tex,v 1.5 2003/06/17 21:14:08 vanto Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\newcommand\version{$Revision: 1.4 $\xspace}
+\RCSdef $Revision: 1.5 $
+\RCSdef $Date: 2003/06/17 21:14:08 $
+
+\newcommand\version{Version \RCSRevision \xspace}
 
 \title {\huge \product\\[0.5cm]\large Angebot\\[0.5cm] \version
   \\[1cm] \Large \company}
@@ -17,7 +20,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Deckblatt
 
-\maketitle
+\begin{titlepage}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+{\Huge
+\raggedright
+\textbf{POA} \\
+\huge Programmierumgebung offener Antrieb
+\rule{\textwidth}{0.75pt}
+\par
+}
+\begin{flushleft}
+\normalsize
+\version \\[2ex]
+\today \\
+%\RCSDate \\
+\end{flushleft}
+\vfill
+
+{\parindent=0cm
+\Huge Angebot
+}
+
+
+\setcounter{footnote}{0}
+\end{titlepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Versionsgeschichte

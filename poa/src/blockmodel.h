@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.34 2003/12/03 17:33:42 garbeam Exp $
+ * $Id: blockmodel.h,v 1.35 2003/12/10 14:43:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -204,11 +204,6 @@ signals:
      * Emitted when a pin is added.
      */
     void pinAdded(PinModel *pin);
-
-    /**
-     * Emitted when updatePerformed() was called.
-     */
-//    virtual void updated();
 
     /**
      * Emitted when model gets deleted

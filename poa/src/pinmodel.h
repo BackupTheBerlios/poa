@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.28 2003/12/10 14:15:58 garbeam Exp $
+ * $Id: pinmodel.h,v 1.29 2003/12/10 14:43:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -115,13 +115,13 @@ public:
     void setType(PinType type);
 
     /**
-     * Returns this' position.
+     * Returns the position of the pin.
      * The position is set by the BlockConfDialog.
      */
     unsigned position();
 
     /**
-     * Sets this' position.
+     * Sets the position of the pin.
      * Used by the BlockModel
      */
     void setPosition(unsigned position);

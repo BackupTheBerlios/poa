@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.38 2003/12/02 09:59:50 vanto Exp $
+ * $Id: blockview.h,v 1.39 2003/12/10 14:43:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -39,6 +39,7 @@
 #include "serializable.h"
 #include "tooltipable.h"
 class AbstractModel;
+class BlockModel;
 class PinModel;
 class PinView;
 
@@ -68,7 +69,7 @@ public:
      * <code>model</code>. Use the member {@link #addPinViewsTo} to get a
      * list of the pin views that were created.
      */
-    BlockView(AbstractModel *model, QCanvas *canvas);
+    BlockView(BlockModel *model, QCanvas *canvas);
 
     /**
      * Default destructor
@@ -222,7 +223,7 @@ private:
      */
     void updateProperties();
 
-    AbstractModel *model_;
+    BlockModel *model_;
 
     QValueList<PinView *> leftPins_;
     QValueList<PinView *> rightPins_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.46 2003/12/02 09:59:50 vanto Exp $
+ * $Id: blockview.cpp,v 1.47 2003/12/10 14:43:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,37 +45,21 @@
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
 
 
-/*unsigned max(unsigned left, unsigned right)
-  {
-  if (left > right) return left;
-  else return right;
-  }*/
-
-
-BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
+BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     : QCanvasRectangle(canvas)
 {
-    model_ = model;
+    this->model_ = model;
 
     BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
 
     setBrush(white);
     setPen(QPen(Settings::instance()->defaultColor(), 2));
 
-    if (INSTANCEOF(model_, BlockModel)) {
-        BlockModel *blockModel = (BlockModel *)model_;
-        connect(blockModel, SIGNAL(pinAdded(PinModel *)),
-                this, SLOT(addPin(PinModel *)));
-        connect(blockModel, SIGNAL(updated()), this, SLOT(updateView()));
-        connect(blockModel, SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(model_, SIGNAL(pinAdded(PinModel *)),
+            this, SLOT(addPin(PinModel *)));
+    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
 
-        // create pin views
-        //        addPins(blockModel->inputPins());
-        //        addPins(blockModel->outputPins());
-        //        addPins(blockModel->episodicPins());
-        addPins(blockModel->pins());
-    }
-
+    addPins(model_->pins());
     arrangePins();
 }
 
@@ -112,6 +96,8 @@ void BlockView::addPin(PinModel *pin)
         pinView = pin->createView(this, PinView::PIN_BOTTOM);
         break;
     }
+
+    // FIX: we should obey the sort order: pin->position()
     pinList(pinView)->append(pinView);
 }
 
@@ -462,14 +448,6 @@ void BlockView::deleteView()
 
 QString BlockView::tip()
 {
-    // FIX: model_ should be of type BlockModel
-    //return model()->tip();
-
-    if (INSTANCEOF(model_, BlockModel)) {
-        BlockModel *blockModel = (BlockModel *)model_;
-        return blockModel->tip();
-    }
-
-    return QString::null;
+    return model_->tip();
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.7 2004/02/20 17:31:44 kilgus Exp $
+ * $Id: connectormoveaction.cpp,v 1.8 2004/02/20 17:40:16 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -62,6 +62,7 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
     // Copy old point list into new and move our start and end-point.
     // Create new point if needed (segment is on a pin).
     QValueList<QPoint>::Iterator it;
+    QValueList<QPoint>::Iterator lastIt;
     for (it = points.begin(); it != points.end(); ++it ) {
         if ((*it == startP) || (*it == endP)) {
             // Translate point using delta

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.49 2004/01/23 01:41:26 vanto Exp $
+ * $Id: project.cpp,v 1.50 2004/01/24 00:06:22 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -358,7 +358,7 @@ void Project::deserialize(QDomDocument *document) {
 
         // set palette position
         QDomNodeList paletteElements = vEl.elementsByTagName("palette-view");
-        if (paletteElements.count() == 1) {
+        if (paletteElements.count() > 0) {
             QDomElement paletteElement = paletteElements.item(0).toElement();
             canvas->colorManager()->moveBy(paletteElement
                                            .attribute("x", "0").toUInt(),

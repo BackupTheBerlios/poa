@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.6 2004/01/23 01:41:26 vanto Exp $
+ * $Id: colormanager.cpp,v 1.7 2004/01/24 00:06:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,27 +38,33 @@ ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
       palPosition_(0)
 {
     setBrush(white);
+    models_ = new SortedBlockList();
 }
 
 ColorManager::~ColorManager()
 {
+    delete models_;
 }
 
 QColor ColorManager::color(const BlockModel *model, int luminance)
 {
-    // rotate palette
-    if (palPosition_ > palette_->size()) {
-        palPosition_ = 0;
+    if (!nsToPalIndex_.contains(model->clock())) {
+        // insert model into modellist
+        models_->inSort(model);
+
+        // connect to update event
+        connect(model, SIGNAL(updated()),
+                this, SLOT(updateMap()));
+
+        // connect to delete event
+        connect(model, SIGNAL(deleted()),
+                this, SLOT(updateMap()));
+
+        // update mapping and widget size
+        updateMap();
     }
 
-    if (!nsToPalIndex_.contains(model->clock())) {
-        nsToPalIndex_.insert(model->clock(), palPosition_);
-        updateWigetSize(model->clock());
-        return palette_->color(palPosition_++);
-    }
-    else {
-        return palette_->color(nsToPalIndex_[model->clock()]).light(luminance);
-    }
+    return palette_->color(nsToPalIndex_[model->clock()]).light(luminance);
 }
 
 QColor ColorManager::color(AbstractModel *model, int luminance)
@@ -80,6 +86,40 @@ QColor ColorManager::activatedColor(AbstractModel*, int)
 QColor ColorManager::selectedColor(AbstractModel*, int)
 {
     return Settings::instance()->selectedColor();
+}
+
+void ColorManager::updateMap()
+{
+    // clean up
+    nsToPalIndex_.clear();
+    palPosition_ = 0;
+
+    BlockModel *model;
+    int fontheight = QFontMetrics(QApplication::font())
+        .height();
+
+    int height = (models_->count() + 2) * (fontheight + VSPACE);
+    int width = QFontMetrics(QApplication::font()).width(tr("Legend"));
+
+    for (model = models_->first(); model; model = models_->next()) {
+
+        // rotate palette
+        if (palPosition_ > palette_->size()) {
+            palPosition_ = 0;
+        }
+
+        // insert mapping
+        nsToPalIndex_.insert(model->clock(), palPosition_++);
+
+        // calculate max width
+        width = QMAX(width, QFontMetrics(QApplication::font())
+                     .width(QString::number(model->clock()) + " ns")
+                     + SAMPLE_SIZE + (3 * HSPACE));
+    }
+
+    setSize(width, height);
+    update();
+    canvas()->update();
 }
 
 QPoint ColorManager::dragBy(int dx, int dy)
@@ -126,7 +166,7 @@ void ColorManager::drawShape(QPainter &p)
     QFont f = p.font();
     f.setBold(true);
     p.setFont(f);
-    p.drawText(textArea, QObject::AlignHCenter, "Legend");
+    p.drawText(textArea, QObject::AlignHCenter, tr("Legend"));
     f.setBold(false);
     p.setFont(f);
 
@@ -152,29 +192,6 @@ void ColorManager::drawShape(QPainter &p)
     }
 }
 
-void ColorManager::updateWigetSize(int clock)
-{
-    int fontheight = QFontMetrics(QApplication::font())
-        .height();
-    int h = (nsToPalIndex_.count()+2) * (fontheight + VSPACE);
-    int w = QFontMetrics(QApplication::font())
-        .width(QString::number(clock) + " ns") + SAMPLE_SIZE;
-
-    setSize(h, QMAX(w, width()));
-
-    /*    if (width() < (3 * HSPACE) + SAMPLE_SIZE + w) {
-        qDebug(QString::number(width()));
-        qDebug(QString::number((3 * HSPACE) + SAMPLE_SIZE + w));
-        qDebug("--");
-        setSize(h, (3 * HSPACE) + SAMPLE_SIZE + w);
-        qDebug(QString::number(width()));
-        qDebug(QString::number((3 * HSPACE) + SAMPLE_SIZE + w));
-        qDebug("-+-");
-    }
-    else {
-        setSize(h, width());
-        }*/
-}
 
 /* ------------------------------------------------------------------------- */
 
@@ -247,4 +264,13 @@ Palette *Palette::lightPalette()
     palette->addColor(QColor("#F5DEB3")); // wheat
 
     return palette;
+}
+
+/* ------------------------------------------------------------------------- */
+
+int SortedBlockList::compareItems(QPtrCollection::Item item1,
+                                  QPtrCollection::Item item2)
+{
+    return ((BlockModel*)item1)->clock()
+        - ((BlockModel*)item2)->clock();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.5 2004/01/23 01:41:26 vanto Exp $
+ * $Id: colormanager.h,v 1.6 2004/01/24 00:06:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,7 @@
 #include <qptrlist.h>
 
 class Palette;
+class SortedBlockList;
 
 /**
  * Provides a color manager and a palette widget.
@@ -47,11 +48,12 @@ class Palette;
  * The palette widget displays a vertical box and displays a legend for
  * the color -> nanoseconds mapping.
  */
-class ColorManager : public QCanvasRectangle,
+class ColorManager : public QObject,
+                     public QCanvasRectangle,
                      public Moveable,
                      public Serializable
 {
-
+    Q_OBJECT
  public:
 
     /**
@@ -133,8 +135,18 @@ class ColorManager : public QCanvasRectangle,
     /* maps nanoseconds to a palette entry */
     QMap<int, int> nsToPalIndex_;
 
+    /* holds all registered cpu models */
+    SortedBlockList *models_;
+
     /* points to the next palette entry */
     int palPosition_;
+
+ private slots:
+
+     /**
+      * Updates the ns-palette mapping
+      */
+     void updateMap();
 
 };
 
@@ -193,6 +205,18 @@ class Palette
     /** the palette */
     QValueList<QColor> colorList_;
 
+};
+
+
+/**
+ * Provides a sorted block list
+ */
+class SortedBlockList : public QPtrList<BlockModel>
+{
+
+ protected:
+    int compareItems(QPtrCollection::Item item1,
+                     QPtrCollection::Item item2);
 };
 
 #endif // POA_COLORMANAGER_H

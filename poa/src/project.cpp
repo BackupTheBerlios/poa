@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.12 2003/08/29 17:59:38 vanto Exp $
+ * $Id: project.cpp,v 1.13 2003/08/29 18:08:22 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -31,6 +31,7 @@
 Project::Project(QString name)
 {
     currentBlockId_ = 0;
+    currentConnectorId_ = 0;
     name_ = name;
 }
 
@@ -93,9 +94,15 @@ QDomDocument Project::serialize()
     QDomElement vlist = doc.createElement("views");
     proj.appendChild(vlist);
 
-    // create model list
+    // create block model list
     AbstractModel *model;
     for (model = blocks_.first(); model; model = blocks_.next()) {
+        QDomElement mElem = model->serialize(&doc);
+        mlist.appendChild(mElem);
+    }
+
+    // create connector model list
+    for (model = connectors_.first(); model; model = connectors_.next()) {
         QDomElement mElem = model->serialize(&doc);
         mlist.appendChild(mElem);
     }

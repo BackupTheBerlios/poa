@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.cpp,v 1.5 2004/01/09 16:56:24 squig Exp $
+ * $Id: connectorrouter.cpp,v 1.6 2004/01/30 14:24:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -31,25 +31,9 @@
 
 #include <qcanvas.h>
 #include <qptrdict.h>
-// #include <utility>
-// #include <map>
-// #include <qdict.h>
 
 void ConnectorRouter::route(QCanvasItemList items)
 {
-//     typedef std::map<ConnectorViewSegment*, ConnectorViewSegment*> ConnectorHistory;
-
-//     ConnectorHistory history;
-//         ConnectorViewSegment *view = dynamic_cast<ConnectorViewSegment*>(*it);
-//         if (view != 0) {
-//             std::pair<ConnectorHistory::iterator, bool> result =
-//               history.insert(ConnectorHistory::value_type(view, view));
-
-//             if (result.second) {
-//                 route(view->viewList());
-//             }
-//         }
-//     }
     QPtrDict<ConnectorViewList> routeItems;
 
     QCanvasItemList::iterator it = items.begin();
@@ -78,7 +62,9 @@ void ConnectorRouter::route(QCanvasItemList items)
     QValueList<ConnectorViewList*> connectors;
     QPtrDictIterator<ConnectorViewList> it2(routeItems);
     for(; it2.current(); ++it2 ) {
-        connectors.append(it2.current());
+        //connectors.append(it2.current()); why? --> linear search (sk 30/01)
+	connectors.prepend(it2.current());
+	(it2.current())->awaitRerouting(true);
     }
     route(connectors);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.cpp,v 1.6 2004/01/15 14:47:18 kilgus Exp $
+ * $Id: dijkstrarouter.cpp,v 1.7 2004/01/30 14:24:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -164,7 +164,7 @@ unsigned PossiblePoint::calcWeight(PossiblePoint *prev,
  * Weighting *
  *************/
 
-const int Weighting::fringe_ = 5;
+const int Weighting::fringe_ = 20;
 
 Weighting::Weighting(QPoint from, QPoint to, QCanvas *canvas):
     grid_(from, 10) // dummy initialization, will be overwritten
@@ -205,8 +205,13 @@ Weighting::Weighting(QPoint from, QPoint to, QCanvas *canvas):
     for (QCanvasItemList::const_iterator current = items.begin();
 	 current != items.end(); ++current) {
 
-	if ((*current)->selected()) {
-	    continue;
+	ConnectorViewSegment *currentSegment = 
+	    dynamic_cast<ConnectorViewSegment*>(*current);
+	if (currentSegment != 0) {
+	    ConnectorViewList *currentViewList = currentSegment->viewList();
+	    if (currentViewList != 0 && currentViewList->awaitsRerouting()) {
+		continue;
+	    }
 	}
 
 	QRect bounding = (*current)->boundingRect();
@@ -356,7 +361,7 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     while (current != target && !unreached.isEmpty()) {
 	unsigned currentWeight = current->weight() + 200;
 	for (int i = 1; true; ++i) {
-	    Q_ASSERT(unreached.checkIntegrity() == QString::null);
+	    // Q_ASSERT(unreached.checkIntegrity() == QString::null);
 
 	    QPoint newPoint = weighting.move(current->point(), 
 					     current->direction(),
@@ -371,26 +376,26 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
 
 	    Node newNode(newPoint, current->direction());
 	    if (newNode == endNode) {
-		qDebug("target seen: " + QString::number(target->weight()));
+		//qDebug("target seen: " + QString::number(target->weight()));
 		seeNode(newNode, current, unreached, seen, currentWeight);
-		qDebug("update:      " + QString::number(target->weight()));
-	    }
+		//qDebug("update:      " + QString::number(target->weight()));
+            }
 
-	    newNode = Node(newPoint, turnLeft(current->direction()));
-	    if (newNode != endNode) {
-		// cannot dock after turn!
-		seeNode(newNode, current, unreached, seen, currentWeight);
-	    }
+            newNode = Node(newPoint, turnLeft(current->direction()));
+            if (newNode != endNode) {
+                // cannot dock after turn!
+                seeNode(newNode, current, unreached, seen, currentWeight);
+            }
 
-	    newNode = Node(newPoint, turnRight(current->direction()));
-	    if (newNode != endNode) {
-		// cannot dock after turn!
-		seeNode(newNode, current, unreached, seen, currentWeight);
-	    }
-	}
+            newNode = Node(newPoint, turnRight(current->direction()));
+            if (newNode != endNode) {
+                // cannot dock after turn!
+                seeNode(newNode, current, unreached, seen, currentWeight);
+            }
+        }
 
-	Q_ASSERT(!unreached.isEmpty());
-	current = unreached.removeHead();
+        // Q_ASSERT(!unreached.isEmpty());
+        current = unreached.removeHead();
     }
 
     //qDebug("target reached");
@@ -400,25 +405,25 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     // where we find target, but there is no path leading to target.
     // thus we check for this situation by testing if current has a predecessor
     if (current == target && current->prev() != 0) {
-	result = new QValueList<QPoint>;
-	result->prepend(to);
+        result = new QValueList<QPoint>;
+        result->prepend(to);
 
-	//qDebug(image(current->point()) + ": " 
-	//       + QString::number(current->weight()));
+        //qDebug(image(current->point()) + ": " 
+        //       + QString::number(current->weight()));
 
-	current = current->prev();
-	while (current->prev() != 0) {
-	    //qDebug(image(current->point()));
-	    result->prepend(weighting.translate(current->point()));
+        current = current->prev();
+        while (current->prev() != 0) {
+            //qDebug(image(current->point()));
+            result->prepend(weighting.translate(current->point()));
 
-	    //    qDebug(image(current->point())
-	    //	   + ": " + QString::number(current->weight()));
+            //    qDebug(image(current->point())
+            //     + ": " + QString::number(current->weight()));
 
-	    current = current->prev();
-	}
+            current = current->prev();
+        }
 
 
-	//qDebug(image(current->point()) + ": " +
+        //qDebug(image(current->point()) + ": " +
 	//       QString::number(current->weight()));
 
 	result->prepend(from);
@@ -443,6 +448,7 @@ void DijkstraRouter::route(ConnectorViewList *view)
 
     PinView *source = view->source();
     PinView *target = view->target();
+    view->awaitRerouting(true);
     QValueList<QPoint> *points = routeOne(source->connectorPoint(),
 					  source->connectorSourceDir(),
 					  target->connectorPoint(),
@@ -450,6 +456,7 @@ void DijkstraRouter::route(ConnectorViewList *view)
 					  canvas);
     if (points != 0) {
 	view->applyPointList(*points);
+	Q_ASSERT(!view->awaitsRerouting());
 	delete points;
     }
 }

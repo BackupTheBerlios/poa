@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.27 2004/01/20 15:45:01 garbeam Exp $
+ * $Id: connectorviewlist.cpp,v 1.28 2004/01/30 14:24:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -47,6 +47,7 @@ ConnectorViewList::ConnectorViewList(PinView *source,
     Q_ASSERT(source->canvas() == canvas);
     Q_ASSERT(target->canvas() == canvas);
 
+    awaitRoute_ = true;
     source_ = source;
     target_ = target;
     canvas_ = canvas;
@@ -202,43 +203,44 @@ void ConnectorViewList::deserialize(QDomElement element)
 
 void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
 {
+    awaitRoute_ = false;
     if (list.size() < 2) {
-    segments_.clear();
+        segments_.clear();
     }
     else {
 
-    QValueList<QPoint>::const_iterator point = list.begin();
-    ConnectorViewSegment *current = segments_.first();
+        QValueList<QPoint>::const_iterator point = list.begin();
+        ConnectorViewSegment *current = segments_.first();
 
-    QPoint second = *point;
-    ++point;
-    QPoint first;
-
-    while (point != list.end()) {
-        first = second;
-        second = *point;
+        QPoint second = *point;
         ++point;
+        QPoint first;
 
-        if (current != 0) {
-        current->setPoints(first.x(), first.y(),
-                   second.x(), second.y());
-        }
-        else {
-        current = new ConnectorViewSegment(first, second,
-                           canvas_, this);
+        while (point != list.end()) {
+            first = second;
+            second = *point;
+            ++point;
 
-        segments_.append(current);
-        current->show();
-        }
-        current = segments_.next();
-    }
+            if (current != 0) {
+                current->setPoints(first.x(), first.y(),
+                                   second.x(), second.y());
+            }
+            else {
+                current = new ConnectorViewSegment(first, second,
+                                                   canvas_, this);
 
-    if (current != 0) {
-        while (current != segments_.last()) {
-        segments_.removeLast();
-        }
-        segments_.removeLast();
-    }
+                segments_.append(current);
+                current->show();
+            }
+	    current = segments_.next();
+	}
+
+	if (current != 0) {
+	    while (current != segments_.last()) {
+		segments_.removeLast();
+	    }
+	    segments_.removeLast();
+	}
     }
 }
 
@@ -250,6 +252,17 @@ void ConnectorViewList::updateProperties()
         current = segments_.next();
     }
 }
+
+bool ConnectorViewList::awaitsRerouting()
+{
+    return awaitRoute_;
+}
+
+void ConnectorViewList::awaitRerouting(bool state)
+{
+    awaitRoute_ = state;
+}
+
 
 /*
 void ConnectorViewList::pinMoved(PinView *pin)

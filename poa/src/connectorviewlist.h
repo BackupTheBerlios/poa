@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.18 2004/01/18 23:15:11 squig Exp $
+ * $Id: connectorviewlist.h,v 1.19 2004/01/30 14:24:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -135,6 +135,21 @@ public:
      */
     virtual void deserialize(QDomElement element);
 
+    /**
+     * Returns true, unless <code>this</code> has been marked to be rerouted
+     * using {@link #awaitRerouting}.
+     */
+    bool awaitsRerouting();
+
+    /**
+     * Sets <code>this</code>'s "waiting for rerouting" state. This state can
+     * be inspected through the method {@link #awaitsRerouting}. That state
+     * should give hints to routers.
+     * Any call on {@link #applyPointList} will set the state to
+     * <code>false</code>
+     */
+    void awaitRerouting(bool state);
+
 public slots:
 
     void updateProperties();
@@ -149,6 +164,8 @@ private:
     QCanvas *canvas_;
     /** List of all segments of this connector view */
     QPtrList<ConnectorViewSegment> segments_;
+    /** Hint for routers */
+    bool awaitRoute_;
 
 };
 

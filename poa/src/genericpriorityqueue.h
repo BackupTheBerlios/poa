@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: genericpriorityqueue.h,v 1.2 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: genericpriorityqueue.h,v 1.3 2004/01/30 14:24:59 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -48,6 +48,7 @@ public:
   unsigned size() { return queue_.size(); }
 
   QString checkIntegrity() { return queue_.checkIntegrity(); }
+  int checkEqualDistribution() { return queue_.checkEqualDistribution(); }
 
 private:
     PriorityQueue queue_;

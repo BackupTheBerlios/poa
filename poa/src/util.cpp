@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.7 2004/01/21 17:20:56 vanto Exp $
+ * $Id: util.cpp,v 1.8 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -149,4 +149,13 @@ QString Util::squeeze(QString text, int maxWidth, QFont font)
 void Util::setExecutablePath(QString path)
 {
     Util::EXECUTABLE_PATH = path;
+}
+
+void Util::writeFile(QFile *file, const QString &content)
+{
+    if (file->open(IO_WriteOnly)) {
+        QTextStream out(file);
+        out << content;
+        file->close();
+    }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.36 2004/01/21 17:20:56 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.37 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -36,15 +36,14 @@ CpuModel::CpuModel(QString type, QString description)
     : BlockModel(type, description)
 {
     autoRuntime_ = true;
-    cpuId_ = -1;
-    project_ = 0;
+    cpuId_ = 1;
+    source_ = QString::null;
 }
 
 CpuModel::CpuModel(QDomElement element)
     : BlockModel(QString::null, QString::null)
 {
     deserialize(element);
-    project_ = 0;
 }
 
 CpuModel::~CpuModel()
@@ -66,41 +65,32 @@ void CpuModel::setCpuId(const int cpuId)
     cpuId_ = cpuId;
 }
 
-/**
- * Produces the XML representation of this instance
- */
-QDomElement CpuModel::serialize(QDomDocument *document)
+QDomElement CpuModel::serialize(QDomDocument *document, QString source)
 {
     QDomElement root = BlockModel::serialize(document);
     root.setAttribute("auto-runtime", autoRuntime() ? "true" : "false");
     root.setAttribute("block-type", "cpu");
     root.setAttribute("cpuid", cpuId_);
-
-    if (!isPartOfLibrary()) {
-        CodeManager::instance()->save(this);
+    if (!source.isEmpty()) {
+        QDomElement element = document->createElement("source-code");
+        element.appendChild(document->createCDATASection(source));
+        root.appendChild(element);
     }
-
     return root;
 }
 
-QDomElement CpuModel::serializeWithSource(QDomDocument *document)
+QDomElement CpuModel::serialize(QDomDocument *document)
 {
-    QString code = source_;
+    return serialize(document, source_);
+}
 
-    // if cpu has no external sourcefile because its part of the library,
-    // serialize the sourcecode which was deserialized from xml on
-    // instanciation.
-    if (!isPartOfLibrary()) {
-        code = CodeManager::instance()->sourceCode(this);
-    }
-
-    QDomElement root = serialize(document);
-    QDomElement source = document->createElement("source-code");
-    QDomCDATASection cdata = document->createCDATASection(code);
-    source.appendChild(cdata);
-    root.appendChild(source);
-
-    return root;
+QDomElement CpuModel::serializeCopy(QDomDocument *document)
+{
+    // read source file from disk in case it is not set
+    return serialize(document,
+                     source_.isEmpty()
+                     ? CodeManager::instance()->sourceCode(this)
+                     : source_);
 }
 
 void CpuModel::deserialize(QDomElement element)
@@ -108,32 +98,24 @@ void CpuModel::deserialize(QDomElement element)
     BlockModel::deserialize(element);
 
     setAutoRuntime((element.attribute("auto-runtime", "true") == "true"));
-    setCpuId(element.attribute("cpuid", "0").toInt());
+    setCpuId(element.attribute("cpuid", "1").toInt());
 
     // fetch sourcecode if available in xml tree
     QDomNodeList mList = element.elementsByTagName("source-code");
-
     if (mList.count() == 1
         && mList.item(0).toElement().firstChild().isCDATASection()) {
 
-        source_ =
-            mList.item(0).toElement().firstChild().toCDATASection().data();
+        source_
+            = mList.item(0).toElement().firstChild().toCDATASection().data();
+    }
+    else {
+        source_ = QString::null;
     }
 }
 
 void CpuModel::setAutoRuntime(const bool autoRuntime)
 {
     autoRuntime_ = autoRuntime;
-}
-
-void CpuModel::setProject(Project *project)
-{
-    project_ = project;
-}
-
-Project *CpuModel::project() const
-{
-    return project_;
 }
 
 QString CpuModel::tip()

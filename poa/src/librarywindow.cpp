@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.36 2004/01/21 17:51:49 squig Exp $
+ * $Id: librarywindow.cpp,v 1.37 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -28,6 +28,7 @@
 #include "modelfactory.h"
 #include "muxmodel.h"
 #include "pinmodel.h"
+#include "settings.h"
 #include "util.h"
 
 #include <qapplication.h>
@@ -100,7 +101,6 @@ LibraryWindow::~LibraryWindow()
 void LibraryWindow::add(AbstractModel *model)
 {
     new LibraryListViewItem(getTypeItem(model->type()), model);
-    model->setPartOfLibrary(true);
     modified_ = true;
 }
 
@@ -358,14 +358,8 @@ QDragObject *LibraryListView::dragObject()
     QDomDocument doc;
     QDomElement root = doc.createElement("model");
     doc.appendChild(root);
+    root.appendChild(item->data().serialize(&doc));
 
-    CpuModel *cpu = dynamic_cast<CpuModel*>(&(item->data()));
-    if (cpu != 0) {
-        root.appendChild(cpu->serializeWithSource(&doc));
-    }
-    else {
-        root.appendChild(item->data().serialize(&doc));
-    }
     QStoredDrag *dragItem = new QStoredDrag("text/xml", this);
     dragItem->setEncodedData(doc.toCString());
     return dragItem;

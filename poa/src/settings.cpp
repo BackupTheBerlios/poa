@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.19 2004/01/20 16:55:17 squig Exp $
+ * $Id: settings.cpp,v 1.20 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,12 @@ Settings::Settings(QString prefix)
 {
     this->prefix = prefix;
     this->confPath_ = QDir::homeDirPath() + "/.poa";
+
+    // create confpah if it does not exist
+    QDir confDir(confPath());
+    if (!confDir.exists()) {
+        confDir.mkdir(confPath(), TRUE);
+    }
 }
 
 Settings::~Settings()

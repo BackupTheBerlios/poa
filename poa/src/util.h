@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.8 2004/01/21 17:20:56 vanto Exp $
+ * $Id: util.h,v 1.9 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -111,6 +111,11 @@ class Util
      * @see #findResource(QString)
      */
     static void setExecutablePath(QString path);
+
+    /**
+     * Writes content to file.
+     */
+    static void Util::writeFile(QFile *file, const QString &content);
 
  private:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.20 2004/01/21 14:00:10 vanto Exp $
+ * $Id: abstractmodel.h,v 1.21 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #define ABSTRACTMODEL_H
 
 #include "serializable.h"
+class Project;
 
 #include <qobject.h>
 #include <qdom.h>
@@ -59,16 +60,31 @@ public:
     virtual QString description() const;
 
     /**
-     * Returns the type of this block, eg. NIOS16-CPU
-     */
-    virtual QString type() const;
-
-    /**
      * Returns the project-wide id of this block.
      * This property should be set in Project::add(),
      * for library items id should be 0
      */
     virtual uint id() const;
+
+    /**
+     * Creates the corresponding view objects.
+     */
+    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
+
+    /**
+     * \copydoc Serializable::deserialize(QDomElement)
+     */
+    virtual void deserialize(QDomElement element);
+
+    /**
+     * Returns the name of this model.
+     */
+    virtual QString name() const;
+
+    /**
+     * Returns the project.
+     */
+    Project *project() const;
 
     /**
      * Sets the block description
@@ -77,16 +93,27 @@ public:
     virtual void setDescription(const QString &description);
 
     /**
-     * Sets the block type
-     * {@link #type}
-     */
-    virtual void setType(const QString &type);
-
-    /**
      * Sets the project-wide id
      * {@see #id}
      */
     virtual void setId(uint id);
+
+    /**
+     * Sets the name of this model.
+     */
+    virtual void setName(QString name);
+
+    /**
+     * Sets the project.
+     * Used by CodeManager to save its sources.
+     */
+    void setProject(Project *project);
+
+    /**
+     * Sets the block type
+     * {@link #type}
+     */
+    virtual void setType(const QString &type);
 
     /**
      * \copydoc Serializable::serialize(QDomDocument)
@@ -94,9 +121,15 @@ public:
     virtual QDomElement serialize(QDomDocument *document);
 
     /**
-     * \copydoc Serializable::deserialize(QDomElement)
+     * Invoked when serializing the model for shipment to the
+     * clipboard. Invokes serialize(QDomDocument), subclasses should
+     * overwrite this if clipboard serialization requires special
+     * treatment.
+     *
+     * @see #serialize(QDomDocument)
+     * @see CpuModel#serializeCopy(QDomDocument)
      */
-    virtual void deserialize(QDomElement element);
+    virtual QDomElement serializeCopy(QDomDocument *document);
 
     /**
      * Needs to be invoked after the model properties have been
@@ -105,29 +138,9 @@ public:
     void updatePerformed();
 
     /**
-     * Creates the corresponding view objects.
+     * Returns the type of this block, eg. NIOS16-CPU
      */
-    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
-
-    /**
-     * Returns the name of this model.
-     */
-    virtual QString name() const;
-
-    /**
-     * Sets the name of this model.
-     */
-    virtual void setName(QString name);
-
-    /**
-     * Marks that this block is a library item.
-     */
-    void setPartOfLibrary(bool);
-
-    /**
-     * Return true if this block is part of the library.
-     */
-    bool isPartOfLibrary();
+    virtual QString type() const;
 
 protected:
     QString name_;
@@ -136,7 +149,7 @@ private:
     QString type_;
     QString description_;
     uint id_;
-    bool partOfLibrary_;
+    Project *project_;
 
 signals:
     /**

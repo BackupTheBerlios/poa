@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.11 2004/01/21 13:57:18 vanto Exp $
+ * $Id: abstractmodel.cpp,v 1.12 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -26,7 +26,6 @@
 AbstractModel::AbstractModel(QString type, QString description, uint id)
     : type_(type), description_(description), id_(id)
 {
-    partOfLibrary_ = false;
 }
 
 /**
@@ -35,14 +34,6 @@ AbstractModel::AbstractModel(QString type, QString description, uint id)
 QString AbstractModel::description() const
 {
     return description_;
-}
-
-/**
- * Returns the name of the item.
- */
-QString AbstractModel::type() const
-{
-    return type_;
 }
 
 /**
@@ -63,6 +54,39 @@ void AbstractModel::setName(QString name)
     name_ = name;
 }
 
+void AbstractModel::deserialize(QDomElement element)
+{
+    setName(element.attribute("name","unnamed"));
+    setType(element.attribute("type", "unknown"));
+    setDescription(element.attribute("desc","no description"));
+    setId(element.attribute("id","0").toUInt());
+}
+
+Project *AbstractModel::project() const
+{
+    return project_;
+}
+
+void AbstractModel::setDescription(const QString &description)
+{
+    description_ = description;
+}
+
+void AbstractModel::setId(uint id)
+{
+    id_ = id;
+}
+
+void AbstractModel::setType(const QString &type)
+{
+    type_ = type;
+}
+
+void AbstractModel::setProject(Project *project)
+{
+    project_ = project;
+}
+
 /**
  * Produces the XML representation of this instance like:
  *
@@ -77,40 +101,21 @@ QDomElement AbstractModel::serialize(QDomDocument *document)
     return root;
 }
 
-void AbstractModel::deserialize(QDomElement element)
+QDomElement AbstractModel::serializeCopy(QDomDocument *document)
 {
-    setName(element.attribute("name","unnamed"));
-    setType(element.attribute("type", "unknown"));
-    setDescription(element.attribute("desc","no description"));
-    setId(element.attribute("id","0").toUInt());
+    return serialize(document);
 }
 
-void AbstractModel::setDescription(const QString &description)
+/**
+ * Returns the name of the item.
+ */
+QString AbstractModel::type() const
 {
-    description_ = description;
-}
-
-void AbstractModel::setType(const QString &type)
-{
-    type_ = type;
-}
-
-void AbstractModel::setId(uint id)
-{
-    id_ = id;
-}
-
-void AbstractModel::setPartOfLibrary(bool partof)
-{
-    partOfLibrary_ = partof;
-}
-
-bool AbstractModel::isPartOfLibrary()
-{
-    return partOfLibrary_;
+    return type_;
 }
 
 void AbstractModel::updatePerformed()
 {
     emit(updated());
 }
+

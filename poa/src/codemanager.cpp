@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.14 2004/01/21 17:20:56 vanto Exp $
+ * $Id: codemanager.cpp,v 1.15 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "settings.h"
+#include "project.h"
 #include "processdialog.h"
 #include "util.h"
 
@@ -93,15 +94,14 @@ QString CodeManager::sourceFilePath(CpuModel *model)
 
 int CodeManager::compile(CpuModel *model)
 {
-    Settings* s = Settings::instance();
     QFile source(sourceFilePath(model));
-
     if (!source.exists()) {
         save(model);
     }
 
     // create arguments
-    QStringList args = QStringList::split(QChar(' '), s->compilerCmd());
+    QStringList args
+        = QStringList::split(' ', Settings::instance()->compilerCmd());
     args.append(fileName(model));
 
     ProcessDialog *dialog = ProcessDialog::instance();
@@ -110,15 +110,14 @@ int CodeManager::compile(CpuModel *model)
 
 bool CodeManager::edit(CpuModel *model)
 {
-    Settings* s = Settings::instance();
     QFile source(sourceFilePath(model));
-
     if (!source.exists()) {
         save(model);
     }
 
     QProcess *proc = new QProcess(this);
-    QStringList args = QStringList::split(QChar(' '), s->editorCmd());
+    QStringList args
+        = QStringList::split(' ', Settings::instance()->editorCmd());
     args.append(source.name());
 
     proc->setArguments(args);
@@ -129,8 +128,6 @@ bool CodeManager::edit(CpuModel *model)
 
 void CodeManager::save(CpuModel *model)
 {
-    Settings* s = Settings::instance();
-
     // check directory structure
     QDir cpuDir(cpuPath(model));
     QDir srcDir(sourcePath(model));
@@ -153,16 +150,20 @@ void CodeManager::save(CpuModel *model)
     // check source file
     QFile source(sourceFilePath(model));
     if (!source.exists()) {
-        // copy template
-        QFile cpuTemplate(s->templatePath());
-        if (cpuTemplate.exists())
-        {
-            Util::copyFile(&cpuTemplate, &source);
+        if (!model->source_.isNull()) {
+            Util::writeFile(&source, model->source_);
+            model->source_ = QString::null;
         }
         else {
-            // TODO: Pop up error dialog.
+            // copy template
+            QFile cpuTemplate(Settings::instance()->templatePath());
+            if (cpuTemplate.exists()) {
+                Util::copyFile(&cpuTemplate, &source);
+            }
+            else {
+                // TODO: Pop up error dialog.
+            }
         }
-        // TODO: Copy template.
     }
     // else: don't care, the user has to save all changes
     // with his editor.
@@ -180,10 +181,14 @@ void CodeManager::remove(CpuModel *model)
 
 QString CodeManager::sourceCode(CpuModel *model)
 {
-    QFile source(sourceFilePath(model));
+    if (!model->source_.isNull()) {
+        return model->source_;
+    }
 
+    QFile source(sourceFilePath(model));
     if (source.exists()) {
         return Util::readFile(&source);
     }
-    return "";
+
+    return QString::null;
 }

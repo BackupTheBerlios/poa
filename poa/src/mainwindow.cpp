@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.93 2004/01/21 17:57:51 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.94 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -91,31 +91,13 @@ const uint MainWindow::DEFAULT_ZOOM_LEVEL = 4;
 MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     : QMainWindow(parent, name, fl), project_(0)
 {
-    // load toolbar icons/items
-
-
     // initialize main window
-    if (!name) {
-        setName("MainWindow");
-    }
     setCaption(tr("POA"));
     setIcon(QPixmap(Util::findIcon("poa.png")));
     setDockMenuEnabled(false);
 
     // restore window settings
     Settings *s = Settings::instance();
-
-    // create $HOME/.poa if it does not exist
-    QDir confDir(s->confPath());
-    if (!confDir.exists()) {
-        confDir.mkdir(s->confPath(), TRUE);
-    }
-    // create $HOME/.poa/library if it does not exist
-    QString libPath(s->confPath() + "/library");
-    QDir libDir(libPath);
-    if (!libDir.exists()) {
-        libDir.mkdir(libPath);
-    }
 
     move(s->getNum("MainWindow/X", 0), s->getNum("MainWindow/Y", 0));
     resize(s->getNum("MainWindow/Width", 640),
@@ -608,14 +590,7 @@ void MainWindow::editCopy()
                 Copyable *item = dynamic_cast<Copyable *>(*current);
                 if (item != 0) {
                     Q_ASSERT(item->model() != 0);
-
-                    CpuModel *cpu = dynamic_cast<CpuModel *>(item->model());
-                    if (cpu != 0) {
-                        root.appendChild(cpu->serializeWithSource(&doc));
-                    }
-                    else {
-                        root.appendChild(item->model()->serialize(&doc));
-                    }
+                    root.appendChild(item->model()->serializeCopy(&doc));
                 }
             }
 
@@ -962,14 +937,7 @@ void MainWindow::saveToLibrary()
                 Copyable *item = dynamic_cast<Copyable *>(*current);
                 if (item != 0) {
                     Q_ASSERT(item->model() != 0);
-
-                    CpuModel *cpu = dynamic_cast<CpuModel *>(item->model());
-                    if (cpu != 0) {
-                        root.appendChild(cpu->serializeWithSource(&doc));
-                    }
-                    else {
-                        root.appendChild(item->model()->serialize(&doc));
-                    }
+                    root.appendChild(item->model()->serializeCopy(&doc));
                 }
             }
 

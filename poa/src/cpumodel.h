@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.30 2004/01/21 17:20:56 vanto Exp $
+ * $Id: cpumodel.h,v 1.31 2004/01/21 20:38:39 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
 #include "blockmodel.h"
-#include "project.h"
 
 #include <qdom.h>
 
@@ -71,6 +70,11 @@ class CpuModel: public BlockModel
     int cpuId();
 
     /**
+     * Deserializes an xml subtree and sets this' properties
+     */
+    void deserialize(QDomElement element);
+
+    /**
      * Sets the cpu id
      */
     void setCpuId(const int cpuId);
@@ -80,18 +84,12 @@ class CpuModel: public BlockModel
      * @param document the main QDomDocument instance.
      * Needed to create elements.
      */
-    QDomElement serialize(QDomDocument *document);
+    virtual QDomElement serialize(QDomDocument *document);
 
     /**
-     * Serializes this instance with the cpu source code as a CDATA element
-     * to an xml subtree.
+     * Reads the source from disk before serialization.
      */
-    QDomElement serializeWithSource(QDomDocument *document);
-
-    /**
-     * Deserializes an xml subtree and sets this' properties
-     */
-    void deserialize(QDomElement element);
+    virtual QDomElement serializeCopy(QDomDocument *document);
 
     /**
      * Sets the automatic runtime calculation.
@@ -99,27 +97,26 @@ class CpuModel: public BlockModel
     virtual void setAutoRuntime(const bool autoRuntime);
 
     /**
-     * Sets the project.
-     * Used by CodeManager to save its sources.
-     */
-    void setProject(Project *project);
-
-    /**
-     * Returns the project.
-     */
-    Project *project() const;
-
-    /**
      * Returns the tooltip text.
      */
     virtual QString tip();
 
  private:
+    /**
+     *
+     * @see #serialize(QDomDocument, QString source)
+     */
+    QDomElement serialize(QDomDocument *document, QString source);
+
+
     bool autoRuntime_;
     int cpuId_;
-    Project *project_;
     QString source_;
 
+    /**
+     * The code manager needs to access the source_ property.
+     */
+    friend class CodeManager;
 };
 
 #endif

@@ -13,13 +13,14 @@
 
 	<menu name="General Information">
 	  <item name="Overview" href="/index.html"/>
+	  <item name="Screenshots" href="/screenshots.html"/>
       <item name="Team" href="/team-list.html"/>
       <item name="License" href="/license.html"/>
 	</menu>
 	
 	<menu name="Documentation">
       <item name="Project Plan (german)" href="ftp://ftp.berlios.de/pub/poa/docs/angebot/angebot.pdf"/>
-      <item name="Other documents..." href="ftp://ftp.berlios.de/pub/poa/docs/"/>
+      <item name="Other documents" href="ftp://ftp.berlios.de/pub/poa/docs/"/>
       <item name="Wiki (german)" href="http://openfacts.berlios.de/index.phtml?title=Prog._umg._Offener_Antrieb"/>
     </menu>
     
@@ -31,10 +32,6 @@
       <item name="CVS statistics" href="/statcvs-xml/index.html"/>
       <item name="Times" href="http://duck.informatik.uni-stuttgart.de/times/cgi-bin/times.cgi?project=poa"/>
     </menu>
-
-	<menu name="Seminars">
-	  <item name="Subjects and Dates" href="/seminars.html"/>
-	</menu>
 
   </body>
   

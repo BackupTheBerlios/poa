@@ -10,15 +10,30 @@
 
 	  <section name="Overview">
 
-		<p>
-          Entwicklung einer Programmierumgebung für einen CPLD-basierten Offenen Antrieb
-		</p>
+        <p>
+          The project goal is to develop a graphical user interface
+          for programming a CPLD (Complex Programable Logics
+          Device). The software is written in C++ and based on QT.  It
+          will be available for Linux and Windows.
+        </p>
 
         <p>
-          
+          The development team is 7 persons, all students of the
+          University of Stuttgart, Germany. The project is part of our
+          studies in Software Engineering. The output of the project
+          is going to be used in conjunction with a hardware system
+          called Offener Antrieb also developed at the University.
         </p>
 
 	  </section>
+
+	  <section name="Ueberblick">
+
+		<p>
+          Entwicklung einer Programmierumgebung fuer einen CPLD-basierten Offenen Antrieb
+		</p>
+
+      </section>
 	  
 	</body>
   </document>

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+  <document>
+        
+        <properties>
+          <title>Screenshots</title>
+        </properties>
+        
+        <body>
+
+          <section name="Screenshots">
+                
+                <p>
+                  Here are some screenshots of how POA will look like
+                  when it is finished.
+                </p>
+                  
+                <table>
+                  <tr>
+                        <td>
+                          <a href="images/concept-config.png"><img
+                                  src="images/concept-config-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Settings dialog
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>
+                          <a href="images/concept-main-window.png"><img
+                                  src="images/concept-main-window-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Main window
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>
+                          <a href="images/concept-module-conf.png"><img
+                                  src="images/concept-module-conf-thumb.png"/></a>
+                        </td>
+                        <td>
+                          CPU Module settings dialog
+                        </td>
+                  </tr>
+                </table>
+             </section>
+          </body>
+   </document>

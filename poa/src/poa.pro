@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.53 2003/11/19 16:18:07 squig Exp $
+# $Id: poa.pro,v 1.54 2003/11/24 16:37:41 squig Exp $
 #
 ###############################################################################
 
@@ -52,12 +52,8 @@ HEADERS += codemanager.h
 HEADERS += connectaction.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
-HEADERS += coremodel.h
-HEADERS += coreview.h
 HEADERS += cpumodel.h
-HEADERS += cpuview.h
 HEADERS += grid.h
-HEADERS += inputmodel.h
 HEADERS += layoutmanager.h
 HEADERS += librarywindow.h
 HEADERS += mainwindow.h
@@ -69,7 +65,6 @@ HEADERS += muxconfdialog.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
-HEADERS += outputmodel.h
 HEADERS += pinmodel.h
 HEADERS += pinvector.h
 HEADERS += pinview.h
@@ -94,10 +89,7 @@ SOURCES += codemanager.cpp
 SOURCES += connectaction.cpp
 SOURCES += connectorviewlist.cpp
 SOURCES += connectorviewsegment.cpp
-SOURCES += coremodel.cpp
-SOURCES += coreview.cpp
 SOURCES += cpumodel.cpp
-SOURCES += cpuview.cpp
 SOURCES += grid.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp

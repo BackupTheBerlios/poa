@@ -18,18 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.30 2003/09/30 10:22:59 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.31 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 
 #include "blockconfdialog.h"
 #include "canvasview.h"
+#include "blockmodel.h"
 #include "codemanager.h"
 #include "cpumodel.h"
-#include "coremodel.h"
-#include "inputmodel.h"
 #include "mainwindow.h"
-#include "outputmodel.h"
 #include "pinvector.h"
 #include "poa.h"
 
@@ -469,9 +467,15 @@ void BlockConfDialog::syncModel() {
             offsetSpinBox->setValue(cpuModel->offset());
         }
 
-        addPins(*(model_->inputPins()), inputRoot_);
-        addPins(*(model_->outputPins()), outputRoot_);
-        addPins(*(model_->episodicPins()), episodicRoot_);
+        if (model_->hasInputPins()) {
+            addPins(*(model_->inputPins()), inputRoot_);
+        }
+        if (model_->hasOutputPins()) {
+            addPins(*(model_->outputPins()), outputRoot_);
+        }
+        if (model_->hasEpisodicPins()) {
+            addPins(*(model_->episodicPins()), episodicRoot_);
+        }
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.29 2003/11/19 16:18:06 squig Exp $
+ * $Id: blockmodel.h,v 1.30 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #ifndef POA_BLOCKMODEL_H
 #define POA_BLOCKMODEL_H
 
+class QDomElement;
 class QString;
 
 #include "abstractmodel.h"
@@ -55,9 +56,19 @@ public:
     BlockModel(QString type, QString description);
 
     /**
+     * Creates a CpuModel instance for the project out of an xml element.
+     */
+    BlockModel(QDomElement element);
+
+    /**
      * Default destructor
      */
     virtual ~BlockModel();
+
+    /**
+     * Creates the CanvasItems for the block.
+     */
+    virtual QCanvasItemList createView(QCanvas *canvas);
 
     /**
      * Returns a list of all episodic pins of this.
@@ -115,6 +126,26 @@ public:
     void setClock(const unsigned int clock);
 
     /**
+     * Set to true, if block has episodic pins.
+     */
+    void setHasEpisodicPins(bool hasEpisodicPins);
+
+    /**
+     * Set to true, if block has input pins.
+     */
+    void setHasInputPins(bool hasInputPins);
+
+    /**
+     * Set to true, if block has output pins.
+     */
+    void setHasOutputPins(bool hasOutputPins);
+
+    /**
+     * Set to true, if block has a runtime.
+     */
+    void setHasRuntime(bool hasRuntime);
+
+    /**
      * Adds an pin to this block model.
      */
     void addPin(PinModel *pin, PinModel *successor = 0,
@@ -141,12 +172,6 @@ public:
      */
     virtual void deserialize(QDomElement element);
 
-
-    /**
-     * Creates the CanvasItems for this.
-     */
-    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
-
     /**
      * Returns the tooltip text.
      */
@@ -160,6 +185,12 @@ protected:
     unsigned currentPinId_;
     unsigned int execTime_;
     unsigned int clock_;
+
+ private:
+    bool hasEpisodicPins_;
+    bool hasInputPins_;
+    bool hasOutputPins_;
+    bool hasRuntime_;
 
 signals:
     /**

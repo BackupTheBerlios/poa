@@ -18,13 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.24 2003/11/19 16:18:06 squig Exp $
+ * $Id: cpumodel.cpp,v 1.25 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 
 #include "blockview.h"
 #include "cpumodel.h"
-#include "cpuview.h"
 #include "codemanager.h"
 
 #include <qdom.h> // used to provide serialization
@@ -44,10 +43,10 @@ CpuModel::CpuModel(QString type, QString description)
     isProducer_ = true;
 }
 
-CpuModel::CpuModel(QDomElement cpuElem)
+CpuModel::CpuModel(QDomElement element)
     : BlockModel(QString::null, QString::null)
 {
-    deserialize(cpuElem);
+    deserialize(element);
 
     isProducer_ = false;
 
@@ -102,15 +101,6 @@ void CpuModel::setAutoOffset(bool autoOffset)
 bool CpuModel::autoOffset()
 {
     return autoOffset_;
-}
-
-QCanvasItemList CpuModel::createView(QCanvas *canvas)
-{
-    QCanvasItemList list;
-    CpuView *view = new CpuView (this, canvas);
-    list.append(view);
-    view->addPinViewsTo(list);
-    return list;
 }
 
 /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.29 2003/10/01 15:23:00 garbeam Exp $
+ * $Id: project.cpp,v 1.30 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -157,7 +157,7 @@ const QPtrList<GridCanvas> *Project::canvasList() const {
     return &canvasList_;
 }
 
-QPtrList<AbstractModel> *Project::blocks() 
+QPtrList<AbstractModel> *Project::blocks()
 {
   return &blocks_;
 }
@@ -229,7 +229,7 @@ void Project::deserialize(QDomDocument *document) {
 
     // create model instances
     QDomElement mEl = bList.item(0).toElement();
-    QValueList<AbstractModel *> l = ModelFactory::generate(mEl, false);
+    QValueList<AbstractModel *> l = ModelFactory::generate(mEl);
     for (QValueList<AbstractModel *>::Iterator it = l.begin();
          it != l.end(); ++it) {
         addBlock(*it);

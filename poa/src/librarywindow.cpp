@@ -18,17 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.19 2003/09/29 09:52:41 garbeam Exp $
+ * $Id: librarywindow.cpp,v 1.20 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
 #include "abstractmodel.h"
 #include "cpumodel.h"
-#include "coremodel.h"
-#include "inputmodel.h"
 #include "muxmodel.h"
-#include "outputmodel.h"
 #include "pinmodel.h"
 
 #include <qvariant.h>
@@ -120,7 +117,7 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(cpuListViewItem, model);
 
     // full adder
-    model = new CoreModel("Full Adder", "Fast binary adder");
+    model = new BlockModel("Full Adder", "Fast binary adder");
     pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
     model->addPin(pin);
@@ -133,20 +130,10 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(coreListViewItem, model);
 
     // input
-    model = new InputModel("Input", "Static input block");
-    pin = new PinModel(model, "in1");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "in2");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "in3");
-    pin->setType(PinModel::INPUT);
-    model->addPin(pin);
-    new LibraryListViewItem(ioListViewItem, model);
-
-    // output
-    model = new OutputModel("Output", "Static output block");
+    model = new BlockModel("Input", "Static input block");
+    model->setHasEpisodicPins(false);
+    model->setHasInputPins(false);
+    model->setHasRuntime(false);
     pin = new PinModel(model, "out1");
     pin->setType(PinModel::OUTPUT);
     model->addPin(pin);
@@ -155,6 +142,22 @@ void LibraryWindow::initializeLibrary()
     model->addPin(pin);
     pin = new PinModel(model, "out3");
     pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    new LibraryListViewItem(ioListViewItem, model);
+
+    // output
+    model = new BlockModel("Output", "Static output block");
+    model->setHasEpisodicPins(false);
+    model->setHasOutputPins(false);
+    model->setHasRuntime(false);
+    pin = new PinModel(model, "in1");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "in2");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "in3");
+    pin->setType(PinModel::INPUT);
     model->addPin(pin);
     new LibraryListViewItem(ioListViewItem, model);
 

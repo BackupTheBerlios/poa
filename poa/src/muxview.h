@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.h,v 1.6 2003/10/01 14:50:43 garbeam Exp $
+ * $Id: muxview.h,v 1.7 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@
 /**
  * Definition of a mux view.
  */
-class MuxView: public BlockView, public Tooltipable
+class MuxView: public BlockView
 {
 
 public:
@@ -45,7 +45,7 @@ public:
     /**
      * Returns the tooltip text.
      */
-    QString tip();
+    virtual QString tip();
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.21 2003/11/19 16:18:06 squig Exp $
+ * $Id: cpumodel.h,v 1.22 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -107,12 +107,6 @@ class CpuModel: public BlockModel
      * Indicates if the automatic offset calculation should be used.
      */
     bool autoOffset();
-
-    /**
-     * Creates the CanvasItems for this.
-     */
-    virtual QCanvasItemList createView(QCanvas *canvas);
-
 
     /**
      * Serializes this instance to a xml subtree

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.28 2003/11/19 16:18:06 squig Exp $
+ * $Id: blockmodel.cpp,v 1.29 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "blockmodel.h"
 
 #include <qcanvas.h>
+#include <qdom.h>
 #include <qstring.h>
 
 #include "blockview.h"
@@ -35,15 +36,29 @@
 BlockModel::BlockModel(QString type, QString description)
     : AbstractModel(type, description)
 {
+
     episodicPins_ = new PinVector();
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
+
+    setHasEpisodicPins(true);
+    setHasInputPins(true);
+    setHasOutputPins(true);
+    setHasRuntime(true);
 
     execTime_ = 0;
     currentPinId_ = 0;
     name_ = type;
 }
 
+BlockModel::BlockModel(QDomElement element)
+{
+    episodicPins_ = new PinVector();
+    inputPins_ = new PinVector();
+    outputPins_ = new PinVector();
+
+    deserialize(element);
+}
 
 BlockModel::~BlockModel()
 {
@@ -68,6 +83,14 @@ BlockModel::~BlockModel()
     emit deleted();
 }
 
+QCanvasItemList BlockModel::createView(QCanvas *canvas)
+{
+    QCanvasItemList list;
+    BlockView *view = new BlockView(this, canvas);
+    list.append(view);
+    view->addPinViewsTo(list);
+    return list;
+}
 
 PinVector *BlockModel::episodicPins()
 {
@@ -76,22 +99,22 @@ PinVector *BlockModel::episodicPins()
 
 bool BlockModel::hasEpisodicPins()
 {
-    return true;
+    return hasEpisodicPins_;
 }
 
 bool BlockModel::hasInputPins()
 {
-    return true;
+    return hasInputPins_;
 }
 
 bool BlockModel::hasOutputPins()
 {
-    return true;
+    return hasOutputPins_;
 }
 
 bool BlockModel::hasRuntime()
 {
-    return true;
+    return hasRuntime_;
 }
 
 PinVector *BlockModel::inputPins()
@@ -120,11 +143,30 @@ void BlockModel::setClock(unsigned int clock)
     clock_ = clock;
 }
 
+void BlockModel::setHasEpisodicPins(bool hasEpisodicPins)
+{
+    this->hasEpisodicPins_ = hasEpisodicPins;
+}
+
+void BlockModel::setHasInputPins(bool hasInputPins)
+{
+    this->hasInputPins_ = hasInputPins;
+}
+
+void BlockModel::setHasOutputPins(bool hasOutputPins)
+{
+    this->hasOutputPins_ = hasOutputPins;
+}
+
+void BlockModel::setHasRuntime(bool hasRuntime)
+{
+    this->hasRuntime_ = hasRuntime;
+}
+
 unsigned int BlockModel::clock()
 {
     return clock_;
 }
-
 
 void BlockModel::addPin(PinModel *pin, PinModel *successor, bool emitSignal)
 {
@@ -182,22 +224,28 @@ PinModel *BlockModel::findPinById(unsigned id)
 QDomElement BlockModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
+    root.setAttribute("hasEpisodicPins", hasEpisodicPins());
+    root.setAttribute("hasInputPins", hasInputPins());
+    root.setAttribute("hasOutputPins", hasOutputPins());
+    root.setAttribute("hasRuntime", hasRuntime());
+
+    root.setAttribute("block-type", "block");
     root.setAttribute("name", name());
     root.setAttribute("exectime", (unsigned int)execTime_);
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
         QDomElement pinElem = inputPins_->at(i)->serialize(document);
-        pinElem.setAttribute("type","input");
+        pinElem.setAttribute("type", "input");
         root.appendChild(pinElem);
     }
     for (unsigned i = 0; i < outputPins_->size(); i++) {
         QDomElement pinElem = outputPins_->at(i)->serialize(document);
-        pinElem.setAttribute("type","output");
+        pinElem.setAttribute("type", "output");
         root.appendChild(pinElem);
     }
     for (unsigned i = 0; i < episodicPins_->size(); i++) {
         QDomElement pinElem = episodicPins_->at(i)->serialize(document);
-        pinElem.setAttribute("type","episodic");
+        pinElem.setAttribute("type", "episodic");
         root.appendChild(pinElem);
     }
 
@@ -209,6 +257,7 @@ void BlockModel::deserialize(QDomElement element)
     AbstractModel::deserialize(element);
 
     setExecTime(element.attribute("exectime","0").toUInt());
+    setHasEpisodicPins(element.attribute("hasEpisodicPins", "") == "true");
 
     // pins
     inputPins_->clear();
@@ -222,9 +271,11 @@ void BlockModel::deserialize(QDomElement element)
             PinModel *pinModel = new PinModel(this, pin);
             if (pin.attribute("type", "") == "input") {
                 pinModel->setType(PinModel::INPUT);
-            } else if (pin.attribute("type","") == "output") {
+            }
+            else if (pin.attribute("type","") == "output") {
                 pinModel->setType(PinModel::OUTPUT);
-            } else if (pin.attribute("type","") == "episodic") {
+            }
+            else if (pin.attribute("type","") == "episodic") {
                 pinModel->setType(PinModel::EPISODIC);
             }
             addPin(pinModel);
@@ -236,11 +287,16 @@ void BlockModel::deserialize(QDomElement element)
 
 QString BlockModel::tip()
 {
-    return QString("<b>Core</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
-                   "<b>Execution time:</b> %4 ms")
+    QString s = QString("<b>Core</b><br>" \
+                        "<u>%1</u> (%2)<br>" \
+                        "<i>%3</i>")
         .arg(this->name())
         .arg(this->type())
-        .arg(this->description())
-        .arg(QString::number(this->execTime()));
+        .arg(this->description());
+    if (hasRuntime()) {
+        s.append(QString("<hr><b>Execution time:</b> %4 ms")
+                 .arg(QString::number(this->execTime())));
+    }
 
+    return s;
 }

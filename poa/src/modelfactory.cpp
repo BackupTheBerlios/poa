@@ -18,16 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.16 2003/09/30 21:54:18 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.17 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
+#include "blockmodel.h"
 #include "cpumodel.h"
-#include "coremodel.h"
-#include "inputmodel.h"
 #include "muxmodel.h"
-#include "outputmodel.h"
 #include "project.h"
 
 #include <qdom.h>
@@ -35,7 +33,7 @@
 /**
  * Generates model objects from xml data.
  */
-QValueList<AbstractModel *> ModelFactory::generate(QDomNode node, bool virgin)
+QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
 {
     QValueList<AbstractModel *> l;
 
@@ -47,35 +45,31 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node, bool virgin)
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "model-item") {
             AbstractModel *model = 0;
+
             QDomElement element = item.toElement();
-            if (element.attribute("block-type", "") == "cpu") {
+            if (element.attribute("block-type", "") == "block") {
+                model = new BlockModel(element);
+            }
+            else if (element.attribute("block-type", "") == "cpu") {
                 model = new CpuModel(element);
             }
-            if (element.attribute("block-type", "") == "input") {
-                model = new InputModel(element);
-            }
-            if (element.attribute("block-type", "") == "output") {
-                model = new OutputModel(element);
-            }
-            else if (element.attribute("block-type","") == "core") {
-                model = new CoreModel(element);
-            }
-            else if ((element.attribute("block-type", "") == "mux") ||
-                     (element.attribute("block-type", "") == "demux"))
-            {
+            else if ((element.attribute("block-type", "") == "mux")
+                     || (element.attribute("block-type", "") == "demux")) {
                 model = new MuxModel(element);
             }
 
             if (model != 0) {
-                if (virgin) {
-                    model->setDescription(QString::null);
-                    model->setId(0);
-                    model->setName(model->type());
-                }
                 l.append(model);
             }
         }
     }
 
     return l;
+}
+
+void ModelFactory::clearProperties(AbstractModel* model)
+{
+    model->setDescription(QString::null);
+    model->setId(0);
+    model->setName(model->type());
 }

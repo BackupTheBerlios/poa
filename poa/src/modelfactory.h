@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.10 2003/09/30 21:54:18 vanto Exp $
+ * $Id: modelfactory.h,v 1.11 2003/11/24 16:37:41 squig Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
@@ -41,9 +41,14 @@ public:
 
     /**
      * Generates cpu respectivly core models
-     * @param virgin set this to true to create clean new instances.
      */
-    static QValueList<AbstractModel *> generate(QDomNode node, bool virgin = true);
+    static QValueList<AbstractModel *> generate(QDomNode node);
+
+    /**
+     * FIX: set this to true to create clean new instances.
+     */
+    static void clearProperties(AbstractModel* model);
+
 };
 
 #endif // MODELFACTORY_H

@@ -18,23 +18,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.5 2004/01/22 23:45:50 vanto Exp $
+ * $Id: colormanager.cpp,v 1.6 2004/01/23 01:41:26 vanto Exp $
  *
  *****************************************************************************/
 
 #include "colormanager.h"
 #include "settings.h"
 
+#include <qpainter.h>
 
-ColorManager::ColorManager(Palette *palette)
-    : palette_(palette)
+const int ColorManager::RTTI = 1003;
+const int VSPACE = 5;
+const int HSPACE = 5;
+const int SAMPLE_SIZE = 12;
+
+ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
+    : QCanvasRectangle(canvas),
+      palette_(palette),
+      palPosition_(0)
 {
-    palPosition_ = 0;
+    setBrush(white);
 }
 
 ColorManager::~ColorManager()
 {
-    delete palette_;
 }
 
 QColor ColorManager::color(const BlockModel *model, int luminance)
@@ -46,6 +53,7 @@ QColor ColorManager::color(const BlockModel *model, int luminance)
 
     if (!nsToPalIndex_.contains(model->clock())) {
         nsToPalIndex_.insert(model->clock(), palPosition_);
+        updateWigetSize(model->clock());
         return palette_->color(palPosition_++);
     }
     else {
@@ -74,7 +82,101 @@ QColor ColorManager::selectedColor(AbstractModel*, int)
     return Settings::instance()->selectedColor();
 }
 
+QPoint ColorManager::dragBy(int dx, int dy)
+{
+    // must convert to be consistent with return value
+    moveBy(dx, dy);
+    return QPoint(dx, dy);
+}
 
+QCanvasItem *ColorManager::item()
+{
+    return this;
+}
+
+int ColorManager::rtti() const
+{
+    return ColorManager::RTTI;
+}
+
+QDomElement ColorManager::serialize(QDomDocument *document)
+{
+    QDomElement root = document->createElement("palette-view");
+    root.setAttribute("name", palette_->name());
+    return root;
+}
+
+void ColorManager::deserialize(QDomElement)
+{
+    //
+}
+
+void ColorManager::drawShape(QPainter &p)
+{
+    QCanvasRectangle::drawShape(p);
+
+    int fontheight = QFontMetrics(QApplication::font())
+        .height();
+
+    QRect textArea((int)x(),
+                   (int)y(),
+                   width(),
+                   fontheight);
+
+    QFont f = p.font();
+    f.setBold(true);
+    p.setFont(f);
+    p.drawText(textArea, QObject::AlignHCenter, "Legend");
+    f.setBold(false);
+    p.setFont(f);
+
+    int ly = (int)y() + fontheight + VSPACE + VSPACE;
+    int lx = (int)x() + HSPACE;
+    for (QMap<int,int>::const_iterator it = nsToPalIndex_.begin();
+         it != nsToPalIndex_.end(); it++) {
+
+        p.fillRect(lx,
+                   ly,
+                   SAMPLE_SIZE,
+                   SAMPLE_SIZE,
+                   QBrush(palette_->color(it.data())));
+
+        textArea = QRect(lx + SAMPLE_SIZE + HSPACE,
+                         ly,
+                         width() - HSPACE,
+                         ly + fontheight);
+        p.drawText(textArea, QObject::AlignLeft,
+                  QString::number(it.key()) + " ns");
+
+        ly += fontheight + VSPACE;
+    }
+}
+
+void ColorManager::updateWigetSize(int clock)
+{
+    int fontheight = QFontMetrics(QApplication::font())
+        .height();
+    int h = (nsToPalIndex_.count()+2) * (fontheight + VSPACE);
+    int w = QFontMetrics(QApplication::font())
+        .width(QString::number(clock) + " ns") + SAMPLE_SIZE;
+
+    setSize(h, QMAX(w, width()));
+
+    /*    if (width() < (3 * HSPACE) + SAMPLE_SIZE + w) {
+        qDebug(QString::number(width()));
+        qDebug(QString::number((3 * HSPACE) + SAMPLE_SIZE + w));
+        qDebug("--");
+        setSize(h, (3 * HSPACE) + SAMPLE_SIZE + w);
+        qDebug(QString::number(width()));
+        qDebug(QString::number((3 * HSPACE) + SAMPLE_SIZE + w));
+        qDebug("-+-");
+    }
+    else {
+        setSize(h, width());
+        }*/
+}
+
+/* ------------------------------------------------------------------------- */
 
 Palette::Palette(QString name)
     : name_(name)

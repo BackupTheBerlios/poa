@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.4 2004/01/22 23:45:50 vanto Exp $
+ * $Id: colormanager.h,v 1.5 2004/01/23 01:41:26 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,10 @@
 
 #include "abstractmodel.h"
 #include "blockmodel.h"
+#include "moveable.h"
+#include "serializable.h"
 
+#include <qcanvas.h>
 #include <qcolor.h>
 #include <qmap.h>
 #include <qptrlist.h>
@@ -35,12 +38,18 @@
 class Palette;
 
 /**
- * Provides a color manager.
+ * Provides a color manager and a palette widget.
+ *
  * This class manages the association between cpu's clock value and colors.
  * For each clock value in the project (per canvas), the color manager
  * provides an individual color.
+ *
+ * The palette widget displays a vertical box and displays a legend for
+ * the color -> nanoseconds mapping.
  */
-class ColorManager
+class ColorManager : public QCanvasRectangle,
+                     public Moveable,
+                     public Serializable
 {
 
  public:
@@ -48,7 +57,7 @@ class ColorManager
     /**
      * Instanciates a color manager.
      */
-    ColorManager(Palette *palette);
+    ColorManager(QCanvas *canvas, Palette *palette);
 
     /**
      * Default destructor.
@@ -80,8 +89,44 @@ class ColorManager
      */
     QColor selectedColor(AbstractModel *model, int luminance = 100);
 
+    /**
+     * \copydoc Moveable::item()
+     */
+    virtual QCanvasItem *item();
+
+    /**
+     * \copydoc Moveable::dragBy(int, int);
+     */
+    virtual QPoint dragBy(int dx, int dy);
+
+    /**
+     * \copydoc Serializable::serialize(QDomDocument)
+     */
+    virtual QDomElement serialize(QDomDocument *document);
+
+    /**
+     * \copydoc Serializable::deserialize(QDomElement)
+     */
+    virtual void deserialize(QDomElement element);
+
+    /**
+     * Draws the palette widget
+     */
+    void drawShape(QPainter &p);
+
+    /**
+     * Return own type information
+     */
+    virtual int rtti() const;
+    static const int RTTI;
 
  private:
+
+    /**
+     * Updates the widget size when new legend entries were added.
+     */
+    void updateWigetSize(int clock);
+
     /* current palette */
     Palette *palette_;
 
@@ -141,6 +186,7 @@ class Palette
 
 
  private:
+
     /** the name of the palette. */
     QString name_;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.27 2004/01/22 22:10:27 vanto Exp $
+ * $Id: gridcanvas.h,v 1.28 2004/01/23 01:41:26 vanto Exp $
  *
  *****************************************************************************/
 
@@ -117,6 +117,11 @@ private:
      * Colormanager
      */
     ColorManager *colormanager_;
+
+    /**
+     * Palette
+     */
+     Palette *palette_;
 
     /**
      * Counter for z-layer. Everytime a an item is added to the canvas,

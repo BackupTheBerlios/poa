@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.7 2003/12/10 13:40:01 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.8 2004/01/09 18:08:39 papier Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include "pinmodel.h"
 #include "codemanager.h"
 #include "cpumodel.h"
+#include "downloadmanager.h"
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -61,10 +62,16 @@ DeployProjectWizard::DeployProjectWizard( QWidget* parent,  const char* name, bo
     resize( 600, 480 ); 
     setCaption( trUtf8( "Deploy Project" ) );
 
+    DownloadManager *dm = DownloadManager::instance();
+  
+    connect(dm, SIGNAL(increaseProgressBar()),     this, SLOT(increaseDownloadProgressBar()));
+    connect(dm, SIGNAL(setProgressBarLength(int)), this, SLOT(setDownloadProgressBarLength(int)));  
+
     setupCheckPage();
     setupCompilePage();
     setupSchedulingPage();
     setupDownloadPage();
+    
 }
 
 void DeployProjectWizard::setupCheckPage()
@@ -167,6 +174,18 @@ void DeployProjectWizard::setupDownloadPage()
     
 }
 
+void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)
+{
+  CompileProgressBar->setTotalSteps(totalSteps);
+}
+
+void DeployProjectWizard::increaseDownloadProgressBar()
+{
+  int progress = CompileProgressBar->progress();
+  CompileProgressBar->setProgress(progress + 1);
+}
+
+
 void DeployProjectWizard::showPage(QWidget* page)
 {
   QWizard::showPage(page);
@@ -230,6 +249,12 @@ bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
   }
   return true;
 }
+
+bool DeployProjectWizard::download() {
+
+  return true;
+}
+
 
 /*  
  *  Destroys the object and frees any allocated resources

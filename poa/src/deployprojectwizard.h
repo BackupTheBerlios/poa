@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.5 2003/12/03 12:57:41 papier Exp $
+ * $Id: deployprojectwizard.h,v 1.6 2004/01/09 18:08:39 papier Exp $
  *
  *****************************************************************************/
 
@@ -53,6 +53,7 @@ public:
 
     void showPage(QWidget* page);
 
+
 protected:
     QWidget*       CheckPage;
     QGroupBox*     ErrorsGroupBox;
@@ -76,6 +77,7 @@ protected:
     void setupSchedulingPage();
     void setupDownloadPage();
 
+
     /**
      * a consitency check
      */
@@ -85,6 +87,13 @@ protected:
      * comiles the source for every cpu, if not already done
      */
     bool compileAll(QPtrList<AbstractModel> blocks);
+
+    bool download();
+
+
+public slots:
+    void setDownloadProgressBarLength(int totalSteps);
+    void increaseDownloadProgressBar();
 
 };
 

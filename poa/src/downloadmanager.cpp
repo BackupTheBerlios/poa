@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.2 2004/01/09 15:50:41 papier Exp $
+ * $Id: downloadmanager.cpp,v 1.3 2004/01/09 18:08:39 papier Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include "util.h"
 #include "qextserialport/qextserialbase.h"
 #include "qextserialport/qextserialport.h"
+#include "deployprojectwizard.h"
 
 #include <qfileinfo.h>
 #include <qfile.h>
@@ -79,6 +80,8 @@ bool DownloadManager::download(QString filename, const char* portname)
   int pos = 0;
   clock_t c1;
 
+
+
   //open serial port
   QextSerialPort port;
   port.setName(portname);
@@ -102,6 +105,8 @@ bool DownloadManager::download(QString filename, const char* portname)
       }
     }
   }
+  //set number of steps in DeployProject Download Processbar
+  //  emit setProgessBarLength((int)fileSize);
   file.close();
 
   //send header
@@ -154,7 +159,8 @@ bool DownloadManager::download(QString filename, const char* portname)
 	  pos++;
 	  c1=clock();
 	  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
-	  //Prozessbalken erhöhen
+	  //increase Download Progressbar in DeployProjectWizard
+	  emit increaseProgressBar();
 	}
       }
     }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.9 2003/08/22 22:47:49 squig Exp $
+ * $Id: canvasview.cpp,v 1.10 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -77,7 +77,7 @@ void CanvasView::contentsMousePressEvent(QMouseEvent* e)
     }
     else if (e->button() == RightButton) {
         if (!l.isEmpty()) {
-            QPopupMenu *menu = ((AbstractView *)l.first())->popupMenu();
+            QPopupMenu *menu = (dynamic_cast<AbstractView *>(l.first()))->popupMenu();
             if (menu) {
                 menu->exec(e->pos());
             }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.h,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: coremodel.h,v 1.2 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -32,8 +32,6 @@
 
 /*****************************************************************************
  * A block that calculates one specific function everytime it is triggered.
- *
- * @author keulsn
  */
 class CoreModel: public BlockModel
 {

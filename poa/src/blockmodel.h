@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.7 2003/08/25 17:08:29 keulsn Exp $
+ * $Id: blockmodel.h,v 1.8 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -39,7 +39,6 @@ class PinModel;
  *   <li>Contained in the module library or</li>
  *   <li>Contained in a certain project</li>
  * </ul>
- * @author keulsn
  */
 class BlockModel: public AbstractModel
 {
@@ -79,7 +78,7 @@ public:
     void addEpisodicPin(PinModel *pin, PinModel *successor = 0);
     void removeEpisodicPin(PinModel *pin);
 
-    QCanvasItemList createView(QCanvas *canvas);
+    virtual QCanvasItemList createView(QCanvas *canvas);
 
 private:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.7 2003/08/22 22:47:49 squig Exp $
+ * $Id: gridcanvas.h,v 1.8 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,6 @@ class Project;
 
 /*****************************************************************************
  * Defines the grid canvas.
- * @author garbeam
  */
 class GridCanvas : public QCanvas {
 

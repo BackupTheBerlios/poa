@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockmodel.h,v 1.2 2003/08/22 16:58:42 keulsn Exp $
+ * $Id: inputblockmodel.h,v 1.3 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -33,8 +33,6 @@
 
 /*****************************************************************************
  * A block providing inputs into the system.
- *
- * @author keulsn
  */
 class InputBlockModel: public BlockModel
 {

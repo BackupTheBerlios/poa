@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockview.h,v 1.3 2003/08/25 11:58:29 keulsn Exp $
+ * $Id: outputblockview.h,v 1.4 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,6 @@
 
 /*****************************************************************************
  * Definition of a ouput block view.
- * @author garbeam
  */
 class OutputBlockView/*: public BlockView*/
 {

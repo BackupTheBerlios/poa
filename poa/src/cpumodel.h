@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.8 2003/08/22 22:47:49 squig Exp $
+ * $Id: cpumodel.h,v 1.9 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -32,8 +32,6 @@
  * A block that executes some source code everytime it is triggered.
  * A CpuModel-object can calculate its execution time based on its
  * source code.
- *
- * @author keulsn
  */
 class CpuModel: public BlockModel
 {

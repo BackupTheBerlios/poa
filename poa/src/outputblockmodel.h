@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockmodel.h,v 1.2 2003/08/22 16:58:42 keulsn Exp $
+ * $Id: outputblockmodel.h,v 1.3 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,8 +34,6 @@
 /*****************************************************************************
  * A block receiving outputs from the system and transmitting those outputs
  * to the environment.
- *
- * @author keulsn
  */
 class OutputBlockModel: public BlockModel
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.13 2003/08/22 16:50:51 squig Exp $
+ * $Id: mdiwindow.h,v 1.14 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -33,7 +33,6 @@ class QCanvasView;
 
 /*****************************************************************************
  * Defines MDI windows.
- * @author garbeam
  */
 class MdiWindow : public QMainWindow
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.h,v 1.1 2003/08/20 10:33:16 squig Exp $
+ * $Id: aboutdialog.h,v 1.2 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,8 +34,6 @@
  * The about dialog has mutliple tabs. The first tab contains a short
  * description of the software, the second a list of authors and the
  * third tab shows the GPL.
- *
- * @author Steffen Pingel
  */
 class AboutDialog : public QTabDialog
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.3 2003/08/25 17:08:29 keulsn Exp $
+ * $Id: pinview.h,v 1.4 2003/08/26 14:31:02 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,8 +34,6 @@ class PinModel;
 
 /*****************************************************************************
  * Definition of a Pin view.
- * @author garbeam
- * @author keulsn
  */
 class PinView: public QCanvasRectangle
 {
@@ -59,9 +57,6 @@ public:
 private:
 
     PinModel *model_;
-    QValueVector<PinView*> leftPins_;
-    QValueVector<PinView*> rightPins_;
-    QValueVector<PinView*> bottomPins_;
 };
 
 #endif // POA_PINVIEW_H

@@ -18,27 +18,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.4 2003/08/20 10:33:16 squig Exp $
+ * $Id: mainwindow.cpp,v 1.5 2003/08/20 11:58:39 garbeam Exp $
  *
  *****************************************************************************/
 
-#include "mainwindow.h"
 #include "aboutdialog.h"
+#include "imagedata.h" // contains toolbar icons
+#include "mainwindow.h"
 #include "moduleconfdialog.h"
 
-#include <qvariant.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qwhatsthis.h>
 #include <qaction.h>
+#include <qapplication.h>
+#include <qimage.h>
+#include <qlayout.h>
 #include <qmenubar.h>
+#include <qpixmap.h>
 #include <qpopupmenu.h>
 #include <qtoolbar.h>
-#include <qimage.h>
-#include <qpixmap.h>
+#include <qtooltip.h>
+#include <qvariant.h>
+#include <qvbox.h>
+#include <qwhatsthis.h>
 
-// contains all toolbar icons
-#include "imagedata.h"
 
 /* 
  *  Constructs a MainWindow which is a child of 'parent', with the 
@@ -136,12 +137,10 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     helpAboutAction->setMenuText( trUtf8( "&About..." ) );
     helpAboutAction->setAccel( 0 );
 
-    openModuleConfDialogAction = new QAction( this, "openCpuConfDialogAction" );
-    openModuleConfDialogAction->setText( trUtf8( "CPU configuration" ) );
-    openModuleConfDialogAction->setMenuText( trUtf8( "&CPU configuration..." ) );
+    openModuleConfDialogAction = new QAction( this, "openModuleConfDialogAction" );
+    openModuleConfDialogAction->setText( trUtf8( "Module configuration" ) );
+    openModuleConfDialogAction->setMenuText( trUtf8( "&Module configuration..." ) );
     openModuleConfDialogAction->setAccel( 0 );
-
-
 
     // toolbars
     commonToolBar = new QToolBar( "", this, DockTop ); 
@@ -158,6 +157,8 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     utilToolBar->setLabel( trUtf8( "utility toolbar" ) );
     openModuleConfDialogAction->addTo(utilToolBar);
+    utilToolBar->addSeparator();
+
         
     drawToolBar = new QToolBar( "", this, DockTop ); 
 
@@ -199,12 +200,13 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
 
     // signals and slots connections
-    connect( fileNewAction, SIGNAL( activated() ), this, SLOT( fileNew() ) );
+    connect( fileNewAction, SIGNAL( activated() ), this, SLOT( newLayout() ) );
     connect( fileOpenAction, SIGNAL( activated() ), this, SLOT( fileOpen() ) );
     connect( fileSaveAction, SIGNAL( activated() ), this, SLOT( fileSave() ) );
     connect( fileSaveAsAction, SIGNAL( activated() ), this, SLOT( fileSaveAs() ) );
     connect( filePrintAction, SIGNAL( activated() ), this, SLOT( filePrint() ) );
-    connect( fileExitAction, SIGNAL( activated() ), this, SLOT( fileExit() ) );
+    connect( fileExitAction, SIGNAL( activated() ),
+             qApp, SLOT(closeAllWindows()));
     connect( editUndoAction, SIGNAL( activated() ), this, SLOT( editUndo() ) );
     connect( editRedoAction, SIGNAL( activated() ), this, SLOT( editRedo() ) );
     connect( editCutAction, SIGNAL( activated() ), this, SLOT( editCut() ) );
@@ -215,8 +217,64 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     connect( helpContentsAction, SIGNAL( activated() ), this, SLOT( helpContents() ) );
     connect( helpAboutAction, SIGNAL( activated() ), this, SLOT( helpAbout() ) );
 
-    connect( openModuleConfDialogAction, SIGNAL(activated()),
-             this, SLOT(openModuleConfDialog()) );
+    connect(openModuleConfDialogAction, SIGNAL(activated()),
+            this, SLOT(openModuleConfDialog()) );
+
+    // set up mdi workspace
+    QVBox* vb = new QVBox(this);
+    vb->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
+    ws = new QWorkspace(vb);
+    ws->setScrollBarsEnabled(TRUE);
+    setCentralWidget(vb);
+    
+}
+
+void MainWindow::closeWindow()
+{
+    MdiWindow *m = (MdiWindow *)ws->activeWindow();
+    if (m) {
+        m->close();
+    }
+}
+
+void MainWindow::tileHorizontal()
+{        
+    // primitive horizontal tiling
+    QWidgetList windows = ws->windowList();
+    if ( !windows.count() )
+        return;
+    int heightForEach = ws->height() / windows.count();
+    int y = 0;
+    for ( int i = 0; i < int(windows.count()); ++i ) {
+        QWidget *window = windows.at(i);
+        if ( window->testWState( WState_Maximized) ) {
+        // prevent flicker
+        window->hide();
+        window->showNormal();
+    }
+    int preferredHeight = window->minimumHeight() +
+                          window->parentWidget()->baseSize().height();
+
+    int actHeight = QMAX(heightForEach, preferredHeight);
+        window->parentWidget()->setGeometry( 0, y, ws->width(), actHeight );
+        y += actHeight;
+    }
+}
+
+void MainWindow::closeEvent( QCloseEvent *e )
+{
+    QWidgetList windows = ws->windowList();
+    if ( windows.count() ) {
+        for ( int i = 0; i < int(windows.count()); ++i ) {
+            QWidget *window = windows.at( i );
+            if ( !window->close() ) {
+                e->ignore();
+                return;
+            }
+        }
+    }
+
+    QMainWindow::closeEvent( e );
 }
 
 /*  
@@ -307,6 +365,22 @@ void MainWindow::openModuleConfDialog()
 {
     ModuleConfDialog *moduleConfDialog = new ModuleConfDialog();
     moduleConfDialog->show();
+    // future: use exec() instead of show and
+    //         determine exit code
+}
 
 
+MdiWindow* MainWindow::newLayout()
+{
+    MdiWindow* w = new MdiWindow(ws, 0, WDestructiveClose);
+//    connect(w, SIGNAL(message(const QString&, int)),
+//            statusBar(), SLOT(message(const QString&, int)));
+    w->setCaption("unnamed layout");
+    // show the very first window in maximized mode
+    if (ws->windowList().isEmpty()) {
+        w->showMaximized();
+    } else {
+        w->show();
+    }
+    return w;
 }

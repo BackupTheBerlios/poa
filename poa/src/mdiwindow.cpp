@@ -18,43 +18,44 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.3 2003/08/20 11:58:39 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.1 2003/08/20 11:58:39 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_MDIWINDOW_H
-#define POA_MIDWINDOW_H
+#include "mdiwindow.h"
 
-#include <qmainwindow.h>
+#include <qvariant.h>
+#include <qlayout.h>
+#include <qaction.h>
+#include <qimage.h>
+#include <qpixmap.h>
 
-#include "layoutcanvas.h"
 
-/*****************************************************************************
- * Defines MDI windows.
- * @author garbeam
- */
-class MdiWindow : public QMainWindow
+MdiWindow::MdiWindow( QWidget* parent, const char* name, int wflags )
+    : QMainWindow( parent, name, wflags )
 {
-    Q_OBJECT
+    //TODO: setCentralWidget(NetworkLayout);
+}
 
-public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
-    ~MdiWindow();
+MdiWindow::~MdiWindow()
+{
+    //TODO: delete NetworkLayout
+}
 
-    void load( const QString& fn );
-    void save();
-    void saveAs();
+void MdiWindow::closeEvent( QCloseEvent *e )
+{
+	e->accept();
+}
 
-protected:
-    void closeEvent( QCloseEvent * );
+void MdiWindow::load( const QString& fn )
+{
+    QString bla = fn;
+}
 
-private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+void MdiWindow::save()
+{
+}
 
-signals:
-    void message(const QString&, int );
-
-};
-
-#endif // POA_MDIWINDOW_H
+void MdiWindow::saveAs()
+{
+}

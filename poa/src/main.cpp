@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.4 2003/08/20 09:28:40 garbeam Exp $
+ * $Id: main.cpp,v 1.5 2003/08/20 11:58:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,6 @@
 #include "layoutcanvas.h"
 #include "layoutmanager.h"
 #include "mainwindow.h"
-#include "mdiwindow.h"
 #include "moduleconfdialog.h"
 #include "modulelibraryitem.h"
 #include "muxmodel.h"

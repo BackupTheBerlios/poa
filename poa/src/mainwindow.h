@@ -9,8 +9,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "mdiwindow.h"
+
 #include <qvariant.h>
 #include <qmainwindow.h>
+#include <qworkspace.h>
+
 class QVBoxLayout; 
 class QHBoxLayout; 
 class QGridLayout; 
@@ -24,7 +28,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow( QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel );
+    MainWindow(QWidget* parent = 0, const char* name = 0,
+               WFlags fl = WType_TopLevel);
     ~MainWindow();
 
     QMenuBar *menubar;
@@ -54,6 +59,11 @@ public:
 
     QAction* openModuleConfDialogAction;
 
+protected:
+    void closeEvent(QCloseEvent *);
+
+private:
+    QWorkspace* ws;
 
 public slots:
     virtual void fileNew();
@@ -72,6 +82,11 @@ public slots:
     virtual void helpContents();
     virtual void helpAbout();
     virtual void openModuleConfDialog();
+
+private slots:
+    MdiWindow* newLayout();
+    void closeWindow();
+    void tileHorizontal();
 
 };
 

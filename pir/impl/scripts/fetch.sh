@@ -1,5 +1,5 @@
 #!/bin/sh
-FETCH_CMD="wget -O $9"
+FETCH_CMD="wget -nv -O $9"
 
 function usage() {
     echo "fetch <host> <size 640x480,320x240,160x120>"

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.5 2004/01/28 16:19:33 vanto Exp $
+ * $Id: poa.cpp,v 1.6 2004/01/29 15:15:36 squig Exp $
  *
  *****************************************************************************/
 
@@ -159,7 +159,7 @@ QString image(LineDirection dir)
     case DOWN:
         return QString("down");
     default:
-        return 0;
+        return QString::null;
     }
 }
 

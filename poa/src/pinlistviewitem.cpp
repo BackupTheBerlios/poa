@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.9 2004/01/28 20:37:44 squig Exp $
+ * $Id: pinlistviewitem.cpp,v 1.10 2004/01/29 15:15:36 squig Exp $
  *
  *****************************************************************************/
 
@@ -126,6 +126,11 @@ PinModel *PinListViewItem::createPin(BlockModel* block)
     pin_->setType(type_);
     commit();
     return pin_;
+}
+
+void PinListViewItem::flushSortOrder()
+{
+    enforceSortOrder();
 }
 
 bool PinListViewItem::isRoot()

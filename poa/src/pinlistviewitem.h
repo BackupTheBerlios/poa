@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.h,v 1.7 2004/01/28 20:37:44 squig Exp $
+ * $Id: pinlistviewitem.h,v 1.8 2004/01/29 15:15:36 squig Exp $
  *
  *****************************************************************************/
 
@@ -95,6 +95,8 @@ public:
 
     /** Overloaded compare method. */
     int compare(QListViewItem *i, int col, bool ascending ) const;
+
+    void flushSortOrder();
 
 private:
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.11 2004/01/29 14:27:22 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.12 2004/01/29 15:15:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -183,8 +183,7 @@ void BlockConfWidget::sync() {
         }
     }
 
-    ioListView_->setSorting(0);
-    ioListView_->sort();
+    resort();
 }
 
 void BlockConfWidget::cancelRename()
@@ -244,8 +243,8 @@ void BlockConfWidget::updatePositions(PinModel::PinType type)
             }
         }
     }
-    ioListView_->setSorting(0);
-    ioListView_->sort();
+
+    resort();
 }
 
 void BlockConfWidget::mouseButtonClicked(int button,
@@ -316,6 +315,19 @@ void BlockConfWidget::removeIo() {
         updatePositions(item->type());
         delete item;
     }
+}
+
+void BlockConfWidget::resort()
+{
+    ioListView_->setSorting(0);
+    ioListView_->sort();
+
+    for (QListViewItemIterator it(ioListView_); it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+        item->flushSortOrder();
+    }
+
+    ioListView_->setSorting(-1);
 }
 
 void BlockConfWidget::moveRowUp()

@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.7 2004/02/18 18:21:32 neco Exp $
+%% $Id: handbuch.tex,v 1.8 2004/02/19 13:04:33 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.7 $
-\RCSdef $Date: 2004/02/18 18:21:32 $
+\RCSdef $Revision: 1.8 $
+\RCSdef $Date: 2004/02/19 13:04:33 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -71,7 +71,7 @@ weder die Ber"ucksichtigung neuartiger Sensoren, noch bieten sie die
 M"oglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
 Daher wird am ISW eine Plattform f"ur die Antriebsregelung entwickelt,
 auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalit"aten
-zu integrieren. Diese Plattform wird am ISW\footnote{Institut f"ur Werkzeugmaschinen} an der Universität Stuttgart kurz als ``Offener Antrieb''
+zu integrieren. Diese Plattform wird am ISW\footnote{Institut f"ur Steuerungstechnik der Werkzeugmaschinen und Fertigungseinrichtungen} an der Universität Stuttgart kurz als ``Offener Antrieb''
 bezeichnet.  \par
 Die hardwaretechnische Realisierung erfolgt in Form einer Einsteckplatine.
 Zentrales Element des Offenen Antriebes ist der Altera ``APEX'' Baustein. Es
@@ -145,7 +145,7 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 
 Die Men"uleiste besteht aus den Men"us Project, Edit, View, Tools, Settings, Windows und Help.\par
 
-Die hier Kurz beschriebenen Funktionen werden in den sp"ateren Kapiteln n"aher erkl"art.\par
+Die hier Kurz beschriebenen Funktionen werden in den folgenden Abschnitten n"aher erkl"art.\par
 
 \begin{itemize}
 \item {\bf Project:}	New, Open, Save, Save as, Print, Recent, Exit\newline
@@ -294,7 +294,7 @@ Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf
 \end{center}
 
 \end{figure}
-F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann man in der Auswahlbox den Seriellen Port einstellen.\par
+F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann man in der Auswahlbox den Seriellen Port, an dem das Board angeschlossen ist, einstellen.\par
 
 \newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -366,6 +366,18 @@ Bl"ocke, wie CPUs, Cores etc. k"onnen per Drag'n Drop aus der Blockbibliothek in
 Beim Erzeugen eines Blocks wird ein Kofigurationsdialog automatisch ge"offnet. Hier hat man je nach Block verschiedene Konfigurationsm"oglichkeiten. Der Konfigurationsdialog kann auch sp"ater ge"offnet werden. Dazu w"ahlt man den zu konfigurierenden Block mit der rechten Maustaste aus und w"ahlt im Kontextmen"u den Eintrag {\bf Configuration}, oder man f"uhrt ein Doppelklick mit der linken Maustaste auf den Block aus.\par
 Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber die Men"uleiste oder Symbolleiste ausf"uhren. \par
 
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{CoreBlockConfiguration}
+
+\caption{Block Konfiguration}\label{test}
+
+\end{center}
+
+\end{figure}
+
 D
 \subsubsection{Blockname "andern}
 Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekräftigen Namen zu geben.\par
@@ -373,7 +385,7 @@ Im Textfeld {\bf Name} kann man den neuen Namen des Blocks eingeben.
 \subsubsection{Block beschreiben}
 Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben.\par
 Die Blockbeschreibung hat den Vorteil, dass man sp"ater auch noch leicht nachvollziehen kann, wof"ur dieser Block gut ist.\par
-Diese Option ist f"ur {\bf Muxbl"ocke} nicht verf"ugbar.
+Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Neue Pins erzeugen}
 In der Pinbibliothek k"onnen blockabh"angig drei verschiedene Arten von Pins ("'Episodic Pin"', "'Input Pin"' und "'Output Pin"') verwaltet werden. Je nach Pinart w"ahlt man in der Bibliothek die entsprechende Kategorie. Dabei wird der {\bf New} Button aktiviert. Mit einem Kick auf den aktivierten {\bf New} Button wird ein neuer Pin erzeugt. \par
 \subsubsection{Pins l"oschen}
@@ -384,48 +396,31 @@ Unter der Spalte {\bf Name} kann man dem Pin einen Namen geben oder einen vorhan
 Unter der Spalte {\bf Bits} kann die Anzahl der Bits f"ur ein Pin "andern werden.\par
 Unter der Spalte {\bf Address} kann eine Adressierung f"ur die Input-Pins und Output-Pins vornehmen werden.\par
 \subsubsection{Offset eingeben}
-Um das Offset einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Offset} klicken und die Offsetzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.
-Diese Option ist f"ur {\bf Muxbl"ocke} nicht verf"ugbar.
+Um das Offset an dem Block einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Offset} klicken und die Offsetzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Takt eingeben}
-Um den Takt einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Clock} klicken und die Taktfrequenz in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.
-Diese Option ist f"ur {\bf Muxbl"ocke} nicht verf"ugbar.
+Um die Taktrate des Blocks einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Clock} klicken und die Taktfrequenz in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Laufzeit eingeben}
-Um die Laufzeit einzugeben, kann man entweder direkt mit der Maus ins Textfeld{\bf Runtime} klicken und die Laufzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.
-Diese Option ist f"ur {\bf Muxbl"ocke} und {\bf Inputbl"ocke} nicht verf"ugbar.
+Um die Laufzeit des Blocks einzugeben, kann man entweder direkt mit der Maus ins Textfeld{\bf Runtime} klicken und die Laufzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Diese Option ist f"ur {\bf Multiplexer} und {\bf Inputbl"ocke} nicht verf"ugbar.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{I/O Block konfigurieren}
 Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 
-\begin{figure}[htbp]
-
-\begin{center}
-
-\includegraphics[width=10cm]{OutputBlockConfiguration}
-
-\caption{I/O Block Configuration}\label{test}
-
-\end{center}
-
-\end{figure}
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[width=10cm]{OutputBlockConfiguration}
+%\caption{I/O Block Configuration}\label{test}
+%\end{center}
+%\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Core konfigurieren}
 Siehe Kapitel {\bf Blockkonfiguration allgemein}.
-
-\begin{figure}[htbp]
-
-\begin{center}
-
-\includegraphics[width=10cm]{CoreBlockConfiguration}
-
-\caption{Core Configuration}\label{test}
-
-\end{center}
-
-\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -436,7 +431,7 @@ Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 
 \includegraphics[width=10cm]{CPUConfiguration}
 
-\caption{CPU Configuration}\label{test}
+\caption{CPU Konfiguration}\label{test}
 
 \end{center}
 
@@ -445,27 +440,41 @@ Siehe Kapitel {\bf Blockkonfiguration allgemein}.
 Jeder CPU muss eine ID (d.h. eine Nummer von 0 - 99) vergeben werden, dazu kann man entweder direkt mit der Maus ins Textfeld {\bf ID} klicken und die Nummer eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.
 
 \subsubsection{Die CPU-Programmcode schreiben}
-Zum Schreiben von CPU-Programmcode wird ein externer Editor aufgerufen, wenn Sie im Konfigurationsdialog den Button {\bf Edit Code} dr"ucken. Im Editor k"onnen Sie dann den Qellcode f"ur die CPU niederschreiben und abspeichern.
+Zum Schreiben von CPU-Programmcode wird ein externer Editor aufgerufen, wenn im Konfigurationsdialog der Button {\bf Edit Code} gedr"uckt wird. Beim "Offnen des des Editors wird automatisch ein C-Source Template geladen, der einen generierten Rahmencode f"ur die CPU in der Programmiersprache C vorgibt. Im Editor kann dann der restliche Quellcode f"ur die CPU niederschreiben und abspeichern.
+
+\subsubsection{CPU-Programmcode kompilieren}
+Zum Kompilieren des erzeugten CPU-Programmcodes wird ein externer Compiler gestartet, wenn im Konfigurationsdialog der Button {\bf Compile} gedr"uckt wird. Der Compiler kompiliert den CPU-Programmcode und gibt im {\bf POA Terminal} eine entsprechende Meldung aus.
+
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{Terminal}
+
+\caption{POA Terminal}\label{test}
+
+\end{center}
+
+\end{figure}
 \newpage
 
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Mux konfigurieren}
+\subsection{Multiplexer konfigurieren}
 \begin{figure}[htbp]
 
 \begin{center}
 
 \includegraphics[width=10cm]{MuxConfiguration}
 
-\caption{Mux Configuration}\label{test}
+\caption{Multiplexer Konfiguration}\label{test}
 
 \end{center}
 
 \end{figure}
 
-
+Multiplexer dienen dazu mehrere Eingangssignale auf ein Ausgangssignal zu reduzieren.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bl"ocke in Arbeitsfenster verschieben}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.8 2004/02/13 16:23:00 vanto Exp $
+ * $Id: problemmanager.cpp,v 1.9 2004/02/13 16:35:52 squig Exp $
  *
  *****************************************************************************/
 
@@ -88,8 +88,11 @@ void ProblemReportItem::setStatus(const QString status)
     else if (status == tr("Critical")) {
         setPixmap(0, QPixmap(Util::findIcon("critical.gif")));
     }
-    else {
+    else if (status == tr("Fixed")) {
         setPixmap(0, QPixmap(Util::findIcon("success.gif")));
+    }
+    else {
+        setPixmap(0, 0);
     }
 }
 

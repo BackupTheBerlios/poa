@@ -15,14 +15,20 @@ import java.util.Map;
  * Project
  * 
  * @author Tammo van Lessen
- * @version $Id: Project.java,v 1.2 2004/01/11 12:09:30 squig Exp $
+ * @version $Id: Project.java,v 1.3 2004/01/11 16:01:34 squig Exp $
  */
 public class Project {
 
 	private List files = new ArrayList();
 	private Map packages = new HashMap();
-	private int instrumentedLines = 0;
-	private int executedLines = 0;
+	private long instrumentedLines = 0;
+	private long executedLines = 0;
+	private long linesOfCode = 0;
+
+	public int getFileCount()
+	{
+		return files.size();
+	}
 
 	public FileInfo[] getFiles() {
 		FileInfo[] array = (FileInfo[])files.toArray(new FileInfo[0]);
@@ -34,17 +40,24 @@ public class Project {
 		files.add(file);
 		instrumentedLines += file.getInstrumentedLinesCount();
 		executedLines += file.getExecutedLinesCount();
-	}
-	
-	public int getInstrumentedLinesCount() {
-		return instrumentedLines;
-	}
-	
-	public int getExecutedLinesCount() {
-		return executedLines;
+		linesOfCode += file.getLinesOfCode();
 	}
 	
 	public double getCoverage() {
 		return (double)executedLines / (double)instrumentedLines;
 	}
+
+	public long getExecutedLinesCount() {
+		return executedLines;
+	}
+	
+	public long getInstrumentedLinesCount() {
+		return instrumentedLines;
+	}
+
+	public long getLinesOfCode()
+	{
+		return linesOfCode;
+	}
+	
 }

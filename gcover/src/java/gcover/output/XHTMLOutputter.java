@@ -21,23 +21,43 @@ package gcover.output;
 import gcover.FileInfo;
 import gcover.LineInfo;
 import gcover.Project;
-import gcover.util.*;
+import gcover.util.Formatter;
+import gcover.util.Util;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.apache.ecs.Entities;
-import org.apache.ecs.*;
+import org.apache.ecs.StringElement;
+import org.apache.ecs.XhtmlDocument;
 import org.apache.ecs.Doctype.XHtml10Strict;
-import org.apache.ecs.xhtml.*;
+import org.apache.ecs.xhtml.a;
+import org.apache.ecs.xhtml.b;
+import org.apache.ecs.xhtml.body;
+import org.apache.ecs.xhtml.br;
+import org.apache.ecs.xhtml.div;
+import org.apache.ecs.xhtml.h1;
+import org.apache.ecs.xhtml.img;
+import org.apache.ecs.xhtml.link;
+import org.apache.ecs.xhtml.pre;
+import org.apache.ecs.xhtml.span;
+import org.apache.ecs.xhtml.table;
+import org.apache.ecs.xhtml.tbody;
+import org.apache.ecs.xhtml.td;
+import org.apache.ecs.xhtml.th;
+import org.apache.ecs.xhtml.tr;
 
 /**
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.8 2004/01/11 12:09:30 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.9 2004/01/11 16:01:34 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -74,18 +94,27 @@ public class XHTMLOutputter implements Outputter {
 
 	public void copyResources()
 	{
-		try {
-			Util.copy(getClass().getResourceAsStream("style.css"),
-					  new FileOutputStream(new File(dir, "style.css")));
-			Util.copy(getClass().getResourceAsStream("index.html"),
-					  new FileOutputStream(new File(dir, "index.html")));
-		} 
-		catch (IOException e) {
-			System.err.println("Could not copy resource");
-			e.printStackTrace(System.err);
+		copyResource("style.css");
+		copyResource("index.html");
+		copyResource("green.png");
+		copyResource("red.png");
+	}			
+
+	public void copyResource(String filename)
+	{
+		InputStream in = getClass().getResourceAsStream(filename);
+		if (in != null) {
+			try {
+				Util.copy(in, new FileOutputStream(new File(dir, filename)));
+			} 
+			catch (IOException e) {
+				System.err.println("Could not copy resource: " + filename);
+			}
+		}
+		else {
+			System.err.println("Could not copy missing resource: " + filename);
 		}
 	}
-			
 
 	/**
 	 * @see gcover.output.Outputter#output(gcover.Project)
@@ -95,7 +124,8 @@ public class XHTMLOutputter implements Outputter {
 
 		// prepare list of files
 		body content = new body();
-
+		content.addElement(new h1("All Files"));
+		
 		for (int i=0; i < files.length; i++) {
 			// write file
 			output(files[i]);
@@ -112,147 +142,169 @@ public class XHTMLOutputter implements Outputter {
 		doc.appendBody(content);
 		writeDocument(doc, "files.html");
 
-		// FIX: write overview.html
-		doc = createDocument("Overview");
-		writeDocument(doc, "overview.html");
+		// write overview.html
+		outputOverview(prj, files);
 	}
 	
 	public void output(FileInfo file) {
-// 		try {
 		System.out.println("Generating " + file.getName() + ".html");
 
-			XhtmlDocument doc = createDocument("GCover - Code Coverage for "+file.getName());
-			table reportHeader = new table().setWidth("100%");
-			reportHeader.addElement(
-				new tr()
-					.addElement(new td("GCover - Coverage Report")
-						.setVAlign("top")
-							.addElement(new div()
-								.addElement(new b("Coverage timestamp:"))
-								.addElement(Entities.NBSP)
-								.addElement(new Date().toString())
-									.setClass("timestamp"))
-						.setClass("titleText"))
-					.addElement(new td().setVAlign("top").setAlign("right").setWidth("40%")
-						.addElement(new table()
-							.addElement(new tr()
-								.addElement(new td("file stats").setNoWrap(true))
-								.addElement(new td(new b("LOC")).setAlign("right"))
-								.addElement(new td(""+file.getLines().length).setAlign("right"))
-								.addElement(new td(new b("Exec.")).setAlign("right"))
-								.addElement(new td(""+file.getExecutionCount()).setAlign("right")) )
-							.addElement(new tr()
-								.addElement(new td())
-								.addElement(new td(new b("IL")).setAlign("right"))
-								.addElement(new td(""+file.getInstrumentedLinesCount()).setAlign("right"))
-								.addElement(new td(new b("EL")).setAlign("right"))
-								.addElement(new td(""+file.getExecutedLinesCount()).setAlign("right"))
-							)
+		XhtmlDocument doc = createDocument("GCover - Code Coverage for "+file.getName());
 
-							.setAlign("right"))
-						.setClass("headerStats")
-						
-					)			
-			);
-					
-			int cov = (int)(file.getCoverage()*200);
-			table header = new table();
-			header.setCellSpacing(0).setCellPadding(2);
-			header.addElement(
-				new tbody()
-					.addElement(new tr()
-						.addElement(new td().setColSpan(6).addElement(reportHeader).setClass("reportHeader")))
-					.addElement(new tr()
-						.addElement(new td(Entities.NBSP).setColSpan(6)))
-					.addElement(new tr()
-						.addElement(new td(new b(Entities.NBSP+"Source file")).setClass("graphHeaderLeft"))
-						.addElement(new td(Entities.NBSP).setClass("graphHeader"))
-						.addElement(new td(Entities.NBSP).setClass("graphHeader"))
-						.addElement(new td(Entities.NBSP).setClass("graphHeader"))
-						.addElement(new td(new b("TOTAL")).setColSpan(2).setAlign("left").setClass("graphHeader"))
-					)
-					.addElement(new tr()
-						.addElement(new td(new b(file.getName())).setClass("graphItem"))
-						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
-						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
-						.addElement(new td(Entities.NBSP).setAlign("center").setClass("graphPercent"))
-						.addElement(new td(new b(Formatter.formatNumber(file.getCoverage()*100,2)+"%")).setAlign("center").setClass("graphBarLeft"))
-						.addElement(new td("BAR")
-							.addElement(new table()
-								.addElement(new tbody()
-									.addElement(new tr()
-										.addElement(new td()
-											.addElement(new img()
-												.setSrc("trans.gif")
-												.setAlt("coverage")
-												.setHeight(12)
-												.setWidth(cov)
-											)
-											.setClass("covered")
-										)
-										.addElement(new td()
-											.addElement(new img()
-												.setSrc("trans.gif")
-												.setAlt("coverage")
-												.setHeight(12)
-												.setWidth(200-cov)
-											)
-											.setClass("uncovered")
-										)
-									)
-								)
-								.setCellSpacing(0)
-								.setClass("barGraph")
-							
-							)
-							.setClass("graphBar")
-						
-						)
-					)
-
-			);
-			doc.appendBody(header);
-			table sourceView = new table();
-			sourceView.setCellPadding(0).setCellSpacing(0).setClass("srcView");
-			tbody srcViewBody = new tbody();
-			sourceView.addElement(srcViewBody);
-
-			for (int i=0; i<file.getLines().length; i++) {
-				LineInfo li = file.getLines()[i];
-				if (li.isInstrumented()) {
-					if (li.getExecCount() == 0) {
-						srcViewBody
-							.addElement(new tr()
-								.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCountHilight"))
-								.addElement(new td(""+li.getExecCount()).setAlign("right").setClass("coverageCountHilight"))
-								.addElement(new td(new span()
-													.addElement(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcHilight")).setClass("srcLine"))
-							);
-					} else {
-						srcViewBody
-							.addElement(new tr()
-								.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCountHilight"))
-								.addElement(new td(""+li.getExecCount()).setAlign("right").setClass("lineCountHilight"))
-								.addElement(new td(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcLine"))
-							);
-					}
-				} else {
-					srcViewBody
+		// header
+		int cov = (int)(file.getCoverage()*100);
+		table headerView = new table();
+		headerView.setCellSpacing(0).setCellPadding(2).setClass("headerView");
+		headerView
+			.addElement(new tr()
+				.addElement(new td(new h1("GCover - Coverage Report"))
+					.setVAlign("top")
+					.addElement(new div()
+						.addElement(new b("Coverage timestamp:"))
+						.addElement(Entities.NBSP)
+						.addElement(new Date().toString())
+						.setClass("timestamp"))
+					.setClass("titleText"))
+				.addElement(new td().setVAlign("top").setAlign("right").setWidth("40%")
+					.addElement(new table()
 						.addElement(new tr()
-							.addElement(new td(""+(i+1)).setAlign("right").setClass("lineCount"))
-							.addElement(new td("").setAlign("right").setClass("coverageCount"))
-							.addElement(new td(new pre(li.getSourceLine()).setClass("srcLine")).setClass("srcLine"))
-						);
-				}
+							.addElement(new td(new b("LOC")).setAlign("right"))
+							.addElement(new td(""+file.getLinesOfCode()).setAlign("left")))
+						.addElement(new tr()
+							.addElement(new td(new b("Instrumented")).setAlign("right"))
+							.addElement(new td(""+file.getInstrumentedLinesCount()).setAlign("left")))
+						.addElement(new tr()
+							.addElement(new td(new b("Executed")).setAlign("right"))
+							.addElement(new td(""+file.getExecutedLinesCount()).setAlign("left"))))))
+			.addElement(new tr()
+				.addElement(new td("Source file: ").setVAlign("top")
+					.addElement(new b(file.getName())))
+				.addElement(new td("Total: ").setVAlign("top")
+					.addElement(new b(Formatter.formatNumber(file.getCoverage()*100,2)+"%"))
+					.addElement(new br())
+					.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
+					.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
+					.setAlign("right")));
+		doc.appendBody(new div().addElement(headerView).setClass("headerView"));
+		doc.appendBody(new br());
+
+		// source code
+		table sourceView = new table();
+		sourceView.setCellPadding(0).setCellSpacing(0).setClass("sourceView");
+		tbody srcViewBody = new tbody();
+		sourceView.addElement(srcViewBody);
+
+		LineInfo[] lines = file.getLines();
+		for (int i=0; i<lines.length; i++) {
+			LineInfo li = lines[i];
+
+			String numberStyle 
+				= (li.isInstrumented()) 
+				? (li.getExecCount() == 0)
+				? "uncovered"
+				: "covered"
+				: "notinstrumented";
+
+			td srcLine = new td(new span().addElement(new pre(li.getSourceLine())));
+			if (li.isInstrumented() && li.getExecCount() == 0) {
+				srcLine.setClass("uncovered");
 			}
 			
-			doc.appendBody(sourceView);
+			srcViewBody
+				.addElement(new tr()
+					.addElement(new td(""+(i+1)).setAlign("right").setClass(numberStyle))
+					.addElement(new td((li.isInstrumented()) ? ""+li.getExecCount() : "")
+						.setAlign("right").setClass(numberStyle))
+					.addElement(srcLine));
+		}
+		doc.appendBody(sourceView);
 
-			writeDocument(doc, file.getName()+".html");
-// 		} catch (IOException e) {
-// 			e.printStackTrace();
-// 		}
-		
+		writeDocument(doc, file.getName()+".html");
 	}
+
+	public void outputOverview(Project project, FileInfo[] files) {
+		System.out.println("Generating overview.html");
+
+		XhtmlDocument doc = createDocument("GCover - Overview");
+		int cov = (int)(project.getCoverage()*100);
+
+		// header
+		table headerView = new table();
+		headerView.setCellSpacing(0).setCellPadding(2).setClass("headerView");
+		headerView
+			.addElement(new tr()
+				.addElement(new td(new h1("GCover - Coverage Report"))
+					.setVAlign("top")
+					.addElement(new div()
+						.addElement(new b("Coverage timestamp:"))
+						.addElement(Entities.NBSP)
+						.addElement(new Date().toString())
+						.setClass("timestamp"))
+					.setClass("titleText"))
+				.addElement(new td().setVAlign("top").setAlign("right").setWidth("40%")
+					.addElement(new table()
+						.addElement(new tr()
+							.addElement(new td(new b("Files")).setAlign("right"))
+							.addElement(new td(""+project.getFileCount()).setAlign("left")))
+						.addElement(new tr()
+							.addElement(new td(new b("LOC")).setAlign("right"))
+							.addElement(new td(""+project.getLinesOfCode()).setAlign("left")))
+						.addElement(new tr()
+							.addElement(new td(new b("Instrumented")).setAlign("right"))
+							.addElement(new td(""+project.getInstrumentedLinesCount()).setAlign("left")))
+						.addElement(new tr()
+							.addElement(new td(new b("Executed")).setAlign("right"))
+							.addElement(new td(""+project.getExecutedLinesCount()).setAlign("left"))))))
+			.addElement(new tr()
+				.addElement(new td())
+				.addElement(new td("Total: ").setVAlign("top")
+					.addElement(new b(Formatter.formatNumber(cov,2)+"%"))
+					.addElement(new br())
+					.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
+					.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
+					.setAlign("right")));
+		doc.appendBody(new div().addElement(headerView).setClass("headerView"));
+		doc.appendBody(new br());
+
+		// source code
+		table fileView = new table();
+		fileView.setCellPadding(2).setCellSpacing(0).setClass("fileView");
+		tbody fileViewBody = new tbody();
+		fileView.addElement(fileViewBody);
+
+		fileViewBody
+			.addElement(new tr()
+				.addElement(new th("Filename"))
+				.addElement(new th("Total").setColSpan(2)));
+
+		Arrays.sort(files, new FileInfoCoverageComparator());
+		for (int i=0; i<files.length; i++) {
+			FileInfo file = files[i];
+			cov = (int)(file.getCoverage()*100);
+
+			fileViewBody
+				.addElement(new tr()
+					.addElement(new td(new a(file.getName()+".html", file.getName())))
+					.addElement(new td()
+						.addElement(Formatter.formatNumber(file.getCoverage()*100,2)+"%").setAlign("right"))
+					.addElement(new td()
+						.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
+						.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
+));
+		}
+		doc.appendBody(fileView);
+
+		writeDocument(doc, "overview.html");
+	}
+
+	public static class FileInfoCoverageComparator implements Comparator {
+		
+		public int compare(Object o1, Object o2) 
+		{
+			return (int)((((FileInfo)o1).getCoverage()- ((FileInfo)o2).getCoverage()) * 100.0);
+		}
+
+	}
+
 
 }

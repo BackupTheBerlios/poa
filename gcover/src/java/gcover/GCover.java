@@ -26,7 +26,7 @@ import gcover.util.Formatter;
  * 
  * @author Tammo van Lessen
  * @author Steffen Pingel
- * @version $Id: GCover.java,v 1.3 2004/01/07 17:01:38 squig Exp $
+ * @version $Id: GCover.java,v 1.4 2004/01/11 16:01:34 squig Exp $
  */
 public class GCover {
 
@@ -53,7 +53,7 @@ public class GCover {
 		Builder.parseDir(project, inputDir);
 
 		// debug
-		printDebug(project);
+		//printDebug(project);
 		
 		// generate output
 		Outputter out = new XHTMLOutputter(outputDir);

@@ -15,7 +15,7 @@ import java.util.List;
  * File
  * 
  * @author Tammo van Lessen
- * @version $Id: FileInfo.java,v 1.2 2004/01/11 12:09:30 squig Exp $
+ * @version $Id: FileInfo.java,v 1.3 2004/01/11 16:01:34 squig Exp $
  */
 public class FileInfo implements Comparable {
 
@@ -87,4 +87,10 @@ public class FileInfo implements Comparable {
 	public int getExecutionCount() {
 		return executions;
 	}
+
+	public int getLinesOfCode()
+	{
+		return lines.size();
+	}
+
 }

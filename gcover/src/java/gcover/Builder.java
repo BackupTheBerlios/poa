@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
  * Builder
  * 
  * @author Tammo van Lessen
- * @version $Id: Builder.java,v 1.2 2004/01/07 20:39:01 squig Exp $
+ * @version $Id: Builder.java,v 1.3 2004/01/11 16:01:34 squig Exp $
  */
 public class Builder {
 
@@ -28,7 +28,7 @@ public class Builder {
 			return null;
 		}
 		
-		System.out.println("Parsing " + filename);
+		System.out.print("Parsing " + FileUtils.filename(filename) + "...");
 
 		FileInfo file = new FileInfo(FileUtils.dirname(filename),
 			FileUtils.filename(filename.substring(0,filename.lastIndexOf(".gcov"))));
@@ -53,6 +53,11 @@ public class Builder {
 				}			
 			}
 		}
+
+		System.out.println
+			("done (" + file.getInstrumentedLinesCount()
+			 + ", " + file.getExecutedLinesCount() + ")");
+
 		return file;
 	}
 	

@@ -1,0 +1,75 @@
+<!-- GCover Stylesheet. Adopted from jcoverage. -->
+
+body {
+background-color: white;
+}
+
+p {
+text-align: left;
+margin-top: 10pt;
+margin-bottom: 10pt;
+}
+
+p, h1, h2, h3, td, th, dt {
+font-family: verdana, arial, sans-serif;
+font-size: 10pt;
+line-height: 100%;
+margin-left: 0pt;
+}
+
+h1 {
+font-size: 13pt;
+}
+
+h2 {
+font-size: 12pt;
+margin-top: 12pt;
+}
+
+div.timestamp {
+font-size: 9px;
+font-weight: normal;
+}
+
+span.srcfile {
+font-size: 9px;
+}
+
+div.headerView {
+background: #eff7ff;
+padding: 10px;
+border: #dcdcdc 1px solid;
+}
+
+table.fileView {
+font-size: 12px;
+border: #dcdcdc 1px solid;
+}
+
+table.fileView th {
+background: #eff7ff;
+border: #dcdcdc 1px solid;
+}
+
+table.sourceView {
+font-size: 12px;
+border: #dcdcdc 1px solid;
+}
+
+td.notinstrumented {
+background: #f0f0f0;
+border-right: #dcdcdc 1px solid;
+padding-right: 3px;
+}
+
+td.covered {
+background: #c8c8f0;
+border-right: #dcdcdc 1px solid;
+padding-right: 3px;
+}
+
+td.uncovered {
+background: #f0c8c8;
+border-right: #dcdcdc 1px solid;
+padding-right: 3px;
+}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.8 2003/08/22 10:08:54 garbeam Exp $
+ * $Id: main.cpp,v 1.9 2003/08/22 10:27:00 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -66,6 +66,8 @@
  */
 int main (int argc, char *argv[])
 {
+    CpuModel model(new QString("CPU 1"), 1, TRUE);
+    model.serialize();
 
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();

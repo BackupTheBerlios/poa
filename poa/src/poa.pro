@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.65 2003/12/18 01:52:02 kilgus Exp $
+# $Id: poa.pro,v 1.66 2004/01/05 15:48:49 kilgus Exp $
 #
 ###############################################################################
 
@@ -32,6 +32,8 @@ CONFIG += exceptions
 TEMPLATE = app
 INCLUDEPATH += .
 INCLUDEPATH += ./qextserialport
+
+win32:OBJECTS_DIR = debug
 
 TARGET = poa
 QMAKE_TARGET_DESTDIR = poa-0.1.0
@@ -48,6 +50,7 @@ HEADERS += aboutdialog.h
 HEADERS += abstractmodel.h
 HEADERS += blockconfdialog.h 
 HEADERS += blockmodel.h
+HEADERS += blocktree.h
 HEADERS += blockview.h
 HEADERS += canvasview.h
 HEADERS += canvasviewaction.h
@@ -81,6 +84,7 @@ HEADERS += priorityqueue.h
 HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += router.h
+HEADERS += scheduledialog.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
@@ -91,6 +95,7 @@ SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
 SOURCES += blockconfdialog.cpp
 SOURCES += blockmodel.cpp
+SOURCES += blocktree.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
@@ -121,6 +126,7 @@ SOURCES += poa.cpp
 SOURCES += priorityqueue.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
+SOURCES += scheduledialog.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp

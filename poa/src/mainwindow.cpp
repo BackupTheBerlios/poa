@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.74 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: mainwindow.cpp,v 1.75 2004/01/05 15:48:49 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -43,6 +43,7 @@
 #include "project.h"
 #include "project.h"
 #include "removeable.h"
+#include "scheduledialog.h"
 #include "settings.h"
 #include "settingsdialog.h"
 #include "util.h"
@@ -237,7 +238,7 @@ void MainWindow::initializeToolbars()
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
     openBlockConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
-    //invokeSchedulingAction->addTo(utilToolBar);
+    invokeSchedulingAction->addTo(utilToolBar);
     //invokeCompilerAction->addTo(utilToolBar);
     //invokeDownloadAction->addTo(utilToolBar);
     invokeDeployAction->addTo(utilToolBar);
@@ -301,7 +302,7 @@ void MainWindow::initializeMenu()
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
     openBlockConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
-    //invokeSchedulingAction->addTo(toolsMenu);
+    invokeSchedulingAction->addTo(toolsMenu);
     //invokeCompilerAction->addTo(toolsMenu);
     //invokeDownloadAction->addTo(toolsMenu);
     invokeDeployAction->addTo(toolsMenu);
@@ -353,6 +354,8 @@ void MainWindow::connectActions()
             Settings::instance(), SLOT(setShowGrid(bool)));
     connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
             settingsShowGridAction_, SLOT(setOn(bool)));
+    connect(invokeSchedulingAction, SIGNAL(activated()), this,
+            SLOT(openScheduling()));
     connect(invokeDeployAction, SIGNAL(activated()), this,
             SLOT(openDeployWizard()));
     connect(tileHorizontalAction, SIGNAL(activated()),
@@ -688,7 +691,7 @@ void MainWindow::openBlockConf()
         QCanvasItemList l = view->selectedItems();
         QCanvasItem *topItem = l.isEmpty() ? 0 : l.first();
 
-        if (INSTANCEOF(topItem, BlockView)) {
+        if (topItem->rtti() == BlockView::RTTI) {
             AbstractModel *model = ((BlockView *)topItem)->model();
             if (INSTANCEOF(model, MuxModel)) {
                 MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
@@ -758,7 +761,8 @@ void MainWindow::openRecentProject(int i)
 
 void MainWindow::openScheduling()
 {
-
+    ScheduleDialog *dialog = new ScheduleDialog(project_, this);
+    dialog->show();
 }
 
 
@@ -811,6 +815,7 @@ void MainWindow::windowActivated(QWidget* w)
         zoomComboBox->setEnabled(true);
         zoomComboBox->setEditText
             (QString::number(m->zoomLevel() * 100.0) + "%");
+		invokeSchedulingAction->setEnabled(true);
     }
     else {
         editCutAction->setEnabled(false);
@@ -819,6 +824,7 @@ void MainWindow::windowActivated(QWidget* w)
         editRemoveAction->setEnabled(false);
         openBlockConfAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
+		invokeSchedulingAction->setEnabled(false);
     }
 }
 

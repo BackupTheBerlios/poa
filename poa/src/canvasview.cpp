@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.14 2003/08/28 15:31:10 vanto Exp $
+ * $Id: canvasview.cpp,v 1.15 2003/08/28 16:10:29 keulsn Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -72,26 +72,30 @@ void CanvasView::contentsMousePressEvent(QMouseEvent* e)
     if (e->button() == LeftButton) {
         if (!l.isEmpty()) {
             // first item is top item
-            movingItem_ = l.first();
-            movingStartPoint_ = p;
-        }
-        else {
-            movingItem_ = 0;
+	    QCanvasItem topItem = l.first();
+	    if (INSTANCEOF(topItem, BlockView)) {
+		movingItem_ = topItem;
+		movingStartPoint_ = p;
+	    }
         }
     }
     else if (e->button() == RightButton) {
         if (!l.isEmpty()) {
-            QPopupMenu *menu = (dynamic_cast<AbstractView *>(l.first()))->popupMenu();
-            if (menu) {
-                menu->exec(e->pos());
-            }
+	    AbstractView *item = dynamic_cast<AbstractView *>(l.first());
+	    // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
+	    if (item != 0) {
+		QPopupMenu *menu = item->popupMenu();
+		if (menu) {
+		    menu->exec(e->pos());
+		}
+	    }
         }
     }
 }
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
 {
-    if (movingItem_) {
+    if (movingItem_ != 0) {
         QPoint p = inverseWorldMatrix().map(e->pos());
         movingItem_->moveBy(p.x() - movingStartPoint_.x(),
                             p.y() - movingStartPoint_.y());
@@ -126,17 +130,6 @@ void CanvasView::dropEvent(QDropEvent *e)
     }
 }
 
-/*void CanvasView::modelAdded(AbstractModel *item, int x, int y)
-{
-    ++currentZ_;
-    QCanvasItemList l = item->createView(canvas());
-    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
-        (*it)->moveBy(x, y);
-    (*it)->setZ(currentZ_);
-        (*it)->show();
-    }
-    canvas()->update();
-}*/
 
 QPoint CanvasView::toCanvas(QPoint pos)
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.44 2004/01/09 16:56:24 squig Exp $
+ * $Id: blockview.h,v 1.45 2004/01/17 15:05:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -244,6 +244,11 @@ private:
      * Sets the pen and brush according to the active and selection state.
      */
     void updateProperties();
+
+    /**
+     * Sorts list by pin position.
+     */
+    void sort(QValueList<PinView *> &list);
 
     BlockModel *model_;
 

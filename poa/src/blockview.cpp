@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.54 2004/01/13 00:28:29 squig Exp $
+ * $Id: blockview.cpp,v 1.55 2004/01/17 15:05:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -189,6 +189,11 @@ void BlockView::arrangeConnectors()
 
 void BlockView::arrangePins()
 {
+    // resort pins
+    sort(leftPins_);
+    sort(rightPins_);
+    sort(bottomPins_);
+
     // calculate height
     unsigned height
         = BlockView::DEFAULT_TOP_SPACING
@@ -513,6 +518,45 @@ QDomElement BlockView::serialize(QDomDocument *document)
     root.setAttribute("x", x());
     root.setAttribute("y", y());
     return root;
+}
+
+/**
+ * Copied from Qt template library classes: qBubbleSort().
+ */
+void BlockView::sort(QValueList<PinView *> &list)
+{
+    if (list.isEmpty() || list.size() == 1) {
+        return;
+    }
+
+    QValueList<PinView *>::iterator b = list.begin();
+    QValueList<PinView *>::iterator e = list.end();
+
+    // Goto last element;
+    QValueList<PinView *>::iterator last = list.end();
+    --last;
+
+    // So we have at least two elements in here
+    while( b != last ) {
+        bool swapped = FALSE;
+        QValueList<PinView *>::iterator swap_pos = b;
+        QValueList<PinView *>::iterator x = e;
+        QValueList<PinView *>::iterator y = x;
+        y--;
+        do {
+            --x;
+            --y;
+            if ( (*x)->model()->position() < (*y)->model()->position() ) {
+                swapped = TRUE;
+                qSwap( *x, *y );
+                swap_pos = y;
+            }
+        } while( y != b );
+        if ( !swapped )
+            return;
+        b = swap_pos;
+        b++;
+    }
 }
 
 void BlockView::updateView()

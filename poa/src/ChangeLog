@@ -1,3 +1,11 @@
+2004-01-17  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* blockview.h (class BlockView): Keeps PinView objects sorted by
+	pin position.
+
+	* blockconfdialog.cpp: Start positions at index 1. Toggled order
+	of address and bits items.
+
 2004-01-12  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* muxmodel.cpp (MuxModel): Removed emit deleted(), the signal is

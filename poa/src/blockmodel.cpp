@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.40 2004/01/14 13:30:29 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.41 2004/01/17 15:05:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include "blockview.h"
 #include "pinmodel.h"
 
+const int BlockModel::FIRST_PIN_POSISION = 1;
 
 BlockModel::BlockModel(QString type, QString description)
     : AbstractModel(type, description)

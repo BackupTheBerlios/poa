@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.46 2004/01/17 12:47:14 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.47 2004/01/17 15:05:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -307,7 +307,7 @@ void BlockConfDialog::initListView()
     // I/O list view
     ioListView = new QListView(leftWidget, "ioListView");
     ioListView->addColumn(tr("Position"));
-    ioListView->addColumn(tr("I/O Name"));
+    ioListView->addColumn(tr("Name"));
     ioListView->addColumn(tr("Bits"));
     ioListView->addColumn(tr("Address"));
     ioListView->setAllColumnsShowFocus(TRUE);
@@ -326,13 +326,13 @@ void BlockConfDialog::initListView()
     addressLineEdit = new QLineEdit(editIoWidget, "addressLineEdit");
     bitsLineEdit = new QLineEdit(editIoWidget, "bitsLineEdit");
 
-    editIoLayout->addWidget(new QLabel(tr("I/O Name"), editIoWidget), 0, 0);
+    editIoLayout->addWidget(new QLabel(tr("Name"), editIoWidget), 0, 0);
     editIoLayout->addWidget(ioNameLineEdit, 0, 1);
-    editIoLayout->addWidget(
-        new QLabel(tr("Address"), editIoWidget), 1, 0);
-    editIoLayout->addWidget(addressLineEdit, 1, 1);
-    editIoLayout->addWidget(new QLabel(tr("Bits"), editIoWidget), 1, 2);
-    editIoLayout->addWidget(bitsLineEdit, 1, 3);
+    editIoLayout->addWidget(new QLabel(tr("Bits"), editIoWidget), 1, 0);
+    editIoLayout->addWidget(bitsLineEdit, 1, 1);
+    editIoLayout->addWidget
+        (new QLabel(tr("Address"), editIoWidget), 1, 2);
+    editIoLayout->addWidget(addressLineEdit, 1, 3);
 
 
     // I/O manipulation buttons
@@ -469,9 +469,8 @@ void BlockConfDialog::updateModel() {
         // clears list view
         ioListView->clear();
 
-        // Notify model about update, so the view will be
-        // repaint.
-        ((AbstractModel *)model_)->updatePerformed();
+        // notify model about update to repaint views
+        model_->updatePerformed();
 
         // sync again
         syncModel();
@@ -596,8 +595,8 @@ void BlockConfDialog::ioSelectionChanged() {
     bitsLineEdit->setEnabled(isChild);
 
     ioNameLineEdit->setText(isChild ? item->text(1) : QString(""));
-    addressLineEdit->setText(isChild ? item->text(3) : QString(""));
     bitsLineEdit->setText(isChild ? item->text(2) : QString(""));
+    addressLineEdit->setText(isChild ? item->text(3) : QString(""));
 }
 
 void BlockConfDialog::toggleManualOffset() {
@@ -658,9 +657,9 @@ void BlockConfDialog::edit()
     }
 }
 
-void BlockConfDialog::updatePositions(PinModel::PinType type) {
-
-    unsigned position = 0;
+void BlockConfDialog::updatePositions(PinModel::PinType type)
+{
+    unsigned position = BlockModel::FIRST_PIN_POSISION;
     for (QListViewItemIterator it(ioListView); it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (!item->isRoot()) {

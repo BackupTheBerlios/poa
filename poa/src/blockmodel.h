@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.36 2004/01/09 14:05:29 squig Exp $
+ * $Id: blockmodel.h,v 1.37 2004/01/17 15:05:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -193,6 +193,11 @@ public:
      * Returns the tooltip text.
      */
     virtual QString tip();
+
+    /**
+     * The position of the first pin. Usually either 0 or 1.
+     */
+    static const int FIRST_PIN_POSISION;
 
 protected:
 

@@ -1,10 +1,9 @@
 #!/bin/sh
 POADIR=poa
 PREFIX=$1
-SOURCE=src
-BINARY=src/poa
-ICONS=src/icons
-TEMPLATES=src/templates
+BINARY=poa
+ICONS=icons
+TEMPLATES=templates
 
 usage()
 {
@@ -24,14 +23,9 @@ done
 if [ "$PREFIX" = "" ]; then
     PREFIX="/usr"
 fi
-if [ ! -d "$SOURCE" ]; then
-    echo "error: no '$SOURCE' directory found, you've to invoke this"
-    echo "       script from the poa directory."
-    exit 1
-fi
 if [ ! -x "$BINARY" ]; then
     echo "error: you've to build POA first before installing it."
-    echo "       Invoke make within '$SOURCE' directory first."
+    echo "       Invoke make within this directory first."
     exit 1
 fi
 if [ ! -d "$ICONS" ]; then

@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch
-%% $Id: handbuch.tex,v 1.19 2004/03/19 17:14:04 neco Exp $
+%% $Id: handbuch.tex,v 1.20 2004/03/24 13:29:08 garbeam Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.19 $
-\RCSdef $Date: 2004/03/19 17:14:04 $
+\RCSdef $Revision: 1.20 $
+\RCSdef $Date: 2004/03/24 13:29:08 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -130,7 +130,7 @@ Systemanforderungen:
 \item C++ Compiler: gcc 2.95 oder h"oher
 \end{itemize}
 
-\item Linux auf i386-kompatiblen Rechnern (X-Windows) \newline
+\item Linux auf allen Rechnerplattformen mit QT und X-Windows \newline
 Systemanforderungen:
 \begin{itemize}
 \item QT 3.0
@@ -138,10 +138,57 @@ Systemanforderungen:
 \end{itemize}
 \end{itemize}
 
+\section{Installation unter Linux}
 
-\subsection{Installation unter Linux}
+Dieser Abschnitt untergliedert sich in die Installation von releasten
+POA Versionen unter Linux und in die Installation von Entwicklersnapshots
+aus dem CVS.
+
+\subsection{Installation von POA 1.0}
+
+Die Installation von POA Releases, wie POA 1.0, ist kommandozeilenbasiert
+und wird durch ein Installationsskript gesteuert. Vor der Installation muss zunächst
+ein Terminal, z.B. {\it xterm}, gestartet werden.\par
+Im Terminal wechselt man zunächst in das Verzeichnis, wo sich das POA
+Release in komprimierter Form (z.B. \textbf{poa-1.0.tar.gz}) befindet.
+
+\begin{verbatim}
+$ cd /home/hans/downloads/
+$ ls
+poa-1.0.tar.gz
+\end{verbatim}
+
+Sollte noch kein POA Release heruntergeladen worden sein, kann dies
+durch Besuch der POA Website auf {\it http://poa.berlios.de/} und dort
+unter dem Menüpunkt \textbf{Download} nachgeholt werden. Alternativ kann POA
+auch wie folgt kommandobasiert heruntergeladen werden.
+
+\begin{verbatim}
+$ cd /home/hans/downloads/
+$ wget http://download.berlios.de/poa/poa-1.0.tar.gz
+$ ls
+poa-1.0.tar.gz
+\end{verbatim}
+
+Als nächster Schritt muss das POA Release dekomprimiert werden. Dies wird
+durch folgenden Befehl durchgeführt, der auch den Fortschritt des 
+Dekomprimierungsvorgangs darstellt:
+
+\begin{verbatim}
+$ tar xvzf poa-1.0.tar.gz
+...
+$ ls
+poa-1.0 poa-1.0.tar.gz
+\end{verbatim}
+
+Nach der Dekomprimierung existiert ein neues Verzeichnis \textbf{poa-1.0}.
+
+
+
+
+
 	
-\subsection{Installation unter Windows}
+\section{Installation unter Windows}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

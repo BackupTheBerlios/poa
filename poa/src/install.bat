@@ -13,10 +13,10 @@ mkdir %PREFIX%\POA
 mkdir %PREFIX%\POA\icons
 mkdir %PREFIX%\POA\templates
 echo "Installiere poa.exe"
-xcopy src\poa.exe %PREFIX%\POA\
+xcopy poa.exe %PREFIX%\POA\
 echo "Installiere Icons"
-xcopy src\icons\* %PREFIX%\POA\icons\
+xcopy icons\* %PREFIX%\POA\icons\
 echo "Installiere Templates"
-xcopy src\templates\* %PREFIX%\POA\templates\
+xcopy templates\* %PREFIX%\POA\templates\
 echo "Installation beendet."
 echo "Have fun! Ihr WMI Team."

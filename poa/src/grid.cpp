@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.cpp,v 1.5 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: grid.cpp,v 1.6 2003/12/20 16:11:26 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,6 @@
 #include <math.h>
 
 #include "grid.h"
-
 
 Grid::Grid(QPoint start, int gridSize)
 {
@@ -55,7 +54,7 @@ Grid::Grid(QPoint first, QPoint second, int gridMagnitude)
 
     if (ownX) {
 	delta = (double) (second.x() - first.x());
-	n = int(delta / ((double) gridMagnitude) + 0.5);
+	n = (int) rint(delta / ((double) gridMagnitude));
 	if (n != 0) {
 	    gridSizeX_ = delta / ((double) n);
 	}
@@ -65,7 +64,7 @@ Grid::Grid(QPoint first, QPoint second, int gridMagnitude)
     }
     if (ownY) {
 	delta = (double) (second.y() - first.y());
-	n = int(delta / ((double) gridMagnitude) + 0.5);
+	n = (int) rint(delta / ((double) gridMagnitude));
 	if (n != 0) {
 	    gridSizeY_ = delta / ((double) n);
 	}
@@ -93,10 +92,10 @@ Grid::~Grid()
 QPoint Grid::closestGridPoint(QPoint point)
 {
     // offset + n * gridSize - point = min
-    int x = int(((double) point.x() - offsetX_) / gridSizeX_ + 0.5);
-    int y = int(((double) point.y() - offsetY_) / gridSizeY_ + 0.5);
-    return QPoint(int(offsetX_ + ((double) x) * gridSizeX_ + 0.5),
-		  int(offsetY_ + ((double) y) * gridSizeY_ + 0.5));
+    int x = (int) rint(((double) point.x() - offsetX_) / gridSizeX_);
+    int y = (int) rint(((double) point.y() - offsetY_) / gridSizeY_);
+    return QPoint((int) rint(offsetX_ + ((double) x) * gridSizeX_),
+		  (int) rint(offsetY_ + ((double) y) * gridSizeY_));
 }
 
 
@@ -131,6 +130,6 @@ void Grid::getGridDistance(QPoint start, QPoint end, int &x, int &y)
 {
     double dx = (double) end.x() - start.x();
     double dy = (double) end.y() - start.y();
-    x = int(dx / gridSizeX_ + 0.5);
-    y = int(dy / gridSizeY_ + 0.5);
+    x = (int) rint(dx / gridSizeX_);
+    y = (int) rint(dy / gridSizeY_);
 }

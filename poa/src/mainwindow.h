@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.7 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: mainwindow.h,v 1.8 2003/08/21 10:46:08 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -102,7 +102,7 @@ public slots:
     virtual void openSettings();
 
 private slots:
-    MdiWindow* newLayout();
+    MdiWindow* newDoc();
     void closeWindow();
     void tileHorizontal();
 

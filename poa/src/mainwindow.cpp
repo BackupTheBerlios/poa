@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.11 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.12 2003/08/21 10:46:08 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 
 #include "aboutdialog.h"
 #include "cpuview.h"
+#include "gridcanvas.h"
 #include "layoutcanvas.h"
 #include "moduleconfdialog.h"
 #include "settingsdialog.h"
@@ -267,7 +268,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
 
     /////////////////////////////////////////////////////////////////
     // signals and slots connections
-    connect(fileNewAction, SIGNAL(activated()), this, SLOT(newLayout()));
+    connect(fileNewAction, SIGNAL(activated()), this, SLOT(newDoc()));
     connect(fileOpenAction, SIGNAL(activated()), this, SLOT(fileOpen()));
     connect(fileSaveAction, SIGNAL(activated()), this, SLOT(fileSave()));
     connect(fileSaveAsAction, SIGNAL(activated()), this, SLOT(fileSaveAs()));
@@ -409,10 +410,11 @@ void MainWindow::openSettings()
     dialog->show();
 }
 
-MdiWindow* MainWindow::newLayout()
+MdiWindow* MainWindow::newDoc()
 {
-    LayoutCanvas *doc = new LayoutCanvas();
-    doc->resize(400, 400);
+//    LayoutCanvas *doc = new LayoutCanvas();
+    GridCanvas *doc = new GridCanvas(100, 400);
+//    doc->resize(400, 400);
 
     MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
     w->setCaption("unnamed layout");

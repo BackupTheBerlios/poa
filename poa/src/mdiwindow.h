@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.6 2003/08/21 08:53:27 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.7 2003/08/21 10:46:08 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define POA_MIDWINDOW_H
 
 #include <qmainwindow.h>
+#include <qcanvas.h>
 
 class LayoutCanvas;
 class QCanvasView;
@@ -39,12 +40,12 @@ class MdiWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MdiWindow(LayoutCanvas* canvas, QWidget* parent = 0, const char* name = 0, 
+    MdiWindow(QCanvas* canvas, QWidget* parent = 0, const char* name = 0, 
 			  WFlags f = WType_TopLevel);
     ~MdiWindow();
 
-	LayoutCanvas *getCanvas();
-    void setCanvas(LayoutCanvas *);
+	QCanvas *getCanvas();
+    void setCanvas(QCanvas *);
 
     void load( const QString& fn );
     void save();

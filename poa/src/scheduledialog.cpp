@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.58 2004/02/15 03:56:24 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.59 2004/02/15 04:00:13 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -58,7 +58,6 @@
 #include "printmanager.h"
 
 const int CANVAS_WIDTH = 800;       // Canvas width
-//const int PRINT_CANVAS_WIDTH = 600; // Same for printer
 const int PRINT_ITEM_HEIGHT = 20;   // Table item height
 const int PRINT_NAME_WIDTH = 100;   // Width of name space left of graph
 const int PRINT_SPACING = 5;        // Space e.g. between lines and text
@@ -518,22 +517,22 @@ void ScheduleDialog::print()
     if (!printer.setup()) return;
 
     QPaintDeviceMetrics *metrics = printer.getMetrics();    
-    int PRINT_CANVAS_WIDTH = metrics->width();
+    int printCanvasWidth = metrics->width();
     delete metrics;
 
     int tableHeight = (blocks_.count() + 1) * PRINT_ITEM_HEIGHT;
-    QCanvas *printCanvas = new QCanvas(PRINT_CANVAS_WIDTH, 
+    QCanvas *printCanvas = new QCanvas(printCanvasWidth, 
         tableHeight + PRINT_ITEM_HEIGHT + canvas->height());
 
     // first draw timing table
     int y = 0;
     Q_ASSERT(timingTable->numCols() == 6);
     int xOfs[6] = {0,       // x offsets of the columns
-                   PRINT_CANVAS_WIDTH * 1/20,
-                   PRINT_CANVAS_WIDTH * 4/10, 
-                   PRINT_CANVAS_WIDTH * 6/10, 
-                   PRINT_CANVAS_WIDTH * 8/10,
-                   PRINT_CANVAS_WIDTH - 1};
+                   printCanvasWidth * 1/20,
+                   printCanvasWidth * 4/10, 
+                   printCanvasWidth * 6/10, 
+                   printCanvasWidth * 8/10,
+                   printCanvasWidth - 1};
 
     QCanvasLine *line = new QCanvasLine(printCanvas);
     line->setPoints(xOfs[0], y, xOfs[5], y);
@@ -594,7 +593,7 @@ void ScheduleDialog::print()
     p.nameWidth = PRINT_NAME_WIDTH;
     p.x = 0;
     p.y = y;
-    p.width = PRINT_CANVAS_WIDTH;
+    p.width = printCanvasWidth;
     p.height = canvas->height();
     p.canvas = printCanvas;
 

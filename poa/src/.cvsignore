@@ -3,3 +3,4 @@ Makefile
 moc_*.cpp
 poa
 *.o
+poa.local

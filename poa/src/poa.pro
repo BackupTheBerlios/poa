@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.28 2003/09/07 19:07:46 squig Exp $
+# $Id: poa.pro,v 1.29 2003/09/08 14:17:09 vanto Exp $
 #
 ###############################################################################
 
@@ -28,13 +28,12 @@ CONFIG += debug
 TEMPLATE = app
 INCLUDEPATH += .
 
-# added for use under OpenBSD (garbeam)
-UNAME = $$system(uname -s)
-contains (UNAME, OpenBSD) {
+include(poa.local)
+
+# move this to poa.local for for use under OpenBSD (garbeam)
 	# I have multi-threaded Qt
 	INCLUDEPATH += $(QTINC)
 	CONFIG += thread
-}
 
 # source files
 HEADERS += aboutdialog.h 

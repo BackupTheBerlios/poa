@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.cpp,v 1.5 2004/02/15 03:56:24 kilgus Exp $
+ * $Id: printmanager.cpp,v 1.6 2004/02/17 01:08:51 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -31,13 +31,8 @@
 #include <qprinter.h>
 #include <qdatetime.h>
 
-int HEADER_SPACE = 20;
-int FONT_HEIGHT = 12;
-
 PrintManager::PrintManager(QString title)
 {
-    FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
-    HEADER_SPACE = 2 * FONT_HEIGHT;
     title_ = title;
     title_.append(" - ");
     title_.append(QDateTime::currentDateTime().toString());
@@ -52,7 +47,8 @@ bool PrintManager::setup()
     // doesnt work in GS-Pool
     //printer.setOptionEnabled(QPrinter::PrintSelection, false);
     //printer.setOptionEnabled(QPrinter::PrintPageRange, false);
-    return printerSetup_ = printer_.setup();
+    printerSetup_ = printer_.setup();
+    return printerSetup_;
 }
 
 QPaintDeviceMetrics *PrintManager::getMetrics()
@@ -63,20 +59,24 @@ QPaintDeviceMetrics *PrintManager::getMetrics()
 
 void PrintManager::print(QCanvas *canvas)
 {
+
     if (!printerSetup_)
         setup();
     if (printerSetup_) {
         // disable grid for printing
-        bool oldValue = Settings::instance()->showGrid();
+        bool oldGridState = Settings::instance()->showGrid();
         Settings::instance()->setShowGrid(false);
 
         QPainter painter(&printer_);
         QFont f = QApplication::font();
         QFontMetrics fm(f);
 
+        int fontHeight = fm.height();
+        int headerSpace = 2 * fontHeight;   // Y space to reserve for header
+
         QPaintDeviceMetrics metrics(&printer_);
         int pageWidth = metrics.width();
-        int pageHeight = metrics.height() - HEADER_SPACE;
+        int pageHeight = metrics.height() - headerSpace;
 
         for (int copies = 0; copies < printer_.numCopies(); copies++) {
             int page = 1;
@@ -103,15 +103,15 @@ void PrintManager::print(QCanvas *canvas)
                     pageString.append(QString::number(page));
                     painter.setFont(f);
                     painter.setPen(QPen(Qt::black));
-                    painter.drawText(x, y + FONT_HEIGHT, title_);
+                    painter.drawText(x, y + fontHeight, title_);
                     painter.drawText(x + pageWidth - fm.width(pageString),
-                        y + FONT_HEIGHT, pageString);
+                        y + fontHeight, pageString);
 
                     // Draw graphics (clip to leave header space out)
-                    painter.setClipRect(0, HEADER_SPACE, pageWidth, pageHeight);
-                    painter.translate(0, HEADER_SPACE);
+                    painter.setClipRect(0, headerSpace, pageWidth, pageHeight);
+                    painter.translate(0, headerSpace);
                     canvas->drawArea(rect, &painter, false);
-                    painter.translate(0, -HEADER_SPACE);
+                    painter.translate(0, -headerSpace);
                     painter.setClipping(false);
 
                     x += pageWidth;
@@ -125,6 +125,6 @@ void PrintManager::print(QCanvas *canvas)
         painter.end();
 
         // restore grid setting
-        Settings::instance()->setShowGrid(oldValue);
+        Settings::instance()->setShowGrid(oldGridState);
     }
 }

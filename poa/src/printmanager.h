@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.h,v 1.3 2004/02/15 03:56:24 kilgus Exp $
+ * $Id: printmanager.h,v 1.4 2004/02/17 01:08:51 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -35,9 +35,16 @@ class QCanvas;
  */
 class PrintManager
 {
-
 public:
+	/**
+	 * Create PrintManager object.
+     * @param title String to be printed in the header.
+	 */
     PrintManager(QString title);
+
+    /**
+     * Default destructor.
+     */
     ~PrintManager();
 
     /**
@@ -47,6 +54,8 @@ public:
 
     /**
      * Get device metrics of printer.
+	 *
+	 * Returns NULL if printer has not been setup.
      */
 	QPaintDeviceMetrics *getMetrics();
 

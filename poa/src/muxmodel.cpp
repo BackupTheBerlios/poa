@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.25 2003/11/26 15:52:45 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.26 2003/12/10 15:11:29 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -243,4 +243,18 @@ void MuxModel::removeMuxMapping(MuxMapping *mapping) {
 
 QPtrList<MuxMapping> *MuxModel::mappings() {
     return &mappings_;
+}
+
+
+QPtrList<PinModel> MuxModel::connectionsForInputPin(PinModel *input) {
+
+    QPtrList<PinModel> connectedPins;
+    for (QPtrListIterator<MuxMapping> it(mappings_); it != 0; ++it) {
+        MuxMapping *mapping = it.current();
+        if (mapping->input() == input) {
+            connectedPins.append(mapping->output());
+        }
+    }
+
+    return connectedPins;
 }

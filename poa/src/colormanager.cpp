@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.23 2004/02/05 14:00:23 papier Exp $
+ * $Id: colormanager.cpp,v 1.24 2004/02/05 14:25:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,6 @@ const int ColorManager::RTTI = 1003;
 const int VSPACE = 5;
 const int HSPACE = 5;
 const int SAMPLE_SIZE = 12;
-const QString LEGEND_TITLE = qApp->translate("colormanager","Clocks");
 int ColorManager::FONT_HEIGHT = 12;
 
 ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
@@ -155,7 +154,8 @@ void ColorManager::recalculateSize()
 {
     QFont headerFont = QApplication::font();
     headerFont.setBold(true);
-    int width = QFontMetrics(headerFont).width(LEGEND_TITLE) + (2 * HSPACE);
+    int width = QFontMetrics(headerFont).width
+        (qApp->translate("colormanager", "Clocks")) + (2 * HSPACE);
 
     QFontMetrics metrics(QApplication::font());
     for (QMap<int,int>::iterator it = nsToPalIndex_.begin();
@@ -231,7 +231,8 @@ void ColorManager::drawShape(QPainter &p)
 
     f.setBold(true);
     p.setFont(f);
-    p.drawText(textArea, QObject::AlignHCenter, tr(LEGEND_TITLE));
+    p.drawText(textArea, QObject::AlignHCenter,
+               tr(qApp->translate("colormanager","Clocks")));
 
     f.setBold(false);
     p.setFont(f);

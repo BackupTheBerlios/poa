@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.8 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: settings.h,v 1.9 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -61,11 +61,12 @@ signals:
     void snapToGridChanged(bool snapToGrid);
     void gridSizeChanged(int gridSize);
 
-private :
+protected:
     Settings();
     Settings(const Settings &);
     ~Settings();
 
+private :
     static Settings* instance_;
 };
 

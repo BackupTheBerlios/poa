@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.4 2003/08/27 17:50:40 vanto Exp $
+ * $Id: project.h,v 1.5 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -42,7 +42,6 @@ class Project : public QObject
 
 public:
     Project();
-    Project(QDomDocument *document);
     ~Project();
 
     void add(AbstractModel *item, int x, int y);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.34 2003/08/27 17:50:40 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.35 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 
@@ -396,10 +396,9 @@ void MainWindow::fileNew()
 
     project_ = new Project();
 
-    //    GridCanvas *canvas = new GridCanvas(project_);
-    //    project_->addCanvas(canvas);
-    //    const QPtrList<GridCanvas> *list = project_->canvasList();
-    //    GridCanvas *canvas = list->getFirst();
+    GridCanvas *canvas = new GridCanvas(project_);
+    project_->addCanvas(canvas);
+
     MdiWindow *w = new MdiWindow(project_->canvasList()->getFirst(), ws, 0, WDestructiveClose);
     w->setCaption(tr("Unnamed Layout"));
     w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
@@ -432,7 +431,15 @@ void MainWindow::fileOpen()
         if (file.open(IO_ReadOnly)) {
             QDomDocument doc;
             if (doc.setContent(&file)) {
-                project_ = new Project(&doc);
+                project_ = new Project();
+                GridCanvas *canvas = new GridCanvas(project_);
+                project_->addCanvas(canvas);
+                MdiWindow *w = new MdiWindow(project_->canvasList()->getFirst(), ws, 0, WDestructiveClose);
+                project_->deserialize(&doc);
+                w->setCaption(fn);
+                w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
+                w->resize(w->sizeHint());
+                w->showMaximized();
             } else {
                 QMessageBox::warning( 0, "File error",
                               QString("Cannot open project file: "+fn));

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.12 2003/08/27 17:44:36 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.13 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -130,7 +130,7 @@ void CanvasView::modelAdded(AbstractModel *item, int x, int y)
     QCanvasItemList l = item->createView(canvas());
     for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
         (*it)->moveBy(x, y);
-	(*it)->setZ(currentZ_);
+    (*it)->setZ(currentZ_);
         (*it)->show();
     }
     canvas()->update();

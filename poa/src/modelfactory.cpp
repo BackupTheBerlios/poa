@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.6 2003/08/27 17:50:40 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.7 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -48,4 +48,17 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
     }
 
     return l;
+}
+
+AbstractModel *ModelFactory::generateSingle(QDomNode &node)
+{
+    if (node.isElement() && node.nodeName() == "model-item") {
+        QDomElement element = node.toElement();
+        if (element.attribute("type","") == "cpu") {
+            return new CpuModel(element);
+        } else if (element.attribute("type","") == "core") {
+            return new CoreModel(element);
+        }
+    }
+    return 0;
 }

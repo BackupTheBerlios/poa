@@ -18,23 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.5 2003/08/27 17:50:40 vanto Exp $
+ * $Id: project.cpp,v 1.6 2003/08/27 21:12:45 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
 #include "project.h"
 #include "gridcanvas.h"
-#include <typeinfo>
+#include "modelfactory.h"
 
 Project::Project()
 {
-    GridCanvas *can = new GridCanvas(this);
-    addCanvas(can);
-}
-
-Project::Project(QDomDocument *document)
-{
-    deserialize(document);
 }
 
 Project::~Project()
@@ -102,5 +95,24 @@ QDomDocument Project::serialize()
 }
 
 void Project::deserialize(QDomDocument *document) {
-    qWarning(document->toString());
+    typedef QMap<QString, AbstractModel*> IdMap;
+    IdMap idMap;
+
+    //QDomElement root = document->documentElement();
+    QDomNodeList mList = document->elementsByTagName("model-item");
+    QDomNodeList vList = document->elementsByTagName("view-item");
+    for (unsigned int i = 0; i < mList.count(); i++) {
+        QDomElement mEl = mList.item(i).toElement();
+        idMap[mEl.attribute("id","0")] = ModelFactory::generateSingle(mEl);
+    }
+
+    for (unsigned int i = 0; i < vList.count(); i++) {
+        QDomElement vEl = vList.item(i).toElement();
+        if (vEl.attribute("model-id","no") != "no") {
+            add(idMap[vEl.attribute("model-id","0")],
+                vEl.attribute("x","0").toUInt(),
+                vEl.attribute("y","0").toUInt());
+        }
+
+    }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.23 2004/02/02 16:57:30 papier Exp $
+ * $Id: settings.cpp,v 1.24 2004/02/11 12:14:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -43,10 +43,14 @@ Settings::Settings(QString prefix)
     if (!confDir.exists()) {
         confDir.mkdir(confPath(), TRUE);
     }
+
+    settingsInstance_ = new QSettings();
+    initialize(settingsInstance_);
 }
 
 Settings::~Settings()
 {
+    delete settingsInstance_;
 }
 
 Settings *Settings::instance()
@@ -58,9 +62,17 @@ Settings *Settings::instance()
     return instance_;
 }
 
+void Settings::save()
+{
+    delete settingsInstance_;
+
+    settingsInstance_ = new QSettings();
+    initialize(settingsInstance_);
+}
+
 QSettings *Settings::initialize(QSettings *settings) const
 {
-    //settings->insertSearchPath(QSettings::Unix, confPath());
+    settings->insertSearchPath(QSettings::Unix, confPath());
     return settings;
 }
 
@@ -73,14 +85,12 @@ QString Settings::get(const QString &key, QString defaultValue)
 {
     QSettings settings;
     initialize(&settings);
-    return settings.readEntry(prefix + key, defaultValue);
+    return settingsInstance_->readEntry(prefix + key, defaultValue);
 }
 
 bool Settings::getBool(const QString &key, bool defaultValue)
 {
-    QSettings settings;
-    initialize(&settings);
-    return settings.readBoolEntry(prefix + key, defaultValue);
+    return settingsInstance_->readBoolEntry(prefix + key, defaultValue);
 }
 
 
@@ -93,16 +103,12 @@ QFont Settings::getFont(const QString &key, QFont defaultValue)
 
 int Settings::getNum(const QString &key, int defaultValue)
 {
-    QSettings settings;
-    initialize(&settings);
-    return settings.readNumEntry(prefix + key, defaultValue);
+    return settingsInstance_->readNumEntry(prefix + key, defaultValue);
 }
 
 QStringList Settings::getStrings(const QString &key, bool *ok)
 {
-    QSettings settings;
-    initialize(&settings);
-    return settings.readListEntry(prefix + key, ok);
+    return settingsInstance_->readListEntry(prefix + key, ok);
 }
 
 bool Settings::set(const QString &key, const char *value)
@@ -114,9 +120,8 @@ bool Settings::set(const QString &key, const QString &value)
 {
     QString oldValue = get(key);
     if (oldValue != value) {
-        QSettings settings;
-        initialize(&settings);
-        settings.writeEntry(prefix + key, value);
+        settingsInstance_->writeEntry(prefix + key, value);
+        save();
         emit settingChanged(key);
         return TRUE;
     }
@@ -127,9 +132,8 @@ bool Settings::set(const QString &key, bool value)
 {
     bool oldValue = getBool(key);
     if (oldValue != value) {
-        QSettings settings;
-        initialize(&settings);
-        settings.writeEntry(prefix + key, value);
+        settingsInstance_->writeEntry(prefix + key, value);
+        save();
         emit settingChanged(key);
         return TRUE;
     }
@@ -140,9 +144,8 @@ bool Settings::set(const QString &key, int value)
 {
     int oldValue = getNum(key);
     if (oldValue != value) {
-        QSettings settings;
-        initialize(&settings);
-        settings.writeEntry(prefix + key, value);
+        settingsInstance_->writeEntry(prefix + key, value);
+        save();
         emit settingChanged(key);
         return TRUE;
     }
@@ -153,9 +156,8 @@ bool Settings::set(const QString &key, const QStringList &value)
 {
     QStringList oldValue = getStrings(key);
     if (oldValue != value) {
-        QSettings settings;
-        initialize(&settings);
-        settings.writeEntry(prefix + key, value);
+        settingsInstance_->writeEntry(prefix + key, value);
+        save();
         emit settingChanged(key);
         return TRUE;
     }

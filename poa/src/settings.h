@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.24 2004/02/02 16:57:30 papier Exp $
+ * $Id: settings.h,v 1.25 2004/02/11 12:14:07 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -74,7 +74,12 @@ public:
     QString serialPort();
     QString language();
 
+
 public slots:
+    /**
+     * Writes the settings to disk.
+     */
+    void save();
     void setGridSize(int gridSize);
     void setSnapToGrid(bool snapToGrid);
     void setShowGrid(bool showGrid);
@@ -102,6 +107,13 @@ private :
 
     /** Contains path to .poa/ configuration directory. */
     QString confPath_;
+
+    /**
+     * The reference to the persistent QSettings object. The instance
+     * is destroyed and reallocated when settings are changed to
+     * commit the settings to disk.
+     */
+    QSettings *settingsInstance_;
 
     /**
      * Methods of {@link SettingsTest} need access the protected constructor.

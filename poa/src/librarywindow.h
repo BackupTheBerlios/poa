@@ -18,13 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.8 2004/01/19 13:56:18 squig Exp $
+ * $Id: librarywindow.h,v 1.9 2004/01/20 19:13:07 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
 #define LIBRARYWINDOW_H
 
 #include <qvariant.h>
+#include <qdict.h>
+#include <qfile.h>
 #include <qdockwindow.h>
 #include <qlistview.h>
 class AbstractModel;
@@ -104,17 +106,41 @@ public:
      */
     ~LibraryWindow();
 
+    /**
+     * Adds model to library.
+     */
+    void add(AbstractModel *model);
+
+    /**
+     * Reads models from file and adds them to the library.
+     */
+    void open(QFile *file);
+
+    /**
+     * Saves all library items to file.
+     */
+    void save(QFile *file);
+
 private :
 
-    QListView* moduleListView;
-    QTextBrowser* descriptionTextBrowser;
-    QListViewItem* coreListViewItem;
-    QListViewItem* cpuListViewItem;
-    QListViewItem* ioListViewItem;
-    QListViewItem* muxListViewItem;
-    QSplitter* splitter;
+    QListView* modelListView_;
+    QTextBrowser* descriptionTextBrowser_;
+    QSplitter* splitter_;
+    QDict<QListViewItem> typeItemByType;
+    bool modified_;
 
-    void initializeLibrary();
+    /**
+     * Adds a few default items to the library. Invoked when the
+     * library could not be restored from disk.
+     */
+    void addDefaultItems();
+
+    QListViewItem *getTypeItem(QString type);
+
+    /**
+     * Adds the modules to the tree.
+     */
+    void initialize();
 
 private slots:
 

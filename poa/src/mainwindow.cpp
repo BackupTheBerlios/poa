@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.87 2004/01/20 17:46:10 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.88 2004/01/20 19:13:07 squig Exp $
  *
  *****************************************************************************/
 
@@ -99,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     }
     setCaption(tr("POA"));
     setIcon(QPixmap(Util::findIcon("poa.png")));
+    setDockMenuEnabled(false);
 
     // restore window settings
     Settings *s = Settings::instance();

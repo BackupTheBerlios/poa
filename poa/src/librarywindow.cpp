@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.30 2004/01/19 13:56:18 squig Exp $
+ * $Id: librarywindow.cpp,v 1.31 2004/01/20 19:13:07 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -49,34 +49,27 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
                              WFlags f)
     : QDockWindow(p, parent, name, f)
 {
+    modified_ = false;
+
     setCloseMode(Never);
     setMovingEnabled(TRUE);
     setResizeEnabled(TRUE);
 
-    splitter = new QSplitter(Qt::Vertical, this);
-    setWidget(splitter);
+    splitter_ = new QSplitter(Qt::Vertical, this);
+    setWidget(splitter_);
 
-    moduleListView = new LibraryListView(splitter);
-    moduleListView->addColumn(tr("Module"));
+    modelListView_ = new LibraryListView(splitter_);
+    modelListView_->addColumn(tr("Module"));
 
-    cpuListViewItem = new QListViewItem(moduleListView, tr("CPU"));
-    cpuListViewItem->setOpen(TRUE);
-    coreListViewItem = new QListViewItem(moduleListView, tr("Core"));
-    coreListViewItem->setOpen(TRUE);
-    ioListViewItem = new QListViewItem(moduleListView, tr("I/O"));
-    ioListViewItem->setOpen(TRUE);
-    muxListViewItem = new QListViewItem(moduleListView, tr("Mux"));
-    muxListViewItem->setOpen(TRUE);
-
-    descriptionTextBrowser = new QTextBrowser(splitter);
+    descriptionTextBrowser_ = new QTextBrowser(splitter_);
     QPalette palette = QApplication::palette();
-    descriptionTextBrowser->setFrameStyle(QFrame::NoFrame);
-    descriptionTextBrowser->setPaper
+    descriptionTextBrowser_->setFrameStyle(QFrame::NoFrame);
+    descriptionTextBrowser_->setPaper
             (palette.brush(QPalette::Normal, QColorGroup::Background));
 
-    initializeLibrary();
+    initialize();
 
-    connect(moduleListView, SIGNAL(selectionChanged(QListViewItem *)),
+    connect(modelListView_, SIGNAL(selectionChanged(QListViewItem *)),
             this, SLOT(setDescription(QListViewItem *)));
     connect(this, SIGNAL(orientationChanged(Orientation)),
             this, SLOT(setOrientation(Orientation)));
@@ -87,143 +80,130 @@ LibraryWindow::~LibraryWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
-/**
- * Adds the modules to the tree.
- */
-void LibraryWindow::initializeLibrary()
+void LibraryWindow::add(AbstractModel *model)
+{
+    new LibraryListViewItem(getTypeItem(model->type()), model);
+    modified_ = true;
+
+}
+
+void LibraryWindow::addDefaultItems()
 {
     BlockModel *model;
-    PinModel *pin;
 
-//      // NIOS 32
-//      BlockModel *model = new CpuModel("NIOS 32", "NIOS 32-bit CPU");
-//      PinModel *pin = new PinModel(model, "in1");
-//      pin->setType(PinModel::INPUT);
-//      model->addPin(pin);
-//      pin = new PinModel(model, "out1");
-//      pin->setType(PinModel::OUTPUT);
-//      model->addPin(pin);
-//      pin = new PinModel(model, "clock");
-//      pin->setType(PinModel::EPISODIC);
-//      model->addPin(pin);
-//      pin = new PinModel(model, "reset");
-//      pin->setType(PinModel::EPISODIC);
-//      model->addPin(pin);
-//      new LibraryListViewItem(cpuListViewItem, model);
-
-    // NIOS 16
+    // cpu
     model = new CpuModel("CPU", "Default CPU");
-    pin = new PinModel(model, "in1");
-    pin->setType(PinModel::INPUT);
-    pin->setPosition(1);
-    model->addPin(pin);
-    pin = new PinModel(model, "out1");
-    pin->setPosition(1);
-    pin->setType(PinModel::OUTPUT);
-    model->addPin(pin);
-    pin = new PinModel(model, "clock");
-    pin->setType(PinModel::EPISODIC);
-    pin->setPosition(1);
-    model->addPin(pin);
-    pin = new PinModel(model, "reset");
-    pin->setType(PinModel::EPISODIC);
-    pin->setPosition(2);
-    model->addPin(pin);
-    new LibraryListViewItem(cpuListViewItem, model);
+    model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
+    model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
+    model->addPin(new PinModel(model, "clock", 0, 32, PinModel::EPISODIC, 1));
+    model->addPin(new PinModel(model, "reset", 0, 32, PinModel::EPISODIC, 2));
+    add(model);
 
     // core
     model = new BlockModel("Core", "Default core");
-    pin = new PinModel(model, "in1");
-    pin->setType(PinModel::INPUT);
-    pin->setPosition(1);
-    model->addPin(pin);
-    pin = new PinModel(model, "out1");
-    pin->setType(PinModel::OUTPUT);
-    pin->setPosition(1);
-    model->addPin(pin);
-    new LibraryListViewItem(coreListViewItem, model);
+    model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
+    model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
+    add(model);
 
     // input
     model = new BlockModel("Input", "Default input block");
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
     model->setHasRuntime(false);
-    pin = new PinModel(model, "out1", 32, 0);
-    pin->setType(PinModel::OUTPUT);
-    pin->setPosition(1);
-    model->addPin(pin);
-    pin = new PinModel(model, "out2", 32, 32);
-    pin->setType(PinModel::OUTPUT);
-    pin->setPosition(2);
-    model->addPin(pin);
-    pin = new PinModel(model, "out3", 32, 64);
-    pin->setType(PinModel::OUTPUT);
-    pin->setPosition(3);
-    model->addPin(pin);
-    new LibraryListViewItem(ioListViewItem, model);
+    model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
+    model->addPin(new PinModel(model, "out2", 32, 32, PinModel::OUTPUT, 2));
+    model->addPin(new PinModel(model, "out3", 64, 32, PinModel::OUTPUT, 3));
+    add(model);
 
     // output
     model = new BlockModel("Output", "Default output block");
-    model->setHasEpisodicPins(false);
-    model->setHasOutputPins(false);
-    model->setHasRuntime(false);
-    pin = new PinModel(model, "in1", 32, 0);
-    pin->setType(PinModel::INPUT);
-    pin->setPosition(1);
-    model->addPin(pin);
-    pin = new PinModel(model, "in2", 32, 32);
-    pin->setType(PinModel::INPUT);
-    pin->setPosition(2);
-    model->addPin(pin);
-    pin = new PinModel(model, "in3", 32, 64);
-    pin->setType(PinModel::INPUT);
-    pin->setPosition(3);
-    model->addPin(pin);
-    new LibraryListViewItem(ioListViewItem, model);
+    model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
+    model->addPin(new PinModel(model, "in2", 32, 32, PinModel::INPUT, 2));
+    model->addPin(new PinModel(model, "in3", 64, 32, PinModel::INPUT, 3));
+    add(model);
 
     // mux
-    new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("Mux", "Multiplexer / Demultiplexer"));
+    MuxModel *muxModel = new MuxModel("Mux", "Multiplexer / Demultiplexer");
+    PinModel *in1 = new PinModel(muxModel, "in1", 0, 32, PinModel::INPUT, 1);
+    PinModel *in2 = new PinModel(muxModel, "in2", 32, 32, PinModel::INPUT, 2);
+    PinModel *out1 = new PinModel(muxModel, "out1", 0, 64, PinModel::OUTPUT, 1);
+    muxModel->addPin(in1);
+    muxModel->addPin(in2);
+    muxModel->addPin(out1);
+    muxModel->addMuxMapping(new MuxMapping(in1, out1, 0, 32, 0, 32));
+    muxModel->addMuxMapping(new MuxMapping(in2, out1, 0, 32, 32, 64));
+    add(muxModel);
+}
 
+QListViewItem *LibraryWindow::getTypeItem(QString type)
+{
+    QListViewItem *item = typeItemByType.find(type);
+    if (item == 0) {
+        item = new QListViewItem(modelListView_, type);
+        item->setOpen(true);
+        typeItemByType.insert(type, item);
+    }
+    return item;
+}
+
+void LibraryWindow::initialize()
+{
     // read library file
-    // FIX: this is copy & paste code from project.cpp
     QString filename = Util::findResource("library.xml");
     if (!filename.isNull()) {
         QFile file(filename);
-        if (file.open(IO_ReadOnly)) {
-            QDomDocument document;
-            if (document.setContent(&file)) {
-                QDomNodeList mList = document.elementsByTagName("model");
-                if (mList.count() == 1) {
-                    QDomNodeList bList
-                        = mList.item(0).toElement().elementsByTagName("blocks");
-                    if (bList.count() == 1) {
-                        // create model instances
-                        QDomElement element = bList.item(0).toElement();
-                        QValueList<AbstractModel *> l
-                            = ModelFactory::generate(element);
-                        for (QValueList<AbstractModel *>::Iterator it = l.begin();
-                             it != l.end(); ++it) {
-                            // FIX: should sort items into appropriate category
-                            new LibraryListViewItem(coreListViewItem, *it);
-                        }
-                    }
-                }
-            }
-            file.close();
+        if (file.exists()) {
+            open(&file);
         }
     }
 
+    addDefaultItems();
+
+    modified_ = false;
+}
+
+
+void LibraryWindow::open(QFile *file)
+{
+    // FIX: this is copy & paste code from project.cpp
+    if (file->open(IO_ReadOnly)) {
+        QDomDocument document;
+        if (document.setContent(file)) {
+            QDomNodeList mList = document.elementsByTagName("model");
+            if (mList.count() == 1) {
+                QDomNodeList bList
+                    = mList.item(0).toElement().elementsByTagName("blocks");
+                if (bList.count() == 1) {
+                    // create model instances
+                    QDomElement element = bList.item(0).toElement();
+                    QValueList<AbstractModel *> l
+                        = ModelFactory::generate(element);
+                    for (QValueList<AbstractModel *>::Iterator it = l.begin();
+                         it != l.end(); ++it) {
+                        add(*it);
+                    }
+                }
+            }
+        }
+        file->close();
+    }
+}
+
+void LibraryWindow::save(QFile *file)
+{
+    if (file->open(IO_WriteOnly)) {
+        file->close();
+    }
 }
 
 void LibraryWindow::setDescription(QListViewItem* item)
 {
-    descriptionTextBrowser->setText(item->text(1));
+    descriptionTextBrowser_->setText(item->text(1));
 }
 
 void LibraryWindow::setOrientation(Qt::Orientation orientation)
 {
-    splitter->setOrientation(orientation);
+    splitter_->setOrientation(orientation);
 }
 
 LibraryListView::LibraryListView(QWidget *parent, const char *name,

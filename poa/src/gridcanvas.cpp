@@ -18,12 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.20 2003/09/18 14:24:36 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.21 2003/09/19 16:17:46 keulsn Exp $
  *
  *****************************************************************************/
 
 #include "gridcanvas.h"
-#include "connectorview.h"
 #include "connectorviewlist.h"
 #include "project.h"
 #include "settings.h"
@@ -53,7 +52,11 @@ void GridCanvas::addConnectorView(PinView *source, PinView *target)
 
     ++currentZ_;
 
-    for (ConnectorViewList::Iterator it = viewList->begin(); it != viewList->end(); ++it) {
+    QCanvasItemList segments = viewList->allSegments();
+    for (QCanvasItemList::Iterator it = segments.begin();
+	 it != segments.end();
+	 ++it) {
+
         (*it)->setZ(currentZ_);
         (*it)->show();
     }

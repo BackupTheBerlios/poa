@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.3 2003/09/18 14:24:36 vanto Exp $
+ * $Id: connectorviewlist.h,v 1.4 2003/09/19 16:17:46 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,12 +26,15 @@
 #ifndef POA_CONNECTORVIEWLIST_H
 #define POA_CONNECTORVIEWLIST_H
 
-#include "connectorview.h"
-
 #include <qcanvas.h>
 #include <qobject.h>
 
+#include "poa.h"
+
+class ConnectorViewSegment;
 class GridCanvas;
+class PinView;
+
 
 /**
  * Definition of a doubly linked connector view list which is used to manage
@@ -39,24 +42,26 @@ class GridCanvas;
  *
  * Each item in the list represents either a horizontal or a vertical line.
  *
- * Each item in the list propagates changes to itself along the list. During
- * propagation some items may be removed or new items may be inserted into
- * the list.
+ * Each item in the list propagates changes to itself to an instance of
+ * <code>this</code>. During propagation some items may be removed or new
+ * items may be inserted into the list.
  */
-class ConnectorViewList : public QObject, public QCanvasItemList
+class ConnectorViewList : public QObject
 {
     Q_OBJECT
 
 public:
 
     /**
-     * Creates a connector view list on the given <code>canvas</code> and draws a
-     * routed line from <code>source</code> pin to <code>target</code> pin for the
-     * given <code>model</code>.
+     * Creates a connector view list on the given <code>canvas</code> and
+     * draws a routed line from <code>source</code> pin to <code>target</code>
+     * pin for the given <code>model</code>.
      */
     ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas);
 
     /**
+     * Creates a connector view list on the given <code>canvas</code> and
+     * inserts connector view segments connecting the given <code>points</code>
      */
     ConnectorViewList(PinView *source,
                       PinView *target,
@@ -79,27 +84,70 @@ public:
     PinView *target();
 
     /**
+     * Returns all segments in this list.
+     */
+    const QCanvasItemList allSegments();
+
+    /**
+     * Returns the points connected by all segments in <code>this</code> list.
      */
     QValueList<QPoint> points();
+
+    /**
+     * Returns the tool tip text for this connector view.
+     */
+    QString tip();
 
     /**
      */
     virtual void serialize();
 
+
+protected:
+
+    /**
+     * Changes <code>this</code> to contain the segments connecting
+     * <code>points</code>
+     */
+    void applyPointList(const QValueList<QPoint> &list, QCanvas *canvas);
+
+    /**
+     * Routes a point list.
+     */
+    static QValueList<QPoint> *routeConnector(QPoint from,
+					      LineDirection fromDir,
+					      QPoint to,
+					      LineDirection toDir);
+
+
 private:
 
-    /** source pin view */
+    /** Source pin view */
     PinView *source_;
-    /** target pin view */
+    /** Target pin view */
     PinView *target_;
+
+    /** List of all segments of this connector view */
+    QCanvasItemList segments_;
 
 public slots:
 
     /**
-     * Deletes (and frees) this ConnectorViewList and its
-     * ConnectorView items.
+     * Deletes (and frees) all segments.
      */
     void deleteAllConnectorViews();
+
+    /**
+     * To be called when one of the pin views is destroyed
+     */
+    void deleteView(PinView *);
+
+signals:
+    /**
+     * Emitted when <code>this</code> is destroyed. Pin views should connect
+     * to this signal to be notified.
+     */
+    void deleted(ConnectorViewList *);
 };
 
 

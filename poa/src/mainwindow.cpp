@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.51 2003/09/19 15:16:22 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.52 2003/09/19 16:17:46 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "cpuview.h"
 #include "blockview.h"
 #include "canvasview.h"
+#include "connectorviewsegment.h"
 #include "project.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
@@ -741,7 +742,7 @@ void MainWindow::selectionChanged(QCanvasItem *item)
         editCopyAction->setEnabled(true);
         editRemoveAction->setEnabled(true);
     }
-    else if (INSTANCEOF(item, ConnectorView)) {
+    else if (INSTANCEOF(item, ConnectorViewSegment)) {
         //TODO
     }
     else {

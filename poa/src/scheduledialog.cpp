@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.35 2004/01/19 16:39:20 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.36 2004/01/19 17:56:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -501,6 +501,7 @@ void ScheduleDialog::swapRows(int index1, int index2)
 
     timingTable->swapRows(index1, index2);
     timingTable->clearSelection();
+    // FIX: should select index2
     timingTable->updateContents();
 
     modelChanged(QMIN(index1, index2), QMAX(index1, index2));

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.13 2003/09/14 11:45:24 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.14 2003/09/15 09:29:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -537,7 +537,9 @@ void BlockConfDialog::removeIo()
         if (item->origData() != 0) {
             // Save deleted pins, to clean up views
             // if the changes will be applied.
-            deletedPins_->append(item->origData());
+            // deletedPins_->append(item->origData()); // QT 3.1+
+            // specific
+            deletedPins_->addBefore(item->origData());
         }
         delete item;
     }

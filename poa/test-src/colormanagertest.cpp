@@ -12,6 +12,7 @@ class ColorManagerTest : public CppUnit::TestFixture
     CPPUNIT_TEST_SUITE(ColorManagerTest);
     CPPUNIT_TEST(testColor);
     CPPUNIT_TEST(testColors);
+    CPPUNIT_TEST(testDeleteBlock);
     CPPUNIT_TEST(testDragBy);
     CPPUNIT_TEST(testItem);
     CPPUNIT_TEST(testLightPalette);
@@ -19,6 +20,7 @@ class ColorManagerTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testRtti);
     CPPUNIT_TEST(testSerialize);
     CPPUNIT_TEST(testStrongPalette);
+    CPPUNIT_TEST(testUpdateBlock);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -71,6 +73,21 @@ public:
                        == Settings::instance()->activatedColor());
         CPPUNIT_ASSERT(colorManager->selectedColor(&block)
                        == Settings::instance()->selectedColor());
+    }
+
+    void testDeleteBlock()
+    {
+        BlockModel *block = new BlockModel("", "");
+        block->setClock(100);
+        CPPUNIT_ASSERT(colorManager->color(block) == palette->color(0));
+
+        delete block;
+
+        block = new BlockModel("", "");
+        block->setClock(100);
+        CPPUNIT_ASSERT(colorManager->color(block) == palette->color(1));
+
+        delete block;
     }
 
     void testDragBy()
@@ -142,6 +159,19 @@ public:
         CPPUNIT_ASSERT(c1 == colorManager2.color(&block));
         CPPUNIT_ASSERT(c2 == colorManager2.color(&block2));
         CPPUNIT_ASSERT(c3 == colorManager2.color(&block3));
+    }
+
+    void testUpdateBlock()
+    {
+        BlockModel *block = new BlockModel("", "");
+        block->setClock(100);
+        CPPUNIT_ASSERT(colorManager->color(block) == palette->color(0));
+
+        block->setClock(200);
+        block->updatePerformed();
+        CPPUNIT_ASSERT(colorManager->color(block) == palette->color(1));
+
+        delete block;
     }
 
 };

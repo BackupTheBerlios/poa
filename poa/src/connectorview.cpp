@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.9 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: connectorview.cpp,v 1.10 2003/09/18 06:17:52 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -338,7 +338,7 @@ QValueList<QPoint> *ConnectorView::routeConnector(QPoint from,
 
 
 void ConnectorView::applyPointList(QValueList<QPoint> *list,
-				   PinView *targetPin = 0)
+				   PinView *targetPin)
 {
     ConnectorView *current = this;
     QPoint first;
@@ -644,7 +644,7 @@ QValueList<QPoint> *ConnectorView::routeConnector(QPoint startPoint,
 		}
 	    }
 
-	    /*qDebug("next point == " +
+	    qDebug("next point == " +
 	      QString::number(dest.x()) + ", " + QString::number(dest.y()));
 
 	    currentPoint = grid.move(currentPoint, primary, distance);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.5 2004/01/09 22:27:34 vanto Exp $
+ * $Id: scheduledialog.h,v 1.6 2004/01/09 22:39:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -87,6 +87,10 @@ private:
     void buildTree();
     void fillTimingTable(BlockTree* bt);
     bool drawTimings(BlockTree* bt, int* Y, int* time);
+
+    /*
+     * Clears all graph widget canvases.
+     */
     void clearCanvases();
 
     /**
@@ -110,14 +114,9 @@ private:
     void initBottomWidget();
 
     /**
-     * Synchronizes dialog with model_'s content.
-     */
-//    void syncModel();
-
-    /**
      * Updates model_'s content by using current dialog's content.
      */
-//    void updateModel();
+    void updateModel();
 
 private slots:
 

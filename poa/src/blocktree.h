@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.h,v 1.2 2004/01/09 17:55:33 vanto Exp $
+ * $Id: blocktree.h,v 1.3 2004/01/09 22:39:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -104,6 +104,12 @@ public:
      * Get whether this is just a back reference
      */
     bool getBackReference();
+
+    /**
+     * Commits all data (runtime, clock, offset) to the corresponding
+     * BlockModel.
+     */
+    void commit();
 
 private:
     BlockModel *block_;

@@ -1,4 +1,5 @@
-VERSION = 0.2.0
+
+VERSION = 0.2.1
 
 include Makefile
 
@@ -8,5 +9,5 @@ DIST += CHANGES
 
 mydist:
 	xsltproc ../changes.xsl ../xdocs/changes.xml | fold -s \
-	  | perl -n -i -e 'print "    " if $_ =~ /^[A-Za-z]/ && $_ !~ /^Version/;' -e 'print $_' > CHANGES
+	  | perl -n -i -e 'print "    " if $$_ =~ /^[A-Za-z]/ && $$_ !~ /^Version/;' -e 'print $$_' > CHANGES
 	mkdir -p .tmp/poa-$(VERSION) && cp --parents $(SOURCES) $(HEADERS) $(FORMS) $(DIST) .tmp/poa-$(VERSION) && ( cd `dirname .tmp/poa-$(VERSION)` && $(TAR) poa-$(VERSION).tar poa-$(VERSION) && $(GZIP) poa-$(VERSION).tar ) && $(MOVE) `dirname .tmp/poa`/poa-$(VERSION).tar.gz . && $(DEL_DIR) .tmp/poa-$(VERSION)

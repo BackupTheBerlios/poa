@@ -12,7 +12,7 @@
   
   <!-- The version of the project under development, e.g.
        1.1, 1.2, 2.0-dev -->
-  <currentVersion>0.2.0</currentVersion>
+  <currentVersion>0.2.1</currentVersion>
   
   <!-- details about the organization that 'owns' the project -->
   <organization>
@@ -50,6 +50,11 @@
       <id>0.2.0</id>
       <name>0.2.0</name>
       <tag>poa-0_2_0</tag>
+    </version>
+    <version>
+      <id>0.2.1</id>
+      <name>0.2.1</name>
+      <tag>poa-0_2_1</tag>
     </version>
   </versions>
 

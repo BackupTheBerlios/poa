@@ -11,6 +11,7 @@
 	<release version="0.1.0" date="2003-10-01">
       <action type="icon_success_sml">Initial Release (prototype)</action>
     </release>
+
 	<release version="0.2.0" date="2004-01-13">
       <action type="icon_success_sml">Ported source code to Windows</action>
       <action type="add">Added scheduling dialog. The scheduling
@@ -28,6 +29,10 @@
       <action type="fix">Fixed bug in project management that caused
       connections to be restored incorrectly when a saved project was
       opened</action>
+    </release>
+
+	<release version="0.2.1" date="2003-16-01">
+      <action type="fix">MS VC++ compile error fixes</action>
     </release>
   </body>
 </document>

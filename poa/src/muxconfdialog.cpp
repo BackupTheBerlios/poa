@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.44 2004/01/29 19:42:27 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.45 2004/02/09 20:34:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -321,6 +321,12 @@ void MuxConfDialog::commit() {
 
     for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
         MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
+        // Solution for Issue POA-59
+        if (!item->inputPinListViewItem()->pin() ||
+            !item->outputPinListViewItem()->pin())
+        {
+            continue; // original pin does not exist anymore
+        }
         MuxMapping *mapping = item->mapping();
         if (!mapping) { // new Mapping
             mapping = new MuxMapping(

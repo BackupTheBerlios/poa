@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.64 2004/02/04 10:29:37 papier Exp $
+ * $Id: blockconfdialog.cpp,v 1.65 2004/02/09 20:34:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -291,7 +291,43 @@ bool BlockConfDialog::commit()
 
     // sync again
     sync();
+
+    // run codemanager's substitutions
+    substituteCode();
+
     return success;
+}
+
+void BlockConfDialog::substituteCode() {
+
+    // run codemanager's substitutions
+    CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
+    if (!cpuModel) {
+        return;
+    }
+
+    CodeManager codeManager(project_, cpuModel);
+    if (!codeManager.templateIsSubstitutable()) {
+        QMessageBox mb
+            ("POA",
+             tr("The block source code contains no"
+                 " substitution marks.\n"
+                 "Prepend such marks?"),
+             QMessageBox::Information,
+             QMessageBox::Yes | QMessageBox::Default,
+             QMessageBox::No,
+             QMessageBox::Cancel | QMessageBox::Escape);
+
+        switch(mb.exec()) {
+        case QMessageBox::Yes:
+            codeManager.prependSubstitutionMarkers();
+            break;
+        default:
+            return;
+            break;
+        }
+    }
+    codeManager.substitute();
 }
 
 void BlockConfDialog::cancel()
@@ -327,6 +363,7 @@ void BlockConfDialog::compile()
 {
     CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
     if (cpuModel != 0 && saveSource(cpuModel)) {
+        substituteCode();
         CodeManager codeManager(project_, cpuModel);
         codeManager.compile();
     }
@@ -337,6 +374,7 @@ void BlockConfDialog::edit()
     CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
     if (cpuModel != 0 && saveSource(cpuModel)) {
         CodeManager codeManager(project_, cpuModel);
+        substituteCode();
         if (!codeManager.edit()) {
             QMessageBox::critical
                 (this, "POA", "The code cannot be edited.\n\n"
@@ -367,7 +405,7 @@ bool BlockConfDialog::saveSource(CpuModel *cpuModel)
             if (!cpuModel->source().isNull()) {
                 QMessageBox mb
                     ("POA",
-		     tr("The block contains uncommited source code, "
+                     tr("The block contains uncommited source code, "
                      "but there is a file on disk already.\n"
                      "Overwrite existing file?"),
                      QMessageBox::Information,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.19 2004/02/09 19:12:12 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.20 2004/02/09 20:34:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,7 +36,6 @@
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qprocess.h>
-#include <qregexp.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
@@ -179,15 +178,15 @@ bool CodeManager::templateIsSubstitutable() {
 
     Q_ASSERT(!model_->source().isNull());
     QString source = sourceCode();
-    QRegExp rxp = QRegExp("/\\*!POA.*AOP!\\*/", TRUE, TRUE);
     // only one block is allowed!
-    return source.contains(rxp) == 1;
+    return (source.find("/*!POA") != -1) &&
+           (source.find("AOP!*/") != -1);
 }
 
 void CodeManager::prependSubstitutionMarkers() {
     Q_ASSERT(!model_->source().isNull());
     QString source = sourceCode();
-    source.prepend("/*!POA\n\nAOP!*/");
+    source.prepend("\n/*!POA\n\nAOP!*/\n");
     model_->setSource(source);
     saveSource();
 }
@@ -204,13 +203,17 @@ void CodeManager::substitute() {
         PinModel *pin = *it;
         substTxt.append(QString("    np_pio *%1 = 0x%2;\n")
                             .arg(pin->name())
-                            .arg(pin->address(), 16));
+                            .arg(pin->address()));
     }
-    substTxt.append("OAP!*/");
 
     QString source = sourceCode();
-    QRegExp rxp = QRegExp("/\\*!POA.*AOP!\\*/", TRUE, TRUE);
-    source.replace(rxp, substTxt);
+    // Note: fucking QRegExp don't works over newlines, so
+    // we've to double-match... - so QRegExp is useless indeed :((
+    int firstIndex = source.find("/*!POA");
+    int lastIndex = source.find("AOP!*/");
+
+    Q_ASSERT(firstIndex < lastIndex);
+    source.replace(firstIndex, lastIndex - firstIndex, substTxt);
     model_->setSource(source);
     saveSource();
 }

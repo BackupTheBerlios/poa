@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.27 2004/01/28 16:35:51 squig Exp $
+ * $Id: blockconfdialog.h,v 1.28 2004/02/09 20:34:07 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -111,6 +111,9 @@ private:
     bool commit();
 
     bool saveSource(CpuModel *cpuModel);
+
+    /** Performs code substitution. */
+    void substituteCode();
 
 private slots:
 

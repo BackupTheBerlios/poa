@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.8 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.9 2003/09/12 10:55:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,6 +46,8 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
+
+#include <iostream.h>
 
 PinListViewItem::PinListViewItem(QListView *parent,
                                  QListViewItem *after,
@@ -121,6 +123,11 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     ioSelectionChanged();
     toggleManualOffset();
     toggleManualRuntime();
+}
+
+BlockConfDialog::~BlockConfDialog()
+{
+    ioListView->clear();
 }
 
 void BlockConfDialog::initLayout()
@@ -310,7 +317,6 @@ void BlockConfDialog::initBottomWidget()
 
 }
 
-
 void BlockConfDialog::initListView()
 {
     // I/O list view
@@ -429,22 +435,14 @@ void BlockConfDialog::updateModel() {
         model_->outputPins()->removeAllPins();
         model_->episodicPins()->removeAllPins();
 
-        PinListViewItem *item = (PinListViewItem *)ioListView->firstChild();
-        while (item != 0) {
+        QListViewItemIterator it(ioListView);
+        for ( ; it.current(); ++it) {
+            PinListViewItem *item = (PinListViewItem *)it.current();
             if (!item->isRoot()) {
                 model_->addPin(item->data()->clone());
             }
-            item = (PinListViewItem *)item->nextSibling();
         }
     }
-}
-
-/**
- *  Destroys the object and frees any allocated resources
- */
-BlockConfDialog::~BlockConfDialog()
-{
-    ioListView->clear();
 }
 
 void BlockConfDialog::newIo()

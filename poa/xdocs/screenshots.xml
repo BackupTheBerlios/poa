@@ -9,7 +9,42 @@
         <body>
 
           <section name="Screenshots">
+		        <p>
+				  Here are some screenshots of the latest POA release
+				  (1.0.1).
+				</p>
+
+                <table>
+                  <tr>
+                        <td>
+                          <a href="images/1.0.1/main-window.png"><img
+                                  src="images/1.0.1/main-window-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Main window
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>
+                          <a href="images/1.0.1/scheduling.png"><img
+                                  src="images/1.0.1/scheduling-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Scheduling dialog
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>
+                          <a href="images/1.0.1/problem-dialog.png"><img
+                                  src="images/1.0.1/problem-dialog-thumb.png"/></a>
+                        </td>
+                        <td>
+                          Problem manager dialog
+                        </td>
+                  </tr>
+                </table>
                 
+
                 <p>
                   Here are some screenshots of the first POA release.
                 </p>

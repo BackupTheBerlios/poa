@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.16 2004/02/02 16:57:30 papier Exp $
+ * $Id: settingsdialog.cpp,v 1.17 2004/03/19 15:41:51 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -128,13 +128,6 @@ QWidget *SettingsDialog::createPathTab()
     grid->addWidget(button, 2, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
 
-    grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
-    downloadLineEdit_ = new QLineEdit(tab);
-    grid->addWidget(downloadLineEdit_, 3, 1);
-    button = new QPushButton("...", tab);
-    grid->addWidget(button, 3, 2);
-    connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
-
     return tab;
 }
 
@@ -186,7 +179,6 @@ void SettingsDialog::setup()
     editorLineEdit_->setText(s->get("Editor"));
     compilerLineEdit_->setText(s->compilerCmd());
     cTemplateLineEdit_->setText(s->templatePath());
-    downloadLineEdit_->setText(s->get("Download Path"));
 
     // download tab
     serialPortComboBox_->setCurrentText(s->get("Serial Port"));
@@ -203,17 +195,16 @@ void SettingsDialog::applySettings()
     s->setGridSize(gridSizeSpinBox_->value());
 
     if (s->get("Language") != languageComboBox_->currentText()) {
-      	s->set("Language", languageComboBox_->currentText());
-	QMessageBox::information(this, 
-				 tr("POA Language Settings"),
-				 tr("The new language settings will take effect after restart of poa."));
+        s->set("Language", languageComboBox_->currentText());
+    QMessageBox::information(this,
+                 tr("POA Language Settings"),
+                 tr("The new language settings will take effect after restart of poa."));
     }
 
     // path tab
     s->set("Editor", editorLineEdit_->text());
     s->set("Compiler", compilerLineEdit_->text());
     s->set("Template Path", cTemplateLineEdit_->text());
-    s->set("Download Tool", downloadLineEdit_->text());
 
     // download tab
     s->set("Serial Port", serialPortComboBox_->currentText());
@@ -249,16 +240,5 @@ void SettingsDialog::chooseTemplatePath()
                         tr("Select C Source Template Path"));
   if (s !=QString::null) {
     cTemplateLineEdit_->setText(s);
-  }
-}
-
-void SettingsDialog::chooseDownloadTool()
-{
-  QString s= QFileDialog::getOpenFileName(downloadLineEdit_->text(),
-                     QString::null,
-                     this, "open file dialog",
-                     tr("Select External Download Tool"));
-  if (s != QString::null) {
-    downloadLineEdit_->setText(s);
   }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.25 2004/02/16 16:42:47 squig Exp $
+ * $Id: settings.cpp,v 1.26 2004/03/19 15:41:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -72,7 +72,10 @@ void Settings::save()
 
 QSettings *Settings::initialize(QSettings *settings) const
 {
-    settings->insertSearchPath(QSettings::Unix, confPath());
+    // does not properly work with qt3 under Linux
+    // the properties are read from a different directory than written to
+    //settings->insertSearchPath(QSettings::Unix, confPath());
+
     return settings;
 }
 

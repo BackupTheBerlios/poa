@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.13 2004/02/02 16:57:30 papier Exp $
+ * $Id: settingsdialog.h,v 1.14 2004/03/19 15:41:51 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -48,7 +48,6 @@ public:
 
     QLineEdit* compilerLineEdit_;
     QLineEdit* cTemplateLineEdit_;
-    QLineEdit* downloadLineEdit_;
     QLineEdit* editorLineEdit_;
     QSpinBox* gridSizeSpinBox_;
     QComboBox* serialPortComboBox_;
@@ -59,7 +58,6 @@ public slots:
     void chooseExternalEditor();
     void chooseExternalCompiler();
     void chooseTemplatePath();
-    void chooseDownloadTool();
 
 private :
     QWidget *createGeneralTab();

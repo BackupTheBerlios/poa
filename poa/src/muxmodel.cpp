@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.11 2003/09/24 16:24:28 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.12 2003/09/25 11:02:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 
 MuxMapping::MuxMapping(PinModel *output, unsigned begin, unsigned end)
 {
-    Q_ASSERT(begin < end);
+    Q_ASSERT(begin <= end);
     output_ = output;
     begin_ = begin;
     end_ = end;
@@ -51,7 +51,7 @@ unsigned MuxMapping::begin()
 
 void MuxMapping::setBegin(unsigned begin)
 {
-    Q_ASSERT(begin < end_);
+    Q_ASSERT(begin <= end_);
     begin_ = begin;
 }
 
@@ -62,7 +62,7 @@ unsigned MuxMapping::end()
 
 void MuxMapping::setEnd(unsigned end)
 {
-    Q_ASSERT(begin_ < end);
+    Q_ASSERT(begin_ <= end);
     end_ = end;
 }
 
@@ -84,7 +84,7 @@ MuxPin::MuxPin(PinModel *model) {
 MuxPin::~MuxPin() {
     for (unsigned i = 0; i < mappings_.count(); i++) {
         MuxMapping *mapping = mappings_.at(i);
-        mappings_.remove(mapping);
+        mappings_.remove(i);
         delete mapping;
     }
 }
@@ -145,41 +145,18 @@ MuxModel::MuxModel(QDomElement coreElement)
 
 MuxModel::~MuxModel()
 {
-    for (QPtrListIterator<MuxPin> it(muxPins_); it.current() != 0; ++it) {
-        delete *it;
+    for (unsigned i = 0; i < muxPins_.count(); i++) {
+        MuxPin *pin = muxPins_.at(i);
+        muxPins_.remove(i);
+        delete pin;
     }
 
     emit deleted();
 }
 
-MuxPin *MuxModel::addPin()
+void MuxModel::addMuxPin(MuxPin *pin)
 {
-    unsigned bits = 32;
-    unsigned id = muxPins_.count() + 1;
-    PinModel::PinType type = (type_ == MUX) ? PinModel::INPUT : PinModel::OUTPUT;
-
-    MuxPin *pin = new MuxPin(new PinModel(
-                    this, id, QString("Output %1").arg(id), 0, bits, type));
     muxPins_.append(pin);
-
-    return pin;
-}
-
-void MuxModel::addMuxMapping(MuxPin *input, PinModel *output,
-                             unsigned begin, unsigned end, bool setOutputBits)
-{
-    Q_ASSERT(output != 0);
-    // add bits of cureent mapping to output
-    if (setOutputBits) {
-        output->setBits(output->bits() + (begin - end));
-    }
-    MuxMapping *mapping = new MuxMapping(output, begin, end);
-    input->addMapping(mapping);
-}
-
-void MuxModel::removeMuxMapping(MuxPin *pin, MuxMapping *mapping)
-{
-    pin->removeMapping(mapping);
 }
 
 void MuxModel::removeMuxPin(MuxPin *pin)

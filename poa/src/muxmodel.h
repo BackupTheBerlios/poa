@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.12 2003/09/24 15:44:28 garbeam Exp $
+ * $Id: muxmodel.h,v 1.13 2003/09/25 11:02:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -166,25 +166,9 @@ public:
     MuxModel(QDomElement coreElement);
 
     /**
-     * Adds a new MuxMapping.
-     * @param output has to be valid not <code>NULL</code>. 
-     * @param setOutputBits if <code>false</code> the bits in output
-     * PinModel have to be set manually, otherwise <code>(end - begin)</code>
-     * will be added to the current bits value of output PinModel
-     * by this method.
+     * Adds mux pin.
      */
-    void addMuxMapping(MuxPin *input, PinModel *output,
-                       unsigned begin, unsigned end, bool setOutputBits = true);
-
-    /**
-     * Adds a new mux pin and returns it.
-     */
-    MuxPin *addPin();
-
-    /**
-     * Removes MuxMapping.
-     */
-    void removeMuxMapping(MuxPin *pin, MuxMapping *mapping);
+    void addMuxPin(MuxPin *pin);
 
     /**
      * Removes the given pin from this MuxModel and any related

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.5 2003/09/24 16:24:28 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.6 2003/09/25 11:02:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@
 class MuxPin;
 class MuxMapping;
 class MuxModel;
+class PinModel;
 
 class QBoxLayout;
 class QComboBox;
@@ -154,6 +155,15 @@ private:
     /** Syncs the <code>model_</code> with this dialog. */
     void updateModel();
 
+    /** Returns an mapped IO by its name, if it exist, otherwise 0. */
+    PinModel *ioForString(QString name);
+
+    /** Adds a new MuxMapping to the selected item. */
+    void addMapping(MuxListViewItem *item);
+
+    /** Adds a new IO to the mappings list view. */
+    void addIo();
+
     QLineEdit* nameLineEdit;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
@@ -170,14 +180,19 @@ private:
 
     MuxModel *model_;
 
+    QPtrList<PinModel> mappedToIos_;
     QPtrList<MuxMapping> deletedMappings_;
-    QPtrList<MuxPin> deletedPins_;
+    QPtrList<MuxPin> deletedMuxPins_;
 
 private slots:
 
     /** Magic selection, button title changing. */
     void mappingSelectionChanged();
 
+    /**
+     * Removes a selected IO with its mappings or a selected mapping.
+     */
+    void removeIoOrMapping();
 
     /** 
      * Adds an IO if no I/O is selected or no mapping was defined.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.5 2003/09/24 16:24:28 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.6 2003/09/25 11:02:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,6 +35,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
+#include <qmessagebox.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
@@ -55,7 +56,9 @@ MuxMappingListViewItem::MuxMappingListViewItem(QListViewItem *parent,
 }
 
 MuxMappingListViewItem::~MuxMappingListViewItem() {
-    delete clone_;
+    if (clone_ != 0) {
+        delete clone_;
+    }
 }
 
 MuxMapping *MuxMappingListViewItem::data() const {
@@ -88,7 +91,9 @@ MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
 }
 
 MuxListViewItem::~MuxListViewItem() {
-    delete clone_;
+    if (clone != 0) {
+        delete clone_;
+    }
 }
 
 MuxPin *MuxListViewItem::data() const {
@@ -246,6 +251,7 @@ void MuxConfDialog::initBottomWidget() {
 void MuxConfDialog::initConnections() {
 
     connect(addPushButton, SIGNAL(clicked()), this, SLOT(addIoOrMapping()));
+    connect(removePushButton, SIGNAL(clicked()), this, SLOT(removeIoOrMapping()));
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(mappingListView, SIGNAL(selectionChanged()),
@@ -257,6 +263,23 @@ void MuxConfDialog::initConnections() {
  */
 MuxConfDialog::~MuxConfDialog()
 {
+    for (unsigned i = 0; i < mappedToIos_.count(); i++) {
+        PinModel *pin = mappedToIos_.at(i);
+        mappedToIos_.remove(i);
+        delete pin;
+    }
+
+    for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
+        MuxPin *pin = deletedMuxPins_.at(i);
+        deletedMuxPins_.remove(i);
+        delete pin;
+    }
+
+    for (unsigned i = 0; i < deletedMappings_.count(); i++) {
+        MuxMapping *mapping = deletedMappings_.at(i);
+        deletedMuxPins_.remove(i);
+        delete mapping;
+    }
 }
 
 void MuxConfDialog::syncModel() {
@@ -298,26 +321,136 @@ void MuxConfDialog::mappingSelectionChanged() {
     }
 }
 
-void MuxConfDialog::addIoOrMapping() {
+PinModel *MuxConfDialog::ioForString(QString name) {
 
-    unsigned bits = 32;
-    unsigned id = mappingListView->childCount() + 1;
+    for (unsigned i = 0; i < mappedToIos_.count(); i++) {
+        PinModel *model = mappedToIos_.at(i);
+        if (model->name() == name) {
+            return model;
+        }
+    }
+
+    return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Add IO/Mapping Slot/Helpers
+//
+void MuxConfDialog::addIo() {
+
     PinModel::PinType type;
     QString name;
 
     if (model_->muxType() == MuxModel::MUX) {
         type = PinModel::INPUT;
-        name = "Input";
+        name = "input";
     }
     else {
         type = PinModel::OUTPUT;
-        name = "Output";
+        name = "output";
     }
+
+    unsigned bits = 32;
+    unsigned id = mappingListView->childCount() + 1;
 
     MuxPin *pin =
         new MuxPin(new PinModel(model_, id,
-                   QString("%1 %2").arg(name).arg(id),
-                   0, bits, type));
+                    QString("%1 %2").arg(name).arg(id),
+                    0, bits, type));
 
     new MuxListViewItem(mappingListView, 0, pin, 0);
+
+}
+
+void MuxConfDialog::addMapping(MuxListViewItem *item) {
+
+    PinModel::PinType type;
+    QString name;
+
+    if (model_->muxType() == MuxModel::MUX) {
+        type = PinModel::OUTPUT;
+        name = "output";
+    }
+    else {
+        type = PinModel::INPUT;
+        name = "input";
+    }
+
+    QString mapToName = ioComboBox_->currentText();
+    unsigned id = mappedToIos_.count() + 1;
+    bool proceed = true;
+
+    if (mapToName == "") {
+
+        mapToName = QString("%1 %2").arg(name).arg(id);
+        switch(QMessageBox::warning(this, "POA",
+                    "Cannot create a new mapping without a valid\n" +
+                    name + " name.\n\n"
+                    "Should I create a new Mapping with\n" +
+                    name + ": " + mapToName,
+                    "Yes",
+                    "No", 0, 0, 1 ) )
+        {
+        case 0: // YES
+            proceed = true;
+            break;
+        case 1: // NO
+            proceed = false;
+            break;
+        }
+    }
+
+
+    if (proceed) {
+
+        PinModel *mapTo = ioForString(mapToName);
+
+        if (mapTo == 0) {
+
+            mapTo =
+                new PinModel(model_, id, mapToName, id * 100, 0,
+                        (type == PinModel::INPUT) ? PinModel::OUTPUT : 
+                        PinModel::INPUT);
+            mappedToIos_.append(mapTo);
+            ioComboBox_->insertItem(mapToName);
+        }
+
+        MuxPin *pin = item->data();
+
+        MuxMapping *mapping = new MuxMapping(mapTo, beginSpinBox->value(),
+                endSpinBox->value());
+        pin->addMapping(mapping);
+
+        // update ListView
+        new MuxMappingListViewItem(item, mapping, 0);
+
+    }
+
+}
+
+void MuxConfDialog::addIoOrMapping() {
+
+    MuxListViewItem *item = (MuxListViewItem *)mappingListView->selectedItem();
+
+    if (item != 0) {
+        addMapping(item);
+    }
+    else {
+        addIo();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Remove IO/Mapping Slot/Helpers
+//
+void MuxConfDialog::removeIoOrMapping() {
+
+    MuxListViewItem *item = (MuxListViewItem *)mappingListView->selectedItem();
+
+    if (item != 0) {
+        // TODO:
+    }
+    else {
+        // TODO:
+    }
 }

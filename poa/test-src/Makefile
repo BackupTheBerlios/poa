@@ -47,11 +47,11 @@ checkqt: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 $(CPPUNIT_PATH)/libqttestrunner.so
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./mainqt
 
 clean:
-	rm ../src/*.o ../src/qextserialbase/*.o	*.o
+	rm -f ../src/*.o ../src/qextserialbase/*.o	*.o
 
 coverageclean:
-	rm ../src/*.da ../src/qextserialbase/*.da *.da
-	rm ../src/*.gcov ../src/qextserialbase/*.gcov *.gcov
+	rm -f ../src/*.da ../src/qextserialbase/*.da *.da
+	rm -f ../src/*.gcov ../src/qextserialbase/*.gcov *.gcov
 
 depend:
 	touch Makefile.depend

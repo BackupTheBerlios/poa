@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.24 2004/01/12 19:13:57 squig Exp $
+ * $Id: cpumodel.h,v 1.25 2004/01/12 19:40:53 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -39,8 +39,6 @@ class QCanvasItemList;
  */
 class CpuModel: public BlockModel
 {
-    Q_OBJECT
-
  public:
     /**
      * Creates a CpuModel instance for the library
@@ -63,7 +61,7 @@ class CpuModel: public BlockModel
      * Returns <code>true</code> if this model is a library item
      * instance, <code>false</code> otherwise.
      */
-    bool isProducer();
+/*      bool isProducer(); */
 
     /**
      * Returns the cpu id. This id is used to upload <code>code()</code> to
@@ -97,8 +95,13 @@ class CpuModel: public BlockModel
     bool autoOffset();
 
     /**
-     * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create elements
+     * Toggles the save source property.
+     */
+    void setSaveSource(const bool saveSource);
+
+    /**
+     * Serializes this instance to a xml subtree @param document the
+     * main QDomDocument instance. Needed to create elements.
      */
     QDomElement serialize(QDomDocument *document);
 
@@ -128,10 +131,8 @@ class CpuModel: public BlockModel
     int cpuId_;
     bool autoExecTime_;
     bool autoOffset_;
-    bool isProducer_;
-
- signals:
-    void serialized(CpuModel *);
+/*      bool isProducer_; */
+    bool saveSource_;
 
 };
 

@@ -24,6 +24,10 @@
       <item name="Wiki (german)" href="http://openfacts.berlios.de/index.phtml?title=Prog._umg._Offener_Antrieb"/>
       <item name="Seminars" href="/seminars.html"/>
     </menu>
+
+    <menu name="Sub Projects">
+      <item name="GCover" href="/gcover-project/index.html"/>
+    </menu>
     
     <menu name="Development">
       <item name="Programming Style Guidelines" href="/styleguide.html"/>

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.28 2004/01/12 19:13:57 squig Exp $
+ * $Id: cpumodel.cpp,v 1.29 2004/01/12 19:40:53 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,8 @@ CpuModel::CpuModel(QString type, QString description)
     autoExecTime_ = true;
     autoOffset_ = true;
     cpuId_ = -1;
-    isProducer_ = true;
+//      isProducer_ = true;
+    saveSource_ = true;
 }
 
 CpuModel::CpuModel(QDomElement element)
@@ -46,20 +47,18 @@ CpuModel::CpuModel(QDomElement element)
 {
     deserialize(element);
 
-    isProducer_ = false;
-
-    connect(this, SIGNAL(serialized(CpuModel *)),
-            CodeManager::instance(), SLOT(save(CpuModel*)));
+//      isProducer_ = false;
+    saveSource_ = true;
 }
 
 CpuModel::~CpuModel()
 {
 }
 
-bool CpuModel::isProducer()
-{
-    return isProducer_;
-}
+//  bool CpuModel::isProducer()
+//  {
+//      return isProducer_;
+//  }
 
 int CpuModel::cpuId()
 {
@@ -98,31 +97,27 @@ QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
     root.setAttribute("block-type", "cpu");
-    if (!isProducer_) {
-        root.setAttribute("srcfile",
-                CodeManager::instance()->sourceFilePath(this));
-    }
+//      if (!isProducer_) {
+//          root.setAttribute("srcfile",
+//                            CodeManager::instance()->sourceFilePath(this));
+//      }
     root.setAttribute("cpuid", cpuId_);
-    root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
-    root.setAttribute("auto-offset", autoOffset_? "true":"false");
+    root.setAttribute("autotime", autoExecTime_  ? "true" : "false");
+    root.setAttribute("auto-offset", autoOffset_ ? "true" : "false");
 
-    emit serialized(this);
+    if (saveSource_) {
+        CodeManager::instance()->save(this);
+    }
 
     return root;
 }
 
 void CpuModel::deserialize(QDomElement element) {
     BlockModel::deserialize(element);
-    cpuId_ = element.attribute("cpuid", "0").toInt();
 
-
-    setAutoOffset((element.attribute("auto-offset","true") == "true"));
-    setClock((unsigned int)element.attribute("clock","0").toUInt());
-
-    // TRUE if value of autotime contains "TRUE" (case insensitive),
-    // FALSE otherwise.
-    autoExecTime_ =
-        element.attribute("autotime", "true").contains("true", false);
+    setAutoExecTime((element.attribute("autotime", "true") == "true"));
+    setAutoOffset((element.attribute("auto-offset", "true") == "true"));
+    setCpuId(element.attribute("cpuid", "0").toInt());
 }
 
 void CpuModel::setProjectPath(QString path)
@@ -133,6 +128,11 @@ void CpuModel::setProjectPath(QString path)
 QString CpuModel::projectPath() const
 {
     return path_;
+}
+
+void CpuModel::setSaveSource(const bool saveSource)
+{
+    saveSource_ = saveSource;
 }
 
 QString CpuModel::tip()

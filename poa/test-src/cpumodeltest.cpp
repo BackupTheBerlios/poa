@@ -68,6 +68,8 @@ public:
         cpu->setAutoExecTime(false);
         cpu->setAutoOffset(false);
 
+        cpu->setSaveSource(false);
+
         QDomDocument document;
         QDomElement element = cpu->serialize(&document);
 

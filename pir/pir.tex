@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.4 2005/02/09 14:19:49 garbeam Exp $
+% $Id: pir.tex,v 1.5 2005/02/10 14:21:16 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -103,8 +103,27 @@ Raum aufhält, wird als sehr gering angenommen.
 Alle untersuchten Algorithmen basieren auf oder sind in der OpenCV \cite{opencv}
 Bibliothek der Intel Corp. enthalten.
 
+\subsection{CalcOpticalFlowHS}
+Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
+zwischen zwei Bildern nach dem Horn \& Schunk \cite{Horn81} Verfahren.
 
+\subsection{CalcOpticalFlowLK}
+Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
+zwischen zwei Bildern nach dem Lucas \& Kanade \cite{Lucas81} Verfahren.
 
+\subsection{CalcOpticalFlowBM}
+Dieser Algorithmus berechnet den optischen Bewegungsfluss für
+Ausschnitte einer frei definierbaren Größe zwischen zwei Bildern.
+Um so gröber die Ausschnitte gewählt werden, desto
+performanter arbeitet der Algorithmus.
+
+\subsection{CalcOpticalFlowPyrLK}
+Dieser Algorithmus \cite{Bouget00} basiert auf einer iterativen Version der optischen
+Fluss-Pyramiden nach Lucas \& Kanade. Er berechnet den optischen
+Bewegungsfluss auf einer Menge von Punkten zwischen zwei Bildern. Es
+werden Bewegungen mit Sub-Pixel Genauigkeit gefunden.
+
+\subsection{Eigene Implementierung}
 
 %------------------------------------------------------------------------- 
 \section{Receiver Operator Characteristic Curves}
@@ -116,7 +135,15 @@ nach \cite{KIL05}, die auch im Source Code im Anhang vorliegt.
 
 \begin{thebibliography}{99}
 \bibitem{KIL05} Marcel Kilgus, Optische Flusserkennung mit 15 LOC, 2005.
-\bibitem{opencv} http://opencv.sf.net
+\bibitem{opencv} http://opencvlibrary.sf.net
+\bibitem{Horn81} Berthold K. P. Horn und Brian G. Schunck. Determining
+Optical Flow. Artificial Intelligence, 17, pp. 185-203, 1981.
+\bibitem{Lucas81} Lucas, B. und Kanade, T. An Iterative Image
+Registration Technique with an Application to Stereo Vision, Proc. of
+7th International Joint Conference on Artificial Intelligence (IJCAI),
+pp. 674-679.
+\bibitem{Bouget00} Jean-Yves Bouguet. Pyramidal Implementation of the
+Lucas Kanade Feature Tracker.
 \end{thebibliography}
 
 \end{document}

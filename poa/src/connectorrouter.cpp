@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.cpp,v 1.3 2003/12/11 15:57:54 keulsn Exp $
+ * $Id: connectorrouter.cpp,v 1.4 2003/12/11 16:06:35 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 
 #include <qcanvas.h>
 
-#include <pair>
+#include <utility>
 #include <map>
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.8 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: settings.cpp,v 1.9 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -125,6 +125,21 @@ bool Settings::set(const QString &key, int value)
 //      }
 //  }
 
+QColor Settings::activatedColor()
+{
+    return Qt::green;
+}
+
+QColor Settings::defaultBrushColor()
+{
+    return Qt::white;
+}
+
+QColor Settings::defaultColor()
+{
+    return Qt::black;
+}
+
 int Settings::gridSize()
 {
     return getNum("Grid Size", 10);
@@ -142,9 +157,12 @@ bool Settings::snapToGrid()
     return getBool("Snap To Grid", TRUE);
 }
 
+QColor Settings::selectedColor()
+{
+    return Qt::lightGray;
+}
+
 void Settings::setSnapToGrid(bool snapToGrid)
 {
-    if (set("Snap To Grid", snapToGrid)) {
-        emit snapToGridChanged(snapToGrid);
-    }
+    set("Snap To Grid", snapToGrid);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.h,v 1.1 2003/09/07 19:07:46 squig Exp $
+ * $Id: connectaction.h,v 1.2 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -56,6 +56,22 @@ public:
     virtual void mouseReleaseEvent(QMouseEvent *e);
 
 private:
+    /**
+     * Returns the first active item in <code>items</code>.
+     *
+     * @return 0, if no item is found
+     */
+    QCanvasItem *activeItem(QCanvasItemList items);
+
+    /**
+     * Returns the active item that is within a limited bounding
+     * rectangle around p. Tries items that directly collide with p
+     * first.
+     *
+     * @return 0, if no item is active
+     */
+    QCanvasItem *activeItemAt(QPoint p);
+
     /** The source pin */
     PinView *source_;
     /** The old tracking state. */

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.20 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: blockview.h,v 1.21 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -156,6 +156,11 @@ protected:
     static const int DEFAULT_RIGHT_BORDER = 5;
 
 private:
+
+    /**
+     * Sets the pen and brush according to the active and selection state.
+     */
+    void updateProperties();
 
     BlockModel *model_;
 

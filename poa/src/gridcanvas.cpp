@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.15 2003/09/07 19:07:46 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.16 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -79,12 +79,13 @@ int coordToGridLower(int c, int gridSize)
 void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
 {
     // clear background
-    painter.fillRect(clip, QBrush (QColor("white")));
+    painter.fillRect(clip, QBrush (Qt::white));
 
     int gridSize = Settings::instance()->gridSize();
 
     // draw grid
-    painter.setPen(QPen(gray));
+    painter.setPen(QPen(Qt::lightGray));
+
     int minX = coordToGridHigher(clip.left(), gridSize);
     int minY = coordToGridHigher(clip.top(), gridSize);
     int maxX = coordToGridLower(clip.right(), gridSize);

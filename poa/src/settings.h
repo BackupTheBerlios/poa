@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.12 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: settings.h,v 1.13 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -52,22 +52,19 @@ public:
     bool set(const QString &key, bool value);
     bool set(const QString &key, int value);
 
-    // the following settings emit an additional signal
-    /**
-     * Grid size
-     */
+    QColor activatedColor();
+    QColor defaultBrushColor();
+    QColor defaultColor();
     int gridSize();
     void setGridSize(int gridSize);
-
-    /**
-     * Snap to grid
-     */
+    QColor selectedColor();
     bool snapToGrid();
     void setSnapToGrid(bool snapToGrid);
 
 signals:
     void settingChanged(const QString &key);
-    void snapToGridChanged(bool snapToGrid);
+
+    // the following settings emit an additional signal
     void gridSizeChanged(int gridSize);
 
 protected:

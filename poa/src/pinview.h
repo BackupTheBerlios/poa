@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.8 2003/09/07 19:07:46 squig Exp $
+ * $Id: pinview.h,v 1.9 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -51,8 +51,8 @@ public:
      * position.
      */
     PinView(PinModel *model,
-        BlockView *block,
-        PinView::DockPosition dockPosition);
+            BlockView *block,
+            PinView::DockPosition dockPosition);
 
     /**
      * Default destructor
@@ -89,11 +89,20 @@ public:
     PinModel *pinModel();
 
     /**
+     * If <code>yes</code>, marks the pin green
+     */
+    virtual void setActive(bool yes);
+
+    /**
      * Sets the brush to red if Pin is selected, otherwise black
      */
     virtual void setSelected(bool yes);
 
 private:
+    /**
+     * Sets the pen and brush according to the active and selection state.
+     */
+    void updateProperties();
 
     DockPosition dockPosition_;
     PinModel *model_;

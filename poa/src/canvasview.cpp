@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.23 2003/09/07 19:07:46 squig Exp $
+ * $Id: canvasview.cpp,v 1.24 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -123,7 +123,7 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
                 // show popup menu if available
                 QPopupMenu *menu = item->popupMenu();
                 if (menu != 0) {
-                    menu->exec(mapToGlobal(e->pos()));
+                    menu->exec(contentsToViewport(mapToGlobal(e->pos())));
                 }
             }
         }

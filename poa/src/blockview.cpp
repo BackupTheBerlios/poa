@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.23 2003/09/07 19:07:46 squig Exp $
+ * $Id: blockview.cpp,v 1.24 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,7 @@
 #include "moveaction.h"
 #include "pinvector.h"
 #include "pinview.h"
-
+#include "settings.h"
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
 
@@ -55,7 +55,7 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
 
     setBrush(white);
-    setPen(QPen(black, 2));
+    setPen(QPen(Settings::instance()->defaultColor(), 2));
 
     unsigned height = BlockView::DEFAULT_TOP_SPACING +
         BlockView::DEFAULT_HEADER_SPACING +
@@ -186,13 +186,21 @@ int BlockView::rtti() const
 
 void BlockView::setSelected(bool yes)
 {
-    if (yes) {
-        setBrush(red);
-    } else {
-        setBrush(white);
-    }
     QCanvasRectangle::setSelected(yes);
+    updateProperties();
+}
 
+void BlockView::updateProperties()
+{
+    if (isActive()) {
+        setBrush(QBrush(Settings::instance()->activatedColor()));
+    }
+    else if (isSelected()) {
+        setBrush(QBrush(Settings::instance()->selectedColor()));
+    }
+    else {
+        setBrush(QBrush(Settings::instance()->defaultBrushColor()));
+    }
 }
 
 void BlockView::drawShape(QPainter &p)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.8 2003/09/07 19:07:46 squig Exp $
+ * $Id: pinview.cpp,v 1.9 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include "canvasview.h"
 #include "connectaction.h"
 #include "pinmodel.h"
+#include "settings.h"
 
 #include <qevent.h>
 
@@ -56,7 +57,6 @@ PinView::PinView(PinModel *model, BlockView *block,
 PinView::~PinView()
 {
 }
-
 
 AbstractModel *PinView::model()
 {
@@ -100,13 +100,30 @@ PinModel *PinView::pinModel()
     return model_;
 }
 
-void PinView::setSelected(bool yes) {
-    if (yes) {
-        setPen(red);
-        setBrush(QBrush(red, SolidPattern));
-    } else {
-        setPen(black);
-        setBrush(QBrush(black, SolidPattern));
-    }
+void PinView::setActive(bool yes)
+{
+    QCanvasRectangle::setActive(yes);
+    updateProperties();
+}
+
+void PinView::setSelected(bool yes)
+{
     QCanvasRectangle::setSelected(yes);
+    updateProperties();
+}
+
+void PinView::updateProperties()
+{
+    if (isActive()) {
+        setPen(Settings::instance()->activatedColor());
+        setBrush(QBrush(Settings::instance()->activatedColor()));
+    }
+    else if (isSelected()) {
+        setPen(Settings::instance()->selectedColor());
+        setBrush(QBrush(Settings::instance()->selectedColor()));
+    }
+    else {
+        setPen(Settings::instance()->defaultColor());
+        setBrush(QBrush(Settings::instance()->defaultColor()));
+    }
 }

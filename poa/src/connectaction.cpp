@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.1 2003/09/07 19:07:46 squig Exp $
+ * $Id: connectaction.cpp,v 1.2 2003/09/08 13:35:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include "gridcanvas.h"
 #include "pinmodel.h"
 #include "pinview.h"
+#include "poa.h"
 #include "project.h"
 #include "settings.h"
 
@@ -48,29 +49,50 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     line_.setPoints(p.x(), p.y(), p.x(), p.y());
     line_.setPen(QPen(Qt::black, 1, Qt::DashLine));
     line_.show();
+
+    // mark all pins
+    QCanvasItemList allItems = view->canvas()->allItems();
+    for (QCanvasItemList::iterator it = allItems.begin();
+         it != allItems.end(); ++it) {
+        (*it)->setActive(*it != source_ && INSTANCEOF(*it, PinView));
+    }
 }
 
 ConnectAction::~ConnectAction()
 {
     view()->setMouseTracking(savedHasMouseTracking_);
+
+    // unmark all items
+    QCanvasItemList allItems = view()->canvas()->allItems();
+    for (QCanvasItemList::iterator it = allItems.begin();
+         it != allItems.end(); ++it) {
+        (*it)->setActive(false);
+    }
 }
 
 void ConnectAction::mouseMoveEvent(QMouseEvent *e)
 {
     QPoint p = view()->inverseWorldMatrix().map(e->pos());
-    line_.setPoints(line_.startPoint().x(), line_.startPoint().y(),
-                    p.x(), p.y());
+
+    QCanvasItem *item = activeItemAt(p);
+    if (item != 0) {
+        line_.setPoints(line_.startPoint().x(), line_.startPoint().y(),
+                        (int)item->x(), (int)item->y());
+    }
+    else {
+            // no active item is close to current position
+            line_.setPoints(line_.startPoint().x(), line_.startPoint().y(),
+                            p.x(), p.y());
+    }
     view()->canvas()->update();
 }
 
 void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
 {
     QPoint p = view()->inverseWorldMatrix().map(e->pos());
-    QCanvasItemList l = view()->canvas()->collisions(p);
-
-    if (!l.isEmpty()) {
-        QCanvasItem *topItem = l.first();
-        PinView *target = dynamic_cast<PinView *>(topItem);
+    QCanvasItem *item = activeItemAt(p);
+    if (item != 0) {
+        PinView *target = dynamic_cast<PinView *>(item);
         if (target != 0 && target != source_) {
             // target is a PinView indeed
             ConnectorModel *cm
@@ -89,4 +111,28 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
     }
 
     view()->setAction(0);
+}
+
+QCanvasItem *ConnectAction::activeItem(QCanvasItemList items)
+{
+    for (QCanvasItemList::iterator it = items.begin();
+         it != items.end(); ++it) {
+        if ((*it)->isActive()) {
+            return (*it);
+        }
+    }
+    return 0;
+}
+
+QCanvasItem *ConnectAction::activeItemAt(QPoint p)
+{
+    QCanvasItem *item;
+
+    // try exact collision first
+    if ((item = activeItem(view()->canvas()->collisions(p))) == 0) {
+        // try bounding rect
+        QRect hotspots(p.x() - 2, p.y() - 2, 5, 5);
+        item = activeItem(view()->canvas()->collisions(hotspots));
+    }
+    return item;
 }

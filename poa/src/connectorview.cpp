@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.2 2003/08/29 17:53:19 keulsn Exp $
+ * $Id: connectorview.cpp,v 1.3 2003/08/29 18:35:16 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -120,7 +120,7 @@ ConnectorView::ConnectorView(QPoint start,
     orientation_ = orientation;
     first_ = true;
     prev_.pin = 0;
-    setStartPoint(start);
+    setPoints(start.x(), start.y(), start.x(), start.y());
 
     QPoint point = firstInflectionPoint(startPoint(),
 					orientation_,
@@ -155,7 +155,7 @@ QCanvasItemList ConnectorView::allSegments()
     ConnectorView *current = this;
 
     while (current != 0) {
-	list.prepend(this);
+	list.prepend(current);
 	if (current->last_) {
 	    current = 0;
 	} else {
@@ -322,7 +322,7 @@ void ConnectorView::dockToTarget(ConnectorView *to)
     Q_ASSERT((orientation_ == HORIZONTAL
 	      && this->startPoint().y() == to->startPoint().y())
 	     || (orientation_ == VERTICAL
-		 && this->startPoint().x() == to->endPoint().x()));
+		 && this->startPoint().x() == to->startPoint().x()));
     setEndPoint(to->startPoint());
 }
 

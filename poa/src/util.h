@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.5 2003/12/03 18:22:47 squig Exp $
+ * $Id: util.h,v 1.6 2003/12/08 00:54:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -33,7 +33,9 @@
 #include <qstringlist.h>
 
 /**
- * Provides utilities for
+ * Provides static utility methods.
+ *
+ * <p>The provided methods cover:
  * <ul>
  *   <li>file/directory manipulation</li>
  *   <li>string manipulation</li>
@@ -94,6 +96,22 @@ class Util
      */
     static QString squeeze(QString text, int maxWidth, QFont font);
 
+    /**
+     * Sets the path of the executable. Invoked as one of the first
+     * actions in main.cpp (before any chdir call has been made). The
+     * path is saved in a static variable and used by
+     * findResource(). This is a somewhat ugly work around as the
+     * QApplication object is not accessible from this class.
+     *
+     * @see #findResource(QString)
+     */
+    static void setExecutablePath(QString path);
+
+ private:
+
+    static QString EXECUTABLE_PATH;
+
 };
+
 
 #endif // POA_UTIL_H

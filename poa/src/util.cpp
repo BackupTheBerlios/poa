@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.4 2003/12/03 18:22:47 squig Exp $
+ * $Id: util.cpp,v 1.5 2003/12/08 00:54:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,8 @@
 #include <qstringlist.h>
 
 const QString Util::ICON_PATH = QString("icons/");
+
+QString Util::EXECUTABLE_PATH = QString("");
 
 bool Util::copyFile(QFile *source, QFile *target)
 {
@@ -67,6 +69,17 @@ QString Util::findResource(QString filename)
     if (fi.exists()) {
         return fi.absFilePath();
     }
+
+    fi = QFileInfo(EXECUTABLE_PATH + "/" + filename);
+    if (fi.exists()) {
+        return fi.absFilePath();
+    }
+
+    fi = QFileInfo(QString("/usr/share/poa/") + filename);
+    if (fi.exists()) {
+        return fi.absFilePath();
+    }
+
     return QString();
 }
 
@@ -114,4 +127,9 @@ QString Util::squeeze(QString text, int maxWidth, QFont font)
         }
         return s + "...";
     }
+}
+
+void Util::setExecutablePath(QString path)
+{
+    Util::EXECUTABLE_PATH = path;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.20 2003/09/18 15:21:34 vanto Exp $
+ * $Id: main.cpp,v 1.21 2003/12/08 00:54:35 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define VERSION "POA-current"
 
 #include "mainwindow.h"
+#include "util.h"
 
 #include <qapplication.h>
 #include <qdom.h>
@@ -38,6 +39,8 @@
 int main (int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    Util::setExecutablePath(QFileInfo(qApp->argv()[0]).dirPath(true));
+
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);
     mainWindow->setCaption(VERSION);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.9 2004/01/22 15:52:32 squig Exp $
+ * $Id: deployprojectwizard.h,v 1.10 2004/01/26 16:04:53 papier Exp $
  *
  *****************************************************************************/
 
@@ -70,7 +70,10 @@ protected slots:
     void cpuSelected(int index);
     void setProblemReportItem(QListViewItem* item);
     void updateProblemReport();
-
+    /*
+    void setDownloadProgressBarLength(int totalSteps);
+    void increaseDownloadProgressBar();
+    */
 private:
 
     Project *project_;

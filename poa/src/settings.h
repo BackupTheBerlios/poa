@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.22 2004/01/20 16:55:17 squig Exp $
+ * $Id: settings.h,v 1.23 2004/01/26 16:04:53 papier Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -71,6 +71,7 @@ public:
     QString compilerCmd();
     QString editorCmd();
     QString confPath() const;
+    QString serialPort();
 
 public slots:
     void setGridSize(int gridSize);

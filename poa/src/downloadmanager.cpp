@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.7 2004/01/26 09:10:48 papier Exp $
+ * $Id: downloadmanager.cpp,v 1.8 2004/01/26 16:04:53 papier Exp $
  *
  *****************************************************************************/
 
@@ -27,16 +27,17 @@
 #include "cpumodel.h"
 #include "settings.h"
 #include "processdialog.h"
+#include "poaexception.h"
 #include "util.h"
 #include "qextserialport/qextserialbase.h"
 #include "qextserialport/qextserialport.h"
 
 #include <qfileinfo.h>
 #include <qfile.h>
-#include <qprocess.h>
+#include <qprogressdialog.h>
 #include <qstring.h>
 #include <qstringlist.h>
-#include <qthread.h>
+#include <qapplication.h>
 #include <stdio.h>
 
 
@@ -65,49 +66,48 @@ DownloadManager *DownloadManager::instance()
 bool DownloadManager::run(const char* portname)
 {
 
-  //TODO: return false if an error occurs e.g. Port is already opened
-  //      Any check nesessary if there is a file on the CPLD??
-
   QextSerialPort port;
   port.setName(portname);
-  port.open(0);
+  if (! port.open(0)) {
+    throw PoaException(tr("Could not open serial port"));
+    return false;
+  }
+  else {
 
-  //send header
-  port.putch(0xff);
-  port.flush();
-  usleep(300);
-  
-  //send adress
-  port.putch(0x01);
-  port.flush();
-  usleep(300);
+    //send header
+    port.putch(0xff);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send adress
+    port.putch(0x01);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send size
+    port.putch((unsigned char) 0);
+    port.flush();
+    qApp->processEvents(300);
 
-  //send size
-  port.putch((unsigned char) 0);
-  port.flush();
-  usleep(300);
+    port.putch((unsigned char) 0);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send command
+    //0x01 = LOAD
+    //0x05 = RUN
+    port.putch(0x05);
+    port.flush();
+    qApp->processEvents(300);
 
-  port.putch((unsigned char) 0);
-  port.flush();
-  usleep(300);
-
-  //send command
-  //0x01 = LOAD
-  //0x05 = RUN
-  port.putch(0x05);
-  port.flush();
-  usleep(300);
-
-  return true;
-  
+    return true;
+  }
 }
 
 bool DownloadManager::download(QString filename, const char* portname)
 {
 
-  //TODO: return false if an error occurs e.g. Port is already opened
-
-  long fileSize = 0;
+  int fileSize = 0;
   Q_LONG err = 0;
   int lenght = 0;
   int address = 0;
@@ -125,82 +125,108 @@ bool DownloadManager::download(QString filename, const char* portname)
   //open serial port
   QextSerialPort port;
   port.setName(portname);
-  port.open(0);
-
-
-  //open file
-  QFile file;
-  file.setName(filename);
-  file.open( IO_ReadOnly );
-
-  //get size of data to send
-  while (file.atEnd() == false) {
-    err = file.readLine(line, 254);
-
-    if (err != 0) {
-      if (line[1]=='1') {
-        sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
-               &lenght, &address, line_tmp);
-        fileSize += (lenght -3 );
-      }
-    }
+  if (! port.open(0)) {
+    throw PoaException(tr("Could not open serial port."));
+    return false;
   }
-  //set number of steps in DeployProject Download Progressbar
-  emit setProgressBarLength(fileSize);
-  file.close();
+  else {
 
-  //send header
-  port.putch(0xff);
-  port.flush();
-  usleep(300);
-
-  //send adress
-  port.putch(0x01);
-  port.flush();
-  usleep(300);
-
-  //send size
-  port.putch((unsigned char)(fileSize>>8));
-  port.flush();
-  usleep(300);
-
-  port.putch((unsigned char)(fileSize&0xff));
-  port.flush();
-  usleep(300);
-
-  //send command
-  //0x01 = LOAD
-  //0x05 = RUN
-  port.putch(0x01);
-  port.flush();
-  usleep(300);
-
-  //send data
-  file.open( IO_ReadOnly );
-  while (file.atEnd() == false) {
-    err = file.readLine(line, 254);
-
-    if (err!=0) {
-      if (line[1] == '1') {
-        sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
-               &lenght, &address, line_tmp);
-        //remove checksum
-        strncpy( data, line_tmp, 2* (lenght-3) );
-        for (int i=0; i < (lenght-3); i++) {
-          sscanf(data, "%2x%s", &character, data);
-          port.putch(character);
-          port.flush();
-          pos++;
-	  usleep(300);
-          //increase Download Progressbar in DeployProjectWizard
-          emit increaseProgressBar();
-        }
+    //open file
+    QFile file;
+    file.setName(filename);
+    if (! file.open( IO_ReadOnly )) {
+      throw PoaException(tr("Could not open srec file %1.").arg(filename));
+      return false;
+	}
+    else {
+    
+      //get size of data to send
+      while (file.atEnd() == false) {
+	err = file.readLine(line, 254);
+	
+	if (err != 0) {
+	  if (line[1]=='1') {
+	    sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
+		   &lenght, &address, line_tmp);
+	    fileSize += (lenght -3 );
+	  }
+	}
       }
+
+      //      emit setProgressBarLength(fileSize);
+      file.close();
     }
+    //send header
+    port.putch(0xff);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send adress
+    port.putch(0x01);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send size
+    port.putch((unsigned char)(fileSize>>8));
+    port.flush();
+    qApp->processEvents(300);
+    
+    port.putch((unsigned char)(fileSize&0xff));
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send command
+    //0x01 = LOAD
+    //0x05 = RUN
+    port.putch(0x01);
+    port.flush();
+    qApp->processEvents(300);
+    
+    //send data
+    if (! file.open( IO_ReadOnly )) {
+      throw PoaException(tr("Could not open srec file %1.").arg(filename));
+      return false;
+    }
+    else {
+      // Open Progressbar Dialog
+      QProgressDialog progress(tr("Downloading srec file to cpld..."), 
+			       tr("Abort"), 
+			       fileSize, 
+			       0,
+			       "progress", 
+			       TRUE);
+
+      while (file.atEnd() == false) {
+	err = file.readLine(line, 254);
+	
+	if (err!=0) {
+	  if (line[1] == '1') {
+	    sscanf(line, "%c%1i%2x%4x%s", &dummy, &dummy_int,
+		   &lenght, &address, line_tmp);
+	    //remove checksum
+	    strncpy( data, line_tmp, 2* (lenght-3) );
+
+	    for (int i=0; i < (lenght-3); i++) {
+	      sscanf(data, "%2x%s", &character, data);
+	      port.putch(character);
+	      port.flush();
+	      pos++;
+
+	      progress.setProgress(progress.progress() +1);
+	      qApp->processEvents(300);
+
+	      if ( progress.wasCancelled() ){
+		return false;
+	      }
+	    }
+	  }
+	}
+      }
+      file.close();
+    }
+    port.close();
+    return true;
   }
-  file.close();
-  port.close();
-  return true;
 }
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.12 2004/01/22 15:52:32 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.13 2004/01/26 16:04:53 papier Exp $
  *
  *****************************************************************************/
 
@@ -145,18 +145,27 @@ void DeployProjectWizard::setupDownloadPage()
     QWidget *buttonWidget = new QWidget(page);
     QPushButton *compileButton = new QPushButton("Compile", buttonWidget);
     QPushButton *downloadButton = new QPushButton("Download", buttonWidget);
+    QPushButton *runButton = new QPushButton("Run", buttonWidget);
 
     QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
     buttonLayout->addWidget(compileButton);
     buttonLayout->addWidget(downloadButton);
+    buttonLayout->addWidget(runButton);
     buttonLayout->addStretch(1);
-
+    /*
+    QWidget *downloadWidget = new QWidget(page);
+    QProgressBar *downloadProgressBar = new QProgressBar(downloadWidget, "DownloadProgressBar" );
+    
+    QBoxLayout *downloadLayout = new QHBoxLayout(downloadWidget, WIDGET_SPACING);
+    downloadLayout->addWidget(downloadProgressBar);
+    */
     QBoxLayout *pageLayout = new QVBoxLayout(page, WIDGET_SPACING);
     pageLayout->addWidget(infoLabel);
     pageLayout->addSpacing(2 * WIDGET_SPACING);
     pageLayout->addWidget(cpuWidget);
     pageLayout->addWidget(detailsGroupBox);
     pageLayout->addWidget(buttonWidget);
+    //    pageLayout->addWidget(downloadWidget);
     pageLayout->addStretch(1);
 
     addPage(page, trUtf8("Compile and Download Project"));
@@ -165,6 +174,8 @@ void DeployProjectWizard::setupDownloadPage()
 
 void DeployProjectWizard::compileSelectedCpu()
 {
+  CodeManager *cm = CodeManager::instance();
+  cm->compile(currentCpu_);
 }
 
 void DeployProjectWizard::cpuSelected(int index)
@@ -177,7 +188,7 @@ void DeployProjectWizard::cpuSelected(int index)
     QFileInfo sourceFileInfo(sourceFilename);
 
     QString srecFilename =
-        (sourceFilename.endsWith(".c"))
+      (sourceFilename.endsWith(".c"))
         ? sourceFilename.left(sourceFilename.length() - 2) + ".srec"
         : sourceFilename + ".srec";
     QFileInfo srecFileInfo(srecFilename);
@@ -191,7 +202,27 @@ void DeployProjectWizard::cpuSelected(int index)
 
 void DeployProjectWizard::downloadSelectedCpu()
 {
+  CodeManager *cm = CodeManager::instance();
+  DownloadManager *dm = DownloadManager::instance();
+  QString sourceFilename = cm->sourceFilePath(currentCpu_);
+  QString srecFilename =
+      (sourceFilename.endsWith(".c"))
+        ? sourceFilename.left(sourceFilename.length() - 2) + ".srec"
+        : sourceFilename + ".srec";
+  dm->download(srecFilename, (const char*)Settings::instance()->serialPort());
 }
+
+/*void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)
+{
+  downloadProgressBar->setTotalSteps(totalSteps);
+}
+
+void DeployProjectWizard::increaseDownloadProgressBar()
+{
+  int progress = downloadProgressBar->progress();
+  downloadProgressBar->setProgress(progress +1);
+}
+*/
 
 void DeployProjectWizard::setProblemReportItem(QListViewItem* item)
 {

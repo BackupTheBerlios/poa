@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.20 2004/01/21 20:38:39 squig Exp $
+ * $Id: settings.cpp,v 1.21 2004/01/26 16:04:53 papier Exp $
  *
  *****************************************************************************/
 
@@ -259,3 +259,9 @@ QString Settings::editorCmd()
 {
     return get("Editor");
 }
+
+QString Settings::serialPort()
+{
+  return get("Serial Port");
+}
+

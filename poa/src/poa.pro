@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.47 2003/09/25 17:25:19 papier Exp $
+# $Id: poa.pro,v 1.48 2003/09/26 14:19:00 keulsn Exp $
 #
 ###############################################################################
 
@@ -68,6 +68,7 @@ HEADERS += pinview.h
 HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += poa.h
+HEADERS += reachedpoint.h
 HEADERS += settings.h
 HEADERS += gridcanvas.h
 HEADERS += tooltipable.h
@@ -105,6 +106,7 @@ SOURCES += pinvector.cpp
 SOURCES += pinview.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
+SOURCES += reachedpoint.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp

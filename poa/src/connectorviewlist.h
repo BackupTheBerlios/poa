@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.10 2003/09/23 17:27:35 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.11 2003/09/26 14:19:00 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -62,15 +62,6 @@ public:
 		      PinView *target,
 		      GridCanvas *canvas,
 		      QDomElement *element = 0);
-
-    /**
-     * Creates a connector view list on the given <code>canvas</code> and
-     * inserts connector view segments connecting the given <code>points</code>
-     */
-    //    ConnectorViewList(PinView *source,
-    //                PinView *target,
-    //                const QValueList<QPoint> &points,
-    //                GridCanvas *canvas);
 
     /**
      * Default destructor
@@ -125,7 +116,7 @@ protected:
      * Changes <code>this</code> to contain the segments connecting
      * <code>points</code>
      */
-    void applyPointList(const QValueList<QPoint> &list, QCanvas *canvas);
+    void applyPointList(const QValueList<QPoint> &list);
 
     /**
      * Deserializes an xml subtree to recreate the point list.
@@ -142,7 +133,18 @@ protected:
                                               QPoint to,
                                               LineDirection toDir);
 
-    static unsigned weight(const QValueList<QPoint> &points, QCanvas *canvas);
+    /**
+     * Routes a point list. Tries to minimize (1) collisions, (2) inflection
+     * points.
+     */
+    QValueList<QPoint> *routeOptimizing(QPoint from,
+					LineDirection fromDir,
+					QPoint to,
+					LineDirection toDir);
+
+    unsigned weight(const QValueList<QPoint> &points);
+
+    unsigned lineWeight(QPoint from, QPoint to);
 
 private:
 

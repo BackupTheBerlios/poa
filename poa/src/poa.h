@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.7 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: poa.h,v 1.8 2003/09/26 14:19:00 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -32,8 +32,8 @@
  */
 #define INSTANCEOF(ptr,class) (((ptr) != 0) && (dynamic_cast<class*>((ptr)) != 0))
 
-static const uint MAX_RECENT_PROJECTS = 5;
-static const uint WIDGET_SPACING = 5;
+static const unsigned MAX_RECENT_PROJECTS = 5;
+static const unsigned WIDGET_SPACING = 5;
 
 
 /** Direction of a line to be drawn on a canvas. */

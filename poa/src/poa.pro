@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.85 2004/02/13 17:07:57 keulsn Exp $
+# $Id: poa.pro,v 1.86 2004/02/18 03:41:31 keulsn Exp $
 #
 ###############################################################################
 
@@ -47,6 +47,7 @@ include(poa.local)
 # source files
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
+HEADERS += autoschedulingdialog.h
 HEADERS += blockconfdialog.h 
 HEADERS += blockconfwidget.h 
 HEADERS += blockgraph.h
@@ -80,6 +81,7 @@ HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
 HEADERS += muxmappingconfdialog.h
 HEADERS += muxmodel.h
+HEADERS += path.h
 HEADERS += pathchooserdialog.h
 HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
@@ -96,7 +98,6 @@ HEADERS += removeable.h
 HEADERS += router.h
 HEADERS += runtimemanager.h
 HEADERS += scheduledialog.h
-HEADERS += scheduler.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
@@ -107,6 +108,7 @@ HEADERS += util.h
 
 SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
+SOURCES += autoschedulingdialog.cpp
 SOURCES += blockconfdialog.cpp
 SOURCES += blockconfwidget.cpp
 SOURCES += blockmodel.cpp
@@ -137,6 +139,7 @@ SOURCES += moveaction.cpp
 SOURCES += muxconfdialog.cpp
 SOURCES += muxmappingconfdialog.cpp
 SOURCES += muxmodel.cpp
+SOURCES += path.cpp
 SOURCES += pathchooserdialog.cpp
 SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp
@@ -150,7 +153,6 @@ SOURCES += problemmanager.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += scheduledialog.cpp
-SOURCES += scheduler.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += srecord.cpp

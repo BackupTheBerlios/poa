@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.28 2004/02/12 19:07:10 kilgus Exp $
+ * $Id: scheduledialog.h,v 1.29 2004/02/18 03:41:31 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -238,6 +238,11 @@ class SpinBoxItem : public QTableItem
      * Updates the model if the editor gets closed.
      */
     void setContentFromEditor( QWidget *w );
+
+    /**
+     * Must be called after the model has changed.
+     */
+    void updateText();
 
  private:
     BlockNode *node_;

@@ -18,18 +18,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.h,v 1.3 2004/02/16 10:40:26 keulsn Exp $
+ * $Id: path.h,v 1.1 2004/02/18 03:42:19 keulsn Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_SCHEDULER
-#define POA_SCHEDULER
+#ifndef POA_PATH_H
+#define POA_PATH_H
 
 #include <qmap.h>
 
 #include "blockgraph.h"
 #include "blockmodel.h"
 #include "genericpriorityqueue.h"
+
+
+class DepthFirstNode;
+typedef QMap<BlockNode*, DepthFirstNode*> BlockMap;
+typedef QValueList<DepthFirstNode*> DepthFirstNodeList;
+
+class Path;
+typedef GenericPriorityQueue<Path> PathQueue;
 
 
 class Path : public PriorityItem
@@ -41,6 +49,7 @@ public:
 
     void prepend(BlockNode *node);
     void removeFirst();
+    void setNodeFlag(bool state);
 
     BlockNode *node();
 
@@ -54,43 +63,26 @@ public:
 
     virtual bool higherPriority(const PriorityItem *other) const;
 
+    static void allPaths(PathQueue &paths,
+			 BlockNode *from,
+			 BlockNode *to);
+    
 private:
+
+    static const int infinity;
+
+    static void recursiveTarjan(DepthFirstNode &current,
+				int &time,
+				BlockMap &blockMap,
+				DepthFirstNodeList &cycleStack);
+
+    static void extractPaths(PathQueue &paths,
+			     const DepthFirstNode &latest,
+			     Path &current);
+	
     QValueList<BlockNode*> nodes_;
     unsigned int runtime_;
 };
 
-typedef GenericPriorityQueue<Path> PathQueue;
 
-class DepthFirstNode;
-typedef QMap<BlockNode*, DepthFirstNode*> BlockMap;
-typedef QValueList<DepthFirstNode*> DepthFirstNodeList;
-
-
-
-class Scheduler
-{
-public:
-    Scheduler(BlockGraph *graph);
-    virtual ~Scheduler();
-
-    void allPaths(PathQueue &paths,
-		  BlockNode *from,
-		  BlockNode *to);
-    
-protected:
-
-    void firstPass(DepthFirstNode &current,
-		   int &time,
-		   BlockMap &blockMap,
-		   DepthFirstNodeList &cycleStack);
-
-    void extractPaths(PathQueue &paths,
-		      const DepthFirstNode &latest,
-		      Path &current);
-	
-private:
-    BlockGraph *graph_;
-    static const int infinity;
-};
-
-#endif // POA_SCHEDULER
+#endif // POA_PATH_H

@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.cpp,v 1.3 2004/02/16 10:40:26 keulsn Exp $
+ * $Id: path.cpp,v 1.1 2004/02/18 03:42:19 keulsn Exp $
  *
  *****************************************************************************/
 
-#include "scheduler.h"
+
+#include "path.h"
 
 #include <qptrlist.h>
 #include <qvaluelist.h>
@@ -116,6 +117,14 @@ void Path::removeFirst()
     }
 }
 
+void Path::setNodeFlag(bool state)
+{
+    QValueList<BlockNode*>::iterator it = nodes_.begin();
+    for (; it != nodes_.end(); ++it) {
+	(*it)->setFlag(state);
+    }
+}
+
 unsigned Path::length() const
 {
     return nodes_.size();
@@ -153,7 +162,7 @@ void Path::optimize()
 	// set offset going forward
 	QValueList<BlockNode*>::iterator tmp = it;
 	while (++it != nodes_.end()) {
-	    (*it)->setOffset(offset);
+	    (*it)->setOffset(offset % (*it)->clock());
 	    offset += (*it)->runtime() + 1;
 	    (*it)->setFlag(true);
 	}
@@ -161,14 +170,20 @@ void Path::optimize()
 	it = tmp;
 	offset = (*it)->offset();
 	while (it != nodes_.begin()) {
-	    offset -= (*it)->runtime() + 1;
+	    unsigned reduction = (*it)->runtime() + 1;
 	    --it;
 	    if ((*it)->flag()) {
 		// block already has an offset
-		offset = (*it)->flag();
+		offset = (*it)->offset();
 	    }
 	    else {
 		// block needs new offset
+		if (reduction > offset) {
+		    offset = (reduction - offset) % (*it)->clock();
+		}
+		else {
+		    offset = (offset - reduction) % (*it)->clock();
+		}
 		(*it)->setOffset(offset);
 		(*it)->setFlag(true);
 	    }
@@ -196,27 +211,12 @@ QString Path::getText() const
 }
 
 
+const int Path::infinity = INT_MAX;
 
-/*************
- * Scheduler *
- *************/
-
-const int Scheduler::infinity = INT_MAX;
-
-Scheduler::Scheduler(BlockGraph *graph)
-{
-    graph_ = graph;
-}
-
-Scheduler::~Scheduler()
-{
-}
-
-
-void Scheduler::firstPass(DepthFirstNode &current,
-			  int &time,
-			  BlockMap &blockMap,
-			  DepthFirstNodeList &cycleStack)
+void Path::recursiveTarjan(DepthFirstNode &current,
+			   int &time,
+			   BlockMap &blockMap,
+			   DepthFirstNodeList &cycleStack)
 {
     current.time = time;
     current.lowest = time;
@@ -241,7 +241,7 @@ void Scheduler::firstPass(DepthFirstNode &current,
 	if (neighbour->time < 0) {
 	    // new node hit
 	    neighbour->addPredecessor(&current);
-	    firstPass(*neighbour, time, blockMap, cycleStack);
+	    recursiveTarjan(*neighbour, time, blockMap, cycleStack);
 	}
 	else if (neighbour->time <= current.time) {
 	    // upward edge in the depth first search-tree --> cycle detected,
@@ -275,9 +275,9 @@ void Scheduler::firstPass(DepthFirstNode &current,
 }
 
 
-void Scheduler::extractPaths(PathQueue &paths,
-			     const DepthFirstNode &latest,
-			     Path &current)
+void Path::extractPaths(PathQueue &paths,
+			const DepthFirstNode &latest,
+			Path &current)
 {
     // use backtracking to find all paths
     DepthFirstNodeList preds = latest.getPredecessors();
@@ -298,9 +298,9 @@ void Scheduler::extractPaths(PathQueue &paths,
 }
 
 
-void Scheduler::allPaths(PathQueue &paths, 
-			 BlockNode *from,
-			 BlockNode *to)
+void Path::allPaths(PathQueue &paths, 
+		    BlockNode *from,
+		    BlockNode *to)
 {
     // Use a modification of Tarjan's algorithm to find all paths that do not
     // contain any cycle
@@ -310,7 +310,7 @@ void Scheduler::allPaths(PathQueue &paths,
     int time;
     DepthFirstNodeList cycleStack;
 
-    firstPass(*fromNode, time, blockMap, cycleStack);
+    Path::recursiveTarjan(*fromNode, time, blockMap, cycleStack);
 
     paths.clear();
 
@@ -319,7 +319,7 @@ void Scheduler::allPaths(PathQueue &paths,
 	DepthFirstNode *toNode = *it;
 
 	Path current(toNode->node());
-	extractPaths(paths, *toNode, current);
+	Path::extractPaths(paths, *toNode, current);
     }
     else {
 	// to is not reachable from source node from --> there are no paths

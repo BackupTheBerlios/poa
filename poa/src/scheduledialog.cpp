@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.60 2004/02/16 10:40:26 keulsn Exp $
+ * $Id: scheduledialog.cpp,v 1.61 2004/02/18 03:41:31 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -50,7 +50,7 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "mainwindow.h"
-#include "pathchooserdialog.h"
+#include "autoschedulingdialog.h"
 #include "pixmapbutton.h"
 #include "poa.h"
 #include "project.h"
@@ -505,12 +505,17 @@ void ScheduleDialog::ok()
 
 void ScheduleDialog::autoSchedule()
 {
-    // do something
-    PathChooserDialog *dialog = new PathChooserDialog(graph_);
+    AutoSchedulingDialog *dialog = new AutoSchedulingDialog(graph_);
 
     int result = dialog->exec();
+    delete dialog;
     if (result == QDialog::Accepted) {
-	// FIX: call some fancy updating method
+	int count = timingTable->numRows();
+	for (int i = 0; i < count; ++i) {
+	    static_cast<SpinBoxItem*>(timingTable->item(i, 3))->updateText();
+	}
+	clearCanvas();
+	initCanvas();
     }
 }
 
@@ -725,10 +730,15 @@ void SpinBoxItem::setContentFromEditor( QWidget *w )
 {
     if ( w->inherits( "QSpinBox" )) {
         setValue(((QSpinBox*)w)->value());
-        setText(value());
+	updateText();
     } else {
         QTableItem::setContentFromEditor(w);
     }
+}
+
+void SpinBoxItem::updateText()
+{
+    setText(value());
 }
 
 QString SpinBoxItem::value() const

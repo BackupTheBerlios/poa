@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.5 2004/02/17 01:04:11 kilgus Exp $
+ * $Id: pathchooserdialog.cpp,v 1.6 2004/02/18 03:41:31 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,11 +34,12 @@
 #include <qpushbutton.h>
 
 
-PathChooserDialog::PathChooserDialog(BlockGraph *graph)
-    : scheduler_(graph)
+PathChooserDialog::PathChooserDialog(BlockGraph *graph, Path **result)
 {
     Q_ASSERT(graph != 0);
     graph_ = graph;
+    result_ = result;
+    *result_ = 0;
     outPins_ = 0;
     inPins_ = 0;
     blocks_ = 0;
@@ -89,6 +90,7 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph)
     QHButtonGroup *mainButtons = new QHButtonGroup(this);
     //    QBoxLayout *buttonPane = new QHBoxLayout(topPane);
     QPushButton *okButton = new QPushButton(tr("&OK"), mainButtons);
+    okButton->setDefault(true);
     //    buttonPane->addWidget(okButton);
     QPushButton *cancelButton = new QPushButton(tr("&Cancel"), mainButtons);
     //    buttonPane->addWidget(cancelButton);
@@ -231,7 +233,7 @@ void PathChooserDialog::updatePaths()
 	}
 	BlockNode *from = blocks_[fromIndex];
 	BlockNode *to = blocks_[toIndex];
-	scheduler_.allPaths(queue, from, to);
+	Path::allPaths(queue, from, to);
 	// filter paths not beginning or ending with correct pin
 	while (!queue.isEmpty()) {
 	    Path *path = queue.removeHead();
@@ -297,18 +299,18 @@ void PathChooserDialog::targetPinActivated(int)
 
 void PathChooserDialog::accept()
 {
-    // flag all blocks that still need automatic offset calculation
-    // unflag all block that already have an offset
-    QValueList<BlockNode*> allBlocks = graph_->blocks();
-    QValueList<BlockNode*>::iterator it = allBlocks.begin();
-    for (; it != allBlocks.end(); ++it) {
-	(*it)->setFlag(!(*it)->autoOffset());
+    int index = pathChooser_->currentItem();
+    if (index >= 0 && index < (int) pathsCount_) {
+	*result_ = paths_[index];
+	--pathsCount_;
+	for (int i = index; i < (int) pathsCount_; ++i) {
+	    paths_[i] = paths_[i + 1];
+	}
+	paths_[pathsCount_] = 0;	
+	pathChooser_->removeItem(index);
+	QDialog::accept();
     }
-    paths_[0]->optimize();
-//     for (int i = 0; i < priorityCount_; ++i) {
-// 	scheduler_.optimize(priority_[i]);
-// 	// all blocks on path priority_[i] are now unflagged and thus will
-// 	// be ignored in the next pass of this loop
-//     }
-    QDialog::accept();
+    else {
+	return;
+    }
 }

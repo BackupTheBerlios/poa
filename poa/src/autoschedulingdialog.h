@@ -18,66 +18,45 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.h,v 1.4 2004/02/18 03:41:31 keulsn Exp $
+ * $Id: autoschedulingdialog.h,v 1.1 2004/02/18 03:41:31 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_PATHCHOOSERDIALOG
-#define POA_PATHCHOOSERDIALOG
+#ifndef POA_AUTOSCHEDULINGDIALOG_H
+#define POA_AUTOSCHEDULINGDIALOG_H
 
-#include <qcombobox.h>
+#include "blockgraph.h"
+#include "path.h"
+
 #include <qdialog.h>
 #include <qlistbox.h>
 
-class BlockGraph;
-class BlockNode;
-#include "pinmodel.h"
-#include "path.h"
-
-
-class PathChooserDialog : public QDialog
+class AutoSchedulingDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-
-    PathChooserDialog(BlockGraph *graph, Path **result);
-    virtual ~PathChooserDialog();
-
-protected slots:
-    void sourceBlockActivated(int index);
-    void sourcePinActivated(int index);
-    void targetBlockActivated(int index);
-    void targetPinActivated(int index);
-
-    virtual void accept();
+    AutoSchedulingDialog(BlockGraph *graph);
+    virtual ~AutoSchedulingDialog();
 
 protected:
-    void updateInPins();
-    void updateOutPins();
-    void updatePaths();
+    void updateBlockList();
+
+protected slots:
+    virtual void accept();
+    virtual void addPath();
+    virtual void removePath();
+    virtual void raisePrio();
+    virtual void lowerPrio();
 
 private:
-    void loadBlocks();
-    void freePaths();
-    static void updatePinCombo(QComboBox *box,
-			       BlockNode *block,
-			       PinModel::PinType type,
-			       PinModel ***array);
+    QListBox *blockBox_;
+    QListBox *pathBox_;
 
     BlockGraph *graph_;
-    BlockNode **blocks_;
-    PinModel **outPins_;
-    PinModel **inPins_;
-    Path **paths_;
-    unsigned int pathsCount_;
-    QComboBox *sourceBlock_;
-    QComboBox *sourcePin_;
-    QComboBox *targetBlock_;
-    QComboBox *targetPin_;
-    QListBox *pathChooser_;
-    Path **result_;
+    QPtrList<Path> paths_;
 };
 
-#endif // POA_PATHCHOOSERDIALOG
+
+#endif // POA_AUTOSCHEDULINGDIALOG_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.36 2003/12/17 13:49:51 squig Exp $
+ * $Id: pinmodel.cpp,v 1.37 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -225,11 +225,8 @@ void PinModel::deserialize(QDomElement element)
 
 PinModel *PinModel::clone()
 {
-    Q_ASSERT(parent_ != 0);
-
     PinModel *pin = new PinModel(parent_, name_, address_, bits_, type_);
     pin->setId(id_);
     pin->setPosition(position_);
-
     return pin;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.11 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: connectaction.cpp,v 1.12 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -53,11 +53,11 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     QCanvasItemList allItems = view->canvas()->allItems();
     for (QCanvasItemList::iterator it = allItems.begin();
          it != allItems.end(); ++it) {
-		if ((*it)->rtti() == PinView::RTTI && *it != source
+                if ((*it)->rtti() == PinView::RTTI && *it != source
             && (((PinView *)*it)->parent() != source->parent()))
         {
             PinView *pv = (PinView *)(*it);
-            pv->setActive(source->pinModel()->isConnectable(pv->pinModel()));
+            pv->setActive(source->model()->isConnectable(pv->model()));
         }
     }
 }
@@ -101,7 +101,7 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
         PinView *target = dynamic_cast<PinView *>(item);
         if (target != 0 && target != source_) {
             // target is a PinView indeed
-            source_->pinModel()->attach(target->pinModel());
+            source_->model()->attach(target->model());
             // add connector views
             view()->project()->createConnectorViews(source_, target);
 

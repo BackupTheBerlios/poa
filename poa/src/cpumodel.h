@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.25 2004/01/12 19:40:53 squig Exp $
+ * $Id: cpumodel.h,v 1.26 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -131,7 +131,6 @@ class CpuModel: public BlockModel
     int cpuId_;
     bool autoExecTime_;
     bool autoOffset_;
-/*      bool isProducer_; */
     bool saveSource_;
 
 };

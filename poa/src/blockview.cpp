@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.53 2004/01/09 16:56:24 squig Exp $
+ * $Id: blockview.cpp,v 1.54 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -266,7 +266,7 @@ void BlockView::remove(Project *project)
 
 QValueList<PinView*> *BlockView::pinList(PinView *pin)
 {
-    switch (pin->pinModel()->type()) {
+    switch (pin->model()->type()) {
     case PinModel::INPUT:
         return &leftPins_;
     case PinModel::OUTPUT:
@@ -378,13 +378,13 @@ void BlockView::drawShape(QPainter &p)
         }
         for (unsigned i = 0; i < slotCount; ++i) {
             if (i < leftPins_.size()) {
-                QString label = Util::squeeze(leftPins_[i]->pinModel()->name(),
+                QString label = Util::squeeze(leftPins_[i]->model()->name(),
                                               maxWidth, p.font());
                 p.drawText(textArea, QObject::AlignLeft, label);
             }
 
             if (i < rightPins_.size()) {
-                QString label = Util::squeeze(rightPins_[i]->pinModel()->name(),
+                QString label = Util::squeeze(rightPins_[i]->model()->name(),
                                               maxWidth, p.font());
                 p.drawText(textArea, QObject::AlignRight, label);
             }
@@ -405,7 +405,7 @@ void BlockView::drawShape(QPainter &p)
                          width__,
                          BlockView::DEFAULT_FONT_HEIGHT);
         for (unsigned i = 0; i < bottomPins_.size(); ++i) {
-            QString label = Util::squeeze(bottomPins_[i]->pinModel()->name(),
+            QString label = Util::squeeze(bottomPins_[i]->model()->name(),
                                           width__, p.font());
             p.drawText(textArea, QObject::AlignHCenter, label);
             textArea.moveBy(width__ + DEFAULT_LABEL_SPACING, 0);

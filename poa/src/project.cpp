@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.41 2004/01/12 19:13:57 squig Exp $
+ * $Id: project.cpp,v 1.42 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -302,12 +302,12 @@ void Project::deserialize(QDomDocument *document) {
             for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
                 PinView *pv = dynamic_cast<PinView*>(*it);
                 if (pv != 0 && pv->parent()->model() == sb
-                    && pv->pinModel()->id() == sid) {
+                    && pv->model()->id() == sid) {
 
                     spv = pv;
                 }
                 if (pv != 0 && pv->parent()->model() == tb
-                    && pv->pinModel()->id() == tid) {
+                    && pv->model()->id() == tid) {
 
                     tpv = pv;
                 }
@@ -316,7 +316,7 @@ void Project::deserialize(QDomDocument *document) {
             //Q_ASSERT(spv != 0 && tpv!=0);
 
             if (spv != 0 && tpv != 0) {
-                spv->pinModel()->attach(tpv->pinModel());
+                spv->model()->attach(tpv->model());
                 ConnectorViewList *vl = new ConnectorViewList(spv, tpv, canvas);
                 canvas->addConnectorView(vl);
             } else {

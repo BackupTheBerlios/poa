@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.68 2004/01/12 19:56:36 garbeam Exp $
+# $Id: poa.pro,v 1.69 2004/01/13 00:28:29 squig Exp $
 #
 ###############################################################################
 
@@ -123,6 +123,7 @@ SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp
 SOURCES += poa.cpp
+SOURCES += poaexception.cpp
 SOURCES += priorityqueue.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.21 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.22 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -50,6 +50,9 @@ ConnectorViewList::ConnectorViewList(PinView *source,
     source_ = source;
     target_ = target;
     canvas_ = canvas;
+
+    // FIX: we need to listen to detach signals from source->model()
+    // and target->model()
 
     segments_.setAutoDelete(true);
 
@@ -97,13 +100,13 @@ void ConnectorViewList::deleteSegment(ConnectorViewSegment *seg)
 
     // if list is empty, delete connection
     if (segments_.isEmpty()) {
-        Q_ASSERT(source_ != 0 && source_->pinModel() != 0);
-        Q_ASSERT(target_ != 0 && target_->pinModel() != 0);
+        Q_ASSERT(source_ != 0 && source_->model() != 0);
+        Q_ASSERT(target_ != 0 && target_->model() != 0);
 
-        source_->pinModel()->detach();
+        source_->model()->detach();
         // the call above will detach the target pin as well, so we do
         // not need to do it
-        // target_->pinModel()->detach();
+        // target_->model()->detach();
     }
 }
 
@@ -130,11 +133,11 @@ QString ConnectorViewList::tip()
                    "<b>Source:</b> <u>%1</u>::%2<br>" \
                    "<b>Target:</b> <u>%3</u>::%4<br>" \
                    "<b>Width:</b> %5")
-        .arg(source()->pinModel()->name())
-        .arg(source()->pinModel()->parent()->name())
-        .arg(target()->pinModel()->name())
-        .arg(target()->pinModel()->parent()->name())
-        .arg((unsigned)target()->pinModel()->bits());
+        .arg(source()->model()->name())
+        .arg(source()->model()->parent()->name())
+        .arg(target()->model()->name())
+        .arg(target()->model()->parent()->name())
+        .arg((unsigned)target()->model()->bits());
 }
 
 void ConnectorViewList::setSelected(bool selected)
@@ -156,10 +159,10 @@ QDomElement ConnectorViewList::serialize(QDomDocument *document)
     QDomElement root = document->createElement("connector-view");
     QDomElement points = document->createElement("points");
     root.appendChild(points);
-    root.setAttribute("source-block", source_->pinModel()->parent()->id());
-    root.setAttribute("source-pin", source_->pinModel()->id());
-    root.setAttribute("target-block", target_->pinModel()->parent()->id());
-    root.setAttribute("target-pin", target_->pinModel()->id());
+    root.setAttribute("source-block", source_->model()->parent()->id());
+    root.setAttribute("source-pin", source_->model()->id());
+    root.setAttribute("target-block", target_->model()->parent()->id());
+    root.setAttribute("target-pin", target_->model()->id());
     QValueList<QPoint> pList = ConnectorViewList::points();
     QValueList<QPoint>::Iterator it;
     for( it = pList.begin(); it != pList.end(); ++it ) {

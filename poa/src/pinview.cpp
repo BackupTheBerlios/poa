@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.30 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: pinview.cpp,v 1.31 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -144,10 +144,10 @@ LineDirection PinView::connectorTargetDir()
 
 bool PinView::isConnected()
 {
-    return pinModel()->connected() != 0;
+    return model()->connected() != 0;
 }
 
-PinModel *PinView::pinModel()
+PinModel *PinView::model()
 {
     return model_;
 }
@@ -188,7 +188,7 @@ void PinView::updateProperties()
 QString PinView::tip()
 {
     QString pt("Unkown type");
-    switch (pinModel()->type()) {
+    switch (model()->type()) {
     case PinModel::INPUT:
         pt = "Input pin";
         break;
@@ -203,11 +203,11 @@ QString PinView::tip()
     return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
             "<b>Address:</b> 0x%4<br>" \
             "<b>Width:</b>%5 bits")
-        .arg(pinModel()->id())
-        .arg(pinModel()->name())
+        .arg(model()->id())
+        .arg(model()->name())
         .arg(pt)
-        .arg(pinModel()->address())
-        .arg(pinModel()->bits());
+        .arg(model()->address())
+        .arg(model()->bits());
 }
 
 void PinView::deleteConnection()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.26 2003/12/20 16:28:19 kilgus Exp $
+ * $Id: pinview.h,v 1.27 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -107,10 +107,8 @@ public:
 
     /**
      * Returns the corresponding model of this view as a PinModel.
-     *
-     * @see #model()
      */
-    PinModel *pinModel();
+    PinModel *model();
 
     /**
      * If <code>yes</code>, marks the pin green
@@ -138,9 +136,9 @@ public:
      */
     BlockView *parent();
 
-	/**
-	 * Return own type information
-	 */
+        /**
+         * Return own type information
+         */
     virtual int rtti() const;
     static const int RTTI;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.29 2004/01/12 19:40:53 squig Exp $
+ * $Id: cpumodel.cpp,v 1.30 2004/01/13 00:28:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,7 @@ CpuModel::CpuModel(QString type, QString description)
     autoExecTime_ = true;
     autoOffset_ = true;
     cpuId_ = -1;
-//      isProducer_ = true;
+
     saveSource_ = true;
 }
 
@@ -47,18 +47,12 @@ CpuModel::CpuModel(QDomElement element)
 {
     deserialize(element);
 
-//      isProducer_ = false;
     saveSource_ = true;
 }
 
 CpuModel::~CpuModel()
 {
 }
-
-//  bool CpuModel::isProducer()
-//  {
-//      return isProducer_;
-//  }
 
 int CpuModel::cpuId()
 {
@@ -97,10 +91,6 @@ QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
     root.setAttribute("block-type", "cpu");
-//      if (!isProducer_) {
-//          root.setAttribute("srcfile",
-//                            CodeManager::instance()->sourceFilePath(this));
-//      }
     root.setAttribute("cpuid", cpuId_);
     root.setAttribute("autotime", autoExecTime_  ? "true" : "false");
     root.setAttribute("auto-offset", autoOffset_ ? "true" : "false");

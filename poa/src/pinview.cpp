@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.5 2003/08/28 18:07:47 vanto Exp $
+ * $Id: pinview.cpp,v 1.6 2003/08/29 17:53:19 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -40,12 +40,12 @@ PinView::PinView(PinModel *model,
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-    setSize(10, 2);
-    break;
+	setSize(10, 2);
+	break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-    setSize(2, 10);
-    break;
+	setSize(2, 10);
+	break;
     }
 }
 
@@ -58,6 +58,33 @@ PinView::~PinView()
 PinModel *PinView::model()
 {
     return model_;
+}
+
+PinView::DockPosition PinView::dockPosition()
+{
+    return dockPosition_;
+}
+
+QPoint PinView::connectorPoint()
+{
+    QRect r = rect();
+    switch (dockPosition_) {
+    case PIN_TOP:
+	return QPoint(r.center().x(), r.top() - 1);
+	break;
+    case PIN_LEFT:
+	return QPoint(r.left() - 1, r.center().y());
+	break;
+    case PIN_BOTTOM:
+	return QPoint(r.center().x(), r.y() + 1);
+	break;
+    case PIN_RIGHT:
+	return QPoint(r.right() + 1, r.center().y());
+	break;
+    default:
+	Q_ASSERT(false);
+	return QPoint(0, 0);
+    }
 }
 
 void PinView::setSelected(bool yes) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.4 2004/01/12 20:09:59 garbeam Exp $
+ * $Id: downloadmanager.h,v 1.5 2004/01/26 09:10:48 papier Exp $
  *
  *****************************************************************************/
 
@@ -51,6 +51,11 @@ public:
      * successful.
      */
     bool download(QString filename, const char* portName);
+
+    /**
+     * returns <code>true</code> if the downloaded file was stared on the cpld.
+     */
+    bool run(const char* portName);
 
 protected:
     DownloadManager();

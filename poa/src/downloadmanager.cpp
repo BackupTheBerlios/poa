@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.6 2004/01/22 15:52:32 squig Exp $
+ * $Id: downloadmanager.cpp,v 1.7 2004/01/26 09:10:48 papier Exp $
  *
  *****************************************************************************/
 
@@ -36,8 +36,9 @@
 #include <qprocess.h>
 #include <qstring.h>
 #include <qstringlist.h>
+#include <qthread.h>
 #include <stdio.h>
-#include <time.h>
+
 
 /**
  * The singleton instance.
@@ -61,10 +62,50 @@ DownloadManager *DownloadManager::instance()
     return instance_;
 }
 
+bool DownloadManager::run(const char* portname)
+{
+
+  //TODO: return false if an error occurs e.g. Port is already opened
+  //      Any check nesessary if there is a file on the CPLD??
+
+  QextSerialPort port;
+  port.setName(portname);
+  port.open(0);
+
+  //send header
+  port.putch(0xff);
+  port.flush();
+  usleep(300);
+  
+  //send adress
+  port.putch(0x01);
+  port.flush();
+  usleep(300);
+
+  //send size
+  port.putch((unsigned char) 0);
+  port.flush();
+  usleep(300);
+
+  port.putch((unsigned char) 0);
+  port.flush();
+  usleep(300);
+
+  //send command
+  //0x01 = LOAD
+  //0x05 = RUN
+  port.putch(0x05);
+  port.flush();
+  usleep(300);
+
+  return true;
+  
+}
+
 bool DownloadManager::download(QString filename, const char* portname)
 {
 
-#define PAUSE   300
+  //TODO: return false if an error occurs e.g. Port is already opened
 
   long fileSize = 0;
   Q_LONG err = 0;
@@ -77,7 +118,7 @@ bool DownloadManager::download(QString filename, const char* portname)
   int dummy_int=0;
   unsigned char character;
   int pos = 0;
-  clock_t c1;
+
 
 
 
@@ -111,34 +152,28 @@ bool DownloadManager::download(QString filename, const char* portname)
   //send header
   port.putch(0xff);
   port.flush();
-  c1=clock();
-  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
-
+  usleep(300);
 
   //send adress
   port.putch(0x01);
   port.flush();
-  c1=clock();
-  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+  usleep(300);
 
   //send size
   port.putch((unsigned char)(fileSize>>8));
   port.flush();
-  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
-  c1=clock();
+  usleep(300);
 
   port.putch((unsigned char)(fileSize&0xff));
   port.flush();
-  c1=clock();
-  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+  usleep(300);
 
   //send command
   //0x01 = LOAD
   //0x05 = RUN
   port.putch(0x01);
   port.flush();
-  c1=clock();
-  while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+  usleep(300);
 
   //send data
   file.open( IO_ReadOnly );
@@ -156,8 +191,7 @@ bool DownloadManager::download(QString filename, const char* portname)
           port.putch(character);
           port.flush();
           pos++;
-          c1=clock();
-          while(clock()<c1+CLOCKS_PER_SEC/PAUSE);
+	  usleep(300);
           //increase Download Progressbar in DeployProjectWizard
           emit increaseProgressBar();
         }

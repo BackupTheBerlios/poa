@@ -31,8 +31,51 @@
       opened</action>
     </release>
 
-	<release version="0.2.1" date="2003-16-01">
+	<release version="0.2.1" date="2003-01-16">
       <action type="fix">MS VC++ compile error fixes</action>
+    </release>
+
+	<release version="0.3.0" date="2004-01-29">
+      <action type="add">Multiple projects can now be opened at once</action>
+      <action type="add">A menu to switch and arrange windows has been
+      added</action>
+      <action type="add">A consistency check report, that checks for
+      unconnected pins, etc. has been added to the deploy dialog</action>
+      <action type="add">An item has been added to the contextual menu
+      to save blocks to the library</action>
+      <action type="add">Custom text items can now be added to the
+      canvas</action>
+      <action type="add">Coloring of blocks according to clock has
+      been added, a legend that displays a mapping between color and
+      clock has also been added to the canvas</action>
+      <action type="add">Save as has been implemented</action>
+      <action type="add">Printing has been implemented for the canvas</action>
+      <action type="update">Connections that connect pins with
+      different width are now drawn in red color</action>
+      <action type="update">Pins can no be reordered in the block
+      configuration dialog</action>
+      <action type="update">Blocks can no be reordered in the scheduling
+      configuration dialog</action>
+      <action type="update">CPU blocks in the library can now have
+      source code attached</action>
+      <action type="update">A dynamic raster of vertical lines has
+      been added to the scheduling dialog</action>
+      <action type="update">All timing displays have been converted to
+      be shown in senseful units</action>
+      <action type="update">The block and mux configuration dialog have been
+      redesigned to provide more intuitive and consistent handling</action>
+      <action type="fix">All block models including I/O blocks now have a runtime</action>
+      <action type="fix">Enlarge canvas size when loading a project to
+      ensure visiblity of all items</action>
+      <action type="fix">Canvas can not be moved out of the canvas anymore</action>
+      <action type="fix">Errors when deleting or updating new
+      pins in the block configuration dialog have been fixed</action>
+      <action type="fix">ms have been replaced by ns in the tooltips</action>
+      <action type="fix">Project changed status is now set after
+      manually routing a connection</action>
+      <action type="fix">The order of pins on the canvas has been fixed</action>
+      <action type="fix">The port settings combo box is now editable</action>
+      <action type="fix">Auto scrolling in the canvas has been accelerated</action>
     </release>
   </body>
 </document>

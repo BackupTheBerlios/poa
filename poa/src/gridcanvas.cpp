@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.17 2003/09/11 16:30:24 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.18 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "gridcanvas.h"
-
+#include "connectorview.h"
 #include "project.h"
 #include "settings.h"
 
@@ -43,6 +43,18 @@ GridCanvas::GridCanvas(QString name)
             this, SLOT(updateAll()));
     connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
             this, SLOT(updateAll()));
+}
+
+void GridCanvas::addConnectorView(PinView *source, PinView *target)
+{
+    ConnectorView *view = new ConnectorView(source, target, this);
+    ++currentZ_;
+    QCanvasItemList l = view->allSegments();
+    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
+        (*it)->setZ(currentZ_);
+        (*it)->show();
+    }
+    update();
 }
 
 void GridCanvas::addView(AbstractModel *item, int x, int y)

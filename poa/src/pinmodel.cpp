@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.10 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.11 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,6 @@
 
 #include "blockview.h"
 #include "blockmodel.h"
-#include "connectormodel.h"
 
 PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
                    unsigned address, unsigned bits, PinType type)
@@ -38,7 +37,7 @@ PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
     name_ = name;
     parent_ = parent;
     id_ = id;
-    connector_ = 0;
+    connected_ = 0;
     address_ = address;
     bits_ = bits;
     type_ = type;
@@ -49,7 +48,7 @@ PinModel::PinModel(BlockModel *parent, const QString &name)
 {
     name_ = name;
     parent_ = parent;
-    connector_ = 0;
+    connected_ = 0;
     id_ = 0;
     address_ = 0;
     bits_ = 0;
@@ -58,7 +57,7 @@ PinModel::PinModel(BlockModel *parent, const QString &name)
 PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
 {
     parent_ = parent;
-    connector_ = 0;
+    connected_ = 0;
     if (!pinElem.isNull()) {
         deserialize(pinElem);
     }
@@ -74,17 +73,17 @@ BlockModel *PinModel::parent()
     return parent_;
 }
 
-void PinModel::attach(ConnectorModel *connector)
+void PinModel::attach(PinModel *connectTo)
 {
-    connector_ = connector;
+    connected_ = connectTo;
     // FIX: update views
 }
 
 
 void PinModel::detach()
 {
-    if (connector_ != 0) {
-    connector_ = 0;
+    if (connected_ != 0) {
+        connected_ = 0;
     // FIX: update views
     }
 }

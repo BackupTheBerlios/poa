@@ -18,23 +18,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.4 2003/09/09 23:21:22 vanto Exp $
+ * $Id: connectorview.cpp,v 1.5 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
 
 #include "connectorview.h"
-#include "connectormodel.h"
 #include "pinmodel.h"
 #include "blockmodel.h"
 
-ConnectorView::ConnectorView(ConnectorModel *model,
+ConnectorView::ConnectorView(
                  PinView *from,
                  PinView *to,
                  QCanvas *canvas)
     : QCanvasLine(canvas)
 {
-    model_ = model;
+    from_ = from;
+    to_ = to;
+
     bool changeDirection;
     bool positiveDirection;
     PinView::DockPosition dock = from->dockPosition();
@@ -89,7 +90,6 @@ ConnectorView::ConnectorView(ConnectorModel *model,
         new ConnectorView(nextPoint,
                   inflection(orientation_),
                   to,
-                  model_,
                   canvas);
     dockToTarget(nextSegment);
     } else {
@@ -107,7 +107,6 @@ ConnectorView::ConnectorView(ConnectorModel *model,
         new ConnectorView(point,
                   inflection(orientation_),
                   to,
-                  model_,
                   canvas);
         dockToTarget(nextSegment);
     }
@@ -117,11 +116,9 @@ ConnectorView::ConnectorView(ConnectorModel *model,
 ConnectorView::ConnectorView(QPoint start,
                              LineOrientation orientation,
                              PinView *to,
-                             ConnectorModel *model,
                              QCanvas *canvas)
     : QCanvasLine(canvas)
 {
-    model_ = model;
     orientation_ = orientation;
     first_ = true;
     prev_.pin = 0;
@@ -140,7 +137,6 @@ ConnectorView::ConnectorView(QPoint start,
         new ConnectorView(point,
                   inflection(orientation_),
                   to,
-                  model_,
                   canvas);
     dockToTarget(nextSegment);
     }
@@ -150,9 +146,14 @@ ConnectorView::~ConnectorView()
 {
 }
 
-ConnectorModel *ConnectorView::model()
+PinView *ConnectorView::from()
 {
-    return model_;
+    return from_;
+}
+
+PinView *ConnectorView::to()
+{
+    return to_;
 }
 
 QCanvasItemList ConnectorView::allSegments()
@@ -391,9 +392,9 @@ QString ConnectorView::tip()
                    "<b>Source:</b> <u>%1</u>::%2<br>" \
                    "<b>Target:</b> <u>%3</u>::%4<br>" \
                    "<b>Width:</b> %5")
-        .arg(model()->source()->name())
-        .arg(model()->source()->parent()->name())
-        .arg(model()->target()->name())
-        .arg(model()->target()->parent()->name())
-        .arg(model()->width());
+        .arg(from()->pinModel()->name())
+        .arg(from()->pinModel()->parent()->name())
+        .arg(to()->pinModel()->name())
+        .arg(to()->pinModel()->parent()->name())
+        .arg(to()->pinModel()->bits());
 }

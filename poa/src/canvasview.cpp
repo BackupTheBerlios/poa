@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.32 2003/09/12 13:22:43 squig Exp $
+ * $Id: canvasview.cpp,v 1.33 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -29,7 +29,6 @@
 #include "blockview.h"
 #include "canvasviewaction.h"
 #include "connectaction.h"
-#include "connectormodel.h"
 #include "cpumodel.h"
 #include "pinmodel.h"
 #include "pinview.h"

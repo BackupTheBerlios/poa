@@ -18,12 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.17 2003/09/11 16:30:24 squig Exp $
+ * $Id: gridcanvas.h,v 1.18 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_GRIDCANVAS_H
 #define POA_GRIDCANVAS_H
+
+#include "pinview.h"
 
 #include <qcanvas.h>
 #include <qpixmap.h>
@@ -53,6 +55,8 @@ public:
      * children) by calling AbstractModel::createView(QCanvas *canvas)
      */
     void addView(AbstractModel *item, int x = 0, int y = 0);
+
+    void addConnectorView(PinView *source, PinView *target);
 
     /**
      * Returns grid coordiante that is closest to <code>p</code>.

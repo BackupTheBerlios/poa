@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.4 2003/09/11 16:44:01 squig Exp $
+ * $Id: connectaction.cpp,v 1.5 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,6 @@
 
 #include "blockmodel.h"
 #include "canvasview.h"
-#include "connectormodel.h"
 #include "gridcanvas.h"
 #include "pinmodel.h"
 #include "pinview.h"
@@ -97,11 +96,10 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
         PinView *target = dynamic_cast<PinView *>(item);
         if (target != 0 && target != source_) {
             // target is a PinView indeed
-            ConnectorModel *cm
-                = new ConnectorModel(source_->pinModel(), target->pinModel());
-            // add connector to project
-            view()->project()->addConnector(cm);
-            view()->project()->createViews(cm);
+            source_->pinModel()->attach(target->pinModel());
+            target->pinModel()->attach(source_->pinModel());
+            // add connector views
+            view()->project()->createConnectorViews(source_, target);
 
             qDebug("Connect: "
                      + QString(source_->pinModel()->parent()->name())

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.16 2003/09/10 18:01:35 squig Exp $
+ * $Id: project.cpp,v 1.17 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -27,7 +27,6 @@
 #include "gridcanvas.h"
 #include "modelfactory.h"
 #include "canvasview.h"
-#include "connectormodel.h"
 
 #include <qdom.h>
 
@@ -35,7 +34,6 @@ Project::Project(QString name, QDomDocument *document)
     : filename_(QString::null)
 {
     currentBlockId_ = 0;
-    currentConnectorId_ = 0;
     name_ = name;
 
     if (document != 0) {
@@ -58,14 +56,13 @@ void Project::addBlock(AbstractModel *item)
     blocks_.append(item);
 }
 
-void Project::addConnector(ConnectorModel *item)
+void Project::createConnectorViews(PinView *source, PinView *target)
 {
-    if (item->id() == 0) {
-        item->setId(++currentConnectorId_);
-    } else if (item->id() > currentConnectorId_) {
-        currentConnectorId_ = item->id();
+    GridCanvas *canvas;
+    for (QPtrListIterator<GridCanvas> it(canvasList_);
+         (canvas = it.current()) != 0; ++it) {
+        canvas->addConnectorView(source, target);
     }
-    connectors_.append(item);
 }
 
 void Project::createViews(AbstractModel *item, int x, int y)
@@ -110,20 +107,12 @@ QDomDocument Project::serialize()
 
     QDomElement blist = doc.createElement("blocks");
     mlist.appendChild(blist);
-    QDomElement clist = doc.createElement("connectors");
-    mlist.appendChild(clist);
 
     // create block model list
     AbstractModel *model;
     for (model = blocks_.first(); model; model = blocks_.next()) {
         QDomElement mElem = model->serialize(&doc);
         blist.appendChild(mElem);
-    }
-
-    // serialize connector model list
-    for (model = connectors_.first(); model; model = connectors_.next()) {
-        QDomElement mElem = model->serialize(&doc);
-        clist.appendChild(mElem);
     }
 
     // serialize view list
@@ -168,12 +157,6 @@ void Project::deserialize(QDomDocument *document) {
         return;
     }
 
-    QDomNodeList cList = mList.item(0).toElement().elementsByTagName("connectors");
-    if (cList.count() != 1) {
-        qWarning("not a valid project file");
-        return;
-    }
-
     // create model instances
     QDomElement mEl = bList.item(0).toElement();
     QValueList<AbstractModel *> l = ModelFactory::generate(mEl);
@@ -182,21 +165,6 @@ void Project::deserialize(QDomDocument *document) {
         addBlock(*it);
         // TODO: Tammo review!!!
         idMap[(*it)->id()] = *it;
-    }
-
-    // create connector instances
-    QDomNodeList coList = cList.item(0).childNodes();
-    for (uint i = 0; i < coList.count(); i++) {
-        QDomElement cEl = coList.item(i).toElement();
-        unsigned sid = cEl.attribute("source-block-id","0").toUInt();
-        unsigned tid = cEl.attribute("target-block-id","0").toUInt();
-        PinModel *source = (dynamic_cast<BlockModel *>(idMap[sid]))->findPinById(sid);
-        PinModel *target = (dynamic_cast<BlockModel *>(idMap[tid]))->findPinById(tid);
-        if ((source) && (target)) {
-            addConnector(new ConnectorModel(source, target));
-        } else {
-            Q_ASSERT("no valid project file");
-        }
     }
 
     // create canvases

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
+ * $Id: connectorview.h,v 1.9 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,6 @@
 
 #include <qcanvas.h>
 
-class ConnectorModel;
 #include "tooltipable.h"
 #include "pinview.h"
 
@@ -57,8 +56,7 @@ public:
      * routed line from <code>from</code> pin to <code>to</code> pin for the
      * given <code>model</code>
      */
-    ConnectorView(ConnectorModel *model,
-          PinView *from,
+    ConnectorView(PinView *from,
           PinView *to,
           QCanvas *canvas);
 
@@ -66,13 +64,6 @@ public:
      * Default destructor
      */
     virtual ~ConnectorView();
-
-    /**
-     * Returns <code>this</code>'s model. Note that only the first
-     * <code>ConnectorView</code> of a list has a model all others do not.
-     * @return 0 or the model
-     */
-    ConnectorModel *model();
 
     /**
      * Returns a list including <code>this</code> and all succeeding view
@@ -104,11 +95,15 @@ public:
      */
     QString tip();
 
+
+    PinView *from();
+
+    PinView *to();
+
 protected:
     ConnectorView(QPoint start,
           LineOrientation orientation,
           PinView *to,
-          ConnectorModel *model,
           QCanvas *canvas);
 
     void setStartPoint(QPoint start);
@@ -176,7 +171,8 @@ private:
      * model for <code>this</code> if <code>this</code> is the first view
      * in the list, 0 else.
      */
-    ConnectorModel *model_;
+    PinView *from_;
+    PinView *to_;
 
     /**
      * true if <code>this</code> has a pin as source or no source,

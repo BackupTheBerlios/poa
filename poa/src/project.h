@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.14 2003/09/10 18:01:35 squig Exp $
+ * $Id: project.h,v 1.15 2003/09/15 11:41:06 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -26,8 +26,8 @@
 
 #include "abstractmodel.h"
 #include "blockmodel.h"
-#include "connectormodel.h"
 #include "gridcanvas.h"
+#include "pinview.h"
 
 #include <qptrlist.h>
 #include <qdom.h>
@@ -62,17 +62,14 @@ public:
     void addBlock(AbstractModel *item);
 
     /**
-     * Adds a connector model to the project
-     * @param item the ConnectorModel
-     */
-    void addConnector(ConnectorModel *item);
-
-    /**
      * Creates the item's corresponding view object on all canvases.
      *
      * @see GridCanvas#addView(AbstractModel *)
      */
     void createViews(AbstractModel *item, int x = 0, int y = 0);
+
+
+    void createConnectorViews(PinView *source, PinView *target);
 
     /**
      * Returns the project's filenname.
@@ -114,15 +111,12 @@ private:
 
     /** List of <code>AbstractModel</code>s */
     QPtrList<AbstractModel> blocks_;
-    /** List of <code>ConnectorModel</code>s */
-    QPtrList<ConnectorModel> connectors_;
     /** List of <code>GridCanvas</code>'s */
     QPtrList<GridCanvas> canvasList_;
     /** project name */
     QString name_;
     /** current model id - provides project-wide unique ids */
     uint currentBlockId_;
-    uint currentConnectorId_;
     /** The filename for serialization. */
     QString filename_;
 };

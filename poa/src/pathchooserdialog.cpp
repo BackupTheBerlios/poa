@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.1 2004/02/09 01:29:49 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.2 2004/02/10 17:09:05 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -98,7 +98,7 @@ void PathChooserDialog::loadBlocks()
     Q_ASSERT(blocks_ == 0);
     QValueList<BlockNode*> blockList = graph_->blocks();
     int blockCount = blockList.size() + 1;
-    blocks_ = new (BlockNode*)[blockCount];
+    blocks_ = new BlockNode*[blockCount];
     int i = 0;
     blocks_[i] = 0;
     for (QValueList<BlockNode*>::iterator node = blockList.begin();
@@ -162,7 +162,7 @@ void PathChooserDialog::updatePinCombo(QComboBox *box,
 
 	// create new array and insert into combo box
 	int filterCount = filtered.count() + 1;
-	*array = new (PinModel*)[filterCount];
+	*array = new PinModel*[filterCount];
 	int i = 0;
 	(*array)[i++] = 0;
 	box->insertItem(tr("<none>"), -1);

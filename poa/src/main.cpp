@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.19 2003/09/18 15:12:08 vanto Exp $
+ * $Id: main.cpp,v 1.20 2003/09/18 15:21:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,7 @@ int main (int argc, char *argv[])
     // load project
     if (app.argc() == 2) {
         QFileInfo fi(app.argv()[1]);
-        if (fi.isDir()) {
+        if (fi.isDir() || fi.fileName() == "project.xml") {
             mainWindow->openProject(fi.dirPath());
         }
     }

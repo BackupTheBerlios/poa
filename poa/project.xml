@@ -45,7 +45,7 @@
        scm:<system>:<system specific connection string> -->
   <repository>
     <connection>scm:cvs:pserver:anonymous@cvs.berlios.de:/cvsroot/poa:poa</connection>
-    <url>http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/</url>
+    <url>http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/poa/</url>
   </repository>
 
   <!-- any mailing lists for the project -->

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.h,v 1.5 2004/01/29 19:42:27 garbeam Exp $
+ * $Id: muxmappingconfdialog.h,v 1.6 2004/02/04 12:55:31 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -109,6 +109,16 @@ private slots:
      * this dialog.
      */
     void ok();
+
+    /**
+     * Resets input spinbox to range of the selected input.
+     */
+    void inputSelectionChanged(int index);
+
+    /**
+     * Resets output spinbox to range of the selected input.
+     */
+    void outputSelectionChanged(int index);
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.9 2004/02/04 11:27:55 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.10 2004/02/04 12:55:31 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -78,6 +78,8 @@ MuxMappingConfDialog::MuxMappingConfDialog(
 
     initLayout();
     sync();
+    inputSelectionChanged(0);
+    outputSelectionChanged(0);
 }
 
 MuxMappingConfDialog::~MuxMappingConfDialog()
@@ -114,6 +116,8 @@ void MuxMappingConfDialog::initLayout() {
     outputComboBox_ = new PinItemComboBox(outputWidget);
     inputComboBox_->setDuplicatesEnabled(false);
     outputComboBox_->setDuplicatesEnabled(false);
+    connect(inputComboBox_, SIGNAL(activated(int)),
+            this, SLOT(inputSelectionChanged(int)));
 
     // inputs range widget
     QWidget *inputRangeWidget = new QWidget(inputWidget);
@@ -195,10 +199,21 @@ void MuxMappingConfDialog::sync() {
             outputComboBox_->insertItem(item);
         }
     }
+    // HACK to eliminate empty entries of QComboBoxes
     inputComboBox_->removeItem(0);
     outputComboBox_->removeItem(0);
-    inputComboBox_->setCurrentText(muxMappingItem_->text(0));
-    outputComboBox_->setCurrentText(muxMappingItem_->text(2));
+    if (muxMappingItem_->text(0) != "") {
+        inputComboBox_->setCurrentText(muxMappingItem_->text(0));
+    }
+    else {
+        inputComboBox_->setCurrentItem(0);
+    }
+    if (muxMappingItem_->text(2) != "") {
+        outputComboBox_->setCurrentText(muxMappingItem_->text(2));
+    }
+    else {
+        outputComboBox_->setCurrentItem(0);
+    }
 
     firstInputBitSpinBox_->setValue(muxMappingItem_->firstInputBit());
     firstOutputBitSpinBox_->setValue(muxMappingItem_->firstOutputBit());
@@ -219,4 +234,22 @@ void MuxMappingConfDialog::commit() {
 void MuxMappingConfDialog::ok() {
     commit();
     accept();
+}
+
+void MuxMappingConfDialog::inputSelectionChanged(int index) {
+
+    index = 0;
+    PinListViewItem *item = inputComboBox_->selectedItem();
+    unsigned value = item->text(2).toUInt();
+    firstInputBitSpinBox_->setMaxValue(value);
+    lastInputBitSpinBox_->setMaxValue(value);
+}
+
+void MuxMappingConfDialog::outputSelectionChanged(int index) {
+
+    index = 0;
+    PinListViewItem *item = outputComboBox_->selectedItem();
+    unsigned value = item->text(2).toUInt();
+    firstOutputBitSpinBox_->setMaxValue(value);
+    lastOutputBitSpinBox_->setMaxValue(value);
 }

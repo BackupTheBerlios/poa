@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.8 2004/05/18 23:03:21 garbeam Exp $
+%% $Id: abschlussbericht.tex,v 1.9 2004/05/24 13:28:20 papier Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.8 $
-\RCSdef $Date: 2004/05/18 23:03:21 $
+\RCSdef $Revision: 1.9 $
+\RCSdef $Date: 2004/05/24 13:28:20 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -498,6 +498,108 @@ Das die POA Entwicklung ein voller Erfolg war dürfte vor allem auf die
 Team-Zusammensetzung zurückzuführen sein.
 
 \section{Stefan Hauser}
+
+\subsection{Team}
+Das POA-Team war eine Gruppe, deren Teilnehmer sehr unterschiedliche 
+Startvoraussetzungen hatten: Etwa die H"alfte des Team war Mitten im 
+Studienprojekt A, also in der heißen Codierungsphase. Die andere
+H"alfte hat mit dem Studienprojekt B zuerst begonnen und bisher noch 
+keine Erfahrungen mit Projekten dieser Gr"oße. Auch das technische
+Wissen war unterschiedlich: Ein Teil des Teams beherschte C++ schon 
+perfekt, f"ur die anderen war dies noch Neuland. \newline
+
+Da ich mit POA mein erstes Studienprojekt bestritt und bisher noch
+keine Erfahrungen in C++, jedoch aus dem vorangegangenen
+Software-Praktikum in Java hatte, erhoffte ich mir zu Beginn
+des Projekts einen großen Wissensgewinn, durch den Know-How-Transfer
+zwischen des Team-Mitgliedern. \newline
+
+Die Entscheidung f"ur POA war aus meiner Sicht die richtige, denn wir 
+bildeten ein schlagkr"afiges Team und auch der Kontakt mit Christian
+Kramer war kollegial, immer schnell hergestellt und
+unproblematisch. Der hervorragende Projektverlauf spiegelt sich auch
+darin wieder, dass wir nie auf die Hilfe unseres Betreuers angewiesen
+waren, sondern alle Problemstellungen selbst"andig oder in Absprache
+mit Christian Kramer l"osen konnten.\newline
+
+\subsection{Seminar}
+Meine Seminararbeit besch"aftigte sich mit den M"oglichkeiten des
+manuellen und automatischen Routens von Leiterbahnen zwischen
+Funktionsbl"ocken auf Platinen. Also dem Erstellen eines
+Platinenlayouts. Mein erster Ansatz den ich verfolgte, war die Idee,
+das Routing mit Hilfe eines evolution"aren Algorithmuses automatisch 
+durchzuf"uhren. Dieses Konzept stellte ich im ersten Teil der
+Seminararbeit vor. Doch ich verwarf die Idee wieder, da sich die
+Algorithmen zwar auf verschiedene Kriterien, wie zum Beispiel minimale 
+Platinenfl"ache oder k"urzeste Leiterwege, optimieren lassen, wir
+jedoch f"ur unsere Anwendung eine Optimierung zur leichten
+Verst"andlichkeit der Schaltung, also einer gute Darstellung
+w"unschten, was sich aber nicht algorithmisch ausdr"ucken l"asst. 
+Der zweite Teil der Seminararbeit besch"aftigte sich somit mit den 
+M"oglichkeiten des manuellen Routings und welche Techniken zum
+Beispiel in CAD-Anwendungen verwendet werden um den Benutzer dabei zu 
+unterst"utzen. Die Arbeit schließt dann mit der Vorstellung eines
+Konzepts zur konsistenen Speicherung des Layouts. \newline
+
+POA sieht in Version 1.0 "ubrigens auch ein automatisches Routing
+vor. Die Idee, die hier dahinter steckt  ist, das ein
+"uberkreuzungsfrei gezeichneter, sprich planarer Graph leichter 
+verst"andlich ist, als einer indem sich die Leitungen "uberkreuzen und
+darauf, dass die Positionen der Funktioinsbl"ocke beim Routing als vom 
+Benutzer fest vorgegeben  angenommen werden.\newline
+
+\subsection{Aufgaben}
+W"ahrend der Angebotserstellung habe ich zusammen mit Anselm Garbe
+eine Anforderungsanalyse durchgef"uhrt, das Mengenger"ust erstellt und 
+am Begriffslexikon mitgearbeitet. Schließlich entwarf ich einen
+funktionslosen Prototypen der Benutzungsoberfl"ache, der so auch in
+der ersten Iteration von POA umgesetzt wurde. W"ahrend der
+Entwurfsphase wirke ich in Reviews mit.\newline
+
+Bei der Codierung beteiligte ich mich bei der Erstellung der 
+Benutzungsoberfl"ache und erstellte die erste Version der 
+``Deploy-Projekt''-Funktionalit"at, zu der auch die M"oglichkeit
+geh"rt, den Quellcode zu compilieren und auf den ``Offenen Antrieb'' 
+herunterzuladen und auszuf"uhren. Dazu wurde bisher ein keines
+C-Programm verwendet, das jedoch plattformabh"angig war und nicht
+unter Linux lief. Ziel war es den Download in POA so zu
+implementieren, dass er sowohl unter Linux als auch unter Windows die 
+serielle Schnittstelle  zum herunterladen des ausf"uhrbaren Programms 
+verwenden konnte. Dazu forschte ich nach eine frei erh"altlichen
+Bibliothek f"ur QT, die plattformabunabh"angigen zugriff auf die
+serielle Schnittstelle erm"oglicht und wurde in QExtSerialPort
+f"undig. Mit Hilfe dieser Bilbliothek konnte der Download in POA 
+platformunabh"angig realisiert werden.\newline
+
+Anschließend implementierte ich die Funktion, die in POA verwendete
+Sprache zu "andern. Dazu  passte den vorhandenen Code, soweit noch
+nicht geschehen, f"ur die Verwendbarkeit mit mehreren Sprachen an und 
+"ubersetzte alle Texte vom englischen ins deutsche.\newline
+
+Schliesslich f"uhrten wir einige Code-Reviews durch, an denen ich
+ebenfalls teilnahm und beschlossen noch weitere Test von der
+Oberfl"ache aus durchzuf"uhren, da dieser Teil bei den bisherigen
+Tests mit gcov noch nicht ausreichend abgedeckt war. Dazu erarbeitete
+ich eine Reihe von Testf"allen, entwickelte einen Testplan und f"uhrte 
+die Tests durch.\newline
+
+Gegen Ende des Projekts nahm ich noch an Handbuch-Reviews teil und
+habe die CD erstellt sowie verschiedene Dinge f"ur den
+Abschlussbericht und die Abschlusspr"asentation erledigt.\newline
+
+\subsection{Fazit}
+Meine Erfahrungen, sowohl ``soft skills'', als auch Kenntnisse "uber 
+Werkzeuge, die wir w"ahrend unseres Projekts verwendet haben (z.\ B. 
+LaTeX, das Zeiterfassungstool oder CVS) kann ich jetzt in meinem
+zweiten Projekt, dass inzwischen schon ein halbes Jahr l"auft,
+einbringen. Dort bin ich der einzige, der schon Softwareprojekt-
+Erfahrungen hat und kann dementsprechend oft den entscheidenen Tipp
+f"ur oder gegen ein bestimmtes Vorgehen oder zu verwendetes Werkzeug
+geben. Insofern kann ich schon jetzt vom meinem erlangten Wissen
+porfitieren, ein wirklich positives Fazit ziehen und mich bei allen 
+Team-Mitgliedern f"ur die gute Zusammenarbeit bedanken.
+
+
 \section{Steffen Keul}
 \section{Marcel Kilgus}
 \subsection{Aufgaben}

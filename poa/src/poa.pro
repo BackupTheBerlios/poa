@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.83 2004/02/01 22:32:27 squig Exp $
+# $Id: poa.pro,v 1.84 2004/02/09 01:29:49 keulsn Exp $
 #
 ###############################################################################
 
@@ -80,6 +80,7 @@ HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
 HEADERS += muxmappingconfdialog.h
 HEADERS += muxmodel.h
+HEADERS += pathchooserdialog.h
 HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
@@ -135,6 +136,7 @@ SOURCES += moveaction.cpp
 SOURCES += muxconfdialog.cpp
 SOURCES += muxmappingconfdialog.cpp
 SOURCES += muxmodel.cpp
+SOURCES += pathchooserdialog.cpp
 SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp

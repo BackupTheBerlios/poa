@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.54 2004/02/06 14:32:29 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.55 2004/02/09 01:29:49 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -49,6 +49,7 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "mainwindow.h"
+#include "pathchooserdialog.h"
 #include "pixmapbutton.h"
 #include "poa.h"
 #include "project.h"
@@ -487,6 +488,9 @@ void ScheduleDialog::ok()
 void ScheduleDialog::autoSchedule()
 {
     // do something
+    PathChooserDialog *dialog = new PathChooserDialog(graph_);
+
+    /*int result = */dialog->exec();
 }
 
 void ScheduleDialog::updateHighlighter(int row, int)

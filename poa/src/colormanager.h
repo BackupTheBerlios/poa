@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.1 2004/01/22 18:11:07 vanto Exp $
+ * $Id: colormanager.h,v 1.2 2004/01/22 21:20:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,22 +31,38 @@
 #include <qmap.h>
 #include <qptrlist.h>
 
+class Palette;
+
 class ColorManager
 {
     //    Q_OBJECT
  public:
     ColorManager();
     ~ColorManager();
-    QColor *getColor(const BlockModel *model, int luminance = 0) const;
-    QColor *getActiveColor(const BlockModel *model, int luminance = 0) const;
-    QColor *getSelectedColor(const BlockModel *model, int luminance = 0) const;
+    QColor color(const BlockModel *model, int luminance = 100);
+    QColor activatedColor(const BlockModel *model, int luminance = 100);
+    QColor selectedColor(const BlockModel *model, int luminance = 100);
 
  private:
-    QPtrList<QColor> palette_;
-    QMap<int, QColor*> colormap_;
+    Palette *palette_;
+    QMap<int, int> nsToPalIndex_;
     int palPosition_;
 
 };
 
+class Palette
+{
+
+ public:
+    Palette(QString name);
+    QString name();
+    QColor color(int index) const;
+    int size();
+    void addColor(const QColor color);
+
+ private:
+    QString name_;
+    QValueList<QColor> colorList_;
+};
 
 #endif // POA_COLORMANAGER_H

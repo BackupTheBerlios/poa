@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.h,v 1.5 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: pinlistviewitem.h,v 1.6 2004/01/28 17:35:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -70,6 +70,11 @@ public:
 
     /** Creates a new PinModel from this item. */
     PinModel *createPin() const;
+
+    /**
+     * Cancels any renaming.
+     */
+    void cancelRename();
 
     /**
      * Commits all changes to the dedicated PinModel or just

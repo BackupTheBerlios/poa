@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.18 2004/01/27 20:22:40 kilgus Exp $
+ * $Id: colormanager.cpp,v 1.19 2004/01/28 17:35:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -118,7 +118,7 @@ void ColorManager::updateMap()
     QMap<int,int>::iterator it = nsToPalIndex_.begin();
     while (it != nsToPalIndex_.end()) {
         // Advance iterator NOW because we might want to delete the current entry
-		// Otherwise the iterator gets undefined! (crash under Windows)
+        // Otherwise the iterator gets undefined! (crash under Windows)
         QMap<int,int>::iterator it2 = it;
         it++;
         if (reqNs.find(it2.key()) == 0) {
@@ -159,7 +159,7 @@ void ColorManager::recalculateSize()
          it != nsToPalIndex_.end(); it++) {
 
         // calculate max width
-        width = QMAX(width, metrics.width(QString::number(*it) + " ns")
+        width = QMAX(width, metrics.width(QString::number(it.key()) + " ns")
                      + SAMPLE_SIZE + 4 * HSPACE);
 
     }

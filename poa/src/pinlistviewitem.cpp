@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.7 2004/01/28 16:59:03 squig Exp $
+ * $Id: pinlistviewitem.cpp,v 1.8 2004/01/28 17:35:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -118,6 +118,12 @@ PinModel *PinListViewItem::pin() const
 
 void PinListViewItem::setPin(PinModel *pin) {
     pin_ = pin;
+}
+
+void PinListViewItem::cancelRename()
+{
+    // just pass 0, the parameter is ignored by qt anyways
+    QListViewItem::cancelRename(0);
 }
 
 void PinListViewItem::commit() const {

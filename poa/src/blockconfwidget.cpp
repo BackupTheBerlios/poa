@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.3 2004/01/28 16:59:03 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.4 2004/01/28 17:35:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -91,7 +91,7 @@ void BlockConfWidget::initLayout() {
     editButtonLayout->addStretch(1);
 
     // I/O list view
-    ioListView_ = new QListView(editWidget, "ioListView");
+    ioListView_ = new IOListView(editWidget, "ioListView");
     ioListView_->addColumn(tr("Position"));
     ioListView_->addColumn(tr("Name"));
     ioListView_->addColumn(tr("Bits"));
@@ -240,10 +240,17 @@ void BlockConfWidget::updatePositions(PinModel::PinType type) {
 
 void BlockConfWidget::mouseButtonClicked(int button,
                                          QListViewItem *item,
-                                         const QPoint & pos, int c)
+                                         const QPoint &, int c)
 {
     if (button == Qt::LeftButton && item != 0) {
         item->startRename(c);
+    }
+    else if (ioListView_->isRenaming()) {
+        PinListViewItem *item
+            = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
+        if (item != 0) {
+            item->cancelRename();
+        }
     }
 }
 
@@ -349,7 +356,7 @@ void BlockConfWidget::moveRowDown()
 
 void BlockConfWidget::ioSelectionChanged() {
     PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
-    PinListViewItem *root = item;
+    //PinListViewItem *root = item;
 
     bool enabled = item != 0;
     bool isChild = enabled && !item->isOpen();

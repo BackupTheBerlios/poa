@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.2 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: blockconfwidget.h,v 1.3 2004/01/28 17:35:17 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_BLOCKCONFWIDGET_H
 #define POA_BLOCKCONFWIDGET_H
 
+#include <qlistview.h>
 #include <qptrlist.h>
 #include <qwidget.h>
 
@@ -119,6 +120,27 @@ private slots:
      * Moves a list view row downwards.
      */
     void moveRowDown();
+};
+
+class IOListView : public QListView
+{
+public:
+
+    IOListView(QWidget *parent = 0, const char *name = 0, WFlags f = 0)
+        : QListView(parent, name, f) {};
+
+protected:
+
+    void keyPressEvent(QKeyEvent *e)
+        {
+            QListView::keyPressEvent(e);
+
+            if (e->key() == Key_F2) {
+                if (currentItem() && currentItem()->renameEnabled(1)) {
+                    currentItem()->startRename(1);
+                }
+            }
+        };
 };
 
 #endif // POA_BLOCKCONFWIDGET_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.3 2003/09/09 23:21:22 vanto Exp $
+ * $Id: connectaction.cpp,v 1.4 2003/09/11 16:44:01 squig Exp $
  *
  *****************************************************************************/
 
@@ -76,8 +76,10 @@ void ConnectAction::mouseMoveEvent(QMouseEvent *e)
 
     QCanvasItem *item = activeItemAt(p);
     if (item != 0) {
+        Q_ASSERT(INSTANCEOF(item, PinView));
+        QPoint target = dynamic_cast<PinView*>(item)->connectorPoint();
         line_.setPoints(line_.startPoint().x(), line_.startPoint().y(),
-                        (int)item->x(), (int)item->y());
+                        target.x(), target.y());
     }
     else {
             // no active item is close to current position

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.11 2004/01/19 13:56:18 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.12 2004/01/22 15:52:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@
 
 #include <qpushbutton.h>
 #include <qvariant.h>
+#include <qcombobox.h>
 #include <qgroupbox.h>
 #include <qheader.h>
 #include <qlabel.h>
@@ -52,6 +53,7 @@
 #include <qsplitter.h>
 #include <qtextbrowser.h>
 #include <qhbox.h>
+#include <qvbox.h>
 #include <qvgroupbox.h>
 
 /*
@@ -65,20 +67,29 @@ DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
                                          WFlags fl)
     : QWizard(parent, name, modal, fl), project_(project)
 {
+    currentCpu_ = 0;
+    currentProblemReport_ = 0;
+
     resize(600, 400);
     setCaption(tr("Deploy Project"));
 
-    currentProblemReport_ = 0;
+    for (QPtrListIterator<AbstractModel> it(*project->blocks()); it != 0; ++it) {
+        CpuModel *cpu = dynamic_cast<CpuModel *>(*it);
+        if (cpu != 0) {
+            cpuModels.append(cpu);
+        }
+    }
 
     setupCheckPage();
-    setupCompilePage();
-    setupSchedulingPage();
     setupDownloadPage();
+}
 
-    DownloadManager *dm = DownloadManager::instance();
-
-    connect(dm, SIGNAL(increaseProgressBar()),     this, SLOT(increaseDownloadProgressBar()));
-    connect(dm, SIGNAL(setProgressBarLength(int)), this, SLOT(setDownloadProgressBarLength(int)));
+/*
+ *  Destroys the object and frees any allocated resources
+ */
+DeployProjectWizard::~DeployProjectWizard()
+{
+    // no need to delete child widgets, Qt does it all for us
 }
 
 void DeployProjectWizard::setupCheckPage()
@@ -102,183 +113,84 @@ void DeployProjectWizard::setupCheckPage()
     connect(listView, SIGNAL(selectionChanged(QListViewItem *)),
             this, SLOT(setProblemReportItem(QListViewItem *)));
 
-    addPage(splitter, trUtf8("Plausibility checkup"));
-}
-
-void DeployProjectWizard::setupCompilePage()
-{
-    CompilePage = new QWidget( this, "CompilePage" );
-
-    CompileListView = new QListView( CompilePage, "CompileListView" );
-    CompileListView->addColumn( trUtf8( "CPU" ) );
-    CompileListView->addColumn( trUtf8( "Compile" ) );
-    QListViewItem * CompileListItem = new QListViewItem( CompileListView, 0 );
-    CompileListItem->setText( 0, trUtf8( "CPU 1" ) );
-    CompileListItem->setText( 1, trUtf8( "done" ) );
-
-    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU 2" ) );
-    CompileListItem->setText( 1, trUtf8( "in progress" ) );
-
-    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU 3" ) );
-
-    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU 4" ) );
-
-    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU 5" ) );
-    CompileListItem->setText( 1, trUtf8( "done" ) );
-
-    CompileListItem = new QListViewItem( CompileListView, CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU 6" ) );
-    CompileListItem->setText( 1, trUtf8( "done" ) );
-
-    CompileListItem = new QListViewItem( CompileListView,CompileListItem );
-    CompileListItem->setText( 0, trUtf8( "CPU x" ) );
-
-    CompileListView->setGeometry( QRect( 0, 0, 580, 410 ) );
-    addPage( CompilePage, trUtf8( "Compile" ) );
-}
-
-void DeployProjectWizard::setupSchedulingPage()
-{
-    SchedulingPage = new QWidget( this, "SchedulingPage" );
-
-    SchedulingListView = new QListView( SchedulingPage, "SchedulingListView" );
-    SchedulingListView->addColumn( trUtf8( "Block" ) );
-    SchedulingListView->addColumn( trUtf8( "Runtime" ) );
-    SchedulingListView->addColumn( trUtf8( "Offset" ) );
-    QListViewItem * SchedulingListItem =
-      new QListViewItem( SchedulingListView, 0 );
-    SchedulingListItem->setText( 0, trUtf8( "New Item" ) );
-
-    SchedulingListView->setGeometry( QRect( 0, 0, 580, 410 ) );
-    addPage( SchedulingPage, trUtf8( "Scheduling" ) );
+    addPage(splitter, trUtf8("Check Project"));
 }
 
 void DeployProjectWizard::setupDownloadPage()
 {
-    DownloadPage = new QWidget( this, "DownloadPage" );
+    QWidget *page = new QWidget(this);
 
-    CompileTextLabel = new QLabel( DownloadPage, "CompileTextLabel" );
-    CompileTextLabel->setGeometry( QRect( 140, 70, 161, 31 ) );
-    CompileTextLabel->setText( trUtf8( "Compiling..." ) );
+    QLabel *infoLabel = new QLabel
+        ("Currently the download of a single CPU only is supported.", page);
 
-    DownloadProgressBar = new QProgressBar( DownloadPage, "DownloadProgressBar" );
-    DownloadProgressBar->setGeometry( QRect( 140, 280, 280, 31 ) );
-
-    DownloadTextLabel = new QLabel( DownloadPage, "DownloadTextLabel" );
-    DownloadTextLabel->setGeometry( QRect( 140, 230, 161, 31 ) );
-    DownloadTextLabel->setText( trUtf8( "Downloading..." ) );
-
-    CompileProgressBar = new QProgressBar( DownloadPage, "CompileProgressBar" );
-    CompileProgressBar->setGeometry( QRect( 140, 120, 280, 31 ) );
-    addPage( DownloadPage, trUtf8( "Compile and download Project" ) );
-
-}
-
-void DeployProjectWizard::setDownloadProgressBarLength(int totalSteps)
-{
-  CompileProgressBar->setTotalSteps(totalSteps);
-}
-
-void DeployProjectWizard::increaseDownloadProgressBar()
-{
-  int progress = CompileProgressBar->progress();
-  CompileProgressBar->setProgress(progress + 1);
-}
-
-
-void DeployProjectWizard::showPage(QWidget* page)
-{
-  QWizard::showPage(page);
-
-  if (page == CompilePage){
-
-  }
-  else if (page == SchedulingPage){
-
-  }
-  else if (page == DownloadPage){
-
-  }
-
-}
-
-bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
-    // @papier: Prefer using iterators instæad of at(N)
-
-  /*  for (uint i=0; i < blocks.count(); ++i){
-    if blocks.at(i).hasInputPins() {
-    DON'T USE PINVECTORS ANYMORE!
-           j != blocks.at(i).inputPins().end();
-           ++j){
-        if (*j).*connected() == null {
-          // pin is not connected!!
-        }
-      }
-    if blocks.take(i).hasOutputPins() {
+    QWidget *cpuWidget = new QWidget(page);
+    QLabel *cpuLabel = new QLabel("CPU", cpuWidget);
+    QComboBox *cpuComboBox = new QComboBox(cpuWidget);
+    for (QPtrListIterator<CpuModel> it(cpuModels); it != 0; ++it) {
+        cpuComboBox->insertItem((*it)->name());
     }
-    //nessary?? Or are Episodic Pins always connected??
-    if block.take(i).hasEpisodicPins() {
+    if (cpuModels.count() > 0) {
+        cpuSelected(0);
     }
-  }
-  */
-  return true;
+    connect(cpuComboBox, SIGNAL(activated(int)), this, SLOT(cpuSelected(int)));
+
+    QBoxLayout *cpuLayout = new QHBoxLayout(cpuWidget, WIDGET_SPACING);
+    cpuLayout->addWidget(cpuLabel);
+    cpuLayout->addWidget(cpuComboBox);
+    cpuLayout->addStretch(1);
+
+    QGroupBox *detailsGroupBox = new QVGroupBox("Details", page);
+    cpuDetailsLabel_ = new QLabel(detailsGroupBox);
+
+    QWidget *buttonWidget = new QWidget(page);
+    QPushButton *compileButton = new QPushButton("Compile", buttonWidget);
+    QPushButton *downloadButton = new QPushButton("Download", buttonWidget);
+
+    QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
+    buttonLayout->addWidget(compileButton);
+    buttonLayout->addWidget(downloadButton);
+    buttonLayout->addStretch(1);
+
+    QBoxLayout *pageLayout = new QVBoxLayout(page, WIDGET_SPACING);
+    pageLayout->addWidget(infoLabel);
+    pageLayout->addSpacing(2 * WIDGET_SPACING);
+    pageLayout->addWidget(cpuWidget);
+    pageLayout->addWidget(detailsGroupBox);
+    pageLayout->addWidget(buttonWidget);
+    pageLayout->addStretch(1);
+
+    addPage(page, trUtf8("Compile and Download Project"));
+    setFinishEnabled(page, true);
 }
 
-/*
- * Checks for every block if it is a cpu or not.
- * For every cpu it is cheked if it has already a binary file and if the
- * binary is actual, if not it will be compiled
- */
-
-bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> /*blocks*/){
-  /*
-  CodeManager *cm = CodeManager::instance();
-
-  QPtrListIterator<AbstractModel> it(blocks);
-  AbstractModel *block;
-  while ( (block = it.current()) != 0) {
-    ++it;
-
-    if (INSTANCEOF(block, CpuModel)) {
-      if (QFileInfo binary(cm.cpuPath(block)).exists() and
-          QFileInfo source(cm.cpuPath(block) +
-                           cm.sourceFilePath(block) +
-                           cm.fileName(block)).exists() )  {
-        if ( binary(cm.cpuPath(block)).lastModified() <
-             source(cm.cpuPath(block) + cm.sourceFilePath(block)).lastModified()) {
-          //        if compile(block) != alles ok returncode compile error
-          //        }
-        }
-      }
-      else {
-        if source(cm.sourceFilePath(block).exists() {
-        //        if compile(block) != alles ok returncode compile error
-        }
-        //      else error cpu without source
-      }
-    }
-
-  }
-  */
-  return true;
-}
-
-bool DeployProjectWizard::download() {
-
-  return true;
-}
-
-
-/*
- *  Destroys the object and frees any allocated resources
- */
-DeployProjectWizard::~DeployProjectWizard()
+void DeployProjectWizard::compileSelectedCpu()
 {
-    // no need to delete child widgets, Qt does it all for us
+}
+
+void DeployProjectWizard::cpuSelected(int index)
+{
+    currentCpu_ = cpuModels.at(index);
+
+    CodeManager *cm = CodeManager::instance();
+
+    QString sourceFilename = cm->sourceFilePath(currentCpu_);
+    QFileInfo sourceFileInfo(sourceFilename);
+
+    QString srecFilename =
+        (sourceFilename.endsWith(".c"))
+        ? sourceFilename.left(sourceFilename.length() - 2) + ".srec"
+        : sourceFilename + ".srec";
+    QFileInfo srecFileInfo(srecFilename);
+
+    cpuDetailsLabel_->setText
+        (QString("Soure Filename: %1\nSource Last Modified:%2\n"
+                 "SRec Filename: %2\nSRec Last Modified:%3\n")
+         .arg(sourceFilename).arg(sourceFileInfo.lastModified().toString())
+         .arg(srecFilename).arg(srecFileInfo.lastModified().toString()));
+}
+
+void DeployProjectWizard::downloadSelectedCpu()
+{
 }
 
 void DeployProjectWizard::setProblemReportItem(QListViewItem* item)

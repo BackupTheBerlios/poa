@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.8 2004/01/19 13:56:18 squig Exp $
+ * $Id: deployprojectwizard.h,v 1.9 2004/01/22 15:52:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,25 +26,21 @@
 #define DEPLOYPROJECTWIZARD_H
 
 #include <qvariant.h>
+#include <qptrlist.h>
 #include <qwizard.h>
+class QGroupBox;
+class QLabel;
+class QListViewItem;
+class QTextBrowser;
+class QVBox;
+class QWidget;
 
 #include "abstractmodel.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
-
+class CpuModel;
 class ProblemReportItem;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QGroupBox;
-class QLabel;
-class QListView;
-class QListViewItem;
-class QProgressBar;
-class QTextBrowser;
-class QWidget;
 class Project;
-class QHBox;
 
 class DeployProjectWizard : public QWizard
 {
@@ -55,53 +51,30 @@ public:
                         const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     virtual ~DeployProjectWizard();
 
-    void showPage(QWidget* page);
-
-public slots:
-    void setDownloadProgressBarLength(int totalSteps);
-    void increaseDownloadProgressBar();
-    void setProblemReportItem(QListViewItem* item);
-    void updateProblemReport();
-
 protected:
     QGroupBox* problemReportDetailsGroupBox_;
     QTextBrowser* problemReportDescriptionTextBrowser_;
     QWidget* problemReportButtonBox_;
     ProblemReportItem *currentProblemReport_;
-
-    QWidget*       CompilePage;
-    QListView*     CompileListView;
-    QListViewItem* CompileListItem;
-    QWidget*       SchedulingPage;
-    QListView*     SchedulingListView;
-    QListViewItem* SchedulingListItem;
-    QWidget*       DownloadPage;
-    QLabel*        CompileTextLabel;
-    QProgressBar*  DownloadProgressBar;
-    QLabel*        DownloadTextLabel;
-    QProgressBar*  CompileProgressBar;
+    CpuModel *currentCpu_;
+    QLabel *cpuDetailsLabel_;
 
     void setupCheckPage();
-    void setupCompilePage();
-    void setupSchedulingPage();
     void setupDownloadPage();
 
+    void compileSelectedCpu();
+    void downloadSelectedCpu();
 
-    /**
-     * a consitency check
-     */
-    bool allPinsConnected(/*QPtrList<AbstractModel> blocks*/);
+protected slots:
 
-    /**
-     * comiles the source for every cpu, if not already done
-     */
-    bool compileAll(QPtrList<AbstractModel> blocks);
-
-    bool download();
+    void cpuSelected(int index);
+    void setProblemReportItem(QListViewItem* item);
+    void updateProblemReport();
 
 private:
 
     Project *project_;
+    QPtrList<CpuModel> cpuModels;
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.cpp,v 1.2 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: moveaction.cpp,v 1.3 2004/01/21 22:28:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,9 @@ MoveAction::MoveAction(CanvasView *view, QMouseEvent *e, Moveable *item)
 void MoveAction::mouseMoveEvent(QMouseEvent *e)
 {
     QPoint p = view()->inverseWorldMatrix().map(e->pos());
+    if (p.x() < 0 || p.y() < 0) {
+        return;
+    }
 
     if (Settings::instance()->snapToGrid() &&
         !(e->stateAfter() & Qt::ControlButton)) {

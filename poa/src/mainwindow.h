@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.33 2004/01/21 13:26:39 squig Exp $
+ * $Id: mainwindow.h,v 1.34 2004/01/21 22:28:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -133,6 +133,7 @@ public slots:
     virtual void defaultRoute();
     virtual void fileNew();
     virtual void fileOpen();
+    virtual void filePrint();
     virtual void fileSave();
     virtual void fileSaveAs();
     virtual void fileExit();
@@ -184,6 +185,7 @@ private:
     QToolBar *viewToolBar;
     QAction *fileNewAction;
     QAction *fileOpenAction;
+    QAction *filePrintAction;
     QAction *fileSaveAction;
     QAction *fileSaveAsAction;
     QAction *fileExitAction;

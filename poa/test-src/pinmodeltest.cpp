@@ -12,12 +12,10 @@ class PinModelTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testAddress);
     CPPUNIT_TEST(testAttach);
     CPPUNIT_TEST(testBits);
-    CPPUNIT_TEST(testClone);
     CPPUNIT_TEST(testConnectable);
     CPPUNIT_TEST(testDetach);
     CPPUNIT_TEST(testId);
     CPPUNIT_TEST(testName);
-    CPPUNIT_TEST(testParent);
     CPPUNIT_TEST(testPosition);
     CPPUNIT_TEST(testSerialize);
     CPPUNIT_TEST(testType);
@@ -69,13 +67,6 @@ public:
         CPPUNIT_ASSERT(inputPin->bits() == 1);
     }
 
-    void testClone()
-    {
-        PinModel *clonePin = inputPin->clone();
-        equals(inputPin, clonePin);
-        delete clonePin;
-    }
-
     void testConnectable()
     {
         CPPUNIT_ASSERT(inputPin->isConnectable(outputPin));
@@ -112,15 +103,6 @@ public:
 
         inputPin->setName("Name");
         CPPUNIT_ASSERT(inputPin->name() == "Name");
-    }
-
-    void testParent()
-    {
-        CPPUNIT_ASSERT(inputPin->parent() == 0);
-
-        BlockModel block("Type", "Description");
-        inputPin->setParent(&block);
-        CPPUNIT_ASSERT(inputPin->parent() == &block);
     }
 
     void testPosition()

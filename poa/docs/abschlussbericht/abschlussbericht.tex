@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.24 2004/06/10 22:38:48 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.25 2004/06/14 18:50:47 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.24 $
-\RCSdef $Date: 2004/06/10 22:38:48 $
+\RCSdef $Revision: 1.25 $
+\RCSdef $Date: 2004/06/14 18:50:47 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -163,19 +163,20 @@ an ihren Pins verbunden werden.
 \end{figure}
 
 Sobald ein Projekt fertig gestellt ist, kann die Laufzeit eines oder
-mehrerer Signale nach einer priorisierten Liste optimiert werden. Ein
-Signal entspricht der Berechnung eines Ausgangswertes aus einem
-Eingangswert. Eingangswerte werden durch Eingangsblöcke repräsentiert
-und der Signalweg durch die Verbindung von Blöcken zu einem
-Ausgangsblock festgelegt. Durch Berechnung eines optimalen Offsets für
-die Taktung eines Blocks kann nun erreicht werden, dass ein bestimmtes
-Signal in kürzest möglicher Zeit das Netzwerk durchläuft.
+mehrerer Signale nach einer priorisierten Liste optimiert werden. 
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=10cm]{scheduling}
   \caption{Scheduling Dialog}
 \end{figure}
+
+Ein Signal entspricht der Berechnung eines Ausgangswertes aus einem
+Eingangswert. Eingangswerte werden durch Eingangsblöcke repräsentiert
+und der Signalweg durch die Verbindung von Blöcken zu einem
+Ausgangsblock festgelegt. Durch Berechnung eines optimalen Offsets für
+die Taktung eines Blocks kann nun erreicht werden, dass ein bestimmtes
+Signal in kürzest möglicher Zeit das Netzwerk durchläuft.
 
 Nach der Optimierung der Signallaufzeiten kann das Projekt auf
 Konsistenz geprüft werden. In einem Dialog wird in einer Baumansicht

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.10 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: abstractmodel.cpp,v 1.11 2004/01/21 13:57:18 vanto Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -26,6 +26,7 @@
 AbstractModel::AbstractModel(QString type, QString description, uint id)
     : type_(type), description_(description), id_(id)
 {
+    partOfLibrary_ = false;
 }
 
 /**
@@ -97,6 +98,16 @@ void AbstractModel::setType(const QString &type)
 void AbstractModel::setId(uint id)
 {
     id_ = id;
+}
+
+void AbstractModel::setPartOfLibrary(bool partof)
+{
+    partOfLibrary_ = partof;
+}
+
+bool AbstractModel::isPartOfLibrary()
+{
+    return partOfLibrary_;
 }
 
 void AbstractModel::updatePerformed()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.32 2004/01/21 13:26:39 squig Exp $
+ * $Id: librarywindow.cpp,v 1.33 2004/01/21 13:57:18 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -92,6 +92,7 @@ LibraryWindow::~LibraryWindow()
 void LibraryWindow::add(AbstractModel *model)
 {
     new LibraryListViewItem(getTypeItem(model->type()), model);
+    model->setPartOfLibrary(true);
     modified_ = true;
 
 }

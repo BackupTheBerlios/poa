@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.34 2004/01/20 17:46:10 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.35 2004/01/21 13:57:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,8 +38,6 @@ CpuModel::CpuModel(QString type, QString description)
     autoRuntime_ = true;
     cpuId_ = -1;
     project_ = 0;
-
-    saveSource_ = true;
 }
 
 CpuModel::CpuModel(QDomElement element)
@@ -47,7 +45,6 @@ CpuModel::CpuModel(QDomElement element)
 {
     deserialize(element);
     project_ = 0;
-    saveSource_ = true;
 }
 
 CpuModel::~CpuModel()
@@ -79,7 +76,7 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("block-type", "cpu");
     root.setAttribute("cpuid", cpuId_);
 
-    if (saveSource_) {
+    if (!isPartOfLibrary()) {
         CodeManager::instance()->save(this);
     }
 
@@ -107,11 +104,6 @@ void CpuModel::setProject(Project *project)
 Project *CpuModel::project() const
 {
     return project_;
-}
-
-void CpuModel::setSaveSource(const bool saveSource)
-{
-    saveSource_ = saveSource;
 }
 
 QString CpuModel::tip()

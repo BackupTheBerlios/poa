@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.18 2004/01/12 19:13:57 squig Exp $
+ * $Id: abstractmodel.h,v 1.19 2004/01/21 13:57:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -86,7 +86,6 @@ public:
      * Sets the project-wide id
      * {@see #id}
      */
-
     virtual void setId(uint id);
 
     virtual QDomElement serialize(QDomDocument *document);
@@ -114,6 +113,16 @@ public:
      */
     virtual void setName(QString name);
 
+    /**
+     * Marks that this block is a library item.
+     */
+    void setPartOfLibrary(bool);
+
+    /**
+     * Return true if this block is part of the library.
+     */
+    bool isPartOfLibrary();
+
 protected:
     QString name_;
 
@@ -121,6 +130,7 @@ private:
     QString type_;
     QString description_;
     uint id_;
+    bool partOfLibrary_;
 
 signals:
     /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.28 2004/01/20 17:46:10 vanto Exp $
+ * $Id: cpumodel.h,v 1.29 2004/01/21 13:57:18 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -76,11 +76,6 @@ class CpuModel: public BlockModel
     void setCpuId(const int cpuId);
 
     /**
-     * Toggles the save source property.
-     */
-    void setSaveSource(const bool saveSource);
-
-    /**
      * Serializes this instance to a xml subtree @param document the
      * main QDomDocument instance. Needed to create elements.
      */
@@ -116,7 +111,6 @@ class CpuModel: public BlockModel
     bool autoRuntime_;
     int cpuId_;
     Project *project_;
-    bool saveSource_;
 
 };
 

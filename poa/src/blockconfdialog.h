@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.3 2003/09/11 15:32:31 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.4 2003/09/11 17:53:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -83,6 +83,11 @@ public:
      */
     bool isRoot();
 
+    /**
+     * Updates the view with current contents of the pin model.
+     */
+    void update();
+
 private:
     PinModel *item_;
     PinModel::PinType type_;
@@ -113,7 +118,7 @@ public:
     QLineEdit *blockNameLineEdit;
     QLineEdit *blockDescrLineEdit;
     QLineEdit *ioNumberLineEdit;
-    QLineEdit *dataLineEdit;
+    QLineEdit *ioNameLineEdit;
     QLineEdit *addressLineEdit;
     QLineEdit *bitsLineEdit;
 
@@ -133,6 +138,11 @@ private:
     PinListViewItem *episodicRoot;
 
     BlockModel *model_;
+
+    /**
+     * Synchronizes dialog with current model_ content.
+     */
+    void update();
 
 private slots:
     /**

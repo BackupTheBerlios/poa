@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.8 2003/09/11 16:30:21 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.9 2003/09/11 17:53:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -116,7 +116,7 @@ QString PinModel::name()
 }
 
 
-void PinModel::setName(QString &name)
+void PinModel::setName(QString name)
 {
     name_ = name;
 }

@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.5 2003/09/11 16:38:25 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.6 2003/09/11 17:53:41 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockconfdialog.h"
+#include "pinvector.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
@@ -63,13 +64,18 @@ PinListViewItem::PinListViewItem(QListViewItem *parent,
     }
     item_ = item;
 
-    if (item != 0) {
-        setText(0, QString::number(item->id(), 10));
-        setText(1, item->name());
-        if (item->type() != PinModel::EPISODIC) {
-            setText(2, QString::number(item->address(), 16));
+    update();
+}
+
+void PinListViewItem::update() {
+
+    if (item_ != 0) {
+        setText(0, QString::number(item_->id(), 10));
+        setText(1, item_->name());
+        if (item_->type() != PinModel::EPISODIC) {
+            setText(2, QString::number(item_->address(), 16));
         }
-        setText(3, QString::number(item->bits(), 10));
+        setText(3, QString::number(item_->bits(), 10));
     }
 }
 
@@ -90,7 +96,6 @@ PinModel::PinType PinListViewItem::type() {
 bool PinListViewItem::isRoot() {
     return isOpen();
 }
-
 
 BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
                                  const char* name, bool modal, WFlags fl)
@@ -145,14 +150,14 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
         new QGridLayout(editIoWidget, 3, 4, 5);
 
     ioNumberLineEdit = new QLineEdit(editIoWidget, "ioNumberLineEdit");
-    dataLineEdit = new QLineEdit(editIoWidget, "dataLineEdit");
+    ioNameLineEdit = new QLineEdit(editIoWidget, "ioNameLineEdit");
     addressLineEdit = new QLineEdit(editIoWidget, "addressLineEdit");
     bitsLineEdit = new QLineEdit(editIoWidget, "bitsLineEdit");
 
     editIoLayout->addWidget(new QLabel(tr("I/O"), editIoWidget), 0, 0);
     editIoLayout->addWidget(ioNumberLineEdit, 0, 1);
     editIoLayout->addWidget(new QLabel(tr("data"), editIoWidget), 0, 2);
-    editIoLayout->addWidget(dataLineEdit, 0, 3);
+    editIoLayout->addWidget(ioNameLineEdit, 0, 3);
     editIoLayout->addWidget(
         new QLabel(tr("address"), editIoWidget), 1, 0);
     editIoLayout->addWidget(addressLineEdit, 1, 1);
@@ -330,9 +335,45 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     dialogLayout->addWidget(bottomWidget);
 
     // disable widgets, if neccessary
+    update();
     ioSelectionChanged();
     toggleManualOffset();
     toggleManualRuntime();
+}
+
+void BlockConfDialog::update() {
+    if (model_ != 0) {
+        blockDescrLineEdit->setText(model_->description());
+
+
+        PinVector &pins = *(model_->inputPins());
+
+        for (unsigned i = 0; i < pins.size(); ++i) {
+            PinListViewItem *child =
+                new PinListViewItem((QListViewItem *)inputRoot,
+                        (PinModel *)pins[i]);
+            child->setVisible(true);
+        }
+
+        pins = *(model_->outputPins());
+
+        for (unsigned i = 0; i < pins.size(); ++i) {
+            PinListViewItem *child =
+                new PinListViewItem((QListViewItem *)outputRoot,
+                        (PinModel *)pins[i]);
+            child->setVisible(true);
+        }
+
+        pins = *(model_->episodicPins());
+
+        for (unsigned i = 0; i < pins.size(); ++i) {
+            PinListViewItem *child =
+                new PinListViewItem((QListViewItem *)episodicRoot,
+                        (PinModel *)pins[i]);
+            child->setVisible(true);
+        }
+
+    }
 }
 
 /**
@@ -364,25 +405,31 @@ void BlockConfDialog::newIo()
 
 void BlockConfDialog::updateIo()
 {
-    QListViewItem *item = ioListView->selectedItem();
+    PinListViewItem *item =
+        (PinListViewItem *)ioListView->selectedItem();
 
-    // Only parent items are open.
-    if (item != 0 && !item->isOpen()) {
-        item->setText(0, ioNumberLineEdit->text());
-        item->setText(1, dataLineEdit->text());
-        item->setText(2, addressLineEdit->text());
-        item->setText(3, bitsLineEdit->text());
+    if (item != 0 && !item->isRoot()) {
+        PinModel *pin = item->data();
+        if (pin != 0) {
+            pin->setName(ioNameLineEdit->text());
+            bool *ok;
+            pin->setId(ioNumberLineEdit->text().toUInt(ok, 10));
+            pin->setAddress(addressLineEdit->text().toUInt(ok, 16));
+            // TODO: check ok and pop up an error dialog, if ok is false
+            pin->setBits(bitsLineEdit->text().toUInt(ok, 10));
+            item->update();
+        }
     }
 }
 
 void BlockConfDialog::removeIo()
 {
-    QListViewItem *item = ioListView->selectedItem();
-    QListViewItem *root = item;
+    PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
+    PinListViewItem *root = item;
 
     if (root != 0) {
-        while (!root->isOpen()) {
-            root = root->parent();
+        while (!root->isRoot()) {
+            root = (PinListViewItem *)root->parent();
         }
         root->takeItem(item);
         delete item;
@@ -390,8 +437,8 @@ void BlockConfDialog::removeIo()
 }
 
 void BlockConfDialog::ioSelectionChanged() {
-    QListViewItem *item = ioListView->selectedItem();
-    QListViewItem *root = item;
+    PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
+    PinListViewItem *root = item;
 
     bool enabled = item != 0;
     bool isChild = enabled && !item->isOpen();
@@ -399,9 +446,9 @@ void BlockConfDialog::ioSelectionChanged() {
 
     if (isChild) {
         while (!root->isOpen()) {
-            root = root->parent();
+            root = (PinListViewItem *)root->parent();
         }
-        isPeriodical = root->text(0).compare(tr(EPISODIC_IO_TEXT)) == 0;
+        isPeriodical = root->type() == PinModel::EPISODIC;
     }
 
     newIoPushButton->setEnabled(enabled);
@@ -409,12 +456,12 @@ void BlockConfDialog::ioSelectionChanged() {
     removeIoPushButton->setEnabled(isChild);
 
     ioNumberLineEdit->setEnabled(isChild);
-    dataLineEdit->setEnabled(isChild);
+    ioNameLineEdit->setEnabled(isChild);
     addressLineEdit->setEnabled(isChild && !isPeriodical);
     bitsLineEdit->setEnabled(isChild);
 
     ioNumberLineEdit->setText(isChild ? item->text(0) : QString(""));
-    dataLineEdit->setText(isChild ? item->text(1) : QString(""));
+    ioNameLineEdit->setText(isChild ? item->text(1) : QString(""));
     addressLineEdit->setText(isChild ? item->text(2) : QString(""));
     bitsLineEdit->setText(isChild ? item->text(3) : QString(""));
 }

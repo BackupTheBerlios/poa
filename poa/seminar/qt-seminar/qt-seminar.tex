@@ -110,7 +110,7 @@
 		}
 		\item MVC Konzept (Model-View-Controller)
 		\item Baumartige Klassenstruktur
-		\item Neuartiges Event-Handling (Signals/Slots)
+		\item Spezielles Event-Handling (Signals/Slots)
 	\end{itemize}
 \end{slide}
 
@@ -262,7 +262,7 @@ int main( int argc, char **argv )
 	\begin{lstlisting}{}
 class BlaFasel : public QMainWindow {
 
-    O_OBJECT    // WICHTIGES MACRO!!!
+    Q_OBJECT    // WICHTIGES MACRO!!!
 ...
 signals:
     void text(const QString&);

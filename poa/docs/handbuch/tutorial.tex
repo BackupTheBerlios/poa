@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Handbuch Tutorial
+%% $Id: tutorial.tex,v 1.1 2004/03/17 00:23:01 neco Exp $
+%% Achtung: Diese Datei wird in das Handbuch inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter {Tutorial}
+Um dem Benutzer einen leichten Einstieg in POA zu verschaffen, wird in diesem Kapitel ein POA-Projekt anhand eines einfachen Regelkreises für eine Antriebsregelung realisiert. Die Abbildung 4.1 gibt alle nötigen Daten für das Projekt wieder.
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=15cm]{Beispielsprojekt}
+\caption{Beispielsprojekt}\label{test}
+\end{center}
+
+\end{figure}
+\newline
+Standard Regelkreis: 
+\begin{itemize}
+	\item Lageregler: Eingänge {\itshape xSoll[32], xIst[32]} und Ausgang {\itshape nSoll[32]}
+	\item Drehzahlregler: Eingänge {\itshape nSoll[32], nIst[32]} und Ausgang {\itshape iSoll[10]}
+	\item Stromregler: Eingänge {\itshape iSoll[10], iIst[10]} und Ausgang {\itshape stell[10]}
+\end{itemize}
+
+Zusätzlich:
+\begin{itemize}
+	\item Signalvorverabeitung: Eingänge {\itshape xIst-raw, nIst-raw, iIst-raw} und Ausgänge {\itshape xIst[32], nIst[32], iIst[10]}
+	\item HardwareInputs: Ausgang {\itshape xIst-raw, nIst-raw, iIst-raw}
+	\item HardwareOutput: Eingang {\itshape stell[10]}
+\end{itemize}
+Die Zahlen in den eckigen Klammer geben die Bitbreite an.
+\par
+
+\section {Beispielprojekt  anlegen}
+Bevor man mit dem Layout für den Antriebsregler anfangen kann, muss zunächts einmal das Projekt angelegt werden. Dazu muss man folgendermaßen vorgehen:
+\begin{enumerate}
+	\item In der Menüleiste {\bf Project} den Eintrag {\bf New} auswählen
+	\item Im Dialog {\bf Select/Create project directory} den gewünschten Pfad angeben
+	\item Den Button {\bf Create New Directory} anklicken
+	\item Name des Projekt eingeben und mit Return bestätigen
+	\item Den neu erzeugten Ordner anwählen und den Button {\bf Open} drücken
+	\item Die Datei {\bf project.xlm} anwählen und den Button {\bf Open} drücken
+\end{enumerate}
+Nach dem Anlegen und Öffnen des neuen Projekt wird das Arbeitsfenster mit einem leeren Layout geöffnet.
+\section{Funktionsblöcke erzeugen und konfigurieren}
+Zur Realisierung des Antriebreglers benötigt man verschiedene Typen von Blöcken und zwar:
+\begin{itemize}
+	\item 2 I/O-Blöcke, einen für HardwareInput und einen fur HardwareOutput
+	\item 3 CPU-Blöcke für Signalverarbeitung, Drehzahlregler und Lageregler
+	\item 1 Core-Block für Stromregler
+\end{itemize}
+\subsection{HardwareInput- und HardwareOutput-Block}
+HardwareInput- und HardwareOutput-Block bilden die Schnittstelle nach Außen. Daher werden I/O-Blöcke verwendet. Die ankommenden Signale werden über den HardwareInput-Block an den Singalverarbeitungsblock weitergeleitet. Signale, die nach Außen weitergeleitet werden müssen, kommen in den HardwareOutput-Block. Als erstes wird der HardwareInput erzeugt und konfiguriert:
+\begin{enumerate} 
+	\item Einen I/O-Block aus der Blockbiliothek per Drag'n Drop ziehen, d.h. mit dem Mauszeiger den Block ankilcken, die Maustaste dabei gedrückt lassen, den Block ins Arbeitsfenster ziehen und die Maustaste wieder loslassen.
+	\item Im Dialog {\bf Block configuration} als erstes den Namen {\itshape "'HardwareInput"'} eingeben
+	\item Unter {\bf Description} den Block beschreiben {\itshape "'...über diesen Inputblock werden die Signale weitergeleitet..."'}
+	\item Den Offset Eintrag auf {\itshape "'Auto (0 ns)"'} lassen
+	\item Unter {\bf Clock} den Takt für den Block angeben, d.h. {\itshape "'62,5 ns"'}
+	\item Pins konfigurieren für die 4 Ausgänge:
+		\begin{itemize}
+			\item Pinnamen angeben
+			\item Bitbreite angeben
+			\item Adresse angeben	
+		\end{itemize}
+	\item 
+\end{enumerate}

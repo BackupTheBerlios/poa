@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.19 2004/06/16 12:54:57 vanto Exp $
+%% $Id: design.tex,v 1.20 2004/06/16 19:01:56 vanto Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,7 +74,7 @@ gespeichert und von diesem geladen werden.
 
 Aufgrund ihrer zentralen Stellung bietet die Sicht auf ein Projekt
 ebenfalls einen guten Ausgangspunkt für die Betrachtung der
-Architektur. (siehe auch \ref{project})
+Architektur.
 
 \subsection{Speicherung von Projekten}
 
@@ -137,7 +137,7 @@ gemacht bzw. wieder entfernt.
 \subsubsection{Blöcke}
 
 Die Model-Klassen sind von der abstrakten Klasse \cn{AbstractModel}
-abgeleitet. Die Felder der abstrakten Klasse enhalten die gemeinsamen
+abgeleitet. Die Felder der abstrakten Klasse enthalten die gemeinsamen
 Metadaten aller Blöcke und werden in der Blockbibliothek angezeigt.
 Die Methode \m{createView(GridCanvas*)} erzeugt für
 eine Model-Object eine korrespondierendes View-Objekt. Eine Aufruf der
@@ -175,15 +175,16 @@ wurden.
 
 \subsubsection{Drag and Drop, Zwischenablage}
 
-Zum visuellen erzeugen von Blöcken wird bei POA die Drag\&Drop-Idee
+Zum visuellen erzeugen von Blöcken wird bei POA Drag\&Drop
 verwendet. Dazu zieht der Benutzer ein Objekt aus der Blockbibliothek
-in den Arbeitsbereich (\cn{GridCanvas}). Unter der
-Haube werden die Objekte beim Herausziehen aus der Bibliothek über die
+in den Arbeitsbereich (\cn{GridCanvas}). Beim Herausziehen aus der
+Bibliothek werden die Objekte über die
 Serialisierungsmethoden in einen XML-String umgewandelt und beim
 ''fallen lassen'' über die \cn{ModelFactory} instanziert, von
 Bibliotheksinformationen bereinigt und in das Projekt eingefügt. Das
 dazugehörige View-Objekt wird an den aktuellen Maus-Koordinaten
-erstellt.  Das Einfügen in die Bibliothek funktioniert analog dazu.
+erstellt. Das Einfügen in die Bibliothek funktioniert analog dazu.
+
 Die Zwischenablagefuntionen sind genauso implementiert. Beim Kopieren
 eines Objekts werden die Daten serialisiert und in die Zwischenablage
 kopiert und beim Einfügen wieder deserialisiert. Da z.B. bei CPUs der
@@ -301,16 +302,16 @@ lediglich die Verbindung zweier Punkte auf einem GridCanvas gefordert.
 Zwei Routing Algorithmen mit sehr unterschiedlichen Eigenschaften
 implementieren diese Schnittstelle.
 
-Der \cn{DirectRouter} stellt die Verbindung anhand von Fallunterscheidungen
-mit der geringsten Anzahl von Knickpunkten her ohne Überschneidungen
-zu berücksichtigen. Der Algorithmus ist ausreichend schnell, um die
-Verbindungen während des Verschiebens von Blöcken simultan
-neuzuberechnen. 
+Der \cn{DirectRouter} stellt die Verbindung anhand von
+Fallunterscheidungen mit der geringsten Anzahl von Knickpunkten her
+ohne Überschneidungen zu berücksichtigen. Der Algorithmus ist
+ausreichend schnell, um die Verbindungen während des Verschiebens von
+Blöcken simultan neuzuberechnen.
 
-Der \cn{DijkstraRouter} benutzt den Dijkstra Algorithmus um eine optimale
-Route mit möglichst wenig Knickpunkten und Überschneidungen zu finden.
-Auf Grund der Vielzahl der möglichen Wege beträgt die Laufzeit des
-Algorithmus in der Regel ein vielfaches des DirectRouter.
+Der \cn{DijkstraRouter} benutzt den Dijkstra Algorithmus um eine
+optimale Route mit möglichst wenig Knickpunkten und Überschneidungen
+zu finden.  Auf Grund der Vielzahl der möglichen Wege beträgt die
+Laufzeit des Algorithmus in der Regel ein vielfaches des DirectRouter.
 
 Durch Ableitung der \cn{ConnectorRouter} Klasse und Erweiterung der
 \cn{GridCanvas} Klasse ist eine Implementierung von zusätzlichen
@@ -336,11 +337,11 @@ im folgenden beschrieben.
 
 \subsubsection{Einstellungen (Settings)}
 
-In der \cn{Setting}-Klasse werden globale Einstellungen wie Farben, Schriftarten
-und Pfade verwaltet, die zum Teil auch über den Einstellungsdialog vom
-Benutzer geändert werden können. Änderungen von Einstellungen, die
-direkt in der Anwendung sichtbar gemacht werden sollen, werden über
-entsprechende Signale bekannt gemacht.
+In der \cn{Setting}-Klasse werden globale Einstellungen wie Farben,
+Schriftarten und Pfade verwaltet, die zum Teil auch über den
+Einstellungsdialog vom Benutzer geändert werden können. Änderungen von
+Einstellungen, die direkt in der Anwendung sichtbar gemacht werden
+sollen, werden über entsprechende Signale bekannt gemacht.
 
 
 %%% Local Variables: 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.59 2003/09/29 19:10:05 papier Exp $
+ * $Id: mainwindow.cpp,v 1.60 2003/09/29 20:19:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -348,8 +348,8 @@ void MainWindow::connectActions()
             Settings::instance(), SLOT(setShowGrid(bool)));
     connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
             settingsShowGridAction_, SLOT(setOn(bool)));
-    connect(invokeDeployAction, SIGNAL(activated()),
-	    this, SLOT(openDeployPoject()));
+    connect(invokeDeployAction, SIGNAL(activated()), this,
+            SLOT(openDeployWizard()));
     connect(tileHorizontalAction, SIGNAL(activated()),
             this, SLOT(tileHorizontal()));
     connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
@@ -732,11 +732,12 @@ void MainWindow::openSettings()
     dialog->show();
 }
 
-int MainWindow::openDeployProject()
+int MainWindow::openDeployWizard()
 {
-  //    DeployProjectWizard *wizard = new DeployProjectWizard(this);
-  DeployProjectWizard wizard;
-  return wizard.exec();
+  DeployProjectWizard *wizard = new DeployProjectWizard(this);
+  int result = wizard->exec();
+  delete wizard;
+  return result;
 }
 
 QAction *MainWindow::pasteAction()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.23 2003/09/29 19:10:05 papier Exp $
+ * $Id: mainwindow.h,v 1.24 2003/09/29 20:19:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -123,7 +123,7 @@ public slots:
     virtual void openRecentProject(int index);
     virtual void openScheduling();
     virtual void openSettings();
-    virtual int openDeployProject();
+    virtual int openDeployWizard();
     //    virtual void saveProject();
     virtual void windowActivated(QWidget *w);
     virtual void zoomTo(const QString &level);

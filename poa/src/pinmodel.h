@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.23 2003/12/03 12:59:28 garbeam Exp $
+ * $Id: pinmodel.h,v 1.24 2003/12/03 13:00:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -59,8 +59,7 @@ public:
      * @param bits is its bits.
      */
     PinModel(BlockModel *parent, unsigned id, const QString &name,
-             unsigned address, unsigned bits, PinType type,
-             unsigned position = 0);
+             unsigned address, unsigned bits, PinType type);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code>.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.28 2003/12/03 12:59:28 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.29 2003/12/03 13:00:33 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,7 @@ PinModel::PinModel(BlockModel *parent, unsigned id, const QString &name,
     address_ = address;
     bits_ = bits;
     type_ = type;
-    position_ = position;
+    position_ = 0;
 }
 
 

@@ -18,13 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.cpp,v 1.1 2004/01/29 21:02:52 papier Exp $
+ * $Id: srecord.cpp,v 1.2 2004/01/30 11:46:58 papier Exp $
  *
  *****************************************************************************/
+#include "srecord.h"
 
 SRecord::SRecord(QString type, QString count, QString address, QString data, 
 		 QString checksum) 
-  : type_(type), count_(count), address_(address), data_(data), id_(id)
+  : type_(type), count_(count), address_(address), data_(data), checksum_(checksum)
 {
 }
 
+QString SRecord::type() const{ 
+  return type_; 
+}
+
+QString SRecord::count() const{
+  return count_; 
+}
+
+QString SRecord::address() const{ 
+  return address_; 
+}
+
+QString SRecord::data() const{
+  return data_; 
+}
+
+QString SRecord::checksum() const { 
+  return checksum_; 
+}

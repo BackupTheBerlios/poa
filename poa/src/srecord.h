@@ -18,39 +18,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.h,v 1.1 2004/01/29 21:02:52 papier Exp $
+ * $Id: srecord.h,v 1.2 2004/01/30 11:46:58 papier Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_SRECORD_H
 #define POA_SRECORD_H
 
-class SRecord
+#include <qobject.h>
+
+class SRecord : public QObject
 {
+  Q_OBJECT
+  
  public:
 
   // more infos about the srec format can be fount at 
   // http://www.amelek.gda.pl/avr/uisp/srecord.htm
 
-  SRecord(const QString& type, 
-	  const QString& count,
-	  const QString& address,
-	  const QString& data,
-	  const QString& checksum) 
-    : type_(type), count_(count), address_(address), data_(data), checksum_(checksum)
-    {
+  SRecord( QString type, 
+	   QString count,
+	   QString address,
+	   QString data,
+	   QString checksum) ;
 
-    }
+  QString type() const;
+  
+  QString count() const;
 
-  QString type() const { return type_; }
+  QString address() const;
 
-  QString count() const { return count_; }
+  QString data() const;
 
-  QString address() const { return address_; }
-
-  QString data() const { return data_; }
-
-  QString checksum() const { return checksum_; }
+  QString checksum() const;
 
  private:
   QString type_;

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.81 2004/01/29 13:33:29 squig Exp $
+# $Id: poa.pro,v 1.82 2004/01/30 11:46:58 papier Exp $
 #
 ###############################################################################
 
@@ -97,6 +97,7 @@ HEADERS += scheduledialog.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
+HEADERS += srecord.h
 HEADERS += textview.h
 HEADERS += tooltipable.h
 HEADERS += util.h
@@ -147,6 +148,7 @@ SOURCES += project.cpp
 SOURCES += scheduledialog.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
+SOURCES += srecord.cpp
 SOURCES += textview.cpp
 SOURCES += util.cpp
 

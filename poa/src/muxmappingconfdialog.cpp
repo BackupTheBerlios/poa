@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.3 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.4 2004/01/28 15:39:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -190,10 +190,6 @@ void MuxMappingConfDialog::commit() {
     muxMappingItem_->setFirstOutputBit(firstOutputBitSpinBox_->value());
     muxMappingItem_->setLastInputBit(lastInputBitSpinBox_->value());
     muxMappingItem_->setLastOutputBit(lastOutputBitSpinBox_->value());
-}
-
-void MuxMappingConfDialog::cancel() {
-
 }
 
 void MuxMappingConfDialog::ok() {

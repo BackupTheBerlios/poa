@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.38 2004/01/28 15:19:40 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.39 2004/01/28 15:39:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -292,7 +292,6 @@ void MuxConfDialog::commit() {
     Q_ASSERT(model_ != 0);
 
     model_->setName(nameLineEdit->text());
-
     blockConfWidget_->commit();
 
     ////////////////////////////////////////////////////////////
@@ -306,6 +305,17 @@ void MuxConfDialog::commit() {
     }
 
     // TODO: other mappings in listview
+    for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
+        MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
+        MuxMapping *mapping = item->mapping();
+        if (!mapping) { // new Mapping
+            // determine Pins
+            //mapping = new MuxMapping(...);
+        }
+        else {
+            // determine Pins, etc.
+        }
+    }
 
     mappingListView->clear();
     deletedMappings_.clear();

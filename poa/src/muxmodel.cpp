@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.28 2003/12/10 16:08:19 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.29 2003/12/10 16:13:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -183,8 +183,6 @@ QDomElement MuxModel::serialize(QDomDocument *document)
         QDomElement mappingElem = it.current()->serialize(document);
         root.appendChild(mappingElem);
     }
-
-    emit serialized(this);
 
     return root;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.cpp,v 1.4 2003/08/29 21:27:46 vanto Exp $
+ * $Id: connectormodel.cpp,v 1.5 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -69,7 +69,7 @@ QCanvasItemList ConnectorModel::createView(QCanvas *canvas)
 
         PinView *currentPinView = dynamic_cast<PinView*>(*current);
         if (currentPinView != 0) {
-            PinModel *currentPinModel = currentPinView->model();
+            PinModel *currentPinModel = currentPinView->pinModel();
             if (currentPinModel == source_) {
                 Q_ASSERT(sourceView == 0);
                 sourceView = currentPinView;

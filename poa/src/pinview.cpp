@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.7 2003/08/29 18:35:16 keulsn Exp $
+ * $Id: pinview.cpp,v 1.8 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,12 +26,14 @@
 #include "pinview.h"
 
 #include "blockview.h"
+#include "canvasview.h"
+#include "connectaction.h"
 #include "pinmodel.h"
 
+#include <qevent.h>
 
-PinView::PinView(PinModel *model,
-         BlockView *block,
-         PinView::DockPosition dockPosition)
+PinView::PinView(PinModel *model, BlockView *block,
+                 PinView::DockPosition dockPosition)
     : QCanvasRectangle(block->canvas())
 {
     model_ = model;
@@ -41,12 +43,12 @@ PinView::PinView(PinModel *model,
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-	setSize(10, 2);
-	break;
+        setSize(10, 2);
+        break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-	setSize(2, 10);
-	break;
+        setSize(2, 10);
+        break;
     }
 }
 
@@ -56,9 +58,9 @@ PinView::~PinView()
 }
 
 
-PinModel *PinView::model()
+AbstractModel *PinView::model()
 {
-    return model_;
+    return 0;
 }
 
 PinView::DockPosition PinView::dockPosition()
@@ -71,21 +73,31 @@ QPoint PinView::connectorPoint()
     QRect r = rect();
     switch (dockPosition_) {
     case PIN_TOP:
-	return QPoint(r.center().x(), r.top() - 1);
-	break;
+        return QPoint(r.center().x(), r.top() - 1);
+        break;
     case PIN_LEFT:
-	return QPoint(r.left() - 1, r.center().y());
-	break;
+        return QPoint(r.left() - 1, r.center().y());
+        break;
     case PIN_BOTTOM:
-	return QPoint(r.center().x(), r.y() + 1);
-	break;
+        return QPoint(r.center().x(), r.y() + 1);
+        break;
     case PIN_RIGHT:
-	return QPoint(r.right() + 1, r.center().y());
-	break;
+        return QPoint(r.right() + 1, r.center().y());
+        break;
     default:
-	Q_ASSERT(false);
-	return QPoint(0, 0);
+        Q_ASSERT(false);
+        return QPoint(0, 0);
     }
+}
+
+void PinView::mousePressEvent(CanvasView *view, QMouseEvent *e)
+{
+    view->setAction(new ConnectAction(view, e, this));
+}
+
+PinModel *PinView::pinModel()
+{
+    return model_;
 }
 
 void PinView::setSelected(bool yes) {

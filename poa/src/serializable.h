@@ -18,30 +18,35 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: serializable.h,v 1.1 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
-// find a good place for constants, maybe consts.h?
-#define VERSION "POA-current"
+#ifndef SERIALIZABLE_H
+#define SERIALIZABLE_H
 
-#include "mainwindow.h"
-
-#include <qapplication.h>
 #include <qdom.h>
 
 /**
- * This is the main entry point of the POA app.
- * @author garbeam
+ * Defines the requirements for classes that support xml serialization.
  */
-int main (int argc, char *argv[])
+class Serializable
 {
-    QApplication app(argc, argv);
-    MainWindow *mainWindow = new MainWindow();
-    app.setMainWidget(mainWindow);
-    mainWindow->setCaption(VERSION);
-    mainWindow->show();
+public:
+    /**
+     * Serializes this instance to a xml subtree.
+     *
+     * @param document the main QDomDocument instance. Needed to
+     * create elements
+     */
+    virtual QDomElement serialize(QDomDocument *document) = 0;
 
-    return app.exec();
-}
+    /**
+     * Deserializes an xml subtree and sets this instance's properties.
+     *
+     * @param element the node
+     */
+    virtual void deserialize(QDomElement element) = 0;
 
+};
+#endif

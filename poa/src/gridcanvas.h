@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.15 2003/09/07 11:32:51 squig Exp $
+ * $Id: gridcanvas.h,v 1.16 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -30,8 +30,8 @@
 class Project;
 class QString;
 class AbstractModel;
-    
-/*****************************************************************************
+
+/**
  * Defines the grid canvas.
  */
 class GridCanvas : public QCanvas {
@@ -40,33 +40,31 @@ class GridCanvas : public QCanvas {
 
 public:
 
-    /*************************************************************************
+    /**
      * Creates a new grid canvas with the given name.
      * name will be shown in the mdiwindow's title and will be serialized to
      * xml, to identify this instance. name must be project-wide unique
      */
     GridCanvas(QString name);
 
-    /*************************************************************************
+    /**
      * Adds a view for the given <code>model</code> to the canvas at
      * (x,y)-coords This method creates the view instance (and its
      * children) by calling AbstractModel::createView(QCanvas *canvas)
      */
-    void addViewAt(AbstractModel *item, int x, int y);
+    void addView(AbstractModel *item, int x = 0, int y = 0);
 
-    /*************************************************************************
-     * Adds a view for the given <code>model</code> to the canvas.
-     * This method creates the view instance (and its children) by calling 
-     * AbstractModel::createView(QCanvas *canvas)
+    /**
+     * Returns grid coordiante that is closest to <code>p</code>.
      */
-    void addView(AbstractModel *item);
+    QPoint toGrid(QPoint p);
 
 public slots:
     void setGridSize(int gridSize);
 
 protected:
 
-    virtual void drawBackground(QPainter &painter, const QRect &clip); 
+    virtual void drawBackground(QPainter &painter, const QRect &clip);
 
 private:
 

@@ -1,3 +1,15 @@
+2003-09-07  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* mainwindow.cpp (editPaste): Made copy and paste work.
+
+	* project.cpp (createViews): Added method to create views on all
+	known canvases.
+
+	* canvasview.cpp (contentsMouseMoveEvent): Added simple auto
+	scrolling. 
+
+	* blockview.h (class BlockView): Moved snapToGrid to MoveAction.
+
 2003-08-29  Tammo van Lessen  <vanto@users.sourceforge.net>
 
 	* abstractmodel.cpp: model type added

@@ -18,30 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: canvasviewaction.cpp,v 1.1 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
-// find a good place for constants, maybe consts.h?
-#define VERSION "POA-current"
+#include "canvasviewaction.h"
 
-#include "mainwindow.h"
+#include "canvasview.h"
 
-#include <qapplication.h>
-#include <qdom.h>
+#include <qevent.h>
 
-/**
- * This is the main entry point of the POA app.
- * @author garbeam
- */
-int main (int argc, char *argv[])
+CanvasViewAction::CanvasViewAction(CanvasView *view)
+    : view_(view)
 {
-    QApplication app(argc, argv);
-    MainWindow *mainWindow = new MainWindow();
-    app.setMainWidget(mainWindow);
-    mainWindow->setCaption(VERSION);
-    mainWindow->show();
-
-    return app.exec();
 }
 
+CanvasViewAction::~CanvasViewAction()
+{
+}
+
+CanvasView *CanvasViewAction::view()
+{
+    return view_;
+}
+
+void CanvasViewAction::cancel()
+{
+    delete this;
+}
+
+void CanvasViewAction::mouseMoveEvent(QMouseEvent *)
+{
+}
+
+void CanvasViewAction::mousePressEvent(QMouseEvent *)
+{
+}
+
+void CanvasViewAction::mouseReleaseEvent(QMouseEvent *)
+{
+}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.14 2003/09/04 14:33:32 keulsn Exp $
+ * $Id: gridcanvas.cpp,v 1.15 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -44,22 +44,14 @@ GridCanvas::GridCanvas(QString name)
             this, SLOT(setGridSize(int)));
 }
 
-void GridCanvas::addViewAt(AbstractModel *item, int x, int y)
+void GridCanvas::addView(AbstractModel *item, int x, int y)
 {
     ++currentZ_;
     QCanvasItemList l = item->createView(this);
     for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
-        (*it)->moveBy(x, y);
-        (*it)->setZ(currentZ_);
-        (*it)->show();
-    }
-    update();
-}
-
-void GridCanvas::addView(AbstractModel *item) {
-    ++currentZ_;
-    QCanvasItemList l = item->createView(this);
-    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
+        if (x || y) {
+            (*it)->moveBy(x, y);
+        }
         (*it)->setZ(currentZ_);
         (*it)->show();
     }
@@ -70,7 +62,7 @@ int coordToGridHigher(int c, int gridSize)
 {
     int nextC = c / gridSize;
     if ((c > 0) && ((c % gridSize) != 0)) {
-	++nextC;
+        ++nextC;
     }
     return nextC * gridSize;
 }
@@ -79,7 +71,7 @@ int coordToGridLower(int c, int gridSize)
 {
     int prevC = c / gridSize;
     if ((c < 0) && ((c % gridSize) != 0)) {
-	--prevC;
+        --prevC;
     }
     return prevC * gridSize;
 }
@@ -103,11 +95,11 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
     // bottom and right coordinate.
 
     for (int x = minX; x <= maxX; x += gridSize) {
-	painter.drawLine(x, clip.top() - 1, x, clip.bottom() + 1);
+        painter.drawLine(x, clip.top() - 1, x, clip.bottom() + 1);
     }
-    
+
     for (int y = minY; y <= maxY; y += gridSize) {
-	painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
+        painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
     }
 }
 
@@ -115,4 +107,18 @@ void GridCanvas::setGridSize(int)
 {
     setAllChanged();
     update();
+}
+
+QPoint GridCanvas::toGrid(QPoint p)
+{
+    int gridSize = Settings::instance()->gridSize();
+    int x = coordToGridLower(p.x(), gridSize);
+    if (p.x() - x > gridSize / 2) {
+        x += gridSize;
+    }
+    int y = coordToGridLower(p.y(), gridSize);
+    if (p.y() - y > gridSize / 2) {
+        y += gridSize;
+    }
+    return QPoint(x, y);
 }

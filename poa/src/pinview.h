@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.7 2003/08/30 18:37:33 vanto Exp $
+ * $Id: pinview.h,v 1.8 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,51 +28,65 @@
 #include <qcanvas.h>
 #include <qvaluevector.h>
 
+#include "abstractview.h"
 class BlockView;
+class CanvasView;
 class PinModel;
 
-
-/*****************************************************************************
+/**
  * Definition of a Pin view.
  */
-class PinView: public QCanvasRectangle
+class PinView: public AbstractView, public QCanvasRectangle
 {
 
 public:
 
-    /*************************************************************************
+    /**
      * Defines the side on that a pin docks to a block
      */
     enum DockPosition {PIN_TOP, PIN_BOTTOM, PIN_LEFT, PIN_RIGHT};
 
-    /*****************************************************************************
-     * Creates a new pin view for the given pin and block model at the given 
+    /**
+     * Creates a new pin view for the given pin and block model at the given
      * position.
      */
     PinView(PinModel *model,
         BlockView *block,
         PinView::DockPosition dockPosition);
 
-    /*****************************************************************************
+    /**
      * Default destructor
      */
     virtual ~PinView();
 
-    /*****************************************************************************
-     * Returns the corresponding model of this view
-     */
-    PinModel *model();
-
-    /*************************************************************************
-     * Returns the side on that <code>this</code> docks onto a blockview
-     */
-    DockPosition dockPosition();
-
-    /*************************************************************************
+    /**
      * Returns the point, where a connector view must dock onto this
      * pin view.
      */
     QPoint connectorPoint();
+
+    /**
+     * Returns the side on that <code>this</code> docks onto a blockview
+     */
+    DockPosition dockPosition();
+
+    /**
+     * Returns the corresponding model of this view.
+     */
+    virtual AbstractModel *model();
+
+    /**
+     * Activates a {@link ConnectAction} for <code>view</code> that
+     * connects the pin.
+     */
+    virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
+
+    /**
+     * Returns the corresponding model of this view as a PinModel.
+     *
+     * @see #model()
+     */
+    PinModel *pinModel();
 
     /**
      * Sets the brush to red if Pin is selected, otherwise black

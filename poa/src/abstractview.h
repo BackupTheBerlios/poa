@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.6 2003/09/04 12:44:13 keulsn Exp $
+ * $Id: abstractview.h,v 1.7 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,11 @@
 #ifndef ABSTRACTVIEW_H
 #define ABSTRACTVIEW_H
 
+class AbstractModel;
+class CanvasView;
+
 #include <qobject.h>
+class QMouseEvent;
 class QPopupMenu;
 #include <qsize.h>
 
@@ -36,18 +40,8 @@ class QPopupMenu;
 class AbstractView
 {
 public:
-    /*************************************************************************
-     * Return a context menu
-     */
-    virtual QPopupMenu *popupMenu() { return 0; };
 
-    /*************************************************************************
-     * Returns <code>true</code> if <code>this</code> can be dragged using
-     * the method {@link #drag}, <code>false</code> else.
-     */
-    virtual bool isDraggable() { return false; };
-
-    /*************************************************************************
+    /**
      * Drags <code>this</code> by <code>(dx, dy)</code>. <code>this</code>
      * will move itself by a distance close to that if possible.
      *
@@ -62,6 +56,29 @@ public:
      *         have to be equal to <code>QSize (dx, dy)</code>.
      */
     virtual QSize dragBy(double, double) { return QSize(0, 0); }
+
+    /**
+     * Returns <code>true</code> if <code>this</code> can be dragged using
+     * the method {@link #drag}, <code>false</code> else.
+     */
+    virtual bool isDraggable() { return false; };
+
+    /**
+     * Returns the model.
+     */
+    virtual AbstractModel *model() = 0;
+
+    /**
+     * Invoked when the mouse button has been pressed.
+     */
+    virtual void mousePressEvent(CanvasView *, QMouseEvent *) { };
+
+    /**
+     * Return a context menu.
+     *
+     * @return 0
+     */
+    virtual QPopupMenu *popupMenu() { return 0; };
 
 };
 #endif

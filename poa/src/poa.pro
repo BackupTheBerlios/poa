@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.27 2003/08/28 18:09:24 keulsn Exp $
+# $Id: poa.pro,v 1.28 2003/09/07 19:07:46 squig Exp $
 #
 ###############################################################################
 
@@ -39,10 +39,13 @@ contains (UNAME, OpenBSD) {
 # source files
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
+HEADERS += abstractview.h
 HEADERS += blockmodel.h
 HEADERS += blockview.h
 HEADERS += canvasview.h
+HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
+HEADERS += connectaction.h
 HEADERS += connectormodel.h
 HEADERS += connectorview.h
 HEADERS += coremodel.h
@@ -57,6 +60,7 @@ HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
 HEADERS += modelfactory.h
 HEADERS += moduleconfdialog.h 
+HEADERS += moveaction.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
@@ -75,6 +79,8 @@ SOURCES += abstractmodel.cpp
 SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
+SOURCES += canvasviewaction.cpp
+SOURCES += connectaction.cpp
 SOURCES += connectormodel.cpp
 SOURCES += connectorview.cpp
 SOURCES += coremodel.cpp
@@ -86,6 +92,7 @@ SOURCES += mainwindow.cpp
 SOURCES += mdiwindow.cpp
 SOURCES += moduleconfdialog.cpp
 SOURCES += modelfactory.cpp
+SOURCES += moveaction.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinvector.cpp
 SOURCES += pinview.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.18 2003/09/07 11:32:51 squig Exp $
+ * $Id: canvasview.h,v 1.19 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,11 +27,14 @@
 
 class AbstractModel;
 class AbstractView;
+class CanvasViewAction;
+class GridCanvas;
 class Project;
 class PinView;
 
 #include <qvariant.h>
 #include <qcanvas.h>
+class QCanvasItemList;
 class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
@@ -49,7 +52,7 @@ class CanvasView : public QCanvasView
 
 public:
 
-    /*************************************************************************
+    /**
      * Creates a new <code>CanvasView</code>
      * @param project The project this canvas view belongs to
      * @param canvas see {@link QCanvasView#QCanvasView}
@@ -57,18 +60,47 @@ public:
      * @param name see {@link QCanvasView#QCanvasView}
      * @param fl see {@link QCanvasView#QCanvasView}
      */
-    CanvasView(Project *project, QCanvas *canvas, QWidget *parent = 0,
+    CanvasView(Project *project, GridCanvas *canvas, QWidget *parent = 0,
                const char* name = 0, WFlags fl = 0);
 
-    /*************************************************************************
+    /**
      * Default destructor
      */
     ~CanvasView();
 
-    /*************************************************************************
+    /**
+     * Returns the associated canvas.
+     */
+    GridCanvas *gridCanvas();
+
+    /**
      * Returns the project <code>this</code> belongs to.
      */
     Project *project();
+
+    /**
+     * Returns a list of the selected items.
+     */
+    QCanvasItemList selectedItems();
+
+    /**
+     * Sets the action for the CanvasView. The currently active action
+     * is cancelled.
+     */
+    void setAction(CanvasViewAction *action);
+
+public slots:
+    /**
+     * Deselects all selected items.  */
+    void deselectAll();
+
+signals:
+    /**
+     * Emitted when the selection changes.
+     *
+     * @param selected true, if at least one item is selected, false otherwise
+     */
+    void selectionChanged(bool selected);
 
 protected:
 
@@ -108,7 +140,6 @@ protected:
      */
     virtual void dropEvent(QDropEvent *e);
 
-
     /*************************************************************************
      * Transforms window-coordinates to canvas-coodinates
      * @param pos Position in window-coodinates
@@ -116,29 +147,21 @@ protected:
      */
     QPoint toCanvas(QPoint pos);
 
-	/**
-	 * Returns a list of the selected items.
-	 */
-	QCanvasItemList selectedItems();
-
 private:
+    /**
+     * Auto scrolls the canvas if the mouse cursor is moved within
+     * AUTOSCROLL_MARGIN.
+     */
+    void doAutoScroll();
+
     /** The project this view belongs to */
     Project *project_;
-    /** The canvas item that is currently in moving state if any, else 0 */
-    AbstractView *movingItem_;
-    /**
-     * The point in canvas-coordinates where <code>movingItem_</code>
-     * received the moving state. Only valid if <code>movingItem_ != 0</code>
-     */
-    QPoint movingStartPoint_;
     /**
      * The start pin for a new connection
      */
     PinView *startPin_;
-    /**
-     * The currently selected canvas item
-     */
-    QCanvasItem *selectedItem_;
+    /** The action that is currently active if any, else 0 */
+    CanvasViewAction *action_;
 
 };
 

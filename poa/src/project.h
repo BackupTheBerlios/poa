@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.11 2003/08/30 18:37:33 vanto Exp $
+ * $Id: project.h,v 1.12 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -72,6 +72,13 @@ public:
      * @param item the ConnectorModel
      */
     void addConnector(ConnectorModel *item);
+
+    /*************************************************************************
+     * Creates the item's corresponding view object on all canvases.
+     *
+     * @see GridCanvas#addView(AbstractModel *)
+     */
+    void createViews(AbstractModel *item, int x = 0, int y = 0);
 
     /*************************************************************************
      * Returns the <code>project</code>'s name

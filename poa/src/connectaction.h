@@ -18,30 +18,50 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: connectaction.h,v 1.1 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
-// find a good place for constants, maybe consts.h?
-#define VERSION "POA-current"
+#ifndef CONNECTACTION_H
+#define CONNECTACTION_H
 
-#include "mainwindow.h"
+#include "canvasviewaction.h"
+class CanvasView;
+class PinView;
 
-#include <qapplication.h>
-#include <qdom.h>
+#include <qcanvas.h>
+#include <qpoint.h>
+class QMouseEvent;
 
 /**
- * This is the main entry point of the POA app.
- * @author garbeam
+ * Provides an action that connects two {@link PinView} objects. Draws
+ * a dahed line from the source pin to the current position of the
+ * mouse.
  */
-int main (int argc, char *argv[])
+class ConnectAction : public CanvasViewAction
 {
-    QApplication app(argc, argv);
-    MainWindow *mainWindow = new MainWindow();
-    app.setMainWidget(mainWindow);
-    mainWindow->setCaption(VERSION);
-    mainWindow->show();
 
-    return app.exec();
-}
+public:
+    ConnectAction(CanvasView *view, QMouseEvent *e, PinView *source);
+    virtual ~ConnectAction();
 
+    /**
+     *
+     */
+    virtual void mouseMoveEvent(QMouseEvent *e);
+
+    /**
+     * Deactivates the action.
+     */
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+
+private:
+    /** The source pin */
+    PinView *source_;
+    /** The old tracking state. */
+    bool savedHasMouseTracking_;
+    /** The dashed line. */
+    QCanvasLine line_;
+};
+
+#endif // CONNECTACTION_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.14 2003/08/30 18:37:33 vanto Exp $
+ * $Id: mainwindow.h,v 1.15 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define MAINWINDOW_H
 
 #include "mdiwindow.h"
+class CanvasView;
 class Project;
 
 #include <qvariant.h>
@@ -45,22 +46,24 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    
-    /*****************************************************************************
+
+    /**
      * Default constructor
      */
     MainWindow(QWidget* parent = 0, const char* name = 0,
                WFlags fl = WType_TopLevel);
 
-    /*****************************************************************************
+    /**
      * Default destructor
      */
     ~MainWindow();
 
-    /*****************************************************************************
+    /**
      * Closes all mdi windows
      */
     bool closeAll();
+
+    CanvasView *activeView() const;
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -105,6 +108,7 @@ private:
     QAction *tileAction;
 
 public slots:
+    virtual void checkClipboardContent();
     virtual void fileNew();
     virtual void fileOpen();
     virtual void fileSave();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.17 2003/08/28 15:44:34 vanto Exp $
+ * $Id: mdiwindow.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -57,36 +57,14 @@ MdiWindow::~MdiWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
-QCanvas *MdiWindow::canvas()
+CanvasView *MdiWindow::view() const
 {
-    return (QCanvas *)view_->canvas();
-}
-
-void MdiWindow::setCanvas(QCanvas *canvas)
-{
-    view_->setCanvas(canvas);
-    setCaption(view_->project()->name()+" ["+view_->canvas()->name()+"]");
-    // TODO: emit some repaint signal if needed to draw
-    //       the newly set canvas
+    return view_;
 }
 
 void MdiWindow::closeEvent( QCloseEvent *e )
 {
     e->accept();
-}
-
-void MdiWindow::load( const QString& fn )
-{
-    // prevents currently compiler warning
-    QString bla = fn;
-}
-
-void MdiWindow::save()
-{
-}
-
-void MdiWindow::saveAs()
-{
 }
 
 /**
@@ -96,16 +74,16 @@ void MdiWindow::saveAs()
 void MdiWindow::resizeCanvas()
 {
 
-    QSize viewSize = view_->size();
+    QSize viewSize = view()->size();
     viewSize /= zoomLevel_;
-    QSize canvasSize = canvas()->size();
+    QSize canvasSize = view()->canvas()->size();
 
     // Resize the canvas only if its smaller than the current
     // canvas view.
     if ((canvasSize.width() < viewSize.width()) ||
             (canvasSize.height() < viewSize.height()))
     {
-        canvas()->resize(viewSize.width(), viewSize.height());
+        view()->canvas()->resize(viewSize.width(), viewSize.height());
     }
 
 }
@@ -119,12 +97,12 @@ void MdiWindow::resizeEvent(QResizeEvent *e)
 void MdiWindow::setZoomLevel(double zoomLevel)
 {
     if (zoomLevel != 0 && zoomLevel != zoomLevel_) {
-        QWMatrix m = view_->worldMatrix();
+        QWMatrix m = view()->worldMatrix();
         double diff = zoomLevel / zoomLevel_;
         zoomLevel_ = zoomLevel;
         m.scale(diff, diff);
-        view_->setWorldMatrix(m);
-        view_->update();
+        view()->setWorldMatrix(m);
+        view()->update();
     }
 }
 

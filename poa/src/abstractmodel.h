@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.10 2003/08/30 18:37:33 vanto Exp $
+ * $Id: abstractmodel.h,v 1.11 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,9 +26,10 @@
 #ifndef ABSTRACTMODEL_H
 #define ABSTRACTMODEL_H
 
-#include <qobject.h>
-#include <qdom.h> // used to provide serialization
+#include "serializable.h"
 
+#include <qobject.h>
+#include <qdom.h>
 class QDomDocument;
 class QDomElement;
 class QCanvas;
@@ -37,7 +38,7 @@ class QCanvasItemList;
 /*****************************************************************************
  * Base class for all model classes.
  */
-class AbstractModel : public QObject
+class AbstractModel : public QObject, public Serializable
 {
 public:
     /*****************************************************************************
@@ -86,15 +87,8 @@ public:
 
     virtual void setId(uint id);
 
-    /*************************************************************************
-     * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create elements
-     */
     virtual QDomElement serialize(QDomDocument *document);
 
-    /*************************************************************************
-     * Deserializes an xml subtree and sets this' properties
-     */
     virtual void deserialize(QDomElement element);
 
     /*************************************************************************

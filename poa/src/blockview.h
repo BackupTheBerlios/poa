@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.18 2003/09/04 15:20:06 squig Exp $
+ * $Id: blockview.h,v 1.19 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -71,7 +71,7 @@ public:
     /*************************************************************************
      * Returns the model for <code>this</code>.
      */
-    BlockModel *model();
+    AbstractModel *model();
 
     /*************************************************************************
      * @return true
@@ -84,6 +84,12 @@ public:
      */
     virtual QSize dragBy(double dx, double dy);
 
+    /**
+     * Activates a {@link MovingAction } for <code>view</code> that moves
+     * the BlockView.
+     */
+    virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
+
     /*************************************************************************
      * Moves <code>this</code> and the pin views that are connected to
      * <code>this</code>.
@@ -92,12 +98,6 @@ public:
      * @see #addPinViewsTo
      */
     virtual void moveBy(double dx, double dy);
-
-    /*************************************************************************
-     * Snaps this View to the given grid and returns the
-     * a point which contains the snap delta.
-     */
-    virtual QPoint snapToGrid(unsigned gridsize);
 
     /*************************************************************************
      * Run Time Type Identification

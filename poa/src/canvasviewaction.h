@@ -18,74 +18,57 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.17 2003/09/07 19:07:46 squig Exp $
+ * $Id: canvasviewaction.h,v 1.1 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
-#ifndef MDIWINDOW_H
-#define MDIWINDOW_H
+#ifndef CANVASVIEWACTION_H
+#define CANVASVIEWACTION_H
 
-#include "project.h"
-class GridCanvas;
-
-#include <qmainwindow.h>
-#include <qcanvas.h>
-#include <qcombobox.h>
 class CanvasView;
 
-/*****************************************************************************
- * Defines MDI windows.
+class QMouseEvent;
+
+/**
+ * Defines the requirements for classes that provide a
+ * {@link CanvasView} action.
+ *
+ * Each view has a single action that is active at a time. Actions
+ * receive all mouse events from the view.
  */
-class MdiWindow : public QMainWindow
+class CanvasViewAction
 {
-    Q_OBJECT
 
 public:
+    CanvasViewAction(CanvasView *view);
+    virtual ~CanvasViewAction();
+
+    CanvasView *view();
 
     /**
-     * Default constructor.
+     * Invoked when the action is cancelled, i.e. another action has
+     * become active. Deletes the action.
      */
-    MdiWindow(CanvasView *view, QWidget* parent = 0, const char* name = 0,
-              WFlags f = WType_TopLevel);
+    virtual void cancel();
 
     /**
-     * Default destructor.
+     * Invoked when the mouse cursor is moved over the view. Does nothing.
      */
-    ~MdiWindow();
+    virtual void mouseMoveEvent(QMouseEvent *e);
 
     /**
-     * Returns the content of the window.
+     * Invoked when a mouse button is pressed the view. Does nothing.
      */
-    CanvasView *view() const;
+    virtual void mousePressEvent(QMouseEvent *e);
 
     /**
-     * Returns the current zoom level of this mdi window
+     * Invoked when a mouse button is released on the view. Does nothing.
      */
-    double zoomLevel();
-
-    /**
-     * Resizes the canvas, if its size changed according to this' zoom level
-     */
-    void resizeCanvas();
-
-public slots:
-    void setZoomLevel(double zoomLevel);
-
-protected:
-    /**
-     * Gets called if sb want to close this mdi window
-     */
-    virtual void closeEvent(QCloseEvent *);
-
-    /**
-     * Gets called if sb resizes this mdi window
-     */
-    virtual void resizeEvent(QResizeEvent *e);
+    virtual void mouseReleaseEvent(QMouseEvent *e);
 
 private:
     CanvasView *view_;
-    double zoomLevel_;
+
 };
 
-#endif // MDIWINDOW_H
-
+#endif // CANVASVIEWACTION_H

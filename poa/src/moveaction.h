@@ -18,30 +18,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: moveaction.h,v 1.1 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
-// find a good place for constants, maybe consts.h?
-#define VERSION "POA-current"
+#ifndef MOVEACTION_H
+#define MOVEACTION_H
 
-#include "mainwindow.h"
+#include "canvasviewaction.h"
+class CanvasView;
 
-#include <qapplication.h>
-#include <qdom.h>
+#include <qpoint.h>
+class QCanvasItem;
+class QMouseEvent;
 
 /**
- * This is the main entry point of the POA app.
- * @author garbeam
+ * Provides an action that moves an item within a {@link
+ * CanvasView}. The item is snapped to the grid if the appropriate
+ * setting is true.
  */
-int main (int argc, char *argv[])
+class MoveAction : public CanvasViewAction
 {
-    QApplication app(argc, argv);
-    MainWindow *mainWindow = new MainWindow();
-    app.setMainWidget(mainWindow);
-    mainWindow->setCaption(VERSION);
-    mainWindow->show();
 
-    return app.exec();
-}
+public:
+    MoveAction(CanvasView *view, QMouseEvent *e, QCanvasItem *item);
 
+    /**
+     * Moves the item to the new position.
+     */
+    virtual void mouseMoveEvent(QMouseEvent *e);
+
+    /**
+     * Deactivates the action.
+     */
+    virtual void mouseReleaseEvent(QMouseEvent *e);
+
+private:
+    /** The item that is currently in moving state. */
+    QCanvasItem *item_;
+    /** The point where the move started in canvas coordinates. */
+    QPoint startPoint_;
+
+};
+
+#endif // MOVEACTION_H

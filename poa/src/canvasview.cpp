@@ -18,16 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.22 2003/09/07 11:32:51 squig Exp $
+ * $Id: canvasview.cpp,v 1.23 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
-
 
 #include "canvasview.h"
 
 #include "abstractmodel.h"
 #include "abstractview.h"
 #include "blockview.h"
+#include "canvasviewaction.h"
 #include "connectormodel.h"
 #include "cpumodel.h"
 #include "pinmodel.h"
@@ -40,6 +40,7 @@
 
 #include <qvariant.h>
 #include <qapplication.h>
+#include <qcursor.h>
 #include <qdom.h>
 #include <qpoint.h>
 #include <qwmatrix.h>
@@ -48,18 +49,24 @@
 #include <qstatusbar.h>
 #include <qtooltip.h>
 
+const int AUTOSCROLL_MARGIN = 16;
 
-CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
+CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
                        const char* name, WFlags fl)
-    : QCanvasView(canvas, parent, name, fl), project_(project),
-    movingItem_(0), selectedItem_(0)
+    : QCanvasView(canvas, parent, name, fl), project_(project), action_(0)
 {
-    setAcceptDrops(TRUE);
+    setAcceptDrops(true);
+    setDragAutoScroll(true);
 }
 
 CanvasView::~CanvasView()
 {
     // no need to delete child widgets, Qt does it all for us
+}
+
+GridCanvas *CanvasView::gridCanvas()
+{
+    return static_cast<GridCanvas *>(canvas());
 }
 
 Project *CanvasView::project()
@@ -69,6 +76,11 @@ Project *CanvasView::project()
 
 void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 {
+    if (action_) {
+        action_->mousePressEvent(e);
+        return;
+    }
+
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
     if (e->button() == LeftButton) {
@@ -76,116 +88,101 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             // first item is top item
             QCanvasItem *topItem = l.first();
 
-// 			QCanvasItemList list = selectedItems();
-// 			for (QCanvasItemList::iterator current = list.begin();
-// 				 current != list.end(); ++current) {
-// 				(*current)->setSelected(false);
-// 			}
-// 			topItem->setSelected(true);
+            // select item, we only support single selection for now
+            deselectAll();
+            topItem->setSelected(true);
+            emit(selectionChanged(true));
 
-            // item selection
-            if (selectedItem_) {
-                if (selectedItem_ != topItem) {
-                    // deselect old item
-                    selectedItem_->setSelected(false);
-                    // select new item
-                    selectedItem_ = topItem;
-                    selectedItem_->setSelected(true);
-                }
-            } else {
-                // select new item
-                selectedItem_ = topItem;
-                selectedItem_->setSelected(true);
+            // notify item that is has been clicked
+            AbstractView *item = dynamic_cast<AbstractView*>(topItem);
+            if (item != 0) {
+                item->mousePressEvent(this, e);
             }
+
             canvas()->update();
-
-            // begin drag if item can be dragged
-	    AbstractView *view = dynamic_cast<AbstractView*>(topItem);
-            if (view != 0 && view->isDraggable()) {
-                movingItem_ = view;
-                movingStartPoint_ = p;
-            } else {
-		movingItem_ = 0;
-	    }
-        } else {
-            // nirvana click -> deselect
-            if (selectedItem_) {
-                selectedItem_->setSelected(false);
-                canvas()->update();
-                selectedItem_ = 0;
-		movingItem_ = 0;
-            }
+        }
+        else {
+            // nirvana click
+            deselectAll();
+            canvas()->update();
         }
     }
     else if (e->button() == RightButton) {
         if (!l.isEmpty()) {
+            // first item is top item
             QCanvasItem *topItem = l.first();
-            if (INSTANCEOF(topItem, PinView)) {
-                // item is a pinview
-                if (INSTANCEOF(selectedItem_, PinView)) {
-                    // create connector
-                    PinView *source = dynamic_cast<PinView *>(selectedItem_);
-                    PinView *target = dynamic_cast<PinView *>(topItem);
 
-                    ConnectorModel *cm = new ConnectorModel(source->model(), target->model());
-                    // add connector to project
-                    project_->addConnector(cm);
-                    ((GridCanvas *)canvas())->addView(cm);
+            // select item
+            deselectAll();
+            topItem->setSelected(true);
+            emit(selectionChanged(true));
+            canvas()->update();
 
-                    qWarning("Connect: "+QString(source->model()->parent()->name())+":"+QString(source->model()->name())+"\n"
-                             +"to "+ QString(target->model()->parent()->name())+":"+QString(target->model()->name()));
-                    // deselect selected item
-                    selectedItem_->setSelected(false);
-                    selectedItem_ = 0;
-                    canvas()->update();
-                }
-            } else {
-                // item is not a pin view
-                AbstractView *item = dynamic_cast<AbstractView *>(l.first());
-                // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
-                if (item != 0) {
-                    // item is a AbstractView -> show popup menu
-                    QPopupMenu *menu = item->popupMenu();
-                    if (menu) {
-                        menu->exec(mapToGlobal(e->pos()));
-                    }
+            AbstractView *item = dynamic_cast<AbstractView *>(topItem);
+            if (item != 0) {
+                // show popup menu if available
+                QPopupMenu *menu = item->popupMenu();
+                if (menu != 0) {
+                    menu->exec(mapToGlobal(e->pos()));
                 }
             }
+        }
+        else {
+            // show background popup menu
         }
     }
 }
 
-void CanvasView::contentsMouseReleaseEvent(QMouseEvent *)
+void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
 {
-    movingItem_ = 0;
+    if (action_) {
+        action_->mouseReleaseEvent(e);
+    }
 }
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {
-    if (movingItem_ != 0) {
-        QPoint p = inverseWorldMatrix().map(e->pos());
-        movingItem_->dragBy(p.x() - movingStartPoint_.x(),
-                            p.y() - movingStartPoint_.y());
-
-        QPoint sp(0,0);
-
-        // snap to grid
-        if (Settings::instance()->snapToGrid() &&
-            !(e->stateAfter() & Qt::ControlButton)) {
-
-            BlockView *bm = dynamic_cast<BlockView *>(movingItem_);
-            if (bm) {
-                sp = bm->snapToGrid(Settings::instance()->gridSize());
-            }
-        }
-
-        movingStartPoint_ = QPoint(p.x()+sp.x(), p.y()+sp.y());
-        canvas()->update();
-    }
-
     QPoint pos = toCanvas(e->pos());
     ((MainWindow *)qApp->mainWidget())->statusBar()->message
         (QString::number(pos.x()) + ":" + QString::number(pos.y()));
+
+    doAutoScroll();
+
+    if (action_) {
+        action_->mouseMoveEvent(e);
+    }
+}
+
+void CanvasView::deselectAll()
+{
+    QCanvasItemList allItems = canvas()->allItems();
+    for (QCanvasItemList::iterator current = allItems.begin();
+         current != allItems.end(); ++current) {
+
+        (*current)->setSelected(false);
+    }
+    emit(selectionChanged(false));
+}
+
+void CanvasView::doAutoScroll()
+{
+    QPoint p = mapFromGlobal(QCursor::pos());
+
+    int dx = 0, dy = 0;
+    if (p.y() < AUTOSCROLL_MARGIN) {
+        dy = -1;
+    }
+    else if (p.y() > visibleHeight() - AUTOSCROLL_MARGIN) {
+        dy = +1;
+    }
+    if ( p.x() < AUTOSCROLL_MARGIN ) {
+        dx = -1;
+    } else if ( p.x() > visibleWidth() - AUTOSCROLL_MARGIN) {
+        dx = +1;
+    }
+    if ( dx || dy ) {
+        scrollBy(dx,dy);
+    }
 }
 
 void CanvasView::dragEnterEvent(QDragEnterEvent *e)
@@ -203,13 +200,37 @@ void CanvasView::dropEvent(QDropEvent *e)
             QValueList<AbstractModel *> l = ModelFactory::generate(doc);
             for (QValueList<AbstractModel *>::Iterator it = l.begin();
                  it != l.end(); ++it) {
-                project_->addBlock(*it);
-                ((GridCanvas *)canvas())->addViewAt(*it, pos.x(), pos.y());
+                project()->addBlock(*it);
+                gridCanvas()->addView(*it, pos.x(), pos.y());
             }
         }
     }
 }
 
+QCanvasItemList CanvasView::selectedItems()
+{
+    QCanvasItemList selectedItems;
+    QCanvasItemList allItems = canvas()->allItems();
+    for (QCanvasItemList::iterator current = allItems.begin();
+         current != allItems.end(); ++current) {
+
+        if ((*current)->isSelected()) {
+            selectedItems.append(*current);
+        }
+    }
+    return selectedItems;
+}
+
+void CanvasView::setAction(CanvasViewAction *action)
+{
+    if (action_) {
+        action_->cancel();
+    }
+    action_ = action;
+
+    // FIX: this call should go somewhere else
+    canvas()->update();
+}
 
 QPoint CanvasView::toCanvas(QPoint pos)
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.22 2003/09/07 11:32:51 squig Exp $
+ * $Id: blockview.cpp,v 1.23 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,8 @@
 #include <qpainter.h>
 
 #include "blockmodel.h"
+#include "canvasview.h"
+#include "moveaction.h"
 #include "pinvector.h"
 #include "pinview.h"
 
@@ -50,7 +52,7 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 {
     model_ = model;
 
-	BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
+    BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
 
     setBrush(white);
     setPen(QPen(black, 2));
@@ -136,18 +138,21 @@ void BlockView::addPinViewsTo(QCanvasItemList &list)
 }
 
 
-BlockModel *BlockView::model()
+AbstractModel *BlockView::model()
 {
     return model_;
 }
 
+void BlockView::mousePressEvent(CanvasView *view, QMouseEvent *e)
+{
+    view->setAction(new MoveAction(view, e, this));
+}
 
 QPopupMenu *BlockView::popupMenu()
 {
     QPopupMenu *pm = new QPopupMenu();
     pm->insertItem("Configure...");
-    pm->insertItem("Edit Source...");
-    pm->insertSeparator();
+    pm->insertItem("Edit Source");
     return pm;
 }
 
@@ -171,28 +176,6 @@ void BlockView::moveBy(double dx, double dy)
           (*current)->moveBy(dx, dy);
           ++current;
           }*/
-}
-
-
-QPoint BlockView::snapToGrid(unsigned gridsize)
-{
-    double remx = (int)x() % (unsigned)gridsize;
-    double remy = (int)y() % (unsigned)gridsize;
-
-    double tempx = x() - remx;
-    double tempy = y() - remy;
-
-    if (remx > gridsize / 2) {
-        tempx += gridsize;
-    }
-
-    if (remy > gridsize / 2) {
-        tempy += gridsize;
-    }
-    QPoint dp((int)(tempx-x()), (int)(tempy-y()));
-    setX(tempx);
-    setY(tempy);
-    return dp;
 }
 
 int BlockView::rtti() const

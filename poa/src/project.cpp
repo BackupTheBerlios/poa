@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.14 2003/08/29 21:27:46 vanto Exp $
+ * $Id: project.cpp,v 1.15 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -69,6 +69,15 @@ void Project::addConnector(ConnectorModel *item)
         currentConnectorId_ = item->id();
     }
     connectors_.append(item);
+}
+
+void Project::createViews(AbstractModel *item, int x, int y)
+{
+    GridCanvas *canvas;
+    for (QPtrListIterator<GridCanvas> it(canvasList_);
+         (canvas = it.current()) != 0; ++it) {
+        canvas->addView(item, x, y);
+    }
 }
 
 QString Project::name()
@@ -142,19 +151,19 @@ void Project::deserialize(QDomDocument *document) {
 
     QDomNodeList mList = document->elementsByTagName("model");
     if (mList.count() != 1) {
-        qWarning("no valid project file");
+        qWarning("not a valid project file");
         return;
     }
 
     QDomNodeList bList = mList.item(0).toElement().elementsByTagName("blocks");
     if (bList.count() != 1) {
-        qWarning("no valid project file");
+        qWarning("not a valid project file");
         return;
     }
 
     QDomNodeList cList = mList.item(0).toElement().elementsByTagName("connectors");
     if (cList.count() != 1) {
-        qWarning("no valid project file");
+        qWarning("not a valid project file");
         return;
     }
 
@@ -194,7 +203,7 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
-                canvas->addViewAt(idMap[viEl.attribute("model-id","0").toUInt()],
+                canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
             }

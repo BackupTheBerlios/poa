@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.36 2003/08/28 15:31:10 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.37 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@
 #include "project.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
+#include "modelfactory.h"
 #include "moduleconfdialog.h"
 #include "poa.h"
 #include "project.h"
@@ -39,7 +40,11 @@
 
 #include <qaction.h>
 #include <qapplication.h>
+#include <qcanvas.h>
+#include <qclipboard.h>
 #include <qcombobox.h>
+#include <qdragobject.h>
+#include <qdom.h>
 #include <qfile.h>
 #include <qfiledialog.h>
 #include <qimage.h>
@@ -96,6 +101,9 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     initializeMenu();
 
     connectActions();
+
+    // disable most actions
+    windowActivated(0);
 }
 
 void MainWindow::initializeActions()
@@ -200,7 +208,7 @@ void MainWindow::initializeToolbars()
     drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop);
     drawLineAction->addTo(drawToolBar);
     drawToolBar->addSeparator();
-    zoomComboBox = new QComboBox(FALSE, drawToolBar);
+    zoomComboBox = new QComboBox(false, drawToolBar);
     zoomComboBox->insertItem("10 %", 0);
     zoomComboBox->insertItem("25 %", 1);
     zoomComboBox->insertItem("50 %", 2);
@@ -290,6 +298,8 @@ void MainWindow::connectActions()
     connect(editCutAction, SIGNAL(activated()), this, SLOT(editCut()));
     connect(editCopyAction, SIGNAL(activated()), this, SLOT(editCopy()));
     connect(editPasteAction, SIGNAL(activated()), this, SLOT(editPaste()));
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
+            this, SLOT(checkClipboardContent()));
     connect(helpContentsAction, SIGNAL(activated()),
             this, SLOT(helpContents()));
     connect(helpAboutAction, SIGNAL(activated()), this, SLOT(helpAbout()));
@@ -316,6 +326,12 @@ void MainWindow::connectActions()
 MainWindow::~MainWindow()
 {
     // no need to delete child widgets, Qt does it all for us
+}
+
+CanvasView *MainWindow::activeView() const
+{
+    MdiWindow *m = (MdiWindow *)ws->activeWindow();
+    return (m != 0) ? m->view() : 0;
 }
 
 void MainWindow::closeWindow()
@@ -350,6 +366,12 @@ void MainWindow::tileHorizontal()
     }
 }
 
+void MainWindow::checkClipboardContent()
+{
+    QMimeSource *data = QApplication::clipboard()->data();
+    editPasteAction->setEnabled(data != 0 && data->provides("text/xml"));
+}
+
 bool MainWindow::closeAll()
 {
     QWidgetList windows = ws->windowList();
@@ -358,7 +380,7 @@ bool MainWindow::closeAll()
     while ((window = it.current()) != 0 ) {
         ++it;
         if (!window->close()) {
-            return FALSE;
+            return false;
         }
     }
     return TRUE;
@@ -398,6 +420,12 @@ void MainWindow::fileNew()
 
     MdiWindow *w = new MdiWindow(view, ws, 0, WDestructiveClose);
     w->showMaximized();
+
+    // connect to signals
+    connect(view, SIGNAL(selectionChanged(bool)), editCutAction,
+            SLOT(setEnabled(bool)));
+    connect(view, SIGNAL(selectionChanged(bool)), editCopyAction,
+            SLOT(setEnabled(bool)));
 
     // show the very first window in maximized mode
 //      if (ws->windowList().isEmpty()) {
@@ -476,12 +504,48 @@ void MainWindow::editCut()
 
 void MainWindow::editCopy()
 {
-    qWarning( "MainWindow::editCopy(): Not implemented yet!" );
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        if (!items.isEmpty()) {
+            QDomDocument doc;
+            QDomElement root = doc.createElement("model");
+            doc.appendChild(root);
+            for (QCanvasItemList::iterator current = items.begin();
+                 current != items.end(); ++current) {
+                AbstractView *item = dynamic_cast<AbstractView *>(*current);
+                if (item != 0 && item->model() != 0) {
+                    root.appendChild(item->model()->serialize(&doc));
+                }
+            }
+
+            if (root.hasChildNodes()) {
+                QStoredDrag *dragItem = new QStoredDrag("text/xml", 0);
+                dragItem->setEncodedData(doc.toCString());
+                QApplication::clipboard()->setData(dragItem);
+            }
+        }
+    }
 }
 
 void MainWindow::editPaste()
 {
-    qWarning( "MainWindow::editPaste(): Not implemented yet!" );
+    CanvasView *view = activeView();
+    QMimeSource *source = QApplication::clipboard()->data();
+    if (source != 0 && source->provides("text/xml") && view != 0) {
+        QByteArray data = source->encodedData("text/xml");
+        if (data) {
+            QDomDocument doc;
+            if (doc.setContent(QString(data))) {
+                QValueList<AbstractModel *> l = ModelFactory::generate(doc);
+                for (QValueList<AbstractModel *>::Iterator it = l.begin();
+                     it != l.end(); ++it) {
+                    view->project()->addBlock(*it);
+                    view->gridCanvas()->addView(*it);
+                }
+            }
+        }
+    }
 }
 
 void MainWindow::helpContents()
@@ -513,11 +577,17 @@ void MainWindow::windowActivated(QWidget* w)
 {
     if (w != 0) {
         MdiWindow *m = (MdiWindow *)ws->activeWindow();
-        zoomComboBox->setEnabled(TRUE);
-        zoomComboBox->setEditText(QString::number(m->zoomLevel() * 100.0) + "%");
+
+        checkClipboardContent();
+        zoomComboBox->setEnabled(true);
+        zoomComboBox->setEditText
+            (QString::number(m->zoomLevel() * 100.0) + "%");
     }
     else {
-        zoomComboBox->setEnabled(FALSE);
+        editCutAction->setEnabled(false);
+        editCopyAction->setEnabled(false);
+        editPasteAction->setEnabled(false);
+        zoomComboBox->setEnabled(false);
     }
 }
 

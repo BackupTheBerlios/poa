@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.9 2003/08/29 21:27:46 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.10 2003/09/07 19:07:46 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -31,11 +31,14 @@
 /*****************************************************************************
  * Generates model objects from xml data.
  */
-QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
+QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
 {
     QValueList<AbstractModel *> l;
 
-    QDomNodeList children = node.childNodes();
+    QDomNodeList children
+        = (node.isDocument())
+        ? node.toDocument().elementsByTagName("model-item")
+        : node.childNodes();
     for (uint i = 0; i < children.length(); i++) {
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "model-item") {
@@ -43,7 +46,8 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
             QDomElement element = item.toElement();
             if (element.attribute("block-type","") == "cpu") {
                 model = new CpuModel(element);
-            } else if (element.attribute("block-type","") == "core") {
+            }
+            else if (element.attribute("block-type","") == "core") {
                 model = new CoreModel(element);
             }
 

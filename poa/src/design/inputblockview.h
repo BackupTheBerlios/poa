@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputblockview.h,v 1.1 2003/07/13 20:15:12 garbeam Exp $
+ * $Id: inputblockview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,14 +35,14 @@
 class InputBlockView: public QCanvasItem
 {
 
-	private:
+private:
 
-		InputBlockModel *inputBlockModel_;
+    InputBlockModel *inputBlockModel_;
 
-  public:
+public:
 
     InputBlockModel *getModel();
-		void setModel(InputBlockModel *cpuModel);
+    void setModel(InputBlockModel *cpuModel);
 
 };
 

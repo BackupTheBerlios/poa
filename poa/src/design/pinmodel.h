@@ -18,38 +18,34 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.1 2003/07/13 20:15:12 garbeam Exp $
+ * $Id: pinmodel.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_PINMODEL_H
 #define POA_PINMODEL_H
 
-
 #include <qobject.h>
-
 
 class PinModel: public QObject
 {
   Q_OBJECT
 
-  public:
+public:
 
     void setName (QString &name);
 
-  private:
+private:
 
     QString *name_;
     unsigned address_;
     unsigned bits_;   // data type to be used in C source
 
-  public slots:
+public slots:
 
     void attach (Connector *connector);
-
     void deattach (Connector *connector);
 
 };
-
 
 #endif // POA_PINMODEL_H

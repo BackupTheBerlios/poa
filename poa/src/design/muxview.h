@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxview.h,v 1.1 2003/07/13 20:15:12 garbeam Exp $
+ * $Id: muxview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,14 +36,14 @@
 class MuxView: public QCanvasItem
 {
 
-	private:
+private:
 
-		MuxModel *muxModel_;
+    MuxModel *muxModel_;
 
-  public:
+public:
 
     MuxModel *getModel();
-		void setModel(MuxModel *muxModel);
+    void setModel(MuxModel *muxModel);
 
 };
 

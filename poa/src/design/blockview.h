@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.1 2003/07/13 20:15:12 garbeam Exp $
+ * $Id: blockview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,14 +36,14 @@
 class BlockView: public QCanvasItem
 {
 
-	private:
+private:
 
-		BlockModel *blockModel_;
+    BlockModel *blockModel_;
 
-  public:
+public:
 
     BlockModel *getModel();
-	void setModel(BlockModel *blockModel);
+    void setModel(BlockModel *blockModel);
 
 };
 

@@ -1,9 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.5 2004/06/04 21:05:19 squig Exp $
+%% $Id: design.tex,v 1.6 2004/06/04 21:19:21 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Architektur}
+
+\section{Übersicht}
 
 \section{Entwurfsmuster}
 
@@ -87,6 +91,15 @@ Das Scheduling Modul
 
 \subsection{Download}
 
+Der Download ist in der Klasse DownloadManager implementiert. Zur
+Übertragung der Daten wird die QExtSerialPort Bibliothek verwendet.
+Die Bibliothek einheitliche Methoden zum Zugriff auf die serielle
+Schnittstelle für Windows und Linux. Die Initialisierung erfolgt in
+der initializeAndOpen() Methode. Hier können die fest programmierten
+Übertragungsparameter und die Geschwindigkeit geändert werden. Die
+Übertragung der Daten erfolgt in der download() Methode und kann hier
+angepasst werden, falls sich das Übertragungsprotokoll ändert.
+ 
 \subsection{Routing}
 
 Die Routing Schnittstelle ist sehr abstrakt definiert. Es wird

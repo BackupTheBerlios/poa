@@ -88,10 +88,11 @@
 
     <resources>
       <resource>
-        <directory>${basedir}/src/conf</directory>
+        <directory>${basedir}/src/java/gcover/output</directory>
         <includes>
-          <include>*.properties</include>
+          <include>*.css</include>
         </includes>
+        <targetPath>gcover/output</targetPath>
       </resource>
     </resources>
   </build>

@@ -1,8 +1,20 @@
 /*
- * gcover
- * TODO
- * Created on 14.07.2003
+ *  GCover
  *
+ *  Copyright by Tammo van Lessen, Steffen Pingel
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  Version 2 as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package gcover;
 
@@ -13,7 +25,8 @@ import gcover.util.Formatter;
  * GCover
  * 
  * @author Tammo van Lessen
- * @version $Id: GCover.java,v 1.2 2004/01/07 16:00:10 squig Exp $
+ * @author Steffen Pingel
+ * @version $Id: GCover.java,v 1.3 2004/01/07 17:01:38 squig Exp $
  */
 public class GCover {
 
@@ -38,13 +51,14 @@ public class GCover {
 
 		// build
 		Builder.parseDir(project, inputDir);
+
+		// debug
+		printDebug(project);
 		
 		// generate output
 		Outputter out = new XHTMLOutputter(outputDir);
-		out.output(project);
-
-		// copy resources
-		
+		out.output(project);		
+		out.copyResources();
 	}
 
 	public static void printDebug(Project prj)

@@ -31,7 +31,7 @@ import org.apache.ecs.html.Title;
  * HTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: HTMLOutputter.java,v 1.1 2003/07/15 18:06:32 vanto Exp $
+ * @version $Id: HTMLOutputter.java,v 1.2 2004/01/07 17:01:38 squig Exp $
  */
 public class HTMLOutputter implements Outputter {
 
@@ -40,9 +40,14 @@ public class HTMLOutputter implements Outputter {
 	public HTMLOutputter(String basedir) {
 		dir = new File(basedir);
 		if (!dir.exists()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 	}
+
+	public void copyResources()
+	{
+	}
+
 	/**
 	 * @see gcover.output.Outputter#output(gcover.Project)
 	 */

@@ -1,19 +1,31 @@
 /*
- * gcover
- * TODO
- * Created on 15.07.2003
+ *  GCover
  *
+ *  Copyright by Tammo van Lessen, Steffen Pingel
+ *
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  Version 2 as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package gcover.output;
 
 import gcover.FileInfo;
 import gcover.LineInfo;
 import gcover.Project;
-import gcover.util.Formatter;
+import gcover.util.*;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 
 import org.apache.ecs.Entities;
@@ -25,7 +37,7 @@ import org.apache.ecs.xhtml.*;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.3 2004/01/07 14:37:12 vanto Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.4 2004/01/07 17:01:38 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -34,9 +46,22 @@ public class XHTMLOutputter implements Outputter {
 	public XHTMLOutputter(String basedir) {
 		dir = new File(basedir);
 		if (!dir.exists()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 	}
+
+	public void copyResources()
+	{
+		try {
+			Util.copy(getClass().getResourceAsStream("style.css"),
+					  new FileOutputStream(new File(dir, "style.css")));
+		} 
+		catch (IOException e) {
+			System.err.println("Could not copy resource");
+			e.printStackTrace(System.err);
+		}
+	}
+			
 
 	/**
 	 * @see gcover.output.Outputter#output(gcover.Project)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.8 2003/09/25 15:10:40 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.9 2003/09/25 16:27:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -272,8 +272,10 @@ void MuxConfDialog::initBottomWidget() {
 void MuxConfDialog::initConnections() {
 
     connect(addPushButton, SIGNAL(clicked()), this, SLOT(addIoOrMapping()));
+    connect(updatePushButton, SIGNAL(clicked()), this, SLOT(updateMapping()));
     connect(removePushButton, SIGNAL(clicked()), this, SLOT(removeIoOrMapping()));
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
+    connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
     connect(mappingListView, SIGNAL(selectionChanged()),
             this, SLOT(mappingSelectionChanged()));
@@ -284,50 +286,98 @@ void MuxConfDialog::initConnections() {
  */
 MuxConfDialog::~MuxConfDialog()
 {
-    for (unsigned i = 0; i < mappedToIos_.count(); i++) {
-        MapToComboBoxItem *item  = mappedToIos_.at(i);
-        mappedToIos_.remove(i);
-        delete item;
-    }
-
-    for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
-        MuxPin *pin = deletedMuxPins_.at(i);
-        deletedMuxPins_.remove(i);
-        delete pin;
-    }
-
-    for (unsigned i = 0; i < deletedMappings_.count(); i++) {
-        MuxMapping *mapping = deletedMappings_.at(i);
-        deletedMuxPins_.remove(i);
-        delete mapping;
-    }
+//    for (unsigned i = 0; i < mappedToIos_.count(); i++) {
+//        MapToComboBoxItem *item  = mappedToIos_.at(i);
+//        mappedToIos_.remove(i);
+//        delete item;
+//    }
+//
+//    for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
+//        MuxPin *pin = deletedMuxPins_.at(i);
+//        deletedMuxPins_.remove(i);
+//        delete pin;
+//    }
+//
+//    for (unsigned i = 0; i < deletedMappings_.count(); i++) {
+//        MuxMapping *mapping = deletedMappings_.at(i);
+//        deletedMuxPins_.remove(i);
+//        delete mapping;
+//    }
 }
 
 void MuxConfDialog::syncModel() {
 
     Q_ASSERT(model_ != 0);
     if (model_ != 0) {
-
         nameLineEdit->setText(model_->name());
+
+        QPtrList<MuxPin> *pins = model_->muxPins();
+
+        MuxListViewItem *last = 0;
+
+        for (unsigned i = 0; i < pins->count(); i++) {
+
+            MuxPin *cloned = pins->at(i)->clone();
+
+            last = new MuxListViewItem(mappingListView, last,
+                                       cloned, pins->at(i));
+
+            QPtrList<MuxMapping> *clonedMappings = cloned->mappings();
+            QPtrList<MuxMapping> *origMappings = pins->at(i)->mappings();
+
+            QListViewItem *lastItem = last;
+
+            for (unsigned j = 0; j < clonedMappings->count(); j++) {
+
+                lastItem =
+                    new MuxMappingListViewItem(lastItem, clonedMappings->at(j),
+                                               origMappings->at(j));
+            }
+        }
     }
 }
 
 
 void MuxConfDialog::updateModel() {
 
+    Q_ASSERT(model_ != 0);
+    if (model_ != 0) {
 
+        model_->setName(nameLineEdit->text());
+
+        QListViewItemIterator it(mappingListView);
+        for ( ; it.current(); ++it) {
+            QListViewItem *item = it.current();
+            if (item->isOpen()) {
+                model_->addMuxPin(((MuxListViewItem *)item)->data());
+            }
+        }
+        // Notify model about update, so the view will be
+        // repaint.
+        ((AbstractModel *)model_)->updatePerformed();
+    }
 }
 
 void MuxConfDialog::mappingSelectionChanged() {
 
     QListViewItem *item = mappingListView->selectedItem();
     bool selectedMapping = (item != 0);
+    bool selectedChild = selectedMapping && !item->isOpen();
 
-    updatePushButton->setEnabled(selectedMapping);
+    updatePushButton->setEnabled(selectedChild);
+    addPushButton->setEnabled(!selectedChild);
     removePushButton->setEnabled(selectedMapping);
     beginSpinBox->setEnabled(selectedMapping);
     endSpinBox->setEnabled(selectedMapping);
     ioComboBox_->setEnabled(selectedMapping);
+
+
+    beginSpinBox->setValue(selectedChild ? 
+            ((MuxMappingListViewItem *)item)->data()->begin() : 0);
+    endSpinBox->setValue(selectedChild ? 
+            ((MuxMappingListViewItem *)item)->data()->end() : 0);
+    ioComboBox_->setCurrentText(selectedChild ? 
+            ((MuxMappingListViewItem *)item)->data()->output()->name() : "");
 
     if (selectedMapping) {
         addPushButton->setText(tr("&Add"));
@@ -478,7 +528,7 @@ void MuxConfDialog::removeIo(MuxListViewItem *item) {
             connected = origPin->connected();
         }
     }
- 
+
     if ((item->childCount() > 0) || connected != 0) {
         QString warnMessage = (item->childCount() > 0) ?
             item->text(0) + " has " +
@@ -559,4 +609,35 @@ void MuxConfDialog::removeIoOrMapping() {
             removeMapping((MuxMappingListViewItem *)item);
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Update IO/Mapping
+//
+void MuxConfDialog::updateMapping() {
+
+    // It's only possible to update a mapping, not a parent IO
+    QListViewItem *item = mappingListView->selectedItem();
+
+    if (item != 0) {
+        if (!item->isOpen()) {
+
+            MuxMapping *mapping = ((MuxMappingListViewItem *)item)->data();
+
+            mapping->output()->setName(ioComboBox_->currentText());
+            mapping->setEnd(endSpinBox->value());
+            mapping->setBegin(beginSpinBox->value());
+
+            ((MuxMappingListViewItem *)item)->update();
+        }
+    }
+}
+
+void MuxConfDialog::apply() {
+    updateModel();
+}
+
+void MuxConfDialog::ok() {
+    updateModel();
+    accept();
 }

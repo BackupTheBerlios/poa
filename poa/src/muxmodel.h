@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.13 2003/09/25 11:02:48 garbeam Exp $
+ * $Id: muxmodel.h,v 1.14 2003/09/25 16:27:42 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -81,6 +81,11 @@ public:
      */
     QDomElement serialize(QDomDocument *document);
 
+    /**
+     * Returns clone of <code>this</code>.
+     */
+    MuxMapping *clone();
+
 private:
 
     PinModel *output_;
@@ -123,6 +128,11 @@ public:
      * Serializes this MuxPin.
      */
     QDomElement serialize(QDomDocument *document);
+
+    /**
+     * Returns clone of <code>this</code>
+     */
+    MuxPin *clone();
 
 private:
 

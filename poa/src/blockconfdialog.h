@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.12 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.13 2003/09/25 16:27:41 garbeam Exp $
  *
  *****************************************************************************/
 
-#ifndef BLOCKCONFDIALOG_H
-#define BLOCKCONFDIALOG_H
+#ifndef POA_BLOCKCONFDIALOG_H
+#define POA_BLOCKCONFDIALOG_H
 
 #include "blockmodel.h"
 #include "pinmodel.h"
@@ -275,4 +275,4 @@ private slots:
     void toggleManualRuntime();
 };
 
-#endif // BLOCKCONFDIALOG_H
+#endif // POA_BLOCKCONFDIALOG_H

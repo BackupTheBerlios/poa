@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.7 2003/09/25 15:10:40 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.8 2003/09/25 16:27:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -235,11 +235,27 @@ private slots:
      */
     void removeIoOrMapping();
 
+    /**
+     * Updates a mapping.
+     */
+    void updateMapping();
+
     /** 
      * Adds an IO if no I/O is selected or no mapping was defined.
      * Otherwise adds a MuxMapping to the selected IO.
      */
     void addIoOrMapping();
+
+    /**
+     * Applies the changes to the model.
+     */
+    void apply();
+
+    /**
+     * Applies the changes to the model and closes this dialog.
+     */
+    void ok();
+
 };
 
 #endif // POA_MUXCONFDIALOG_H

@@ -1,0 +1,76 @@
+%% 
+%% sollte in allen Dokumenten included werden
+%%
+
+% Packages
+
+\RequirePackage{parskip}                % Absätze ohne Einzüge und mit Spacing 
+\RequirePackage[german]{babel} 
+\RequirePackage[latin1]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{textcomp}   
+\RequirePackage{eepic}
+\RequirePackage{url}                    % \url{}
+\RequirePackage{fancyhdr}
+\RequirePackage{xspace}
+\RequirePackage{lastpage}
+\RequirePackage{a4wide}
+\RequirePackage{times}                  % Font
+
+%%% check whether we are running pdflatex
+%%% from http://www.db.informatik.uni-bremen.de/~mr/pdflatex.html
+\newif\ifpdf 
+\ifx\pdfoutput\undefined 
+\pdffalse % we are not running pdflatex 
+\else 
+\pdfoutput=1 % we are running pdflatex 
+\pdfcompresslevel=9     % compression level for text and image;
+\pdftrue 
+\fi
+
+\ifpdf
+  %see http://scgwiki.iam.unibe.ch:8080/SCG/47
+  \usepackage[pdftex,
+              colorlinks=true,
+              linkcolor=blue,
+              citecolor=blue,
+              urlcolor=blue,
+              bookmarks=true,
+              pdfstartview=FitV,
+              backref,
+              pagebackref]{hyperref}
+  \usepackage{thumbpdf}
+  \RequirePackage[pdftex]{graphicx}
+\else
+  \RequirePackage[dvips]{graphicx}
+\fi
+
+% Konstanten
+
+\newcommand{\product}{POA\xspace}
+\newcommand{\company}{Team POA\xspace}
+
+% Page Setup
+
+\newcommand\euro{{\sffamily C%
+  \makebox[0pt][l]{\kern-.70em\mbox{--}}%
+  \makebox[0pt][l]{\kern-.68em\raisebox{.25ex}{--}}}}
+
+\frenchspacing
+\pagestyle{fancy}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0.2cm}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.2pt}
+
+% Header
+
+\fancyhead{}
+\fancyhead[LE,RO]{\slshape \company}
+\fancyhead[LO,RE]{\slshape \leftmark}
+
+% Footer
+
+\fancyfoot[LE,RO]{\thepage{}}
+\fancyfoot[LO,RE]{\version}

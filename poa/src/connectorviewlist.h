@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.9 2003/09/23 15:49:25 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.10 2003/09/23 17:27:35 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -128,17 +128,21 @@ protected:
     void applyPointList(const QValueList<QPoint> &list, QCanvas *canvas);
 
     /**
+     * Deserializes an xml subtree to recreate the point list.
+     * <code>source</code> and <code>target</code> are ignored
+     */
+    virtual void deserialize(QDomElement *element);
+
+
+    /**
      * Routes a point list.
      */
     static QValueList<QPoint> *routeConnector(QPoint from,
                                               LineDirection fromDir,
                                               QPoint to,
                                               LineDirection toDir);
-    /**
-     * Deserializes an xml subtree to recreate the point list.
-     * <code>source</code> and <code>target</code> are ignored
-     */
-    virtual void deserialize(QDomElement *element);
+
+    static unsigned weight(const QValueList<QPoint> &points, QCanvas *canvas);
 
 private:
 

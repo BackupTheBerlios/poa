@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.10 2003/09/23 15:49:25 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.11 2003/09/23 17:27:35 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,12 +26,15 @@
 #include "connectorviewlist.h"
 
 #include "blockmodel.h"
+#include "blockview.h"
 #include "connectorviewsegment.h"
 #include "grid.h"
 #include "gridcanvas.h"
 #include "pinmodel.h"
 
 #include <qcanvas.h>
+#include <qpoint.h>
+#include <qvaluelist.h>
 
 
 QString image(QPoint p)
@@ -508,4 +511,67 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
 
     list->append(to);
     return list;
+}
+
+
+unsigned ConnectorViewList::weight(const QValueList<QPoint> &points,
+				   QCanvas *canvas) 
+{
+    Q_ASSERT(points.size() >= 2);
+    QValueList<QPoint>::const_iterator it = points.begin();
+    QPoint second = *it;
+    ++it;
+    QPoint first;
+    QPtrDict<unsigned> collisions;
+    collisions.setAutoDelete(true);
+
+    while (it != points.end()) {
+	first = second;
+	second = *it;
+	++it;
+
+	int left = QMIN(first.x(), second.x());
+	int top = QMIN(first.y(), second.y());
+	QRect rect = QRect(left,
+			   top,
+			   QABS(first.x() - second.x()),
+			   QABS(first.y() - second.y()));
+	if (rect.width() == 1) {
+	    rect.setLeft(rect.left() - 1);
+	    rect.setWidth(rect.width() + 1);
+	}
+	if (rect.height() == 1) {
+	    rect.setTop(rect.top() - 1);
+	    rect.setHeight(rect.height() + 1);
+	}
+
+	// collect all collisions
+	QCanvasItemList newCollisions = canvas->collisions(rect);
+	QCanvasItemList::const_iterator current;
+	for (current = newCollisions.begin();
+	       current != newCollisions.end(); ++current) {
+
+	    unsigned *value = new unsigned;
+	    if (INSTANCEOF(*current, const ConnectorViewSegment)) {
+		*value += 5000;
+	    }
+	    else if (INSTANCEOF(*current, const BlockView)) {
+		*value += 10000;
+	    }
+	    // current is inserted only once. If the same current is
+	    // intersected by a different rect then the value will be
+	    // updated but not inserted a second time.
+	    collisions.insert(*current, value);
+	}
+    }
+
+    // sum up collision weight
+    unsigned collisionWeight = 0;
+    QPtrDictIterator<unsigned> curr(collisions);
+    for (unsigned *current = curr.current(); current != 0; current = ++curr) {
+	collisionWeight += *current;
+    }
+
+    // calculate altogether weight
+    return collisionWeight + 400 * (points.size() - 1);
 }

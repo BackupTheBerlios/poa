@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.8 2004/06/05 21:33:13 squig Exp $
+%% $Id: design.tex,v 1.9 2004/06/07 09:19:41 keulsn Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -15,18 +15,27 @@
 
 \section{Entwurfsmuster}
 
-Während des Entwurfs von POA konnte ein Teil der Implementierung mit
-Hilfe von Entwufsmustern der Softwaretechnik realisiert
-werden. Entwufsmuster beschreiben eine Lösungsstrategie für ein
-abstraktes Problem.
+Der Entwurf von POA integriert bekannte und weitverbreitete
+Entwurfsmuster, um die Struktur des Entwurfs leicht verständlich zu
+machen und für zukünftige Erweiterungen im größtmöglichen Maße offen
+zu sein.
+
+Entwufsmuster beschreiben eine Lösungsstrategie für ein abstraktes
+Problem. Die Struktur des Codes wird so weitgehend standardisiert und
+ermöglicht einem Wartungsingenieur eine schnelle
+Einarbeitung. Weiterhin bieten sie Richtlinien an, wie weitere
+Funktionalität in das System integriert werden kann.
 
 \subsection{Model-View-Controller}
 
-Die Speicherung der Daten ist vollständig von der Visualisierung
-unabhängig. Die Daten werden in sogenannten Model Klassen verwaltet
-und von View Klassen angezeigt, wobei eine 1:n Beziehung besteht. Die
-Kommunikation zwischen den Klassen erfolgt anonym über
-Benachrichtigungen (siehe auch \ref{Benachrichtigungen}). 
+In dem Model-View-Controller Entwurfsmuster wird die Verarbeitung der
+Daten vollständig von der Visualisierung unabhängig gehalten. Die
+Daten werden in sogenannten Model Klassen verwaltet und von View
+Klassen angezeigt, wobei eine 1:n Beziehung besteht, das heißt mehrere
+Views können die selben Daten darstellen. Es werden auch verschiedene
+Ansichten auf die selben Daten ermöglicht. Die Kommunikation von
+Model- zu View-Klassen erfolgt anonym über Benachrichtigungen (siehe
+auch \ref{Benachrichtigungen}).
 
 Eine Model Klasse stellt über get-Methoden oder Iteratoren den Zustand
 zur Verfügung. Dieser Zustand wird von einer View-Klasse dem
@@ -38,7 +47,7 @@ GridCanvas Klasse angezeigt.
 \subsection{Oberserver}
 
 Die QT Bibliothek erweitert den Sprachumfang von C++ über einen
-speziellen Kompiler, den Meta-Object-Compiler (MOC), mit einem
+speziellen Compiler, den Meta-Object-Compiler (MOC), mit einem
 Benachrichtigungskonzept. Mit Hilfe von
 Benachrichtigungen können Objekte anderen Objekten Mitteilungen über
 Zustandsänderungen schicken. Die nahtlose Integration in die
@@ -50,12 +59,19 @@ gesendet und von speziellen Methoden (Slots) empfangen. Die Signals
 und Slots werden in den Klassendeklarationen angegeben. Die Verbindung
 zwischen zwei Objekten wird mittels der connect Methode hergestellt. 
 
-In POA wird an meheren Stellen gebrauch von dem Signal-Slot
-Mechanismus gemacht.
+In POA wird an mehreren Stellen Gebrauch von dem Signal-Slot
+Mechanismus gemacht: 
+\begin{enumerate}
+\item Wenn sich Einstellungen verändern 
+\item Wenn ein Projekt verändert wurde
+\item Um die Kommunikation zwischen Pins und den zugehörigen Blöcken
+und Konnektoren zu ermöglichen.
+\item Um Veränderungen zwischen Models und Views zu synchronisieren.
+\end{enumerate}
 
 \subsection{Strategie}
 
-Das Strategiemuster ermöglicht den Algorithmus für eine Problemlösung
+Das Strategiemuster ermöglicht, den Algorithmus für eine Problemlösung
 austauschbar zu machen. 
 
 In POA wurde die Routing Schnittstelle für die Verbindungen zwischen
@@ -65,7 +81,7 @@ Eigenschaften in Bezug auf die Laufzeit und Qualität des Ergebnisses.
 
 \subsection{Singleton}
 
-Das Singleton Muster wird verwendet, wenn ein Objekt nur genau einmal
+Das Singleton Muster wird verwendet, wenn eine Klasse nur genau einmal
 instanziert werden soll. Dadurch lassen sich auch in
 objekt-orientierten Systemen, äquivalent zu globalen Variablen in
 imperativen Systemen, global verfügbare Objekte realisieren,
@@ -85,11 +101,60 @@ Software-Architektur anhand der Schattierung ersichtlich.
 
 \subsection{Datenmodell (Model)}
 
-In den Model-Klassen wird das Datenmodell eines Projekts repräsentiert.
+In den Model-Klassen wird das Datenmodell eines Projekts
+repräsentiert. In POA werden Daten in Objekten der Klassen BlockModel
+und PinModel, sowie abgeleiteter Klassen gespeichert. Die Klasse
+Projekt stellt den Zusammenhalt zwischen den einzelnen Models her.
 
 \subsection{View}
 
+Views werden verwendet, um dem Benutzer die Daten zu präsentieren. Sie
+werden über Signals benachrichtigt, wenn sich ein Model verändert und
+passen dann die grafische Darstellung entsprechend an.
+
+\subsection{Controller}
+
+Als Controller wird die Komponente bezeichnet, die Benutzereingaben
+und interne Ereignisse verarbeitet und die Synchronisation zwischen
+View und Model sicherstellt.
+
+Aktionen, die der Benutzer durch Eingaben anstößt, lösen in QT Signals
+aus. Diese Signals werden in POA lokal in dem entsprechenden
+View-Objekt verarbeitet, z.B. in CanvasView für alle Aktionen, die auf
+dem Canvas geschehen (z.B. Selektieren eines Blocks) oder in
+MainWindow (z.B. bei Aktivieren eines Menüpunkts). Aufwändige
+Bearbeitungen werden in spezielle Action-Objekte ausgelagert.
+
+Eine Besondere Auslagerung der Controller bietet sich für POA nicht
+an. Die Benutzer-Eingaben erfolgen auf einer bestimmten View und das
+zugehörige View-Objekt hat die nötigen Kompetenzen, um die Eingabe zu
+verarbeiten. Falls eine Bearbeitung mehrere Schritte erfordert, so
+erzeugt das View-Objekt ein Action-Objekt, um die Aufgabe zu
+erledigen.
+
 \subsection{Scheduling}
+
+Optimales Scheduling bedeutet in POA die Berechnung eines optimalen
+Offsets für jeden Block, da die Taktraten für jeden Block bereits
+feststehen.
+
+Die optimalen Offsets werden in POA für bestimmte Signalpfade
+berechnet. Hierzu dient dienen Objekte der Klasse Path. Für jeden
+gewünschten Signallaufpfad wird ein solches Objekt erzeugt. Dann kann
+die Signallaufzeit minimiert werden, indem alle Path-Objekte in einer
+definierten Reihenfolge einzeln optimiert werden.
+
+Die Path-Objekte verwenden dazu eine Graph-Struktur, die von der
+Klasse Blockgraph angeboten wird. Ein BlockGraph besteht aus einer
+Reihe von BlockNode-Objekten. In den BlockNode-Objekten kann ein Flag
+gesetzt werden. Anhand dieses Flags erkennt der
+Optimierungsalgorithmus, ob ein bestimmter Knoten bereits einen
+optimalen Offset erhalten hat, oder noch verändert werden darf.
+
+Eine Auswahl von Signallaufpfaden, kann der Benutzer in dem
+AutoSchedulingDialog vornehmen. Dieser Dialog bedient sich des
+BlockGraphs, um eine Liste aller Blöcke anzuzeigen, die noch in keinem
+Pfad enthalten sind.
 
 \subsection{Download}
 
@@ -115,7 +180,7 @@ zu berücksichtigen. Der Algorithmus ist ausreichend schnell, um die
 Verbindungen während des Verschiebens von Blöcken simultan
 neuzuberechnen. 
 
-Der Dijkstrarouter benutzt den Dijkstra Algorithmuss um eine optimale
+Der Dijkstrarouter benutzt den Dijkstra Algorithmus um eine optimale
 Route mit möglichst wenig Knickpunkten und Überschneidungen zu finden.
 Auf Grund der Vielzahl der möglichen Wege beträgt die Laufzeit des
 Algorithmus in der Regel ein vielfaches des DirectRouter.

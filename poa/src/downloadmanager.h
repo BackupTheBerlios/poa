@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.9 2004/02/01 21:37:04 squig Exp $
+ * $Id: downloadmanager.h,v 1.10 2004/02/03 04:40:31 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,7 @@
 #define POA_DOWNLOADMANAGER_H
 
 #include "qextserialport/qextserialport.h"
-class SRecord;
+#include "srecord.h"
 
 #include <qdir.h>
 #include <qfile.h>

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.45 2003/09/23 10:53:39 garbeam Exp $
+# $Id: poa.pro,v 1.46 2003/09/23 17:10:59 garbeam Exp $
 #
 ###############################################################################
 
@@ -56,6 +56,7 @@ HEADERS += mdiwindow.h
 HEADERS += modelfactory.h
 HEADERS += blockconfdialog.h 
 HEADERS += moveaction.h
+HEADERS += muxconfdialog.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
@@ -95,6 +96,7 @@ SOURCES += mdiwindow.cpp
 SOURCES += blockconfdialog.cpp
 SOURCES += modelfactory.cpp
 SOURCES += moveaction.cpp
+SOURCES += muxconfdialog.cpp
 SOURCES += muxmodel.cpp
 SOURCES += muxview.cpp
 SOURCES += pinmodel.cpp

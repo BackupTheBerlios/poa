@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.39 2003/09/23 14:25:38 squig Exp $
+ * $Id: canvasview.cpp,v 1.40 2003/09/23 17:10:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -39,6 +39,8 @@
 #include "mainwindow.h"
 #include "modelfactory.h"
 #include "moveaction.h"
+#include "muxconfdialog.h"
+#include "muxmodel.h"
 #include "settings.h"
 
 #include <qvariant.h>
@@ -261,6 +263,12 @@ void CanvasView::dropEvent(QDropEvent *e)
                 if (INSTANCEOF(*it, BlockModel)) {
                     BlockConfDialog *dialog =
                         new BlockConfDialog((BlockModel *)(*it));
+                    dialog->exec();
+                    delete dialog;
+                }
+                else if (INSTANCEOF(*it, MuxModel)) {
+                    MuxConfDialog *dialog =
+                        new MuxConfDialog();
                     dialog->exec();
                     delete dialog;
                 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.15 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.16 2003/09/27 09:13:46 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -81,8 +81,8 @@ QDomElement MuxMapping::serialize(QDomDocument *document)
     return root;
 }
 
-MuxMapping *MuxMapping::clone() {
-    return new MuxMapping(muxPin_, output_->clone(), begin_, end_);
+MuxMapping *MuxMapping::clone(MuxPin *muxPin) {
+    return new MuxMapping(muxPin, output_->clone(), begin_, end_);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ MuxPin *MuxPin::clone() {
 
     QPtrList<MuxMapping> *mappings = clonePin->mappings();
     for (unsigned i = 0; i < mappings_.count(); i++) {
-        mappings->append(mappings_.at(i)->clone());
+        mappings->append(mappings_.at(i)->clone(clonePin));
     }
 
     return clonePin;

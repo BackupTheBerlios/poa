@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.15 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: muxmodel.h,v 1.16 2003/09/27 09:13:46 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -92,9 +92,15 @@ public:
     QDomElement serialize(QDomDocument *document);
 
     /**
-     * Returns clone of <code>this</code>.
+     * Returns clone of <code>this</code>. 
+     * @param muxPin the muxPin which should be used for cloning.
+     * Mostly, also the MuxPin has been cloned, so all the cloned
+     * mappings should point to the cloned MuxPin instead of the
+     * original one.
+     * If you need for some reason the original MuxPin use this
+     * method like this: <code>mapping->clone(mapping->muxPin());</code>
      */
-    MuxMapping *clone();
+    MuxMapping *clone(MuxPin *muxPin);
 
 private:
 

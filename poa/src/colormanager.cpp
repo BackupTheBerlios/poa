@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.7 2004/01/24 00:06:22 vanto Exp $
+ * $Id: colormanager.cpp,v 1.8 2004/01/25 15:53:31 vanto Exp $
  *
  *****************************************************************************/
 
@@ -57,7 +57,7 @@ QColor ColorManager::color(const BlockModel *model, int luminance)
                 this, SLOT(updateMap()));
 
         // connect to delete event
-        connect(model, SIGNAL(deleted()),
+        connect(model, SIGNAL(deleted(BlockModel *)),
                 this, SLOT(updateMap()));
 
         // update mapping and widget size
@@ -90,6 +90,7 @@ QColor ColorManager::selectedColor(AbstractModel*, int)
 
 void ColorManager::updateMap()
 {
+    qDebug("x");
     // clean up
     nsToPalIndex_.clear();
     palPosition_ = 0;

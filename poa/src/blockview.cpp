@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.66 2004/01/25 15:11:30 vanto Exp $
+ * $Id: blockview.cpp,v 1.67 2004/01/25 15:53:31 vanto Exp $
  *
  *****************************************************************************/
 
@@ -75,7 +75,7 @@ BlockView::BlockView(BlockModel *model, GridCanvas *canvas)
             this, SLOT(addPin(PinModel *)));
     connect(model_, SIGNAL(updated()),
             this, SLOT(updateView()));
-    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(model_, SIGNAL(deleted(BlockModel *)), this, SLOT(deleteView()));
 
     addPins(model_->pins());
     arrangePins();

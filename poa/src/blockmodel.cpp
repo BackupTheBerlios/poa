@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.45 2004/01/24 16:20:10 squig Exp $
+ * $Id: blockmodel.cpp,v 1.46 2004/01/25 15:53:31 vanto Exp $
  *
  *****************************************************************************/
 
@@ -68,7 +68,7 @@ BlockModel::~BlockModel()
         deletePin(*it);
     }
 
-    emit deleted();
+    emit deleted(this);
 }
 
 bool BlockModel::autoOffset() const

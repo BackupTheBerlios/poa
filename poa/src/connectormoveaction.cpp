@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.2 2004/01/28 07:08:47 squig Exp $
+ * $Id: connectormoveaction.cpp,v 1.3 2004/01/28 18:00:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@ int getAngle(int x, int y)
 {
         if (x == 0) return 90;
 
-        return atan(y / x) * 360 / 2 * 3.14159265358979;
+        return (int)(atan(y / x) * 360 / 2 * M_PI);
 }
 
 QPoint ConnectorMoveAction::dragBy(int dx, int dy)

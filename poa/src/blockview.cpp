@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.69 2004/01/28 10:36:13 keulsn Exp $
+ * $Id: blockview.cpp,v 1.70 2004/01/28 18:00:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -162,15 +162,15 @@ void addToList(QValueList<ConnectorViewList*> &list,
 
 void BlockView::arrangeConnectors()
 {
-    GridCanvas *ownCanvas = dynamic_cast<GridCanvas*>(canvas());
-    if (ownCanvas != 0) {
-    QValueList<ConnectorViewList*> list;
+//     GridCanvas *ownCanvas = dynamic_cast<GridCanvas*>(canvas());
+//     if (ownCanvas != 0) {
+//     QValueList<ConnectorViewList*> list;
 
-    addToList(list, &leftPins_);
-    addToList(list, &rightPins_);
-    addToList(list, &bottomPins_);
-    ownCanvas->reRoute(list);
-    }
+//     addToList(list, &leftPins_);
+//     addToList(list, &rightPins_);
+//     addToList(list, &bottomPins_);
+//     ownCanvas->reRoute(list);
+//     }
 }
 
 void BlockView::arrangePins()
@@ -219,7 +219,7 @@ void BlockView::arrangePins()
 
     arrangeVerticalPins();
     arrangeHorizontalPins();
-    arrangeConnectors();
+    //arrangeConnectors();
 }
 
 QCanvasItem *BlockView::item()
@@ -236,7 +236,7 @@ void BlockView::moveBy(double dx, double dy)
 {
     QCanvasRectangle::moveBy(dx, dy);
     arrangePins();
-    arrangeConnectors();
+    //arrangeConnectors();
 }
 
 void BlockView::remove(Project *project)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.35 2004/01/27 15:26:46 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.36 2004/01/28 18:00:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -62,7 +62,7 @@ GridCanvas::~GridCanvas()
 
 void GridCanvas::addConnectorView(ConnectorViewList *viewList)
 {
-    router_->route(viewList);
+    route(viewList);
 
     QCanvasItemList segments = viewList->allSegments();
     for (QCanvasItemList::Iterator it = segments.begin();
@@ -161,11 +161,10 @@ void GridCanvas::ensureVisibility(QCanvasItem *item)
     }
 }
 
-void GridCanvas::reRoute(QValueList<ConnectorViewList*>& list)
+void GridCanvas::route(ConnectorViewList* connector)
 {
-    router_->route(list);
+    router_->route(connector);
 }
-
 
 double GridCanvas::incZ()
 {

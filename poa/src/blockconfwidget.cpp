@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.4 2004/01/28 17:35:17 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.5 2004/01/28 18:00:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -246,10 +246,10 @@ void BlockConfWidget::mouseButtonClicked(int button,
         item->startRename(c);
     }
     else if (ioListView_->isRenaming()) {
-        PinListViewItem *item
+        PinListViewItem *currentItem
             = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
-        if (item != 0) {
-            item->cancelRename();
+        if (currentItem != 0) {
+            currentItem->cancelRename();
         }
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.29 2004/01/27 15:26:46 squig Exp $
+ * $Id: gridcanvas.h,v 1.30 2004/01/28 18:00:56 squig Exp $
  *
  *****************************************************************************/
 
@@ -82,7 +82,7 @@ public:
      * and can be called during moving operations. Thus the resulting routing
      * might be ugly.
      */
-    void reRoute(QValueList<ConnectorViewList*>& list);
+    void route(ConnectorViewList *connector);
 
     /**
      * Increases the z-layer and returns the increased value.

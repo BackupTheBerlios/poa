@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.21 2003/09/18 13:15:22 vanto Exp $
+ * $Id: project.cpp,v 1.22 2003/09/18 17:43:57 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -107,6 +107,7 @@ void Project::addBlock(AbstractModel *item)
     }
     if (INSTANCEOF(item, CpuModel))
     {
+        ((CpuModel *)item)->setCpuId(currentBlockId_);
         ((CpuModel *)item)->setProjectPath(&path_);
     }
 

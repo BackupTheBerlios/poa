@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.34 2003/09/18 14:12:32 squig Exp $
+ * $Id: canvasview.cpp,v 1.35 2003/09/18 17:43:57 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #include "abstractmodel.h"
 #include "abstractview.h"
 #include "blockview.h"
+#include "blockconfdialog.h"
 #include "canvasviewaction.h"
 #include "connectaction.h"
 #include "cpumodel.h"
@@ -244,6 +245,11 @@ void CanvasView::dropEvent(QDropEvent *e)
                  it != l.end(); ++it) {
                 project()->addBlock(*it);
                 gridCanvas()->addView(*it, pos.x(), pos.y());
+
+                BlockConfDialog *dialog =
+                    new BlockConfDialog((BlockModel *)(*it));
+                dialog->exec();
+                delete dialog;
             }
         }
     }

@@ -62,7 +62,7 @@
 %
 \ProcessOptions
 %
-\LoadClass[letterpaper,twocolumn,10pt]{article}
+\LoadClass[letterpaper,10pt]{article}
 %
 \setlength\textwidth{6.875in} 
 \setlength\textheight{8.875in}

@@ -1,6 +1,6 @@
 CC=gcc -c
 LINK=g++
-INCLUDE_PATH=/usr/local/include/opencv
+INCLUDE_PATH=/home/garbeam/local/include/opencv
 
 all      : marcel
 
@@ -11,5 +11,5 @@ marcel.o : marcel.c
 	$(CC) marcel.c -I$(INCLUDE_PATH)
 
 marcel   : marcel.o
-	$(LINK) -o marcel marcel.o -lstdc++ -lcv -lhighgui -lcxcore
+	$(LINK) -o marcel marcel.o -L/home/garbeam/local/lib -lstdc++ -lcv -lhighgui -lcxcore
 

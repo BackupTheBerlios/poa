@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.6 2003/08/22 22:47:49 squig Exp $
+ * $Id: blockmodel.h,v 1.7 2003/08/25 17:08:29 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,10 +26,11 @@
 #ifndef POA_BLOCKMODEL_H
 #define POA_BLOCKMODEL_H
 
-#include <qstring.h>
+class QString;
 
 #include "abstractmodel.h"
-#include "pinvector.h"
+class PinVector;
+class PinModel;
 
 /*****************************************************************************
  * Base class for blocks.
@@ -67,9 +68,9 @@ public:
     /*************************************************************************
      * Returns a list of all episodic pins of this.
      */
-    PinVector *getEpisodicPins();
-    PinVector *getInputPins();
-    PinVector *getOutputPins();
+    PinVector *episodicPins();
+    PinVector *inputPins();
+    PinVector *outputPins();
 
     void setClock(unsigned long clock);
     void setOffset(unsigned long offset);

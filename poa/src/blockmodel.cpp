@@ -18,14 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.3 2003/08/22 22:47:49 squig Exp $
+ * $Id: blockmodel.cpp,v 1.4 2003/08/25 17:08:29 keulsn Exp $
  *
  *****************************************************************************/
+
+
 #include "blockmodel.h"
 
-#include "blockview.h"
-
 #include <qcanvas.h>
+#include <qstring.h>
+
+#include "blockview.h"
+#include "pinvector.h"
+
 
 BlockModel::BlockModel(QString name, QString description)
     : AbstractModel(name, description)
@@ -44,19 +49,19 @@ BlockModel::~BlockModel()
 }
 
 
-PinVector *BlockModel::getEpisodicPins()
+PinVector *BlockModel::episodicPins()
 {
     return episodicPins_;
 }
 
 
-PinVector *BlockModel::getInputPins()
+PinVector *BlockModel::inputPins()
 {
     return inputPins_;
 }
 
 
-PinVector *BlockModel::getOutputPins()
+PinVector *BlockModel::outputPins()
 {
     return outputPins_;
 }
@@ -85,7 +90,7 @@ void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor)
     int size = episodicPins_->size();
     int i = 0;
     while (i < size && episodicPins_->at(i) != successor) {
-    ++i;
+	++i;
     }
 
     episodicPins_->insert(episodicPins_->begin() + i, pin);
@@ -99,8 +104,8 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
     int i = 0;
     bool found = episodicPins_->at(i) == pin;
     while (i < size && !found) {
-    ++i;
-    found = episodicPins_->at(i) == pin;
+	++i;
+	found = episodicPins_->at(i) == pin;
     }
     if (found) {
     episodicPins_->erase(episodicPins_->begin() + i);
@@ -111,6 +116,7 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
 QCanvasItemList BlockModel::createView(QCanvas *canvas)
 {
     QCanvasItemList list;
-    list.append(new BlockView(this, canvas));
+    BlockView *view = new BlockView (this, canvas);
+    list.append(view);
     return list;
 }

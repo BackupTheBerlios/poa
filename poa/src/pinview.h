@@ -18,34 +18,50 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.2 2003/08/25 11:58:29 keulsn Exp $
+ * $Id: pinview.h,v 1.3 2003/08/25 17:08:29 keulsn Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_PINVIEW_H
 #define POA_PINVIEW_H
 
-//#include <qcanvasitem.h>
 #include <qcanvas.h>
+#include <qvaluevector.h>
 
-#include "pinmodel.h"
+class BlockView;
+class PinModel;
+
 
 /*****************************************************************************
  * Definition of a Pin view.
  * @author garbeam
+ * @author keulsn
  */
-class PinView: public QCanvas
+class PinView: public QCanvasRectangle
 {
-
-private:
-
-    PinModel *pinModel_;
 
 public:
 
-    PinModel *model();
-    void setModel(PinModel *pinModel);
+    /**************************************************************************
+     * Defines the side on that a pin docks to a block
+     */
+    enum DockPosition {PIN_TOP, PIN_BOTTOM, PIN_LEFT, PIN_RIGHT};
 
+    PinView(PinModel *model,
+	    BlockView *block,
+	    PinView::DockPosition dockPosition);
+
+    virtual ~PinView();
+
+    PinModel *model();
+    void setModel(PinModel *model);
+
+private:
+
+    PinModel *model_;
+    QValueVector<PinView*> leftPins_;
+    QValueVector<PinView*> rightPins_;
+    QValueVector<PinView*> bottomPins_;
 };
 
 #endif // POA_PINVIEW_H

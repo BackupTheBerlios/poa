@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.6 2003/08/25 11:58:29 keulsn Exp $
+ * $Id: blockview.h,v 1.7 2003/08/25 17:08:29 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,9 +26,12 @@
 #define POA_BLOCKVIEW_H
 
 #include <qcanvas.h>
+#include <qvaluevector.h>
 
 #include "abstractview.h"
-#include "blockmodel.h"
+class BlockModel;
+class PinView;
+
 
 /*****************************************************************************
  * Definition of a block view.
@@ -45,20 +48,33 @@ class BlockView: public AbstractView, public QCanvasRectangle
     BlockModel *model();
     void setModel(BlockModel *model);
 
+    virtual void moveBy(double dx, double dy);
+
     virtual int rtti() const;
 
  protected:
 
     virtual void drawShape (QPainter &p);
 
+    virtual void arrangeVerticalPins();
+
+    static const int DEFAULT_WIDTH = 150;
+    static const int DEFAULT_FONT_HEIGHT = 12;
+    static const int DEFAULT_TOP_SPACING = 3;
+    static const int DEFAULT_HEADER_SPACING = 4;
+    static const int DEFAULT_BOTTOM_SPACING = 4;
+    static const int DEFAULT_PIN_SEPARATION = 2;
+
  private:
+
 
     BlockModel *model_;
 
-    static const int RTTI = 1000;
-    static const int DEFAULT_WIDTH = 150;
-    static const int DEFAULT_FONT_HEIGHT = 12;
+    QValueVector<PinView*> leftPins_;
+    QValueVector<PinView*> rightPins_;
+    QValueVector<PinView*> bottomPins_;
 
+    static const int RTTI = 1000;
 };
 
 #endif // POA_BLOCKVIEW_H

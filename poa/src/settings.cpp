@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.11 2003/09/11 13:17:14 squig Exp $
+ * $Id: settings.cpp,v 1.12 2003/09/17 14:38:27 garbeam Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -210,4 +210,19 @@ void Settings::setShowGrid(bool showGrid)
     if (set("Show Grid", showGrid)) {
         emit showGridChanged(showGrid);
     }
+}
+
+QString Settings::templatePath()
+{
+    return get("Template Path");
+}
+
+QString Settings::terminalCmd()
+{
+    return get("Terminal");
+}
+
+QString Settings::compilerCmd()
+{
+    return get("Compiler");
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.16 2003/09/11 16:30:24 squig Exp $
+ * $Id: settings.h,v 1.17 2003/09/17 14:38:27 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -63,6 +63,10 @@ public:
     QColor selectedColor();
     bool snapToGrid();
     bool showGrid();
+
+    QString templatePath();
+    QString terminalCmd();
+    QString compilerCmd();
 
 public slots:
     void setGridSize(int gridSize);

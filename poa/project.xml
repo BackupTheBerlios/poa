@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<project>
+
+  <!-- the version of maven's project object model -->
+  <pomVersion>3</pomVersion>
+  
+  <!-- a unique name for this project -->
+  <id>poa</id>
+  
+  <!-- a short but descriptive name for the project -->
+  <name>poa</name>
+  
+  <!-- The version of the project under development, e.g.
+       1.1, 1.2, 2.0-dev -->
+  <currentVersion>0.1.0</currentVersion>
+  
+  <!-- details about the organization that 'owns' the project -->
+  <organization>
+    <name>POA Team, University of Stuttgart</name>
+    <!-- <url>http://www.uni-stuttgart.de/</url>
+    <logo>http://www.uni-stuttgart.de/res/img/logomitte.gif</logo> -->
+  </organization>
+  
+  <!-- the year the project started -->
+  <inceptionYear>2003</inceptionYear>
+  <!--<package>poa</package>-->
+  <!--<logo>http://poa.berlios.de/images/logo.jpg</logo>-->
+  <description>
+    Entwicklung einer Programmierumgebung für einen CPLD-basierten Offenen Antrieb
+  </description>
+  <!-- a short description of what the project does -->
+  <shortDescription>
+    Entwicklung einer Programmierumgebung für einen CPLD-basierten Offenen Antrieb
+  </shortDescription>
+
+  <!-- the project home page -->
+  <url>http://poa.berlios.de/</url>
+  <issueTrackingUrl>http://test.klintox.net:8080/jira/secure/Dashboard.jspa</issueTrackingUrl>
+  <siteAddress>shell.berlios.de</siteAddress>
+  <siteDirectory>/home/groups/poa/htdocs</siteDirectory>
+  <distributionDirectory/>
+
+  <!-- the version control repository and http url for online access
+       the connection element has the form:
+       scm:<system>:<system specific connection string> -->
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@cvs.berlios.de:/cvsroot/poa:poa</connection>
+    <url>http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/</url>
+  </repository>
+
+  <!-- any mailing lists for the project -->
+  <mailingLists/>
+  
+  <!-- who the developers are for the project -->
+  <developers>
+    <developer>
+      <name>Necati Aydin</name>
+      <id>neco</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Anselm Garbe</name>
+      <id>garbeam</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Stefan Hauser</name>
+      <id>papier</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Steffen Keul</name>
+      <id>keulsn</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Marcel Kilgus</name>
+      <id>kilgus</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+     <developer>
+      <name>Tammo van Lessen</name>
+      <id>vanto</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Steffen Pingel</name>
+      <id>squig</id>
+      <roles>
+        <role>Project Manager</role>
+      </roles>
+    </developer>
+  </developers>
+
+<!-- jar files the project is dependent on -->
+  <dependencies/>
+  
+  <!-- build information for the project -->
+  <build>
+  </build>
+  <reports>
+    <report>maven-changes-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-developer-activity-plugin</report>
+    <report>maven-file-activity-plugin</report>
+    <report>maven-license-plugin</report>
+	<report>maven-statcvs-xml-plugin</report>
+  </reports>  
+</project>
+

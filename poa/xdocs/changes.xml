@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+    <author email="vanto@users.berlios.de">Tammo van Lessen</author>
+  </properties>
+
+  <body>
+	<release version="0.1.0" date="in CVS">
+      <action dev="garbeam" type="add">
+		Prototyping
+      </action>
+    </release>
+  </body>
+</document>

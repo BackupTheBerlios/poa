@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="POA" href="http://poa.berlios.net">
+  
+  <title>Programmierumgebung Offener Antrieb</title>
+  
+  <body>
+
+	<links>
+	  <item name="Project Page" href="http://developer.berlios.de/projects/poa/"/>
+	  <item name="Project Stats" href="http://developer.berlios.de/project/stats/?group_id=819"/>
+	</links>
+
+	<menu name="General Information">
+	  <item name="Overview" href="/index.html"/>
+      <item name="Team" href="/team-list.html"/>
+      <item name="License" href="/license.html"/>
+	</menu>
+	
+	<menu name="Documentation">
+      <item name="Project Plan (german)" href="ftp://ftp.berlios.de/pub/poa/docs/angebot/angebot.pdf"/>
+      <item name="Other documents..." href="ftp://ftp.berlios.de/pub/poa/docs/"/>
+      <item name="Wiki (german)" href="http://openfacts.berlios.de/index.phtml?title=Prog._umg._Offener_Antrieb"/>
+    </menu>
+    
+    <menu name="Development">
+	  <item name="Programming Style Guidelines" href="/styleguide.html"/>
+      <item name="Issue Tracker" href="http://test.klintox.net:8080/jira/secure/Dashboard.jspa"/>
+	  <item name="Project Reports" href="/maven-reports.html"/>
+      <item name="CVS Repository" href="/cvs-usage.html"/>
+      <item name="CVS statistics" href="/statcvs-xml/index.html"/>
+    </menu>
+
+	<menu name="Seminars">
+	  <item name="Subjects and Dates" href="/seminars.html"/>
+	</menu>
+
+  </body>
+  
+</project>

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0"?>
+
+  <document>
+
+	<properties>
+	  <title>Seminars</title>
+	</properties>
+
+	<body>
+
+	  <section name="Seminars">
+
+        <table>
+          <tr>
+            <th colspan="2">Dates and Topics</th>
+          </tr>
+          <tr>
+            <td>26.06.03</td><td>CPLD (Tammo van Lessen)</td>
+          </tr>
+          <tr>
+            <td>26.06.03</td><td>Regelungstechnik (Necati Aydin)</td>
+          </tr>
+          <tr>
+            <td>03.07.03</td><td>QT (Anselm Garbe) <a href="ftp://ftp.berlios.de/pub/poa/seminar/qt-seminar.pdf">Paper</a></td>
+          </tr>
+          <tr>
+            <td>03.07.03</td><td>Agile (Software) Prozesse (Steffen Pingel)</td>
+          </tr>
+          <tr>
+            <td>17.07.03</td><td>Algorithmen zur Laufzeitermittlung (Marcel Kilgus)</td>
+          </tr>
+          <tr>
+            <td>17.07.03</td><td>Algorithmen zur Scheduling-Optimierung (Steffen Keul)</td>
+          </tr>
+          <tr>
+            <td>17.07.03</td><td>Algorithmen zur Graphischen Darstellung von CPU-Netzwerken (Stefan Hauser)</td>
+          </tr>
+        </table>
+
+	  </section>
+	  
+	</body>
+  </document>
+  

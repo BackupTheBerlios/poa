@@ -1,0 +1,3381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<HTML>
+
+<HEAD>
+   <TITLE> C++ Programming Style Guidelines </TITLE>
+   <META NAME="Author"   CONTENT="Anselm">
+   <META NAME="Keywords" CONTENT="c++, c, programming, code, style, guideline, guidelines, recommendation, recommendations, layout, standard, conventions, standardization, naming, names, indentation, block, readability, maintainability, mixed case, suffix, prefix, statement, statements, conditional, white space, align, alignment comments, code complete">
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <LINK REL=STYLESHEET HREF="style.css" TYPE="text/css">
+</HEAD>
+
+
+<BODY>
+
+<TABLE CELLPADDING=10 BORDER=0 CELLSPACING=0>
+
+<TR>
+
+
+
+<!--
+*******************************************************************************
+   Document content on right hand side
+*******************************************************************************
+-->
+
+<TD>
+
+<CENTER>
+<H1>C++ Programming Style Guidelines of POA</H1>
+</CENTER>
+
+<CENTER><I>$Id: poa_guidelines.html,v 1.1 2003/08/20 12:15:15 vanto Exp $</I></CENTER>
+<br>
+<CENTER>This document is derived from 
+<A HREF="http://geosoft.no/style.html">http://geosoft.no/style.html</A>
+</CENTER>
+
+<P>
+<HR WIDTH="100%">
+<H2>
+Table of Content</H2>
+
+<UL>
+
+<LI>
+<A HREF="#introduction">1 Introduction</A>
+<UL>
+<LI><A HREF="#Layout of the Recommendations">1.1 Layout of the
+Recommendations</A></LI>
+<LI><A HREF="#Recommendation">1.2 Recommendations Importance</A></LI>
+</UL>
+</LI>
+
+<LI><A HREF="#General Recomendations">2 General Recommendations</A></LI>
+
+<LI>
+<A HREF="#Naming Conventions">3 Naming Conventions</A>
+<UL>
+<LI><A HREF="#General">3.1 General</A></LI>
+<LI><A HREF="#Specific">3.2 Specific</A></LI>
+</UL>
+</LI>
+
+<LI><A HREF="#Files">4 Files</A>
+<UL>
+<LI><A HREF="#Source Files">4.1 Source Files</A></LI>
+<LI><A HREF="#Include Files">4.2 Include Files and Include Statements</A></LI>
+</UL>
+</LI>
+
+<LI>
+<A HREF="#Statements">5 Statements</A>
+<UL>
+<LI><A HREF="#Types">5.1 Types</A></LI>
+<LI><A HREF="#Variables">5.2 Variables</A></LI>
+<LI><A HREF="#Loops">5.3 Loops</A></LI>
+<LI><A HREF="#Conditionals">5.4 Conditionals</A></LI>
+<LI><A HREF="#Misc">5.5 Miscellaneous</A></LI>
+</UL>
+</LI>
+
+<LI>
+<A HREF="#Layout and Comments">6 Layout and Comments</A>
+<UL>
+<LI><A HREF="#Layout">6.1 Layout</A></LI>
+<LI><A HREF="#White Space">6.2 White space</A></LI>
+<LI><A HREF="#Comments">6.3 Comments</A></LI>
+</UL>
+</LI>
+
+<LI><A HREF="#References">8 References</A></LI>
+
+</UL>
+
+<HR WIDTH="100%">
+<H2>
+<A NAME="introduction"></A>1 Introduction</H2>
+
+<P>
+This document lists C++ coding recommendations common in the C++ development
+community.
+
+<P>
+The recommendations are based on established standards collected from a number
+of sources, individual experience, local requirements/needs, as well as 
+uggestions given in 
+<A HREF="#ref1">[1]</A> - <A HREF="#ref4">[4]</A>.
+
+
+<H3>
+<A NAME="Layout of the Recommendations"></A>1.1 Layout of the
+Recommendations.</H3>
+
+<P>
+The recommendations are grouped by topic and each recommendation is
+numbered to make it easier to refer to during reviews.
+
+<P>
+Layout of the recommendations is as follows:
+
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+Guideline short description
+</TD>
+</TR>
+
+<TR>
+<TD><TT>Example if applicable</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Motivation, background and additional information.
+</TD>
+</TR>
+</TABLE>
+
+<P>
+The motivation section is important. Coding standards and guidelines
+tend to start "religious wars", and it is important to state the background
+for the recommendation.
+
+
+<H3>
+<A NAME="Recommendation"></A>1.2 Recommendation Importance</H3>
+
+<P>
+In the guideline sections the terms <I>must</I>, <I>should </I>and <I>can
+</I>have special meaning. A <I>must </I>requirement must be followed, a
+<I>should </I>is a strong recommendation, and a <I>can </I>is a general
+guideline. 
+
+
+<H2>
+<A NAME="General Recomendations"></A>2 General Recommendations</H2>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+1. Any violation to the guide is allowed if it enhances readability.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS=rationale> 
+The main goal of the recommendation is to improve readability and thereby 
+the understanding and the maintainability and general quality of the code. 
+It is impossible to cover all the specific cases in a general guide and 
+the programmer should be flexible.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+2. The rules can be violated if there are strong personal objections against 
+them.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The attempt is to make a guideline, not to force a particular coding style 
+onto individuals. Experienced programmers normally want adopt a style like
+this anyway, but having one, and at least requiring everyone to get
+familiar with it, usually makes people start <em>thinking</em> about 
+programming style and evaluate their own habits in this area.
+<P>
+On the other hand, new and inexperienced programmers normally use a style
+guide as a convenience of getting into the programming jargon more
+easily.
+</TD>
+</TR>
+</TABLE>
+
+<BR>
+<BR>
+<BR>
+<H2>
+<A NAME="Naming Conventions"></A>3 Naming Conventions</H2>
+
+<H3>
+<A NAME="General"></A>3.1 General Naming Conventions</H3>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+3. Names representing types must be in mixed case starting with upper case.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+Line, SavingsAccount
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+4. Variable names must be in mixed case starting with lower case.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+line, savingsAccount
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community. Makes variables easy to 
+distinguish from types, and effectively resolves potential naming collision 
+as in the declaration Line line;
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+5. Named constants (including enumeration values) must be all uppercase
+using underscore to separate words.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+MAX_ITERATIONS, COLOR_RED, PI
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community.
+In general, the use of such constants should be minimized.
+In many cases implementing the value as a method is a better choice:
+</P>
+<P>
+<TT>
+int getMaxIterations() &nbsp; &nbsp; // NOT: MAX_ITERATIONS = 25 <BR>
+{<BR>
+&nbsp; return 25;<BR>
+}
+</TT>
+</P>
+<P>
+This form is both easier to read, and it ensures a unified interface
+towards class values.
+</P>
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+6. Names representing methods or functions must be verbs and written in mixed
+case starting with lower case.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+getName(), computeTotalWidth()
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community.
+This is identical to variable names, but functions in C++ are already 
+distingushable from variables by their specific form.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+7. Names representing namespaces should be all lowercase.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+analyzer, iomanager, mainwindow
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+8. Names representing template types should be a single uppercase letter.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+template&lt;class T&gt; ... <BR>
+
+template&lt;class C, class D&gt; ... <BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community.
+This makes template names stand out relative to all other names used.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+9. Abbreviations and acronyms must not be uppercase when used as name [4].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+exportHtmlSource(); &nbsp;&nbsp; // NOT: exportHTMLSource();<BR>
+openDvdPlayer(); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // NOT: openDVDPlayer();
+</TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Using all uppercase for the base name will give conflicts with the naming 
+conventions given above. A variable of this type whould have to be 
+named dVD, hTML 
+etc. which obviously is not very readable.
+Another problem is illustrated in the examples above; When the name is
+connected to another, the readbility is seriously reduced; the word
+following the abbreviation does not stand out as it should.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+10. Global variables should always be referred to using the :: operator.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+::mainWindow.open(), ::applicationContext.getName()
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+In general, the use of global variables should be avoided. Consider 
+using singleton objects instead.
+</TD>
+</TR>
+</TABLE>
+
+<!--
+***************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+11. Private class variables could have m_ prefix.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+class SomeClass {<BR>
+&nbsp; private:<BR>
+&nbsp;&nbsp;&nbsp; int&nbsp; m_length;<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+
+Apart from its name and its type, the <em>scope</em> of a variable is its
+most important feature. Indicating class scope by using m_ makes it 
+easy to distinguish class variables from local scratch variables. 
+This is important because class variables are considered to have higher
+significance than method variables, and should be treated with special care
+by the programmer.
+
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+12. Generic variables should have the same name as their type.
+</TD>
+</TR>
+
+<TR>
+<TD>
+<TT>
+void setTopic (Topic *topic) &nbsp; &nbsp;&nbsp; // NOT: void setTopic (Topic *value)<BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // NOT: void setTopic (Topic *aTopic) <BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // NOT: void setTopic (Topic *x) <BR> <BR>
+
+void connect (Database *database) // NOT: void connect (Database *db)<BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // NOT: void connect (Database *oracleDB)
+</TT>
+</TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Reduce complexity by reducing the number of terms and names used.
+Also makes it easy to deduce the type given a variable name only.
+<P>
+If for some reason this convention doesn't seem to <em>fit</em> it is a strong
+indication that the type name is badly chosen. 
+<P>
+Non-generic variables have a <em>role</em>. These variables can often be named
+by combining role and type:
+
+<P>
+<TT>
+Point       startingPoint, centerPoint;<BR>
+Name&nbsp;  loginName;<BR>
+</TT>
+
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+13. All names should be written in english.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+fileName;&nbsp;&nbsp;&nbsp; // NOT:&nbsp;&nbsp; filNavn
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+English is the prefered language for international development.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+14. Variables with a large scope should have long names, variables
+with a small scope can have short names [1].
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Scratch variables used for temporary storage or indices are best kept short. 
+A programmer reading such variables should be able to assume that its value 
+is not used outside a few lines of code. Common scratch variables for integers
+are <EM>i</EM>, <EM>j</EM>, <EM>k</EM>, <EM>m</EM>, <EM>n</EM> and for 
+characters <EM>c</EM> and <EM>d</EM>.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+15. The name of the object is implicit, and should be avoided in a 
+method name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+line.getLength();&nbsp;&nbsp;&nbsp; // NOT:&nbsp; line.getLineLength();
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The latter seems natural in the class declaration, but proves superfluous in 
+use, as shown in the example.
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+
+
+<H3>
+<A NAME="Specific"></A>3.2 Specific Naming Conventions</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+17. The terms <I>get/set</I> must be used where an attribute is accessed 
+directly.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+employee.getName();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+matrix.getElement (2, 4);<BR>
+employee.setName (name);&nbsp; matrix.setElement (2, 4, value);
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community. In Java this 
+convention has become more or less standard.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+18. The term <I>compute</I> can be used in methods where something
+is computed.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+valueSet->computeAverage();&nbsp; matrix->computeInverse()
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Give the reader the immediate clue that this is a potential time consuming 
+operation, and if used repeatedly, he might consider caching the result.
+Consistent use of the term enhances readability.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+19. The term <I>find</I> can be used in methods where something is 
+looked up.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+vertex.findNearestVertex();&nbsp;&nbsp;
+matrix.findMinElement();&nbsp;
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Give the reader the immediate clue that this is a simple look up method 
+with a minimum of computations involved.
+Consistent use of the term enhances readability.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+20. The term <I>initialize</I> can be used where an object or a concept 
+is established.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+printer.initializeFontSet();
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The american <I>initialize </I>should be preferred over the english 
+<I>initialise</I>. Abbreviation <I>init </I>should be avoided.</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+21. Variables representing GUI components should be suffixed by
+the component type name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+mainWindow, propertiesDialog, widthScale, loginText, leftScrollbar, mainForm, fileMenu, minLabel, exitButton, yesToggle etc.
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enhances readability since the name gives the user an immediate clue of the 
+type of the variable and thereby the objects resources.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+22. The suffix <I>List</I> can be used on names representing a list of 
+objects.
+</TD>
+</TR>
+
+<TR>
+<TD>
+<TT> vertex </TT>(one vertex),&nbsp;&nbsp; <TT>vertexList </TT>(a list of
+vertices)
+</TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enhances readability since the name gives the user an immediate clue of the 
+type of the variable and the operations that can be performed on the object.
+<P>
+Simply using the plural form of the base class name for a list 
+(<TT>matrixElement </TT>(one matrix element), <TT>matrixElements </TT>(list of
+matrix elements)) shoul be avoided since the two only differ in a single 
+character and are thereby difficult to distinguish.
+<P>
+A <I>list</I> in this context is the compound data type that can be traversed 
+backwards, forwards, etc. (typically an STL <TT>vector</TT>). 
+A plain array is simpler. The suffix <I>Array</I> can be used to denote an 
+array of objects.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+23. The prefix <I>n</I> should be used for variables representing a number of 
+objects.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+nPoints, nLines
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The notation is taken from mathematics where it is an established
+convention for indicating a number of objects.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+24.The suffix <I>No</I> should be used for variables representing an entity 
+number.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+tableNo, employeeNo
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The notation is taken from mathematics where it is an established 
+convention for indicating an entity number.
+<P>
+An elegant alternative is to prefix such variables 
+with an <em>i</em>: <TT>iTable, iEmployee</TT>.
+This effectively makes them <em>named</em> iterators.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+25. Iterator variables should be called <em>i</em>, <em>j</em>, <em>k</em> etc.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+for (int i = 0; i < nTables); i++) {<BR>
+ &nbsp;  :<BR>
+}<BR>
+<BR>
+vector&lt;MyClass&gt;::iterator  i;<BR>
+for (i = list.begin(); i != list.end(); i++) { <BR>
+&nbsp;   Element element = *i;<BR>
+&nbsp;   ... <BR>
+}  <BR>
+
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The notation is taken from mathematics where it is an established 
+convention for indicating iterators.
+</P>
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+26. The prefix <I>is</I> should be used for boolean variables and methods.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+isSet, isVisible, isFinished, isFound, isOpen
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice in the C++ development community and partially enforced
+in Java.
+<P>
+Using the <I>is</I> prefix solves a common problem of 
+choosing bad boolean names like <TT>status</TT> or <TT>flag</TT>. 
+<TT>isStatus </TT>or<TT> isFlag</TT> simply doesn't fit, and the programmer 
+is forced to choose more meaningful names.
+</P>
+<P>
+There are a few alternatives to the <em>is</em> prefix that fits better in some
+situations. These are the <em>has</em>,  <em>can</em> and
+<em>should</em> prefixes:
+</P>
+<P>
+<TT>bool hasLicense(); </TT><BR>
+<TT>bool canEvaluate(); </TT><BR>
+<TT>bool shouldSort(); </TT><BR>
+</P>
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+27. Complement names must be used for complement operations [1].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+get/set, add/remove, create/destroy, start/stop, insert/delete,
+increment/decrement, old/new, begin/end, first/last, up/down, min/max,
+next/previous, old/new, open/close, show/hide, suspend/resume, etc.
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">Reduce complexity by symmetry.</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+28. Abbreviations in names should be avoided.</TD>
+</TR>
+
+<TR>
+<TD><TT>
+computeAverage();&nbsp;&nbsp;&nbsp;&nbsp; // NOT:&nbsp; compAvg();
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+There are two types of words to consider. 
+First are the common words listed in a language dictionary. 
+These must never be abbreviated. Never write:
+<P>
+<TT>cmd&nbsp;&nbsp;</TT> instead of <TT> &nbsp; command</TT><BR>
+<TT>cp &nbsp;&nbsp;</TT> instead of <TT> &nbsp; copy</TT><BR>
+<TT>pt &nbsp;&nbsp;</TT> instead of <TT> &nbsp; point</TT><BR>
+<TT>comp&nbsp;</TT>      instead of <TT> &nbsp; compute</TT><BR>
+<TT>init&nbsp;</TT>      instead of <TT> &nbsp; initialize</TT><BR>
+etc.<BR>
+<P>
+Then there are domain specific phrases that are more naturally
+known through their abbreviations/acronym. These phrases should be kept
+abbreviated. Never write:
+<P>
+<TT>HypertextMarkupLanguage&nbsp; </TT> instead of <TT> &nbsp; html</TT><BR>
+<TT>CentralProcessingUnit &nbsp;&nbsp; </TT>  instead of <TT> &nbsp; cpu</TT><BR>
+<TT>PriceEarningRatio &nbsp;&nbsp; &nbsp; &nbsp; </TT> instead of <TT> &nbsp; pe</TT><BR>
+etc.
+
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+29. Naming pointers specifically should be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+Line *line;&nbsp;&nbsp; // NOT:&nbsp; Line *pLine;&nbsp; or Line
+*linePtr;&nbsp; etc.
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Many variables in a C/C++ environment are pointers, so a convention like 
+this is almost impossible to follow. Also objects in C++ are often oblique 
+types where the specific implementation should be ignored by the programmer. 
+Only when the actual type of an object is of special significance, the name 
+should empahsize the type.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+30. Negated boolean variable names must be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+bool isError;&nbsp;&nbsp;&nbsp; // NOT:&nbsp;&nbsp; isNoError&nbsp;<BR>
+bool isFound;&nbsp;&nbsp;&nbsp; // NOT:&nbsp;&nbsp; isNotFound
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The problem arises when such a name is used in conjunction with the logical 
+negation operator as this results in a double negative.
+It is not immediately apparent what <TT>!isNotFound</TT>
+means.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+31. Enumeration constants can be prefixed by a common type name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+enum Color {<BR>
+&nbsp; COLOR_RED,<BR>
+&nbsp; COLOR_GREEN,<BR>
+&nbsp; COLOR_BLUE<BR>
+};
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This gives additional information of where the declaration can be found, 
+which constants belongs together, and what concept the constants represent.
+<P>
+An alternative approach is to always refer to the constants through their
+common type: <TT>Color::RED</TT>, <TT>Airline::AIR_FRANCE</TT> etc.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+32. Exception classes should be suffixed with <em>Exception</em>.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+class AccessException<BR>
+{<BR>
+&nbsp; :<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Exception classes are really not part of the main design of the program, and 
+naming them like this makes them stand out relative to the other classes.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+33. Functions (methods returning something) should be named after what they 
+return and procedures (<I>void</I> methods) after what they do.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Increase readability. Makes it clear what the unit should do and especially 
+all the things it is not supposed to do. This again makes it easier to keep 
+the code clean of side effects.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<BR>
+<BR>
+<BR>
+<H2>
+<A NAME="Files"></A>4 Files</H2>
+
+<H3>
+<A NAME="Source Files"></A>4.1 Source Files</H3>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+34. C++ header files should have the extension <I>.h</I>. Source files
+should have the extension <I>.cpp</I> (recommended).
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+MyClass.cpp, MyClass.h
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+These are all accepted C++ standards for file extension. 
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+35. A class should be declared in a header file and defined in a source file
+where the name of the files match the name of the class.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+MyClass.h, MyClass.cpp
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Makes it easy to find the associated files of a given class. 
+This convention is enforced in Java and has become very successful
+as such.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+36. All definitions should reside in source files.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+class MyClass <BR>
+{ <BR>
+&nbsp;  public: <BR>
+&nbsp; &nbsp;   int getValue () {return value_;}  // NO!  <BR>
+&nbsp; &nbsp;   ... <BR>
+&nbsp;   private: <BR>
+&nbsp; &nbsp; int value_; <BR>
+} <BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The header files should declare an interface, the source file should
+implement it. When looking for an implementation, the programmer should
+always know that it is found in the source file.
+The obvious exception to this rule is of course inline functions that
+must be defined in the header file.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+37. File content must be kept within 80 columns.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+80 columns is a common dimension for editors, terminal emulators, 
+printers and 
+debuggers, and files that are shared between several people should keep within 
+these constraints. It improves readability when unintentional line breaks are 
+avoided when passing a file between programmers.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+38. Special characters like TAB and page break must be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+These characters are bound to cause problem for editors, printers, terminal 
+emulators or debuggers when used in a multi-programmer, multi-platform 
+environment.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+39. The incompleteness of split lines must be made obvious [1].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+totalSum = a + b + c +<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d + e;<BR>
+function (param1, param2,<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; param3);<BR>
+setText ("Long line split"<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "into two parts.");<BR>
+for (tableNo = 0; tableNo &lt; nTables;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp; tableNo += tableStep)
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Split lines occurs when a statement exceed the 80 column limit given above. 
+It is difficult to give rigid rules for how lines should be split, but the 
+examples above should give a general hint.
+
+<P>
+In general:
+<UL>
+<LI> Break after a comma. </LI>
+<LI> Break after an operator.</LI>
+<LI> Align the new line with the beginning of the expression on the
+previous line.</LI>
+</UL>
+
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3>
+<A NAME="Include Files"></A>4.2 Include Files and Include Statements</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+40. Header files must include a construction that prevents multiple
+inclusion. The convention is an all uppercase construction of the module
+name, the file name and the h suffix.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+#ifndef MOD_FILENAME_H<BR>
+#define MOD_FILENAME_H<BR>
+&nbsp;:<BR>
+#endif
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The construction is to avoid compilation errors. The name convention is 
+common practice. The construction should appear in the top of the file 
+(before the file header) so file parsing is aborted immediately
+and compilation time is reduced.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+41. Include statements should be sorted and grouped. Sorted by their
+hierarchical position in the system with low level files included first.
+Leave an empty line between groups of include statements.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+#include &lt;fstream&gt;<BR>
+#include &lt;iomanip&gt;<BR><BR>
+
+#include &lt;Xm/Xm.h&gt;<BR>
+#include &lt;Xm/ToggleB.h&gt;<BR><BR>
+
+#include "ui/PropertiesDialog.h"<BR>
+#include "ui/MainWindow.h"
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+In addition to show the reader the individual include files, it also give an 
+immediate clue about the modules that are involved.
+<p>
+Include file paths must never be absolute. Compiler directives should 
+instead be used to indicate root directories for includes.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+42. Include statements must be located at the top of a file only.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Common practice. Avoid unwanted compilation side effects by "hidden" 
+include statements deep into a source file.
+</TD>
+</TR>
+</TABLE>
+
+
+<BR>
+<BR>
+<BR>
+<H2>
+<A NAME="Statements"></A>5 Statements</H2>
+
+<H3>
+<A NAME="Types"></A>5.1 Types</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+43. Types that are local to one file only can be declared inside that file.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enforces information hiding.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+44. The parts of a class must be sorted <I>public</I>, <I>protected
+</I>and <I>private</I> [2][3]. All sections must be identified explicitly.
+Not applicable sections should be left out.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The ordering is <I>"most public first"</I> so people who only wish to use 
+the class can stop reading when they reach the <TT>protected/private</TT>
+sections.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+45. Type conversions must always be done explicitly. Never rely on implicit 
+type conversion.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+floatValue = static_cast&lt;float&gt; (intValue);&nbsp; &nbsp; // YES! <BR>
+floatValue = intValue; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; // NO! <BR> 
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+By this, the programmer indicates that he is aware of the different types 
+involved and that the mix is intentional.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3>
+<A NAME="Variables"></A>5.2 Variables</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+46. Variables should be initialized where they are declared.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This ensures that variables are valid at any time. Sometimes it is 
+impossible to initialize a variable to a valid value where it is declared:
+<P>
+<TT>
+int x, y, z; <BR>
+getCenter (&x, &y, &z); <BR>
+</TT>
+<P>
+In these cases it should be left uninitialized rather than initialized to
+some phony value.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+47. Variables must never have dual meaning.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enhance readability by ensuring all concepts are represented
+uniquely. Reduce chance of error by side effects.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+48. Use of global variables should be minimized.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+In C++ there is no reason global variables need to be used at all. 
+The same is true for global functions or file scope (static) variables.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+49. Class variables should never be declared public.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The concept of C++ information hiding and encapsulation is violated by public 
+variables. Use private variables and access functions instead. 
+One exception to this rule is when the class is essentially a data structure, 
+with no behavior (equivalent to a C <TT>struct</TT>). In this case
+it is appropriate to make the class' instance variables public [2].
+<p>
+Note that <I>struct</I>s are kept in C++ for compatibility with C only, and
+avoiding them increases the readability of the code by reducing the number
+of constructs used. Use a class instead.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+50. Related variables of the same type can be declared in a common 
+statement [3].<BR>
+Unrelated variables should not be declared in the same statement.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+float&nbsp; x, y, z;<BR>
+float&nbsp; revenueJanuary, revenueFebruary, revenueMarch;
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+The common requirement of having declarations on separate lines is not useful 
+in the situations like the ones above. It enhances readability to group 
+variables like this.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+51. C++ pointers and references should have their reference symbol  
+next to the variable name rather than to the type name [3].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+float *x;&nbsp;&nbsp;&nbsp; // NOT:&nbsp; float* x;<BR>
+int &nbsp; &y;&nbsp;&nbsp;&nbsp; // NOT:&nbsp; int& &nbsp; y;<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+It is debatable whether a pointer is a variable of a pointer type 
+(float*&nbsp; x) or a pointer to a given type (float&nbsp; *x). Important 
+in the recommendation given though is the fact that it is impossible to 
+declare more than one pointer in a given statement using the first approach. 
+I.e. float* x, y, z; is equivalent with float *x; float y; float z;
+The same goes for references.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+52. The <TT>const</TT> keyword should be listed before the type name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+void f1 (const Widget *v) &nbsp; &nbsp;  // NOT: void f1 (Widget const *v)
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Neither is better nor worse, but since the former is more commonly used
+that should be the convention.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+53. Implicit test for <I>0</I> should not be used other than for boolean 
+variables and pointers.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if (nLines != 0)&nbsp;&nbsp;&nbsp; // NOT:&nbsp;&nbsp; if (nLines)<BR>
+if (value != 0.0)&nbsp;&nbsp; // NOT:&nbsp;&nbsp; if (value)
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+It is not necessarily defined by the compiler that ints and floats 0 are 
+implemented as binary 0. Also, by using explicit test the statement give 
+immediate clue of the type being tested. It is common also to suggest that 
+pointers shouldn't test implicit for 0 either, i.e. <TT>if (line == 0)</TT> 
+instead of <TT>if (line)</TT>. The latter is regarded as such a common 
+practice in C/C++ however that it can be used.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+54. Variables should be declared in the smallest scope possible.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Keeping the operations on a variable within a small scope, it is easier to 
+control the effects and side effects of the variable.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3> <A NAME="Loops"></A>5.3 Loops</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+55. Only loop control statements must be included in the <TT>for()</TT>
+construction.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+sum = 0; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+// NOT: for (i = 0, sum = 0; i &lt; 100; i++)<BR>
+
+for (i = 0; i &lt; 100; i++) &nbsp;// &nbsp; &nbsp; &nbsp; &nbsp;sum += value[i];<BR>
+&nbsp; sum += value[i];
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Increase maintainability and readability. Make it crystal clear what controls 
+the loop and what the loop contains.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+56. Loop variables should be initialized immediately before the loop.
+</TD>
+</TR>
+
+<TR>
+<TD>
+<TT>
+isDone = false; &nbsp; &nbsp; &nbsp;
+// NOT: &nbsp; bool isDone = false;<BR>
+while (!isDone) { &nbsp; &nbsp;
+// &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;:<BR>
+&nbsp; : &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+// &nbsp; &nbsp; &nbsp;&nbsp; while (!isDone) {<BR>
+} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+// &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; :<BR>
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+</TT>
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+57. <TT>do-while</TT> loops can be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+<TT>do-while</TT> loops are less readable than ordinary <TT>while</TT> loops 
+and <TT>for</TT> loops 
+since the conditional is at the bottom of the loop. The reader must
+scan the entire loop in order to understand the scope of the loop.
+<P>
+In addition, <TT>do-while</TT> loops are not needed. Any <TT>do-while</TT>
+loop can easily be rewritten into a <TT>while</TT> loop or a <TT>for</TT>
+loop. Reducing the number of constructs used enhance readbility.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom">
+58. The use of <TT>break</TT> and <TT>continue</TT> in loops should be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+These constructs can be compared to goto and they should only be used if 
+they prove to have higher readability than their structured counterpart.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+60. The form <TT>while(true)</TT> should be used for infinite loops.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+while (true) {<BR>
+&nbsp;  :    <BR>      
+}<BR>
+<BR>
+for (;;) {  // NO!<BR>
+&nbsp;   :<BR>
+}<BR>
+<BR>
+while (1) {  // NO!<BR>
+&nbsp;   :<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Testing against 1 is neither necessary nor meaningful. The form
+<TT>for (;;)</TT> is not very readable, and it is not apparent that this
+actually is an infinite loop.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3>
+<A NAME="Conditionals"></A>5.4 Conditionals</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+61. Complex conditional expressions must be avoided. Introduce temporary
+boolean variables instead [1].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if ((elementNo &lt; 0) || (elementNo > maxElement)||<BR>
+&nbsp;&nbsp;&nbsp; elementNo == lastElement) {<BR>
+&nbsp; :<BR>
+}</TT>
+
+<P>should be replaced by:
+
+<P><TT>
+isFinished&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = (elementNo &lt; 0) ||
+(elementNo &gt; maxElement);<BR>
+isRepeatedEntry = elementNo == lastElement;<BR>
+if (isFinished || isRepeatedEntry) {<BR>
+&nbsp; :<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+By assigning boolean variables to expressions, the program gets automatic 
+documentation. The construction will be easier to read and to debug.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+62. The nominal case should be put in the <I>if</I>-part and the exception in 
+the <I>else</I>-part of an if statement [1].
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+isError = readFile (fileName);<BR>
+if (!isError) {<BR>
+&nbsp; :<BR>
+}<BR>
+else {<BR>
+&nbsp; :<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Makes sure that the exceptions don't obscure the normal path of execution. 
+This is important for both the readability and performance.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+63. The conditional should be put on a separate line.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if (isDone) {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; // NOT:&nbsp; if (isDone) doCleanup();<BR>
+&nbsp; doCleanup();<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This is for debugging purposes. When writing on a single line, it is not 
+apparent whether the test is really true or not.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+64. Executable statements in conditionals must be avoided.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+// Bad!<BR>
+if (!(fileHandle = open (fileName, "w"))) { <BR>
+&nbsp; : <BR>
+} <BR>
+<BR>
+// Better!<BR>
+fileHandle = open (fileName, "w");<BR>
+if (!fileHandle) {<BR>
+&nbsp; :<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Conditionals with executable statements are just very difficult to read. 
+This is especially true for programmers new to C/C++.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3> <A NAME="Misc"></A>5.5 Miscellaneous</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+65. The use of magic numbers in the code should be avoided. Numbers other 
+than <I>0 </I>and <I>1 </I>should be considered declared as named constants 
+instead.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+If the number does not have an obvious meaning by itself, the readability is 
+enhanced by introducing a named constant instead.
+A different approach is to introduce a method from which the constant can
+be accessed. 
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<p>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+66. Floating point constants should always be written with
+decimal point and at least one decimal.
+
+</TD>
+</TR>
+
+<TR><TD><tt>
+double total = 0.0;  &nbsp; // NOT:  double total = 0; <br>
+double speed = 3.0e8;  // NOT:  double speed = 3e8;<br>
+<br>
+double sum;<br>
+:<br>
+sum = (a + b) * 10.0;
+
+</tt></TD></TR>
+
+<TR>
+<TD CLASS="rationale">
+This empasize the different nature of integer and floating 
+point numbers even if their values might happen to be the same
+in a specific case.
+<P>
+Also, as in the last example above, it emphasize the type of the assigned 
+variable (<tt>sum</tt>) at a point in the code where this might not be 
+evident.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<p>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+67. Floating point constants should always be written with a digit
+before the decimal point.
+</TD>
+</TR>
+
+<TR><TD><tt>
+double total = 0.5;  &nbsp; // NOT:  double total = .5;
+</tt></TD></TR>
+
+<TR>
+<TD CLASS="rationale">
+The number and expression system in C++ is borrowed from mathematics
+and one should adhere to mathematical conventions for syntax wherever
+possible.
+Also, 0.5 is a lot more readable than .5;
+There is no way it can be mixed with the integer 5.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+68. Functions must always have the return value explicitly listed.
+</TD>
+</TR>
+
+<TR>
+<TD>
+<TT>
+int getValue() &nbsp; &nbsp; // NOT: getValue()<BR>
+{<BR>
+&nbsp; :<BR>
+}<BR>
+</TT>
+</TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+If not exlicitly listed, C++ implies <TT>int</tt> return value for 
+functions. A programmer must never rely on this feature, since this
+might be confusing for programmers not aware of this artifact.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+69. <TT>goto</TT> should not be used.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Goto statements violates the idea of structured code. Only in some very few 
+cases (for instance breaking out of deeply nested structures) should goto be 
+considered, and only if the alternative structured counterpart is proven to 
+be less readable.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+70. "0" should be used instead of "NULL".
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+<TT>NULL</TT>is part of the standard C library, but is made obsolete in C++.
+</TD>
+</TR>
+</TABLE>
+
+
+<BR>
+<BR>
+<BR>
+<H2> <A NAME="Layout and Comments"></A>6 Layout and Comments</H2>
+
+<H3>
+<A NAME="Layout"></A>6.1 Layout</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+71. Basic indentation should be 4.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+for (i = 0; i &lt; nElements; i++)<BR>
+&nbsp;&nbsp; a[i] = 0;
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Indentation of 1 is to small to emphasize the logical layout of the code. 
+Indentation larger than 4 makes deeply nested code difficult to read and 
+increase the chance that the lines must be split. Choosing between 
+indentation of 2, 3 and 4,&nbsp; 2 and 4 are the more common, and 4 chosen 
+to increase readability.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%">
+<TR>
+<TD CLASS="recom" COLSPAN="3">
+72. Block layout should be as illustrated in example 1 below (recommended) 
+or example 2, and must not be as shown in example 3 [4]. Function and 
+class blocks must use the block layout of example 2.
+</TD>
+</TR>
+
+<TR>
+<TD WIDTH="33%">
+<TT>
+while (!done) {<BR>
+&nbsp;&nbsp; doSomething();<BR>
+&nbsp;&nbsp; done = moreToDo();<BR>
+}<BR>
+</TD>
+
+<TD WIDTH="33%">
+<TT>
+while (!done)<BR>
+{<BR>
+&nbsp;&nbsp; doSomething();<BR>
+&nbsp;&nbsp; done = moreToDo();<BR>
+}<BR>
+</TD>
+
+<TD>
+<TT>
+while (!done)<BR>
+&nbsp;&nbsp; {<BR>
+&nbsp;&nbsp;&nbsp;&nbsp; doSomething();<BR>
+&nbsp;&nbsp;&nbsp;&nbsp; done = moreToDo();<BR>
+&nbsp;&nbsp; }<BR>
+</TD>
+</TR>
+
+<TR>
+<TD COLSPAN="3" CLASS="rationale">
+Example 3 introduce an extra indentation level which doesn't emphasize the 
+logical structure of the code as clearly as example 1 and 2.&nbsp;
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+73. The <TT>class</TT> declarations should have the
+following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+class SomeClass : public BaseClass<BR>
+{<BR>
+&nbsp;  public: <BR>
+&nbsp; &nbsp; ... <BR>
+&nbsp;  protected: <BR>
+&nbsp; &nbsp; ... <BR>
+&nbsp;  private: <BR>
+&nbsp; &nbsp; ... <BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows partly from the general block rule above.
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+74. The function declarations should have the
+following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+void someMethod() <BR>
+{<BR>
+&nbsp; ...<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows from the general block rule above.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+75. The <TT>if-else</TT> class of statements should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if (condition) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+<BR>
+if (condition) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+else {<BR>
+&nbsp; statements;<BR>
+}<BR>
+<BR>
+if (condition) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+else if (condition) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+else {<BR>
+&nbsp; statements;<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows partly from the general block rule above. However, it might be 
+discussed if an <TT>else</TT> clause should be on the same line as the
+closing bracket of the previous <TT>if</TT> or <TT>else</TT> clause:<BR><BR>
+<TT>
+if (condition) {<BR>
+&nbsp; statements;<BR>
+} else { <BR>
+&nbsp; statements;<BR>
+}<BR><BR>
+</TT>
+This is equivalent to the Sun recommendation. The chosen approach is 
+considered better in the way that each part of the <TT>if-else</TT>
+statement is written on separate lines of the file. This should make it
+easier to manipulate the statement, for instance when moving <TT>else</TT>
+clauses around.
+
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+76. A <TT>for</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+for (initialization; condition; update) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows from the general block rule above. 
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+77. An empty <TT>for</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+for (initialization; condition; update)<BR>
+&nbsp; ;
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This emphasize the fact that the for statement is empty and it makes
+it obvious for the reader that this is intentional.
+Empty loops should be avoided however.
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+78. A <TT>while</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+while (condition) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows from the general block rule above.
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+79. A <TT>do-while</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+do {<BR>
+&nbsp; statements;<BR>
+} while (condition);<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows from the general block rule above.
+</TD>
+</TR>
+</TABLE>
+
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+80. A <TT>switch</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+switch (condition) {<BR>
+&nbsp; case ABC : <BR>
+&nbsp; &nbsp; statements;<BR>
+&nbsp; &nbsp; // Fallthrough<BR>
+<BR>
+&nbsp; case DEF : <BR>
+&nbsp; &nbsp; statements;<BR>
+&nbsp; &nbsp; break;<BR>
+<BR>
+&nbsp; case XYZ : <BR>
+&nbsp; &nbsp; statements;<BR>
+&nbsp; &nbsp; break;<BR>
+<BR>
+&nbsp; default : <BR>
+&nbsp; &nbsp; statements;<BR>
+&nbsp; &nbsp; break;<BR>
+}<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Note that each <TT>case</TT> keyword is indented relative 
+to the switch statement as a whole. This makes the entire switch statement
+stand out. Note also the extra space before the <I>:</I> character.
+The explicit <I>Fallthrough</I> comment should be included whenever 
+there is a case statement without a <TT>break</TT> statement. Leaving the
+<TT>break</TT> out is a common error, and it must be made clear that it
+is intentional when it is not there.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+81. A <TT>try-catch</TT> statement should have the following form:
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+try {<BR>
+&nbsp; statements;<BR>
+}<BR>
+catch (Exception &exception) {<BR>
+&nbsp; statements;<BR>
+}<BR>
+
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This follows partly from the general block rule above. 
+The discussion about closing brackets for <tt>if-else<tt> statements
+apply to the <tt>try-catch<TT> statments.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+82. Single statement <TT>if-else</TT>, <TT>for</TT> or <TT>while</TT>
+statements can be written without brackets.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if (condition) <BR>
+&nbsp; statement;<BR>
+<BR>
+while (condition) <BR>
+&nbsp; statement;<BR>
+<BR>
+for (initialization; condition; update) <BR>
+&nbsp; statement;<BR>
+<BR>
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+It is a common recommendation (Sun Java recommendation included) that brackets 
+should always be used in all these cases. However, brackets are in general 
+a language construct that groups several statements. Brackets are per
+definition superfluous on a single statement.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+83. The function return type can be put in the left column immediately above 
+the function name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+void<BR>
+MyClass::myMethod (void)<BR>
+{<BR>
+&nbsp; :<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This makes it easier to spot function names within a file since one can 
+assume that they all start in the first column.
+</TD>
+</TR>
+</TABLE>
+
+
+<H3> <A NAME="White Space"></A>6.2 White Space</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+84.<BR>
+- Conventional operators should be surrounded by a space character. <BR>
+- C++ reserved words should be followed by a white space. <BR>
+- Commas should be followed by a white space. <BR>
+- Colons should be surrounded by white space. <BR>
+- Semicolons in for statments should be followed by a space character.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+a = (b + c) *
+d;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// NOT:&nbsp;&nbsp; a=(b+c)*d<BR>
+while (true)
+{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// NOT:&nbsp;&nbsp; while(true) ...<BR>
+doSomething (a, b, c, d);&nbsp;&nbsp; // NOT:&nbsp;&nbsp;
+doSomething (a,b,c,d);<BR>
+case 100
+:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+// NOT:&nbsp;&nbsp; case 100:<BR>
+for (i = 0; i &lt; 10; i++) {&nbsp; // NOT:&nbsp;&nbsp; for
+(i=0;i&lt;10;i++){
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Makes the individual components of the statements stand out. Enhances 
+readability. It is difficult to give a complete list of the suggested use of 
+whitespace in C++ code. The examples above however should give a general idea 
+of the intentions.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+85. Method names should be followed by a white space when it is followed 
+by another name.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+doSomething (currentFile);&nbsp;&nbsp;&nbsp; // NOT:&nbsp;&nbsp;
+doSomething(currentFile);
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Makes the individual names stand out. Enhances readability. When no name 
+follows, the space can be omitted (<TT>doSomething()</TT>) since there is no 
+doubt about the name in this case. 
+<P>
+An alternative to this approach is to
+require a space <I>after</I> the opening parenthesis. Those that adhere 
+to this standard usually also leave a space before the closing parentheses:
+<TT>doSomething( currentFile );</TT>. This do make the individual names stand
+out as is the intention, but the space before the closing parenthesis is
+rather artificial, and without this space the statement looks rather
+asymmetrical (<TT>doSomething( currentFile);</TT>).
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+86. Logical units within a block should be separated by one blank line.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enhance readability by introducing white space between logical units of 
+a block.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+87. Methods should be separated by three blank lines.
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+By making the space larger than space within a method, the methods will 
+stand out within the file.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+88. Variables in declarations should be left aligned.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+AsciiFile&nbsp; *file;<BR>
+int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nPoints;<BR>
+float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x, y;
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Enhance readability. The variables are easier to spot from the types by 
+alignment.
+</TD> 
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+89. Use alignment wherever it enhanbces readability.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+if&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (a == lowValue)&nbsp;&nbsp;&nbsp;
+compueSomething();<BR>
+else if (a == mediumValue) computeSomethingElse();<BR>
+else if (a == highValue)&nbsp;&nbsp; computeSomethingElseYet();<BR>
+
+<BR><BR>
+
+value = (potential&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *
+oilDensity)&nbsp;&nbsp; / constant1 +<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(depth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+* waterDensity) / constant2 +<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (zCoordinateValue *
+gasDensity)&nbsp;&nbsp; / constant3;<BR>
+
+<BR><BR>
+
+minPosition&nbsp;&nbsp;&nbsp;&nbsp; = computeDistance
+(min,&nbsp;&nbsp;&nbsp;&nbsp; x, y, z);<BR>
+averagePosition = computeDistance (average, x, y, z);<BR>
+
+<BR><BR>
+
+switch (value) {<BR>
+&nbsp; case PHASE_OIL&nbsp;&nbsp; : strcpy (string,
+"Oil");&nbsp;&nbsp; break;<BR>
+&nbsp; case PHASE_WATER : strcpy (string, "Water"); break;<BR>
+&nbsp; case PHASE_GAS&nbsp;&nbsp; : strcpy (string,
+"Gas");&nbsp;&nbsp; break;<BR>
+}
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+There are a number of places in the code where white space can
+be included to enhance readability even if this violates common guidelines.
+Many of these cases have to do with code alignment. General guidelines on
+code alignment are difficult to give, but the examples above should give
+a general clue.
+</TD>
+</TR>
+</TABLE>
+
+
+
+<H3> <A NAME="Comments"></A>6.3 Comments</H3>
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+90. Tricky code should not be commented but rewritten! [1]
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+In general, the use of comments should be minimized by making
+the code self-documenting by appropriate name choices and an explicit
+logical structure.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+91. All comments should be written in english [2].
+</TD>
+</TR>
+
+<TR>
+<TD></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+In an international environment english is the preferred language.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+92. Use <I>//</I> for all comments, including multi-line comments.
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+// Comment spanning<BR>
+// more than one line.
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Since multilevel C-commenting is not supported, using // comments ensure 
+that it is always possible to comment out entire sections of a file using 
+/* */ for debugging purposes etc.
+<P>
+There should be a space between the "//" and the actual comment, and comments
+should always start with an upper case letter and end with a period. 
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+93. Comments should be included relative to their position in the code. [1]
+</TD>
+</TR>
+
+<TR>
+<TD><TT>
+while (true)
+{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+// NOT:&nbsp;&nbsp;&nbsp; while (true) {<BR>
+&nbsp; // Do something&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Do
+something<BR>
+&nbsp; something();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+something();<BR>
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }
+</TT></TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+This is to avoid that the comments break the logical structure of the 
+program.
+</TD>
+</TR>
+</TABLE>
+
+
+<!--
+****************************************************************************
+   Rule
+****************************************************************************
+-->
+<P>
+<TABLE BORDER WIDTH="100%" >
+<TR>
+<TD CLASS="recom">
+94. Class and method header comments should follow the JavaDoc conventions.
+</TD>
+</TR>
+
+<TR>
+<TD>
+</TD>
+</TR>
+
+<TR>
+<TD CLASS="rationale">
+Regarding standardized class and method documentation the Java development
+community is far more mature than the C++. This is of course becuase Java
+includes a tool for extracting such comments and produce high quality
+hypertext documentation from it.
+<P>
+There have never been a common convention for writing this kind of 
+documentation in C++, so when choosing between inventing your own 
+convention, and using an existing one, the latter option seem natural. 
+Also, there are JavaDoc tools for C++ available. See for instance
+<A HREF="http://www.zib.de/Visual/software/doc++/">Doc++</A> or
+<A HREF="http://www.stack.nl/~dimitri/doxygen/index.html">Doxygen</A>.
+</TD>
+</TR>
+</TABLE>
+
+
+<BR>
+<BR>
+<BR>
+<H2> <A NAME="References"></A>8 References
+</H2>
+
+<P><A NAME="ref1"></A>[1] Code Complete, Steve McConnel - Microsoft
+Press (hhhummmpff)
+
+<P><A NAME="ref2"></A>[2] Programming in C++, Rules and Recommendations,
+M Henricson, e. Nyquist,&nbsp; Ellemtel (Swedish telecom)
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A HREF="http://www.doc.ic.ac.uk/lab/cplus/c%2b%2b.rules/">
+http://www.doc.ic.ac.uk/lab/cplus/c%2b%2b.rules/
+</A>
+
+<P><A NAME="ref3"></A>[3] Wildfire C++ Programming Style, Keith Gabryelski,
+Wildfire Communications Inc.
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A HREF="http://www.wildfire.com/~ag/Engineering/Development/C++Style/">
+http://www.wildfire.com/~ag/Engineering/Development/C++Style/
+</A>
+
+<P><A NAME="ref4"></A>[4] C++ Coding Standard, Todd Hoff
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A HREF="http://www.possibility.com/Cpp/CppCodingStandard.html">
+http://www.possibility.com/Cpp/CppCodingStandard.htm
+</A>
+
+<P><A NAME="ref5"></A>[5] Doxygen documentation system
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+<A HREF="http://www.stack.nl/~dimitri/doxygen/index.html">
+http://www.stack.nl/~dimitri/doxygen/index.html
+</A>
+
+
+<!--
+*******************************************************************************
+   Footer common for all pages 
+*******************************************************************************
+-->
+
+<BR> <BR>
+
+<HR SIZE=1>
+
+<TABLE WIDTH="100%">
+
+<TR>
+
+<TD VALIGN="bottom">
+
+<A HREF="http://www.w3.org">
+<IMG BORDER=0 ALIGN="right" HSPACE=0 VSPACE=0 SRC="images/vh40.gif" ALT="HTML4.0 Compliant">
+</A>
+
+</TD></TR></TABLE>
+
+</TD>
+</TR>
+</TABLE>
+
+</BODY>
+</HTML>

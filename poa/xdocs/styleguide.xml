@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+  <document>
+
+	<properties>
+	  <title>Programming Style Guideline</title>
+	</properties>
+
+	<body>
+
+	  <section name="Programming Style Guideline">
+          <!-- TODO: Port styleguide to xdoc -->
+          <p>The style guide has not been ported to xdoc, so you can find it <a href="poa_guidelines.html">here</a></p>
+      </section>
+    </body>
+  </document>

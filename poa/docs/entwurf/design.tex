@@ -1,9 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.15 2004/06/15 22:36:48 vanto Exp $
+%% $Id: design.tex,v 1.16 2004/06/16 11:55:21 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% classname
+\newcommand\cn[1]{{\bf \texttt{#1}}}
+% method
+\newcommand\m[1]{\texttt{#1}}
 
 \chapter{Architektur}
 
@@ -85,84 +90,6 @@ gegen die der selbstgeschriebene Code zu linken ist, und src für den
 Quelltext für die CPU enthält. Für diesen Quelltext kann POA
 Rahmencode generieren.
 
-\section{Entwurfsmuster}
-
-Der Entwurf von POA integriert bekannte und weitverbreitete
-Entwurfsmuster, um die Struktur des Entwurfs leicht verständlich zu
-machen und für zukünftige Erweiterungen im größtmöglichen Maße offen
-zu sein.
-
-Entwufsmuster beschreiben eine Lösungsstrategie für ein abstraktes
-Problem. Die Struktur des Codes wird so weitgehend standardisiert und
-ermöglicht einem Wartungsingenieur eine schnelle
-Einarbeitung. Weiterhin bieten sie Richtlinien an, wie weitere
-Funktionalität in das System integriert werden kann.
-
-\subsection{Model-View-Controller}
-\label{model_view_controller}
-
-In dem Model-View-Controller Entwurfsmuster wird die Verarbeitung der
-Daten vollständig von der Visualisierung unabhängig gehalten. Die
-Daten werden in sogenannten Model Klassen verwaltet und von View
-Klassen angezeigt, wobei eine 1:n Beziehung besteht, das heißt mehrere
-Views können die selben Daten darstellen. Es werden auch verschiedene
-Ansichten auf die selben Daten ermöglicht. Die Kommunikation von
-Model- zu View-Klassen erfolgt anonym über Benachrichtigungen (siehe
-auch \ref{Benachrichtigungen}).
-
-Eine Model Klasse stellt über get-Methoden oder Iteratoren den Zustand
-zur Verfügung. Dieser Zustand wird von einer View-Klasse dem
-Anwendungszweck entsprechend angezeigt. Konkret werden die Blöcke,
-Pins und Verbindungen in POA jeweils durch Datenobjekte
-repräsentiert. Diese werden mit Hilfe von entsprechenden Viewobjekten von der
-GridCanvas Klasse angezeigt. 
-
-\subsection{Observer}
-
-Die QT Bibliothek erweitert den Sprachumfang von C++ über einen
-speziellen Compiler, den Meta-Object-Compiler (MOC), mit einem
-Benachrichtigungskonzept. Mit Hilfe von
-Benachrichtigungen können Objekte anderen Objekten Mitteilungen über
-Zustandsänderungen schicken. Die nahtlose Integration in die
-Programmiersprache ermöglicht eine besonders einfache Verwendung des
-Mechanismus.
-
-\label{Benachrichtigungen}
-Die Benachrichtigungen (Signals) werden durch das Schlüsselwort emit
-gesendet und von speziellen Methoden (Slots) empfangen. Die Signals
-und Slots werden in den Klassendeklarationen angegeben. Die Verbindung
-zwischen zwei Objekten wird mittels der connect Methode hergestellt. 
-
-In POA wird an mehreren Stellen Gebrauch von dem Signal-Slot
-Mechanismus gemacht: 
-\begin{enumerate}
-\item Wenn sich Einstellungen verändern 
-\item Wenn ein Projekt verändert wurde
-\item Um die Kommunikation zwischen Pins und den zugehörigen Blöcken
-und Konnektoren zu ermöglichen.
-\item Um Veränderungen zwischen Models und Views zu synchronisieren.
-\end{enumerate}
-
-\subsection{Strategie}
-
-Das Strategiemuster ermöglicht, den Algorithmus für eine Problemlösung
-austauschbar zu machen. 
-
-In POA wurde die Routing Schnittstelle für die Verbindungen zwischen
-den Blöcken abstrakt definiert und konkret mit zwei verschiedenen
-Algorithmen implementiert. Die Algorithmen haben unterschiedliche
-Eigenschaften in Bezug auf die Laufzeit und Qualität des Ergebnisses. 
-
-\subsection{Singleton}
-
-Das Singleton Muster wird verwendet, wenn eine Klasse nur genau einmal
-instanziert werden soll. Dadurch lassen sich auch in
-objekt-orientierten Systemen, äquivalent zu globalen Variablen in
-imperativen Systemen, global verfügbare Objekte realisieren,
-die über eine definierte Schnittstelle angesprochen werden können. 
-
-In POA ist lediglich die Settings Klasse als Singleton implementiert.
-
 \section{Module}
 \label{modules}
 
@@ -171,129 +98,106 @@ Module aufteilen, die eine gerine Kopplung aufweisen. In den folgenden
 Abschnitten sind diese Module im Detail beschrieben.
 
 Die Zuordnung von einzelnen Klassen zu Modulen lässt sich in der Regel
-aus dem Klassennamen ableiten oder ist aus dem POA
-Software-Architektur anhand der Schattierung ersichtlich.
+aus dem Klassennamen ableiten oder ist aus dem
+Software-Architektur-Poster anhand der Schattierung ersichtlich.
 
 \subsection{Datenmodell (Model)}
 \label{model}
 
 In den Model-Klassen wird das Datenmodell eines Projekts
-repräsentiert. In POA werden Daten in Objekten der Klassen {\bf BlockModel}
-und {\bf PinModel}, sowie abgeleiteter Klassen gespeichert. Die Klasse
-{\bf Projekt} stellt den Zusammenhalt zwischen den einzelnen Models her und
-stellt das Projektmanagement zur Verfügung. Dafür gibt es die Methoden
-\emph{open()}, \emph{save()} und \emph{saveAs(OString path)}. Der
-Dateiname für die POA-Projektdatei für \emph{open()} und \emph{save()}
-wird dem Projekt über den Konstruktor mitgeteilt, aber nicht
-automatisch geladen. \emph{save()} erstellt über einen Aufruf von
-\emph{serialize()} ein XML Document, welches dann in die Datei
-geschrieben wird. Umgekehrt analog geht \emph{open()} vor. Der
-Mechanismus zum Erstellen des XML Dokuments bzw. des Datenmodells aus
-einem XML Dokument ist auf jede einzelne Klasse des Modells
-verteilt. So ist es zum Einen möglich, jedes Objekt auch unabhängig
-vom Gesamtmodell zu serialisieren, zum Anderen vereinfacht es die
-Wartbarkeit - so müssen bei Erweiterungen des Models nur die Methoden
-des {\bf Serialize}-Interfaces angepasst werden, der Code im {\bf
-  Project} bleibt gleich. Wichtig ist hier, dass bei abgeleiteten
-Klassen immer die serialize/deserialize-Methoden der Superklasse
-aufgerufen werden, da sich der Mechanismus auf die gesamte
-Klassenhierarchie verteilt. Um anhand der Model-Typenbezeichnung in
-dem XML Dokument die richtige Klasse zu instanzieren, wird die Klasse
-{\bf ModelFactory} verwendet. Sie liest das XML-Attribut
-''block-type'' aus und wählt so die Implementierung aus.
-Über die Methoden \emph{addBlock()} und \emph{removeBlock()} werden
-dem Projekt neue Modellblöcke bekannt gemacht bzw. wieder entfernt.
-Die {\bf Project}-Klasse erlaubt es auch, mehrere View-Instanzen zu
-verwalten. Dieser Mechanismus ist bisher aber nicht vollständig in die
-anderen Klassen integriert. So wird bisher immer der erste Canvas aus
-\emph{canvasList()} verwendet und angezeigt.
-Wird ein Projekt verändert, d.h. ein Block hinzugefügt oder entfernt,
-oder die Methode \emph{setModified()} aufgerufen, so wird das Signal
-\emph{modified(bool)} aufgerufen. Darüber können andere Klassen über
-die Veränderung benachrichtigt werden.
+repräsentiert. In POA werden Daten in Objekten der Klassen
+\cn{BlockModel} und \cn{PinModel}, sowie abgeleiteter Klassen
+gespeichert. Die Klasse \cn{Projekt} verwaltet die Model-Objekte. Sie
+dient als Container und stellt Methoden zur serialisierung und
+deserialisierung von Projekten in einem POA spezifischen XML-Format
+zur Verfügung. Wird ein Projekt verändert, d.h. ein Block hinzugefügt,
+entfernt oder verändert, muss die Methode \m{setModified()}
+aufgerufen werden.
 
-Die Modelklassen basieren alle auf der abstrakten Klasse {\bf
-  AbstractModel}. In ihr werden nur die grundlegensten Felder wie
-  \emph{id}, \emph{name}, \emph{description}, \emph{type}
-  definiert. Das letztere Feld ist die Kategorie-Bezeichnung in der
-  Library. Diese Daten werden auch über die Serialize-Methoden
-  persistierbar gemacht. Die Methode \emph{createView(GridCanvas*)}
-  erzeugt für das Modell die korrespondierende View-Instanz, die
-  Methode \emph{updatePerformed()} benachrichtigt das View von
-  signifikanten Änderungen am Modell und sollte aufgerufen werden,
-  wenn die Taktraten eines Blocks geändert wurden.
+\subsubsection{Serialisierung}
 
-Die Klasse {\bf BlockModel} ist die erste Implementierung der
-abstrakten Klasse und gibt dem Modell die Möglichkeit, Blöcke mit Pins
-zu repräsentieren. Ausserdem werden in ihr Informationen zum
-Laufzeitverhalten der Blöcke abgelegt.
-Über die Methoden \emph{addPin(PinModel*)}
-bzw. \emph{deletePin(PinModel*)} wird dem Block ein Pin hinzugefügt
-bzw. wieder entfernt. Beim deserialisieren wird dieser Vorgang
-automatisch propagiert. Mittels \emph{pins()} kann eine Liste der Pins
-abgefragt werden. Zusätzlich enthält diese Klasse einige Methoden um
-Informationen über den Typ der Pins zu erhalten, ob der Block
-Input-Pins, Output-Pins und/oder Episodic-Pins hat.
-Das Laufzeitverhalten wird über die Felder \emph{offset, autoOffset,
-  runtime} und \emph{hasRuntime} spezifiziert und kann über die
-entsprechenden get- bzw. set-Methoden abgefragt bzw modifziert
-werden. Die Methode \emph{tip()} stellt objektspezifische
-Informationen zur Verfügung, die dann als Tooltip angezeigt werden.
-Zur Benachrichtigung anderer Klassen, stellt {\bf BlockModel} zwei
-Singale zur Verfügung: \emph{pinAdded(PinModel*)} notifiziert andere
-Klassen und das View-Pendant über neue Pins, das
-\emph{deleted(BlockModel*)}-Signal wird ausgelöst, bevor der Block
-gelöscht wird.
+Der Mechanismus zum Erstellen des XML Dokuments bzw. des Datenmodells
+aus einem XML Dokument ist in den Model-Klassen gekapselt. So ist es zum
+Einen möglich, jedes Objekt unabhängig vom Projekt zu serialisieren,
+zum Anderen vereinfacht es die Wartbarkeit. Bei Erweiterungen der
+Model-Klasse um weitere Datenfelder müssen nur die \m{serialize()} und
+\m{deserialize()} Methoden angepasst werden, der Code in der Klasse \cn{Project}
+bleibt gleich. Wichtig ist hier, dass bei abgeleiteten Klassen immer
+die serialize/deserialize-Methoden der Superklasse aufgerufen werden,
+da sich der Mechanismus auf die gesamte Klassenhierarchie verteilt. 
 
-Die nächste Verfeinerung der Hierarchie ermöglicht die Spezialisierung
-auf CPUs und Muxer, die es ermöglichen, Verbindungen zwischen Blöcken
-zu multiplexen.
-Ein CPU-Block ({\bf CpuModel}) erhält die neuen Felder
-\emph{autoRuntime, cpuId} und \emph{source}. Diese Felder ermöglichen
-die automatische Laufzeitdauerberechnung, die Erfassung der Id, die
-die CPU auf dem CPLD identifiziert sowie der C-Quellcode der NIOS-CPU.
-Ein Mux-Block ({\bf MuxModel}) wird mit einem Container für {\bf
-  MuxMapping}s ausgestattet. In diesen wird das Mapping von Pins auf
-Pins mit unterschiedlichen Bitbreiten ermöglicht.
+Für die Erzeugung von Objektinstanzen bei der Deserialisierung ist die
+Klasse \cn{ModelFactory} zuständig. Sie erzeugt anhand der
+XML-Attributs ''block-type'' in dem jeweiligen XML-Element das
+entsprechende Model-Objekt. Über die Methoden \m{addBlock()} und
+\m{removeBlock()} werden dem Projekt neue Modellblöcke bekannt
+gemacht bzw. wieder entfernt.
 
-Instanzen der Klasse {\bf PinModel} repräsentieren die einzelnen Pins
+\subsubsection{Klassenhierarchie}
+
+Die Model-Klassen sind von der abstrakten Klasse \cn{AbstractModel}
+abgeleitet. Die Methode \m{createView(GridCanvas*)} erzeugt für
+eine Model-Object eine korrespondierendes View-Object. Eine Aufruf der
+Methode \m{updatePerformed()} benachrichtigt das View-Object über
+Änderungen im Zustand des Model-Objects und sollte aufgerufen werden,
+wenn z.B. die Taktraten eines Blocks geändert wurde.
+
+Die Klasse \cn{BlockModel} ist von \cn{AbstractModel} abgeleitet und
+repräsentiert Blöcke mit Pins. Ausserdem werden in ihr Informationen
+zum Laufzeitverhalten der Blöcke abgelegt. Über die Methoden
+\m{addPin(PinModel*)} bzw. \m{deletePin(PinModel*)} wird dem Block ein
+Pin hinzugefügt bzw. wieder entfernt. Bei Aufruf der Methode
+\m{addPin(PinModel*)}, erfolgt eine Benachrichtigung an das
+korrespondierende View-Objekt über das Signal \m{pinAdded(PinModel*)}.
+Wird ein \cn{BlockModel}-Objekt gelöscht wird das Signal
+\m{deleted(BlockModel*)} gesendet, und das View-Objekt gelöscht.
+
+Die nächste Verfeinerung der Vererbungshierarchie ermöglicht die
+Spezialisierung auf CPUs und Muxes, die es ermöglichen, Verbindungen
+zwischen Blöcken zu multiplexen. Ein CPU-Block (\cn{CpuModel}) erhält
+die neuen Felder \m{autoRuntime}, \m{cpuId} und \m{source}.  Diese
+Felder ermöglichen die automatische Laufzeitdauerberechnung, die
+Erfassung der Id, die die CPU auf dem CPLD identifiziert sowie der
+C-Quellcode der NIOS-CPU.  Ein Mux-Block (\cn{MuxModel}) verwaltet
+einen Container mit \cn{MuxMapping}-Objekten. In diesen wird das
+Mapping von Pins auf Pins mit unterschiedlichen Bitbreiten ermöglicht.
+
+Instanzen der Klasse \cn{PinModel} repräsentieren die einzelnen Pins
 eines Blocks. Wenn eine Verbindung zwischen zwei Blöcken hergestellt
 wird, so müssen auch die Pins über darüber benachrichtigt werden. Das
-geschieht über einen Aufruf der Methode \emph{attach(PinModel*
-  connectTo)}. Wurde ein Verbindung erstellt, gibt die Methode
-\emph{connected()} gibt den Pin des anderen Blocks zurück. Ausserdem
-haben Pins einen Namen (\emph{name}), eine Adresse (\emph{address}),
-eine Bitbreite (\emph{bits}), eine Id (\emph{id}), sowie eine
-Position (\emph{position}), die die Reihenfolge der Pins
-wiederspiegelt. Der Typ eines Pins kann die Werte
-\emph{PinType::INPUT}, \emph{PinType::OUTPUT} und
-\emph{PinType::EPISODIC} annehmen. Über den Konstruktor wird dem Pin
-der Vaterblock mitgeteilt. Dieser kann über \emph{parent()} abgefragt
-werden.
-Die Signale \emph{deleted(), detached()} und \emph{updated()}
-benachtigten interessierte Klassen wenn ein Pin entfernt werden soll,
-wenn eine Verbindung gelöst wurde und wenn Eigenschaften des Pins
-verändert wurden. In der derzeitige Implementierung hören nur die {\bf
-  BlockView}-Instanzen auf diese Signale.
+geschieht über einen Aufruf der Methode \m{attach(PinModel*
+  connectTo)}. Wurde eine Verbindung erstellt, gibt die Methode
+\m{connected()} gibt den Pin des anderen Blocks zurück. Ausserdem
+haben Pins einen Namen (\m{name}), eine Adresse (\m{address}), eine
+Bitbreite (\m{bits}), eine Id (\m{id}), sowie eine Position
+(\m{position}), die die Reihenfolge der Pins wiederspiegelt. Der Typ
+eines Pins kann die Werte \m{PinType::INPUT}, \m{PinType::OUTPUT} und
+\m{PinType::EPISODIC} annehmen. Über den Konstruktor wird dem Pin der
+Vaterblock mitgeteilt. Dieser kann über \m{parent()} abgefragt werden.
+Die Signale \m{deleted(), detached()} und \m{updated()} benachtigten
+interessierte Klassen, wenn ein Pin entfernt werden soll, wenn eine
+Verbindung gelöst wurde oder wenn Eigenschaften des Pins verändert
+wurden. In der derzeitige Implementierung hören nur die
+\cn{BlockView}-Instanzen auf diese Signale.
+
+\subsubsection{Drag and Drop}
 
 Zum visuellen erzeugen von Blöcken wird bei POA die Drag\&Drop-Idee
 verwendet. Dazu zieht der Benutzer ein Objekt aus der Blockbibliothek
-in den Arbeitsbereich ({\bf GridCanvas}). Umgekehrt können auch Blöcke
-aus dem Arbeitsbereich in die Bibliothekt gezogen werden. Unter der
+in den Arbeitsbereich (\cn{GridCanvas}). Unter der
 Haube werden die Objekte beim Herausziehen aus der Bibliothek über die
 Serialisierungsmethoden in einen XML-String umgewandelt und beim
-''fallen lassen'' über die {\bf ModelFactory} instanziert, von
+''fallen lassen'' über die \cn{ModelFactory} instanziert, von
 Bibliotheksinformationen bereinigt und in das Projekt eingefügt. Das
 dazugehörige View-Objekt wird an den aktuellen Maus-Koordinaten
-erstellt.
-Das Einfügen in die Bibliothek funktioniert analog dazu.
+erstellt.  Das Einfügen in die Bibliothek funktioniert analog dazu.
 Die Zwischenablagefuntionen sind genauso implementiert. Beim Kopieren
 eines Objekts werden die Daten serialisiert und in die Zwischenablage
 kopiert und beim Einfügen wieder deserialisiert. Da z.B. bei CPUs der
 Sourcecode mitkopiert werden soll, ist für die
-Copy\&Paste-Funktionalität eine erweiterte Serialisierung
-notwendig. Daher sieht die abstrakte Superklasse für die
-Serialisierung für die Zwischenablage eine eigene Methode vor: \emph{serializeCopy()}.
+Copy\&Paste-Funktionalität eine erweiterte Serialisierung notwendig.
+Daher sieht die abstrakte Superklasse für die Serialisierung für die
+Zwischenablage eine eigene Methode vor: \m{serializeCopy()}.
 
 \subsection{View}
 \label{view}
@@ -302,32 +206,37 @@ Views werden verwendet, um dem Benutzer die Daten zu präsentieren. Sie
 werden über Signals benachrichtigt, wenn sich ein Model verändert und
 passen dann die grafische Darstellung entsprechend an.
 
-Der GridCanvas ist eine Arbeitsoberfläche für ein POA-Netzwerk. Die
-Basisklasse für den GridCanvas sowie für alle Views darauf werden von
+Der \cn{GridCanvas} ist eine Arbeitsoberfläche für ein POA-Netzwerk. Die
+Basisklasse für den \cn{GridCanvas} sowie für alle Views darauf werden von
 der QT-Bibliothek gestellt. Für POA musste nur eine Spezialisierung
 dieser Basisfunktionalität durchgeführt werden.
 
-Ohne selbst als Model gelten zu können, stellt der GridCanvas nur eine
+Die \cn{GridCanvas}-Objecte werden in der \cn{Project}-Klasse
+verwaltet. Zu jedem Projekt kann es mehrere \cn{GridCanvas}-Instanzen
+geben. Diese Funktionalität wird bisher allerdings nicht genutzt, es
+wird immer nur ein \cn{GridCanvas} pro Projekt angezeigt.
+
+Ohne selbst als Model gelten zu können, stellt der \cn{GridCanvas} nur eine
 virtuelle Arbeitsoberfläche dar. Für die Darstellung eines Teils des
-GridCanvas sind CanvasView-Objekte zuständig. So kann dieselbe
+\cn{GridCanvas} sind \cn{CanvasView}-Objekte zuständig. So kann dieselbe
 Arbeitsoberfläche in mehreren Fenstern geöffnet werden und in jedem
 Fenster kann ein anderer Ausschnitt der Arbeitsoberfläche angezeit
 werden.
 
 Die meisten Views, die speziell für POA entwickelt wurden, päsentieren
-grafische Objekte auf einem dem GridCanvas. Dazu gehören BlockView,
-PinView und TextView.
+grafische Objekte auf einem \cn{GridCanvas}. Dazu gehören \cn{BlockView},
+\cn{PinView} und \cn{TextView}.
 
-Eine besondere Behandlung ist allerdings für Konnektoren
-notwendig. Konnektoren können auf dem Canvas nicht ohne weiteres
-dargestellt werden, weil Qt seine Funktionalität hier auf wenige
-geometrische Objekte beschränkt. Die Linienzüge die In POA verwendet
-werden, bestehen deshalb aus mehreren
-ConnectorViewSegment-Objekten. Um von der Verwaltung der einzelnen
-Segmente zu abstrahieren wurde die Klasse ConnectorViewList
-eingeführt. Objekte dieser Klasse agieren als View für ein
-ConnectorModel, aber delegieren die tatsächliche Darstellungsaufgabe
-an mehrere ConnectorViewSegment-Objekte.
+Eine besondere Behandlung ist allerdings für Konnektoren notwendig.
+Konnektoren können auf dem Canvas nicht ohne weiteres dargestellt
+werden, weil Qt seine Funktionalität hier auf wenige geometrische
+Objekte beschränkt. Die Linienzüge die In POA verwendet werden,
+bestehen deshalb aus mehreren \cn{ConnectorViewSegment}-Objekten. Um
+von der Verwaltung der einzelnen Segmente zu abstrahieren wurde die
+Klasse \cn{ConnectorViewList} eingeführt. Objekte dieser Klasse
+agieren als View für ein Verbindung zwischen zwei
+\cn{PinModel}-Objekten, aber delegieren die tatsächliche
+Darstellungsaufgabe an mehrere \cn{ConnectorViewSegment}-Objekte.
 
 \subsection{Controller}
 \label{controller}
@@ -338,26 +247,18 @@ View und Model sicherstellt.
 
 Aktionen, die der Benutzer durch Eingaben anstößt, lösen in QT Signals
 aus. Diese Signals werden in POA lokal in dem entsprechenden
-View-Objekt verarbeitet, z.B. in CanvasView für alle Aktionen, die auf
-dem Canvas geschehen (z.B. Selektieren eines Blocks) oder in
+View-Objekt verarbeitet, z.B. in \cn{CanvasView} für alle Aktionen,
+die auf dem Canvas geschehen (z.B. Selektieren eines Blocks) oder in
 MainWindow (z.B. bei Aktivieren eines Menüpunkts). Aufwändige
-Bearbeitungen werden in spezielle Action-Objekte ausgelagert.
+Bearbeitungen werden in spezielle von der Klasse \cn{CanvasViewAction}
+abgeleitete Objekte ausgelagert.
 
-Eine Besondere Auslagerung der Controller bietet sich für POA nicht
+Eine besondere Auslagerung der Controller bietet sich für POA nicht
 an. Die Benutzer-Eingaben erfolgen auf einer bestimmten View und das
 zugehörige View-Objekt hat die nötigen Kompetenzen, um die Eingabe zu
 verarbeiten. Falls eine Bearbeitung mehrere Schritte erfordert, so
 erzeugt das View-Objekt ein Action-Objekt, um die Aufgabe zu
 erledigen.
-
-\subsection{Project}
-\label{project}
-
-Die Daten, die in POA zum Layout eines Netzwerks gehören, werden in
-einem Objekt der Klasse Project registriert. Das Project-Objekt
-übernimmt die administrativen Aufgaben beim Laden und
-Speichern. Außerdem verwaltet es die Canvases, auf denen die Views
-leben.
 
 \subsection{Scheduling}
 \label{scheduling}
@@ -373,11 +274,12 @@ die Signallaufzeit minimiert werden, indem alle Path-Objekte in einer
 definierten Reihenfolge einzeln optimiert werden.
 
 Die Path-Objekte verwenden dazu eine Graph-Struktur, die von der
-Klasse Blockgraph angeboten wird. Ein BlockGraph besteht aus einer
-Reihe von BlockNode-Objekten. In den BlockNode-Objekten kann ein Flag
-gesetzt werden. Anhand dieses Flags erkennt der
-Optimierungsalgorithmus, ob ein bestimmter Knoten bereits einen
-optimalen Offset erhalten hat, oder noch verändert werden darf.
+Klasse \cn{BlockGraph} angeboten wird. Ein \cn{BlockGraph} besteht aus
+einer Reihe von \cn{BlockNode}-Objekten. In den
+\cn{BlockNode}-Objekten kann ein Flag gesetzt werden. Anhand dieses
+Flags erkennt der Optimierungsalgorithmus, ob ein bestimmter Knoten
+bereits einen optimalen Offset erhalten hat, oder noch verändert
+werden darf.
 
 Eine Auswahl von Signallaufpfaden, kann der Benutzer in dem
 AutoSchedulingDialog vornehmen. Dieser Dialog bedient sich des
@@ -387,14 +289,16 @@ Pfad enthalten sind.
 \subsection{Download}
 \label{download}
 
-Der Download ist in der Klasse DownloadManager implementiert. Zur
-Übertragung der Daten wird die QExtSerialPort Bibliothek verwendet.
+Der Download ist in der Klasse \cn{DownloadManager} implementiert. Zur
+Übertragung der Daten wird die QExtSerialPort-Bibliothek verwendet.
 Die Bibliothek einheitliche Methoden zum Zugriff auf die serielle
 Schnittstelle für Windows und Linux. Die Initialisierung erfolgt in
-der initializeAndOpen() Methode. Hier können die fest programmierten
-Übertragungsparameter und die Geschwindigkeit geändert werden. Die
-Übertragung der Daten erfolgt in der download() Methode und kann hier
-angepasst werden, falls sich das Übertragungsprotokoll ändert.
+der \m{initializeAndOpen()} Methode. Hier können die fest
+programmierten Übertragungsparameter und die Geschwindigkeit geändert
+werden. Die Übertragung der Daten erfolgt in der \m{download()}
+Methode und kann hier angepasst werden, falls sich das
+Übertragungsprotokoll ändert. In der aktuellen Implementierung kann
+der kompilierte Quellcode einer einzelnen CPU übertragen werden.
  
 \subsection{Routing}
 \label{routing}
@@ -404,31 +308,32 @@ lediglich die Verbindung zweier Punkte auf einem GridCanvas gefordert.
 Zwei Routing Algorithmen mit sehr unterschiedlichen Eigenschaften
 implementieren diese Schnittstelle.
 
-Der DirectRouter stellt die Verbindung anhand von Fallunterscheidungen
+Der \cn{DirectRouter} stellt die Verbindung anhand von Fallunterscheidungen
 mit der geringsten Anzahl von Knickpunkten her ohne Überschneidungen
 zu berücksichtigen. Der Algorithmus ist ausreichend schnell, um die
 Verbindungen während des Verschiebens von Blöcken simultan
 neuzuberechnen. 
 
-Der Dijkstrarouter benutzt den Dijkstra Algorithmus um eine optimale
+Der \cn{DijkstraRouter} benutzt den Dijkstra Algorithmus um eine optimale
 Route mit möglichst wenig Knickpunkten und Überschneidungen zu finden.
 Auf Grund der Vielzahl der möglichen Wege beträgt die Laufzeit des
 Algorithmus in der Regel ein vielfaches des DirectRouter.
 
-Durch Ableitung der ConnectorRouter Klasse und Erweiterung der
-GridCanvas Klasse ist jederzeit eine Implementierung von zusätzlichen
-Routing Algorithmen möglich. 
+Durch Ableitung der \cn{ConnectorRouter} Klasse und Erweiterung der
+\cn{GridCanvas} Klasse ist eine Implementierung von zusätzlichen
+Routing-Algorithmen möglich.
 
 \subsection{Problemmanager}
 \label{problem_manager}
 
-Die Klasse ProblemReportManager validiert ein Projekt und stellt eine
-Baumansicht mit den Ergebnissen zur Verfügung. Im ersten Schritt
+Die Klasse \cn{ProblemReportManager} validiert ein Projekt und stellt
+eine Baumansicht mit den Ergebnissen zur Verfügung. Im ersten Schritt
 werden alle Blöcke sequentiell geprüft. Im zweiten Schritt werden die
 Verbindungen zwischen den Blöcken geprüft. Die Validierung erfolgt in
-der report() Methode und checkBlock() Methode. Hier können weitere
-Prüfungen eingefügt werden. Für jeden Fehler wird ein Objekt vom Typ
-ProblemReportItem erzeugt.
+der \m{report()}-Methode und \m{checkBlock()}-Methode. Hier können
+weitere Prüfungen eingefügt werden. Für jeden Fehler wird ein Objekt
+vom Typ \cn{ProblemReportItem} erzeugt, das in dem Ergebnissbaum
+angezeigt wird.
 
 \subsection{Querschnittsmodule}
 
@@ -438,7 +343,7 @@ im folgenden beschrieben.
 
 \subsubsection{Einstellungen (Settings)}
 
-In den Settings werden globale Einstellungen wie Farben, Schriftarten
+In der \cn{Setting}-Klasse werden globale Einstellungen wie Farben, Schriftarten
 und Pfade verwaltet, die zum Teil auch über den Einstellungsdialog vom
 Benutzer geändert werden können. Änderungen von Einstellungen, die
 direkt in der Anwendung sichtbar gemacht werden sollen, werden über
@@ -446,6 +351,6 @@ entsprechende Signale bekannt gemacht.
 
 
 %%% Local Variables: 
-%%% TeX-master: "angebot"
+%%% TeX-master: "entwurf"
 %%% End: 
 %%% vim:tw=79:

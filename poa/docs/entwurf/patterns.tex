@@ -1,0 +1,89 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Entwurf
+%% $Id: patterns.tex,v 1.1 2004/06/16 11:55:21 squig Exp $
+%% Achtung: Diese Datei wird in den Entwurf inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Entwurfsmuster}
+
+Der Entwurf von POA integriert bekannte und weitverbreitete
+Entwurfsmuster, um die Struktur des Entwurfs leicht verständlich zu
+machen und für zukünftige Erweiterungen im größtmöglichen Maße offen
+zu sein.
+
+Entwufsmuster beschreiben eine Lösungsstrategie für ein abstraktes
+Problem. Die Struktur des Codes wird so weitgehend standardisiert und
+ermöglicht einem Wartungsingenieur eine schnelle
+Einarbeitung. Weiterhin bieten sie Richtlinien an, wie weitere
+Funktionalität in das System integriert werden kann.
+
+\section{Model-View-Controller}
+\label{model_view_controller}
+
+In dem Model-View-Controller Entwurfsmuster wird die Verarbeitung der
+Daten vollständig von der Visualisierung unabhängig gehalten. Die
+Daten werden in sogenannten Model Klassen verwaltet und von View
+Klassen angezeigt, wobei eine 1:n Beziehung besteht, das heißt mehrere
+Views können die selben Daten darstellen. Es werden auch verschiedene
+Ansichten auf die selben Daten ermöglicht. Die Kommunikation von
+Model- zu View-Klassen erfolgt anonym über Benachrichtigungen (siehe
+auch \ref{Benachrichtigungen}).
+
+Eine Model Klasse stellt über get-Methoden oder Iteratoren den Zustand
+zur Verfügung. Dieser Zustand wird von einer View-Klasse dem
+Anwendungszweck entsprechend angezeigt. Konkret werden die Blöcke,
+Pins und Verbindungen in POA jeweils durch Datenobjekte
+repräsentiert. Diese werden mit Hilfe von entsprechenden Viewobjekten von der
+GridCanvas Klasse angezeigt. 
+
+\section{Observer}
+
+Die QT Bibliothek erweitert den Sprachumfang von C++ über einen
+speziellen Compiler, den Meta-Object-Compiler (MOC), mit einem
+Benachrichtigungskonzept. Mit Hilfe von
+Benachrichtigungen können Objekte anderen Objekten Mitteilungen über
+Zustandsänderungen schicken. Die nahtlose Integration in die
+Programmiersprache ermöglicht eine besonders einfache Verwendung des
+Mechanismus.
+
+\label{Benachrichtigungen}
+Die Benachrichtigungen (Signals) werden durch das Schlüsselwort emit
+gesendet und von speziellen Methoden (Slots) empfangen. Die Signals
+und Slots werden in den Klassendeklarationen angegeben. Die Verbindung
+zwischen zwei Objekten wird mittels der connect Methode hergestellt. 
+
+In POA wird an mehreren Stellen Gebrauch von dem Signal-Slot
+Mechanismus gemacht: 
+\begin{enumerate}
+\item Wenn sich Einstellungen verändern 
+\item Wenn ein Projekt verändert wurde
+\item Um die Kommunikation zwischen Pins und den zugehörigen Blöcken
+und Konnektoren zu ermöglichen.
+\item Um Veränderungen zwischen Models und Views zu synchronisieren.
+\end{enumerate}
+
+\section{Strategie}
+
+Das Strategiemuster ermöglicht, den Algorithmus für eine Problemlösung
+austauschbar zu machen. 
+
+In POA wurde die Routing Schnittstelle für die Verbindungen zwischen
+den Blöcken abstrakt definiert und konkret mit zwei verschiedenen
+Algorithmen implementiert. Die Algorithmen haben unterschiedliche
+Eigenschaften in Bezug auf die Laufzeit und Qualität des Ergebnisses. 
+
+\section{Singleton}
+
+Das Singleton Muster wird verwendet, wenn eine Klasse nur genau einmal
+instanziert werden soll. Dadurch lassen sich auch in
+objekt-orientierten Systemen, äquivalent zu globalen Variablen in
+imperativen Systemen, global verfügbare Objekte realisieren,
+die über eine definierte Schnittstelle angesprochen werden können. 
+
+In POA ist lediglich die Settings Klasse als Singleton implementiert.
+
+%%% Local Variables: 
+%%% TeX-master: "entwurf"
+%%% End: 
+%%% vim:tw=79:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.67 2004/02/13 17:39:03 vanto Exp $
+ * $Id: blockconfdialog.cpp,v 1.68 2004/06/04 15:40:55 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -140,7 +140,7 @@ void BlockConfDialog::initBlockWidget()
                 this, SLOT(checkIfValidCpuId(int)));
 
         cpuIdWarning_ = new QLabel(cpuWidget);
-        cpuIdWarning_->setPixmap(QPixmap(Util::findIcon("warning.gif")));
+        cpuIdWarning_->setPixmap(QPixmap(Util::findIcon("warning.png")));
         QToolTip::add(cpuIdWarning_, tr("This ID is already in use"));
 
         checkIfValidCpuId(cpuIdSpinBox->value());

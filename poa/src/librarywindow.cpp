@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.41 2004/02/05 14:00:23 papier Exp $
+ * $Id: librarywindow.cpp,v 1.42 2004/06/04 15:41:15 kilgus Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -112,7 +112,7 @@ void LibraryWindow::addDefaultItems()
     model = new CpuModel("CPU", tr("Default CPU"));
     model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
     model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
-    model->addPin(new PinModel(model, "clock", 0, 32, PinModel::EPISODIC, 1));
+    model->addPin(new PinModel(model, "clk", 0, 32, PinModel::EPISODIC, 1));
     model->addPin(new PinModel(model, "reset", 0, 32, PinModel::EPISODIC, 2));
     add(model);
 

@@ -18,13 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.1 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.2 2003/09/11 14:38:38 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef BLOCKCONFDIALOG_H
 #define BLOCKCONFDIALOG_H
 
+#include "blockmodel.h"
+#include "pinmodel.h"
+
+#include <qlistview.h>
 #include <qvariant.h>
 #include <qdialog.h>
 class QVBoxLayout; 
@@ -35,18 +39,44 @@ class QGroupBox;
 class QLabel;
 class QLineEdit;
 class QListView;
-class QListViewItem;
 class QPushButton;
 class QRadioButton;
 class QSpinBox;
+
+/**
+ * Provides the I/O view items.
+ */
+class PinListViewItem : public QListViewItem
+{
+public:
+
+    /**
+     * Creates a IO list view item for the given abstract model
+     */
+    PinListViewItem(QListViewItem *parent, PinModel *item);
+
+    /**
+     * Default destructor
+     */
+    ~PinListViewItem();
+
+    /**
+     * Returns the AbstractModel, represented by this view item
+     */
+    PinModel &data() const;
+
+private:
+    PinModel *item_;
+};
+
 
 class BlockConfDialog : public QDialog
 { 
     Q_OBJECT
 
 public:
-    BlockConfDialog(QWidget* parent = 0, const char* name = 0,
-                     bool modal = FALSE, WFlags fl = 0 );
+    BlockConfDialog(BlockModel *model, QWidget* parent = 0,
+                    const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     ~BlockConfDialog();
 
     QListView *ioListView;
@@ -81,6 +111,8 @@ private:
     QListViewItem *inputRoot;
     QListViewItem *outputRoot;
     QListViewItem *periodicalRoot;
+
+    BlockModel *model_;
 
 private slots:
     /**

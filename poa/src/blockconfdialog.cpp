@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.1 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.2 2003/09/11 14:38:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,8 +43,27 @@
 
 #define PERIODICAL_IO_TEXT "periodical inputs"
 
-BlockConfDialog::BlockConfDialog(QWidget* parent, const char* name,
-                                   bool modal, WFlags fl)
+PinListViewItem::PinListViewItem(QListViewItem *parent,
+                                 PinModel *item)
+    : QListViewItem(parent), item_(item)
+{
+    //setText(0, item->type());
+    //setText(1, item->description());
+}
+
+PinListViewItem::~PinListViewItem()
+{
+    delete item_;
+}
+
+PinModel &PinListViewItem::data() const
+{
+    return *item_;
+}
+
+
+BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
+                                 const char* name, bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
     if (!name) {
@@ -52,6 +71,8 @@ BlockConfDialog::BlockConfDialog(QWidget* parent, const char* name,
     }
     resize(400, 500);
     setCaption(tr("Block configuration"));
+
+    model_ = model;
 
     QBoxLayout *dialogLayout = new QVBoxLayout(this, 5);
     QWidget *topWidget = new QWidget(this);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.29 2003/09/11 13:17:14 squig Exp $
+ * $Id: canvasview.cpp,v 1.30 2003/09/11 14:38:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -99,13 +99,21 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
 
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
-    QCanvasItem *topItem = l.first();
+    QCanvasItem *topItem = l.isEmpty() ? 0 : l.first();
 
-    selectItem(topItem);
+    if (topItem != 0) {
+        selectItem(topItem);
 
-    if (INSTANCEOF(topItem, BlockView)) {
-        MainWindow::instance()->openBlockConf();
+        if (INSTANCEOF(topItem, BlockView)) {
+            MainWindow::instance()->openBlockConf();
+        }
     }
+    else {
+        // nirvana click
+        deselectAll();
+        canvas()->update();
+    }
+
 }
 
 void CanvasView::contentsMousePressEvent(QMouseEvent *e)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.41 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.42 2003/09/11 14:38:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -565,8 +565,24 @@ MainWindow *MainWindow::instance()
 
 void MainWindow::openBlockConf()
 {
-    BlockConfDialog *dialog = new BlockConfDialog();
-    dialog->show();
+
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList l = view->selectedItems();
+        QCanvasItem *topItem = l.isEmpty() ? 0 : l.first();
+
+        if (INSTANCEOF(topItem, BlockView)) {
+            AbstractModel *model = ((BlockView *)topItem)->model();
+            if (INSTANCEOF(model, BlockModel)) {
+                BlockConfDialog *dialog =
+                    new BlockConfDialog((BlockModel *)model);
+                dialog->show();
+
+
+                // destray dialog
+            }
+        }
+    }
     // future: use exec() instead of show and
     //         determine exit code
 }

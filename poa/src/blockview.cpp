@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.19 2003/09/01 18:48:05 squig Exp $
+ * $Id: blockview.cpp,v 1.20 2003/09/03 14:57:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -94,6 +94,20 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 
 BlockView::~BlockView()
 {
+}
+
+
+bool BlockView::isDraggable()
+{
+    return true;
+}
+
+
+QSize BlockView::dragBy(double dx, double dy)
+{
+    // must convert to be consistent with return value
+    moveBy((double) (int) dx, (double) (int) dy);
+    return QSize((int) dx, (int) dy);
 }
 
 

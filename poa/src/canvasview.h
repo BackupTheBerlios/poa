@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.16 2003/08/30 13:42:51 vanto Exp $
+ * $Id: canvasview.h,v 1.17 2003/09/03 14:57:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define CANVASVIEW_H
 
 class AbstractModel;
+class AbstractView;
 class Project;
 class PinView;
 
@@ -119,7 +120,7 @@ private:
     /** The project this view belongs to */
     Project *project_;
     /** The canvas item that is currently in moving state if any, else 0 */
-    QCanvasItem *movingItem_;
+    AbstractView *movingItem_;
     /**
      * The point in canvas-coordinates where <code>movingItem_</code>
      * received the moving state. Only valid if <code>movingItem_ != 0</code>

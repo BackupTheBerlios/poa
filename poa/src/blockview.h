@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.16 2003/08/30 18:37:33 vanto Exp $
+ * $Id: blockview.h,v 1.17 2003/09/03 14:57:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -73,6 +73,17 @@ public:
     BlockModel *model();
 
     /*************************************************************************
+     * @return true
+     */
+    virtual bool isDraggable();
+
+    /*************************************************************************
+     * Drags <code>this</code> and all attached pin views by the specified
+     * amount
+     */
+    virtual QSize dragBy(double dx, double dy);
+
+    /*************************************************************************
      * Moves <code>this</code> and the pin views that are connected to
      * <code>this</code>.
      * @param dx Number of pixels to move in horizontal direction
@@ -81,13 +92,13 @@ public:
      */
     virtual void moveBy(double dx, double dy);
 
-    /*****************************************************************************
+    /*************************************************************************
      * Snaps this View to the given grid and returns the
      * a point which contains the snap delta.
      */
     virtual QPoint snapToGrid(unsigned gridsize);
 
-    /*****************************************************************************
+    /*************************************************************************
      * Run Time Type Identification
      */
     virtual int rtti() const;
@@ -99,7 +110,8 @@ public:
 
     /*************************************************************************
      * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create elements
+     * @param document the main QDomDocument instance. Needed to create
+     *        elements
      */
     QDomElement serialize(QDomDocument *document);
 

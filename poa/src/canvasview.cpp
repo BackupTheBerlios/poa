@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.20 2003/08/30 13:42:51 vanto Exp $
+ * $Id: canvasview.cpp,v 1.21 2003/09/03 14:57:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -92,17 +92,21 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             }
             canvas()->update();
 
-            // move blocks
-            if (INSTANCEOF(topItem, BlockView)) {
-                movingItem_ = topItem;
+            // begin drag if item can be dragged
+	    AbstractView *view = dynamic_cast<AbstractView*>(topItem);
+            if (view != 0 && view->isDraggable()) {
+                movingItem_ = view;
                 movingStartPoint_ = p;
-            }
+            } else {
+		movingItem_ = 0;
+	    }
         } else {
             // nirvana click -> deselect
             if (selectedItem_) {
                 selectedItem_->setSelected(false);
                 canvas()->update();
                 selectedItem_ = 0;
+		movingItem_ = 0;
             }
         }
     }
@@ -153,7 +157,7 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {
     if (movingItem_ != 0) {
         QPoint p = inverseWorldMatrix().map(e->pos());
-        movingItem_->moveBy(p.x() - movingStartPoint_.x(),
+        movingItem_->dragBy(p.x() - movingStartPoint_.x(),
                             p.y() - movingStartPoint_.y());
 
         QPoint sp(0,0);

@@ -18,14 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.4 2003/08/30 18:37:33 vanto Exp $
+ * $Id: abstractview.h,v 1.5 2003/09/03 14:57:43 keulsn Exp $
  *
  *****************************************************************************/
+
+
 #ifndef ABSTRACTVIEW_H
 #define ABSTRACTVIEW_H
 
 #include <qobject.h>
 class QPopupMenu;
+#include <qsize.h>
 
 /*****************************************************************************
  * Base class for all view classes.
@@ -33,10 +36,32 @@ class QPopupMenu;
 class AbstractView
 {
 public:
-    /*****************************************************************************
+    /*************************************************************************
      * Return a context menu
      */
     virtual QPopupMenu *popupMenu() { return 0; };
+
+    /*************************************************************************
+     * Returns <code>true</code> if <code>this</code> can be dragged using
+     * the method {@link #drag}, <code>false</code> else.
+     */
+    virtual bool isDraggable() { return false; };
+
+    /*************************************************************************
+     * Drags <code>this</code> by <code>(dx, dy)</code>. <code>this</code>
+     * will move itself by a distance close to that if possible.
+     *
+     * Note that <code>this</code> will never move if
+     * !{@link #isDraggable()}
+     *
+     * @param dx The horizontal coordinate of the distance along which
+     *           <code>this</code> should be moved
+     * @param dy The vertical coordinate of the distance along which
+     *           <code>this</code> should be moved
+     * @return The distance <code>this</code> has really moved. Does not
+     *         have to be equal to <code>QSize (dx, dy)</code>.
+     */
+    virtual QSize dragBy(double dx, double dy) { return QSize(0, 0); }
 
 };
 #endif

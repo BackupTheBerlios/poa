@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.cpp,v 1.4 2004/01/22 22:27:47 squig Exp $
+ * $Id: moveaction.cpp,v 1.5 2004/01/22 22:46:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,9 @@ MoveAction::MoveAction(CanvasView *view, QMouseEvent *e, Moveable *item)
 void MoveAction::mouseMoveEvent(QMouseEvent *e)
 {
     QPoint p = view()->inverseWorldMatrix().map(e->pos());
+    int dx = 0;
+    int dy = 0;
+
     if (Settings::instance()->snapToGrid() &&
         !(e->stateAfter() & Qt::ControlButton)) {
         QPoint oldPos = QPoint((int)item_->item()->x(), (int)item_->item()->y());
@@ -48,27 +51,29 @@ void MoveAction::mouseMoveEvent(QMouseEvent *e)
         // move to closest grid coordinate
         QPoint newPos = view()->gridCanvas()->toGrid(oldPos + p - startPoint_);
 
-        int dx = newPos.x() - oldPos.x();
-        int dy = newPos.y() - oldPos.y();
-
-        // make sure item is not moved outside of canvas
-        if (item_->item()->x() + dx < 0) {
-            dx = (int)item_->item()->x();
-        }
-        if (item_->item()->y() + dy < 0) {
-            dy = (int)item_->item()->y();
-        }
-        QPoint moved = item_->dragBy(dx, dy);
-
-        startPoint_ += moved;
+        dx = newPos.x() - oldPos.x();
+        dy = newPos.y() - oldPos.y();
     }
     else {
-        item_->dragBy(p.x() - startPoint_.x(), p.y() - startPoint_.y());
-        startPoint_ = p;
+        dx = p.x() - startPoint_.x();
+        dy = p.y() - startPoint_.y();
     }
 
-    view()->gridCanvas()->ensureVisibility(item_->item());
-    view()->canvas()->update();
+    // make sure item is not moved outside of canvas
+    if (item_->item()->x() + dx < 0) {
+        dx = (int)item_->item()->x();
+    }
+    if (item_->item()->y() + dy < 0) {
+        dy = (int)item_->item()->y();
+    }
+
+    if (dx != 0 || dy != 0) {
+        QPoint moved = item_->dragBy(dx, dy);
+        startPoint_ += moved;
+
+        view()->gridCanvas()->ensureVisibility(item_->item());
+        view()->canvas()->update();
+    }
 }
 
 void MoveAction::mouseReleaseEvent(QMouseEvent *)

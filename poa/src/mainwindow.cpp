@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.37 2003/09/07 19:07:46 squig Exp $
+ * $Id: mainwindow.cpp,v 1.38 2003/09/08 16:03:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -204,11 +204,9 @@ void MainWindow::initializeToolbars()
     invokeCompilerAction->addTo(utilToolBar);
     invokeDownloadAction->addTo(utilToolBar);
 
-    // draw
-    drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop);
-    drawLineAction->addTo(drawToolBar);
-    drawToolBar->addSeparator();
-    zoomComboBox = new QComboBox(false, drawToolBar);
+    // view
+    viewToolBar = new QToolBar(tr("view toolbar"), this, DockTop);
+    zoomComboBox = new QComboBox(false, viewToolBar);
     zoomComboBox->insertItem("10 %", 0);
     zoomComboBox->insertItem("25 %", 1);
     zoomComboBox->insertItem("50 %", 2);
@@ -218,17 +216,17 @@ void MainWindow::initializeToolbars()
     zoomComboBox->insertItem("500 %", 6);
     zoomComboBox->insertItem("1000 %", 7);
     zoomComboBox->setCurrentItem(DEFAULT_ZOOM_LEVEL);
-    zoomInAction->addTo(drawToolBar);
-    zoomNormalAction->addTo(drawToolBar);
-    zoomOutAction->addTo(drawToolBar);
+    zoomInAction->addTo(viewToolBar);
+    zoomNormalAction->addTo(viewToolBar);
+    zoomOutAction->addTo(viewToolBar);
 }
 
 void MainWindow::initializeMenu()
 {
     QPopupMenu *fileMenu;
     QPopupMenu *editMenu;
+    QPopupMenu *viewMenu;
     QPopupMenu *toolsMenu;
-    QPopupMenu *drawMenu;
     QPopupMenu *settingsMenu;
     QPopupMenu *windowMenu;
     QPopupMenu *helpMenu;
@@ -250,6 +248,13 @@ void MainWindow::initializeMenu()
     editCopyAction->addTo(editMenu);
     editPasteAction->addTo(editMenu);
 
+    // view
+    viewMenu = new QPopupMenu(this);
+    menuBar()->insertItem(trUtf8("&View"), viewMenu);
+    zoomInAction->addTo(viewMenu);
+    zoomNormalAction->addTo(viewMenu);
+    zoomOutAction->addTo(viewMenu);
+
     // tools
     toolsMenu = new QPopupMenu(this);
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
@@ -257,15 +262,6 @@ void MainWindow::initializeMenu()
     toolsMenu->insertSeparator();
     invokeCompilerAction->addTo(toolsMenu);
     invokeDownloadAction->addTo(toolsMenu);
-
-    // draw
-    drawMenu = new QPopupMenu(this);
-    menuBar()->insertItem(trUtf8("&Draw"), drawMenu);
-    drawLineAction->addTo(drawMenu);
-    drawMenu->insertSeparator();
-    zoomInAction->addTo(drawMenu);
-    zoomNormalAction->addTo(drawMenu);
-    zoomOutAction->addTo(drawMenu);
 
     // settings
     settingsMenu = new QPopupMenu(this);
@@ -403,6 +399,15 @@ void MainWindow::closeEvent(QCloseEvent *e)
     e->accept();
 }
 
+QAction *MainWindow::copyAction()
+{
+    return editCopyAction;
+}
+
+QAction *MainWindow::cutAction()
+{
+    return editCutAction;
+}
 
 void MainWindow::fileNew()
 {
@@ -499,7 +504,12 @@ void MainWindow::fileExit()
 
 void MainWindow::editCut()
 {
-    qWarning( "MainWindow::editCut(): Not implemented yet!" );
+    editCopy();
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        // FIX: delete items
+    }
 }
 
 void MainWindow::editCopy()
@@ -559,6 +569,11 @@ void MainWindow::helpAbout()
     dialog->show();
 }
 
+MainWindow *MainWindow::instance()
+{
+    return (MainWindow *)qApp->mainWidget();
+}
+
 void MainWindow::openModuleConf()
 {
     ModuleConfDialog *dialog = new ModuleConfDialog();
@@ -571,6 +586,11 @@ void MainWindow::openSettings()
 {
     SettingsDialog *dialog = new SettingsDialog();
     dialog->show();
+}
+
+QAction *MainWindow::pasteAction()
+{
+    return editPasteAction;
 }
 
 void MainWindow::windowActivated(QWidget* w)

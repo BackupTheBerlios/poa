@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.15 2003/09/07 19:07:46 squig Exp $
+ * $Id: mainwindow.h,v 1.16 2003/09/08 16:03:59 squig Exp $
  *
  *****************************************************************************/
 
@@ -63,7 +63,31 @@ public:
      */
     bool closeAll();
 
+    /**
+     * Returns the content of the active window.
+     * @return 0, if no window is active
+     */
     CanvasView *activeView() const;
+
+    /**
+     * Returns a reference to the main window.
+     */
+    static MainWindow *instance();
+
+    /**
+     * Returns the copy action.
+     */
+    QAction *copyAction();
+
+    /**
+     * Returns the cut action.
+     */
+    QAction *cutAction();
+
+    /**
+     * Returns the paste action.
+     */
+    QAction *pasteAction();
 
 protected:
     void closeEvent(QCloseEvent *);
@@ -82,7 +106,7 @@ private:
     QComboBox *zoomComboBox;
     QToolBar *commonToolBar;
     QToolBar *utilToolBar;
-    QToolBar *drawToolBar;
+    QToolBar *viewToolBar;
     QAction *fileNewAction;
     QAction *fileOpenAction;
     QAction *fileSaveAction;

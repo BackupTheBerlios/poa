@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.24 2003/09/08 13:35:04 squig Exp $
+ * $Id: blockview.cpp,v 1.25 2003/09/08 16:03:59 squig Exp $
  *
  *****************************************************************************/
 
 
 #include "blockview.h"
 
+#include <qaction.h>
 #include <qbrush.h>
 #include <qcanvas.h>
 #include <qpopupmenu.h>
@@ -32,6 +33,7 @@
 
 #include "blockmodel.h"
 #include "canvasview.h"
+#include "mainwindow.h"
 #include "moveaction.h"
 #include "pinvector.h"
 #include "pinview.h"
@@ -153,6 +155,10 @@ QPopupMenu *BlockView::popupMenu()
     QPopupMenu *pm = new QPopupMenu();
     pm->insertItem("Configure...");
     pm->insertItem("Edit Source");
+    pm->insertSeparator();
+    MainWindow::instance()->cutAction()->addTo(pm);
+    MainWindow::instance()->copyAction()->addTo(pm);
+    MainWindow::instance()->pasteAction()->addTo(pm);
     return pm;
 }
 

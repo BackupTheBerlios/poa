@@ -1,5 +1,8 @@
 2003-09-08  Steffen Pingel  <squig@users.sourceforge.net>
 
+	* mainwindow.cpp (initializeToolbars): Renamed draw to
+	view. Removed draw line action.
+
 	* canvasview.cpp (contentsMousePressEvent): Fixed popup menu
 	position when scrolled.
 

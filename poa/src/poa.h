@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.16 2004/01/28 16:19:33 vanto Exp $
+ * $Id: poa.h,v 1.17 2004/01/29 13:33:48 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,14 +51,51 @@ QString image(QRect r);
 /** Direction of a line to be drawn on a canvas. */
 enum LineDirection {UNKNOWN, UP, DOWN, LEFT, RIGHT};
 
+/**
+ * Returns the reverse direction.
+ * LEFT -> RIGHT, UP -> DOWN, vice versa
+ */
 LineDirection reverse(LineDirection dir);
+
+/**
+ *
+ */
 int distInDir(LineDirection dir, int x, int y);
+
+
 LineDirection alternateDir(LineDirection dir, int x, int y);
+
+/**
+ * Returns true if the given directions are orthogonal.
+ */
 bool isRightAngle(LineDirection first, LineDirection second);
+
+/**
+ * Returns true if the first direction is the opposite of the
+ * second direction.
+ */
 bool isTurn(LineDirection first, LineDirection second);
+
+/**
+ * Returns the direction which results out of a left turn from
+ * the given direction.
+ */
 LineDirection turnLeft(LineDirection dir);
+
+/**
+ * Returns the direction which results out of a right turn from
+ * the given direction.
+ */
 LineDirection turnRight(LineDirection dir);
+
+/**
+ * Returns the direction as a lowercase string.
+ */
 QString image(LineDirection dir);
+
+/**
+ * Transforms the given duration in nanoseconds to senseful units.
+ */
 QString formatTimeProperly(int ns);
 
 #endif // POA_POA_H

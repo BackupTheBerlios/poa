@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.2 2003/08/22 10:08:54 garbeam Exp $
+ * $Id: cpumodel.h,v 1.3 2003/08/22 11:53:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 
 
 #include <qcstring.h> // includes QByteArray
+#include <qdom.h>
 
 /*****************************************************************************
  * A block that executes some source code everytime it is triggered.
@@ -45,9 +46,10 @@ class CpuModel: public BlockModel
 
  public:
     CpuModel(QString *name, unsigned short id, bool autoExecTime);
+    CpuModel(QDomDocument *doc);
 
     // Returns XML representation of this instance,
-    QByteArray *serialize();
+    QByteArray serialize();
 
 
  private:

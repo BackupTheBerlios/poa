@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.10 2003/08/22 10:44:52 garbeam Exp $
+ * $Id: main.cpp,v 1.11 2003/08/22 11:53:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -60,6 +60,7 @@
 #include "mainwindow.h"
 #include <qapplication.h>
 #include <iostream.h>
+#include <qdom.h>
 
 /**
  * This is the main entry point of the POA app.
@@ -68,9 +69,16 @@
 int main (int argc, char *argv[])
 {
     CpuModel model(new QString("CPU 1"), 1, TRUE);
-    QByteArray *xml = model.serialize();
-    cout << *xml;
+    QByteArray xml = model.serialize();
+    cout << xml;
 
+    QDomDocument *doc = new QDomDocument("cpu");
+    doc->setContent(xml);
+    CpuModel model2(doc);
+
+    xml = model.serialize();
+    cout << xml;
+    
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);

@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.9 2004/05/24 13:28:20 papier Exp $
+%% $Id: abschlussbericht.tex,v 1.10 2004/05/30 09:06:03 keulsn Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.9 $
-\RCSdef $Date: 2004/05/24 13:28:20 $
+\RCSdef $Revision: 1.10 $
+\RCSdef $Date: 2004/05/30 09:06:03 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -601,6 +601,140 @@ Team-Mitgliedern f"ur die gute Zusammenarbeit bedanken.
 
 
 \section{Steffen Keul}
+
+\subsection{Aufgaben}
+
+Zu Beginn des Projekts wurden keine bestimmten Rollen zugewiesen. Es
+war vielmehr eine Anforderung an jedes Team-Mitglied, den Überblick
+über das gesamte Projekt zu behalten und bei Bedarf an bestimmte
+Detailproblemen arbeiten zu können.
+
+\subsection{Tätigkeiten}
+
+\subsubsection{Seminar}
+
+In meinem Seminarvortrag untersuchte ich das Problem der Berechnung
+eines optimalen Scheduling für die POA-Plattform. Da für die
+speziellen Anforderungen des Offenen Antriebs keine bekannten Lösungen
+existieren, analysierte ich die genauen Anforderungen an eine
+algorithmische Lösung des Problems. Diese Anforderungsanalyse diente
+später als Grundlage für die Implementierung von POA.
+
+\subsubsection{Anforderungsanalyse}
+
+Während der Anforderungsanalyse nahm ich an allen Kundengesprächen und
+internen Besprechungen teil.
+
+\subsubsection{Entwurf}
+
+Gemeinsam mit Anselm Garbe erstellte ich einen Grobentwurf für das
+POA-System. Die Tauglichkeit unseres ersten Vorschlags wurde dann in
+einer Review-Sitzung evaluiert und wir konnten noch einige
+Vereinfachungen in den Entwurf integrieren.
+
+Das Ergebnis des Entwurfs waren kommentierte Klassendeklarationen, die
+während der Implementierung in die POA-Codebasis übergingen. Die
+grundlegende Struktur des Entwurfs ist im fertigen Produkt erhalten
+geblieben.
+
+\subsubsection{Implementierung}
+
+Zu Beginn der Implementierung nahm ich vielfältige Funktionen
+war. Diese schlossen diskussionen über die Programmiersprache C++ ein
+sowie die konkrete Gestaltung des Codes, um Konformität zu dem Entwurf
+sicher zu stellen. Die Sprache C++ wird im Grundstudium der
+Softwaretechnik nicht gelehrt und war deshalb für einige
+Team-Mitglieder neu. Ich selbst hatte zwar vor Beginn meines Studiums
+schon einige Jahre damit gearbeitet, musste mein Wissen aber zu Beginn
+des Projekts etwas auffrischen.
+
+Im weiteren Verlauf des Projekts wendete ich mich zunehmend den
+algorithmisch aufwändigeren Problemen des Projekts zu. Ich entwarf und
+implementierte zwei verschiedene Verfahren zur automatischen
+Layoutberechnung und den Algorithmus zur automatischen Berechnung des
+Scheduling.
+
+Das erste Verfahren zur Layoutberechnung basiert auf einer Sequenz von
+Entscheidungen und berechnet in konstanter Zeit ein Layout für einen
+eizelnen Konnektor. Dieses Verfahren ist extrem effizient und kann
+angewendet werden, während ein Block verschoben wird um die
+verbundenen Konnektoren entsprechend anzupassen.
+
+Das zweite Verfahren basiert auf dem bekannten Algorithmus von
+Dijkstra. Dieses Verfahren wird angewendet, um einen einzelnen
+Konnektor in ein bestehendes Netzwerk zu integrieren. Dabei wird der
+neue Konnektor mit einer minimalen Anzahl an Kreuzugen mit anderen
+Objekten und einer minimalen Anzahl an Knickpunkten gezeichnet.
+
+Zur Berechnung eines optimalen Scheduling für POA konnte ich in der
+Literatur kein geeignetes Verfahren finden. Für meinen Seminarvortrag
+hatte ich eine Lösung entworfen, die sich einem evolutionären
+Verfahren bedient. Mit dem Fortschritt des Projekts hatte ich aber
+einen besseren Einblick in potenzielle Anwendungen von POA gewonnen und
+konnte eine weniger rechenaufwändige Lösung finden, die für die
+meisten Netzwerke trotzdem optimale Ergebnisse berechnet.
+
+Der Benutzer kann eine Liste von priorisierten Wegen durch das
+Netzwerk vorgeben, die in der angegebenen Reihenfolge optimiert
+werden. Der erste Weg wird garantiert eine minimale Signallaufzeit
+erhalten. Für die weiteren Wege der Liste kann das Ergebnis durch die
+bereits berechneten Eigenschaften der voherigen Wege verschlechtert
+werden. In den getesteten Beispielen konnte stets ein optimales
+Scheduling gefunden werden. Die konkrete Implementierung des
+Verfahrens lässt auch zu dass Parameter einzelner Blöcke manuell
+vorgegeben werden und nicht das gesamte Scheduling automatisch
+berechnet wird.
+
+\subsubsection{Validierung}
+
+Ich erstellte Testprogramme für die Teile meines Codes, bei denen ein
+automatischer Test sinnvoll erschien. Für das automatische Scheduling
+oder das automatische Layout wäre ein automatisierter Test jedoch
+nicht machbar gewesen. Es ist kaum möglich, automatisiert
+festzustellen, ob ein Layout den Anforderungen entspricht oder ob ein
+Scheduling tatsächlich optimal ist. Stattdessen führte ich durch
+systematisches Ausprobieren des Programms einen explorativen Test
+durch.
+
+Außerdem führten wir Code-Reviews durch an denen ich als Gutachter
+sowie als Autor beteiligt war. In diesen Reviews konnten einige Fehler
+identifiziert und später beseitigt werden.
+
+\subsection{Einschätzung des Projekts}
+
+Ich werte POA als Erfolg. Die Anforderungen an POA waren zu keinem
+Zeitpunkt klar fixiert, sondern POA war Teil eines größeren Projekts
+dessen Richtung noch nicht bis ins letzte Detail feststand. Das von
+uns angewendete Prozessmodell halte ich deshalb für richtig gewählt,
+da es uns ermöglichte, dem Kunden erste Ergebnisse zu präsentieren und
+dann aufgrund seines Feedbacks das weitere Vorgehen anzupassen.
+
+Die Arbeit im Team empfand ich als sehr angenehm. Die einzelnen
+Team-Mitglieder waren kompetent und hilfsbereit. Die Projektleitung
+ging auf individuelle Eigenschaften der Entwickler ein und führte das
+Team ohne einschränkend zu wirken. Der Kontakt zum Kunden war direkt
+und unkompliziert.
+
+
+\subsection{Persönlicher Lernerfolg}
+
+Als Ergänzung zu den Vorlesungen im Anwendungsfach gewann ich durch
+das Projekt einen besseren Einblick in die Regelungstechnik und den
+Aufbau eines Regelkreises.
+
+Ich lernte das Toolkit Qt kennen. Ich hatte Gelegenheit mich mit
+algorithmischen Aufgabenstellungen aus der Praxis auseinander zu
+setzen. Hier konnte ich den Nutzen meiner theoretischen Ausbildung
+erproben, da sich diese Probleme zumindest teilweise auf
+Standardalgorithmen zurückführen ließen.
+
+Schließlich fand ich es interessant, ein iteratives Prozessmodell zu
+erleben. Obwohl ich dieses Vorgehen nach wie vor nicht für optimal
+halte, fand ich es sehr lehrreich mich mit Vor- und Nachteilen dieses
+Vorgehens in der praktischen Anwendung auseinader zu setzen.
+
+
+
 \section{Marcel Kilgus}
 \subsection{Aufgaben}
 Aufgrund meiner weit über 10 Jahre Erfahrung mit Maschinencode und der Emulation 

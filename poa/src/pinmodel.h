@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.27 2003/12/03 17:33:42 garbeam Exp $
+ * $Id: pinmodel.h,v 1.28 2003/12/10 14:15:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -59,7 +59,8 @@ public:
      * @param bits is its bits.
      */
     PinModel(BlockModel *parent, const QString &name,
-             unsigned address = 0, unsigned bits = 0, PinType type = INPUT);
+             unsigned address = 0, unsigned bits = 0,
+             PinType type = INPUT, unsigned position = 0);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code> and de-
@@ -220,6 +221,11 @@ signals:
      * Emitted, when the pin is detached.
      */
     void detached();
+
+    /**
+     * Emitted, when the pin is updated.
+     */
+    void updated();
 
 };
 

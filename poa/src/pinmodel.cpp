@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.34 2003/12/03 18:26:12 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.35 2003/12/10 14:15:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,8 @@
 #include "blockview.h"
 
 PinModel::PinModel(BlockModel *parent, const QString &name,
-                   unsigned address, unsigned bits, PinType type)
+                   unsigned address, unsigned bits, PinType type,
+                   unsigned position)
 {
     Q_ASSERT(name != 0);
     name_ = name;
@@ -40,7 +41,7 @@ PinModel::PinModel(BlockModel *parent, const QString &name,
     bits_ = bits;
     type_ = type;
     id_ = 0;
-    position_ = 0;
+    position_ = position;
     connected_ = 0;
     view_ = 0;
 }
@@ -133,7 +134,10 @@ unsigned PinModel::position()
 
 void PinModel::setPosition(unsigned position)
 {
-    position_ = position;
+    if (position_ != position) {
+        position_ = position;
+        emit updated();
+    }
 }
 
 QString PinModel::name()

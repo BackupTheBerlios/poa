@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.17 2003/12/03 13:11:17 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.18 2003/12/10 14:15:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -62,8 +62,8 @@ public:
     /**
      * Creates a IO list view item for the given abstract model
      */
-    PinListViewItem(QListViewItem *parent, PinModel *clone = 0,
-            PinModel *origin = 0);
+    PinListViewItem(QListViewItem *parent, QListViewItem *after,
+                    PinModel *clone = 0, PinModel *origin = 0);
 
     /**
      * Default destructor

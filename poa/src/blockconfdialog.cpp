@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.38 2003/12/10 13:53:58 vanto Exp $
+ * $Id: blockconfdialog.cpp,v 1.39 2003/12/10 14:15:58 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -60,8 +60,9 @@ PinListViewItem::PinListViewItem(QListView *parent,
 }
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,
+                                 QListViewItem *after,
                                  PinModel *clone, PinModel *origin)
-    : QListViewItem(parent)
+    : QListViewItem(parent, after)
 {
     setOpen(false);
     type_ = clone->type();
@@ -203,7 +204,7 @@ void BlockConfDialog::initBlockWidget()
     blockLayout->addWidget(blockDescrLineEdit, 2, 1);
     blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 3, 0);
     blockLayout->addWidget(blockClockSpinBox, 3, 1);
-    blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 3, 2);
+    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 3, 2);
 
     rightLayout->addWidget(blockGroupBox);
 }
@@ -237,7 +238,7 @@ void BlockConfDialog::initOffsetWidget()
     offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
     offsetLayout->addWidget(offsetRadioButton, 1, 0);
     offsetLayout->addWidget(offsetSpinBox, 1, 1);
-    offsetLayout->addWidget(new QLabel(tr("ns"), offsetButtonGroup), 1, 2);
+    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
 
     rightLayout->addWidget(offsetButtonGroup);
 }
@@ -270,7 +271,7 @@ void BlockConfDialog::initRuntimeWidget()
         runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
         runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
         runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
-        runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeButtonGroup), 1, 2);
+        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
         rightLayout->addWidget(runtimeButtonGroup);
     }
     else {
@@ -288,7 +289,7 @@ void BlockConfDialog::initRuntimeWidget()
         QBoxLayout *runtimeLayout = new QHBoxLayout(runtimeGroupBox, 15);
         runtimeLayout->addWidget(new QLabel(tr("runtime"), runtimeGroupBox));
         runtimeLayout->addWidget(runtimeSpinBox);
-        runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeGroupBox));
+        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeGroupBox));
         rightLayout->addWidget(runtimeGroupBox);
     }
 }
@@ -362,6 +363,7 @@ void BlockConfDialog::initListView()
     ioListView->addColumn(tr("bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
     ioListView->setMinimumWidth(300);
+    ioListView->setSorting(10); // 10 > number of columns
     leftLayout->addWidget(ioListView);
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
@@ -423,8 +425,7 @@ void BlockConfDialog::syncModel() {
     inputRoot_->setText(0, tr("Inputs"));
     inputRoot_->setVisible(model_->hasInputPins());
 
-    outputRoot_ = new PinListViewItem(ioListView, 0,
-                                          PinModel::OUTPUT);
+    outputRoot_ = new PinListViewItem(ioListView, 0, PinModel::OUTPUT);
     outputRoot_->setText(0, tr("Outputs"));
     outputRoot_->setVisible(model_->hasOutputPins());
 
@@ -459,13 +460,13 @@ void BlockConfDialog::syncModel() {
             qDebug(pin->name());
             switch (pin->type()) {
             case PinModel::INPUT:
-                new PinListViewItem(inputRoot_, pin->clone(), pin);
+                new PinListViewItem(inputRoot_, 0, pin->clone(), pin);
                 break;
             case PinModel::OUTPUT:
-                new PinListViewItem(outputRoot_, pin->clone(), pin);
+                new PinListViewItem(outputRoot_, 0, pin->clone(), pin);
                 break;
             case PinModel::EPISODIC:
-                new PinListViewItem(episodicRoot_, pin->clone(), pin);
+                new PinListViewItem(episodicRoot_, 0, pin->clone(), pin);
                 break;
             }
         }
@@ -533,17 +534,17 @@ void BlockConfDialog::newIo()
     PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
 
     if (item != 0) {
-        while (!item->isRoot()) {
-            item = (PinListViewItem *)item->parent();
+        QListViewItem *parentItem = item;
+        while (!parentItem->isOpen()) {
+            parentItem = parentItem->parent();
         }
-        int childCount = item->childCount() + 1;
+        int childCount = parentItem->childCount() + 1;
         PinModel *pin = new PinModel(model_,
                 "data" + QString::number(childCount),
                 childCount * 100, 32, item->type());
         newPins_.append(pin);
-        PinListViewItem *child = new PinListViewItem(item, pin);
-        child->setVisible(true);
-        updatePositions(item->type());
+        new PinListViewItem(parentItem, item != parentItem ? item : 0, pin);
+        updatePositions(((PinListViewItem *)parentItem)->type());
     }
 }
 

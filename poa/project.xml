@@ -24,7 +24,7 @@
   <!-- the year the project started -->
   <inceptionYear>2003</inceptionYear>
   <!--<package>poa</package>-->
-  <!--<logo>http://poa.berlios.de/images/logo.jpg</logo>-->
+  <logo>http://developer.berlios.de/bslogo.php?group_id=819</logo>
   <description>
     Entwicklung einer Programmierumgebung für einen CPLD-basierten Offenen Antrieb
   </description>

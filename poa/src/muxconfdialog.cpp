@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.29 2003/12/17 17:19:30 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.30 2003/12/18 01:52:02 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -316,10 +316,10 @@ void MuxConfDialog::syncModel() {
 
         QValueList<PinModel *> pins = model_->pins();
 
-        for (QValueListIterator<PinModel *> it = pins.begin();
-             it != pins.end(); ++it)
+        for (QValueListIterator<PinModel *> it1 = pins.begin();
+             it1 != pins.end(); ++it1)
         {
-            PinModel *pin = *it;
+            PinModel *pin = *it1;
 
             if (pin->type() == PinModel::INPUT) {
                 new PinListViewItem(inputListView, 0, pin->clone(), pin);
@@ -332,10 +332,10 @@ void MuxConfDialog::syncModel() {
             }
         }
 
-        for (QPtrListIterator<MuxMapping> it(*model_->mappings()); it != 0;)
+        for (QPtrListIterator<MuxMapping> it2(*model_->mappings()); it2 != 0;)
         {
-            ++it;
-            MuxMapping *mapping = it.current();
+            ++it2;
+            MuxMapping *mapping = it2.current();
             PinModel *clonedInput =
                 findPinById(PinModel::INPUT, mapping->input()->id());
             Q_ASSERT(clonedInput);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.27 2003/12/17 13:49:51 squig Exp $
+ * $Id: pinview.cpp,v 1.28 2003/12/18 01:52:02 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,7 @@ PinView::PinView(PinModel *model, BlockView *block,
 
     dockPosition_ = dockPosition;
     setZ(block->z());
-    setBrush(QBrush(SolidPattern));
+    setBrush(QBrush(QObject::SolidPattern));
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
@@ -81,23 +81,6 @@ void PinView::moveBy(double dx, double dy) {
         // FIX: someone needs to be notified, the connection needs
         // some rerouting
         //connector()->pinMoved(this);
-    }
-}
-
-LineDirection reverse(LineDirection dir)
-{
-    switch (dir) {
-    case LEFT:
-        return RIGHT;
-    case RIGHT:
-        return LEFT;
-    case UP:
-        return DOWN;
-    case DOWN:
-        return UP;
-    default:
-        Q_ASSERT(false);
-        return UNKNOWN;
     }
 }
 

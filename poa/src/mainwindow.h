@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.26 2003/12/03 18:26:12 vanto Exp $
+ * $Id: mainwindow.h,v 1.27 2003/12/18 01:52:02 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -145,7 +145,7 @@ private:
 
     QWorkspace* ws;
     Project *project_;
-    static const uint DEFAULT_ZOOM_LEVEL = 4;
+    static const uint DEFAULT_ZOOM_LEVEL;
 
     QPopupMenu *recentProjectsMenu;
 

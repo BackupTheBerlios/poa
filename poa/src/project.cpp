@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.39 2003/12/17 15:51:56 vanto Exp $
+ * $Id: project.cpp,v 1.40 2003/12/18 01:52:02 kilgus Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -257,13 +257,14 @@ void Project::deserialize(QDomDocument *document) {
     // create canvases
     QDomNodeList vList = document->elementsByTagName("view");
     for (unsigned int i = 0; i < vList.count(); i++) {
+		uint j;
         QDomElement vEl = vList.item(i).toElement();
         QDomNodeList viList = vEl.elementsByTagName("view-item");
         QDomNodeList conList = vEl.elementsByTagName("connector-view");
 
         GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
         // create view items
-        for (uint j = 0; j < viList.count(); j++) {
+        for (j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
                 if (idMap[viEl.attribute("model-id","0").toUInt()] == 0) {
@@ -277,7 +278,7 @@ void Project::deserialize(QDomDocument *document) {
         }
 
         // create connector views
-        for (uint j = 0; j < conList.count(); j++) {
+        for (j = 0; j < conList.count(); j++) {
             QDomElement conEl = conList.item(j).toElement();
 
             AbstractModel *sb = dynamic_cast<AbstractModel*>(

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.43 2003/12/17 16:35:07 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.44 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -437,14 +437,14 @@ void BlockConfDialog::updateModel() {
         }
 
         // deleted pins
-        for (QPtrListIterator<PinModel> it(deletedPins_); it != 0; ++it) {
-            model_->deletePin(*it);
+        for (QPtrListIterator<PinModel> dit(deletedPins_); dit != 0; ++dit) {
+            model_->deletePin(*dit);
         }
         deletedPins_.clear();
 
         // updated pins
-        for (QPtrListIterator<PinModel> it(updatedPins_); it != 0; ++it) {
-            PinModel *pin = *it;
+        for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
+            PinModel *pin = *uit;
             PinModel *origPin = model_->findPinById(pin->id());
             origPin->setName(pin->name());
             origPin->setAddress(pin->address());
@@ -455,8 +455,8 @@ void BlockConfDialog::updateModel() {
         updatedPins_.clear();
 
         // new pins
-        for (QPtrListIterator<PinModel> it(newPins_); it != 0; ++it) {
-            PinModel *pin = *it;
+        for (QPtrListIterator<PinModel> nit(newPins_); nit != 0; ++nit) {
+            PinModel *pin = *nit;
 
             model_->addPin(pin->clone());
         }

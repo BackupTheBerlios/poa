@@ -19,13 +19,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.64 2003/12/17 15:33:06 vanto Exp $
+# $Id: poa.pro,v 1.65 2003/12/18 01:52:02 kilgus Exp $
 #
 ###############################################################################
 
 CONFIG += debug 
 CONFIG += release
 CONFIG += thread
+CONFIG += rtti
+CONFIG += exceptions
 
 TEMPLATE = app
 INCLUDEPATH += .

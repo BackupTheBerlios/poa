@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.14 2003/12/03 16:06:20 squig Exp $
+ * $Id: connectorviewlist.h,v 1.15 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -33,7 +33,8 @@ class QDomElement;
 
 #include "poa.h"
 #include "serializable.h"
-class ConnectorViewSegment;
+#include "connectorviewsegment.h"
+//class ConnectorViewSegment;
 class GridCanvas;
 class PinView;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.1 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: poa.cpp,v 1.2 2003/12/18 01:52:02 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@ QString image(QPoint p)
 }
 
 
-LineDirection operator-(LineDirection dir)
+LineDirection reverse(LineDirection dir)
 {
     switch (dir) {
     case LEFT:
@@ -139,7 +139,7 @@ LineDirection turnLeft(LineDirection dir)
 
 LineDirection turnRight(LineDirection dir)
 {
-    return -turnLeft(dir);
+    return reverse(turnLeft(dir));
 }
 
 QString image(LineDirection dir)

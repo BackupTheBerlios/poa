@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.cpp,v 1.2 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: dijkstrarouter.cpp,v 1.3 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,11 @@ bool Node::operator<(const Node &other) const
 bool Node::operator==(const Node &other) const
 {
     return dir_ == other.dir_ && point_ == other.point_;
+}
+
+bool Node::operator!=(const Node &other) const
+{
+    return !(dir_ == other.dir_ && point_ == other.point_);
 }
 
 QPoint Node::point() const

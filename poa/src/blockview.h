@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.40 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: blockview.h,v 1.41 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -201,31 +201,31 @@ protected:
     virtual void arrangeVerticalPins();
 
     /** default width of a block */
-    static const int DEFAULT_WIDTH = 70;
+    static const int DEFAULT_WIDTH;
     /** default height of text drawn on the canvas */
     static int DEFAULT_FONT_HEIGHT;
     /** default vertical space between the top of the rectangle and the
      *  title */
-    static const int DEFAULT_TOP_SPACING = 3;
+    static const int DEFAULT_TOP_SPACING;
     /** default vertical space between
      * <li> the title and the separating horizontal line </li>
      * <li> the separating horizontal line and the pin list </li>
      * <li> the horizontal pin list and the vertical pin list </li>
      */
-    static const int DEFAULT_HEADER_SPACING = 4;
+    static const int DEFAULT_HEADER_SPACING;
     /** default vertical space between the last pin name and the bottom of
      *  the rectangle */
-    static const int DEFAULT_BOTTOM_SPACING = 4;
+    static const int DEFAULT_BOTTOM_SPACING;
     /** default vertical space between two consecutive pin names */
-    static const int DEFAULT_PIN_SEPARATION = 0;
+    static const int DEFAULT_PIN_SEPARATION;
     /** default horizontal space between the left border and the text */
-    static const int DEFAULT_LEFT_BORDER = 3;
+    static const int DEFAULT_LEFT_BORDER;
     /** default horizontal space between the text and the right border */
-    static const int DEFAULT_RIGHT_BORDER = 5;
+    static const int DEFAULT_RIGHT_BORDER;
     /** Default space between two adjacent labels */
-    static const int DEFAULT_LABEL_SPACING = 5;
+    static const int DEFAULT_LABEL_SPACING;
     /** Space per episodic pin label. */
-    static const int DEFAULT_LABEL_WIDTH = 40;
+    static const int DEFAULT_LABEL_WIDTH;
 
 private:
     /**
@@ -244,7 +244,7 @@ private:
     QValueList<PinView *> rightPins_;
     QValueList<PinView *> bottomPins_;
 
-    static const int RTTI = 1000;
+    static const int RTTI;
 
 
     void addPins(const QValueList<PinModel *>);

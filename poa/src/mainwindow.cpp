@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.73 2003/12/17 15:33:02 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.74 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -73,6 +73,9 @@
 #include <qlineedit.h>
 
 #include "poaexception.h"
+
+const uint MainWindow::DEFAULT_ZOOM_LEVEL = 4;
+
 
 /**
  * Constructs the main window.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.3 2003/12/15 04:07:09 keulsn Exp $
+ * $Id: dijkstrarouter.h,v 1.4 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -85,6 +85,7 @@ public:
      * (reflexive, transitive, symmetric).
      */
     bool operator==(const Node &other) const;
+    bool operator!=(const Node &other) const;
 
     /**
      * Returns the Point this node lies on.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.50 2003/12/17 13:49:51 squig Exp $
+ * $Id: blockview.cpp,v 1.51 2003/12/18 01:52:01 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,18 @@
 #include "util.h"
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
+
+const int BlockView::DEFAULT_WIDTH = 70;
+const int BlockView::DEFAULT_TOP_SPACING = 3;
+const int BlockView::DEFAULT_HEADER_SPACING = 4;
+const int BlockView::DEFAULT_BOTTOM_SPACING = 4;
+const int BlockView::DEFAULT_PIN_SEPARATION = 0;
+const int BlockView::DEFAULT_LEFT_BORDER = 3;
+const int BlockView::DEFAULT_RIGHT_BORDER = 5;
+const int BlockView::DEFAULT_LABEL_SPACING = 5;
+const int BlockView::DEFAULT_LABEL_WIDTH = 40;
+
+const int BlockView::RTTI = 1000;
 
 
 BlockView::BlockView(BlockModel *model, QCanvas *canvas)
@@ -82,7 +94,7 @@ bool BlockView::isDraggable()
 QSize BlockView::dragBy(double dx, double dy)
 {
     // must convert to be consistent with return value
-    moveBy(rint(dx), rint(dy));
+    moveBy(int(dx + 0.5), int(dy + 0.5));
     return QSize((int) dx, (int) dy);
 }
 
@@ -131,20 +143,20 @@ void BlockView::addPins(const QValueList<PinModel *> pins)
 
 void BlockView::addPinViewsTo(QCanvasItemList &list)
 {
-    for (QValueList<PinView*>::iterator current = leftPins_.begin();
-         current != leftPins_.end(); ++current) {
+    for (QValueList<PinView*>::iterator current1 = leftPins_.begin();
+         current1 != leftPins_.end(); ++current1) {
 
-        list.prepend(*current);
+        list.prepend(*current1);
     }
-    for (QValueList<PinView*>::iterator current = rightPins_.begin();
-         current != rightPins_.end(); ++current) {
+    for (QValueList<PinView*>::iterator current2 = rightPins_.begin();
+         current2 != rightPins_.end(); ++current2) {
 
-        list.prepend(*current);
+        list.prepend(*current2);
     }
-    for (QValueList<PinView*>::iterator current = bottomPins_.begin();
-         current != bottomPins_.end(); ++current) {
+    for (QValueList<PinView*>::iterator current3 = bottomPins_.begin();
+         current3 != bottomPins_.end(); ++current3) {
 
-        list.prepend(*current);
+        list.prepend(*current3);
     }
 }
 
@@ -331,7 +343,7 @@ void BlockView::drawShape(QPainter &p)
         QFont f = p.font();
         f.setBold(true);
         p.setFont(f);
-        p.drawText(textArea, Qt::AlignHCenter, label);
+        p.drawText(textArea, QObject::AlignHCenter, label);
         f.setBold(false);
         p.setFont(f);
 
@@ -368,13 +380,13 @@ void BlockView::drawShape(QPainter &p)
             if (i < leftPins_.size()) {
                 QString label = Util::squeeze(leftPins_[i]->pinModel()->name(),
                                               maxWidth, p.font());
-                p.drawText(textArea, Qt::AlignLeft, label);
+                p.drawText(textArea, QObject::AlignLeft, label);
             }
 
             if (i < rightPins_.size()) {
                 QString label = Util::squeeze(rightPins_[i]->pinModel()->name(),
                                               maxWidth, p.font());
-                p.drawText(textArea, Qt::AlignRight, label);
+                p.drawText(textArea, QObject::AlignRight, label);
             }
             textArea.moveBy(0, pinHeight);
         }
@@ -395,7 +407,7 @@ void BlockView::drawShape(QPainter &p)
         for (unsigned i = 0; i < bottomPins_.size(); ++i) {
             QString label = Util::squeeze(bottomPins_[i]->pinModel()->name(),
                                           width__, p.font());
-            p.drawText(textArea, Qt::AlignHCenter, label);
+            p.drawText(textArea, QObject::AlignHCenter, label);
             textArea.moveBy(width__ + DEFAULT_LABEL_SPACING, 0);
         }
     }

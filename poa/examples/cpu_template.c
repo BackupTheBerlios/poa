@@ -1,13 +1,21 @@
 /**
- * POA CPU $$NR.
+ * POA Standard Template für CPU Sourcen
  *
- * $Id: cpu_template.c,v 1.1 2003/09/17 13:18:32 garbeam Exp $
+ * Compile: nb -b 0x4000 bof.c
+ *
+ * $Id: cpu_template.c,v 1.2 2004/02/09 19:18:21 garbeam Exp $
  */
 
-#include <stdio.h>
+// Hardware-Adressen - folgenden POA Kommentarblock NICHT entfernen!
+/*!POA
 
-int main(int argc, char **argv)
+AOP!*/
+
+int main(void)
 {
-    printf("This is POA CPU $$NR.\n");
+
+
     return 0;
 }
+
+/* End of file */

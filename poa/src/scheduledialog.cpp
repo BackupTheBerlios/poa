@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.12 2004/01/11 13:57:35 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.13 2004/01/11 14:25:59 vanto Exp $
  *
  *****************************************************************************/
 
@@ -520,7 +520,10 @@ void ArrowLine::drawShape(QPainter &p)
 {
     QCanvasLine::drawShape(p);
 
-    double angle = computeAngle(sx, sy, ex, ey);
+    double angle = computeAngle(startPoint().x(),
+                                startPoint().y(),
+                                endPoint().x(),
+                                endPoint().y());
     QPointArray pts(3);
 
     QWMatrix m;
@@ -533,7 +536,10 @@ void ArrowLine::drawShape(QPainter &p)
     m.map(0, 0, &x, &y);
     pts.setPoint(2, x, y);
 
-    p.drawPoints(pts);
+    pts.translate(endPoint().x(), endPoint().y());
+
+    p.setBrush(QColor(black));
+    p.drawPolygon(pts);
 }
 
 double ArrowLine::computeAngle(int sx, int sy, int ex, int ey)

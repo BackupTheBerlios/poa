@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.11 2004/06/10 07:33:15 keulsn Exp $
+%% $Id: design.tex,v 1.12 2004/06/15 07:33:58 keulsn Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -9,9 +9,80 @@
 
 \section{Übersicht}
 
-*** Grafik ***
+Die Architektur von POA gliedert sich in stark zusammenhängende
+Module, die durch schmale Schnittstellen miteinander kommunizieren und
+so eine geringe Kopplung aufweisen. So kann jedes dieser Module
+einzeln an geänderte Anforderungen angepasst werden, wobei die
+Interoperabilität erhalten bleibt.
 
-- Was sind Projekte
+Auf diese Weise wird die größtmögliche Flexibilität für die
+Weiterentwicklung und Wartung der Software sichergestellt. Aufgrund
+des forschungsnahen Charakters des OA-Projekts wurde auf die
+Flexibilität der Architektur besonderer Wert gelegt.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{../abschlussbericht/design}
+  \caption{POA Architektur}\label{arch_grafik}
+\end{figure}
+
+In Abbildung \ref{arch_grafik} werden die Module von POA
+dargestellt. Im Folgenden wird eine kurze Beschreibung gegeben,
+Details folgen im Kapitel \ref{modules}.
+
+Die grün dargestellten Module bilden die Basis des
+POA-Systems. Entwürfe für Regler auf dem Offenen Antrieb werden in
+Projekten (\ref{project}) entwickelt. Die Daten eines Projekts werden
+in den Models (\ref{model}) des Projekts gespeichert.
+
+Die rot dargestellten Module, Problemmanager (\ref{problem_manager}),
+Scheduling (\ref{scheduling}) und Download (\ref{download}) bilden die
+wesentlichen Aufgaben von POA ab.
+\begin{itemize}
+\item Prüfen der Integrität eines Projekts und Anzeige der
+aufgefundenen Problem.
+\item Automatische Berechnung eines optimalen Schedulings für das
+Netzwerk von Blöcken.
+\item Compilation des Sourcecodes und Download auf die spezifizierten
+CPUs
+\end{itemize}
+
+Die in blau eingefärbten Module realisieren die
+Benutzungsschnittstelle von POA. Das Modul GUI umfasst Klassen zur
+Darstellung von Dialogen. Die Views (\ref{view}) visualisieren die
+relevanten Nutzdaten und das Routing-Modul (\ref{routing}) wird eingesetzt, um
+Konnektoren überkreuzungsarm in ein Netzwerk einzubringen.
+
+Schließlich bietet das Utils Modul diverse Funktionalität, die häuftig
+benötigt wird. Die Klassen dieses Moduls sind Kandidaten um in
+folgenden Projekten wiederverwendet zu werden.
+
+\subsection{Projekte in POA}
+
+Um mehrere Konfigurationen des Offenen Antriebs bearbeiten zu können,
+stellt POA das Projekt-Konzept zur Verfügung. Die Arbeit an einer
+bestimmten Konfiguration (alle Blöcke, Konnektoren, Source Code,
+Layout der Darstellungen) wird in ein Projekt
+zusammengefasst. Projekte können als ganzes auf ständigen Speicher
+gespeichert und von diesem geladen werden.
+
+Aufgrund ihrer zentralen Stellung bietet die Sicht auf ein Projekt
+ebenfalls einen guten Ausgangspunkt für die Betrachtung der
+Architektur. (siehe auch \ref{project})
+
+\subsection{Speicherung von Projekten}
+
+Projekte werden in einem Projekt-Ordner auf der Festplatte
+gespeichert. Der Name des Ordners ist gleichzeitig der Name des
+Projekts. Der Projekt-Ordner enthält die Datei project.xml, die alle
+Projekt-Daten enthält.
+
+Zusätzlich gibt es für jede CPU des Projekts einen Unter-Ordner, der
+die wiederum die Ordner inc für zu inkludierende
+C-Präprozessor-Definitionen oder C-Deklarationen, lib für Bibliotheken
+gegen die der selbstgeschriebene Code zu linken ist, und src für den
+Quelltext für die CPU enthält. Für diesen Quelltext kann POA
+Rahmencode generieren.
 
 \section{Entwurfsmuster}
 
@@ -27,6 +98,7 @@ Einarbeitung. Weiterhin bieten sie Richtlinien an, wie weitere
 Funktionalität in das System integriert werden kann.
 
 \subsection{Model-View-Controller}
+\label{model_view_controller}
 
 In dem Model-View-Controller Entwurfsmuster wird die Verarbeitung der
 Daten vollständig von der Visualisierung unabhängig gehalten. Die
@@ -54,6 +126,7 @@ Zustandsänderungen schicken. Die nahtlose Integration in die
 Programmiersprache ermöglicht eine besonders einfache Verwendung des
 Mechanismus.
 
+\label{Benachrichtigungen}
 Die Benachrichtigungen (Signals) werden durch das Schlüsselwort emit
 gesendet und von speziellen Methoden (Slots) empfangen. Die Signals
 und Slots werden in den Klassendeklarationen angegeben. Die Verbindung
@@ -90,6 +163,7 @@ die über eine definierte Schnittstelle angesprochen werden können.
 In POA ist lediglich die Settings Klasse als Singleton implementiert.
 
 \section{Module}
+\label{modules}
 
 Die Architektur von POA lässt sich in stark zusammenhängende
 Module aufteilen, die eine gerine Kopplung aufweisen. In den folgenden
@@ -100,6 +174,7 @@ aus dem Klassennamen ableiten oder ist aus dem POA
 Software-Architektur anhand der Schattierung ersichtlich.
 
 \subsection{Datenmodell (Model)}
+\label{model}
 
 In den Model-Klassen wird das Datenmodell eines Projekts
 repräsentiert. In POA werden Daten in Objekten der Klassen BlockModel
@@ -107,6 +182,7 @@ und PinModel, sowie abgeleiteter Klassen gespeichert. Die Klasse
 Projekt stellt den Zusammenhalt zwischen den einzelnen Models her.
 
 \subsection{View}
+\label{view}
 
 Views werden verwendet, um dem Benutzer die Daten zu präsentieren. Sie
 werden über Signals benachrichtigt, wenn sich ein Model verändert und
@@ -140,6 +216,7 @@ ConnectorModel, aber delegieren die tatsächliche Darstellungsaufgabe
 an mehrere ConnectorViewSegment-Objekte.
 
 \subsection{Controller}
+\label{controller}
 
 Als Controller wird die Komponente bezeichnet, die Benutzereingaben
 und interne Ereignisse verarbeitet und die Synchronisation zwischen
@@ -159,7 +236,17 @@ verarbeiten. Falls eine Bearbeitung mehrere Schritte erfordert, so
 erzeugt das View-Objekt ein Action-Objekt, um die Aufgabe zu
 erledigen.
 
+\subsection{Project}
+\label{project}
+
+Die Daten, die in POA zum Layout eines Netzwerks gehören, werden in
+einem Objekt der Klasse Project registriert. Das Project-Objekt
+übernimmt die administrativen Aufgaben beim Laden und
+Speichern. Außerdem verwaltet es die Canvases, auf denen die Views
+leben.
+
 \subsection{Scheduling}
+\label{scheduling}
 
 Optimales Scheduling bedeutet in POA die Berechnung eines optimalen
 Offsets für jeden Block, da die Taktraten für jeden Block bereits
@@ -184,6 +271,7 @@ BlockGraphs, um eine Liste aller Blöcke anzuzeigen, die noch in keinem
 Pfad enthalten sind.
 
 \subsection{Download}
+\label{download}
 
 Der Download ist in der Klasse DownloadManager implementiert. Zur
 Übertragung der Daten wird die QExtSerialPort Bibliothek verwendet.
@@ -195,6 +283,7 @@ der initializeAndOpen() Methode. Hier können die fest programmierten
 angepasst werden, falls sich das Übertragungsprotokoll ändert.
  
 \subsection{Routing}
+\label{routing}
 
 Die Routing Schnittstelle ist sehr abstrakt definiert. Es wird
 lediglich die Verbindung zweier Punkte auf einem GridCanvas gefordert.
@@ -216,7 +305,8 @@ Durch Ableitung der ConnectorRouter Klasse und Erweiterung der
 GridCanvas Klasse ist jederzeit eine Implementierung von zusätzlichen
 Routing Algorithmen möglich. 
 
-\subsection{Problemreport}
+\subsection{Problemmanager}
+\label{problem_manager}
 
 Die Klasse ProblemReportManager validiert ein Projekt und stellt eine
 Baumansicht mit den Ergebnissen zur Verfügung. Im ersten Schritt

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.8 2003/08/28 15:44:34 vanto Exp $
+ * $Id: project.cpp,v 1.9 2003/08/28 16:16:58 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -139,4 +139,4 @@ void Project::deserialize(QDomDocument *document) {
         }
     }
 }
-x
+

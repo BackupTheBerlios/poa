@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockmodel.h,v 1.4 2003/08/29 14:34:41 vanto Exp $
+ * $Id: outputblockmodel.h,v 1.5 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,7 @@
 #include "pinvector.h"
 
 
-/*****************************************************************************
+/**
  * A block receiving outputs from the system and transmitting those outputs
  * to the environment.
  */

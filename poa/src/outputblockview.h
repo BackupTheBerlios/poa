@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockview.h,v 1.4 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: outputblockview.h,v 1.5 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,10 +28,10 @@
 #include "outputblockmodel.h"
 #include "blockview.h"
 
-/*****************************************************************************
+/**
  * Definition of a ouput block view.
  */
-class OutputBlockView/*: public BlockView*/
+class OutputBlockView/**: public BlockView*/
 {
 
 private:

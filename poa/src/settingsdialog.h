@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.5 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: settingsdialog.h,v 1.6 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -31,7 +31,7 @@ class QLineEdit;
 class QPushButton;
 class QSpinBox;
 
-/*****************************************************************************
+/**
  * Provides the settings dialog.
  * 
  * The settings dialog has mutliple tabs.

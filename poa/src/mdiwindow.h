@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.17 2003/09/07 19:07:46 squig Exp $
+ * $Id: mdiwindow.h,v 1.18 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,7 +33,7 @@ class GridCanvas;
 #include <qcombobox.h>
 class CanvasView;
 
-/*****************************************************************************
+/**
  * Defines MDI windows.
  */
 class MdiWindow : public QMainWindow

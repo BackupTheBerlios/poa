@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.11 2003/09/04 15:20:06 squig Exp $
+ * $Id: settings.h,v 1.12 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -29,7 +29,7 @@
 #include <qobject.h>
 #include <qsettings.h>
 
-/*****************************************************************************
+/**
  * Provides the user settings.
  *
  * Makes use of the singleton pattern.
@@ -53,13 +53,13 @@ public:
     bool set(const QString &key, int value);
 
     // the following settings emit an additional signal
-    /*****************************************************************************
+    /**
      * Grid size
      */
     int gridSize();
     void setGridSize(int gridSize);
 
-    /*****************************************************************************
+    /**
      * Snap to grid
      */
     bool snapToGrid();

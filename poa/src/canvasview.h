@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.19 2003/09/07 19:07:46 squig Exp $
+ * $Id: canvasview.h,v 1.20 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@ class QMouseEvent;
 class QKeyEvent;
 class QPoint;
 
-/*****************************************************************************
+/**
  * Defines a view on a {@link QCanvas} that belongs to a {@link Project}.
  * Each project can have several <code>CanvasView</code>s. Several
  * <code>CanvasView</code>s can visualize one <code>QCanvas</code>.
@@ -104,20 +104,20 @@ signals:
 
 protected:
 
-    /*************************************************************************
+    /**
      * Called when a mouse button is pressed on <code>this</code>'s content.
      * If the mouse button is pressed on a descendant of {@link BlockView}
      * then sets that object as <code>movingItem_</code>.
      */
     virtual void contentsMousePressEvent(QMouseEvent *e);
 
-    /*************************************************************************
+    /**
      * Called when a mouse button is released on <code>this</code>'s content.
      * Cleares the moving state, if an item exists that has movin state.
      */
     virtual void contentsMouseReleaseEvent(QMouseEvent *e);
 
-    /*************************************************************************
+    /**
      * Called when the mouse cursor is moved over <code>this</code>'s content.
      * If there is a <code>movingItem_</code> then that item is moved along
      * with the cursor. The current position is displayed in the
@@ -125,13 +125,13 @@ protected:
      */
     virtual void contentsMouseMoveEvent(QMouseEvent *e);
 
-    /*************************************************************************
+    /**
      * Approves those <code>QDragEnterEvent</code> that may be passed to
      * {@link #dropEvent}.
      */
     virtual void dragEnterEvent(QDragEnterEvent *e);
 
-    /*************************************************************************
+    /**
      * Can only be used for those <code>QDropEvents</code> approved by
      * {@link #dragEnterEvent}. Tries to create a new model from the dragged
      * content an adds that model to the project. Then creates a new view
@@ -140,7 +140,7 @@ protected:
      */
     virtual void dropEvent(QDropEvent *e);
 
-    /*************************************************************************
+    /**
      * Transforms window-coordinates to canvas-coodinates
      * @param pos Position in window-coodinates
      * @return Position in canvas-world-coodinates

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.5 2003/08/22 22:47:49 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.6 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -33,7 +33,7 @@
 #include <qpushbutton.h>
 #include <qspinbox.h>
 
-/*****************************************************************************
+/**
  * Constructs the dialog.
  */
 SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
@@ -55,7 +55,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 	connect(this, SIGNAL(applyButtonPressed()), this, SLOT(applySettings()));
 }
 
-/*****************************************************************************
+/**
  * Destroys the dialog.
  */
 SettingsDialog::~SettingsDialog()
@@ -63,7 +63,7 @@ SettingsDialog::~SettingsDialog()
     // no need to delete child widgets, Qt does it all for us
 }
 
-/*****************************************************************************
+/**
  * Returns the general tab.
  */
 QWidget *SettingsDialog::createGeneralTab()
@@ -78,7 +78,7 @@ QWidget *SettingsDialog::createGeneralTab()
 	return tab;
 }
 
-/*****************************************************************************
+/**
  * Returns the path tab.
  */
 QWidget *SettingsDialog::createPathTab()
@@ -118,7 +118,7 @@ QWidget *SettingsDialog::createPathTab()
 	return tab;
 }
 
-/*****************************************************************************
+/**
  * Reads and sets the default settings from Settings.
  */
 void SettingsDialog::setup()
@@ -135,7 +135,7 @@ void SettingsDialog::setup()
 	downloadLineEdit->setText(s->get("Download Path"));	
 }
 
-/*****************************************************************************
+/**
  * Stores the settings to Settings.
  */
 void SettingsDialog::applySettings()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.12 2003/09/07 19:07:46 squig Exp $
+ * $Id: project.h,v 1.13 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -34,7 +34,7 @@
 #include <qcanvas.h>
 #include <qmap.h>
 
-/*****************************************************************************
+/**
  * Project
  * Contains the model and a list of canvases
  */
@@ -43,66 +43,66 @@ class Project : public QObject
     Q_OBJECT
 
 public:
-    /*************************************************************************
+    /**
      * Creates a new project with the given name.
      * @param name will be showed in the mdiwindow title
      */
     Project(QString name);
 
-    /*************************************************************************
+    /**
      * Creates a new project and deserialized the given xml document
      * @param document will be deserialized
      * @param name will be showed in the mdiwindow title
      */
     Project(QString name, QDomDocument *document);
 
-    /*************************************************************************
+    /**
      * Destroys the project
      */
     ~Project();
 
-    /*************************************************************************
+    /**
      * Adds a block model to the project
      * @param item the AbstractModel
      */
     void addBlock(AbstractModel *item);
 
-    /*************************************************************************
+    /**
      * Adds a connector model to the project
      * @param item the ConnectorModel
      */
     void addConnector(ConnectorModel *item);
 
-    /*************************************************************************
+    /**
      * Creates the item's corresponding view object on all canvases.
      *
      * @see GridCanvas#addView(AbstractModel *)
      */
     void createViews(AbstractModel *item, int x = 0, int y = 0);
 
-    /*************************************************************************
+    /**
      * Returns the <code>project</code>'s name
      */
     QString name();
 
-    /*************************************************************************
+    /**
      * Creates a new Canvas with the given name
      * @param name canvas' name
      */
     GridCanvas *newCanvas(const QString name);
 
-    /*************************************************************************
+    /**
      * Returns a QPtrList of all canvases
      */
     const QPtrList<GridCanvas> *canvasList() const;
 
-    /*************************************************************************
+    /**
      * Serializes this project to xml
      */
     QDomDocument serialize();
 
 private:
-    /*************************************************************************
+    /**
      * Deserializes the given xml document to this project
      */
     void deserialize(QDomDocument *document);

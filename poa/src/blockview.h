@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.19 2003/09/07 19:07:46 squig Exp $
+ * $Id: blockview.h,v 1.20 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,7 @@
 class BlockModel;
 class PinView;
 
-/*****************************************************************************
+/**
  * Block view for all blocks on a <code>GridCanvas</code>.
  * The block itself is a rectangle. Every pin that connects to the block
  * has its own <code>PinView</code>-instance. Those pin views are created
@@ -48,7 +48,7 @@ class BlockView: public AbstractView, public QCanvasRectangle
 
 public:
 
-    /*************************************************************************
+    /**
      * Creates a view for <code>model</code> on <code>canvas</code>. Creates
      * also canvas view objects for all pins that connects to
      * <code>model</code>. Use the member {@link #addPinViewsTo} to get a
@@ -56,29 +56,29 @@ public:
      */
     BlockView(BlockModel *model, QCanvas *canvas);
 
-    /*************************************************************************
+    /**
      * Default destructor
      */
     virtual ~BlockView();
 
-    /*************************************************************************
+    /**
      * Returns a list of all canvas items that were created implicitely with
      * <code>this</code>.
      * @see #BlockView
      */
     void addPinViewsTo(QCanvasItemList &list);
 
-    /*************************************************************************
+    /**
      * Returns the model for <code>this</code>.
      */
     AbstractModel *model();
 
-    /*************************************************************************
+    /**
      * @return true
      */
     virtual bool isDraggable();
 
-    /*************************************************************************
+    /**
      * Drags <code>this</code> and all attached pin views by the specified
      * amount
      */
@@ -90,7 +90,7 @@ public:
      */
     virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
 
-    /*************************************************************************
+    /**
      * Moves <code>this</code> and the pin views that are connected to
      * <code>this</code>.
      * @param dx Number of pixels to move in horizontal direction
@@ -99,24 +99,24 @@ public:
      */
     virtual void moveBy(double dx, double dy);
 
-    /*************************************************************************
+    /**
      * Run Time Type Identification
      */
     virtual int rtti() const;
 
-    /*************************************************************************
+    /**
      * Sets the brush to red if Pin is selected, otherwise black
      */
     virtual void setSelected(bool yes);
 
-    /*************************************************************************
+    /**
      * Serializes this instance to a xml subtree
      * @param document the main QDomDocument instance. Needed to create
      *        elements
      */
     QDomElement serialize(QDomDocument *document);
 
-    /*************************************************************************
+    /**
      * Deserializes an xml subtree and sets this' properties
      */
     void deserialize(QDomElement element);
@@ -127,7 +127,7 @@ protected:
 
     virtual QPopupMenu *popupMenu();
 
-    /*************************************************************************
+    /**
      * Alignes all pins that dock onto <code>this</code> either on the left
      * side or on the right.
      */

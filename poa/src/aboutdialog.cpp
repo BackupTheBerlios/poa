@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.cpp,v 1.3 2003/08/27 17:50:40 vanto Exp $
+ * $Id: aboutdialog.cpp,v 1.4 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #include "aboutdialog.h"
@@ -27,7 +27,7 @@
 #include <qfile.h>
 #include <qtextedit.h>
 
-/*****************************************************************************
+/**
  * Constructs the dialog.
  */
 AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal,
@@ -43,7 +43,7 @@ AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal,
     addFileTab("COPYING", tr("License Agreement"));
 }
 
-/*****************************************************************************
+/**
  * Destroys the dialog.
  */
 AboutDialog::~AboutDialog()
@@ -51,7 +51,7 @@ AboutDialog::~AboutDialog()
     // no need to delete child widgets, Qt does it all for us
 }
 
-/*****************************************************************************
+/**
  * Adds a tab to the dialog that contains the content of file.
  */
 void AboutDialog::addFileTab(const QString &filename, const QString &label)

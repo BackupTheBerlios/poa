@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.8 2003/09/07 19:07:46 squig Exp $
+ * $Id: modelfactory.h,v 1.9 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
@@ -29,17 +29,17 @@ class AbstractModel;
 #include <qvaluelist.h>
 class QDomNode;
 
-/*  class AbstractModelList : public QValueList<AbstractModel *> { */
-/*  }; */
+/**  class AbstractModelList : public QValueList<AbstractModel *> { */
+/**  }; */
 
-/*****************************************************************************
+/**
  * Generates model objects from xml data.
  */
 class ModelFactory
 {
 public:
 
-    /*****************************************************************************
+    /**
      * Generates cpu respectivly core models
      */
     static QValueList<AbstractModel *> generate(QDomNode node);

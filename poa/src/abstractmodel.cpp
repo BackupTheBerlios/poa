@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.6 2003/09/01 18:48:05 squig Exp $
+ * $Id: abstractmodel.cpp,v 1.7 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -28,7 +28,7 @@ AbstractModel::AbstractModel(QString type, QString description, uint id)
 {
 }
 
-/*************************************************************************
+/**
  * Returns a description of the item.
  */
 QString AbstractModel::description() const
@@ -36,7 +36,7 @@ QString AbstractModel::description() const
     return description_;
 }
 
-/*************************************************************************
+/**
  * Returns the name of the item.
  */
 QString AbstractModel::type() const
@@ -44,7 +44,7 @@ QString AbstractModel::type() const
     return type_;
 }
 
-/*************************************************************************
+/**
  * Returns the project unique id
  */
 uint AbstractModel::id() const

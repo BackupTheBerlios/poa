@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.h,v 1.6 2003/08/30 18:37:33 vanto Exp $
+ * $Id: pinvector.h,v 1.7 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,7 @@
 
 typedef QValueVector<PinModel*> PinPointerVector;
 
-/*****************************************************************************
+/**
  * Collection of pinmodels.
  */
 class PinVector: public PinPointerVector
@@ -39,17 +39,17 @@ class PinVector: public PinPointerVector
 
 public:
 
-    /*****************************************************************************
+    /**
      * Adds <code>pin</code> before <code>successor</code> to this vector
      */
     void addBefore(PinModel *pin, PinModel *successor = 0);
 
-    /*****************************************************************************
+    /**
      * Removes the given pin from this vector
      */
     void remove(PinModel *pin);
 
-    /*****************************************************************************
+    /**
      * Finds a pin according to it's id
      */
     PinModel *findById(const unsigned id);

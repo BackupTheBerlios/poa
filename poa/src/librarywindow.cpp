@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.12 2003/09/07 19:07:46 squig Exp $
+ * $Id: librarywindow.cpp,v 1.13 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -34,7 +34,7 @@
 #include <qsplitter.h>
 #include <qtextbrowser.h>
 
-/*****************************************************************************
+/**
  * Constructs the window.
  */
 LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
@@ -68,7 +68,7 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
             this, SLOT(setOrientation(Orientation)));
 }
 
-/*****************************************************************************
+/**
  * Destroys the window.
  */
 LibraryWindow::~LibraryWindow()
@@ -76,7 +76,7 @@ LibraryWindow::~LibraryWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
-/*****************************************************************************
+/**
  * Adds the modules to the tree.
  */
 void LibraryWindow::initializeLibrary()
@@ -94,7 +94,7 @@ void LibraryWindow::initializeLibrary()
                             new CoreModel("InputBlock", "Coredump"));
 }
 
-/*****************************************************************************
+/**
  * Sets the description
  */
 void LibraryWindow::setDescription(QListViewItem* item)
@@ -102,7 +102,7 @@ void LibraryWindow::setDescription(QListViewItem* item)
     descriptionTextBrowser->setText(item->text(1));
 }
 
-/*****************************************************************************
+/**
  * Sets the orientation of the splitter to the reverse value of orientation.
  */
 void LibraryWindow::setOrientation(Qt::Orientation orientation)

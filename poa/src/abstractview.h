@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.7 2003/09/07 19:07:46 squig Exp $
+ * $Id: abstractview.h,v 1.8 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,7 @@ class QMouseEvent;
 class QPopupMenu;
 #include <qsize.h>
 
-/*****************************************************************************
+/**
  * Base class for all view classes.
  */
 class AbstractView

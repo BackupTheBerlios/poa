@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.h,v 1.3 2003/08/30 18:37:33 vanto Exp $
+ * $Id: aboutdialog.h,v 1.4 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 #include <qvariant.h>
 #include <qtabdialog.h>
 
-/*****************************************************************************
+/**
  * Provides the about dialog.
  * 
  * The about dialog has mutliple tabs. The first tab contains a short
@@ -40,18 +40,18 @@ class AboutDialog : public QTabDialog
     Q_OBJECT
 
 public:
-    /*****************************************************************************
+    /**
      * Creates the about dialog
      */
     AboutDialog(QWidget* parent = 0, const char* name = 0, bool modal = FALSE,
                 WFlags flags = 0);
 
-    /*****************************************************************************
+    /**
      * Default destructor
      */
     ~AboutDialog();
 
-    /*****************************************************************************
+    /**
      * Adds a file tab to this dialog.
      * @param filename the new tab shall display this textfile
      * @param label the tab's name

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.h,v 1.4 2003/08/29 23:51:08 vanto Exp $
+ * $Id: connectormodel.h,v 1.5 2003/09/08 13:01:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,14 +31,14 @@
 class PinModel;
 
 
-/*****************************************************************************
+/**
  *
  */
 class ConnectorModel: public AbstractModel
 {
 public:
 
-    /*************************************************************************
+    /**
      * Creates a new connector between two pins
      * @param source Source pin for this connector
      * @param target Target pin for this connector
@@ -46,43 +46,43 @@ public:
     ConnectorModel(PinModel *source,
            PinModel *target);
 
-    /*************************************************************************
+    /**
      * Default destructor
      */
     virtual ~ConnectorModel();
 
-    /*************************************************************************
+    /**
      * Creates the views.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
 
-    /*************************************************************************
+    /**
      * Returns the source of this connector
      */
     PinModel *source();
 
-    /*************************************************************************
+    /**
      * Returns the target of this connector
      */
     PinModel *target();
 
-    /*************************************************************************
+    /**
      * Returns the width of this connector
      */
     unsigned width();
 
-    /*************************************************************************
+    /**
      * Sets the width of this connector
      */
     void setWidth(const unsigned width);
 
-    /*************************************************************************
+    /**
      * Serializes this instance to a xml subtree
      * @param document the main QDomDocument instance. Needed to create elements
      */
     QDomElement serialize(QDomDocument *document);
 
-    /*************************************************************************
+    /**
      * Deserializes an xml subtree and sets this' properties
      */
     //void deserialize(QDomElement element);
@@ -94,7 +94,7 @@ private:
     /** Target pin. must not be 0  */
     PinModel *target_;
 
-    /*************************************************************************
+    /**
      * Number of bits. Must be equal to width of <code>source_</code> and
      * of <code>target_</code>
      */

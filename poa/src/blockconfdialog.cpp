@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.51 2004/01/18 23:15:11 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.52 2004/01/19 21:14:30 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     if (!name) {
         setName("BlockConfDialog");
     }
-    resize(400, 500);
+    resize(600, 400);
     setCaption(tr("Block configuration"));
 
     model_ = model;

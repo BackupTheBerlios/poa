@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.3 2004/01/19 15:25:40 squig Exp $
+ * $Id: problemmanager.cpp,v 1.4 2004/01/19 21:14:30 squig Exp $
  *
  *****************************************************************************/
 
@@ -160,12 +160,14 @@ void DifferentWidthReport::addWidgets(QWidget *widget)
 void DifferentWidthReport::adjustSource()
 {
     source_->setBits(target_->bits());
+    source_->updatePerformed();
     setFixed(true);
 }
 
 void DifferentWidthReport::adjustTarget()
 {
     target_->setBits(source_->bits());
+    target_->updatePerformed();
     setFixed(true);
 }
 
@@ -200,12 +202,14 @@ void DifferentClockReport::addWidgets(QWidget *widget)
 void DifferentClockReport::adjustSource()
 {
     source_->setClock(target_->clock());
+    source_->updatePerformed();
     setFixed(true);
 }
 
 void DifferentClockReport::adjustTarget()
 {
     target_->setClock(source_->clock());
+    target_->updatePerformed();
     setFixed(true);
 }
 

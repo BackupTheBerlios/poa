@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.20 2004/01/19 18:08:46 squig Exp $
+ * $Id: scheduledialog.h,v 1.21 2004/01/19 21:14:30 squig Exp $
  *
  *****************************************************************************/
 
@@ -73,14 +73,6 @@ private:
 
     QCanvas *labelCanvas;
     QCanvasView *labelCanvasView;
-
-    QPushButton *applyPushButton;
-    QPushButton *helpPushButton;
-    QPushButton *cancelPushButton;
-    QPushButton *okPushButton;
-
-    QPushButton *upPushButton_;
-    QPushButton *downPushButton_;
 
     QSlider *zoomSlider;
     double zoom_;

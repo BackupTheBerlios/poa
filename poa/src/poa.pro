@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.74 2004/01/19 11:23:07 squig Exp $
+# $Id: poa.pro,v 1.75 2004/01/19 21:14:30 squig Exp $
 #
 ###############################################################################
 
@@ -80,6 +80,7 @@ HEADERS += muxmodel.h
 HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
+HEADERS += pixmapbutton.h
 HEADERS += poa.h
 HEADERS += poaexception.h
 HEADERS += priorityqueue.h
@@ -127,6 +128,7 @@ SOURCES += muxmodel.cpp
 SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp
+SOURCES += pixmapbutton.cpp
 SOURCES += poa.cpp
 SOURCES += poaexception.cpp
 SOURCES += priorityqueue.cpp

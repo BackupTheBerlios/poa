@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.37 2004/01/19 18:08:46 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.38 2004/01/19 21:14:30 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,7 @@
 #include <qtable.h>
 #include <qwmatrix.h>
 #include <math.h>
+#include <qtoolbutton.h>
 
 #include "scheduledialog.h"
 #include "canvasview.h"
@@ -48,8 +49,10 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "mainwindow.h"
+#include "pixmapbutton.h"
 #include "poa.h"
 #include "project.h"
+#include "util.h"
 
 const int CANVAS_WIDTH = 800;       // Canvas width
 const int X_ORIGIN = 50;            // Blocks start at this origin
@@ -176,21 +179,23 @@ void ScheduleDialog::initTimingWidget()
     topLayout->addWidget(timingTable);
 
     rightWidget_ = new QWidget(topWidget);
-    rightLayout_ = new QVBoxLayout(rightWidget_, WIDGET_SPACING);
+    rightLayout_ = new QVBoxLayout(rightWidget_);
     topLayout->addWidget(rightWidget_);
 
-    upPushButton_ = new QPushButton(rightWidget_, "upPushButton");
-    upPushButton_->setText("+");
-    connect(upPushButton_, SIGNAL(clicked()),
-            SLOT(moveRowUp()));
+    QPushButton *upPushButton_
+        = new PixmapButton(QPixmap(Util::findIcon("1uparrow.png")),
+                           rightWidget_);
+    connect(upPushButton_, SIGNAL(clicked()), this, SLOT(moveRowUp()));
 
-    downPushButton_ = new QPushButton(rightWidget_, "downPushButton");
-    downPushButton_->setText("-");
-    connect(downPushButton_, SIGNAL(clicked()),
-            SLOT(moveRowDown()));
+    QPushButton *downPushButton_
+        = new PixmapButton(QPixmap(Util::findIcon("1downarrow.png")),
+                          rightWidget_);
+    connect(downPushButton_, SIGNAL(clicked()), this, SLOT(moveRowDown()));
 
+    rightLayout_->addStretch(1);
     rightLayout_->addWidget(upPushButton_);
     rightLayout_->addWidget(downPushButton_);
+    rightLayout_->addStretch(1);
 }
 
 void ScheduleDialog::initGraphWidget()
@@ -412,22 +417,22 @@ void ScheduleDialog::initBottomWidget()
     QBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget, WIDGET_SPACING);
 
     // ok button
-    okPushButton = new QPushButton(bottomWidget, "okPushButton");
+    QPushButton *okPushButton = new QPushButton(bottomWidget);
     okPushButton->setText(tr("&OK"));
     okPushButton->setDefault(TRUE);
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
 
     // help button
-    helpPushButton = new QPushButton(bottomWidget, "helpPushButton");
+    QPushButton *helpPushButton = new QPushButton(bottomWidget);
     helpPushButton->setText(tr("&Help"));
 
     // apply button
-    applyPushButton = new QPushButton(bottomWidget, "applyPushButton");
+    QPushButton *applyPushButton = new QPushButton(bottomWidget);
     applyPushButton->setText(tr("&Apply"));
     connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
 
     // cancel button
-    cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton" );
+    QPushButton *cancelPushButton = new QPushButton(bottomWidget);
     cancelPushButton->setText(tr("&Cancel"));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 

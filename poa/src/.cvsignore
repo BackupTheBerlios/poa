@@ -2,5 +2,6 @@
 Makefile
 moc_*.cpp
 poa
+poa.db
 *.o
 poa.local

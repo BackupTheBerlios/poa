@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.38 2003/09/18 01:51:17 keulsn Exp $
+# $Id: poa.pro,v 1.39 2003/09/18 07:45:32 garbeam Exp $
 #
 ###############################################################################
 
@@ -75,6 +75,7 @@ SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
+SOURCES += codemanager.cpp
 SOURCES += connectaction.cpp
 SOURCES += connectorview.cpp
 SOURCES += coremodel.cpp

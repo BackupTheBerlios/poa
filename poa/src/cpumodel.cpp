@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.21 2003/09/17 16:16:40 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.22 2003/09/18 07:45:32 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockview.h"
 #include "cpumodel.h"
 #include "cpuview.h"
-#include "abstractmodel.h"
 #include "codemanager.h"
 
 #include <qdom.h> // used to provide serialization
@@ -133,10 +132,10 @@ QCanvasItemList CpuModel::createView(QCanvas *canvas)
 QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
-    CodeManager *codeManager = CodeManager::instance();
     root.setAttribute("block-type", "cpu");
     if (!isProducer_) {
-        root.setAttribute("srcfile", codeManager->sourceFilePath(this));
+        root.setAttribute("srcfile",
+                CodeManager::instance()->sourceFilePath(this));
     }
     root.setAttribute("cpuid", cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");

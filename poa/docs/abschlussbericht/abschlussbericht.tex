@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.3 2004/05/03 19:59:16 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.4 2004/05/17 03:44:22 kilgus Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.3 $
-\RCSdef $Date: 2004/05/03 19:59:16 $
+\RCSdef $Revision: 1.4 $
+\RCSdef $Date: 2004/05/17 03:44:22 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -95,7 +95,30 @@ Netzwerk konfiguriert werden kann.
 \chapter{Projektergebnisse}
 
 \section{Programmierumgebung Offener Antrieb}
+Aus der genannten Aufgabenstellung resultierte POA, die ``Programmierumgebung 
+Offener Antrieb''. POA ist eine Applikation mit grafischer Oberfl"ache, in der 
+Funktionsbl"ocke (sowohl Cores als auch CPUs) auf einer Arbeitsfl"ache platziert 
+und miteinander verbunden werden k"onnen. 
+
+POA hilft nach der Erstellung des Netzwerkes bei der Pr"ufung der Konsistenz, bei 
+der Optimierung der zeitlichen Offsets der einzelnen Bl"ocke, bei der Programmierung 
+der CPUs sowie bei der "Ubertragung der "ubersetzten Codes auf die CPUs.
+
+\includegraphics[width=15cm]{bspprojekt1}
+
 \subsection{Merkmale}
+Im einzelnen bietet POA im Wesentlichen folgende Funktionalit"aten:
+\begin{itemize}
+\item Darstellung und Manipulation rasterisierter CPLD Layouts
+\item Verwaltung und Bearbeitung einer CPLD-Blockbibliothek zur CPLD-Layout
+      Manipulation
+\item Rahmencodegenerierung f"ur eingebette CPU-Bl"ocke in einem CPLD-Layout
+\item Plausibilit"atspr"ufung und Optimierung eines entworfenen CPLD-Layouts
+\item Compilieren und Herunterladen von Quellcode f"ur die CPU-Bl"ocke
+\item Speichern und "Offnen von CPLD-Layouts und zugeh"origem Quellcode
+\item Konfiguration der Programmeigenschaften
+\item Zusammenarbeit mit externen Programmen
+\end{itemize}
 
 \section{Dokumente}
 
@@ -119,7 +142,7 @@ Beginn des Projekts im sechsten Semester studierten.
 
 \subsection{Rollen}
 
-Formale Rollen wurden mangels Notwendigkeit nur wenige Festgelegt. 
+Formale Rollen wurden mangels Notwendigkeit nur wenige festgelegt. 
 
 \subsubsection{Projektleiter}
 
@@ -164,10 +187,24 @@ einem kontinuierlichen Regressionstest begleitet wurde. Zu Ende jeder
 Iteration wurde das weiter entwickelte Produkt ausgeliefert und vom
 Kunden einem Akzeptanztest unterzogen. 
 
-Das Prozessmodell wurde gewählt, um dem Forschungscharakter des
-Projekts gerecht zu werden. Zu Begin des Projekts war unklar, wie
+Das Prozessmodell wurde gewählt um dem Forschungscharakter des
+Projekts gerecht zu werden. Zu Begin des Projekts war unklar wie
 stark sich die Anforderungen während des Projekts ändern
 würden. Deswegen wurde zu Beginn jeder Iteration
+
+...and here the tale suddenly ended. Which reminds me of this:
+
+\begin{verbatim}
+MAYNARD:  It reads, 'Here may be found the last words of Joseph
+    of Aramathea.  He who is valiant and pure of spirit may find
+    the Holy Grail in the Castle of uuggggggh'.
+ARTHUR:  What?
+MAYNARD: '... the Castle of uuggggggh'.
+BEDEMIR:  What is that?
+MAYNARD:  He must have died while carving it.
+
+[Monthy Python and the Holy Grail]
+\end{verbatim}
 
 \section{Projektplan}
 
@@ -189,9 +226,9 @@ Einverständnis des Kunden geringfügig verschoben.
 Als Schwierig erwiess sich die Koordination der individuellen
 Wochenpläne. Bedingt durch unterschiedlich gewählte Vorlesungen,
 andere Studienprojekte, Urlaubsplanung, Krankheit und
-Nebenbeschäftigungen war es kaum Möglich gemeinsame Termin zu finden.
+Nebenbeschäftigungen war es kaum möglich gemeinsame Termin zu finden.
 Dennoch wurde sowohl während Entwicklung des Prototypen in der
-Vorlesungsfreienzeit und während der Sprints in der Vorlesungszeit
+vorlesungsfreien Zeit und während der Sprints in der Vorlesungszeit
 Kernarbeitszeiten eingeführt, die die Kommunikation stark erleichtert
 haben.
 
@@ -271,14 +308,14 @@ des Datenmodells in Form von Headerdateien entwickelt.
 Der Prototyp wurde für eine Hausmesse am ISW entwickelt. Der Prototyp
 wurde für die Präsentation des Offenen Antriebs verwendet. Der Focus
 lag auf der Entwicklung der graphischen Benutzungsoberfläche, die
-teilweise funktionslosse Dialoge beinhaltete. 
+teilweise funktionslose Dialoge beinhaltete. 
 
 Die zeitgemässe Auslieferung des Prototypen und die damit verbundene
 Erreichung des zweiten Meilensteins war auch ein erster Test, ob die
 Umsetzung der Anforderungen mit den Vorstellung des Kunden
 übereinstimmte. Da sich die Rückmeldungen des Kunden als sehr positiv
 erwies, wurde die Entscheidung getroffen den Prototyp nicht zu
-verwerfen, sondern als Basis weiter zu verwenden. Somit kann die
+verwerfen sondern als Basis weiter zu verwenden. Somit kann die
 Entwicklung des Prototypen als erste Iteration bezeichnet werden. 
 
 \subsection{Sprint 1}
@@ -294,7 +331,7 @@ Zum Ende des erstens Sprints wurde das bisher nur unter Linux
 entwickelte Produkt auf Microsoft Windows portiert. Neben einigen
 syntaktischen Korrekturen, die in Unterschieden zwischen den
 verwendeten Compilern begründet sind, mussten kleinere
-platformspezifische Eigenheiten von QT umschifft werden.
+plattformspezifische Eigenheiten von QT umschifft werden.
 
 Die Portierung, die oben beschriebene Refaktorisierung und die
 zweiwöchigen Weihnachtsferiern haben zu der Ausdehnung der Iteration
@@ -358,6 +395,74 @@ Kontrolle der Sprints.
 \section{Stefan Hauser}
 \section{Steffen Keul}
 \section{Marcel Kilgus}
+\subsection{Aufgaben}
+Aufgrund meiner weit über 10 Jahre Erfahrung mit Maschinencode und der Emulation 
+von Prozessoren oblag mir das Seminarthema der Laufzeitmessung von Altera NIOS 
+CPUs. Dazu wurden verschiedene Verfahren evaluiert, vom einfachen Profiling bis zum 
+Schreiben eines kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen 
+einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies nicht mit 
+vertretbarem Aufwand und vor allem nicht in der benötigten Präzision möglich war. 
+Die einzig verbleibende Option einer hardwaregstützten Instrumentierung des Codes 
+inklusive Ausführung auf einem realen CPLD konnte im Rahmen des Projekts leider
+nicht weiter verfolgt werden.
+
+Der Kunde verlangte von uns primär eine Windows Applikation, mit der Option
+später auf Linux wechseln zu können. Zu diesem Zweck wurde die Qt Bibliothek
+von Trolltech als Basis für POA bestimmt. POA an sich wurde größtenteils unter 
+Linux entwickelt, als einzigem mit Erfahrung in der der Windows Programmierung im 
+Team oblag es mir die ``Redmond''\footnote{Für die nicht Eingeweihten: Firmensitz 
+der Microsoft Corporation} Kompatibiltät des Codes sicherzustellen. Zuerst wurde 
+dies erreicht mit der Hilfe des MinGW Compilers, einem GCC Port für Windows. Da 
+aber nur Microsoft Visual C++ offiziell von Trolltech für Windows unterstützt 
+wird und dieser Compiler auch noch andere Vorteile mit sich bringt (IDE mit 
+integriertem Debugger, schnellerer Übersetzer, kompakterer Code), lag es an 
+mir die Unterschiede der beiden Compiler zu bestimmen und den vorhandenen 
+Code in einer Art anzupassen, die auf beiden Plattformen lauffähig ist.
+
+Auch im weiteren Verlauf der Entwicklung habe ich neue Codeblöcke und Code
+Änderungen evaluiert und gegebenenfalls wieder an Visual C++ angepasst. 
+Dies umfasste sowohl kleinere Syntaxänderungen als auch Änderungen an 
+Objektstrukturen (einige Abstürze unter Windows konnte ich auf Probleme 
+mit der RTTI\footnote{Runtime Type Information} zurückführen).
+
+Ich habe einen ersten Prototyp des Scheduling Dialog erstellt, den dann
+Tammo aus damaligen zeitlichen Engpässen weiterentwickelt hat.
+
+Weiterhin zeichnete ich mich für die Druckfunktionalität sowohl für die 
+Netzwerke als auch für die Scheduling Übersicht verantwortlich.
+
+Außerdem oblag es mir das manuelle Routen von Verbindungen zu implementieren.
+Nach einigen mehr oder weniger komplizierten Versuchen habe ich dafür eine
+im Detail trickreich zu entwickelnde aber erstaunlich einfach zu bedienende 
+Möglichkeit gefunden, die sich nahtlos in das vorhandene Konzept eingegliedert
+hat.
+
+Dafüber hinaus habe ich meine langjährige Erfahrung in der Entwicklung und 
+nicht zuletzt auch Fehlerbereinigung von Software eingebracht um im 
+gesamten Projekt kleinere beobachtete Bugs aufzuspüren und gleich zu 
+beseitigen (``I've got a debugger and I'm not afraid to use it!'').
+
+Last and probably least war ich partiell an der Einführung von CPPUnit,
+der Erstellung des Handbuchs sowie des Abschlussberichts beteiligt.
+
+\subsection{Team}
+Das Team hat sich erfreulicherweise als überaus kompetent erwiesen, eine
+Eigenschaft die leider auch in höheren Semestern der Softwaretechnik nicht
+immer selbstverständlich ist. Auch Zwischenmenschlich sind mir keinerlei
+Probleme aufgefallen, im Gegenteil. Die Team-Grüße war der Aufgabenstellung
+angemessen.
+
+Das Team war größtenteils sehr motiviert und auch das Projekt Management hat 
+sehr gut funktioniert. Alles in allem eine sehr willkommene Abwechslung zu 
+meinem in fast all diesen Punkten etwas gescheitertem StuPro A.
+
+\subsection{Fazit}
+Meine Erachtens war das Projekt ein voller Erfolg, die Vorgaben wurden laut
+des Kunden zur vollsten Zufriedenheit erfüllt. Das Arbeitsklima war durchweg
+angenehm und der verwendete Software-Prozess war den leicht ungenauen, 
+aufgrund der weitergehenden Forschung teilweise auch dem Kunden noch nicht 
+hundertprozentig bekannten Anforderungen gewachsen.
+
 \section{Steffen Pingel}
 \section{Tammo van Lessen}
 

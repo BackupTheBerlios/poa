@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.14 2004/01/27 14:42:07 squig Exp $
+ * $Id: colormanager.cpp,v 1.15 2004/01/27 15:26:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,8 @@ ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
       palette_(palette),
       palPosition_(0)
 {
+    Q_ASSERT(palette != 0);
+
     setBrush(white);
     FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
     Q_ASSERT(FONT_HEIGHT >= SAMPLE_SIZE);
@@ -47,6 +49,7 @@ ColorManager::ColorManager(QCanvas *canvas, Palette *palette)
 
 ColorManager::~ColorManager()
 {
+    delete palette_;
 }
 
 QColor ColorManager::color(AbstractModel *model)

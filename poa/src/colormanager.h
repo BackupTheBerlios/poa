@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.9 2004/01/26 19:17:18 vanto Exp $
+ * $Id: colormanager.h,v 1.10 2004/01/27 15:26:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -62,7 +62,7 @@ class ColorManager : public QObject,
     ColorManager(QCanvas *canvas, Palette *palette);
 
     /**
-     * Default destructor.
+     * Default destructor. Deletes the palette.
      */
     ~ColorManager();
 

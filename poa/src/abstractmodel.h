@@ -18,13 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.4 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: abstractmodel.h,v 1.5 2003/08/26 15:59:23 vanto Exp $
  *
  *****************************************************************************/
 #ifndef ABSTRACTMODEL_H
 #define ABSTRACTMODEL_H
 
 #include <qobject.h>
+#include <qdom.h> // used to provide serialization
+
 class QDomDocument;
 class QDomElement;
 class QCanvas;
@@ -47,7 +49,7 @@ public:
     /*************************************************************************
      * Returns an XML representation of this instance.
      */
-    virtual QDomElement serialize(QDomDocument *document) = 0;
+    virtual QDomElement serialize(QDomDocument *document);
 
     /*************************************************************************
      * Creates the corresponding view object.

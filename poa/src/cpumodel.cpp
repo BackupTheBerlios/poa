@@ -18,10 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.8 2003/08/22 22:47:49 squig Exp $
+ * $Id: cpumodel.cpp,v 1.9 2003/08/26 15:59:23 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
+#include "abstractmodel.h"
 
 #include <qdom.h> // used to provide serialization
 #include <qtextstream.h>
@@ -41,9 +42,20 @@ CpuModel::CpuModel(QDomElement cpuElem)
         // TRUE if value of autotime contains "TRUE" (case insensitive),
         // FALSE otherwise.
         autoExecTime_ =
-            cpuElem.attribute("autotime", "TRUE").contains("TRUE", FALSE);
+            cpuElem.attribute("autotime", "true").contains("true", FALSE);
         setName(cpuElem.attribute("name", "unknown"));
+        setCode(cpuElem.attribute("srcfile",""));
     }
+}
+
+QString CpuModel::code() const
+{
+  return code_;
+}
+
+void CpuModel::setCode(const QString &code)
+{
+  code_ = code;
 }
 
 /**
@@ -53,9 +65,10 @@ CpuModel::CpuModel(QDomElement cpuElem)
  */
 QDomElement CpuModel::serialize(QDomDocument *document)
 {
-    QDomElement root = document->createElement("cpu");
-    root.setAttribute("name", name());
+    QDomElement root = BlockModel::serialize(document); //= document->createElement("cpu");
+    root.setAttribute("type", "cpu");
+    root.setAttribute("srcfile", code_);
     root.setAttribute("id", (unsigned int) id_);
-    root.setAttribute("autotime", autoExecTime_ ? "TRUE" : "FALSE");
+    root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     return root;
 }

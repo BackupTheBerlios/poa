@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.5 2003/08/16 18:11:06 garbeam Exp $
+ * $Id: cpumodel.h,v 1.6 2003/08/26 15:59:23 vanto Exp $
  *
  *****************************************************************************/
 
@@ -42,11 +42,13 @@ class CpuModel: public BlockModel
 {
 
  public:
+    QString code () const;
+    void setCode (QString &code);
 
  private:
 
     unsigned short id_;
-    CodeManager *code_;
+    QString *code_;
     bool autoExecTime_;
 
 };

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.1 2003/08/22 22:48:48 squig Exp $
+ * $Id: abstractmodel.cpp,v 1.2 2003/08/26 15:59:23 vanto Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -42,6 +42,19 @@ QString AbstractModel::description() const
 QString AbstractModel::name() const
 {
     return name_;
+}
+
+/**
+ * Produces the XML representation of this instance like:
+ *
+ * <cpu name="cpu_XY" id="nn" autotime="true"/>
+ */
+QDomElement AbstractModel::serialize(QDomDocument *document)
+{
+    QDomElement root = document->createElement("model-item");
+    root.setAttribute("name", name());
+    root.setAttribute("desc", description());
+    return root;
 }
 
 void AbstractModel::setDescription(const QString &description)

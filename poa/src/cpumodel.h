@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.9 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: cpumodel.h,v 1.10 2003/08/26 15:59:23 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -40,11 +40,12 @@ class CpuModel: public BlockModel
     CpuModel(unsigned short id, bool autoExecTime, QString name,
              QString description);
     CpuModel(QDomElement cpuElement);
-
+    QString code() const;
+    void setCode(const QString &code);
     QDomElement serialize(QDomDocument *document);
 
  private:
-
+    QString code_;
     unsigned short id_;
     bool autoExecTime_;
 

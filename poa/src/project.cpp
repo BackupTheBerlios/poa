@@ -18,21 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.23 2003/09/19 15:16:22 vanto Exp $
+ * $Id: project.cpp,v 1.24 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
+#include "canvasview.h"
+#include "connectorviewlist.h"
+#include "connectorviewsegment.h"
 #include "cpumodel.h"
+#include "gridcanvas.h"
+#include "modelfactory.h"
 #include "pinmodel.h"
 #include "poa.h"
 #include "project.h"
-#include "gridcanvas.h"
-#include "modelfactory.h"
-#include "canvasview.h"
 #include "settings.h"
 
-#include <qdom.h>
 #include <qdir.h>
+#include <qdom.h>
 #include <qfileinfo.h>
 
 Project::Project(QString path)
@@ -125,7 +127,8 @@ void Project::createConnectorViews(PinView *source, PinView *target)
     GridCanvas *canvas;
     for (QPtrListIterator<GridCanvas> it(canvasList_);
          (canvas = it.current()) != 0; ++it) {
-        canvas->addConnectorView(source, target);
+        ConnectorViewList *viewList = new ConnectorViewList(source, target, canvas);
+        canvas->addConnectorView(viewList);
     }
 }
 
@@ -161,6 +164,8 @@ const QPtrList<GridCanvas> *Project::canvasList() const {
 
 QDomDocument Project::serialize()
 {
+    typedef QMap<ConnectorViewList *, bool> ConSerMap;
+    ConSerMap serialized;
     QDomDocument doc;
     QDomElement proj = doc.createElement("project");
     doc.appendChild(proj);
@@ -193,6 +198,12 @@ QDomDocument Project::serialize()
                 QDomElement viElem = bv->serialize(&doc);
                 viElem.setAttribute("model-id", bv->model()->id());
                 vElem.appendChild(viElem);
+            }
+            ConnectorViewSegment *seg = (dynamic_cast<ConnectorViewSegment *> (*it));
+            if (seg != 0 && !serialized[seg->viewList()]) {
+                QDomElement conElem = seg->viewList()->serialize(&doc);
+                vElem.appendChild(conElem);
+                serialized[seg->viewList()] = true;
             }
         }
         vlist.appendChild(vElem);
@@ -231,6 +242,7 @@ void Project::deserialize(QDomDocument *document) {
     for (unsigned int i = 0; i < vList.count(); i++) {
         QDomElement vEl = vList.item(i).toElement();
         QDomNodeList viList = vEl.elementsByTagName("view-item");
+        QDomNodeList conList = vEl.elementsByTagName("connector-view");
 
         GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
         // create view items
@@ -240,6 +252,23 @@ void Project::deserialize(QDomDocument *document) {
                 canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
+            }
+        }
+        // create connector views
+        for (uint j = 0; j < conList.count(); j++) {
+            QDomElement conEl = conList.item(j).toElement();
+            BlockModel *sb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("source-block","0").toUInt()]);
+            BlockModel *tb = dynamic_cast<BlockModel*>(idMap[conEl.attribute("target-block","0").toUInt()]);
+            if (sb == 0 && tb == 0) {
+                qWarning("Could not connect non-existent blocks.");
+                return;
+            }
+            PinModel *sp = sb->findPinById(conEl.attribute("source-pin","0").toUInt());
+            PinModel *tp = tb->findPinById(conEl.attribute("target-pin","0").toUInt());
+            if (sp != 0 && tp != 0) {
+                sp->attach(tp);
+                ConnectorViewList *viewList = new ConnectorViewList(sp->view(), tp->view(), canvas, &conEl);
+                canvas->addConnectorView(viewList);
             }
         }
     }

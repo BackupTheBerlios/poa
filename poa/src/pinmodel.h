@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.18 2003/09/20 17:25:49 garbeam Exp $
+ * $Id: pinmodel.h,v 1.19 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -32,8 +32,8 @@
 #include <qcanvas.h>
 #include <qdom.h>
 
-class BlockView;
 class BlockModel;
+class BlockView;
 class ConnectorModel;
 class QDomDocument;
 class QDomElement;
@@ -161,13 +161,19 @@ public:
      * DON'T USE THIS, use createView(BlockView, DockPosition)
      * instead!
      */
-    QCanvasItemList createView(QCanvas *canvas);
+    //    QCanvasItemList createView(QCanvas *canvas);
 
     /**
      * Creates the CanvasItems for this.
      */
     PinView *createView(BlockView *block,
             PinView::DockPosition dockPosition);
+
+    /**
+     * Returns the according PinView.
+     * Returns 0 if the pinView has not been instanciated
+     */
+    PinView *view();
 
     /**
      * Serializes this instance to a xml subtree
@@ -196,6 +202,7 @@ private:
                       // one pin can be wider than one bit.
     PinModel *connected_;
     PinType type_;
+    PinView *view_;
 
 signals:
     void deleted();

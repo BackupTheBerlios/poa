@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.20 2003/09/20 17:25:49 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.21 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -48,6 +48,7 @@ PinModel::PinModel(AbstractModel *parent, const QString &name)
 {
     name_ = name;
     parent_ = parent;
+    view_ = 0;
     connected_ = 0;
     id_ = 0;
     address_ = 0;
@@ -58,6 +59,7 @@ PinModel::PinModel(AbstractModel *parent, QDomElement pinElem)
 {
     parent_ = parent;
     connected_ = 0;
+    view_ = 0;
     if (!pinElem.isNull()) {
         deserialize(pinElem);
     }
@@ -159,9 +161,14 @@ unsigned int PinModel::bits()
 PinView *PinModel::createView(BlockView *block,
                   PinView::DockPosition dockPosition)
 {
-    PinView *view = new PinView(this, block, dockPosition);
-    view->show();
-    return view;
+    view_ = new PinView(this, block, dockPosition);
+    view_->show();
+    return view_;
+}
+
+PinView *PinModel::view()
+{
+    return view_;
 }
 
 QDomElement PinModel::serialize(QDomDocument *document)

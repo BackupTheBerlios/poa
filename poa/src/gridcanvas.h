@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.20 2003/09/18 14:24:36 vanto Exp $
+ * $Id: gridcanvas.h,v 1.21 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -61,7 +61,7 @@ public:
     /**
      * Adds ConnectorViews between the two given PinViews.
      */
-    void addConnectorView(PinView *source, PinView *target);
+    void addConnectorView(ConnectorViewList *);
 
     /**
      * Returns grid coordiante that is closest to <code>p</code>.

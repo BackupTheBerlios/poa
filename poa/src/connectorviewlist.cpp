@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.7 2003/09/21 21:05:51 vanto Exp $
+ * $Id: connectorviewlist.cpp,v 1.8 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -35,25 +35,32 @@
 
 ConnectorViewList::ConnectorViewList(PinView *source,
                                      PinView *target,
-                                     GridCanvas *canvas)
+                                     GridCanvas *canvas,
+                                     QDomElement *element)
 {
     source_ = source;
     target_ = target;
+    canvas_ = canvas;
 
     connect(source->pinModel(), SIGNAL(deleted()),
             this, SLOT(deleteView()));
     connect(target->pinModel(), SIGNAL(deleted()),
             this, SLOT(deleteView()));
 
-    QValueList<QPoint> *points = routeConnector(source->connectorPoint(),
+    if (element == 0) {
+        QValueList<QPoint> *points = routeConnector(source->connectorPoint(),
                                                 source->connectorDirection(),
                                                 target->connectorPoint(),
                                                 target->connectorDirection());
-    applyPointList(*points, canvas);
-    delete points;
+        applyPointList(*points, canvas);
+        delete points;
+    }
+    else {
+        deserialize(element);
+    }
 }
 
-ConnectorViewList::ConnectorViewList(PinView *source,
+/*ConnectorViewList::ConnectorViewList(PinView *source,
                                      PinView *target,
                                      const QValueList<QPoint> &points,
                                      GridCanvas *canvas)
@@ -67,7 +74,7 @@ ConnectorViewList::ConnectorViewList(PinView *source,
             this, SLOT(deleteView()));
 
     applyPointList(points, canvas);
-}
+}*/
 
 ConnectorViewList::~ConnectorViewList()
 {
@@ -138,8 +145,37 @@ void ConnectorViewList::setSelected(bool selected)
     emit select(selected);
 }
 
-void ConnectorViewList::serialize()
+QDomElement ConnectorViewList::serialize(QDomDocument *document)
 {
+    QDomElement root = document->createElement("connector-view");
+    QDomElement points = document->createElement("points");
+    root.appendChild(points);
+    root.setAttribute("source-block", source_->pinModel()->parent()->id());
+    root.setAttribute("source-pin", source_->pinModel()->id());
+    root.setAttribute("target-block", target_->pinModel()->parent()->id());
+    root.setAttribute("target-pin", target_->pinModel()->id());
+    QValueList<QPoint> pList = ConnectorViewList::points();
+    QValueList<QPoint>::Iterator it;
+    for( it = pList.begin(); it != pList.end(); ++it ) {
+        QDomElement point = document->createElement("point");
+        point.setAttribute("x", (*it).x());
+        point.setAttribute("y", (*it).y());
+        points.appendChild(point);
+    }
+    return root;
+}
+
+void ConnectorViewList::deserialize(QDomElement *element)
+{
+    QDomNodeList pList = element->elementsByTagName("point");
+    QValueList<QPoint> *points = new QValueList<QPoint>;
+    for (uint i = 0; i < pList.count(); i++) {
+        QDomElement pEl = pList.item(i).toElement();
+        points->append(QPoint(pEl.attribute("x","0").toUInt(),
+                             pEl.attribute("y","0").toUInt()));
+    }
+    applyPointList(*points, canvas_);
+    delete points;
 }
 
 void ConnectorViewList::applyPointList(const QValueList<QPoint> &list,

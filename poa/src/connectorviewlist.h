@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.6 2003/09/21 21:05:51 vanto Exp $
+ * $Id: connectorviewlist.h,v 1.7 2003/09/22 12:36:43 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,8 @@
 class ConnectorViewSegment;
 class GridCanvas;
 class PinView;
-
+class QDomDocument;
+class QDomElement;
 
 /**
  * Definition of a doubly linked connector view list which is used to manage
@@ -57,16 +58,16 @@ public:
      * draws a routed line from <code>source</code> pin to <code>target</code>
      * pin for the given <code>model</code>.
      */
-    ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas);
+    ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas, QDomElement *element = 0);
 
     /**
      * Creates a connector view list on the given <code>canvas</code> and
      * inserts connector view segments connecting the given <code>points</code>
      */
-    ConnectorViewList(PinView *source,
-                      PinView *target,
-                      const QValueList<QPoint> &points,
-                      GridCanvas *canvas);
+    //    ConnectorViewList(PinView *source,
+    //                PinView *target,
+    //                const QValueList<QPoint> &points,
+    //                GridCanvas *canvas);
 
     /**
      * Default destructor
@@ -104,14 +105,15 @@ public:
     QString tip();
 
     /**
-     * Selects/Deselects this connector (all connector segments)
+     * Selects/Deselects this connector (all connector segments).
      */
     void setSelected(bool);
 
     /**
+     * Serializes this instance to a xml subtree.
+     * @param document the main QDomDocument instance. Needed to create elements
      */
-    virtual void serialize();
-
+    virtual QDomElement serialize(QDomDocument *);
 
 protected:
 
@@ -128,7 +130,11 @@ protected:
                                               LineDirection fromDir,
                                               QPoint to,
                                               LineDirection toDir);
-
+    /**
+     * Deserializes an xml subtree to recreate the point list.
+     * <code>source</code> and <code>target</code> are ignored
+     */
+    virtual void deserialize(QDomElement *element);
 
 private:
 
@@ -136,7 +142,8 @@ private:
     PinView *source_;
     /** Target pin view */
     PinView *target_;
-
+    /** the current canvas */
+    QCanvas *canvas_;
     /** List of all segments of this connector view */
     QCanvasItemList segments_;
 

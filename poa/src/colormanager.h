@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.2 2004/01/22 21:20:22 vanto Exp $
+ * $Id: colormanager.h,v 1.3 2004/01/22 22:10:27 vanto Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_COLORMANAGER_H
 #define POA_COLORMANAGER_H
 
+#include "abstractmodel.h"
 #include "blockmodel.h"
 
 #include <qcolor.h>
@@ -37,11 +38,24 @@ class ColorManager
 {
     //    Q_OBJECT
  public:
+
+    /**
+     * Instanciates a color manager.
+     */
     ColorManager();
+
+    /**
+     * Default destructor.
+     */
     ~ColorManager();
-    QColor color(const BlockModel *model, int luminance = 100);
-    QColor activatedColor(const BlockModel *model, int luminance = 100);
-    QColor selectedColor(const BlockModel *model, int luminance = 100);
+
+    /**
+     * Returns the
+     */
+    QColor color_(const BlockModel *model, int luminance = 100);
+    QColor color(AbstractModel *model, int luminance = 100);
+    QColor activatedColor(AbstractModel *model, int luminance = 100);
+    QColor selectedColor(AbstractModel *model, int luminance = 100);
 
  private:
     Palette *palette_;

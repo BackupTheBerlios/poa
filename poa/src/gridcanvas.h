@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.26 2004/01/22 12:07:42 squig Exp $
+ * $Id: gridcanvas.h,v 1.27 2004/01/22 22:10:27 vanto Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@
 #include <qpixmap.h>
 class QString;
 
+#include "colormanager.h"
 #include "connectorviewlist.h"
 class AbstractModel;
 class ConnectorRouter;
@@ -93,6 +94,11 @@ public:
      */
     QPoint toGrid(QPoint p);
 
+    /**
+     * Returns the color manager.
+     */
+    ColorManager *colorManager();
+
 public slots:
     void updateAll();
 
@@ -106,6 +112,11 @@ private:
      * Egoistic router for adding new <code>ConnectorViewList</code>s.
      */
     ConnectorRouter *router_;
+
+    /**
+     * Colormanager
+     */
+    ColorManager *colormanager_;
 
     /**
      * Counter for z-layer. Everytime a an item is added to the canvas,

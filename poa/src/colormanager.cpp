@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.2 2004/01/22 21:20:22 vanto Exp $
+ * $Id: colormanager.cpp,v 1.3 2004/01/22 22:10:27 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,12 +51,8 @@ ColorManager::~ColorManager()
     delete palette_;
 }
 
-QColor ColorManager::color(const BlockModel *model, int luminance)
+QColor ColorManager::color_(const BlockModel *model, int luminance)
 {
-    if (model->clock() == 0) {
-        return Settings::instance()->defaultColor();
-    }
-
     // rotate palette
     if (palPosition_ > palette_->size()) {
         palPosition_ = 0;
@@ -71,20 +67,34 @@ QColor ColorManager::color(const BlockModel *model, int luminance)
     }
 }
 
-QColor ColorManager::activatedColor(const BlockModel *model, int luminance)
+QColor ColorManager::color(AbstractModel *model, int luminance)
 {
-    if (model->clock() == 0) {
-        return Settings::instance()->activatedColor();
+    BlockModel *bm = dynamic_cast<BlockModel*>(model);
+    if (bm == 0) {
+        return Settings::instance()->defaultColor();
     }
-    return color(model, luminance + 50);
+
+    return color_(bm, luminance);
 }
 
-QColor ColorManager::selectedColor(const BlockModel *model, int luminance)
+QColor ColorManager::activatedColor(AbstractModel *model, int luminance)
 {
-    if (model->clock() == 0) {
+    BlockModel *bm = dynamic_cast<BlockModel*>(model);
+    if (bm == 0) {
         return Settings::instance()->activatedColor();
     }
-    return color(model, luminance + 50);
+
+    return color_(bm, luminance + 50);
+}
+
+QColor ColorManager::selectedColor(AbstractModel *model, int luminance)
+{
+    BlockModel *bm = dynamic_cast<BlockModel*>(model);
+    if (bm == 0) {
+        return Settings::instance()->selectedColor();
+    }
+
+    return color_(bm, luminance + 70);
 }
 
 Palette::Palette(QString name)

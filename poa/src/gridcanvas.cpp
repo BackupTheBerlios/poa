@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.30 2004/01/22 12:07:42 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.31 2004/01/22 22:10:27 vanto Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,8 @@ GridCanvas::GridCanvas(QString name)
     currentZ_ = 0;
     router_ = new DirectRouter();
 
+    colormanager_ = new ColorManager();
+
     setName(name);
     setDoubleBuffering(TRUE);
 
@@ -52,6 +54,7 @@ GridCanvas::GridCanvas(QString name)
 GridCanvas::~GridCanvas()
 {
     delete router_;
+    delete colormanager_;
 }
 
 void GridCanvas::addConnectorView(ConnectorViewList *viewList)
@@ -184,4 +187,9 @@ void GridCanvas::updateAll()
 {
     setAllChanged();
     update();
+}
+
+ColorManager *GridCanvas::colorManager()
+{
+    return colormanager_;
 }

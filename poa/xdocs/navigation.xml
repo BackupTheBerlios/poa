@@ -29,7 +29,7 @@
 	  <item name="Project Reports" href="/maven-reports.html"/>
       <item name="CVS Repository" href="/cvs-usage.html"/>
       <item name="CVS statistics" href="/statcvs-xml/index.html"/>
-      <item name="Times" href="http://duck.informatik.uni-stuttgart.de/times/cgi-bin/times.cgi?project=poa">
+      <item name="Times" href="http://duck.informatik.uni-stuttgart.de/times/cgi-bin/times.cgi?project=poa"/>
     </menu>
 
 	<menu name="Seminars">

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.10 2004/06/07 23:32:46 vanto Exp $
+%% $Id: design.tex,v 1.11 2004/06/10 07:33:15 keulsn Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -44,7 +44,7 @@ Pins und Verbindungen in POA jeweils durch Datenobjekte
 repräsentiert. Diese werden mit Hilfe von entsprechenden Viewobjekten von der
 GridCanvas Klasse angezeigt. 
 
-\subsection{Oberserver}
+\subsection{Observer}
 
 Die QT Bibliothek erweitert den Sprachumfang von C++ über einen
 speziellen Compiler, den Meta-Object-Compiler (MOC), mit einem
@@ -111,6 +111,33 @@ Projekt stellt den Zusammenhalt zwischen den einzelnen Models her.
 Views werden verwendet, um dem Benutzer die Daten zu präsentieren. Sie
 werden über Signals benachrichtigt, wenn sich ein Model verändert und
 passen dann die grafische Darstellung entsprechend an.
+
+Der GridCanvas ist eine Arbeitsoberfläche für ein POA-Netzwerk. Die
+Basisklasse für den GridCanvas sowie für alle Views darauf werden von
+der QT-Bibliothek gestellt. Für POA musste nur eine Spezialisierung
+dieser Basisfunktionalität durchgeführt werden.
+
+Ohne selbst als Model gelten zu können, stellt der GridCanvas nur eine
+virtuelle Arbeitsoberfläche dar. Für die Darstellung eines Teils des
+GridCanvas sind CanvasView-Objekte zuständig. So kann dieselbe
+Arbeitsoberfläche in mehreren Fenstern geöffnet werden und in jedem
+Fenster kann ein anderer Ausschnitt der Arbeitsoberfläche angezeit
+werden.
+
+Die meisten Views, die speziell für POA entwickelt wurden, päsentieren
+grafische Objekte auf einem dem GridCanvas. Dazu gehören BlockView,
+PinView und TextView.
+
+Eine besondere Behandlung ist allerdings für Konnektoren
+notwendig. Konnektoren können auf dem Canvas nicht ohne weiteres
+dargestellt werden, weil Qt seine Funktionalität hier auf wenige
+geometrische Objekte beschränkt. Die Linienzüge die In POA verwendet
+werden, bestehen deshalb aus mehreren
+ConnectorViewSegment-Objekten. Um von der Verwaltung der einzelnen
+Segmente zu abstrahieren wurde die Klasse ConnectorViewList
+eingeführt. Objekte dieser Klasse agieren als View für ein
+ConnectorModel, aber delegieren die tatsächliche Darstellungsaufgabe
+an mehrere ConnectorViewSegment-Objekte.
 
 \subsection{Controller}
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.10 2004/06/04 15:13:42 garbeam Exp $
+ * $Id: problemmanager.cpp,v 1.11 2004/06/04 15:41:51 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -84,13 +84,13 @@ void ProblemReportItem::setStatus(const QString status)
     setText(1, status);
 
     if (status == tr("Warning")) {
-        setPixmap(0, QPixmap(Util::findIcon("warning.gif")));
+        setPixmap(0, QPixmap(Util::findIcon("warning.png")));
     }
     else if (status == tr("Critical")) {
-        setPixmap(0, QPixmap(Util::findIcon("critical.gif")));
+        setPixmap(0, QPixmap(Util::findIcon("critical.png")));
     }
     else if (status == tr("Fixed")) {
-        setPixmap(0, QPixmap(Util::findIcon("success.gif")));
+        setPixmap(0, QPixmap(Util::findIcon("success.png")));
     }
     else {
         setPixmap(0, 0);
@@ -132,9 +132,10 @@ void DisconnectedPinReport::addWidgets(QWidget *widget)
 void DisconnectedPinReport::deletePin()
 {
     if (pin_ != 0) {
+        CpuModel *cpu = dynamic_cast<CpuModel*>(pin_->parent());
         pin_->parent()->deletePin(pin_);
-        if (INSTANCEOF(pin_->parent(), CpuModel)) {
-            CodeManager codeManager(project_, (CpuModel *)pin_->parent());
+        if (cpu != 0) {
+            CodeManager codeManager(project_, cpu);
             if (!codeManager.templateIsSubstitutable()) {
                 codeManager.prependSubstitutionMarkers();
             }

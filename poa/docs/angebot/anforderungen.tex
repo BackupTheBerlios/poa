@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.4 2003/06/01 15:35:51 squig Exp $
+%% $Id: anforderungen.tex,v 1.5 2003/06/01 20:12:00 keulsn Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -19,8 +19,8 @@ Viele dieser Entwicklungen beinhalten neue Kinematiken, wie z.B. die
 Parallelkinematiken und Sensoren (z.B. den Ferraris 
 Relativbeschleunigungssensor).\par
 Dadurch entstehen neue Anforderungen an die Antriebsregelung. Zusätzliche
-Sensor-Signale müssen in den Reglerstrukturen berücksichtigt werden - oder
-sogar völlig neue Reglerstrukturen werden benötigt.\par
+Sensor-Signale müssen in den Reglerstrukturen berücksichtigt werden -- oder
+es werden sogar völlig neue Reglerstrukturen benötigt.\par
 Die momentan auf dem Markt erhältlichen Reglersysteme erlauben meist
 weder die Berücksichtigung neuartiger Sensoren, noch bieten sie die
 Möglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
@@ -35,10 +35,10 @@ der sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
 Funktion des Bausteins seinen Bedürfnissen anzupassen.\par
 Um die Offenheit für jeden Anwender nutzbar zu machen, wird für den CPLD eine
 Architektur festgelegt, die es ermöglicht, einzelne Funktionalitäten in Form
-von Modulen zu implementieren. Diese Modlue können aus festprogrammierten
+von Modulen zu implementieren. Diese Module können aus festprogrammierten
 Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Modul kann
 auf die Signale aller anderen Module zugreifen und stellt seine eigenen
-Ausgangsignale allen anderen Modulen zur Verfügung.\par
+Ausgangssignale allen anderen Modulen zur Verfügung.\par
 Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
 von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
 Netzwerk konfiguriert werden kann.\par
@@ -51,7 +51,7 @@ dargelegten Kataloges der Funktionalen Anforderungen.
 %% Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 
-Die Programmierumgebung ``Offener Antrieb`` soll eine grafisch Oberfläche
+Die Programmierumgebung ``Offener Antrieb`` soll eine grafische Oberfläche
 mit folgenden wesentliche Funktionalitäten bieten:
 \begin{itemize}
 \item Darstellung und Manipulation rasterisierter CPLD Layouts
@@ -72,7 +72,7 @@ aufgeworfenen Begriffe wird in den folgenden Abschnitten eingegangen.
 \subsection{CPLD Layouts}
 Ein CPLD Layout spiegelt ein virtuelles Abbild der realen Konfiguration
 (Vernetzung der CPLD-Funktionsblöcke) eines CPLD Hardware-Bausteins wider.
-Dabei besteht die virtuelle Abbildung aus Funktionsblöcken (CPU, Cores,
+Dabei besteht die virtuelle Abbildung aus Funktionsblöcken (CPUs, Cores,
 E/A-Blöcke) und Signalleitungen.\par
 Im zu entwickelnden System soll ein CPLD Layout rasterisiert dargestellt
 werden und durch Maus- und Tastatureingaben manipulierbar sein. Dabei
@@ -88,7 +88,7 @@ in einer geeigneten Verzeichnisstruktur abgelegt.
 %% CPLD-Modulbibliothek
 \subsection{CPLD-Modulbibliothek}
 Die Modulbibliothek ist eine CPLD-Layout übergreifende Sammlung von
-Funktionsblöcken (CPU, Cores, E/A-Blöcke), die in CPLD-Layouts einbettbar
+Funktionsblöcken (CPUs, Cores, E/A-Blöcke), die in CPLD-Layouts einbettbar
 sein sollen. Bereits vorhandene, in CPLD-Layout eingebettete Funktionsblöcke,
 die umkonfiguriert oder editiert wurden (z.B. spezieller Code in einem
 CPU-Block), und demnach noch nicht in der Modulbibliothek existieren,
@@ -118,7 +118,7 @@ CPU-Block auszuführende Sourcecode editierbar sein.
 Zur Editierung von C-Sourcen für CPU-Blöcke soll ein (vom Kunden)
 vordefiniertes C-Template kontextabhängig für die existierende
 Konfiguration eines CPU-Blocks verwendet werden, um Rahmencode zu generieren.
-Dabei soll die Benamung der Signal-Ein- und Signal-Aus-gänge im C-Sourcecode
+Dabei soll die Benamung der Signal-Ein- und Signal-Ausgänge im C-Sourcecode
 eines einzelnen CPU-Blocks angepaßt werden. Hierzu wird lediglich ein
 einfacher Substitutionsalgorithmus ohne tierfergehende Logik angeboten.
 

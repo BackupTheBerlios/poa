@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch
-%% $Id: handbuch.tex,v 1.20 2004/03/24 13:29:08 garbeam Exp $
+%% $Id: handbuch.tex,v 1.21 2004/03/24 14:45:54 garbeam Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.20 $
-\RCSdef $Date: 2004/03/24 13:29:08 $
+\RCSdef $Revision: 1.21 $
+\RCSdef $Date: 2004/03/24 14:45:54 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -142,13 +142,15 @@ Systemanforderungen:
 
 Dieser Abschnitt untergliedert sich in die Installation von releasten
 POA Versionen unter Linux und in die Installation von Entwicklersnapshots
-aus dem CVS.
+aus dem CVS.\par
 
 \subsection{Installation von POA 1.0}
 
 Die Installation von POA Releases, wie POA 1.0, ist kommandozeilenbasiert
 und wird durch ein Installationsskript gesteuert. Vor der Installation muss zunächst
 ein Terminal, z.B. {\it xterm}, gestartet werden.\par
+
+\subsubsection{POA Release dekomprimieren}
 Im Terminal wechselt man zunächst in das Verzeichnis, wo sich das POA
 Release in komprimierter Form (z.B. \textbf{poa-1.0.tar.gz}) befindet.
 
@@ -178,16 +180,160 @@ Dekomprimierungsvorgangs darstellt:
 $ tar xvzf poa-1.0.tar.gz
 ...
 $ ls
-poa-1.0 poa-1.0.tar.gz
+poa-1.0          poa-1.0.tar.gz
 \end{verbatim}
 
-Nach der Dekomprimierung existiert ein neues Verzeichnis \textbf{poa-1.0}.
+\subsubsection{POA Kompilierung vorbereiten}
+Nach der Dekomprimierung existiert ein neues Verzeichnis
+\textbf{poa-1.0}, in das zur Installation gewechselt werden muss.
 
+\begin{verbatim}
+$ cd poa-1.0
+\end{verbatim}
 
+In diesem Verzeichnis befinden sich viele C++ Source Dateien sowie ein
+Installationsskript. Da POA Releases als Source ausgeliefert werden,
+muss POA zunächst kompiliert werden. Hierzu muss sichergestellt werden,
+dass einige Umgebungsvariablen für QT3 richtig gesetzt sind und die
+ausführbaren QT3-Tools in der {\it PATH} Umgebungsvariablen verfügbar
+sind. Hierzu ist es notwendig zu ermitteln, wo QT auf dem System
+installiert ist. Um das zu bestimmen kann man folgenden Befehl
+verwenden:
 
+\begin{verbatim}
+$ su
+# find / -name 'qobject.h'
+/usr/qt3/include/qobject.h
+\end{verbatim}
 
+Dies bedeutet, dass sich QT im Verzeichnis {\it /usr/qt3} befindet.
+Sollte eine Ausgabe wie:
 
-	
+\begin{verbatim}
+/usr/include/qobject.h
+\end{verbatim}
+
+erscheinen, so ist QT im Verzeichnis {\it /usr} installiert. Wenn eine
+Ausgabe wie:
+
+\begin{verbatim}
+/usr/qt2/include/qobject.h
+/usr/qt3/include/qobject.h
+/usr/qt4/include/qobject.h
+\end{verbatim}
+
+erscheint, so ist für POA nur {\it /usr/qt3} relevant, da POA für QT
+3.0 entwickelt wurde.\par
+Nachdem nun der Ort der QT-Installation bestimmt wurde, werden zwei
+Umgebungsvariablen gesetzt, wobei die Variable {\it QTDIR} auf das
+ermittelte QT-Verzeichnis gesetzt wird.
+
+\begin{verbatim}
+$ bash
+$ export QTDIR=/usr/qt3
+$ export PATH=$PATH:$QTDIR/bin
+\end{verbatim}
+
+Durch diese Umgebungsvariablen kann nun die Kompilierung von POA
+beginnen.
+
+\subsubsection{POA kompilieren}
+Um POA zu kompilieren werden nun folgende Befehle eingegeben.
+
+\begin{verbatim}
+$ qmake poa.pro
+$ make
+\end{verbatim}
+
+Die Kompilierung kann je nach System einige Zeit dauern, sollte jedoch
+spätestens nach 15 Minuten beendet sein.\par
+Nachdem die Kompilierung beendet ist, sollte sichergestellt werden, das
+eine ausführbare Datei namens {\it poa} im aktuellen Verzeichnis existiert:
+
+\begin{verbatim}
+$ ls -l poa
+-rwxr-xr-x  1 hans  users  8417818 Mar  5 09:29 poa
+\end{verbatim}
+
+Wenn dies der Fall ist, kann POA bereits aus dem aktuellen Verzeichnis
+gestartet werden ({\it ./poa} eingeben). Falls eine Installation in ein
+benutzerdefiniertes Verzeichnis gewünscht ist, kann aber auch das
+Installationsskript verwendet werden.
+
+\subsubsection{POA in benutzerdefiniertes Verzeichnis installieren}
+Zur Installation in ein benutzerdefiniertes Verzeichnis wird folgender Befehl
+eingegeben (sofern POA in ein globales Verzeichnis wie z.b. /usr
+installiert werden soll, muss man Superuser (root) Rechte besitzen).
+
+\begin{verbatim}
+$ su (optional)
+# ./install.sh
+\end{verbatim}
+
+Die Ausführung des Installationsskriptes ohne Argumente installiert POA
+standardmäßig nach {\it /usr/poa}, wenn ein anderer Installationspfad
+gewünscht ist, kann man folgende Syntax abwandeln:
+
+\begin{verbatim}
+$ su (optional)
+# ./install.sh -p /opt/local/
+\end{verbatim}
+
+In diesem Fall wird POA in das Verzeichnis {\it /opt/local/poa}
+installiert.\par
+Damit ist die Installation von POA bereits abgeschlossen. Sollte POA in
+ein globales Verzeichnis installiert worden sein, kann das aktuelle
+Verzeichnis wieder entfernt werden.
+
+\subsection{Installation eines Entwicklersnapshots aus dem CVS}
+
+Um einen Entwicklersnapshot von POA zu installieren, sind einige zum
+vorherigen Abschnitt abweichende Dinge zu beachten.
+
+\subsubsection{Auschecken aus dem CVS}
+
+Entwicklersnapshots müssen aus dem CVS von POA ausgecheckt werden,
+hierzu werden folgende Befehle verwendet:
+
+\begin{verbatim}
+$ cd /home/hans/projects
+$ cvs -d:pserver:anonymous@cvs.poa.berlios.de:/cvsroot/poa login
+$ cvs -z3 -d:pserver:anonymous@cvs.poa.berlios.de:/cvsroot/poa co poa
+$ ls
+poa     ...
+\end{verbatim}
+
+Sollte eine Passwortabfrage erscheinen, so ist diese einfach mit
+\textbf{ENTER} zu bestätigen. Nach erfolgtem Auschecken existiert nun
+ein Verzeichnis {\it poa} im aktuellen Verzeichnis. Sobald POA
+ausgecheckt wurde, kann der Entwicklersnapshot wie folgt auf dem
+aktuellen Stand halten werden:
+
+\begin{verbatim}
+$ cd /home/hans/projects/poa
+$ cvs up -AdP
+\end{verbatim}
+
+\subsubsection{Abweichungen zur Installation eines Releases}
+
+Die Verzeichnisstruktur eines Entwicklersnapshots weicht etwas von der
+Verzeichnisstruktur eines POA Releases ab, da Entwicklersnapshots noch
+weitere Verzeichnisse enthalten, die in POA Releases nicht mit released
+werden, z.B. dieses Handbuch im \TeX-Source unter {\it
+poa/docs/handbuch}.\par
+Um einen POA Entwicklersnapshot zu installieren, muss in das folgende
+Verzeichnis gewechselt werden:
+
+\begin{verbatim}
+$ cd poa/src
+\end{verbatim}
+
+Dieses Verzeichnis enthält alle Dateien in der selben
+Verzeichnisstruktur, die in einem POA Release released werden. Um einen
+Entwicklersnapshot zu installieren, ist das Vorgehen identisch zum
+Unterabschnitt \textbf{'POA Kompilierung vorbereiten'} aus dem vorherigen
+Abschnitt.
+
 \section{Installation unter Windows}
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.26 2004/01/09 14:05:29 squig Exp $
+ * $Id: cpumodel.cpp,v 1.27 2004/01/12 11:24:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -150,9 +150,10 @@ QString CpuModel::tip()
         .arg(this->type())
         .arg(this->description())
         //        .arg((this->cpuId()==-1)?"not defined":QString::number(this->cpuId()))
-        .arg((this->cpuId()==-1)?"not defined":QString::number(this->cpuId()))
+        // garbeam: patched to work with Qt 3.2.x - ambigious overload
+        .arg((this->cpuId()==-1)?QString("not defined"):QString::number(this->cpuId()))
         .arg(this->clock())
-        .arg((this->autoOffset())?"auto":QString::number(this->offset())+" ms")
-        .arg((this->autoExecTime())?"auto":QString::number(this->execTime())+" ms")
+        .arg((this->autoOffset())?QString("auto"):QString::number(this->offset())+" ms")
+        .arg((this->autoExecTime())?QString("auto"):QString::number(this->execTime())+" ms")
         .arg(codeManager->sourceFilePath(this));
 }

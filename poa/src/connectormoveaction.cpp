@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.5 2004/02/10 17:38:18 kilgus Exp $
+ * $Id: connectormoveaction.cpp,v 1.6 2004/02/16 03:16:39 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -97,6 +97,7 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
             if (*it == *lastIt) {
             	newPoints.remove(it);
                 it = lastIt;      		// it got invalid after the remove
+                state--;
                 continue;
             }
             angle = getAngle((*lastIt).x() - (*it).x(), (*lastIt).y() - (*it).y());

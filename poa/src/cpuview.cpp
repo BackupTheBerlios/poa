@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.cpp,v 1.3 2003/09/17 13:08:29 garbeam Exp $
+ * $Id: cpuview.cpp,v 1.4 2003/09/18 14:54:32 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,7 @@ QString CpuView::tip()
 {
     CodeManager *codeManager = CodeManager::instance();
     CpuModel *m = (CpuModel*)model();
-    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><br><hr>" \
+    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
                    "<b>Id on CPLD:</b> %4<br>" \
                    "<b>Clock:</b> %5 ms<br>" \
                    "<b>Offset:</b> %6<br>" \

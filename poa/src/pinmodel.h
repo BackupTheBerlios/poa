@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.16 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: pinmodel.h,v 1.17 2003/09/18 14:54:32 vanto Exp $
  *
  *****************************************************************************/
 
@@ -99,7 +99,12 @@ public:
      * Returns the connected pin.
      */
     PinModel *connected();
-    
+
+    /*
+     * Returns if this pin is connectable to <code>toPin</code>.
+     */
+    bool isConnectable(PinModel *toPin);
+
     /**
      * Returns the type of this pin
      */

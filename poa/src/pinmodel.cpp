@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.17 2003/09/18 10:19:03 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.18 2003/09/18 14:54:32 vanto Exp $
  *
  *****************************************************************************/
 
@@ -95,6 +95,13 @@ void PinModel::detach()
 PinModel *PinModel::connected()
 {
     return connected_;
+}
+
+bool PinModel::isConnectable(PinModel *toPin)
+{
+    return (type() == EPISODIC
+            || toPin->type() == EPISODIC
+            || type() != toPin->type());
 }
 
 PinModel::PinType PinModel::type()

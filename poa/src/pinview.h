@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.10 2003/09/09 23:21:22 vanto Exp $
+ * $Id: pinview.h,v 1.11 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -77,12 +77,6 @@ public:
      * Returns the corresponding model of this view.
      */
     virtual AbstractModel *model();
-
-    /**
-     * Activates a {@link ConnectAction} for <code>view</code> that
-     * connects the pin.
-     */
-    virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
 
     /**
      * Returns the corresponding model of this view as a PinModel.

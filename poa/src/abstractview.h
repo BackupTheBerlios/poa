@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.10 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: abstractview.h,v 1.11 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -67,18 +67,6 @@ public:
      * Returns the model.
      */
     virtual AbstractModel *model() = 0;
-
-    /**
-     * Invoked when the mouse button has been pressed.
-     */
-    virtual void mousePressEvent(CanvasView *, QMouseEvent *) { };
-
-    /**
-     * Return a context menu.
-     *
-     * @return 0
-     */
-    virtual QPopupMenu *popupMenu() { return 0; };
 
 };
 #endif

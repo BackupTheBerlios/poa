@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.27 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: blockview.cpp,v 1.28 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,14 +28,12 @@
 #include <qaction.h>
 #include <qbrush.h>
 #include <qcanvas.h>
-#include <qpopupmenu.h>
 #include <qpainter.h>
 
 #include "blockmodel.h"
 #include "canvasview.h"
 #include "mainwindow.h"
 #include "blockconfdialog.h"
-#include "moveaction.h"
 #include "pinvector.h"
 #include "pinview.h"
 #include "settings.h"
@@ -144,29 +142,6 @@ void BlockView::addPinViewsTo(QCanvasItemList &list)
 AbstractModel *BlockView::model()
 {
     return model_;
-}
-
-void BlockView::mousePressEvent(CanvasView *view, QMouseEvent *e)
-{
-    view->setAction(new MoveAction(view, e, this));
-}
-
-void BlockView::mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e)
-{
-    BlockConfDialog *dialog = new BlockConfDialog();
-    dialog->show();
-}
-
-QPopupMenu *BlockView::popupMenu()
-{
-    QPopupMenu *pm = new QPopupMenu();
-    pm->insertItem("Configure...");
-    pm->insertItem("Edit Source");
-    pm->insertSeparator();
-    MainWindow::instance()->cutAction()->addTo(pm);
-    MainWindow::instance()->copyAction()->addTo(pm);
-    MainWindow::instance()->pasteAction()->addTo(pm);
-    return pm;
 }
 
 void BlockView::moveBy(double dx, double dy)

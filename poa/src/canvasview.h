@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.22 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: canvasview.h,v 1.23 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -36,13 +36,13 @@ class PinView;
 #include <qvariant.h>
 #include <qcanvas.h>
 #include <qtooltip.h>
-
 class QCanvasItemList;
 class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
 class QKeyEvent;
 class QPoint;
+class QPopupMenu;
 class QToolTip;
 
 /**
@@ -130,7 +130,8 @@ protected:
     virtual void contentsMouseMoveEvent(QMouseEvent *e);
 
     /**
-     * Called when a mouse button is double clicked on <code>this</code>'s content.
+     * Called when a mouse button is double clicked on
+     * <code>this</code>'s content.
      */
     virtual void contentsMouseDoubleClickEvent(QMouseEvent *e);
 
@@ -151,6 +152,14 @@ protected:
     virtual void dropEvent(QDropEvent *e);
 
     /**
+     * Sets the selected state of item to true. All other items are
+     * deselected and a selectionChanged signal is emitted.
+     *
+     * Only single selection is supported for now.
+     */
+    void selectItem(QCanvasItem *item);
+
+    /**
      * Transforms window-coordinates to canvas-coodinates
      * @param pos Position in window-coodinates
      * @return Position in canvas-world-coodinates
@@ -166,14 +175,16 @@ private:
 
     /** The project this view belongs to */
     Project *project_;
-    /**
-     * The start pin for a new connection
-     */
-    PinView *startPin_;
-    /** The action that is currently active if any, else 0 */
+    /** The action that is currently active if any, else 0. */
     CanvasViewAction *action_;
-    /** The Tooltip instance */
+    /** The Tooltip instance. */
     CanvasToolTip *tooltip_;
+    /** The popup menu for the background. */
+    QPopupMenu *backgroundPopupMenu;
+    /** The popup menu for blocks. */
+    QPopupMenu *blockViewPopupMenu;
+    /** The popup menu for pins. */
+    QPopupMenu *pinViewPopupMenu;
 };
 
 class CanvasToolTip : public QToolTip

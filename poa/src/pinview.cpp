@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.11 2003/09/09 23:21:22 vanto Exp $
+ * $Id: pinview.cpp,v 1.12 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -88,11 +88,6 @@ QPoint PinView::connectorPoint()
         Q_ASSERT(false);
         return QPoint(0, 0);
     }
-}
-
-void PinView::mousePressEvent(CanvasView *view, QMouseEvent *e)
-{
-    view->setAction(new ConnectAction(view, e, this));
 }
 
 PinModel *PinView::pinModel()

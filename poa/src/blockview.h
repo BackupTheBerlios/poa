@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.23 2003/09/10 10:39:00 garbeam Exp $
+ * $Id: blockview.h,v 1.24 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -84,16 +84,16 @@ public:
      */
     virtual QSize dragBy(double dx, double dy);
 
-    /**
-     * Activates a {@link MovingAction } for <code>view</code> that moves
-     * the BlockView.
-     */
-    virtual void mousePressEvent(CanvasView *view, QMouseEvent *e);
+/*     /\** */
+/*      * Activates a {@link MovingAction } for <code>view</code> that moves */
+/*      * the BlockView. */
+/*      *\/ */
+/*     virtual void mousePressEvent(CanvasView *view, QMouseEvent *e); */
 
-    /**
-     * Opens the block model dialog for <code>view</code>.
-     */
-    virtual void mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e);
+/*     /\** */
+/*      * Opens the block model dialog for <code>view</code>. */
+/*      *\/ */
+/*     virtual void mouseDoubleClickEvent(CanvasView *view, QMouseEvent *e); */
 
     /**
      * Moves <code>this</code> and the pin views that are connected to
@@ -129,8 +129,6 @@ public:
 protected:
 
     virtual void drawShape (QPainter &p);
-
-    virtual QPopupMenu *popupMenu();
 
     /**
      * Alignes all pins that dock onto <code>this</code> either on the left

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.10 2003/09/10 18:01:35 squig Exp $
+ * $Id: settings.cpp,v 1.11 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -178,11 +178,9 @@ int Settings::gridSize()
     return getNum("Grid Size", 10);
 }
 
-void Settings::setGridSize(int gridSize)
+bool Settings::showGrid()
 {
-    if (set("Grid Size", gridSize)) {
-        emit gridSizeChanged(gridSize);
-    }
+    return getBool("Show Grid", TRUE);
 }
 
 bool Settings::snapToGrid()
@@ -195,7 +193,21 @@ QColor Settings::selectedColor()
     return Qt::lightGray;
 }
 
+void Settings::setGridSize(int gridSize)
+{
+    if (set("Grid Size", gridSize)) {
+        emit gridSizeChanged(gridSize);
+    }
+}
+
 void Settings::setSnapToGrid(bool snapToGrid)
 {
     set("Snap To Grid", snapToGrid);
+}
+
+void Settings::setShowGrid(bool showGrid)
+{
+    if (set("Show Grid", showGrid)) {
+        emit showGridChanged(showGrid);
+    }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.28 2003/09/11 12:43:11 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.29 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "abstractview.h"
 #include "blockview.h"
 #include "canvasviewaction.h"
+#include "connectaction.h"
 #include "connectormodel.h"
 #include "cpumodel.h"
 #include "pinmodel.h"
@@ -36,9 +37,11 @@
 #include "project.h"
 #include "mainwindow.h"
 #include "modelfactory.h"
+#include "moveaction.h"
 #include "settings.h"
 
 #include <qvariant.h>
+#include <qaction.h>
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qdom.h>
@@ -58,6 +61,17 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     setAcceptDrops(true);
     setDragAutoScroll(true);
     tooltip_ = new CanvasToolTip(this);
+
+    backgroundPopupMenu = new QPopupMenu();
+
+    blockViewPopupMenu = new QPopupMenu();
+    MainWindow::instance()->blockConfAction()->addTo(blockViewPopupMenu);
+    blockViewPopupMenu->insertSeparator();
+    MainWindow::instance()->cutAction()->addTo(blockViewPopupMenu);
+    MainWindow::instance()->copyAction()->addTo(blockViewPopupMenu);
+    MainWindow::instance()->pasteAction()->addTo(blockViewPopupMenu);
+
+    pinViewPopupMenu = new QPopupMenu();
 }
 
 CanvasView::~CanvasView()
@@ -83,7 +97,15 @@ void CanvasView::contentsMouseDoubleClickEvent(QMouseEvent *e)
         return;
     }
 
+    QPoint p = inverseWorldMatrix().map(e->pos());
+    QCanvasItemList l = canvas()->collisions(p);
+    QCanvasItem *topItem = l.first();
 
+    selectItem(topItem);
+
+    if (INSTANCEOF(topItem, BlockView)) {
+        MainWindow::instance()->openBlockConf();
+    }
 }
 
 void CanvasView::contentsMousePressEvent(QMouseEvent *e)
@@ -100,15 +122,17 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             // first item is top item
             QCanvasItem *topItem = l.first();
 
-            // select item, we only support single selection for now
-            deselectAll();
-            topItem->setSelected(true);
-            emit(selectionChanged(true));
+            selectItem(topItem);
 
             // notify item that is has been clicked
             AbstractView *item = dynamic_cast<AbstractView*>(topItem);
-            if (item != 0) {
-                item->mousePressEvent(this, e);
+            if (item != 0 && item->isDraggable()) {
+                setAction(new MoveAction(this, e, topItem));
+            }
+
+            PinView *pinItem = dynamic_cast<PinView*>(topItem);
+            if (pinItem != 0) {
+                setAction(new ConnectAction(this, e, pinItem));
             }
 
             canvas()->update();
@@ -124,23 +148,21 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             // first item is top item
             QCanvasItem *topItem = l.first();
 
-            // select item
-            deselectAll();
-            topItem->setSelected(true);
-            emit(selectionChanged(true));
+            selectItem(topItem);
             canvas()->update();
 
-            AbstractView *item = dynamic_cast<AbstractView *>(topItem);
-            if (item != 0) {
-                // show popup menu if available
-                QPopupMenu *menu = item->popupMenu();
-                if (menu != 0) {
-                    menu->exec(contentsToViewport(mapToGlobal(e->pos())));
-                }
+            if (INSTANCEOF(topItem, BlockView)) {
+                blockViewPopupMenu->exec
+                    (contentsToViewport(mapToGlobal(e->pos())));
+            }
+            else if (INSTANCEOF(topItem, PinView)) {
+                pinViewPopupMenu->exec
+                    (contentsToViewport(mapToGlobal(e->pos())));
             }
         }
         else {
-            // show background popup menu
+            backgroundPopupMenu->exec
+                (contentsToViewport(mapToGlobal(e->pos())));
         }
     }
 }
@@ -151,7 +173,6 @@ void CanvasView::contentsMouseReleaseEvent(QMouseEvent *e)
         action_->mouseReleaseEvent(e);
     }
 }
-
 
 void CanvasView::contentsMouseMoveEvent(QMouseEvent *e)
 {
@@ -218,6 +239,13 @@ void CanvasView::dropEvent(QDropEvent *e)
             }
         }
     }
+}
+
+void CanvasView::selectItem(QCanvasItem *item)
+{
+    deselectAll();
+    item->setSelected(true);
+    emit(selectionChanged(true));
 }
 
 QCanvasItemList CanvasView::selectedItems()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.14 2003/09/10 18:01:35 squig Exp $
+ * $Id: settings.h,v 1.15 2003/09/11 13:17:14 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -62,8 +62,10 @@ public:
     int gridSize();
     QColor selectedColor();
     bool snapToGrid();
+    bool showGrid();
     void setGridSize(int gridSize);
     void setSnapToGrid(bool snapToGrid);
+    void setShowGrid(bool showGrid);
 
 signals:
     void settingChanged(const QString &key);
@@ -71,6 +73,7 @@ signals:
     // the following settings emit an additional signal
     void gridSizeChanged(int gridSize);
     void recentProjectsChanged();
+    void showGridChanged(bool showGrid);
 
 protected:
     Settings();

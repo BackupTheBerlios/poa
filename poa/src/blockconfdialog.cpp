@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.39 2003/12/10 14:15:58 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.40 2003/12/10 15:00:02 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -90,6 +90,30 @@ PinListViewItem::~PinListViewItem()
         delete clone_;
     }
 }
+
+int PinListViewItem::compare(QListViewItem *i, int col, bool ascending ) const {
+    if (col == 0) { // first colum
+        PinModel *nextPin = ((PinListViewItem *)i)->data();
+        if (nextPin && clone_)  {
+            if (ascending) {
+                return clone_->position() - nextPin->position();
+            }
+            else {
+                return nextPin->position() - clone_->position();
+            }
+        }
+        else if (clone_) {
+            return clone_->position();
+        }
+        else {
+            return 0;
+        }
+    }
+    else {
+        return key(col, ascending).compare(i->key(col, ascending));
+    }
+}
+
 
 PinModel *PinListViewItem::data() const
 {
@@ -471,6 +495,9 @@ void BlockConfDialog::syncModel() {
             }
         }
     }
+    ioListView->setSorting(0);
+    ioListView->sort();
+    ioListView->setSorting(10);
 }
 
 void BlockConfDialog::updateModel() {
@@ -534,17 +561,17 @@ void BlockConfDialog::newIo()
     PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
 
     if (item != 0) {
-        QListViewItem *parentItem = item;
+        PinListViewItem *parentItem = item;
         while (!parentItem->isOpen()) {
-            parentItem = parentItem->parent();
+            parentItem = (PinListViewItem *)parentItem->parent();
         }
         int childCount = parentItem->childCount() + 1;
         PinModel *pin = new PinModel(model_,
                 "data" + QString::number(childCount),
-                childCount * 100, 32, item->type());
+                childCount * 100, 32, parentItem->type());
         newPins_.append(pin);
         new PinListViewItem(parentItem, item != parentItem ? item : 0, pin);
-        updatePositions(((PinListViewItem *)parentItem)->type());
+        updatePositions(parentItem->type());
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.18 2003/12/10 14:15:58 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.19 2003/12/10 15:00:02 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -101,6 +101,9 @@ public:
      * Updates the view with current contents of the pin model.
      */
     void update();
+
+    /** Overloaded compare method. */
+    int compare(QListViewItem *i, int col, bool ascending ) const;
 
 private:
     PinModel *clone_;

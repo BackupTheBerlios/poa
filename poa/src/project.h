@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.15 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: project.h,v 1.16 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -27,6 +27,7 @@
 #include "abstractmodel.h"
 #include "blockmodel.h"
 #include "gridcanvas.h"
+#include "pinmodel.h"
 #include "pinview.h"
 
 #include <qptrlist.h>
@@ -68,7 +69,11 @@ public:
      */
     void createViews(AbstractModel *item, int x = 0, int y = 0);
 
-
+    /**
+     * Creates ConnectorViews between the two given PinViews.
+     * @param source the source PinView.
+     * @param target the target PinView.
+     */
     void createConnectorViews(PinView *source, PinView *target);
 
     /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.8 2003/09/14 11:45:24 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.9 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -157,6 +157,7 @@ private:
 
     BlockModel *model_;
     PinVector *deletedPins_;
+    PinVector *deletedConnections_;
 
     /**
      * Initializes layout.

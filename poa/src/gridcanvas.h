@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.18 2003/09/15 11:41:06 garbeam Exp $
+ * $Id: gridcanvas.h,v 1.19 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -56,6 +56,9 @@ public:
      */
     void addView(AbstractModel *item, int x = 0, int y = 0);
 
+    /**
+     * Adds ConnectorViews between the two given PinViews.
+     */
     void addConnectorView(PinView *source, PinView *target);
 
     /**

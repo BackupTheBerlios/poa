@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.12 2003/09/11 13:17:14 squig Exp $
+ * $Id: pinview.cpp,v 1.13 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -38,6 +38,7 @@ PinView::PinView(PinModel *model, BlockView *block,
     : QCanvasRectangle(block->canvas())
 {
     model_ = model;
+    connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
     dockPosition_ = dockPosition;
     setZ(block->z());
     setBrush(QBrush(SolidPattern));
@@ -146,4 +147,9 @@ QString PinView::tip()
         .arg(pt)
         .arg(pinModel()->address())
         .arg(pinModel()->bits());
+}
+
+void PinView::deleteView()
+{
+    delete this;
 }

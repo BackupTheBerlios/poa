@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.10 2003/09/15 13:03:51 garbeam Exp $
+ * $Id: connectorview.h,v 1.11 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -47,8 +47,9 @@ class ConnectorView;
  * propagation some items may be removed or new items may be inserted into
  * the list.
  */
-class ConnectorView: public QCanvasLine, public Tooltipable
+class ConnectorView: public QObject, public QCanvasLine, public Tooltipable
 {
+    Q_OBJECT
 
 public:
     /**
@@ -202,6 +203,8 @@ private:
     /** Orientation of this view */
     LineOrientation orientation_;
 
+public slots:
+    void deleteView();
 };
 
 

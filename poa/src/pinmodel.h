@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.15 2003/09/15 13:03:51 garbeam Exp $
+ * $Id: pinmodel.h,v 1.16 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -39,8 +39,9 @@ class QDomDocument;
 class QDomElement;
 
 
-class PinModel
+class PinModel : public QObject
 {
+    Q_OBJECT
 
 public:
 
@@ -190,6 +191,9 @@ private:
                       // one pin can be wider than one bit.
     PinModel *connected_;
     PinType type_;
+
+signals:
+    void deleted();
 
 };
 

@@ -18,17 +18,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.15 2003/09/15 13:03:51 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.16 2003/09/15 16:29:50 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockconfdialog.h"
+#include "canvasview.h"
 #include "cpumodel.h"
 #include "coremodel.h"
 #include "inputmodel.h"
+#include "mainwindow.h"
 #include "outputmodel.h"
 #include "pinvector.h"
 #include "poa.h"
+#include "project.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
@@ -558,9 +561,9 @@ void BlockConfDialog::removeIo()
                             "Ok",
                             "Cancel", 0, 0, 1 ) )
                 {
-                    case 0: // The user clicked the Retry again button or pressed Enter
-                        // TODO: remove ConnectorView and connection
-                        deletedPins_->addBefore(item->origData());
+                    case 0: // The user clicked OK, so all related connections
+                            // will be removed after applying changes.
+                        deletedPins_->addBefore(origin);
                         break;
                     case 1: // Cancel removal.
                         remove = false;

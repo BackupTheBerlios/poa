@@ -8,7 +8,7 @@ SAT=0
 SHARP=0
 NSUPP=high
 
-while true
-do
-   sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-`date +%s`.jpg
-done
+sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-norm-`date +%s`.jpg
+sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-norm-`date +%s`.jpg
+sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-norm-`date +%s`.jpg
+sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP south/south-norm-`date +%s`.jpg

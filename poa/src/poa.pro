@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.76 2004/01/22 12:07:42 squig Exp $
+# $Id: poa.pro,v 1.77 2004/01/22 18:11:07 vanto Exp $
 #
 ###############################################################################
 
@@ -54,6 +54,7 @@ HEADERS += blockview.h
 HEADERS += canvasview.h
 HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
+HEADERS += colormanager.h
 HEADERS += connectaction.h
 HEADERS += connectorrouter.h
 HEADERS += connectorviewlist.h
@@ -105,6 +106,7 @@ SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
 SOURCES += codemanager.cpp
+SOURCES += colormanager.cpp
 SOURCES += connectaction.cpp
 SOURCES += connectorrouter.cpp
 SOURCES += connectorviewlist.cpp

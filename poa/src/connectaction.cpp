@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.13 2004/01/17 12:03:04 squig Exp $
+ * $Id: connectaction.cpp,v 1.14 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,6 +35,7 @@
 
 #include <qcanvas.h>
 #include <qcolor.h>
+#include <qmessagebox.h>
 #include <qwmatrix.h>
 
 ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
@@ -107,6 +108,37 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
             view()->project()->createConnectorViews(source_, target);
 
             view()->deselectAll();
+            line_.setVisible(false);
+            view()->canvas()->update();
+
+
+            int sourceBits = source_->model()->bits();
+            int targetBits = target->model()->bits();
+            if (sourceBits != targetBits) {
+                int ans = QMessageBox::information
+                    (0, "POA",
+                     QString("The pins have different widths\n"
+                             "Do you want to change the width?"),
+                     QString("Set %1 bits to %2")
+                     .arg(source_->model()->name()).arg(targetBits),
+                     QString("Set %1 bits to %2")
+                     .arg(target->model()->name()).arg(sourceBits),
+                     "Cancel",
+                     0,  // Default == button 0
+                     2); // Escape  == button 2
+                switch(ans) {
+                case 0: // Adjust source
+                    source_->model()->setBits(targetBits);
+                    source_->model()->updatePerformed();
+                    break;
+                case 1: // Adjust target
+                    target->model()->setBits(sourceBits);
+                    target->model()->updatePerformed();
+                    break;
+                default: // Cancel clicked or Alt+C pressed or Escape pressed
+                    break;
+                }
+            }
         }
     }
 

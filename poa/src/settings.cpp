@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.17 2004/01/17 12:47:14 garbeam Exp $
+ * $Id: settings.cpp,v 1.18 2004/01/18 23:15:12 squig Exp $
  *
  *****************************************************************************/
 
@@ -223,6 +223,11 @@ void Settings::setShowGrid(bool showGrid)
 QString Settings::templatePath()
 {
     return get("Template Path", "templates/cpu_template.cpp");
+}
+
+QColor Settings::warningColor()
+{
+    return Qt::red;
 }
 
 QString Settings::compilerCmd()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.30 2004/01/17 17:59:40 squig Exp $
+ * $Id: mainwindow.h,v 1.31 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -108,6 +108,11 @@ public:
     QAction *removeAction();
 
     /**
+     * Returns the save to library action.
+     */
+    QAction *saveToLibraryAction();
+
+    /**
      * Returns the show grid action.
      */
     QAction *showGridAction();
@@ -138,6 +143,7 @@ public slots:
     virtual void openSettings();
     virtual int openDeployWizard();
     //    virtual void saveProject();
+    virtual void saveToLibrary();
     virtual void smartRoute();
     virtual void windowActivated(QWidget *w);
     virtual void zoomTo(const QString &level);
@@ -195,6 +201,7 @@ private:
     QAction *smartRouteAction_;
     QAction *tileHorizontalAction;
     QAction *cascadeAction;
+    QAction *saveToLibraryAction_;
     QAction *tileAction;
 
 private slots:

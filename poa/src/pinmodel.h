@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.30 2004/01/12 14:35:51 squig Exp $
+ * $Id: pinmodel.h,v 1.31 2004/01/18 23:15:12 squig Exp $
  *
  *****************************************************************************/
 
@@ -171,17 +171,10 @@ public:
     void setBits(unsigned int bits);
 
     /**
-     * DON'T USE THIS, use createView(BlockView, DockPosition)
-     * instead!
-     */
-    //    QCanvasItemList createView(QCanvas *canvas);
-
-    /**
      * Creates the CanvasItems for this.
      */
     PinView *createView(BlockView *block,
-            PinView::DockPosition dockPosition);
-
+                        PinView::DockPosition dockPosition);
 
     /**
      * Serializes this instance to a xml subtree
@@ -199,6 +192,12 @@ public:
      * Clones this model.
      */
     PinModel *clone();
+
+    /**
+     * Needs to be invoked after the properties have been
+     * changed. Emits the {@link updated()} signal to notify the views
+     * to repaint. */
+    void updatePerformed();
 
 private:
 
@@ -225,7 +224,8 @@ signals:
     void detached();
 
     /**
-     * Emitted, when the pin is updated.
+     * Emitted, after the pin's properties have been changed.
+     * @see #updatePerformed()
      */
     void updated();
 

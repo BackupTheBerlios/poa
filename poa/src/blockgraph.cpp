@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.2 2004/01/18 17:33:51 squig Exp $
+ * $Id: blockgraph.cpp,v 1.3 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -136,6 +136,11 @@ QPtrList<PinNode> PinNode::neighbours() const
     return neighbours_;
 }
 
+BlockNode *PinNode::parent() const
+{
+    return parent_;
+}
+
 BlockGraph::BlockGraph(Project *project)
 {
     // First look for all input blocks
@@ -150,6 +155,21 @@ BlockGraph::BlockGraph(Project *project)
             }
         }
     }
+
+    // iterate through all pins
+    QValueList<PinNode*> pins = nodeByModel_.values();
+    for (QValueList<PinNode*>::Iterator it = pins.begin(); it != pins.end();
+         ++it) {
+
+        for (QPtrListIterator<PinNode> it2((*it)->neighbours()); it2 != 0;
+             ++it2) {
+
+            if ((*it)->parent() != (*it2)->parent()) {
+                QPtrList<PinNode> seen;
+                addBlockNeighbour(*it, *it2, seen);
+            }
+        }
+    }
 }
 
 // Recursively build tree
@@ -160,6 +180,7 @@ void BlockGraph::addInputBlock(BlockModel *model)
     QValueList<PinModel*> pins = model->pins();
     for (QValueList<PinModel*>::Iterator it = pins.begin(); it != pins.end();
          ++it) {
+
         addOutput(*it);
     }
 }
@@ -219,6 +240,29 @@ BlockNode *BlockGraph::addBlock(BlockModel *block)
     }
 }
 
+void BlockGraph::addBlockNeighbour(PinNode *source, PinNode *target,
+                                   QPtrList<PinNode> seen)
+{
+    if (INSTANCEOF(target->parent()->model(), MuxModel)) {
+        // iterate through output pins
+        for (QPtrListIterator<PinNode> it(target->neighbours()); it != 0;
+             ++it) {
+
+            if (!seen.contains(*it)) {
+                seen.append(*it);
+                for (QPtrListIterator<PinNode> it2 = (*it)->neighbours();
+                     it2 != 0; ++it2) {
+
+                    addBlockNeighbour(source, *it2, seen);
+                }
+            }
+        }
+    }
+    else {
+        source->parent()->addNeighbour(target->parent());
+    }
+}
+
 QValueList<BlockNode*> BlockGraph::blocks() const
 {
     QPtrList<PinNode> seen;
@@ -251,4 +295,3 @@ QValueList<BlockNode*> BlockGraph::blocks() const
 
     return nodeByBlock_.values();
 }
-

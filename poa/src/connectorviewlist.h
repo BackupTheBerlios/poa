@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.17 2004/01/13 15:04:37 vanto Exp $
+ * $Id: connectorviewlist.h,v 1.18 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -48,7 +48,7 @@ class PinView;
  * <code>this</code>. During propagation some items may be removed or new
  * items may be inserted into the list.
  */
-class ConnectorViewList : public QObject//, public Serializable
+class ConnectorViewList : public QObject, public Serializable
 {
     Q_OBJECT
 
@@ -133,7 +133,11 @@ public:
      * Deserializes an xml subtree to recreate the point list.
      * <code>source</code> and <code>target</code> are ignored
      */
-    virtual void deserialize(QDomElement *element);
+    virtual void deserialize(QDomElement element);
+
+public slots:
+
+    void updateProperties();
 
 private:
 
@@ -146,9 +150,6 @@ private:
     /** List of all segments of this connector view */
     QPtrList<ConnectorViewSegment> segments_;
 
-signals:
-    void select(bool);
-    void hover(bool);
 };
 
 

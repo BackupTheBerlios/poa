@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.33 2004/01/18 19:58:17 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.34 2004/01/18 23:15:12 squig Exp $
  *
  *****************************************************************************/
 
@@ -76,16 +76,19 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     setCaption(tr("Scheduling"));
 
     project_ = pro;
+    graph_ = 0;
     modified_ = false;
     zoom_ = 1.0;
     pixPerNs_ = 1.0;
+
     initLayout();
 }
 
 ScheduleDialog::~ScheduleDialog()
 {
-    delete canvas;
-    delete labelCanvas;
+    if (graph_ != 0) {
+        delete graph_;
+    }
 }
 
 // Recursively build tree
@@ -148,8 +151,7 @@ void ScheduleDialog::buildTree()
         }
     }
 
-    BlockGraph graph(project_);
-    graph.blocks();
+    graph_ = new BlockGraph(project_);
 
     // Then built the trees from the input blocks on
     blocksToTree_.clear();
@@ -163,7 +165,10 @@ void ScheduleDialog::updateModel()
     for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         (*it)->commit();
     }
-    project_->setModified(project_->isModified() || modified_);
+
+    if (modified_) {
+        project_->setModified(true);
+    }
 }
 
 void ScheduleDialog::fillTimingTable(BlockTree* bt)

@@ -1,3 +1,8 @@
+2004-01-18  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* connectaction.cpp (mouseReleaseEvent): Prompt if pin width are
+	different.
+
 2004-01-17  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* mainwindow.cpp (closeEvent): Remember width of library window.

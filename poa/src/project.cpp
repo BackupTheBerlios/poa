@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.43 2004/01/13 15:04:37 vanto Exp $
+ * $Id: project.cpp,v 1.44 2004/01/18 23:15:12 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -319,7 +319,7 @@ void Project::deserialize(QDomDocument *document) {
                 spv->model()->attach(tpv->model());
                 ConnectorViewList *vl = new ConnectorViewList(spv, tpv, canvas);
                 canvas->addConnectorView(vl);
-                vl->deserialize(&conEl);
+                vl->deserialize(conEl);
             } else {
                 qDebug(tr("Could not create connector view because one of the pinmodels is invalid."));
             }

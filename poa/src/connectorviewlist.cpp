@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.25 2004/01/13 15:04:37 vanto Exp $
+ * $Id: connectorviewlist.cpp,v 1.26 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -59,8 +59,13 @@ ConnectorViewList::ConnectorViewList(PinView *source,
     source_->setConnector(this);
     target_->setConnector(this);
 
+    connect(source_->model(), SIGNAL(updated()),
+            this, SLOT(updateProperties()));
+    connect(target_->model(), SIGNAL(updated()),
+            this, SLOT(updateProperties()));
+
     if (element != 0) {
-        deserialize(element);
+        deserialize(*element);
     }
 }
 
@@ -86,9 +91,9 @@ const QCanvasItemList ConnectorViewList::allSegments()
 {
     QCanvasItemList list;
     for (ConnectorViewSegment *current = segments_.first();
-     current != 0; current = segments_.next()) {
+         current != 0; current = segments_.next()) {
 
-    list.prepend(current);
+        list.prepend(current);
     }
     return list;
 }
@@ -136,7 +141,9 @@ QString ConnectorViewList::tip()
         .arg(source()->model()->parent()->name())
         .arg(target()->model()->name())
         .arg(target()->model()->parent()->name())
-        .arg((unsigned)target()->model()->bits());
+        .arg((target()->model()->bits() != source()->model()->bits())
+             ? "Source and target have different widths!"
+             : QString::number(target()->model()->bits()));
 }
 
 void ConnectorViewList::setSelected(bool selected)
@@ -179,18 +186,17 @@ QCanvas *ConnectorViewList::canvas() const {
     return canvas_;
 }
 
-void ConnectorViewList::deserialize(QDomElement *element)
+void ConnectorViewList::deserialize(QDomElement element)
 {
-    QDomNodeList pList = element->elementsByTagName("point");
-    QValueList<QPoint> *points = new QValueList<QPoint>;
+    QDomNodeList pList = element.elementsByTagName("point");
+    QValueList<QPoint> points;
     for (uint i = 0; i < pList.count(); i++) {
         QDomElement pEl = pList.item(i).toElement();
         //qDebug("("+pEl.attribute("x","0")+","+pEl.attribute("y","0")+")");
-        points->append(QPoint(pEl.attribute("x","0").toUInt(),
+        points.append(QPoint(pEl.attribute("x","0").toUInt(),
                              pEl.attribute("y","0").toUInt()));
     }
-    applyPointList(*points);
-    delete points;
+    applyPointList(points);
 }
 
 void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
@@ -232,6 +238,15 @@ void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
         }
         segments_.removeLast();
     }
+    }
+}
+
+void ConnectorViewList::updateProperties()
+{
+    ConnectorViewSegment *current = segments_.first();
+    while (current != 0) {
+        current->updateProperties();
+        current = segments_.next();
     }
 }
 

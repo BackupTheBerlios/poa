@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.6 2003/11/26 16:27:10 squig Exp $
+ * $Id: connectorviewsegment.h,v 1.7 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -86,6 +86,11 @@ public:
     void setSelected(bool);
 
     /**
+     * Sets the pen according to the selection and hover state.
+     */
+    void updateProperties();
+
+    /**
      * Returns a list containing all segments belonging to one connector
      * view.
      */
@@ -94,11 +99,6 @@ public:
 private:
     /** List of all segments */
     ConnectorViewList *viewList_;
-
-    /**
-     * Sets the pen according to the selection and hover state.
-     */
-    void updateProperties();
 
 };
 

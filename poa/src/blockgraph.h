@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.h,v 1.2 2004/01/18 17:33:51 squig Exp $
+ * $Id: blockgraph.h,v 1.3 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include <qptrlist.h>
 
 class AbstractModel;
+class BlockGraphIterator;
 class BlockModel;
 class PinModel;
 class PinNode;
@@ -125,6 +126,7 @@ public:
     void addNeighbour(PinNode *neighbour);
     PinModel *model();
     QPtrList<PinNode> neighbours() const;
+    BlockNode *parent() const;
 
 private:
 
@@ -140,6 +142,7 @@ public:
     BlockGraph(Project *project);
 
     QValueList<BlockNode*> blocks() const;
+    void addBlockVertices();
 
 private:
 
@@ -149,6 +152,8 @@ private:
     PinNode *addInput(PinModel *pin);
     PinNode *addOutput(PinModel *pin);
     BlockNode *addBlock(BlockModel *block);
+    void addBlockNeighbour(PinNode *source, PinNode *target,
+                           QPtrList<PinNode> seen);
 
     ModelNodeMap nodeByModel_;
     QMap<BlockModel*, BlockNode*> nodeByBlock_;

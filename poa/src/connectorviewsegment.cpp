@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.8 2003/12/03 16:06:20 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.9 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -50,16 +50,6 @@ void ConnectorViewSegment::remove(Project *)
     viewList_->deleteSegment(this);
 }
 
-QString ConnectorViewSegment::tip()
-{
-    return viewList()->tip();
-}
-
-ConnectorViewList *ConnectorViewSegment::viewList()
-{
-    return viewList_;
-}
-
 void ConnectorViewSegment::setSelected(bool yes)
 {
     viewList_->setSelected(yes);
@@ -80,10 +70,25 @@ void ConnectorViewSegment::updateProperties()
         setZ(static_cast<GridCanvas *>(canvas())->incZ());
         setPen(QPen(Settings::instance()->selectedColor(), 2));
     }
+    else if (viewList_->source()->model()->bits()
+             != viewList_->target()->model()->bits()) {
+        setZ(0);
+        setPen(QPen(Settings::instance()->warningColor(), 2));
+    }
     else {
         setZ(0);
         setPen(QPen(Settings::instance()->defaultColor(), 2));
     }
 
+}
+
+QString ConnectorViewSegment::tip()
+{
+    return viewList()->tip();
+}
+
+ConnectorViewList *ConnectorViewSegment::viewList()
+{
+    return viewList_;
 }
 

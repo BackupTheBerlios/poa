@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.50 2004/01/18 13:50:48 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.51 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -385,6 +385,7 @@ void BlockConfDialog::updateModel()
         origPin->setBits(pin->bits());
         origPin->setType(pin->type());
         origPin->setPosition(pin->position());
+        origPin->updatePerformed();
     }
     updatedPins_.clear();
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.81 2004/01/17 17:59:40 squig Exp $
+ * $Id: mainwindow.cpp,v 1.82 2004/01/18 23:15:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -243,6 +243,9 @@ void MainWindow::initializeActions()
     smartRouteAction_ = new QAction
         (tr("Smart Router"), QPixmap(Util::findIcon("smartroute.png")),
          tr("&Smart Router"), 0, this, "smartRouteAction");
+    saveToLibraryAction_ =
+        new QAction("Save To Library", image_filesave, "&Save To Library",
+                    QKeySequence("Ctrl+L"), this, "saveToLibraryAction");
 }
 
 void MainWindow::initializeToolbars()
@@ -395,6 +398,8 @@ void MainWindow::connectActions()
     connect(cascadeAction, SIGNAL(activated()), ws, SLOT(cascade()));
     connect(ws, SIGNAL(windowActivated(QWidget*)),
             this, SLOT(windowActivated(QWidget*)));
+    connect(saveToLibraryAction_, SIGNAL(activated()),
+            this, SLOT(saveToLibrary()));
     connect(smartRouteAction_, SIGNAL(activated()), this, SLOT(smartRoute()));
     connect(zoomComboBox, SIGNAL(activated(const QString&)),
             this, SLOT(zoomTo(const QString&)));
@@ -859,6 +864,16 @@ void MainWindow::updateRecentProjectsMenu()
     recentProjectsMenu->setEnabled(i > 0);
 }
 
+QAction *MainWindow::saveToLibraryAction()
+{
+    return saveToLibraryAction_;
+}
+
+void MainWindow::saveToLibrary()
+{
+    qWarning("Not implemented yet");
+}
+
 QAction *MainWindow::showGridAction()
 {
     return settingsShowGridAction_;
@@ -880,7 +895,7 @@ void MainWindow::windowActivated(QWidget* w)
         MdiWindow *m = (MdiWindow *)ws->activeWindow();
 
         checkClipboardContent();
-        //FIX: invokeDeployAction->setEnabled(true);
+        invokeDeployAction->setEnabled(true);
         fileSaveAction->setEnabled(m->view()->project()->isModified());
         invokeSchedulingAction->setEnabled(true);
         zoomComboBox->setEnabled(true);
@@ -908,6 +923,7 @@ void MainWindow::selectionChanged(QCanvasItem *item)
     openBlockConfAction->setEnabled(INSTANCEOF(item, BlockView));
     invokeCompilerAction->setEnabled(INSTANCEOF(item, BlockView));
     editRemoveAction->setEnabled(INSTANCEOF(item, Removeable));
+    saveToLibraryAction_->setEnabled(INSTANCEOF(item, BlockView));
 }
 
 void MainWindow::zoomIn()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.4 2003/08/28 18:04:35 vanto Exp $
+ * $Id: pinview.cpp,v 1.5 2003/08/28 18:07:47 vanto Exp $
  *
  *****************************************************************************/
 
@@ -52,13 +52,6 @@ PinView::PinView(PinModel *model,
 
 PinView::~PinView()
 {
-}
-
-
-void PinView::setModel(PinModel *model)
-{
-    model_ = model;
-    // FIX: update views
 }
 
 

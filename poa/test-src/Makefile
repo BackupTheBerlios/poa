@@ -68,7 +68,7 @@ gcover:
 	java -jar ../../gcover/target/gcover-0.2-uber.jar ../src ../target/docs/gcover ../src/gcov.out
 
 poa:
-	make -C ../src	
+		make -C ../src
 
 preparecheck:
 

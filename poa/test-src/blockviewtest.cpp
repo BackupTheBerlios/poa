@@ -13,6 +13,7 @@ class BlockViewTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(BlockViewTest);
     CPPUNIT_TEST(testCanvas);
+    CPPUNIT_TEST(testItem);
     CPPUNIT_TEST(testModel);
     CPPUNIT_TEST(testPins);
     CPPUNIT_TEST(testRtti);
@@ -50,6 +51,11 @@ public:
     void testCanvas()
     {
         CPPUNIT_ASSERT(block->canvas() == canvas);
+    }
+
+    void testItem()
+    {
+        CPPUNIT_ASSERT(block->item() == block);
     }
 
     void testModel()

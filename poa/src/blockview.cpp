@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.12 2003/08/27 15:49:23 keulsn Exp $
+ * $Id: blockview.cpp,v 1.13 2003/08/27 17:44:36 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -122,11 +122,12 @@ BlockModel *BlockView::model()
 }
 
 
+/*
 void BlockView::setModel(BlockModel *model)
 {
     model_ = model;
     // FIX: update views
-}
+}*/
 
 
 void BlockView::moveBy(double dx, double dy)

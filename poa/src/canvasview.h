@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.10 2003/08/27 15:49:23 keulsn Exp $
+ * $Id: canvasview.h,v 1.11 2003/08/27 17:44:36 keulsn Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
@@ -53,12 +53,23 @@ public:
     QPoint toCanvas(QPoint pos);
 
 public slots:
+    /*************************************************************************
+     * Calls <code>item->createView</code> to create a view for
+     * <code>item</code>, increases <code>currentZ_</code> and sets the
+     * new z on all created canvas items. Then updates the canvas to display
+     * the new view.
+     */
     void modelAdded(AbstractModel *item, int x, int y);
 
 private:
     Project *project_;
     QCanvasItem *movingItem_;
     QPoint movingStartPoint_;
+    /**
+     * Counter for z-layer. Everytime a an item is added to the canvas,
+     * all canvas items that make up the view for that item are assigned
+     * an equal z value 
+     */
     unsigned currentZ_;
 };
 

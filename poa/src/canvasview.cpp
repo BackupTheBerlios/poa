@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.11 2003/08/27 15:49:23 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.12 2003/08/27 17:44:36 keulsn Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -39,6 +39,8 @@
 #include <qpopupmenu.h>
 #include <qstatusbar.h>
 
+#include <typeinfo>
+
 /*****************************************************************************
  * Constructs the view.
  */
@@ -47,6 +49,7 @@ CanvasView::CanvasView(Project *project, QCanvas *canvas, QWidget *parent,
     : QCanvasView(canvas, parent, name, fl), project_(project),
       movingItem_(0)
 {
+    currentZ_ = 0;
     setAcceptDrops(TRUE);
 
     connect(project, SIGNAL(modelAdded(AbstractModel *, int, int)),
@@ -63,7 +66,6 @@ CanvasView::~CanvasView()
 
 void CanvasView::contentsMousePressEvent(QMouseEvent* e)
 {
-    currentZ_ = 0;
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
     if (e->button() == LeftButton) {

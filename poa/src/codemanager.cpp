@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.16 2004/01/28 16:35:51 squig Exp $
+ * $Id: codemanager.cpp,v 1.17 2004/02/04 10:29:37 papier Exp $
  *
  *****************************************************************************/
 
@@ -31,9 +31,11 @@
 #include "settings.h"
 #include "util.h"
 
+#include <qapplication.h>
 #include <qfile.h>
 #include <qfileinfo.h>
 #include <qprocess.h>
+#include <qstring.h>
 #include <qstringlist.h>
 
 CodeManager::CodeManager(Project *project, CpuModel *cpuModel)
@@ -107,7 +109,7 @@ void CodeManager::createDirectory(const QDir &path)
     if (!path.exists()) {
         if (!path.mkdir(path.absPath())) {
             throw PoaException
-                (QString("Could not create directory: %1").arg(path.absPath()));
+	      (QString("Could not create directory: %1").arg(path.absPath()));
         }
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.15 2004/02/04 09:30:30 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.16 2004/02/04 10:29:37 papier Exp $
  *
  *****************************************************************************/
 
@@ -156,15 +156,15 @@ void BlockConfWidget::sync()
 
     if (model_->hasInputPins()) {
         inputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::INPUT);
-        inputRoot_->setText(0, "Input Pins");
+        inputRoot_->setText(0, tr("Input Pins"));
     }
     if (model_->hasOutputPins()) {
         outputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::OUTPUT);
-        outputRoot_->setText(0, "Output Pins");
+        outputRoot_->setText(0, tr("Output Pins"));
     }
     if (model_->hasEpisodicPins()) {
         episodicRoot_ = new PinListViewItem(ioListView_, 0, PinModel::EPISODIC);
-        episodicRoot_->setText(0, "Episodic Pins");
+        episodicRoot_->setText(0, tr("Episodic Pins"));
     }
 
     QValueList<PinModel *> pinList = model_->pins();
@@ -292,14 +292,14 @@ void BlockConfWidget::removeIo()
                 // and another one
                 PinModel *connected = pin->connected();
                 switch(QMessageBox::warning(this, "POA",
-                            "The selected I/O is connected to I/O <i>id=" +
-                            QString::number(connected->id()) + " name=" +
-                            connected->name() + " of " +
-                            connected->parent()->name() + "</i>.\n\n"
-                            "The connection will be removed if you apply "
-                            "your changes.\n\n",
-                            "Ok",
-                            "Cancel", 0, 0, 1 ) )
+                           tr("The selected I/O is connected to I/O <i>id=") +
+                            QString::number(connected->id()) + tr(" name=") +
+                            connected->name() + tr(" of ") +
+                            connected->parent()->name() + "</i>.\n\n" +
+					    tr("The connection will be removed if you apply "
+                            "your changes.\n\n"),
+                            tr("&OK"),
+                            tr("&Cancel"), 0, 0, 1 ) )
                 {
                     case 0: // The user clicked OK, so all related connections
                             // will be removed after applying changes.

@@ -80,6 +80,12 @@
         <source>POA Error</source>
         <translation>POA Fehler</translation>
     </message>
+    <message>
+        <source>The block contains uncommited source code, but there is a file on disk already.
+Overwrite existing file?</source>
+        <translation>Dieser Block enthält nicht gespeicherten Quelltext, auf der Festplatte befindet sich jedoch schon eine Datei. 
+Soll die existierende Datei überschrieben werden?</translation>
+    </message>
 </context>
 <context>
     <name>BlockConfWidget</name>
@@ -106,6 +112,44 @@
     <message>
         <source>Address</source>
         <translation>Adresse</translation>
+    </message>
+    <message>
+        <source>Input Pins</source>
+        <translation>Eingangpins</translation>
+    </message>
+    <message>
+        <source>Output Pins</source>
+        <translation>Ausgangpins</translation>
+    </message>
+    <message>
+        <source>Episodic Pins</source>
+        <translation>Interruptpins</translation>
+    </message>
+    <message>
+        <source>The selected I/O is connected to I/O &lt;i&gt;id=</source>
+        <translation>Der selektierte E/A ist mit dem E/A &lt;i&gt;id=</translation>
+    </message>
+    <message>
+        <source> name=</source>
+        <translation>name=</translation>
+    </message>
+    <message>
+        <source> of </source>
+        <translation> von </translation>
+    </message>
+    <message>
+        <source>The connection will be removed if you apply your changes.
+
+</source>
+        <translation>Diese Verbindung beim Übernehmen der Änderungen entfernt.</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Abbruch</translation>
     </message>
 </context>
 <context>
@@ -276,10 +320,6 @@
     <message>
         <source>&amp;Show Grid</source>
         <translation>&amp;Raster anzeigen</translation>
-    </message>
-    <message>
-        <source>Ctrl+G</source>
-        <translation type="obsolete"></translation>
     </message>
     <message>
         <source>Smart Router</source>
@@ -528,19 +568,19 @@ Do you want to overwrite it?</source>
     </message>
     <message>
         <source>Tile Horizontal</source>
-        <translation>Nebeneinander</translation>
+        <translation>Übereinander</translation>
     </message>
     <message>
         <source>Tile &amp;Horizontal</source>
-        <translation>&amp;Nebeneinander</translation>
+        <translation>&amp;Übereinander</translation>
     </message>
     <message>
         <source>Tile</source>
-        <translation>Fenster</translation>
+        <translation>Nebeneinander</translation>
     </message>
     <message>
         <source>&amp;Tile</source>
-        <translation>&amp;Fenster</translation>
+        <translation>&amp;Nebeneinaner</translation>
     </message>
     <message>
         <source>Cascade</source>

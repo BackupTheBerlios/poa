@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.63 2004/01/29 16:30:05 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.64 2004/02/04 10:29:37 papier Exp $
  *
  *****************************************************************************/
 
@@ -367,9 +367,9 @@ bool BlockConfDialog::saveSource(CpuModel *cpuModel)
             if (!cpuModel->source().isNull()) {
                 QMessageBox mb
                     ("POA",
-                     "The block contains uncommited source code, "
+		     tr("The block contains uncommited source code, "
                      "but there is a file on disk already.\n"
-                     "Overwrite existing file?",
+                     "Overwrite existing file?"),
                      QMessageBox::Information,
                      QMessageBox::Yes | QMessageBox::Default,
                      QMessageBox::No,

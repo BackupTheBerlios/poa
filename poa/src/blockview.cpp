@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.65 2004/01/25 14:41:17 vanto Exp $
+ * $Id: blockview.cpp,v 1.66 2004/01/25 15:11:30 vanto Exp $
  *
  *****************************************************************************/
 
@@ -302,24 +302,25 @@ void BlockView::updateProperties()
 
 void BlockView::drawShape(QPainter &p)
 {
-    //    QCanvasRectangle::drawShape(p);
-    // draws the rectangle
+    // draw rectangle
     QPen oldPen = p.pen();
     p.setPen(QPen(QColor(118, 118, 118), 1));
-    p.drawRect(x(), y(), width(), height());
+    p.drawRect((int)x(), (int)y(),
+               width(), height());
 
-    // draws decorations
+    // draw decorations
+    p.setPen(QPen(brush().color().light(45), 1));
+
+    p.drawLine((int)x() + 1, (int)y() + height() - 2,
+               (int)x() + width() - 2, (int)y() + height() - 2);
+    p.drawLine((int)x() + width() - 2, (int)y() + height() - 1,
+               (int)x() + width() - 2, (int)y() + 1);
+
     p.setPen(QPen(QColor(192, 192, 192), 1));
-    p.drawPoint(x(), y());
-    p.drawPoint(x(), y() + height() - 1);
-    p.drawPoint(x() + width() - 1, y());
-    p.drawPoint(x() + width() - 1, y() + height() - 1);
-
-    p.setPen(QPen(brush().color().light(50), 1));
-    p.drawLine(x() + 1, y() + height() - 2,
-               x() + width() - 2, y() + height() - 2);
-    p.drawLine(x() + width() - 2, y() + height() - 1,
-               x() + width() - 2, y() + 1);
+    p.drawPoint((int)x(), (int)y());
+    p.drawPoint((int)x(), (int)y() + height() - 1);
+    p.drawPoint((int)x() + width() - 1, (int)y());
+    p.drawPoint((int)x() + width() - 1, (int)y() + height() - 1);
 
     p.setPen(oldPen);
 

@@ -18,18 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.2 2003/08/19 20:00:49 garbeam Exp $
  *
  *****************************************************************************/
 
-/****************************************************************************
-** Form implementation generated from reading ui file 'mainwindow.ui'
-**
-** Created: Tue Aug 19 15:38:27 2003
-**      by:  The User Interface Compiler (uic)
-**
-** WARNING! All changes made in this file will be lost!
-****************************************************************************/
 #include "mainwindow.h"
 
 #include <qvariant.h>

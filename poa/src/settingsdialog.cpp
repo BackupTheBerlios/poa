@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.14 2004/01/18 19:12:52 papier Exp $
+ * $Id: settingsdialog.cpp,v 1.15 2004/02/01 17:29:48 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -35,12 +35,14 @@
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
+#include <qtabbar.h>
 
 
 /**
  * Constructs the dialog.
  */
-SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
+SettingsDialog::SettingsDialog(int tabIndex, QWidget* parent,
+                               const char* name, bool modal,
                                WFlags fl)
     : QTabDialog(parent, name, modal, fl)
 {
@@ -54,6 +56,10 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
     this->addTab(createPathTab(), tr("Paths"));
     this->addTab(createDownloadTab(), tr("Download"));
     setup();
+
+    if (tabIndex >= 0 && tabIndex < tabBar()->count()) {
+        tabBar()->setCurrentTab(tabIndex);
+    }
 
     resize(sizeHint());//resize(400, 400);
 

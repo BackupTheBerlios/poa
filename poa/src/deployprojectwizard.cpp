@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.17 2004/02/01 17:18:48 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.18 2004/02/01 17:29:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -170,10 +170,9 @@ QString DeployProjectWizard::checkSerialPort()
     QString port = Settings::instance()->serialPort();
     if (port.isEmpty()) {
         QMessageBox::warning(this, tr("POA Error"),
-                             tr("Serial port setting is invalid."));
-        SettingsDialog *dialog = new SettingsDialog(this);
-        dialog->setModal(true);
-        dialog->show();
+                             tr("The serial port setting is invalid."));
+        SettingsDialog *dialog = new SettingsDialog(2, this);
+        dialog->exec();
         delete dialog;
 
         return Settings::instance()->serialPort();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.11 2004/01/19 11:23:07 squig Exp $
+ * $Id: settingsdialog.h,v 1.12 2004/02/01 17:29:48 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -42,7 +42,7 @@ class SettingsDialog : public QTabDialog
     Q_OBJECT
 
 public:
-    SettingsDialog(QWidget* parent = 0, const char* name = 0,
+    SettingsDialog(int tabIndex = 0, QWidget* parent = 0, const char* name = 0,
                    bool modal = FALSE, WFlags fl = 0);
     ~SettingsDialog();
 

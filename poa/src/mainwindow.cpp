@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.106 2004/01/30 14:43:20 papier Exp $
+ * $Id: mainwindow.cpp,v 1.107 2004/02/01 17:29:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -903,7 +903,7 @@ void MainWindow::openScheduling()
 
 void MainWindow::openSettings()
 {
-    SettingsDialog *dialog = new SettingsDialog(this);
+    SettingsDialog *dialog = new SettingsDialog(0, this);
     dialog->show();
 }
 

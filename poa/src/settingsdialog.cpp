@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.8 2003/09/17 15:39:59 vanto Exp $
+ * $Id: settingsdialog.cpp,v 1.9 2003/09/19 11:47:37 garbeam Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -85,7 +85,7 @@ QWidget *SettingsDialog::createPathTab()
 {
     QPushButton *button;
     QWidget *tab = new QWidget(this);
-    QGridLayout *grid = new QGridLayout(tab, 5, 3, 5, 5);
+    QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
 
     grid->addWidget(new QLabel(tr("External Editor"), tab), 0, 0);
     editorLineEdit = new QLineEdit(tab);
@@ -101,25 +101,18 @@ QWidget *SettingsDialog::createPathTab()
     grid->addWidget(button, 1, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
 
-    grid->addWidget(new QLabel(tr("External Terminal"), tab), 2, 0);
-    terminalLineEdit = new QLineEdit(tab);
-    grid->addWidget(terminalLineEdit, 2, 1);
+    grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 2, 0);
+    cTemplateLineEdit = new QLineEdit(tab);
+    grid->addWidget(cTemplateLineEdit, 2, 1);
     button = new QPushButton("...", tab);
     grid->addWidget(button, 2, 2);
-    connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalTerminal()));
-
-    grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 3, 0);
-    cTemplateLineEdit = new QLineEdit(tab);
-    grid->addWidget(cTemplateLineEdit, 3, 1);
-    button = new QPushButton("...", tab);
-    grid->addWidget(button, 3, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
 
-    grid->addWidget(new QLabel(tr("External Download Tool"), tab), 4, 0);
+    grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
     downloadLineEdit = new QLineEdit(tab);
-    grid->addWidget(downloadLineEdit, 4, 1);
+    grid->addWidget(downloadLineEdit, 3, 1);
     button = new QPushButton("...", tab);
-    grid->addWidget(button, 4, 2);
+    grid->addWidget(button, 3, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
 
     return tab;
@@ -138,7 +131,6 @@ void SettingsDialog::setup()
     // path tab
     editorLineEdit->setText(s->get("Editor"));
     compilerLineEdit->setText(s->get("Compiler"));
-    terminalLineEdit->setText(s->get("Terminal"));
     cTemplateLineEdit->setText(s->get("Template Path"));
     downloadLineEdit->setText(s->get("Download Path"));
 }
@@ -156,7 +148,6 @@ void SettingsDialog::applySettings()
     // path tab
     s->set("Editor", editorLineEdit->text());
     s->set("Compiler", compilerLineEdit->text());
-    s->set("Terminal", terminalLineEdit->text());
     s->set("Template Path", cTemplateLineEdit->text());
     s->set("Download Tool", downloadLineEdit->text());
 }
@@ -180,17 +171,6 @@ void SettingsDialog::chooseExternalCompiler()
                                              tr("Select External Compiler"));
     if (s != QString::null) {
         compilerLineEdit->setText(s);
-    }
-}
-
-void SettingsDialog::chooseExternalTerminal()
-{
-    QString s = QFileDialog::getOpenFileName(terminalLineEdit->text(),
-                                             QString::null,
-                                             this, "open file dialog",
-                                             tr("Select External Terminal"));
-    if (s != QString::null) {
-        terminalLineEdit->setText(s);
     }
 }
 

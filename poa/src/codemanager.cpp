@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.8 2003/09/18 16:32:39 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.9 2003/09/19 11:47:37 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "settings.h"
+#include "processdialog.h"
 #include "util.h"
 
 #include <qfileinfo.h>
@@ -92,33 +93,12 @@ int CodeManager::compile(CpuModel *model)
 {
     Settings* s = Settings::instance();
 
-    QProcess *proc = new QProcess(this);
-
     // create arguments
-    QStringList args;
-    QStringList currArgs = QStringList::split(QChar(' '), s->terminalCmd());
+    QStringList args = QStringList::split(QChar(' '), s->compilerCmd());
+    args.append(fileName(model));
 
-    for (unsigned i = 0; i < currArgs.size(); i++)
-    {
-        args.append(*(currArgs.at(i)));
-    }
-
-    currArgs.clear();
-    currArgs = QStringList::split(QChar(' '), s->compilerCmd());
-    for (unsigned i = 0; i < currArgs.size(); i++)
-    {
-        args.append(*(currArgs.at(i)));
-    }
-    //args.append(QString("./%1").arg(fileName(model)));
-    args.append(sourceFilePath(model));
-
-    // init process
-    proc->setArguments(args);
-    proc->setWorkingDirectory(sourcePath(model));
-
-    proc->launch("");
-
-    return proc->exitStatus();
+    ProcessDialog *dialog = ProcessDialog::instance();
+    return dialog->run(sourcePath(model), args);
 }
 
 void CodeManager::edit(CpuModel *model)

@@ -18,15 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: processdialog.cpp,v 1.1 2003/09/19 10:08:14 garbeam Exp $
+ * $Id: processdialog.cpp,v 1.2 2003/09/19 11:47:37 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "processdialog.h"
 
-#include <qpushbutton.h>
 #include <qmessagebox.h>
-#include <qvbox.h>
+#include <qlayout.h>
+#include <qstringlist.h>
 
 /**
  * The singleton instance.
@@ -37,13 +37,18 @@ ProcessDialog::ProcessDialog()
 {
     // Layout
     setCaption("POA Terminal");
-    QVBox *vBox = new QVBox(this);
-    output_ = new QTextView(vBox);
-    QPushButton *quitButton = new QPushButton(tr("&Quit"), vBox);
-    connect(quitButton, SIGNAL(clicked()), this, SLOT(reject()) );
+    QBoxLayout *vBox = new QVBoxLayout(this);
+    output_ = new QTextView(this);
+    vBox->addWidget(output_);
+    okPushButton_ = new QPushButton(tr("&OK"), this);
+    connect(okPushButton_, SIGNAL(clicked()), this, SLOT(reject()) );
+    vBox->addWidget(okPushButton_);
     resize( 500, 500 );
 
-    process_ = 0;
+    process_ = new QProcess();
+    connect(process_, SIGNAL(readyReadStdout()), this, SLOT(readFromStdout()));
+    connect(process_, SIGNAL(readyReadStderr()), this, SLOT(readFromStderr()));
+    connect(process_, SIGNAL(processExited()), this, SLOT(enableOkButton()));
 }
 
 ProcessDialog::~ProcessDialog()
@@ -59,13 +64,14 @@ ProcessDialog *ProcessDialog::instance()
     return instance_;
 }
 
-void ProcessDialog::run(QProcess *process) 
+int ProcessDialog::run(QString workDir, QStringList arguments) 
 {
 
-    process_ = process;
-    exec();
-
-    connect(process_, SIGNAL(readyReadStdout()), this, SLOT(readFromStdout()));
+    output_->clear();
+    okPushButton_->setEnabled(false);
+    process_->clearArguments();
+    process_->setWorkingDirectory(workDir);
+    process_->setArguments(arguments);
 
     if ( !process_->start() ) {
         // error handling
@@ -73,8 +79,10 @@ void ProcessDialog::run(QProcess *process)
                 tr("Fatal error"),
                 tr("Could not start the command."),
                 tr("Quit"));
-        reject();
     }
+
+    exec();
+    return process_->exitStatus();
 }
 
 void ProcessDialog::readFromStdout()
@@ -82,4 +90,16 @@ void ProcessDialog::readFromStdout()
     // Read and process the data.
     // Bear in mind that the data might be output in chunks.
     output_->append(process_->readStdout());
+}
+
+void ProcessDialog::readFromStderr()
+{
+    // Read and process the data.
+    // Bear in mind that the data might be output in chunks.
+    output_->append(process_->readStderr());
+}
+
+void ProcessDialog::enableOkButton()
+{
+    okPushButton_->setEnabled(true);
 }

@@ -37,7 +37,7 @@ import org.apache.ecs.xhtml.*;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.6 2004/01/07 20:39:01 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.7 2004/01/09 13:31:14 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -77,6 +77,8 @@ public class XHTMLOutputter implements Outputter {
 		try {
 			Util.copy(getClass().getResourceAsStream("style.css"),
 					  new FileOutputStream(new File(dir, "style.css")));
+			Util.copy(getClass().getResourceAsStream("index.html"),
+					  new FileOutputStream(new File(dir, "index.html")));
 		} 
 		catch (IOException e) {
 			System.err.println("Could not copy resource");
@@ -100,7 +102,7 @@ public class XHTMLOutputter implements Outputter {
 
 			// append file to list of files
 			content.setBgColor("white");
-			content.addElement(new a(files[i].getName()+".html", files[i].getName()).setTarget("classFrame"));
+			content.addElement(new a(files[i].getName()+".html", files[i].getName()).setTarget("gcoverClassFrame"));
 			content.addElement(new StringElement("&nbsp;("+Formatter.formatNumber(files[i].getCoverage()*100,2)+"%)"));
 			content.addElement(new br());
 		}
@@ -110,16 +112,9 @@ public class XHTMLOutputter implements Outputter {
 		doc.appendBody(content);
 		writeDocument(doc, "files.html");
 
-		// write frame set
-		doc = createDocument("GCover - Coverage Report");
-		doc.getHtml().addElement((new frameset("", "20%,80%")
-								  .addElement(new frame("", "classListFrame", "files.html"))
-								  .addElement(new frame("", "classFrame", "overview-summary.html"))));
-//     <noframes>
-//       <h2>Frame Alert</h2>
-//       <p>You don't have frames. Go <a href="overview-summary.html">here</a></p>
-//     </noframes>
-		writeDocument(doc, "index.html");
+		// FIX: write overview.html
+		doc = createDocument("Overview");
+		writeDocument(doc, "overview.html");
 	}
 	
 	public void output(FileInfo file) {

@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.6 2005/02/10 14:26:10 garbeam Exp $
+% $Id: pir.tex,v 1.7 2005/02/10 14:30:11 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -100,8 +100,12 @@ Raum aufhält, wird als sehr gering angenommen.
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
 
-Alle untersuchten Algorithmen basieren auf oder sind in der OpenCV \cite{opencv}
-Bibliothek der Intel Corp. enthalten.
+Mit Ausnahme eines selbst implementierten Algorithmus, sind alle anderen
+Algorithmen in der OpenCV Bibliothek\cite{opencv} von Intel enthalten.
+Zur Erkennung von Personen werden Algorithmen untersucht, die Bewegungen
+zwischen zwei Bildern erkennen können. Signifikante Bewegungen gelten
+als Bewegung von größeren Objekten, darunter sind Bewegungen von
+Menschen inbegriffen.
 
 \subsection{CalcOpticalFlowHS}
 Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel

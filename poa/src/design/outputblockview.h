@@ -18,21 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputblockview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
+ * $Id: outputblockview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_OUTPUTBLOCKVIEW_H
 #define POA_OUTPUTBLOCKVIEW_H
 
-#include <qcanvasitem.h>
 #include "outputblockmodel.h"
+#include "blockview.h"
 
 /*****************************************************************************
  * Definition of a ouput block view.
  * @author garbeam
  */
-class OutputBlockView: public QCanvasItem
+class OutputBlockView: public BlockView
 {
 
 private:

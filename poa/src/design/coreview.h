@@ -18,22 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coreview.h,v 1.2 2003/07/14 14:21:48 garbeam Exp $
+ * $Id: coreview.h,v 1.3 2003/07/14 20:00:56 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_COREVIEW_H
 #define POA_COREVIEW_H
 
-#include <qcanvasitem.h>
-
 #include "coremodel.h"
+#include "inputblockview.h"
+#include "outputblockview.h"
+
 
 /*****************************************************************************
  * Definition of a core view.
  * @author garbeam
  */
-class CoreView: public QCanvasItem
+class CoreView: public InputBlockView, public OutputBlockView
 {
 
 private:

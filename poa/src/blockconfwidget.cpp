@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.8 2004/01/28 20:49:27 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.9 2004/01/28 21:11:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@ BlockConfWidget::BlockConfWidget(BlockModel *model, QWidget* parent) :
 {
     model_ = model;
     inputRoot_ = outputRoot_ = episodicRoot_ = 0;
+    currentRenameItem = 0;
 
     initLayout();
     ioSelectionChanged();
@@ -190,13 +191,17 @@ void BlockConfWidget::sync() {
 
 void BlockConfWidget::cancelRename()
 {
-    if (ioListView_->isRenaming()) {
-        PinListViewItem *currentItem
-            = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
-        if (currentItem != 0) {
-            currentItem->cancelRename();
-        }
+    if (currentRenameItem != 0) {
+        currentRenameItem->cancelRename();
     }
+
+//      if (ioListView_->isRenaming()) {
+//          PinListViewItem *currentItem
+//              = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
+//          if (currentItem != 0) {
+//              currentItem->cancelRename();
+//          }
+//      }
 }
 
 void BlockConfWidget::commit() {
@@ -250,11 +255,10 @@ void BlockConfWidget::mouseButtonClicked(int button,
                                          QListViewItem *item,
                                          const QPoint &, int c)
 {
+    cancelRename();
     if (button == Qt::LeftButton && item != 0) {
         item->startRename(c);
-    }
-    else {
-        cancelRename();
+        currentRenameItem = (PinListViewItem*)item;
     }
 }
 
@@ -269,7 +273,9 @@ void BlockConfWidget::newIo()
             : new PinListViewItem(selectedItem->parent(), selectedItem,
                                   selectedItem->type(), 0);
         updatePositions(selectedItem->type());
+        cancelRename();
         item->startRename(1);
+        currentRenameItem = item;
     }
 }
 

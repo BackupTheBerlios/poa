@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.5 2004/01/28 20:49:27 squig Exp $
+ * $Id: blockconfwidget.h,v 1.6 2004/01/28 21:11:46 squig Exp $
  *
  *****************************************************************************/
 
@@ -75,6 +75,8 @@ private:
     QPushButton *newIoPushButton_;
     QPushButton *removeIoPushButton_;
     bool newPinSortOrder_;
+
+    PinListViewItem *currentRenameItem;
 
     void cancelRename();
 

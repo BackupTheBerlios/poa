@@ -1,6 +1,7 @@
 CFLAGS   = -pipe -Wall -W -g -D_REENTRANT  -DQT_THREAD_SUPPORT
 CXXFLAGS = -pipe -Wall -W -g -D_REENTRANT  -DQT_THREAD_SUPPORT
-CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L../cppunit/lib -lcppunit)
+CPPUNIT_PATH = $(shell test $(shell hostname -s)=gspc54 && echo ../cppunit/lib/gspc54 || ../cppunit/lib)
+CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L$(CPPUNIT_PATH) -lcppunit)
 LDFLAGS  = $(CPPUNIT_LDFLAGS) -L$(QTDIR)/lib  -L/usr/X11R6/lib -lqt-mt -lpthread -lXext -lX11 -lm
 CPPUNIT_INCLUDES = $(shell cppunit-config --cflags || echo -I../cppunit/include)
 INCLUDES = $(CPPUNIT_INCLUDES) -I../src -I../src/qextserialport -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
@@ -18,32 +19,32 @@ all: main
 .cpp.o:
 	$(CXX) $(CXXFLAGS) -c $(INCLUDES) -o $@ $<
 
-../cppunit/lib/libcppunit.so:
-	ln -s libcppunit-1.9.so.11.0.0 ../cppunit/lib/libcppunit.so
+$(CPPUNIT_PATH)/libcppunit.so:
+	ln -s libcppunit-1.9.so.11.0.0 $(CPPUNIT_PATH)/libcppunit.so
 
-../cppunit/lib/libcppunit-1.9.so.11:
-	ln -s libcppunit-1.9.so.11.0.0 ../cppunit/lib/libcppunit-1.9.so.11
+$(CPPUNIT_PATH)/libcppunit-1.9.so.11:
+	ln -s libcppunit-1.9.so.11.0.0 $(CPPUNIT_PATH)/libcppunit-1.9.so.11
 
-../cppunit/lib/libqttestrunner.so:
-	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so
+$(CPPUNIT_PATH)/libqttestrunner.so:
+	ln -s libqttestrunner.so.1.0.0 $(CPPUNIT_PATH)/libqttestrunner.so
 
-../cppunit/lib/libqttestrunner.so.1:
-	ln -s libqttestrunner.so.1.0.0 ../cppunit/lib/libqttestrunner.so.1
+$(CPPUNIT_PATH)/libqttestrunner.so.1:
+	ln -s libqttestrunner.so.1.0.0 $(CPPUNIT_PATH)/libqttestrunner.so.1
 
 coverage: 
 	make CXXFLAGS="$(CXXFLAGS) -fprofile-arcs -ftest-coverage" LDFLAGS="$(LDFLAGS) -fprofile-arcs -ftest-coverage" check
 
-main: poa ../cppunit/lib/libcppunit.so $(TESTOBJECTS) main.o
+main: poa $(CPPUNIT_PATH)/libcppunit.so $(TESTOBJECTS) main.o
 	$(CXX) -o main $(LDFLAGS) $(OBJECTS) main.o
 
-mainqt: poa ../cppunit/lib/libcppunit.so ../cppunit/lib/libqttestrunner.so $(TESTOBJECTS) mainqt.o
+mainqt: poa $(CPPUNIT_PATH)/libcppunit.so $(CPPUNIT_PATH)/libqttestrunner.so $(TESTOBJECTS) mainqt.o
 	$(CXX) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
 
-check: ../cppunit/lib/libcppunit-1.9.so.11 all
-	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./main
+check: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 all
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./main
 
-checkqt: ../cppunit/lib/libcppunit-1.9.so.11 ../cppunit/lib/libqttestrunner.so.1 all
-	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):../cppunit/lib ./mainqt
+checkqt: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 $(CPPUNIT_PATH)/libqttestrunner.so.1 all
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./mainqt
 
 clean:
 	rm ../src/*.o	

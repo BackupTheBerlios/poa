@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.4 2004/01/09 21:40:38 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.5 2004/01/09 22:04:45 squig Exp $
  *
  *****************************************************************************/
 
@@ -229,8 +229,9 @@ void ScheduleDialog::initGraphWidget()
         cnt += (*inpit)->count();
 
     }
-    canvas->resize(CANVAS_WIDTH, cnt * (BOX_HEIGHT + 2 * BOX_YSPACING));
-    labelCanvas->resize(50, cnt * (BOX_HEIGHT + 2 * BOX_YSPACING));
+    canvas->resize(CANVAS_WIDTH,
+                   BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
+    labelCanvas->resize(50, BOX_YSPACING + cnt * (BOX_HEIGHT + BOX_YSPACING));
 
     int Y = BOX_YSPACING;
     for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {

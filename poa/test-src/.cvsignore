@@ -1,2 +1,6 @@
 main
 Makefile.depend
+*.bb
+*.bbg
+*.da
+*.gcov

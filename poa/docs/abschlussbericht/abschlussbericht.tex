@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.6 2004/05/18 13:07:27 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.7 2004/05/18 14:30:50 garbeam Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.6 $
-\RCSdef $Date: 2004/05/18 13:07:27 $
+\RCSdef $Revision: 1.7 $
+\RCSdef $Date: 2004/05/18 14:30:50 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -413,6 +413,90 @@ Kontrolle der Sprints.
 
 \section{Necati Aydin}
 \section{Anselm Garbe}
+
+Draft :-)
+
+\subsection{Tätigkeiten}
+Seit Projektbeginn war ich mich neben den allgemeinen
+Entwicklunstätigkeiten für das Configuration Management verantwortlich,
+welches die Aufstellung von Richtlinien zur Toolunterstützung, u.a. zu
+CVS, ssh und TeX beinhaltete, sowie die Pflege und Wartung des
+Projekt-Repositories und der Mailinglisten. Die Pflege des
+Projektrepositories und der Mailinglisten waren eine permanente Aufgabe
+bis zum Projektende. Hierzu gehörte u.a. auch die Sicherung von
+automatischen Backups zu POA.
+
+Am Projektbeginn war ich an der Spezifikations- und Angebotserstellung
+beteiligt, vor allem mit dem Fokus auf die GUI und Codegenerierung.
+Grundlage des Angebotes und der Spezifikation war eine detaillierte
+Anforderungsanalyse die durch verschiedene Kundengespräche durchgeführt
+wurde.
+
+Zusammen mit Steffen Keul erstellte ich einen Grobentwurf, der
+grundlegend das MVC Design Pattern propagierte, dass integraler
+Bestandteil von POA während der gesamten Entwicklung blieb.
+
+Aufgrund meiner C++ Kenntnisse aus der Zeit vor meinem Studium, die auch
+verschiede windows-basierte GUI Anwendungen zur Folge hatten sowie aufgrund
+meiner C Kenntnisse aus einem OpenSource Projekt wählte ich als
+Seminarthema das ``Qt Toolkit'' welches eine portable OpenSource
+Plattform (für nicht-kommerzielle Projekte) bietet, die unter Windows,
+Unix und Mac OS X lauffähig ist und dem POA Team einen initialen
+Anleitungsfaden vermitteln sollte.
+
+Zu Beginn der Implementierungsphase in der ersten Iteration entwickelte
+ich zusammen mit Steffen Pingel eine Qt-basierte POA Rahmenanwendung,
+die eine MDI (Multiple Document Interface) Architektur unterstützt
+sowie den qmake-basierten Buildprozess unterstützte.
+Zu dieser Zeit evaluierte ich auch, dass wir auf die
+Entwicklungsunterstützung durch den Qt (GUI) Designer verzichten, da
+dieser nur absolute Widget-Positionierung unterstützt und 
+umständlichen Code generiert - die GUI Entwicklung im POA Projekt fand
+weitestgehend ohne Unterstützung des Qt Designers statt bzw. ist in der
+Rückbetrachtung vollkommen unabhängig von diesem verlaufen.
+
+Während der Implementierungsphase war ich für die Entwicklung des
+Block-Konfigurationsdialoges, sowie des (De)Mux-Konfigurationsdialoges
+zuständig, sowie mit der Integration der damit zusammenhängenden Models
+(Cpu-, Block-, Mux- und PinModel). Darüber hinaus entwickelte ich den
+CodeManager für die Konfiguration und Editierung von CPUs. Dieser führt
+automatische Substitutionen des Quellcodes durch, der alle Ein- und
+Ausgänge (Pins) der CPU-Konfiguration als Variablen (NIOS Address
+Pointer) zur Verfügung stellt. Hierzu zählte auch die Entwicklung eines
+internen Ausgabeterminals, das Compiler-Ausgaben in einen POA Dialog
+umleitet, um den Status und Fortschritt der Compilierung des Quellcodes
+einer CPU zur Verfügung stellt.
+
+Neben meiner Entwicklungstätigkeit nahm ich auch an verschiedenen
+Reviews des Quellcodes und des Handbuchs teil, die zur
+Qualitätssicherung durchgeführt wurden.
+
+\subsection{Beurteilung}
+
+Rückblickend betrachtet verlief die POA Entwicklung ohne nennenswerte
+Konflikte im Team. Die Zusammenarbeit mit den anderen Entwicklern war
+durchweg harmonisch. Trotz der weitestgehend autonomen
+Entwicklertätigkeiten funktionierte die Modulintegration durch kurze
+Absprachen sehr gut, mir ist rückblickend fast kein Zeitpunkt bekannt,
+an dem die POA Applikation im CVS nicht compilierfähig gewesen wäre.
+
+Ich empfand die durchweg kollegiale und lockere Entwicklerführung durch
+den Projektleiter Steffen Pingel als angenehm und motivierend.
+Alle Entwickler konnten aufgrund der nur kurzen Kernarbeitszeit ihre
+Aufgaben weitestgehnd autonom lösen. Neben der eigentlichen
+Entwicklertätigkeit trafen sich die Entwickler auch spontan zu privaten
+Arrangements.
+
+Aus ökonomischer Sicht stellt sich mir durch Vergleiche mit
+kommerziellen Projekten durch meine werkstudentische Tätigkeit sowie
+meines viermonatigen Industrtiepraktikums bei der
+Firma Danet IS GmbH in Stuttgart die POA Entwicklung als voller Erfolg
+dar, da der Zeitrahmen nicht überzogen wurde und somit sich die Kosten im
+Rahmen des für Studienprojekte vorgesehenen Zeitaufwands beliefen.
+
+Das die POA Entwicklung ein voller Erfolg war dürfte vor allem auf die
+Team-Zusammensetzung zurückzuführen sein.
+
 \section{Stefan Hauser}
 \section{Steffen Keul}
 \section{Marcel Kilgus}
@@ -423,7 +507,7 @@ CPUs. Dazu wurden verschiedene Verfahren evaluiert, vom einfachen Profiling bis 
 Schreiben eines kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen 
 einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies nicht mit 
 vertretbarem Aufwand und vor allem nicht in der benötigten Präzision möglich war. 
-Die einzig verbleibende Option einer hardwaregstützten Instrumentierung des Codes 
+Die einzig verbleibende Option einer hardwaregestützten Instrumentierung des Codes 
 inklusive Ausführung auf einem realen CPLD konnte im Rahmen des Projekts leider
 nicht weiter verfolgt werden.
 

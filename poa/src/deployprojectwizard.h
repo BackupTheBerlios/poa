@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.12 2004/01/29 21:02:52 papier Exp $
+ * $Id: deployprojectwizard.h,v 1.13 2004/02/01 17:18:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -47,8 +47,17 @@ class DeployProjectWizard : public QWizard
     Q_OBJECT
 
 public:
+    /*
+     *  Constructs the DeployProjectWizard.
+     *
+     *  The wizard will by default be modeless, unless you set 'modal' to
+     *  TRUE to construct a modal wizard.
+     */
     DeployProjectWizard(Project *project, QWidget* parent = 0,
                         const char* name = 0, bool modal = FALSE, WFlags fl = 0);
+    /*
+     *  Destroys the object and frees any allocated resources
+     */
     virtual ~DeployProjectWizard();
 
 protected:
@@ -62,16 +71,18 @@ protected:
     void setupCheckPage();
     void setupDownloadPage();
 
-    void compileSelectedCpu();
-    void downloadSelectedCpu();
-
 protected slots:
 
+    void compileSelectedCpu();
     void cpuSelected(int index);
+    void downloadSelectedCpu();
+    void sendRunCommand();
     void setProblemReportItem(QListViewItem* item);
     void updateProblemReport();
 
 private:
+
+    QString checkSerialPort();
 
     Project *project_;
     QPtrList<CpuModel> cpuModels;

@@ -18,15 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.6 2004/01/29 21:02:52 papier Exp $
+ * $Id: downloadmanager.h,v 1.7 2004/02/01 17:18:48 squig Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_DOWNLOADMANAGER_H
 #define POA_DOWNLOADMANAGER_H
 
-#include "cpumodel.h"
-#include "srecord.h"
+#include "qextserialport/qextserialport.h"
+class SRecord;
 
 #include <qdir.h>
 #include <qfile.h>
@@ -41,42 +41,30 @@ class DownloadManager : public QObject
 
 public:
 
-    /**
-     * DownloadManager singleton instance.
-     */
-    static DownloadManager *instance();
-    
-    /**
-     * returns <code>true</code> if the download of the srec file was
-     * successful.
-     */
-    bool download(QString filename, const char* portName);
-
-    /**
-     * returns <code>true</code> if the downloaded file was stared on the cpld.
-     */
-    bool run(const char* portName);
-
-protected:
-    DownloadManager();
+    DownloadManager(const QString &filename);
     ~DownloadManager();
 
+    /**
+     * @return true, if download was successful; false, if the
+     * download was cancelled
+     */
+    bool download(const char* portName);
+
+    unsigned long filesize() const;
+
+    /**
+     * @return true, if the run command was sent; false, if the
+     * operation was cancelled
+     */
+    static bool run(const char* portName);
 
 private:
-    static DownloadManager* instance_;
-    
-    bool readFile(QString filename);
-    int fileSize();
+    static void initializeAndOpen(QextSerialPort &port);
 
-    QPtrList<SRecord> srecFile_;
-    
-public slots:
+    void readFile(const QString &filename);
 
-signals:
-    void increaseProgressBar();
-    void setProgressBarLength(int);
-
-
+    QPtrList<SRecord> records_;
+    unsigned long filesize_;
 };
 
 #endif // POA_DOWNLOADMANAGER_H

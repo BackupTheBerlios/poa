@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.h,v 1.2 2004/01/30 11:46:58 papier Exp $
+ * $Id: srecord.h,v 1.3 2004/02/01 17:18:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,35 +29,42 @@
 
 class SRecord : public QObject
 {
-  Q_OBJECT
-  
- public:
+    Q_OBJECT
 
-  // more infos about the srec format can be fount at 
-  // http://www.amelek.gda.pl/avr/uisp/srecord.htm
+public:
 
-  SRecord( QString type, 
-	   QString count,
-	   QString address,
-	   QString data,
-	   QString checksum) ;
+    /**
+     * So far, only S1 record types are supported.
+     */
+    enum Record_Type { S1 };
 
-  QString type() const;
-  
-  QString count() const;
+    /**
+     * Construct an srecord object parsing line.
+     *
+     * More infos about the srec format can be fount at
+     * http://www.amelek.gda.pl/avr/uisp/srecord.htm
+     */
+    SRecord(const char *line, const unsigned int length);
 
-  QString address() const;
+    unsigned int address() const;
 
-  QString data() const;
+    const char *data() const;
 
-  QString checksum() const;
+    unsigned int dataSize() const;
 
- private:
-  QString type_;
-  QString count_;
-  QString address_;
-  QString data_;
-  QString checksum_;
+    static unsigned int minLength();
+
+    Record_Type type() const;
+
+    unsigned int checksum() const;
+
+private:
+
+    Record_Type type_;
+    unsigned int address_;
+    QString data_;
+    unsigned int checksum_;
+    unsigned int count_;
 };
 
 #endif // POA_SRECORD_H

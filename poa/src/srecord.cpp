@@ -18,33 +18,71 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.cpp,v 1.2 2004/01/30 11:46:58 papier Exp $
+ * $Id: srecord.cpp,v 1.3 2004/02/01 17:18:48 squig Exp $
  *
  *****************************************************************************/
+
+#include "poaexception.h"
 #include "srecord.h"
 
-SRecord::SRecord(QString type, QString count, QString address, QString data, 
-		 QString checksum) 
-  : type_(type), count_(count), address_(address), data_(data), checksum_(checksum)
+SRecord::SRecord(const char *line, const unsigned int length)
 {
+    if (length < minLength()) {
+        throw PoaException(tr("Record is too short"));
+    }
+
+    if (line[0] == 'S' && line[1] == '1') {
+        type_ = S1;
+    }
+    else {
+        throw PoaException(tr("Invalid type"));
+    }
+
+    bool ok;
+    count_ = QString::fromLatin1(&line[2], 2).toUInt(&ok, 16);
+    if (!ok && length - 4 >= count_ * 2) {
+        throw PoaException(tr("Invalid count"));
+    }
+
+    address_ = QString::fromLatin1(&line[4], 4).toUInt(&ok, 16);
+    if (!ok) {
+        throw PoaException(tr("Invalid address"));
+    }
+
+    data_ = QString::fromLatin1(&line[8], count_ - 5);
+
+    checksum_ = QString::fromLatin1(&line[count_ - 2], 2).toUInt(&ok, 16);
+    if (!ok) {
+        throw PoaException(tr("Invalid checksum"));
+    }
 }
 
-QString SRecord::type() const{ 
-  return type_; 
+unsigned int SRecord::address() const
+{
+    return address_;
 }
 
-QString SRecord::count() const{
-  return count_; 
+unsigned int SRecord::checksum() const
+{
+    return checksum_;
 }
 
-QString SRecord::address() const{ 
-  return address_; 
+const char *SRecord::data() const
+{
+    return data_;
 }
 
-QString SRecord::data() const{
-  return data_; 
+unsigned int SRecord::dataSize() const
+{
+    return count_ - 3;
 }
 
-QString SRecord::checksum() const { 
-  return checksum_; 
+unsigned int SRecord::minLength()
+{
+    return 10;
+}
+
+SRecord::Record_Type SRecord::type() const
+{
+    return type_;
 }

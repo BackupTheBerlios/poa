@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.16 2004/01/29 21:02:52 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.17 2004/02/01 17:18:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -29,8 +29,10 @@
 #include "deployprojectwizard.h"
 #include "downloadmanager.h"
 #include "pinmodel.h"
+#include "poaexception.h"
 #include "problemmanager.h"
 #include "project.h"
+#include "settingsdialog.h"
 
 #include <qpushbutton.h>
 #include <qvariant.h>
@@ -41,6 +43,7 @@
 #include <qlistview.h>
 #include <qprogressbar.h>
 #include <qtextedit.h>
+#include <qmessagebox.h>
 #include <qwidget.h>
 #include <qlayout.h>
 #include <qtooltip.h>
@@ -56,12 +59,6 @@
 #include <qvbox.h>
 #include <qvgroupbox.h>
 
-/*
- *  Constructs the DeployProjectWizard.
- *
- *  The wizard will by default be modeless, unless you set 'modal' to
- *  TRUE to construct a modal wizard.
- */
 DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
                                          const char* name, bool modal,
                                          WFlags fl)
@@ -84,9 +81,6 @@ DeployProjectWizard::DeployProjectWizard(Project *project, QWidget* parent,
     setupDownloadPage();
 }
 
-/*
- *  Destroys the object and frees any allocated resources
- */
 DeployProjectWizard::~DeployProjectWizard()
 {
     // no need to delete child widgets, Qt does it all for us
@@ -144,22 +138,20 @@ void DeployProjectWizard::setupDownloadPage()
 
     QWidget *buttonWidget = new QWidget(page);
     QPushButton *compileButton = new QPushButton("Compile", buttonWidget);
+    connect(compileButton, SIGNAL(clicked()), this, SLOT(compileSelectedCpu()));
+
     QPushButton *downloadButton = new QPushButton("Download", buttonWidget);
+    connect(downloadButton, SIGNAL(clicked()),
+            this, SLOT(downloadSelectedCpu()));
+
     QPushButton *runButton = new QPushButton("Run", buttonWidget);
+    connect(runButton, SIGNAL(clicked()), this, SLOT(sendRunCommand()));
 
     QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
     buttonLayout->addWidget(compileButton);
     buttonLayout->addWidget(downloadButton);
     buttonLayout->addWidget(runButton);
     buttonLayout->addStretch(1);
-
-    /*
-    QWidget *downloadWidget = new QWidget(page);
-    QProgressBar *downloadProgressBar = new QProgressBar(downloadWidget, "DownloadProgressBar" );
-
-    QBoxLayout *downloadLayout = new QHBoxLayout(downloadWidget, WIDGET_SPACING);
-    downloadLayout->addWidget(downloadProgressBar);
-    */
 
     QBoxLayout *pageLayout = new QVBoxLayout(page, WIDGET_SPACING);
     pageLayout->addWidget(infoLabel);
@@ -173,10 +165,29 @@ void DeployProjectWizard::setupDownloadPage()
     setFinishEnabled(page, true);
 }
 
+QString DeployProjectWizard::checkSerialPort()
+{
+    QString port = Settings::instance()->serialPort();
+    if (port.isEmpty()) {
+        QMessageBox::warning(this, tr("POA Error"),
+                             tr("Serial port setting is invalid."));
+        SettingsDialog *dialog = new SettingsDialog(this);
+        dialog->setModal(true);
+        dialog->show();
+        delete dialog;
+
+        return Settings::instance()->serialPort();
+    }
+
+    return port;
+}
+
 void DeployProjectWizard::compileSelectedCpu()
 {
-    CodeManager cm(project_, currentCpu_);
-    cm.compile();
+    if (currentCpu_ != 0) {
+        CodeManager cm(project_, currentCpu_);
+        cm.compile();
+    }
 }
 
 void DeployProjectWizard::cpuSelected(int index)
@@ -184,8 +195,6 @@ void DeployProjectWizard::cpuSelected(int index)
     currentCpu_ = cpuModels.at(index);
 
     CodeManager cm(project_, currentCpu_);
-    cm.compile();
-
     QString sourceFilename = cm.sourceFilePath();
     QFileInfo sourceFileInfo(sourceFilename);
 
@@ -199,14 +208,40 @@ void DeployProjectWizard::cpuSelected(int index)
          .arg(srecFilename).arg(srecFileInfo.lastModified().toString()));
 }
 
+void DeployProjectWizard::sendRunCommand()
+{
+    QString port = checkSerialPort();
+    if (!port.isEmpty()) {
+        try {
+            if (DownloadManager::run(port.latin1())) {
+                QMessageBox::information(this, tr("POA Error"),
+                                         tr("Run command sent."));
+            }
+        }
+        catch (const PoaException e) {
+            QMessageBox::warning(this, tr("POA Error"), e.message());
+        }
+    }
+}
+
 void DeployProjectWizard::downloadSelectedCpu()
 {
-    CodeManager cm(project_, currentCpu_);
-
-    DownloadManager *dm = DownloadManager::instance();
-    QString sourceFilename = cm.sourceFilePath();
-    QString srecFilename = cm.sourceFilePath("srec");
-    dm->download(srecFilename, (const char*)Settings::instance()->serialPort());
+    if (currentCpu_ != 0) {
+        QString port = checkSerialPort();
+        if (!port.isEmpty()) {
+            CodeManager cm(project_, currentCpu_);
+            try {
+                DownloadManager dm(cm.sourceFilePath("srec"));
+                if (dm.download(port.latin1())) {
+                    QMessageBox::information(this, tr("POA Error"),
+                                             tr("Download was successful."));
+                }
+            }
+            catch (const PoaException e) {
+                QMessageBox::warning(this, tr("POA Error"), e.message());
+            }
+        }
+    }
 }
 
 void DeployProjectWizard::setProblemReportItem(QListViewItem* item)

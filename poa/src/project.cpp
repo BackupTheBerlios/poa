@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.53 2004/01/28 23:09:56 squig Exp $
+ * $Id: project.cpp,v 1.54 2004/02/15 04:05:53 kilgus Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -189,7 +189,7 @@ void Project::setModified(bool mod)
 void Project::setPath(QString path)
 {
     QDir dir(path);
-    name_ = dir.path();
+    name_ = dir.absPath();
     path_ = dir.canonicalPath();
 }
 

@@ -6,6 +6,8 @@ if [ "$1" == "--help" ]; then
   exit
 fi
 
+FETCH="`dirname "$0"`/fetch.sh"
+
 HOST=129.69.210.63
 SIZE=640x480
 AUTO=day
@@ -35,5 +37,5 @@ else
 fi
 
 for ((i=1;i<=TOTAL;++i)); do
-  sh fetch.sh $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP "${DIR}/west-norm-`date +%s.%N`.jpeg"
+  sh ${FETCH} $HOST $SIZE $AUTO $BR $BACKL $SAT $SHARP $NSUPP "${DIR}/west-norm-`date +%s.%N`.jpeg"
 done

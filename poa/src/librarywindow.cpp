@@ -18,24 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.2 2003/08/21 20:29:20 squig Exp $
+ * $Id: librarywindow.cpp,v 1.3 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
-#include "cpu.h"
+#include "cpumodel.h"
+#include "modulelibraryitem.h"
 
 #include <qvariant.h>
+#include <qdragobject.h>
 #include <qlayout.h>
-#include <qlistview.h>
 #include <qsplitter.h>
 #include <qtextbrowser.h>
 
 /*****************************************************************************
  * Constructs the window.
  */
-LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name, 
-							 WFlags f)
+LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
+                             WFlags f)
     : QDockWindow(p, parent, name, f)
 {
     setCloseMode(Always);
@@ -45,18 +46,18 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
     splitter = new QSplitter(Qt::Vertical, this);
     setWidget(splitter);
 
-    moduleListView = new QListView(splitter);
+    moduleListView = new LibraryListView(splitter);
     moduleListView->addColumn(tr("Module"));
-	
+
     cpuListViewItem = new QListViewItem(moduleListView, tr("CPU"));
-	cpuListViewItem->setOpen(TRUE);
+    cpuListViewItem->setOpen(TRUE);
     coreListViewItem = new QListViewItem(moduleListView, tr("Core"));
-	coreListViewItem->setOpen(TRUE);
+    coreListViewItem->setOpen(TRUE);
     ioListViewItem = new QListViewItem(moduleListView, tr("I/O"));
-	ioListViewItem->setOpen(TRUE);
+    ioListViewItem->setOpen(TRUE);
 
     descriptionTextBrowser = new QTextBrowser(splitter);
-	
+
     initializeLibrary();
 
     connect(moduleListView, SIGNAL(selectionChanged(QListViewItem *)),
@@ -78,7 +79,7 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    new CPU(cpuListViewItem);
+    new LibraryListViewItem(cpuListViewItem, new CpuModel("NIOS32", 0, TRUE));
 }
 
 /*****************************************************************************
@@ -90,12 +91,47 @@ void LibraryWindow::setDescription(QListViewItem* item)
 }
 
 /*****************************************************************************
- * Sets the orientation of the splitter to the reverse value of orientation. 
+ * Sets the orientation of the splitter to the reverse value of orientation.
  */
 void LibraryWindow::setOrientation(Qt::Orientation orientation)
 {
     splitter->setOrientation(orientation);
-	// (orientation == Qt::Horizontal) 
+    // (orientation == Qt::Horizontal)
 //                              ? Qt::Vertical
 //                              : Qt::Horizontal);
+}
+
+LibraryListView::LibraryListView(QWidget *parent = 0, const char *name = 0,
+                                 WFlags f = 0)
+    : QListView(parent, name, f)
+{
+}
+
+QDragObject *LibraryListView::dragObject()
+{
+    LibraryListViewItem *item = (LibraryListViewItem *)selectedItem();
+    QStoredDrag *dragItem = new QStoredDrag("text/xml", this, "poa");
+    dragItem->setEncodedData(item->serialize());
+    return dragItem;
+}
+
+LibraryListViewItem::LibraryListViewItem(QListViewItem *parent,
+                                         ModuleLibraryItem *item)
+    : QListViewItem(parent), item_(item)
+{
+    setText(0, item->name());
+    setText(1, item->description());
+
+    setDragEnabled(TRUE);
+
+}
+
+LibraryListViewItem::~LibraryListViewItem()
+{
+    delete item_;
+}
+
+QByteArray LibraryListViewItem::serialize()
+{
+    return item_->serialize();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.1 2003/08/21 13:01:28 squig Exp $
+ * $Id: librarywindow.h,v 1.2 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -26,10 +26,41 @@
 
 #include <qvariant.h>
 #include <qdockwindow.h>
+#include <qlistview.h>
+class ModuleLibraryItem;
 class QListView;
 class QListViewItem;
 class QSplitter;
 class QTextBrowser;
+
+/*****************************************************************************
+ * Provides the library module list view.
+ *
+ * The list view has drag support.
+ */
+class LibraryListView : public QListView
+{
+public:
+    LibraryListView(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+
+	QDragObject *dragObject();
+};
+
+/*****************************************************************************
+ *
+ * @author Steffen Pingel
+ */
+class LibraryListViewItem : QListViewItem
+{
+public:
+	LibraryListViewItem(QListViewItem *parent, ModuleLibraryItem *item);
+	~LibraryListViewItem();
+
+	QByteArray serialize();
+
+private:
+	ModuleLibraryItem *item_;
+};
 
 /*****************************************************************************
  * Provides the library window.
@@ -44,8 +75,8 @@ class LibraryWindow : public QDockWindow
     Q_OBJECT
 
 public:
-    LibraryWindow (Place p = InDock, QWidget * parent = 0, 
-				   const char* name = 0, WFlags f = 0 );
+    LibraryWindow(Place p = InDock, QWidget * parent = 0, 
+				  const char* name = 0, WFlags f = 0 );
     ~LibraryWindow();
 
 private :

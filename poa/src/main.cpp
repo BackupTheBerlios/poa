@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.11 2003/08/22 11:53:40 garbeam Exp $
+ * $Id: main.cpp,v 1.12 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 
@@ -68,7 +68,7 @@
  */
 int main (int argc, char *argv[])
 {
-    CpuModel model(new QString("CPU 1"), 1, TRUE);
+    CpuModel model("CPU 1", 1, TRUE);
     QByteArray xml = model.serialize();
     cout << xml;
 
@@ -78,7 +78,7 @@ int main (int argc, char *argv[])
 
     xml = model.serialize();
     cout << xml;
-    
+
     QApplication app(argc, argv);
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.22 2003/08/22 10:14:19 squig Exp $
+ * $Id: mainwindow.cpp,v 1.23 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 
@@ -525,3 +525,4 @@ void MainWindow::zoomTo(const QString& level)
         }
     }
 }
+

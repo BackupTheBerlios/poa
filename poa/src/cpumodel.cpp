@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.4 2003/08/22 11:53:40 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.5 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 
@@ -40,11 +40,11 @@ CpuModel::CpuModel(QDomDocument *doc)
         // FALSE otherwise.
         autoExecTime_ =
             cpuElem.attribute("autotime", "TRUE").contains("TRUE", FALSE);
-        name_ = new QString(cpuElem.text());
+        name_ = cpuElem.text();
     }
 }
 
-CpuModel::CpuModel(QString *name, unsigned short id, bool autoExecTime)
+CpuModel::CpuModel(const QString &name, unsigned short id, bool autoExecTime)
 {
     name_ = name;
     id_ = id;
@@ -64,7 +64,7 @@ QByteArray CpuModel::serialize()
     root.setAttribute("autotime", autoExecTime_ ? "TRUE" : "FALSE");
     doc.appendChild(root);
 
-    QDomText t = doc.createTextNode(*name_);
+    QDomText t = doc.createTextNode(name_);
     root.appendChild(t);
 
     QCString result = doc.toCString();

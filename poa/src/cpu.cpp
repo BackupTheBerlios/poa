@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpu.cpp,v 1.1 2003/08/21 13:01:28 squig Exp $
+ * $Id: cpu.cpp,v 1.2 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 #include "cpu.h"
@@ -26,10 +26,12 @@
 #include <qapplication.h>
 
 CPU::CPU(QListViewItem* parent)
-	: QListViewItem(parent)
+    : QListViewItem(parent)
 {
-	setText(0, qApp->translate(0, "CPU"));
-	setText(1, qApp->translate(0, "NIOS32 CPU"));
+    setText(0, qApp->translate(0, "CPU"));
+    setText(1, qApp->translate(0, "NIOS32 CPU"));
+
+    setDragEnabled(TRUE);
 }
 
 CPU::~CPU()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modulelibraryitem.h,v 1.1 2003/08/19 14:19:38 garbeam Exp $
+ * $Id: modulelibraryitem.h,v 1.2 2003/08/22 12:06:16 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,27 +28,33 @@
 
 
 #include <qobject.h>
-
+class QString;
 
 /*****************************************************************************
  * Base class for items in the module library.
- * Subclasses QListBoxItem as a very simple interface. If more functionality
- * is needed, QListViewItem might be a better choice.
  *
  * @author keulsn
+ * @author Steffen Pingel
  */
-class ModuleLibraryItem: public QObject
+class ModuleLibraryItem : public QObject
 {
-//  Q_OBJECT
-//
-//  public:
-//
-//
-//  public slots:
-//
-//    void drag ();
-//
-};
 
+public:
+	/*************************************************************************
+	 * Returns a description of the item.
+	 */
+	virtual QCString description() = 0;
+
+	/*************************************************************************
+	 * Returns the name of the item.
+	 */
+	virtual QCString name() = 0;
+
+	/*************************************************************************
+	 * Returns an XML representation of this instance.
+	 */
+    virtual QByteArray serialize() = 0;
+
+};
 
 #endif

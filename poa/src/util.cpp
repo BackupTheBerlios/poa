@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.1 2003/09/18 13:06:22 garbeam Exp $
+ * $Id: util.cpp,v 1.2 2003/09/19 15:09:28 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,7 +26,7 @@
 
 #include <qfileinfo.h>
 #include <qstring.h>
-#include <qstringlist.h> 
+#include <qstringlist.h>
 
 bool Util::copyFile(QFile *source, QFile *target)
 {
@@ -80,4 +80,22 @@ bool Util::removeDir(QDir *subDir)
     }
 
     return subDir->rmdir(subDir->absPath());
+}
+
+QString Util::squeeze(QString text, int maxWidth, QFont font)
+{
+    QFontMetrics fm = QFontMetrics(font);
+    if (fm.width(text) < maxWidth) {
+        return text;
+    }
+    else {
+        QString s = text.left(1);
+        int dotWidth = fm.width("...");
+        int i = 1;
+        while (fm.width(s) + fm.width(text[i]) + dotWidth <= maxWidth) {
+            s += text[i];
+            i++;
+        }
+        return s + "...";
+    }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.27 2003/09/16 16:03:32 squig Exp $
+ * $Id: blockview.h,v 1.28 2003/09/19 15:09:28 squig Exp $
  *
  *****************************************************************************/
 
@@ -145,6 +145,11 @@ protected:
     virtual void arrangePins();
 
     /**
+     * Alignes pins that ared docked on the bottom.
+     */
+    virtual void arrangeHorizontalPins();
+
+    /**
      * Alignes all pins that dock onto <code>this</code> either on the left
      * side or on the right.
      */
@@ -171,6 +176,10 @@ protected:
     static const int DEFAULT_LEFT_BORDER = 3;
     /** default horizontal space between the text and the right border */
     static const int DEFAULT_RIGHT_BORDER = 5;
+    /** Default vertical space between the left and right text */
+    static const int DEFAULT_CENTER_SPACING = 5;
+    /** Space per episodic pin label. */
+    static const int DEFAULT_LABEL_WIDTH = 40;
 
 private:
     /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.31 2003/09/16 16:03:31 squig Exp $
+ * $Id: blockview.cpp,v 1.32 2003/09/19 15:09:28 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,6 +38,7 @@
 #include "pinvector.h"
 #include "pinview.h"
 #include "settings.h"
+#include "util.h"
 
 int BlockView::DEFAULT_FONT_HEIGHT = 12;
 
@@ -135,6 +136,7 @@ void BlockView::addPinViewsTo(QCanvasItemList &list)
 
 void BlockView::arrangePins()
 {
+    // calculate height
     unsigned height
         = BlockView::DEFAULT_TOP_SPACING
         + BlockView::DEFAULT_HEADER_SPACING
@@ -144,15 +146,22 @@ void BlockView::arrangePins()
     height += BlockView::DEFAULT_FONT_HEIGHT;
 
     // pins
-    unsigned numberOfPins = QMAX(leftPins_.size(),
-                                 rightPins_.size());
+    unsigned numberOfPins = QMAX(leftPins_.size(), rightPins_.size());
     height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
 
     height += BlockView::DEFAULT_BOTTOM_SPACING;
-    setSize(BlockView::DEFAULT_WIDTH, height);
+
+    // calculate width
+    int width = bottomPins_.size() * DEFAULT_LABEL_WIDTH;
+    width = QMAX(BlockView::DEFAULT_WIDTH, width);
+    if (bottomPins_.size() > 0) {
+        height += DEFAULT_FONT_HEIGHT;
+    }
+
+    setSize(width, height);
 
     arrangeVerticalPins();
-    // FIX: arrangeHorizontalPins
+    arrangeHorizontalPins();
 }
 
 AbstractModel *BlockView::model()
@@ -225,6 +234,7 @@ void BlockView::drawShape(QPainter &p)
 {
     QCanvasRectangle::drawShape(p);
 
+    // draw header
     int left = (int) x();
     int right = left + width() - 1;
     int currentY = (int) y() + BlockView::DEFAULT_TOP_SPACING;
@@ -233,7 +243,9 @@ void BlockView::drawShape(QPainter &p)
                    width(),
                    BlockView::DEFAULT_FONT_HEIGHT);
     if (model_->name() != 0) {
-        p.drawText(textArea, Qt::AlignHCenter, model_->name());
+        int w = width() - DEFAULT_LEFT_BORDER - DEFAULT_RIGHT_BORDER;
+        QString label = Util::squeeze(model_->name(), w, p.font());
+        p.drawText(textArea, Qt::AlignHCenter, label);
     }
     currentY += textArea.height() + BlockView::DEFAULT_HEADER_SPACING;
     p.drawLine(left, currentY, right, currentY);
@@ -255,26 +267,46 @@ void BlockView::drawShape(QPainter &p)
                               - BlockView::DEFAULT_BOTTOM_SPACING)
             / slotCount;
 
+        int maxWidth = width() / 2 - DEFAULT_CENTER_SPACING;
         for (unsigned i = 0; i < slotCount; ++i) {
-
             if (i < leftPins_.size()) {
-                p.drawText(textArea,
-                           Qt::AlignLeft,
-                           leftPins_[i]->pinModel()->name());
+                QString label = Util::squeeze(leftPins_[i]->pinModel()->name(),
+                                              maxWidth, p.font());
+                p.drawText(textArea, Qt::AlignLeft, label);
             }
 
             if (i < rightPins_.size()) {
-                p.drawText(textArea,
-                           Qt::AlignRight,
-                           rightPins_[i]->pinModel()->name());
+                QString label = Util::squeeze(rightPins_[i]->pinModel()->name(),
+                                              maxWidth, p.font());
+                p.drawText(textArea, Qt::AlignRight, label);
             }
             textArea.moveBy(0, pinHeight);
         }
     } else {
         Q_ASSERT(slotCount == 0);
     }
+
+    textArea = QRect(left,
+                     (int)y() + height() - DEFAULT_FONT_HEIGHT,
+                     DEFAULT_LABEL_WIDTH,
+                     BlockView::DEFAULT_FONT_HEIGHT);
+    for (unsigned i = 0; i < bottomPins_.size(); ++i) {
+        QString label = Util::squeeze(bottomPins_[i]->pinModel()->name(),
+                                      DEFAULT_LABEL_WIDTH, p.font());
+        p.drawText(textArea, Qt::AlignLeft, label);
+        textArea.moveBy(DEFAULT_LABEL_WIDTH, 0);
+    }
+
 }
 
+void BlockView::arrangeHorizontalPins()
+{
+    for (unsigned i = 0; i < bottomPins_.size(); ++i) {
+        bottomPins_[i]->move(x() + i * DEFAULT_LABEL_WIDTH
+                             + DEFAULT_LABEL_WIDTH / 2,
+                               y() + height());
+    }
+}
 
 void BlockView::arrangeVerticalPins()
 {

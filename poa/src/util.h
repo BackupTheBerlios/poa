@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.2 2003/09/18 16:32:39 garbeam Exp $
+ * $Id: util.h,v 1.3 2003/09/19 15:09:28 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,9 @@
 
 #include <qdir.h>
 #include <qfile.h>
+#include <qfont.h>
+#include <qfontmetrics.h>
+#include <qstring.h>
 #include <qstringlist.h>
 
 /**
@@ -39,7 +42,7 @@
 class Util
 {
 
-public:
+ public:
 
     /**
      * Copies <code>source</code>'s content line by line
@@ -64,6 +67,15 @@ public:
      * @param subDir the directory to be removed.
      */
     static bool removeDir(QDir *subDir);
+
+    /**
+     * Shortens text to fit it in maxWidth pixels. If text does not
+     * fit characters are chopped from the end and three dots "..."
+     * are appended.
+     *
+     * @return the shortened text
+     */
+    static QString squeeze(QString text, int maxWidth, QFont font);
 
 };
 

@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.13 2004/01/27 06:50:32 kilgus Exp $
+ * $Id: colormanager.cpp,v 1.14 2004/01/27 14:42:07 squig Exp $
  *
  *****************************************************************************/
 
 #include "colormanager.h"
 #include "settings.h"
 
+#include <qintdict.h>
 #include <qpainter.h>
 
 const int ColorManager::RTTI = 1003;
@@ -69,13 +70,26 @@ QColor ColorManager::color(AbstractModel *model)
         connect(bm, SIGNAL(deleted(BlockModel *)),
                 this, SLOT(deleteModel(BlockModel *)));
 
-        // update mapping and widget size
-        updateMap();
+        // update widget size
+        recalculateSize();
+        canvas()->update();
     }
 
-    return (bm->clock() == 0)
-        ?Settings::instance()->defaultBrushColor()
-        :palette_->color(nsToPalIndex_[bm->clock()]);
+    if (bm->clock() == 0) {
+        return Settings::instance()->defaultBrushColor();
+    }
+    else {
+        // insert mapping
+        if (!nsToPalIndex_.contains(bm->clock())) {
+            // rotate palette
+            if (palPosition_ >= palette_->size()) {
+                palPosition_ = 0;
+            }
+
+            nsToPalIndex_.insert(bm->clock(), palPosition_++);
+        }
+        return palette_->color(nsToPalIndex_[bm->clock()]);
+    }
 }
 
 QColor ColorManager::activatedColor(AbstractModel*)
@@ -90,38 +104,24 @@ QColor ColorManager::selectedColor(AbstractModel*)
 
 void ColorManager::updateMap()
 {
-    BlockModel *model;
-
     // actually existing clocks
-    QValueList<int> reqNs;
-
-    for (model = models_.first(); model; model = models_.next()) {
-
-        // rotate palette
-        if (palPosition_ > palette_->size()) {
-            palPosition_ = 0;
-        }
-
-        reqNs += model->clock();
-
-        // insert mapping
-        if ((!nsToPalIndex_.contains(model->clock()))
-            && (model->clock() != 0)) {
-            nsToPalIndex_.insert(model->clock(), palPosition_++);
-        }
+    QIntDict<int> reqNs;
+    int value = 1;
+    for (BlockModel *model = models_.first(); model; model = models_.next()) {
+        reqNs.insert(model->clock(), &value);
     }
 
     // remove unused map entries
-	QMap<int,int>::iterator it = nsToPalIndex_.begin();
-	while (it != nsToPalIndex_.end()) {
-		// Advance iterator NOW because we might want to delete the current entry
-		QMap<int,int>::iterator it2 = it;
-		it++;
-
-        if (!reqNs.contains(it2.key())) {
-            nsToPalIndex_.remove(it2);
-		}
-	}
+    QMap<int,int>::iterator it = nsToPalIndex_.begin();
+    while (it != nsToPalIndex_.end()) {
+//         // Advance iterator NOW because we might want to delete the current entry
+//         QMap<int,int>::iterator it2 = it;
+//         it++;
+        if (reqNs.find(it.key()) == 0) {
+            nsToPalIndex_.remove(it);
+        }
+        ++it;
+    }
 
     recalculateSize();
     canvas()->update();

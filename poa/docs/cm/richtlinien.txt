@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.5 2003/05/28 09:03:31 garbeam Exp $
+$Id: richtlinien.txt,v 1.6 2003/06/01 08:35:03 garbeam Exp $
 
 Richtlinien zur POA-Enwticklung
 ===============================
@@ -152,7 +152,7 @@ Arbeitskopie mit der aktuellen Version im CVS Repository (HEAD)
 synchronisiert werden:
 
 cd <lokales Arbeitsverzeichnis alias Modulname>
-cvs update -Ad (Kurzform: cvs up -Ad)
+cvs update -APd (Kurzform: cvs up -APd)
 
 
 2.2.4 Änderungen commiten

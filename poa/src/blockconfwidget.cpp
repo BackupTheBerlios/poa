@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.7 2004/01/28 20:37:44 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.8 2004/01/28 20:49:27 squig Exp $
  *
  *****************************************************************************/
 
@@ -188,6 +188,17 @@ void BlockConfWidget::sync() {
     ioListView_->setSorting(10);
 }
 
+void BlockConfWidget::cancelRename()
+{
+    if (ioListView_->isRenaming()) {
+        PinListViewItem *currentItem
+            = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
+        if (currentItem != 0) {
+            currentItem->cancelRename();
+        }
+    }
+}
+
 void BlockConfWidget::commit() {
 
     // deleted pins
@@ -242,12 +253,8 @@ void BlockConfWidget::mouseButtonClicked(int button,
     if (button == Qt::LeftButton && item != 0) {
         item->startRename(c);
     }
-    else if (ioListView_->isRenaming()) {
-        PinListViewItem *currentItem
-            = dynamic_cast<PinListViewItem *>(ioListView_->currentItem());
-        if (currentItem != 0) {
-            currentItem->cancelRename();
-        }
+    else {
+        cancelRename();
     }
 }
 
@@ -314,6 +321,7 @@ void BlockConfWidget::moveRowUp()
     if (item != 0 && !item->isRoot()) {
         PinListViewItem *itemAbove = (PinListViewItem *)item->itemAbove();
         if (!itemAbove->isRoot()) {
+            cancelRename();
             itemAbove->moveItem(item);
             updatePositions(item->type());
         }
@@ -326,6 +334,7 @@ void BlockConfWidget::moveRowDown()
     if (item && !item->isRoot()) {
         PinListViewItem *itemBelow = (PinListViewItem *)item->itemBelow();
         if (itemBelow && !itemBelow->isRoot()) {
+            cancelRename();
             item->moveItem(itemBelow);
             updatePositions(item->type());
         }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.38 2004/01/28 20:37:44 squig Exp $
+ * $Id: librarywindow.cpp,v 1.39 2004/01/28 20:49:27 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -124,6 +124,7 @@ void LibraryWindow::addDefaultItems()
 
     // input
     model = new BlockModel("Input", "Default input block");
+    model->setType("I/O");
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
     model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
@@ -133,6 +134,7 @@ void LibraryWindow::addDefaultItems()
 
     // output
     model = new BlockModel("Output", "Default output block");
+    model->setType("I/O");
     model->setHasEpisodicPins(false);
     model->setHasOutputPins(false);
     model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
@@ -185,6 +187,15 @@ QListViewItem *LibraryWindow::getTypeItem(const QString &type)
     if (item == 0) {
         item = new TypeListViewItem(this, modelListView_, type);
         item->setOpen(true);
+        if (type == "I/O") {
+            item->setPixmap(0, QPixmap(Util::findIcon("connect_established.png")));
+        }
+        else if (type == "CPU") {
+            item->setPixmap(0, QPixmap(Util::findIcon("kcmprocessor.png")));
+        }
+        else if (type == "Core") {
+            item->setPixmap(0, QPixmap(Util::findIcon("memory.png")));
+        }
         typeItemByType.insert(type, item);
     }
     return item;

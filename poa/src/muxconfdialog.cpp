@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.6 2003/09/25 11:02:48 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.7 2003/09/25 11:07:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -400,13 +400,18 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
         }
     }
 
-
+    ////////////////////////////////////////////////////////////
+    // Proceeds if the selected mapTo IO exist or should be
+    // created.
+    //
     if (proceed) {
 
+        // Get model for name, if it already exists
         PinModel *mapTo = ioForString(mapToName);
 
         if (mapTo == 0) {
-
+            // the given mapTo name does not exist yet,
+            // so we create a new PinModel
             mapTo =
                 new PinModel(model_, id, mapToName, id * 100, 0,
                         (type == PinModel::INPUT) ? PinModel::OUTPUT : 
@@ -417,8 +422,8 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
 
         MuxPin *pin = item->data();
 
-        MuxMapping *mapping = new MuxMapping(mapTo, beginSpinBox->value(),
-                endSpinBox->value());
+        MuxMapping *mapping =
+            new MuxMapping(mapTo, beginSpinBox->value(), endSpinBox->value());
         pin->addMapping(mapping);
 
         // update ListView

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.51 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: blockview.cpp,v 1.52 2003/12/20 16:06:23 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -94,7 +94,7 @@ bool BlockView::isDraggable()
 QSize BlockView::dragBy(double dx, double dy)
 {
     // must convert to be consistent with return value
-    moveBy(int(dx + 0.5), int(dy + 0.5));
+    moveBy(rint(dx), rint(dy));
     return QSize((int) dx, (int) dy);
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.1 2003/09/16 12:17:51 garbeam Exp $
+ * $Id: connectorviewlist.h,v 1.2 2003/09/18 13:07:49 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -55,16 +55,15 @@ public:
     ConnectorViewList(PinView *source, PinView *target);
 
     /**
+     */
+    ConnectorViewList(PinView *source,
+		      PinView *target,
+		      const QValueList<QPoint> &points);
+
+    /**
      * Default destructor
      */
     virtual ~ConnectorViewList();
-
-    /**
-     * Returns a list including <code>this</code> and all succeeding view
-     * objects. That is the list of all objects that make up a connector
-     * view on a canvas.
-     */
-    ConnectorViewList *allSegments();
 
     /**
      * Returns the source pin.
@@ -75,6 +74,14 @@ public:
      * Returns the target pin.
      */
     PinView *target();
+
+    /**
+     */
+    QValueList<QPoint> points();
+
+    /**
+     */
+    virtual void serialize();
 
 private:
 

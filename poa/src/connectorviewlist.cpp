@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.1 2003/09/16 12:17:51 garbeam Exp $
+ * $Id: connectorviewlist.cpp,v 1.2 2003/09/18 13:07:49 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,15 +34,18 @@ ConnectorViewList::ConnectorViewList(PinView *source, PinView *target)
     // TODO: create new parts of ConnectorViews
 }
 
+ConnectorViewList::ConnectorViewList(PinView *source, 
+				     PinView *target,
+				     const QValueList<QPoint> &points)
+{
+    source_ = source;
+    target_ = target;
+}
+
 ConnectorViewList::~ConnectorViewList()
 {
     deleteAllConnectorViews();
     // emit signal to pinviews?
-}
-
-ConnectorViewList *ConnectorViewList::allSegments()
-{
-    return this;
 }
 
 PinView *ConnectorViewList::source()
@@ -64,4 +67,8 @@ void ConnectorViewList::deleteAllConnectorViews()
         delete view;
         it = erase(it);
     }
+}
+
+void ConnectorViewList::serialize()
+{
 }

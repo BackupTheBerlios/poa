@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: inputblockmodel.h,v $, $Revision: 1.2 $
- *  $Author: garbeam $
- *  $Date: 2003/07/08 11:41:13 $
+ *  $RCSfile: inputblockmodel.h,v $, $Revision: 1.3 $
+ *  $Author: keulsn $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -45,11 +45,12 @@ class InputBlockModel: public BlockModel
 {
   public:
   
-    virtual bool isProducer() const;
+    void addOutputPin (Pin *pin, Pin *successor = 0);
+    void removeOutputPin (Pin *pin);
 
   private:
 
-    PinVector *inputPins;
+    PinVector *outputPins;
   
 };
 

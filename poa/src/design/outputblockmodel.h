@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: outputblockmodel.h,v $, $Revision: 1.1 $
+ *  $RCSfile: outputblockmodel.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -46,7 +46,8 @@ class OutputBlockModel: public BlockModel
 {
   public:
   
-    virtual bool isProducer() const;
+    void addInputPin (Pin *pin, Pin *successor = 0);
+    void removeInputPin (Pin *pin);
 
   private:
 

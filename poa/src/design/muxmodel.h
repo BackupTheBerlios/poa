@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: muxmodel.h,v $, $Revision: 1.1 $
+ *  $RCSfile: muxmodel.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -32,9 +32,7 @@
 #define POA_MUXMODEL_H
 
 
-#include "inputblockmodel.h"
-#include "outputblockmodel.h"
-
+#include "inputoutputblockmodel.h"
 
 
 /*****************************************************************************
@@ -43,12 +41,11 @@
  *  on inputs and the production of outputs takes no time.
  *
  */
-class MuxModel: public InputBlockModel, OutputBlockModel
+class MuxModel: public InputOutputBlockModel
 {
 
   public:
 
-    virtual bool isProducer() const;
 
 };
 

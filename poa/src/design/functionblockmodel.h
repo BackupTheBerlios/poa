@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: functionblockmodel.h,v $, $Revision: 1.1 $
+ *  $RCSfile: functionblockmodel.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@
 #define POA_FUNCTIONBLOCKMODEL_H
 
 
-#include "muxmodel.h"
+#include "inputoutputblockmodel.h"
 
 
 /*****************************************************************************
@@ -41,12 +41,11 @@
  *  outputs. The calculation process takes some time.
  *
  */
-class FunctionBlockModel: public MuxModel
+class FunctionBlockModel: public InputOutputBlockModel
 {
 
   public:
   
-    virtual bool isProducer() const;
 
   private:
 

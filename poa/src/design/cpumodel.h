@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: cpumodel.h,v $, $Revision: 1.1 $
+ *  $RCSfile: cpumodel.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -50,8 +50,9 @@ class CpuModel: public FunctionBlockModel
 
  private:
 
-    CodeManager *code;
-    bool autoExecTime;
+    unsigned short id_;
+    CodeManager *code_;
+    bool autoExecTime_;
 
 };
 

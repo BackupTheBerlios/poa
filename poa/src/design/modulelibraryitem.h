@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: modulelibraryitem.h,v $, $Revision: 1.1 $
+ *  $RCSfile: modulelibraryitem.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -32,7 +32,7 @@
 #define POA_MODULELIBRARYITEM_H
 
 
-#include <qlistbox.h>
+#include <qobject.h>
 
 
 /*****************************************************************************
@@ -42,8 +42,17 @@
  *  is needed, QListViewItem might be a better choice.
  *
  */
-class ModuleLibraryItem: public QListBoxItem
+class ModuleLibraryItem: public QObject
 {
+  Q_OBJECT
+
+  public:
+
+
+  public slots:
+
+    void drag ();
+
 };
 
 

@@ -21,9 +21,9 @@
  *
  *  First Author: Steffen Keul
  *
- *  $RCSfile: blockmodel.h,v $, $Revision: 1.1 $
+ *  $RCSfile: blockmodel.h,v $, $Revision: 1.2 $
  *  $Author: keulsn $
- *  $Date: 2003/07/07 23:35:41 $
+ *  $Date: 2003/07/08 17:34:13 $
  *
  *****************************************************************************/
 
@@ -47,7 +47,6 @@
  */
 class BlockModel: public ModuleLibraryItem
 {
-
   public:
 
     /*************************************************************************
@@ -67,14 +66,25 @@ class BlockModel: public ModuleLibraryItem
      */
     virtual BlockModel *getInstance ();
 
+
+    bool isProducer();
+
+
+    void setName (QSting &name);
+    void setId (unsigned long id);
+    void setOffset (unsigned long offset);
+    void setAutoOffset (bool autoOffset);
+
+    void addEpisodicPin (Pin *pin, Pin *successor = 0);
+    void removeEpisodicPin (Pin *pin);
+
   private:
 
-    QString *name;
-    unsigned short id;
-    PinVector *episodicPins;
-    unsigned long clock;
-    unsigned long offset;
-    bool autoOffset;
+    QString *name_;
+    PinVector *episodicPins_;
+    unsigned long clock_;
+    unsigned long offset_;
+    bool autoOffset_;
 
 };
 

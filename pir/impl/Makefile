@@ -7,7 +7,7 @@ ifeq ($(shell test -e Makefile.local && echo ja || echo nein),ja)
   include Makefile.local
 endif
 
-all      : test marcel motion manual
+all      : test marcel motion manual setfeature pyramid
 
 clean    : 
 	rm -f test.o test marcel.o marcel motion.o motion steffen.o steffen
@@ -35,4 +35,16 @@ manual.o : manual.c
 
 manual   : manual.o
 	$(LINK) -o manual manual.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
+
+setfeature.o : setfeature.c features.h
+	$(CC) setfeature.c -o setfeature.o $(INCLUDE_PATH)
+
+setfeature   : setfeature.o
+	$(LINK) -o setfeature setfeature.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
+
+pyramid.o : pyramid.c features.h
+	$(CC) pyramid.c -o pyramid.o $(INCLUDE_PATH)
+
+pyramid   : pyramid.o
+	$(LINK) -o pyramid pyramid.o $(LIBRARY_PATH) -lstdc++ -lcv -lhighgui -lcxcore
 

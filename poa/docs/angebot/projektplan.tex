@@ -1,26 +1,58 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Projektplan
-%% $Id: projektplan.tex,v 1.5 2003/06/12 11:35:47 papier Exp $
+%% $Id: projektplan.tex,v 1.6 2003/06/12 21:23:24 squig Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\milestone}[4]{
-\paragraph* {#1} { (#2) }
+\newcommand{\milestone}[3]{
+\paragraph* {#1}
+\vspace{0.3cm}
+Ergebnis: \begin {bfseries} #2 \end {bfseries}
 \\[0.3cm]
-Ergebnis: \begin {bfseries} #3 \end {bfseries}
-\\[0.3cm]
-#4
+#3
 }
 
 \chapter {Projektplan}
 
 \section {Zeitplan}
+Während der erste Phase des Projekts wird die grundlegende Architektur
+der Software festgelegt und ein Prototyp erstellt. In der zweiten
+Phase wird der Prototyp in drei Sprints erweitert.
+
 Zu Anfang jedes Sprints werden in einer priorisierten Liste die
-Ziele für den Sprint festgelegt und innerhalb von 2 Wochen fertig
-gestellt. 
+Ziele für den Sprint festgelegt und innerhalb von 4 Wochen fertig
+gestellt. Am Ende jedes Sprints wird dem Auftraggeber die erstellte
+Software zur Prüfung vorgelegt. 
+
+\begin {center}
+  \begin {tabular}[l]{rlrll}
+    \multicolumn{1}{c}{\bf ID} & \multicolumn{1}{c}{\bf Bezeichnung} &
+    \multicolumn{1}{c}{\bf Aufwand} & \multicolumn{1}{c}{\bf Termin} &
+    \multicolumn{1}{c}{\bf Meilenstein} \\
+    \multicolumn{2}{c}{} &
+    \multicolumn{1}{c}{(in Mh)} \\
+    \hline
+     1 & Analyse und Angebot & 200 & KW 25 & M1: Angebot \\
+     2 & Spezifikation & 300 & & \\
+     2 & Entwurf & 300 & & \\
+     2 & Prototyp Messe & 300 & 1.10.2003 & M2: Prototyp Messe \\
+     2 & Prototyp Erweitert & 300 & 10.11.2003 & M3: Prototyp Erweitert \\
+    16 & Sprint 1 & & KW 48 - 51 & \\
+    16 & Sprint 2 & & KW 2 - 6 & \\
+    16 & Sprint 3 & & KW 8 - 12 & \\
+    26 & Auslieferung und Präsentation & & 1.4.2004 & M4: Auslieferung\\
+    \hline
+       & & 1400\\
+  \end {tabular}
+\end {center}
 
 \section {Kostenschätzung}
+
+Für die erste Phase des Projekts wird ein Zeitaufwand von 1400 Stunden
+veranschlagt, das entspricht Kosten von 140.000 Euro. Die Bezahlung
+der Sprints wird zu begin jedes Sprints festgelegt und Anhand der
+erreichten Ergebnisse vorgenommen.
 
 \section {Meilensteine}
 \label {Meilensteine}
@@ -41,21 +73,44 @@ werden. Sollten dadurch erhebliche Verzögerungen im Projekt auftreten,
 muss der Zeitplan entsprechend angepasst werden. Der Auftraggeber nimmt
 den Meilenstein ab.
 
-Abbruchmeilensteine.
+\milestone {M1: Angebot}{Angebot}{Das vorliegende Dokument.}
 
-\milestone {M1: Angebot}{extern}{Angebot}
-{Das vorliegende Dokument.}
+\milestone {M2: Prototyp Messe}{Entwurf, Lauffähiger Prototyp} {Der
+  Prototyp, der auf der Messe präsentiert werden soll. Die
+  Funktionalität wird sich auf eine pseudo interaktive grafische
+  Oberfläche beschränken. Sollte der Prototyp stark von den
+  Erwartungen abweichen, kann das Projekt hier abgebrochen werden.}
 
-\milestone {M2: Prototyp Präsentation}{extern}{Lauffähiger Prototyp}
-{Der Prototyp, der auf der Messe präsentiert werden soll.}
+\milestone {M3: Prototyp Erweitert}{Lauffähiger Prototyp} {Ein
+  mit erweiterter Funktionalität ausgestatteter Prototyp, der als
+  Grundlage für den ersten Sprint dient.}
 
-\milestone {M3: Prototyp Endgültig}{extern}{Lauffähiger Prototyp}
-{Ein mit Funktionalität erweiterter Prototyp.}
-
-\milestone {M4: Auslieferung}{extern}{Software}
-{Auslieferung des erstellten Systems.}
+\milestone {M4: Auslieferung}{Software}{Auslieferung des erstellten
+  Systems.}
 
 \section{Risiken}
+
+\paragraph* {Nicht-Erfüllen von Meilensteinen}
+\ \\[0.3cm]
+Sollte ein Meilenstein nicht erfüllt werden können, also die
+erwarteten Ergebnisse nicht geliefert werden, muss der Projektplan
+entsprechend angepasst werden. Sollte das nicht möglich sein, da keine
+ausreichende Pufferzeiten vorhanden sind, müssen die Anforderungen in
+Übereinkunft mit dem Auftraggeber reduziert werden.
+
+\paragraph* {Ausfall von Team-Mitgliedern}
+\ \\[0.3cm]
+Sollten Teammitglieder unerwartet ausfallen, müssen die Anforderungen
+gegebenenfalls reduziert werden und Aufgabenverteilung angepasst
+werden. Wenn dies nicht möglich ist, muss in Übereinkunft mit dem
+Auftraggeber eine andere Lösung (z.B. Reduktion der Anforderungen)
+gefunden werden.
+
+\paragraph*{Prozessprobleme}
+\ \\[0.3cm]
+Falls sich herausstellt, daß das gewählte Prozessmodell ungeignet ist,
+da das Team oder der Auftraggeber nicht mit den Bedingungen des
+Modells zurecht kommen, kann ein anderes Modell gewählt werden.
 
 %%% Local Variables: 
 %%% TeX-master: "angebot"

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: begriffslexikon.tex,v 1.4 2003/06/12 19:27:53 garbeam Exp $
+%% $Id: begriffslexikon.tex,v 1.5 2003/06/12 21:23:24 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\begriff}[2]
 {\item \bfseries{#1} \textnormal{#2}}
@@ -11,7 +11,8 @@
 
 \begriff{Block}{siehe Funktionsblock}
 
-\begriff{Bus}{Mehrere Signalleitungen, die von einem Funktionsblock ausgehen.}
+\begriff{Bus}{Mehrere Signalleitungen können zu einem Bus zusammen
+  gefasst werden.}
 
 \begriff{Core}{Eine festgelegte Logik mit bekannter Laufzeit.}
 
@@ -25,10 +26,22 @@ auf den CPLD.}
 \begriff{Funktionsblock}{Virtuelles Abbild eines Cores, einer CPU oder
 eines Ein- bzw. Ausgabeblocks.}
 
+\begriff{Laufzeitermittlung}{Abschätzung der maximalen Laufzeit eines
+  Programms in Milli-Sekunden.}
+
+\begriff{ISWOS}{Minimal Betriebssystem, dass nach der Initialisierung
+  des CPLDs auf den CPUs ausgeführt wird.}
+
 \begriff{Plausibilitätsprüfung}{Prüfung des CPLD-Layouts auf
-un- und falsch verknüpfte E/As.}
+  unverküpfte und falsch verknüpfte E/As.}
 
 \begriff{Optimierung}{Verkürzung der Gesamtlaufzeit eines CPLD-Takt-Zyklus.}
+
+\begriff{Signalleitung}{Eine Verbindung zwischen zwei
+  Funktionsblöcken. Eine Signalleitung hat immer 32-bit.}
+
+\begriff{Verbindung}{Eine Kopplung von einem Ausgang zu ein oder
+  mehreren Eingängen.}
 
 \end{itemize}
 

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.7 2003/06/12 11:35:47 papier Exp $
+%% $Id: anforderungen.tex,v 1.8 2003/06/12 21:23:24 squig Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -101,7 +101,7 @@ Eine Verwaltung verschiedener Modulbibliotheken wird nicht angeboten.
 %% Funktionsblock
 \subsection{Funktionsblock}
 Ein Funktionsblock spiegelt ein virtuelles Abbild eines CPU-, Core- oder
-E/A-Bausteins auf einem CPLD wider. Dabei sollen an allen genannten
+E/A-Bausteins auf einem CPLD wieder. Dabei sollen an allen genannten
 Funktionsblöcken die Ein- und Ausgänge mit Signalleitungen verbunden
 werden können.\par
 Speziell bei CPU-Blöcken soll überdies die Anzahl der Ein- und Ausgänge,
@@ -139,7 +139,11 @@ Warnmeldung ausgegeben werden, die die fehlerhaften Verknüpfungen aufführt.\par
 Der Entwurf eines plausiblen CPLD-Layouts soll durch einen gekoppelten
 Signallaufzeitsermittlungs- und -optimierungs-Algorithmus optimiert werden
 können. Hierzu wird zur Laufzeitermittlung ein Laufzeitermittlungsprogramm
-für CPLD-CPU-Block Object-Code verwendet, das vom Kunden zu liefern ist.
+für CPLD-CPU-Block Object-Code verwendet, das vom Kunden zu liefern
+ist. Sollte diese Software keine hinreichend genaue Laufzeitermittlung
+ermöglichen werden alternative Möglichkeiten geprüft. Sollte das zu
+keinem Ergeniss führen, kann die Optimierungsfunktionalität nicht
+garantiert werden.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,18 +175,19 @@ Template und das externe Download-Tool konfigurierbar sein.
 %% Funktionale Anforderungen
 \section{Nicht funktionale Anforderungen}
 Die Implementierung der Software erfolgt in C++ auf der Basis von
-Trolltech QT 3.0.1. Als Zielplatform wird Redhat GNU/Linux 8.2
+Trolltech QT 3.1.1. Als Zielplatform wird Redhat GNU/Linux 8.2
 festgelegt.
 
 \subsection{Hardware}
-Die minimalen Hardware Anforderungen entsprechen denen der Zielplattform.
+Die minimalen Hardware Anforderungen entsprechen denen der
+Zielplattform bzw. der verwendeten Bibliotheken.
 
 \subsection{Mengengerüst}
 \begin{itemize}
-\item Eine CPLD hat maximal 20 Cores und 10 CPUs.
-\item Die Modulbibliotek enthält maximal 100 Module.
-\item Ein Funktionsblock hat zu max.XXX Bussen zusammengefasste Ein-
-  und Ausgänge.
+\item Eine CPLD besteht aus maximal 30 Funktionsblöcken.
+\item Ein Funktionsblock hat maximal 50 Ein- bzw.\ Ausgänge, die mit
+  Bussen oder Signalleitungen verbunden werden können.
+\item Die Modulbibliothek enthält maximal 20 Funktionsblöcke.
 \end{itemize}
 
 \subsection{Wartbarkeit}

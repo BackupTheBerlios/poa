@@ -1,15 +1,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: angebot.tex,v 1.4 2003/06/12 21:23:24 squig Exp $
+%% $Id: spezifikation.tex,v 1.1 2003/06/12 21:23:24 squig Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\newcommand\version{$Revision: 1.4 $\xspace}
+\newcommand\version{$Revision: 1.1 $\xspace}
 
-\title {\huge \product\\[0.5cm]\large Angebot\\[0.5cm] \version
+\title {\huge \product\\[0.5cm]\large Spezifikation\\[0.5cm] \version
   \\[1cm] \Large \company}
 
 \begin{document}
@@ -37,32 +37,36 @@
 
 \tableofcontents
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Einleitung
+\chapter{Funktionale Anforderungen}
 
-\include{einleitung}
+\section{Laufzeitermittlung}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Anforderungen
+Für die Laufzeitermittlung wird eine Schnittstelle vorgesehen.
 
-\include{anforderungen}
+\chapter{Projekte}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Projektplan
+\section{Verzeichnissstuktur}
 
-\include{projektplan}
+Für jedes Projekt wird ein Verzeichniss mit einer festgelegten
+Struktur erzeugt.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Lieferumfang
+\begin{itemize}
+\item CPU\_NR\_sdk
+  \begin{itemize}
+  \item lib\\
+    ?
+  \item src \\
+    Source Code
+  \item inc \\
+    NIOS Header Dateien
+  \end{itemize}
+\item poa
+  \begin{itemize}
+  \item project.xml
+  \end{itemize}
+\end{itemize}
 
-\include{lieferumfang}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Anhang
-
-\appendix
-
-\include{begriffslexikon}
+Innerhalb des Projektverzeichnisses wird zum Kompilieren ``nb'' 
+gestartet. 
 
 \end{document}
-%%% vim:tw=79:

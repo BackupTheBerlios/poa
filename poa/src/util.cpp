@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.cpp,v 1.2 2003/09/19 15:09:28 squig Exp $
+ * $Id: util.cpp,v 1.3 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -52,6 +52,11 @@ bool Util::copyFile(QFile *source, QFile *target)
     }
 
     return false;
+}
+
+QString Util::findResource(QString filename)
+{
+    return QString();
 }
 
 bool Util::removeDir(QDir *subDir)

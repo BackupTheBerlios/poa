@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.7 2003/11/26 16:27:10 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.8 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -48,10 +48,6 @@ void ConnectorViewSegment::remove(Project *)
 {
     // delete segment from list and mem
     viewList_->deleteSegment(this);
-    // if list is empty, delete it
-    if (viewList_->allSegments().empty()) {
-        delete viewList_;
-    }
 }
 
 QString ConnectorViewSegment::tip()

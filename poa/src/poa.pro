@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.58 2003/12/03 14:43:54 keulsn Exp $
+# $Id: poa.pro,v 1.59 2003/12/03 16:06:20 squig Exp $
 #
 ###############################################################################
 
@@ -29,6 +29,7 @@ CONFIG += thread
 
 TEMPLATE = app
 INCLUDEPATH += .
+INCLUDEPATH += ./qextserialport
 
 TARGET = poa
 QMAKE_TARGET_DESTDIR = poa-0.1.0

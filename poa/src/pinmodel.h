@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.25 2003/12/03 13:21:58 garbeam Exp $
+ * $Id: pinmodel.h,v 1.26 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -211,7 +211,15 @@ private:
     PinView *view_;
 
 signals:
+    /**
+     * Emitted, when th pin is deleted.
+     */
     void deleted();
+
+    /**
+     * Emitted, when the pin is detached.
+     */
+    void detached();
 
 };
 

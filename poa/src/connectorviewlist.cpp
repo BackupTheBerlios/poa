@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.18 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.19 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,23 +45,17 @@ ConnectorViewList::ConnectorViewList(PinView *source,
                                      GridCanvas *canvas,
                                      QDomElement *element)
 {
+    Q_ASSERT(source->canvas() == canvas);
+    Q_ASSERT(target->canvas() == canvas);
+
     source_ = source;
     target_ = target;
     canvas_ = canvas;
-    Q_ASSERT(source->canvas() == canvas_);
-    Q_ASSERT(target->canvas() == canvas_);
+
     segments_.setAutoDelete(true);
 
-    // FIX: inform pins?
-
-    /*    connect(source->pinModel(), SIGNAL(deleted()),
-            this, SLOT(deleteView()));
-    connect(target->pinModel(), SIGNAL(deleted()),
-            this, SLOT(deleteView()));
-    connect(source, SIGNAL(moved(PinView*)),
-            this, SLOT(pinMoved(PinView*)));
-    connect(target, SIGNAL(moved(PinView*)),
-    this, SLOT(pinMoved(PinView*)));*/
+    source_->setConnector(this);
+    target_->setConnector(this);
 
     if (element != 0) {
         deserialize(element);
@@ -70,14 +64,10 @@ ConnectorViewList::ConnectorViewList(PinView *source,
 
 ConnectorViewList::~ConnectorViewList()
 {
-    // Was ist denn das???:
-    /*    if (source_ != 0 && source_->pinModel() != 0) {
-        source_->pinModel()->detach();
-    }
-    if (target_ != 0 && target_->pinModel() != 0) {
-        target_->pinModel()->detach();
-	}*/
     segments_.clear();
+
+    source_->setConnector(0);
+    target_->setConnector(0);
 }
 
 PinView *ConnectorViewList::source()
@@ -94,9 +84,9 @@ const QCanvasItemList ConnectorViewList::allSegments()
 {
     QCanvasItemList list;
     for (ConnectorViewSegment *current = segments_.first();
-	 current != 0; current = segments_.next()) {
+     current != 0; current = segments_.next()) {
 
-	list.prepend(current);
+    list.prepend(current);
     }
     return list;
 }
@@ -105,6 +95,17 @@ void ConnectorViewList::deleteSegment(ConnectorViewSegment *seg)
 {
     Q_ASSERT(segments_.contains(seg));
     segments_.remove(seg);
+
+    // if list is empty, delete connection
+    if (segments_.isEmpty()) {
+        Q_ASSERT(source_ != 0 && source_->pinModel() != 0);
+        Q_ASSERT(target_ != 0 && target_->pinModel() != 0);
+
+        source_->pinModel()->detach();
+        // the call above will detach the target pin as well, so we do
+        // not need to do it
+        // target_->pinModel()->detach();
+    }
 }
 
 QValueList<QPoint> ConnectorViewList::points()
@@ -187,42 +188,42 @@ void ConnectorViewList::deserialize(QDomElement *element)
 void ConnectorViewList::applyPointList(const QValueList<QPoint> &list)
 {
     if (list.size() < 2) {
-	segments_.clear();
+    segments_.clear();
     }
     else {
 
-	QValueList<QPoint>::const_iterator point = list.begin();
-	ConnectorViewSegment *current = segments_.first();
-	
-	QPoint second = *point;
-	++point;
-	QPoint first;
-	
-	while (point != list.end()) {
-	    first = second;
-	    second = *point;
-	    ++point;
+    QValueList<QPoint>::const_iterator point = list.begin();
+    ConnectorViewSegment *current = segments_.first();
 
-	    if (current != 0) {
-		current->setPoints(first.x(), first.y(),
-				   second.x(), second.y());
-	    }
-	    else {
-		current = new ConnectorViewSegment(first, second,
-						   canvas_, this);
+    QPoint second = *point;
+    ++point;
+    QPoint first;
 
-		segments_.append(current);
-		current->show();
-	    }
-	    current = segments_.next();
-	}
+    while (point != list.end()) {
+        first = second;
+        second = *point;
+        ++point;
 
-	if (current != 0) {
-	    while (current != segments_.last()) {
-		segments_.removeLast();
-	    }
-	    segments_.removeLast();
-	}
+        if (current != 0) {
+        current->setPoints(first.x(), first.y(),
+                   second.x(), second.y());
+        }
+        else {
+        current = new ConnectorViewSegment(first, second,
+                           canvas_, this);
+
+        segments_.append(current);
+        current->show();
+        }
+        current = segments_.next();
+    }
+
+    if (current != 0) {
+        while (current != segments_.last()) {
+        segments_.removeLast();
+        }
+        segments_.removeLast();
+    }
     }
 }
 
@@ -242,9 +243,3 @@ void ConnectorViewList::pinMoved(PinView *pin)
         delete points;
     }
 }*/
-
-void ConnectorViewList::deleteView()
-{
-    delete this;
-}
-

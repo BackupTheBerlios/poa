@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.3 2003/09/19 15:09:28 squig Exp $
+ * $Id: util.h,v 1.4 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -58,6 +58,15 @@ class Util
      * successfully, <code>false</code> otherwise.
      */
     static bool copyFile(QFile *source, QFile *target);
+
+    /**
+     * Searches the resource pathes for filename.
+     *
+     * @param filename a relative path to the resource, i.e. icons/icon.png
+     * @return the absolute filename if resource was found; QString::null,
+     * otherwise
+     */
+    static QString findResource(QString filename);
 
     /**
      * Removes a directory with all it's files subdirectories.

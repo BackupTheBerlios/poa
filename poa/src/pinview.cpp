@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.24 2003/11/24 20:11:59 squig Exp $
+ * $Id: pinview.cpp,v 1.25 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "blockview.h"
 #include "canvasview.h"
 #include "connectaction.h"
+#include "connectorviewlist.h"
 #include "pinmodel.h"
 #include "settings.h"
 
@@ -41,6 +42,8 @@ PinView::PinView(PinModel *model, BlockView *block,
     model_ = model;
     block_ = block;
     connect(model_, SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(model_, SIGNAL(detached()), this, SLOT(deleteConnection()));
+
     dockPosition_ = dockPosition;
     setZ(block->z());
     setBrush(QBrush(SolidPattern));
@@ -61,6 +64,11 @@ PinView::~PinView()
     block_->deletePinView(this);
 }
 
+ConnectorViewList *PinView::connector()
+{
+    return connector_;
+}
+
 PinView::DockPosition PinView::dockPosition()
 {
     return dockPosition_;
@@ -68,7 +76,11 @@ PinView::DockPosition PinView::dockPosition()
 
 void PinView::moveBy(double dx, double dy) {
     QCanvasRectangle::moveBy(dx, dy);
-    emit moved(this);
+    if (connector() != 0) {
+        // FIX: someone needs to be notified, the connection needs
+        // some rerouting
+        //connector()->pinMoved(this);
+    }
 }
 
 LineDirection reverse(LineDirection dir)
@@ -150,6 +162,11 @@ void PinView::setActive(bool yes)
     updateProperties();
 }
 
+void PinView::setConnector(ConnectorViewList *connector)
+{
+    this->connector_ = connector;
+}
+
 void PinView::setSelected(bool yes)
 {
     QCanvasRectangle::setSelected(yes);
@@ -197,8 +214,16 @@ QString PinView::tip()
         .arg(pinModel()->bits());
 }
 
+void PinView::deleteConnection()
+{
+    if (connector_ != 0) {
+        delete connector_;
+    }
+}
+
 void PinView::deleteView()
 {
+    deleteConnection();
     delete this;
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.21 2003/11/24 20:11:59 squig Exp $
+ * $Id: pinview.h,v 1.22 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 #include "tooltipable.h"
 
 class BlockView;
+class ConnectorViewList;
 class CanvasView;
 class PinModel;
 
@@ -71,6 +72,12 @@ public:
     virtual void moveBy(double dx, double dy);
 
     /**
+     * Returns the connector this pin is connected to or 0, if the pin
+     * is not connected.
+     */
+    ConnectorViewList *connector();
+
+    /**
      * Returns the point, where a connector view must dock onto this
      * pin view.
      */
@@ -106,6 +113,12 @@ public:
     virtual void setActive(bool yes);
 
     /**
+     * Sets the connector this pin is connected to or 0, if the pin is
+     * not connected.
+     */
+    void setConnector(ConnectorViewList *connector);
+
+    /**
      * Sets the brush to red if Pin is selected, otherwise black
      */
     virtual void setSelected(bool yes);
@@ -130,16 +143,12 @@ private:
     DockPosition dockPosition_;
     PinModel *model_;
     BlockView *block_;
-
+    ConnectorViewList *connector_;
 
 public slots:
     void deleteView();
 
-signals:
-    /**
-     * Emitted everytime <code>this</code> is moved on the canvas.
-     */
-    void moved(PinView*);
+    void deleteConnection();
 
 };
 

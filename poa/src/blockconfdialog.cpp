@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.35 2003/12/03 13:21:58 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.36 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -710,7 +710,7 @@ void BlockConfDialog::edit()
     }
 }
 
-void BlockConfDialog::updatePositions(PinModel::PinType type) {
+void BlockConfDialog::updatePositions(PinModel::PinType) {
 
 //    for (QPtrListIterator<
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.13 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.14 2003/12/03 16:06:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -138,13 +138,6 @@ private:
     QCanvas *canvas_;
     /** List of all segments of this connector view */
     QPtrList<ConnectorViewSegment> segments_;
-
-public slots:
-
-    /**
-     * To be called when one of the pin is destroyed
-     */
-    void deleteView();
 
 signals:
     void select(bool);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.13 2004/01/09 18:08:39 papier Exp $
+ * $Id: settingsdialog.cpp,v 1.14 2004/01/18 19:12:52 papier Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -135,7 +135,7 @@ QWidget *SettingsDialog::createDownloadTab()
 
   grid->addWidget(new QLabel(tr("Serial Port"), tab), 0, 0);
   serialPortComboBox_ = new QComboBox(tab);
-  serialPortComboBox_->setEditable(false);
+  serialPortComboBox_->setEditable(true);
 #ifdef _TTY_WIN_
   serialPortComboBox_->insertItem("COM1");
   serialPortComboBox_->insertItem("COM2");

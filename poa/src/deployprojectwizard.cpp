@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.8 2004/01/09 18:08:39 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.9 2004/01/18 19:12:52 papier Exp $
  *
  *****************************************************************************/
 
@@ -66,7 +66,7 @@ DeployProjectWizard::DeployProjectWizard( QWidget* parent,  const char* name, bo
   
     connect(dm, SIGNAL(increaseProgressBar()),     this, SLOT(increaseDownloadProgressBar()));
     connect(dm, SIGNAL(setProgressBarLength(int)), this, SLOT(setDownloadProgressBarLength(int)));  
-
+  
     setupCheckPage();
     setupCompilePage();
     setupSchedulingPage();
@@ -227,26 +227,42 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
   return true;
 }
 
+/* 
+ * Checks for every block if it is a cpu or not.
+ * For every cpu it is cheked if it has already a binary file and if the
+ * binary is actual, if not it will be compiled
+ */
+
 bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
+  /*
+  CodeManager *cm = CodeManager::instance();
+
   QPtrListIterator<AbstractModel> it(blocks);
   AbstractModel *block;
   while ( (block = it.current()) != 0) {
     ++it;
-    //  if  block is CPU {
-    //    if block has binary file {
-    //      if binary file date < fileName(block).lastModified() {
-    //        if compile(block) != alles ok returncode compile error
-    //      }
-    //    }
-    //    else {
-    //      if block has source file {
-    //        if compile(block) != alles ok returncode compile error
-    //      }
-    //      else error cpu without source
-    //   }
-    // }
+
+    if (INSTANCEOF(block, CpuModel)) {
+      if (QFileInfo binary(cm.cpuPath(block)).exists() and 
+	  QFileInfo source(cm.cpuPath(block) + 
+			   cm.sourceFilePath(block) + 
+			   cm.fileName(block)).exists() )  {
+	if ( binary(cm.cpuPath(block)).lastModified() < 
+	     source(cm.cpuPath(block) + cm.sourceFilePath(block)).lastModified()) {
+	  //        if compile(block) != alles ok returncode compile error
+	  //        }
+	}
+      }
+      else {
+	if source(cm.sourceFilePath(block).exists() {
+	//        if compile(block) != alles ok returncode compile error
+	}
+	//      else error cpu without source
+      }
+    }
     
   }
+  */
   return true;
 }
 

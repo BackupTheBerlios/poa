@@ -90,7 +90,7 @@ Soll die existierende Datei überschrieben werden?</translation>
         <source>The block source code contains no substitution marks.
 Prepend such marks?</source>
         <translation>Der Bockquelltext enthält keine Substitutionsmarkierungen.
-Sollen die Markierungen vorgetäuscht werden?</translation>
+Sollen die Markierungen in die Datei eingefügt werden werden?</translation>
     </message>
     <message>
         <source>You&apos;ve modified the block configuration without applying the changes.
@@ -1066,6 +1066,10 @@ Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     <message>
         <source>A&amp;uto</source>
         <translation>A&amp;uto</translation>
+    </message>
+    <message>
+        <source>&amp;Print</source>
+        <translation>&amp;Drucken</translation>
     </message>
 </context>
 <context>

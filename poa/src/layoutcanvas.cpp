@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutcanvas.cpp,v 1.1 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: layoutcanvas.cpp,v 1.2 2003/08/21 08:53:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,19 +34,3 @@ LayoutCanvas::LayoutCanvas()
 };
 
 
-
-// methods after this line maybe deprecated
-/**
- * Returns an unique key of this blockView
- */
-QString* LayoutCanvas::putView(BlockView *blockView)
-{
-    return 0;
-};
-
-BlockView* LayoutCanvas::getView(QString &key)
-{
-    return 0;
-};
-
-#endif // POA_NETWORKCANVAS_H

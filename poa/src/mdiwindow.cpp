@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.3 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.4 2003/08/21 08:53:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -45,14 +45,14 @@ MdiWindow::~MdiWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
-LayoutCanvas* MdiWindow::getCanvas()
+LayoutCanvas *MdiWindow::getCanvas()
 {
-    return layoutCanvas_;
+    return (LayoutCanvas *)view_->canvas();
 }
 
 void MdiWindow::setCanvas(LayoutCanvas *layoutCanvas)
 {
-    layoutCanvas_ = layoutCanvas;
+    view_->setCanvas(layoutCanvas);
     // TODO: emit some repaint signal if needed to draw
     //       the newly set canvas
 }
@@ -60,11 +60,6 @@ void MdiWindow::setCanvas(LayoutCanvas *layoutCanvas)
 void MdiWindow::closeEvent( QCloseEvent *e )
 {
     e->accept();
-}
-
-LayoutCanvas *MdiWindow::canvas()
-{
-    return (LayoutCanvas *)view_->canvas();
 }
 
 void MdiWindow::load( const QString& fn )

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutcanvas.h,v 1.3 2003/08/21 08:43:22 garbeam Exp $
+ * $Id: layoutcanvas.h,v 1.4 2003/08/21 08:53:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,9 +46,6 @@ private:
 public:
 	LayoutCanvas();
 
-    // Returns an unique key of this blockView
-    QString *putView(BlockView *blockView);
-    BlockView *getView(QString &key);
 };
 
 #endif // POA_NETWORKCANVAS_H

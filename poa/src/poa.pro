@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.6 2003/08/20 14:06:02 squig Exp $
+# $Id: poa.pro,v 1.7 2003/08/21 08:53:27 garbeam Exp $
 #
 ###############################################################################
 
@@ -31,6 +31,6 @@ INCLUDEPATH += .
 
 # source files
 HEADERS += aboutdialog.h blockmodel.h blockview.h codemanager.h connectormodel.h connectorview.h coremodel.h coreview.h cpumodel.h cpuview.h inputblockmodel.h inputblockview.h layoutcanvas.h layoutmanager.h mainwindow.h mdiwindow.h moduleconfdialog.h modulelibraryitem.h muxmodel.h muxview.h settingsdialog.h outputblockmodel.h outputblockview.h pinmodel.h pinvector.h pinview.h settings.h viewmap.h
-SOURCES += aboutdialog.cpp mainwindow.cpp mdiwindow.cpp moduleconfdialog.cpp settings.cpp settingsdialog.cpp main.cpp
+SOURCES += aboutdialog.cpp mainwindow.cpp mdiwindow.cpp moduleconfdialog.cpp settings.cpp settingsdialog.cpp main.cpp layoutcanvas.cpp
 
 TARGET = poa

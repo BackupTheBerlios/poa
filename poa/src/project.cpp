@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.9 2003/08/28 16:16:58 vanto Exp $
+ * $Id: project.cpp,v 1.10 2003/08/28 23:07:13 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -96,6 +96,7 @@ QDomDocument Project::serialize()
         vElem.setAttribute("name", canvas->name());
         QCanvasItemList canvasItems = canvas->allItems();
         QCanvasItemList::iterator it;
+        // create views
         for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
             BlockView *bv = (dynamic_cast<BlockView *> (*it));
             if (bv != 0) {
@@ -113,9 +114,9 @@ void Project::deserialize(QDomDocument *document) {
     typedef QMap<QString, AbstractModel*> IdMap;
     IdMap idMap;
 
-    //QDomElement root = document->documentElement();
     QDomNodeList mList = document->elementsByTagName("model-item");
     QDomNodeList vList = document->elementsByTagName("view");
+    // create model instances
     for (unsigned int i = 0; i < mList.count(); i++) {
         QDomElement mEl = mList.item(i).toElement();
         AbstractModel *model = ModelFactory::generateSingle(mEl);
@@ -123,12 +124,13 @@ void Project::deserialize(QDomDocument *document) {
         add(model);
     }
 
+    // create canvases
     for (unsigned int i = 0; i < vList.count(); i++) {
         QDomElement vEl = vList.item(i).toElement();
         QDomNodeList viList = vEl.elementsByTagName("view-item");
 
         GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
-
+        // create view items
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {

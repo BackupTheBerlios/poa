@@ -1,9 +1,8 @@
-
 TEMPLATE = app
 INCLUDEPATH += .
 
 # Input
-HEADERS += modulelibraryitem.h blockmodel.h inputblockmodel.h outputblockmodel.h inputoutputblockmodel.h muxmodel.h functionblockmodel.h coremodel.h cpumodel.h codemanager.h pinvector.h pin.h
+HEADERS += blockmodel.h blockview.h codemanager.h coremodel.h coreview.h cpumodel.h cpuview.h functionblockmodel.h inputblockmodel.h inputblockview.h mainwindow.h mdiwindow.h modulelibraryitem.h muxmodel.h muxview.h networkcanvas.h outputblockmodel.h outputblockview.h pinmodel.h pinvector.h pinview.h viewmap.h
 SOURCES += main.cpp
 
-TARGET = main
+TARGET = design

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.9 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: blockmodel.h,v 1.10 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 
@@ -83,6 +83,9 @@ public:
 
     void addEpisodicPin(PinModel *pin, PinModel *successor = 0);
     void removeEpisodicPin(PinModel *pin);
+
+    virtual QDomElement serialize(QDomDocument *document);
+    virtual void deserialize(QDomElement element);
 
     virtual QCanvasItemList createView(QCanvas *canvas);
 

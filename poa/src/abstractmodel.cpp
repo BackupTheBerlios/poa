@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.2 2003/08/26 15:59:23 vanto Exp $
+ * $Id: abstractmodel.cpp,v 1.3 2003/08/26 23:27:10 vanto Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -55,6 +55,12 @@ QDomElement AbstractModel::serialize(QDomDocument *document)
     root.setAttribute("name", name());
     root.setAttribute("desc", description());
     return root;
+}
+
+void AbstractModel::deserialize(QDomElement element)
+{
+    name_ = element.attribute("name", "unknown");
+    description_ = element.attribute("desc","no description");
 }
 
 void AbstractModel::setDescription(const QString &description)

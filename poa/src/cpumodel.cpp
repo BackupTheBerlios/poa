@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.10 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: cpumodel.cpp,v 1.11 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -47,13 +47,7 @@ CpuModel::CpuModel(unsigned short id, bool autoExecTime, QString name,
 CpuModel::CpuModel(QDomElement cpuElem)
 {
     if (!cpuElem.isNull()) {
-        id_ = (unsigned short) cpuElem.attribute("id", "400").toUInt();
-        // TRUE if value of autotime contains "TRUE" (case insensitive),
-        // FALSE otherwise.
-        autoExecTime_ =
-            cpuElem.attribute("autotime", "true").contains("true", FALSE);
-        setName(cpuElem.attribute("name", "unknown"));
-        setCode(cpuElem.attribute("srcfile",""));
+        deserialize(cpuElem);
     }
 }
 
@@ -80,4 +74,14 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("id", (unsigned int) id_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     return root;
+}
+
+void CpuModel::deserialize(QDomElement element) {
+    BlockModel::deserialize(element);
+    id_ = (unsigned short) element.attribute("id", "400").toUInt();
+    // TRUE if value of autotime contains "TRUE" (case insensitive),
+    // FALSE otherwise.
+    autoExecTime_ =
+        element.attribute("autotime", "true").contains("true", FALSE);
+    setCode(element.attribute("srcfile",""));
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.2 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: project.h,v 1.3 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -41,6 +41,7 @@ public:
     ~Project();
 
     void add(AbstractModel *item, int x, int y);
+    QDomDocument serialize();
 
 signals:
     void modelAdded(AbstractModel *item, int x, int y);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.3 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: pinmodel.h,v 1.4 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,9 +27,13 @@
 #define POA_PINMODEL_H
 
 #include <qcanvas.h>
+#include <qdom.h>
 
 class BlockView;
 class ConnectorModel;
+class QDomDocument;
+class QDomElement;
+
 #include "pinview.h"
 
 
@@ -49,12 +53,12 @@ public:
     void setName(QString &name);
 
     PinView *createView(BlockView *block,
-			PinView::DockPosition dockPosition);
+            PinView::DockPosition dockPosition);
 
     /*************************************************************************
      * Returns an XML representation of this instance.
      */
-    //    virtual QDomElement serialize(QDomDocument *document);
+    virtual QDomElement serialize(QDomDocument *document);
 
 private:
 

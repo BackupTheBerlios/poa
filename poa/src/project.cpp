@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.1 2003/08/22 22:48:48 squig Exp $
+ * $Id: project.cpp,v 1.2 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #include "project.h"
@@ -38,5 +38,9 @@ void Project::add(AbstractModel *item, int x, int y)
     emit modelAdded(item, x, y);
 }
 
-
+QDomDocument serialize()
+{
+    QDomDocument doc;
+    //TODO doc.appendChild(items[i
+}
 

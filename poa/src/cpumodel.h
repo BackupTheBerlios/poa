@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.10 2003/08/26 15:59:23 vanto Exp $
+ * $Id: cpumodel.h,v 1.11 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -43,6 +43,7 @@ class CpuModel: public BlockModel
     QString code() const;
     void setCode(const QString &code);
     QDomElement serialize(QDomDocument *document);
+    void deserialize(QDomElement element);
 
  private:
     QString code_;

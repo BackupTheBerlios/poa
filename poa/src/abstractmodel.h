@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.5 2003/08/26 15:59:23 vanto Exp $
+ * $Id: abstractmodel.h,v 1.6 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #ifndef ABSTRACTMODEL_H
@@ -50,6 +50,7 @@ public:
      * Returns an XML representation of this instance.
      */
     virtual QDomElement serialize(QDomDocument *document);
+    virtual void deserialize(QDomElement element);
 
     /*************************************************************************
      * Creates the corresponding view object.

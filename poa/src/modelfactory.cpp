@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.4 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: modelfactory.cpp,v 1.5 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
 #include "cpumodel.h"
-
+#include "coremodel.h"
 #include <qdom.h>
 
 /*****************************************************************************
@@ -37,9 +37,13 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
     QDomNodeList children = node.childNodes();
     for (uint i = 0; i < children.length(); i++) {
         QDomNode item = children.item(i);
-        if (item.isElement() && item.nodeName() == "cpu") {
+        if (item.isElement() && item.nodeName() == "model-item") {
             QDomElement element = item.toElement();
-            l.append(new CpuModel(element));
+	    if (element.attribute("type","") == "cpu") {
+	        l.append(new CpuModel(element));
+	    } else if (element.attribute("type","") == "core") {
+		//l.append(new CoreModel(element));
+	    }
         }
     }
 

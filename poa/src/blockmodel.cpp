@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.5 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: blockmodel.cpp,v 1.6 2003/08/26 23:27:11 vanto Exp $
  *
  *****************************************************************************/
 
@@ -129,4 +129,39 @@ QCanvasItemList BlockModel::createView(QCanvas *canvas)
     list.append(view);
     view->addPinViewsTo(list);
     return list;
+}
+
+QDomElement BlockModel::serialize(QDomDocument *document)
+{
+    QDomElement root = AbstractModel::serialize(document);
+    root.setAttribute("auto-offset", autoOffset_? "true":"false");
+    root.setAttribute("offset", (unsigned int)offset_);
+    root.setAttribute("clock", (unsigned int)clock_);
+
+    for (unsigned i = 0; i < inputPins_->size(); i++) {
+    QDomElement pinElem = inputPins_->at(i)->serialize(document);
+    pinElem.setAttribute("type","input");
+        root.appendChild(pinElem);
+    }
+    for (unsigned i = 0; i < outputPins_->size(); i++) {
+        QDomElement pinElem = outputPins_->at(i)->serialize(document);
+    pinElem.setAttribute("type","output");
+    root.appendChild(pinElem);
+    }
+    for (unsigned i = 0; i < episodicPins_->size(); i++) {
+        QDomElement pinElem = episodicPins_->at(i)->serialize(document);
+    pinElem.setAttribute("type","episodic");
+    root.appendChild(pinElem);
+    }
+
+    return root;
+}
+
+void BlockModel::deserialize(QDomElement element)
+{
+    AbstractModel::deserialize(element);
+    autoOffset_ = (element.attribute("auto-offset","false") == "true");
+    offset_ = (unsigned int)element.attribute("offset","0").toUInt();
+    clock_ = (unsigned int)element.attribute("clock","0").toUInt();
+    // TODO: pins
 }

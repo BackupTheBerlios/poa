@@ -53,9 +53,17 @@ coverageclean:
 	rm -f ../src/*.da ../src/qextserialbase/*.da *.da
 	rm -f ../src/*.gcov ../src/qextserialbase/*.gcov *.gcov
 
+mrproper: clean coverageclean
+	rm -f ../src/*.bb ../src/qextserialbase/*.bb *.bb
+	rm -f ../src/*.bbg ../src/qextserialbase/*.bbg *.bbg
+
 depend:
 	touch Makefile.depend
 	makedepend -f Makefile.depend -- -I../src -- $(SOURCES)
+
+gcover:
+	cd ../src; find -name "*.cpp" -exec gcov {} \;
+	java -jar ../gcover/target/gcover-1.0-uber.jar ../src ../target/docs/gcover
 
 poa:
 	make -C ../src	

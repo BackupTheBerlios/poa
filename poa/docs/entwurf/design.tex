@@ -1,43 +1,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.3 2004/06/04 14:43:18 squig Exp $
+%% $Id: design.tex,v 1.4 2004/06/04 19:28:54 squig Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Entwurfsmuster}
 
-WÃ¤hrend des Entwurfs von POA konnte ein Teil der Implementierung mit
+Während des Entwurfs von POA konnte ein Teil der Implementierung mit
 Hilfe von Entwufsmustern der Softwaretechnik realisiert
-werden. Entwufsmuster beschreiben eine LÃ¶sungsstrategie fÃ¼r ein
+werden. Entwufsmuster beschreiben eine Lösungsstrategie für ein
 abstraktes Problem.
 
 \subsection{Model-View-Controller}
 
-Die Speicherung der Daten ist vollstÃ¤ndig von der Visualisierung
-unabhÃ¤ngig. Die Daten werden in sogenannten Model Klassen verwaltet
+Die Speicherung der Daten ist vollständig von der Visualisierung
+unabhängig. Die Daten werden in sogenannten Model Klassen verwaltet
 und von View Klassen angezeigt, wobei eine 1:n Beziehung besteht. Die
-Kommunikation zwischen den Klassen erfolgt anonym Ã¼ber
+Kommunikation zwischen den Klassen erfolgt anonym über
 Benachrichtigungen (siehe auch \ref{Benachrichtigungen}). 
 
-Eine Model Klasse stellt Ã¼ber get-Methoden oder Iteratoren den Zustand
-zur VerfÃ¼gung. Dieser Zustand wird von einer View-Klasse dem
-Anwendungszweck entsprechend angezeigt. Konkret werden die BlÃ¶cke,
+Eine Model Klasse stellt über get-Methoden oder Iteratoren den Zustand
+zur Verfügung. Dieser Zustand wird von einer View-Klasse dem
+Anwendungszweck entsprechend angezeigt. Konkret werden die Blöcke,
 Pins und Verbindungen in POA jeweils durch Datenobjekte
-reprÃ¤sentiert. Diese werden mit Hilfe von entsprechenden Viewobjekten von der
+repräsentiert. Diese werden mit Hilfe von entsprechenden Viewobjekten von der
 GridCanvas Klasse angezeigt. 
 
 \subsection{Benachrichtigung}
 
-Die QT Bibliothek erweitert den Sprachumfang von C++ Ã¼ber einen
+Die QT Bibliothek erweitert den Sprachumfang von C++ über einen
 speziellen Kompiler, den Meta-Object-Compiler (MOC), mit einem
 Benachrichtigungskonzept. Mit Hilfe von
-Benachrichtigungen kÃ¶nnen Objekte anderen Objekten Mitteilungen Ã¼ber
-ZustandsÃ¤nderungen schicken. Die nahtlose Integration in die
-Programmiersprache ermÃ¶glicht eine besonders einfache Verwendung des
+Benachrichtigungen können Objekte anderen Objekten Mitteilungen über
+Zustandsänderungen schicken. Die nahtlose Integration in die
+Programmiersprache ermöglicht eine besonders einfache Verwendung des
 Mechanismus.
 
-Die Benachrichtigungen (Signals) werden durch das SchlÃ¼sselwort emit
+Die Benachrichtigungen (Signals) werden durch das Schlüsselwort emit
 gesendet und von speziellen Methoden (Slots) empfangen. Die Signals
 und Slots werden in den Klassendeklarationen angegeben. Die Verbindung
 zwischen zwei Objekten wird mittels der connect Methode hergestellt. 
@@ -49,20 +49,20 @@ Mechanismus gemacht.
 
 Das Singleton Muster wird verwendet, wenn ein Objekt nur genau einmal
 instanziert werden soll. Dadurch lassen sich auch in
-objekt-orientierten Systemen, Ã¤quivalent zu globalen Variablen in
-imperativen Systemen, global verfÃ¼gbare Objekte realisieren,
-die Ã¼ber eine definierte Schnittstelle angesprochen werden kÃ¶nnen. 
+objekt-orientierten Systemen, äquivalent zu globalen Variablen in
+imperativen Systemen, global verfügbare Objekte realisieren,
+die über eine definierte Schnittstelle angesprochen werden können. 
 
 In POA wird nur an e
 
 
 \section{Module}
 
-Die Architektur von POA lÃ¤sst sich gut in stark zusammenhÃ¤ngende
+Die Architektur von POA lässt sich gut in stark zusammenhängende
 Module aufteilen, die eine gerine Kopplung aufweisen. In den folgenden
 Abschnitten sind diese Module im Detail beschrieben.
 
-Die Zuordnung von einzelnen Klassen zu Modulen lÃ¤sst sich in der Regel
+Die Zuordnung von einzelnen Klassen zu Modulen lässt sich in der Regel
 aus dem Klassennamen ableiten oder ist aus dem POA
 Software-Architektur anhand der Schattierung ersichtlich.
 

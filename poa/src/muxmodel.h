@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.5 2003/09/20 17:12:26 garbeam Exp $
+ * $Id: muxmodel.h,v 1.6 2003/09/22 08:57:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -122,6 +122,12 @@ public:
      * Creates a MuxModel instance for the project out of an xml subtree
      */
     MuxModel(QDomElement coreElement);
+
+    /**
+     * Adds a new MuxMapping.
+     */
+    void addMuxMapping(PinModel *input, PinModel *output,
+                       unsigned begin, unsigned end);
 
     /**
      * Removes the given pin from this MuxModel and any related

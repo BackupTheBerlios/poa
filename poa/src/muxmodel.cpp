@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.2 2003/09/20 17:12:26 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.3 2003/09/22 08:57:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -97,6 +97,16 @@ MuxModel::~MuxModel()
 
 }
 
+void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
+                             unsigned begin, unsigned end)
+{
+    MuxMapping *mapping = new MuxMapping(input, output, begin, end);
+
+
+    mappings_.append(mapping);
+
+}
+
 void MuxModel::removePin(PinModel *pin)
 {
     switch (pin->type()) {
@@ -107,7 +117,7 @@ void MuxModel::removePin(PinModel *pin)
         outputPins_->remove(pin);
         break;
     case PinModel::EPISODIC:
-        qDebug("Warning: Cannot remove pin of type EPISODIC from MuxModel");
+        qDebug("Warning: Cannot remove EPISODIC pin from MuxModel");
         break;
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.101 2004/01/22 20:49:09 squig Exp $
+ * $Id: mainwindow.cpp,v 1.102 2004/01/22 21:42:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -355,11 +355,10 @@ void MainWindow::initializeMenu()
     openSettingsAction->addTo(settingsMenu);
 
     // window
-    windowMenu_ = new QPopupMenu(this);
-    menuBar()->insertItem(tr("&Window"), windowMenu_);
-    tileAction->addTo(windowMenu_);
-    tileHorizontalAction->addTo(windowMenu_);
-    cascadeAction->addTo(windowMenu_);
+    windowsMenu_ = new QPopupMenu(this);
+    menuBar()->insertItem(tr("&Windows"), windowsMenu_);
+    connect(windowsMenu_, SIGNAL(aboutToShow()),
+            this, SLOT(windowsMenuAboutToShow()));
 
     // help
     helpMenu = new QPopupMenu(this);
@@ -968,6 +967,15 @@ QAction *MainWindow::pasteAction()
     return editPasteAction;
 }
 
+void MainWindow::raiseWindow(int id)
+{
+    QWidget* w = ws->windowList().at(id);
+    if (w) {
+        w->showNormal();
+        w->setFocus();
+    }
+}
+
 void MainWindow::routeSelected(ConnectorRouter *router)
 {
     CanvasView *view = activeView();
@@ -1045,6 +1053,18 @@ void MainWindow::saveToLibrary()
     }
 }
 
+QCanvasItem *MainWindow::selectedItem()
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        if (!items.isEmpty()) {
+            return items.first();
+        }
+    }
+    return 0;
+}
+
 AbstractModel *MainWindow::selectedModel()
 {
     CanvasView *view = activeView();
@@ -1112,6 +1132,9 @@ void MainWindow::windowActivated(QWidget *window)
         fileSaveAsAction->setEnabled(false);
         editModeActionGroup_->setEnabled(false);
     }
+
+    // update popup menu actions
+    selectionChanged(selectedItem());
 }
 
 void MainWindow::selectionChanged(QCanvasItem *item)
@@ -1133,6 +1156,29 @@ void MainWindow::setEditMode(QAction *action)
         }
         else {
             view->setEditMode(CanvasView::Default);
+        }
+    }
+}
+
+void MainWindow::windowsMenuAboutToShow()
+{
+    windowsMenu_->clear();
+    tileAction->addTo(windowsMenu_);
+    tileHorizontalAction->addTo(windowsMenu_);
+    cascadeAction->addTo(windowsMenu_);
+
+    QWidgetList windows = ws->windowList();
+    tileAction->setEnabled(!windows.isEmpty());
+    tileHorizontalAction->setEnabled(!windows.isEmpty());
+    cascadeAction->setEnabled(!windows.isEmpty());
+
+    if (!windows.isEmpty()) {
+        windowsMenu_->insertSeparator();
+        for (int i = 0; i < int(windows.count()); ++i ) {
+            int id = windowsMenu_->insertItem
+                (windows.at(i)->caption(), this, SLOT(raiseWindow(int)));
+            windowsMenu_->setItemParameter(id, i);
+            windowsMenu_->setItemChecked(id, ws->activeWindow() == windows.at(i));
         }
     }
 }

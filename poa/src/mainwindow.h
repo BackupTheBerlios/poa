@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.38 2004/01/22 20:49:09 squig Exp $
+ * $Id: mainwindow.h,v 1.39 2004/01/22 21:42:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -117,6 +117,12 @@ public:
      * Returns the save to library action.
      */
     QAction *saveToLibraryAction();
+
+    /**
+     * Returns the top most currently selected item.
+     * @return 0, if no window is active or selection is empty
+     */
+    QCanvasItem *selectedItem();
 
     /**
      * Returns the currently selected model.
@@ -222,14 +228,18 @@ private:
     QAction *cascadeAction;
     QAction *saveToLibraryAction_;
     QAction *tileAction;
-    QPopupMenu *windowMenu_;
+    QPopupMenu *windowsMenu_;
 
 private slots:
+
     void closeWindow();
-    void tileHorizontal();
+    void raiseWindow(int id);
     void updateRecentProjectsMenu();
     void selectionChanged(QCanvasItem *item);
     void setEditMode(QAction *action);
+    void tileHorizontal();
+    void windowsMenuAboutToShow();
+
 };
 
 #endif // POA_MAINWINDOW_H

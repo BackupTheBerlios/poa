@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.7 2004/01/26 16:44:28 keulsn Exp $
+ * $Id: priorityqueue.h,v 1.8 2004/01/30 12:29:04 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -105,14 +105,33 @@ public:
      */
     unsigned size();
 
+    /**
+     * Checks the consistency of the data structures used. Returns
+     * QString::null
+     */
     QString checkIntegrity();
 
-    QString diagnostics();
+    /**
+     * Returns the distribution of items in the data structure used.
+     * If this is implemented as a heap, the Returns the greatest difference
+     * of the number of elements contained in a subtree rooted at any node
+     * in the heap.
+     */
+    int checkEqualDistribution();
 
 protected:
 
     /**
      *
+     * Note: <code>*smaller</code>, <code>*larger</code> should be pointers to
+     * variables of type <code>PriorityItem*</code>. Values will be assigned
+     * to those variables.
+     *
+     * Postcondition: <code><br>
+     *  ((left == *smaller && right == *larger)
+     *   || (left == *larger && right == *smaller)) <br>
+     *  && (*smaller == 0 || *larger != 0 && *smaller != 0 &&
+     *                       !(*smaller)->higherPriority(*larger)</code>
      */
     void separateSmallerLarger(PriorityItem *left,
 			       PriorityItem *right,
@@ -214,6 +233,10 @@ private:
      */
     PriorityItem *updateSizeUpward();
 
+    /**
+     * Returns the parent of <code>this</code> or 0 if <code>this</code> is
+     * a root node.
+     */
     PriorityItem *parent() const;
 
     /**

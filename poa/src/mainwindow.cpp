@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.62 2003/10/01 15:23:00 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.63 2003/10/01 15:53:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -229,8 +229,8 @@ void MainWindow::initializeToolbars()
     openBlockConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
     //invokeSchedulingAction->addTo(utilToolBar);
-    invokeCompilerAction->addTo(utilToolBar);
-    invokeDownloadAction->addTo(utilToolBar);
+    //invokeCompilerAction->addTo(utilToolBar);
+    //invokeDownloadAction->addTo(utilToolBar);
     invokeDeployAction->addTo(utilToolBar);
 
     // view
@@ -293,8 +293,8 @@ void MainWindow::initializeMenu()
     openBlockConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
     //invokeSchedulingAction->addTo(toolsMenu);
-    invokeCompilerAction->addTo(toolsMenu);
-    invokeDownloadAction->addTo(toolsMenu);
+    //invokeCompilerAction->addTo(toolsMenu);
+    //invokeDownloadAction->addTo(toolsMenu);
     invokeDeployAction->addTo(toolsMenu);
 
     // settings

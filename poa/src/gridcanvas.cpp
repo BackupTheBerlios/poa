@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.13 2003/08/29 17:59:38 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.14 2003/09/04 14:33:32 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -66,37 +66,53 @@ void GridCanvas::addView(AbstractModel *item) {
     update();
 }
 
-
-void GridCanvas::setGridSize(int gridSize)
+int coordToGridHigher(int c, int gridSize)
 {
-    int stretch = 10;
-    // create grid pixmap
-    QRect r(0, 0, stretch *  gridSize, stretch * gridSize);
-    QPixmap gridTile(r.size());
-    gridTile.fill(white);
-
-    QPainter p(&gridTile);
-    p.setPen(QPen(gray, 1));
-
-    for (int i = 1; i <= stretch; i++) {
-        p.drawLine(0,
-                   i * gridSize - 2,
-                   r.size().width(),
-                   i * gridSize - 2);
-        p.drawLine(i * gridSize - 2,
-                   0,
-                   i * gridSize - 2,
-                   r.size().height());
+    int nextC = c / gridSize;
+    if ((c > 0) && ((c % gridSize) != 0)) {
+	++nextC;
     }
-//             p.drawLine(x + (gridSize / 2) /* x1 */,
-//                        y + ((gridSize / 2) - 2) /* y1 */,
-//                        x + (gridSize / 2) /* x2 */,
-//                        y + ((gridSize / 2) + 3) /* y2 */);
-//             p.drawLine(x + ((gridSize / 2) - 2) /* x1 */,
-//                        y + (gridSize / 2) /* y1 */,
-//                        x + ((gridSize / 2) + 3) /* x2 */,
-//                        y + (gridSize / 2) /* y2 */);
-    p.end();
+    return nextC * gridSize;
+}
 
-    setBackgroundPixmap(gridTile);
+int coordToGridLower(int c, int gridSize)
+{
+    int prevC = c / gridSize;
+    if ((c < 0) && ((c % gridSize) != 0)) {
+	--prevC;
+    }
+    return prevC * gridSize;
+}
+
+void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
+{
+    // clear background
+    painter.fillRect(clip, QBrush (QColor("white")));
+
+    int gridSize = Settings::instance()->gridSize();
+
+    // draw grid
+    painter.setPen(QPen(gray));
+    int minX = coordToGridHigher(clip.left(), gridSize);
+    int minY = coordToGridHigher(clip.top(), gridSize);
+    int maxX = coordToGridLower(clip.right(), gridSize);
+    int maxY = coordToGridLower(clip.bottom(), gridSize);
+
+    // for some reason qt does not draw a line onto the pixels specified.
+    // therefore we must subtract 1 at top and left coodinate and add 1 at
+    // bottom and right coordinate.
+
+    for (int x = minX; x <= maxX; x += gridSize) {
+	painter.drawLine(x, clip.top() - 1, x, clip.bottom() + 1);
+    }
+    
+    for (int y = minY; y <= maxY; y += gridSize) {
+	painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
+    }
+}
+
+void GridCanvas::setGridSize(int)
+{
+    setAllChanged();
+    update();
 }

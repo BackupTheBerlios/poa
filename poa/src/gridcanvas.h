@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.13 2003/09/04 12:44:13 keulsn Exp $
+ * $Id: gridcanvas.h,v 1.14 2003/09/04 14:33:32 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,10 @@ public:
 
 public slots:
     void setGridSize(int gridSize);
+
+protected:
+
+    virtual void drawBackground(QPainter &painter, const QRect &clip); 
 
 private:
 

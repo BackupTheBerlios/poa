@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.12 2004/01/29 15:15:35 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.13 2004/01/29 16:30:05 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -226,9 +226,6 @@ void BlockConfWidget::commit() {
             }
         }
     }
-
-    // resync
-    sync();
 }
 
 void BlockConfWidget::updatePositions(PinModel::PinType type)

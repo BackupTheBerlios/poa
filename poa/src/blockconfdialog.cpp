@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.62 2004/01/28 20:37:44 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.63 2004/01/29 16:30:05 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -284,13 +284,13 @@ bool BlockConfDialog::commit()
 
     // commits all changes to blockConfWidget_
     blockConfWidget_->commit();
+    blockConfWidget_->sync();
 
     // notify model about update to repaint views
     model_->updatePerformed();
 
     // sync again
     sync();
-
     return success;
 }
 

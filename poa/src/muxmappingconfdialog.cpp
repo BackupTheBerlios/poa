@@ -18,11 +18,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.6 2004/01/29 16:07:12 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.7 2004/01/29 16:30:05 garbeam Exp $
  *
  *****************************************************************************/
 
-#include <qcombobox.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -150,7 +149,7 @@ void MuxMappingConfDialog::initLayout() {
 PinListViewItem *MuxMappingConfDialog::pinListViewItemForString(
     QString name)
 {
-    QListViewItemIterator it = *itemIter_;
+    QListViewItemIterator it = itemIter_;
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->text(1) == name) {
@@ -165,7 +164,7 @@ void MuxMappingConfDialog::sync() {
 
     inputComboBox_->clear();
     outputComboBox_->clear();
-    QListViewItemIterator it = *((QListViewItemIterator *)itemIter_);
+    QListViewItemIterator it = itemIter_;
     for (; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
         if (item->type() == PinModel::INPUT) {

@@ -18,23 +18,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.h,v 1.3 2004/01/29 14:27:22 garbeam Exp $
+ * $Id: muxmappingconfdialog.h,v 1.4 2004/01/29 16:30:05 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_MUXMAPPINGCONFDIALOG_H
 #define POA_MUXMAPPINGCONFDIALOG_H
 
+#include <qcombobox.h>
 #include <qdialog.h>
 #include <qlistview.h>
+#include <qptrlist.h>
 
-class QComboBox;
 class QSpinBox;
 class QString;
 
 class MuxModel;
 class MuxMappingListViewItem;
 class PinListViewItem;
+
+/**
+ * PinItemComboBox
+ */
+
+class PinItemComboBox : public QComboBox
+{
+
+public:
+    PinItemComboBox(QWidget *parent);
+    ~PinItemComboBox();
+
+    void insertItem(PinListViewItem *item);
+
+    PinListViewItem *selectedItem();
+
+private:
+
+    PinListViewItem *selected_;
+    QPtrList<PinListViewItem> items_;
+};
+
+//////////////////////////////////////////////////////////////////////////////
 
 /**
  * MuxMapping Configuration Dialog.

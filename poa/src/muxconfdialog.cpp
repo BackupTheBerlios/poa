@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.42 2004/01/29 14:27:22 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.43 2004/01/29 16:30:05 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -337,6 +337,7 @@ void MuxConfDialog::commit() {
 
     mappingListView->clear();
     deletedMappings_.clear();
+    blockConfWidget_->sync();
 
     // Notify model about update, so the view will be
     // repaint.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.48 2004/01/28 10:36:13 keulsn Exp $
+ * $Id: scheduledialog.cpp,v 1.49 2004/01/28 16:19:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -61,7 +61,7 @@ const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
 const int BLOCKS_PER_CANVAS = 10;
 const int RULER_SNAP = 250;         // nanoseconds to snap the rulerbar to.
-const int RULER_INTERVAL = 50;      // show a rulerbar every X pixels (+snap)
+const int RULER_INTERVAL = 75;      // show a rulerbar every X pixels (+snap)
 const double RAD2DEG = 57.2958;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -150,6 +150,7 @@ void ScheduleDialog::initTimingWidget()
 {
     graph_ = new BlockGraph(project_);
     blocks_ = graph_->blocks();
+
     // remove all MuxModel nodes from list
     for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
          it != blocks_.end(); ++it) {
@@ -158,6 +159,7 @@ void ScheduleDialog::initTimingWidget()
             it = blocks_.remove(it);
         }
     }
+
     timingTable = new QTable(0, 4, topWidget, "timingWidget");
     timingTable->horizontalHeader()->setLabel(0, tr( "Block" ));
     timingTable->horizontalHeader()->setLabel(1, tr( "Laufzeit" ));
@@ -177,6 +179,7 @@ void ScheduleDialog::initTimingWidget()
 
         fillTimingTable(*it2);
     }
+
     topLayout->addWidget(timingTable);
 
     rightWidget_ = new QWidget(topWidget);
@@ -280,29 +283,40 @@ void ScheduleDialog::clearCanvas()
 void ScheduleDialog::drawRuler()
 {
     // draw ruler
+    QFont font = QApplication::font();
+    font.setPointSize(font.pointSize() - 2);
+
     int x = WIDGET_SPACING;
+    int currNs = 0;
 
     double nsPer100 = RULER_INTERVAL * (1.0 / (pixPerNs_ * zoom_));
     int rulerTick = (((int)nsPer100 / RULER_SNAP)+1) * RULER_SNAP;
 
-    QCanvasText *text = new QCanvasText(QString::number(rulerTick)+" ns",
-                                        canvas);
-    text->move(x, 1);
-    text->setColor(gray);
-
-    text->show();
     while (x < canvas->width()) {
         x += (int)(pixPerNs_ * zoom_ * rulerTick);
+        currNs += rulerTick;
+
         // draw short line
         QCanvasLine *tick = new QCanvasLine(canvas);
         tick->setPoints(x, 0, x, 10);
         tick->setPen(gray);
         tick->show();
+
         // draw long line
         tick = new QCanvasLine(canvas);
         tick->setPoints(x, 10, x, canvas->height());
         tick->setPen(lightGray);
         tick->show();
+
+        QCanvasText *text = new QCanvasText(formatTimeProperly(currNs),
+                                            canvas);
+        text->move(x + WIDGET_SPACING / 2, 1);
+        text->setColor(gray);
+
+        text->setFont(font);
+
+        text->show();
+
     }
 }
 

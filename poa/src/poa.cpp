@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.4 2004/01/18 23:31:02 squig Exp $
+ * $Id: poa.cpp,v 1.5 2004/01/28 16:19:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -161,4 +161,19 @@ QString image(LineDirection dir)
     default:
         return 0;
     }
+}
+
+QString formatTimeProperly(int ns)
+{
+    double time = ns;
+    int unit = 0;
+
+    // unicode: µ == "\u00B5"
+    QString UNITS[4] = {"ns", "\u00B5s", "ms", "s"};
+
+    for (; unit < 4 - 1 && time >= 1000; unit++) {
+        time /= 1000;
+    }
+
+    return QString("%1 " + UNITS[unit]).arg(time);
 }

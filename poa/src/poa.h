@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.15 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: poa.h,v 1.16 2004/01/28 16:19:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -59,6 +59,6 @@ bool isTurn(LineDirection first, LineDirection second);
 LineDirection turnLeft(LineDirection dir);
 LineDirection turnRight(LineDirection dir);
 QString image(LineDirection dir);
-
+QString formatTimeProperly(int ns);
 
 #endif // POA_POA_H

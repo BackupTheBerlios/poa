@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.11 2003/08/27 13:56:13 keulsn Exp $
+ * $Id: blockview.cpp,v 1.12 2003/08/27 15:49:23 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -235,13 +235,13 @@ void BlockView::arrangeVerticalPins()
 	for (unsigned i = 0; i < slotCount; ++i) {
 	    if (i < leftSize) {
 		QSize pinSize = leftPins_[i]->size();
-		leftPins_[i]->move(x() - pinSize.width() - 1,
+		leftPins_[i]->move(x() - pinSize.width() + 1,
 				   top - pinSize.height() / 2);
 	    }
 	    
 	    if (i < rightSize) {
 		QSize pinSize = rightPins_[i]->size();
-		rightPins_[i]->move(x() + width(),
+		rightPins_[i]->move(x() + width() - 1,
 				    top - pinSize.height() / 2);
 	    }
 	    top += height;

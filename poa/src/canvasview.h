@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.9 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: canvasview.h,v 1.10 2003/08/27 15:49:23 keulsn Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
@@ -59,6 +59,7 @@ private:
     Project *project_;
     QCanvasItem *movingItem_;
     QPoint movingStartPoint_;
+    unsigned currentZ_;
 };
 
 #endif // CANVASVIEW_H

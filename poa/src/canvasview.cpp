@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.10 2003/08/26 14:31:02 keulsn Exp $
+ * $Id: canvasview.cpp,v 1.11 2003/08/27 15:49:23 keulsn Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -63,6 +63,7 @@ CanvasView::~CanvasView()
 
 void CanvasView::contentsMousePressEvent(QMouseEvent* e)
 {
+    currentZ_ = 0;
     QPoint p = inverseWorldMatrix().map(e->pos());
     QCanvasItemList l = canvas()->collisions(p);
     if (e->button() == LeftButton) {
@@ -123,9 +124,11 @@ void CanvasView::dropEvent(QDropEvent *e)
 
 void CanvasView::modelAdded(AbstractModel *item, int x, int y)
 {
+    ++currentZ_;
     QCanvasItemList l = item->createView(canvas());
     for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
         (*it)->moveBy(x, y);
+	(*it)->setZ(currentZ_);
         (*it)->show();
     }
     canvas()->update();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.2 2003/08/27 13:56:13 keulsn Exp $
+ * $Id: pinview.cpp,v 1.3 2003/08/27 15:49:23 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -35,9 +35,8 @@ PinView::PinView(PinModel *model,
     : QCanvasRectangle(block->canvas())
 {
     model_ = model;
-    move(0, 0);
     setZ(block->z());
-    Q_ASSERT(z() == block->z());
+    setBrush(QBrush(SolidPattern));
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:

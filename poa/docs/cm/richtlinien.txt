@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.7 2003/06/16 17:39:38 garbeam Exp $
+$Id: richtlinien.txt,v 1.8 2003/06/16 19:33:43 garbeam Exp $
 
 Richtlinien zur POA-Entwicklung
 ===============================
@@ -6,7 +6,7 @@ Richtlinien zur POA-Entwicklung
 Inhalt
 ------
 
-0.    Vorraussetzungen
+0.    Voraussetzungen
 
 1.    Einzusetzende Software
 1.1     Betriebssystemplattform
@@ -27,7 +27,7 @@ Inhalt
 -------------------------------------------------------------------------------
 
 
-0. Vorraussetzungen
+0. Voraussetzungen
 
 Es wird von jedem Team-Mitglied vorausgesetzt, dass es eigenverantwortlich
 einen Entwickler-Account bei BerliOS.de und auf 

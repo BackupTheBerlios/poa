@@ -18,22 +18,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpu.cpp,v 1.2 2003/08/22 12:06:16 squig Exp $
+ * $Id: abstractmodel.h,v 1.1 2003/08/22 15:07:13 squig Exp $
  *
  *****************************************************************************/
-#include "cpu.h"
 
-#include <qapplication.h>
 
-CPU::CPU(QListViewItem* parent)
-    : QListViewItem(parent)
+#ifndef ABSTRACTMODEL_H
+#define ABSTRACTMODEL_H
+
+#include <qobject.h>
+class QDomDocument;
+class QDomElement;
+
+/*****************************************************************************
+ * Base class for items in the module library.
+ *
+ * @author keulsn
+ * @author Steffen Pingel
+ */
+class AbstractModel : public QObject
 {
-    setText(0, qApp->translate(0, "CPU"));
-    setText(1, qApp->translate(0, "NIOS32 CPU"));
 
-    setDragEnabled(TRUE);
-}
+public:
+    /*************************************************************************
+     * Returns a description of the item.
+     */
+    virtual QCString description() = 0;
 
-CPU::~CPU()
-{
-}
+    /*************************************************************************
+     * Returns the name of the item.
+     */
+    virtual QCString name() = 0;
+
+    /*************************************************************************
+     * Returns an XML representation of this instance.
+     */
+    virtual QDomElement serialize(QDomDocument *document) = 0;
+
+};
+
+#endif

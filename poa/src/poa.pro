@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.17 2003/08/22 13:31:37 keulsn Exp $
+# $Id: poa.pro,v 1.18 2003/08/22 15:06:11 squig Exp $
 #
 ###############################################################################
 
@@ -38,6 +38,7 @@ contains (UNAME, OpenBSD) {
 
 # source files
 HEADERS += aboutdialog.h 
+HEADERS += abstractmodel.h
 HEADERS += blockmodel.h
 HEADERS += blockview.h
 HEADERS += canvasview.h
@@ -46,7 +47,6 @@ HEADERS += connectormodel.h
 HEADERS += connectorview.h
 HEADERS += coremodel.h
 # HEADERS += coreview.h
-HEADERS += cpu.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h
 HEADERS += inputblockmodel.h
@@ -56,7 +56,6 @@ HEADERS += librarywindow.h
 HEADERS += mainwindow.h
 HEADERS += mdiwindow.h
 HEADERS += moduleconfdialog.h 
-HEADERS += modulelibraryitem.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
 HEADERS += settingsdialog.h
@@ -72,7 +71,6 @@ HEADERS += gridcanvas.h
 SOURCES += aboutdialog.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
-SOURCES += cpu.cpp
 SOURCES += cpumodel.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp

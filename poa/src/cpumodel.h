@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.5 2003/08/22 13:45:53 garbeam Exp $
+ * $Id: cpumodel.h,v 1.6 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -51,7 +51,7 @@ class CpuModel: public BlockModel
     // Returns XML representation of this instance,
     QCString name() { return "NIOS32"; };
     QCString description() { return "NIOS32 CPU"; };
-    QDomElement serialize();
+    QDomElement serialize(QDomDocument *document);
 
  private:
 

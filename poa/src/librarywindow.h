@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.2 2003/08/22 12:06:16 squig Exp $
+ * $Id: librarywindow.h,v 1.3 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -27,7 +27,7 @@
 #include <qvariant.h>
 #include <qdockwindow.h>
 #include <qlistview.h>
-class ModuleLibraryItem;
+class AbstractModel;
 class QListView;
 class QListViewItem;
 class QSplitter;
@@ -43,7 +43,7 @@ class LibraryListView : public QListView
 public:
     LibraryListView(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
-	QDragObject *dragObject();
+    QDragObject *dragObject();
 };
 
 /*****************************************************************************
@@ -53,47 +53,47 @@ public:
 class LibraryListViewItem : QListViewItem
 {
 public:
-	LibraryListViewItem(QListViewItem *parent, ModuleLibraryItem *item);
-	~LibraryListViewItem();
+    LibraryListViewItem(QListViewItem *parent, AbstractModel *item);
+    ~LibraryListViewItem();
 
-	QByteArray serialize();
+    AbstractModel &data() const;
 
 private:
-	ModuleLibraryItem *item_;
+    AbstractModel *item_;
 };
 
 /*****************************************************************************
  * Provides the library window.
- * 
+ *
  * The library is a dock window with a tree and an information area
  * that show a short description of the selected item.
  *
  * @author Steffen Pingel
  */
 class LibraryWindow : public QDockWindow
-{ 
+{
     Q_OBJECT
 
 public:
-    LibraryWindow(Place p = InDock, QWidget * parent = 0, 
-				  const char* name = 0, WFlags f = 0 );
+    LibraryWindow(Place p = InDock, QWidget * parent = 0,
+                  const char* name = 0, WFlags f = 0 );
     ~LibraryWindow();
 
 private :
 
-	QListView* moduleListView;
-    QTextBrowser* descriptionTextBrowser; 
-	QListViewItem* coreListViewItem;
-	QListViewItem* cpuListViewItem;
-	QListViewItem* ioListViewItem;
-	QSplitter* splitter;
+    QListView* moduleListView;
+    QTextBrowser* descriptionTextBrowser;
+    QListViewItem* coreListViewItem;
+    QListViewItem* cpuListViewItem;
+    QListViewItem* ioListViewItem;
+    QSplitter* splitter;
 
-	void initializeLibrary();
+    void initializeLibrary();
 
 private slots :
-	void setDescription(QListViewItem* item);
-	void setOrientation(Qt::Orientation orientation);
-		
+    void setDescription(QListViewItem* item);
+    void setOrientation(Qt::Orientation orientation);
+
 };
 
 #endif // LIBRARYWINDOW_H

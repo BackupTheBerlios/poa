@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.4 2003/08/22 13:21:24 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.5 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -115,7 +115,6 @@ void CanvasView::dropEvent(QDropEvent *e)
     if (data) {
         QDomDocument *doc = new QDomDocument("cpu");
         if (doc->setContent(QString(data))) {
-            CpuModel model2(doc);
             // FIX: remove: create dummy items
             QPoint pos = viewportToContents(e->pos());
             QCanvasPolygonalItem *i

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.2 2003/08/22 10:08:54 garbeam Exp $
+ * $Id: blockmodel.h,v 1.3 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 
 #include <qstring.h>
 
-#include "modulelibraryitem.h"
+#include "abstractmodel.h"
 #include "pinvector.h"
 
 
@@ -41,9 +41,9 @@
  * </ul>
  * @author keulsn
  */
-class BlockModel: public ModuleLibraryItem
+class BlockModel: public AbstractModel
 {
-  public:
+public:
 
     /*************************************************************************
      * Returns <code>true</code> if this cannot itself be contained in a
@@ -70,7 +70,7 @@ class BlockModel: public ModuleLibraryItem
     void removeEpisodicPin (PinModel *pin);
 
 
-  private:
+private:
 
     QString *name_;
     PinVector *episodicPins_;

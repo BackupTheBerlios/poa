@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.4 2003/08/22 12:53:38 squig Exp $
+ * $Id: librarywindow.cpp,v 1.5 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
 #include "cpumodel.h"
-#include "modulelibraryitem.h"
+#include "abstractmodel.h"
 
 #include <qvariant.h>
 #include <qdragobject.h>
@@ -96,9 +96,6 @@ void LibraryWindow::setDescription(QListViewItem* item)
 void LibraryWindow::setOrientation(Qt::Orientation orientation)
 {
     splitter->setOrientation(orientation);
-    // (orientation == Qt::Horizontal)
-//                              ? Qt::Vertical
-//                              : Qt::Horizontal);
 }
 
 LibraryListView::LibraryListView(QWidget *parent = 0, const char *name = 0,
@@ -110,20 +107,22 @@ LibraryListView::LibraryListView(QWidget *parent = 0, const char *name = 0,
 QDragObject *LibraryListView::dragObject()
 {
     LibraryListViewItem *item = (LibraryListViewItem *)selectedItem();
+
+    QDomDocument doc;
+    doc.appendChild(item->data().serialize(&doc));
     QStoredDrag *dragItem = new QStoredDrag("text/xml", this);
-    dragItem->setEncodedData(item->serialize());
+    dragItem->setEncodedData(doc.toCString());
     return dragItem;
 }
 
 LibraryListViewItem::LibraryListViewItem(QListViewItem *parent,
-                                         ModuleLibraryItem *item)
+                                         AbstractModel *item)
     : QListViewItem(parent), item_(item)
 {
     setText(0, item->name());
     setText(1, item->description());
 
     setDragEnabled(TRUE);
-
 }
 
 LibraryListViewItem::~LibraryListViewItem()
@@ -131,7 +130,7 @@ LibraryListViewItem::~LibraryListViewItem()
     delete item_;
 }
 
-QByteArray LibraryListViewItem::serialize()
+AbstractModel &LibraryListViewItem::data() const
 {
-    return item_->serialize();
+    return *item_;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.6 2003/08/22 13:45:53 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.7 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -51,12 +51,11 @@ CpuModel::CpuModel(const QString &name, unsigned short id, bool autoExecTime)
  *
  * <cpu name="cpu_XY" id="nn" autotime="true"/>
  */
-QDomElement CpuModel::serialize()
+QDomElement CpuModel::serialize(QDomDocument *document)
 {
-    QDomElement root = new QDomElement("cpu");
+    QDomElement root = document->createElement("cpu");
     root.setAttribute("name", name_);
     root.setAttribute("id", (unsigned int) id_);
     root.setAttribute("autotime", autoExecTime_ ? "TRUE" : "FALSE");
-
     return root;
 }

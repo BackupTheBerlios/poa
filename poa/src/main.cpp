@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.15 2003/08/22 13:45:53 garbeam Exp $
+ * $Id: main.cpp,v 1.16 2003/08/22 15:06:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,7 +42,7 @@
 #include "layoutmanager.h"
 #include "mainwindow.h"
 #include "moduleconfdialog.h"
-#include "modulelibraryitem.h"
+//#include "modulelibraryitem.h"
 #include "muxmodel.h"
 //#include "muxview.h"
 #include "outputblockmodel.h"
@@ -68,9 +68,12 @@
  */
 int main (int argc, char *argv[])
 {
-//    CpuModel model("CPU 1", 1, TRUE);
-//    QByteArray xml = model.serialize();
-//    cout << xml << "\n";
+//     CpuModel model("CPU 1", 1, TRUE);
+
+//     QDomDocument doc;
+//     doc.appendChild(model.serialize(&doc));
+//     QByteArray xml = doc.toCString();
+//     cout << xml << "\n";
 //
 //    QDomDocument *doc = new QDomDocument("cpu");
 //    QString msg;

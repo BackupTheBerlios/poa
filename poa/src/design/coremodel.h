@@ -19,7 +19,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *  $Id: coremodel.h,v 1.2 2003/07/14 22:14:23 keulsn Exp $
+ *  $Id: coremodel.h,v 1.3 2003/08/16 18:00:09 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,7 @@
 #define POA_COREMODEL_H
 
 
-#include "functionblockmodel.h"
+#include "blockmodel.h"
 
 
 /*****************************************************************************
@@ -36,7 +36,7 @@
  *  A block that calculates one specific function everytime it is triggered.
  *
  */
-class CoreModel: public FunctionBlockModel
+class CoreModel: public BlockModel
 {
 };
 

@@ -5,7 +5,6 @@
 #include "coreview.h"
 #include "cpumodel.h"
 #include "cpuview.h"
-#include "functionblockmodel.h"
 #include "inputblockmodel.h"
 #include "inputblockview.h"
 #include "mainwindow.h"

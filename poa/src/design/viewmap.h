@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: viewmap.h,v 1.3 2003/07/14 19:54:30 garbeam Exp $
+ * $Id: viewmap.h,v 1.4 2003/08/16 18:00:09 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,7 +33,7 @@
 /*****************************************************************************
  * Basic map container for BlockModel objects.
  * Used by NetworkCanvas to store its BlockModelView items.
- * @author <author>
+ * @author garbeam
  */
 class ViewMap
 {

@@ -19,7 +19,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- *  $Id: cpumodel.h,v 1.3 2003/07/14 22:14:23 keulsn Exp $
+ *  $Id: cpumodel.h,v 1.4 2003/08/16 18:00:09 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -29,7 +29,7 @@
 
 
 #include "codemanager.h"
-#include "functionblockmodel.h"
+#include "blockmodel.h"
 
 
 /*****************************************************************************
@@ -39,7 +39,7 @@
  *  source code.
  *
  */
-class CpuModel: public FunctionBlockModel
+class CpuModel: public BlockModel
 {
 
  public:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.12 2003/09/28 21:52:11 squig Exp $
+ * $Id: muxconfdialog.cpp,v 1.13 2003/09/29 09:52:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,9 +89,9 @@ MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
 }
 
 MuxListViewItem::~MuxListViewItem() {
-//      if (clone != 0) {
-//          delete clone_;
-//      }
+    if (clone != 0) {
+        delete clone_;
+    }
 }
 
 MuxPin *MuxListViewItem::data() const {
@@ -349,6 +349,7 @@ void MuxConfDialog::updateModel() {
                 pinModels->append(origPin);
             }
             else {
+                // new pin
                 pinModels->append(currPin);
             }
         }
@@ -394,7 +395,9 @@ void MuxConfDialog::updateModel() {
                     QPtrList<MuxMapping> *currMappings = currPin->mappings();
                     for (unsigned i = 0; i < currMappings->count(); i++) {
                         MuxMapping *mapping = currMappings->at(i);
-                        model_->addMuxMapping(mapping->clone(origPin));
+                        PinModel *output =
+                            model_->outputForName(mapping->output()->name());
+                        model_->addMuxMapping(mapping->clone(origPin, output));
                     }
                 }
                 else {

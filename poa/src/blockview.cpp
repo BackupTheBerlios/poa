@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.38 2003/09/28 21:52:11 squig Exp $
+ * $Id: blockview.cpp,v 1.39 2003/09/29 09:52:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -77,6 +77,9 @@ BlockView::BlockView(AbstractModel *model, QCanvas *canvas)
     }
     else if (INSTANCEOF(model_, MuxModel)) {
         MuxModel *muxModel = (MuxModel *)model_;
+        connect(muxModel, SIGNAL(pinAdded(PinModel *)),
+                this, SLOT(addPin(PinModel *)));
+        connect(muxModel, SIGNAL(updated()), this, SLOT(updateView()));
         connect(muxModel, SIGNAL(deleted()), this, SLOT(deleteView()));
     }
 

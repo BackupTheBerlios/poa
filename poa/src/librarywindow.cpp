@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.18 2003/09/28 21:52:11 squig Exp $
+ * $Id: librarywindow.cpp,v 1.19 2003/09/29 09:52:41 garbeam Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -143,7 +143,7 @@ void LibraryWindow::initializeLibrary()
     pin = new PinModel(model, "in3");
     pin->setType(PinModel::INPUT);
     model->addPin(pin);
-    new LibraryListViewItem(coreListViewItem, model);
+    new LibraryListViewItem(ioListViewItem, model);
 
     // output
     model = new OutputModel("Output", "Static output block");
@@ -156,7 +156,7 @@ void LibraryWindow::initializeLibrary()
     pin = new PinModel(model, "out3");
     pin->setType(PinModel::OUTPUT);
     model->addPin(pin);
-    new LibraryListViewItem(coreListViewItem, model);
+    new LibraryListViewItem(ioListViewItem, model);
 
     // mux
     new LibraryListViewItem(muxListViewItem,

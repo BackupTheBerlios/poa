@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.16 2003/09/27 09:13:46 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.17 2003/09/29 09:52:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -81,8 +81,8 @@ QDomElement MuxMapping::serialize(QDomDocument *document)
     return root;
 }
 
-MuxMapping *MuxMapping::clone(MuxPin *muxPin) {
-    return new MuxMapping(muxPin, output_->clone(), begin_, end_);
+MuxMapping *MuxMapping::clone(MuxPin *muxPin, PinModel *output) {
+    return new MuxMapping(muxPin, output, begin_, end_);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,8 @@ MuxPin *MuxPin::clone() {
 
     QPtrList<MuxMapping> *mappings = clonePin->mappings();
     for (unsigned i = 0; i < mappings_.count(); i++) {
-        mappings->append(mappings_.at(i)->clone(clonePin));
+        MuxMapping *mapping = mappings_.at(i);
+        mappings->append(mapping->clone(clonePin, mapping->output()->clone()));
     }
 
     return clonePin;
@@ -140,7 +141,7 @@ MuxModel::MuxModel(QString type, QString description)
     : AbstractModel(type, description)
 {
     setName(QString("new %1").arg(type));
-    type_ = (type == "mux") ? MUX : DEMUX;
+    type_ = (type == "Mux") ? MUX : DEMUX;
     setDescription(description);
 }
 
@@ -166,6 +167,7 @@ MuxModel::~MuxModel()
 void MuxModel::addMuxPin(MuxPin *pin)
 {
     muxPins_.append(pin);
+    emit pinAdded(pin->model());
 }
 
 void MuxModel::removeMuxPin(MuxPin *pin)
@@ -206,7 +208,7 @@ QDomElement MuxModel::serialize(QDomDocument *document)
 void MuxModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
-    type_ = (element.attribute("type", "mux") == "mux") ? MUX : DEMUX;
+    type_ = (element.attribute("type", "Mux") == "Mux") ? MUX : DEMUX;
 
     // TODO: MuxMappings
     QDomNode node = element.firstChild();
@@ -243,7 +245,9 @@ void MuxModel::addMuxMapping(MuxMapping *mapping) {
     mappings->append(mapping);
 
     if (!outputPins_.containsRef(mapping->output())) {
-        outputPins_.append(mapping->output());
+        PinModel *output = mapping->output();
+        outputPins_.append(output);
+        emit pinAdded(output);
     }
 }
 
@@ -262,4 +266,14 @@ void MuxModel::removeMuxMapping(MuxMapping *mapping) {
         outputPins_.remove(output);
         delete output; // Notifies also the dedicated view
     }
+}
+
+PinModel *MuxModel::outputForName(QString name) {
+    for (unsigned i = 0; i < outputPins_.count(); i++) {
+        PinModel *model = outputPins_.at(i);
+        if (model->name() == name) {
+            return model;
+        }
+    }
+    return 0;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.16 2003/09/27 09:13:46 garbeam Exp $
+ * $Id: muxmodel.h,v 1.17 2003/09/29 09:52:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -99,8 +99,10 @@ public:
      * original one.
      * If you need for some reason the original MuxPin use this
      * method like this: <code>mapping->clone(mapping->muxPin());</code>
+     * @param output equivalent to MuxPin, but this means the output
+     * or also called "map to" pin.
      */
-    MuxMapping *clone(MuxPin *muxPin);
+    MuxMapping *clone(MuxPin *muxPin, PinModel *output);
 
 private:
 
@@ -235,6 +237,12 @@ public:
      */
     QPtrList<PinModel> *outputPins();
 
+    /**
+     * Returns pin model with name <code>name</code> if it exists,
+     * otherwise <code>0</code>.
+     */
+    PinModel *outputForName(QString name);
+
 private:
 
     /** Contains all I/O mappings */
@@ -246,6 +254,11 @@ private:
     MuxType type_;
 
 signals:
+
+    /**
+     * Emitted when a mux pin or output pin was added.
+     */
+    void pinAdded(PinModel *pin);
 
     /**
      * Emitted by <code>this</code> destructor.

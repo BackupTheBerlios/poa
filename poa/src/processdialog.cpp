@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: processdialog.cpp,v 1.2 2003/09/19 11:47:37 garbeam Exp $
+ * $Id: processdialog.cpp,v 1.3 2004/06/04 13:55:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,7 @@ ProcessDialog::ProcessDialog()
     output_ = new QTextView(this);
     vBox->addWidget(output_);
     okPushButton_ = new QPushButton(tr("&OK"), this);
+    okPushButton_->setDefault(true);
     connect(okPushButton_, SIGNAL(clicked()), this, SLOT(reject()) );
     vBox->addWidget(okPushButton_);
     resize( 500, 500 );

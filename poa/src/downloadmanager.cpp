@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.14 2004/06/03 13:30:39 kilgus Exp $
+ * $Id: downloadmanager.cpp,v 1.15 2004/06/04 13:55:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -40,6 +40,8 @@
 #include <qapplication.h>
 #include <stdio.h>
 
+
+QString *DownloadManager::lastString_ = 0;
 
 DownloadManager::DownloadManager(const QString &filename)
 {
@@ -88,7 +90,7 @@ void DownloadManager::readFile(const QString &filename)
 
                 // Seperate last string (used for running the program)
                 if (line[0] == 'S' && line[1] == '8') {
-                    lastString_ = new QString(line);
+                    DownloadManager::lastString_ = new QString(line);
                 } else {
                     strings_.append(new QString(line));
                     filesize_ += strlen(line);
@@ -126,7 +128,7 @@ bool DownloadManager::run(const char* portname)
     sendChar(port, 0x05);*/
 
     // send last record (which runs the whole thing)
-    QString *str = lastString_; 
+    QString *str = DownloadManager::lastString_; 
     for (unsigned int i = 0; i < str->length(); i++) {
         port.putch(str->at(i).latin1());
         port.flush(); 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.20 2004/02/01 21:59:49 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.21 2004/06/04 13:55:35 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -137,14 +137,14 @@ void DeployProjectWizard::setupDownloadPage()
     connect(cpuComboBox, SIGNAL(activated(int)), this, SLOT(cpuSelected(int)));
 
     QWidget *buttonWidget = new QWidget(page);
-    QPushButton *compileButton = new QPushButton("Compile", buttonWidget);
+    QPushButton *compileButton = new QPushButton("&Compile", buttonWidget);
     connect(compileButton, SIGNAL(clicked()), this, SLOT(compileSelectedCpu()));
 
-    QPushButton *downloadButton = new QPushButton("Download", buttonWidget);
+    QPushButton *downloadButton = new QPushButton("&Download", buttonWidget);
     connect(downloadButton, SIGNAL(clicked()),
             this, SLOT(downloadSelectedCpu()));
 
-    QPushButton *runButton = new QPushButton("Run", buttonWidget);
+    QPushButton *runButton = new QPushButton("&Run", buttonWidget);
     connect(runButton, SIGNAL(clicked()), this, SLOT(sendRunCommand()));
 
     QBoxLayout *buttonLayout = new QHBoxLayout(buttonWidget, WIDGET_SPACING);
@@ -212,10 +212,7 @@ void DeployProjectWizard::sendRunCommand()
     QString port = checkSerialPort();
     if (!port.isEmpty()) {
         try {
-            if (DownloadManager::run(port.latin1())) {
-                QMessageBox::information(this, tr("POA Error"),
-                                         tr("Run command sent."));
-            }
+            DownloadManager::run(port.latin1());
         }
         catch (const PoaException e) {
             QMessageBox::warning(this, tr("POA Error"), e.message());

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.21 2003/09/23 12:07:43 keulsn Exp $
+ * $Id: pinview.cpp,v 1.22 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -35,8 +35,8 @@
 
 
 PinView::PinView(PinModel *model, BlockView *block,
-        PinView::DockPosition dockPosition)
-: QCanvasRectangle(block->canvas())
+                 PinView::DockPosition dockPosition)
+    : QCanvasRectangle(block->canvas())
 {
     model_ = model;
     block_ = block;
@@ -69,6 +69,11 @@ AbstractModel *PinView::model()
 PinView::DockPosition PinView::dockPosition()
 {
     return dockPosition_;
+}
+
+void PinView::moveBy(double dx, double dy) {
+    QCanvasRectangle::moveBy(dx, dy);
+    emit moved(this);
 }
 
 LineDirection reverse(LineDirection dir)

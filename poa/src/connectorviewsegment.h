@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.3 2003/09/23 12:07:43 keulsn Exp $
+ * $Id: connectorviewsegment.h,v 1.4 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -89,8 +89,6 @@ private:
      */
     void updateProperties();
 
-    /*public slots:
-      void deleteView();*/
 public slots:
     void select(bool);
 };

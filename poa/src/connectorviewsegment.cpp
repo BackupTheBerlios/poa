@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.4 2003/09/23 14:25:38 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.5 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -29,13 +29,14 @@
 #include <qcanvas.h>
 
 ConnectorViewSegment::ConnectorViewSegment(QPoint from,
-                       QPoint to,
-                       QCanvas *canvas,
-                       ConnectorViewList *viewList)
+                                           QPoint to,
+                                           QCanvas *canvas,
+                                           ConnectorViewList *viewList)
     : QCanvasLine(canvas)
 {
     viewList_ = viewList;
     setPoints(from.x(), from.y(), to.x(), to.y());
+    updateProperties();
 }
 
 ConnectorViewSegment::~ConnectorViewSegment()
@@ -80,7 +81,3 @@ void ConnectorViewSegment::updateProperties()
 
 }
 
-/*void ConnectorViewSegment::deleteView()
-{
-    delete this;
-}*/

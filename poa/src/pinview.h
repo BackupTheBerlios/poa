@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.19 2003/09/23 12:07:43 keulsn Exp $
+ * $Id: pinview.h,v 1.20 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -64,6 +64,12 @@ public:
      * Default destructor
      */
     virtual ~PinView();
+
+    /**
+     * Moves the canvas item relative to its current position by (dx, dy). 
+     * Emits the signal 'moved'
+     */
+    virtual void moveBy(double dx, double dy);
 
     /**
      * Returns the point, where a connector view must dock onto this
@@ -135,8 +141,11 @@ private:
 public slots:
     void deleteView();
 
-//signals:
-//  void deleted(PinView *);
+signals:
+    /**
+     * Emitted everytime <code>this</code> is moved on the canvas.
+     */
+    void moved(PinView*);
 
 };
 

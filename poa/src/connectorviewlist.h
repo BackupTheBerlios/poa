@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.8 2003/09/23 12:07:43 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.9 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -163,7 +163,13 @@ public slots:
      */
     void deleteView();
 
- signals:
+private slots:
+    /** 
+     * Will be connected to the incident pin views' signal 'moved'.
+     */
+    void pinMoved(PinView*);
+
+signals:
     void select(bool);
     void hover(bool);
 };

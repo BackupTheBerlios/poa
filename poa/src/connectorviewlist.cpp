@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.9 2003/09/23 12:07:43 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.10 2003/09/23 15:49:25 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,11 @@
 #include <qcanvas.h>
 
 
+QString image(QPoint p)
+{
+    return "(" + QString::number(p.x()) + ", " + QString::number(p.y()) + ")";
+}
+
 ConnectorViewList::ConnectorViewList(PinView *source,
                                      PinView *target,
                                      GridCanvas *canvas,
@@ -47,6 +52,10 @@ ConnectorViewList::ConnectorViewList(PinView *source,
             this, SLOT(deleteView()));
     connect(target->pinModel(), SIGNAL(deleted()),
             this, SLOT(deleteView()));
+    connect(source, SIGNAL(moved(PinView*)),
+	    this, SLOT(pinMoved(PinView*)));
+    connect(target, SIGNAL(moved(PinView*)),
+	    this, SLOT(pinMoved(PinView*)));
 
     if (element == 0) {
         QValueList<QPoint> *points =
@@ -200,14 +209,15 @@ void ConnectorViewList::applyPointList(const QValueList<QPoint> &list,
         ConnectorViewSegment *current;
         if (it != segments_.end()) {
             current = (ConnectorViewSegment*) *it;
-            current->setPoints(first.x(), first.y(), second.x(), second.y());
+	    current->setPoints(first.x(), first.y(), second.x(), second.y());
         }
         else {
             current = new ConnectorViewSegment(first, second, canvas, this);
             connect(this, SIGNAL(select(bool)), current, SLOT(select(bool)));
-            it = segments_.insert(it, current);
+	    it = segments_.insert(it, current);
+	    current->show();
         }
-        ++it;
+	++it;
     }
 
     while (it != segments_.end()) {
@@ -224,6 +234,20 @@ void ConnectorViewList::deleteAllConnectorViews()
         QCanvasItem *view = *it;
         delete view;
         it = segments_.erase(it);
+    }
+}
+
+void ConnectorViewList::pinMoved(PinView *pin)
+{
+    if (pin == source_ || pin == target_) {
+	QValueList<QPoint> *points =
+	  routeConnector(source_->connectorPoint(),
+			 source_->connectorSourceDir(),
+			 target_->connectorPoint(),
+			 target_->connectorTargetDir());
+	
+	applyPointList(*points, pin->canvas());
+	delete points;
     }
 }
 
@@ -341,11 +365,6 @@ LineDirection turnLeft(LineDirection dir)
 LineDirection turnRight(LineDirection dir)
 {
     return -turnLeft(dir);
-}
-
-QString image(QPoint p)
-{
-    return "(" + QString::number(p.x()) + ", " + QString::number(p.y()) + ")";
 }
 
 QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,

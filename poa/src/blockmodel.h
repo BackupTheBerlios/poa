@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.27 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: blockmodel.h,v 1.28 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -63,6 +63,26 @@ public:
      * Returns a list of all episodic pins of this.
      */
     PinVector *episodicPins();
+
+    /**
+     * Returns true, if the block has episodic pins.
+     */
+    virtual bool hasEpisodicPins();
+
+    /**
+     * Returns true, if the block has input pins.
+     */
+    virtual bool hasInputPins();
+
+    /**
+     * Returns true, if the block has output pins.
+     */
+    virtual bool hasOutputPins();
+
+    /**
+     * Returns true, if the block has a runtime property.
+     */
+    virtual bool hasRuntime();
 
     /**
      * Returns a list of all input pins of this.

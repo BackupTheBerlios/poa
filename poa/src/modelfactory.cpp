@@ -18,15 +18,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.14 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: modelfactory.cpp,v 1.15 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
 
 #include "cpumodel.h"
 #include "coremodel.h"
+#include "inputmodel.h"
 #include "muxmodel.h"
+#include "outputmodel.h"
 #include "project.h"
+
 #include <qdom.h>
 
 /**
@@ -45,8 +48,14 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
         if (item.isElement() && item.nodeName() == "model-item") {
             AbstractModel *model = 0;
             QDomElement element = item.toElement();
-            if (element.attribute("block-type","") == "cpu") {
+            if (element.attribute("block-type", "") == "cpu") {
                 model = new CpuModel(element);
+            }
+            if (element.attribute("block-type", "") == "input") {
+                model = new InputModel(element);
+            }
+            if (element.attribute("block-type", "") == "output") {
+                model = new OutputModel(element);
             }
             else if (element.attribute("block-type","") == "core") {
                 model = new CoreModel(element);
@@ -60,7 +69,7 @@ QValueList<AbstractModel *> ModelFactory::generate(QDomNode node)
             if (model != 0) {
                 model->setDescription(QString::null);
                 model->setId(0);
-                model->setName("new "+model->type());
+                model->setName(model->type());
                 l.append(model);
             }
         }

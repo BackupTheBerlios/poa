@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.27 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.28 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -155,7 +155,7 @@ void BlockConfDialog::initLayout()
     initListView();
     initBlockWidget();
 
-    if (!(INSTANCEOF(model_, InputModel) || INSTANCEOF(model_, OutputModel))) {
+    if (model_->hasRuntime()) {
         if (INSTANCEOF(model_, CpuModel)) {
             initOffsetWidget();
         }
@@ -363,34 +363,28 @@ void BlockConfDialog::initListView()
     ioListView->addColumn(tr("bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
     ioListView->setMinimumWidth(300);
+    leftLayout->addWidget(ioListView);
     connect(ioListView, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
 
-    if (INSTANCEOF(model_, CpuModel) || INSTANCEOF(model_, CoreModel)
-        || INSTANCEOF(model_, InputModel))
-    {
-        // inputs root
+    // add pin root list item
+
+    if (model_->hasInputPins()) {
         inputRoot_ = new PinListViewItem(ioListView, 0, PinModel::INPUT);
-        inputRoot_->setText(0, tr("inputs"));
+        inputRoot_->setText(0, tr("Inputs"));
     }
 
-    if (INSTANCEOF(model_, CpuModel) || INSTANCEOF(model_, CoreModel)
-        || INSTANCEOF(model_, OutputModel))
-    {
-        // outputs root
-        outputRoot_ = new PinListViewItem(ioListView, inputRoot_,
+    if (model_->hasOutputPins()) {
+        outputRoot_ = new PinListViewItem(ioListView, 0,
                                           PinModel::OUTPUT);
-        outputRoot_->setText(0, tr("outputs"));
+        outputRoot_->setText(0, tr("Outputs"));
     }
 
-    if (!(INSTANCEOF(model_, InputModel) || INSTANCEOF(model_, OutputModel))) {
-        // episodic root
+    if (model_->hasEpisodicPins()) {
         episodicRoot_ =
-            new PinListViewItem(ioListView, outputRoot_, PinModel::EPISODIC);
-        episodicRoot_->setText(0, tr("episodic inputs"));
+            new PinListViewItem(ioListView, 0, PinModel::EPISODIC);
+        episodicRoot_->setText(0, tr("Episodic Inputs"));
     }
-
-    leftLayout->addWidget(ioListView);
 
     // I/O list view manipulation widget
     QWidget *editIoWidget = new QWidget(leftWidget);
@@ -456,7 +450,9 @@ void BlockConfDialog::syncModel() {
     if (model_ != 0) {
         blockNameLineEdit->setText(model_->name());
         blockDescrLineEdit->setText(model_->description());
-        runtimeSpinBox->setValue(model_->execTime());
+        if (model_->hasRuntime()) {
+            runtimeSpinBox->setValue(model_->execTime());
+        }
         blockClockSpinBox->setValue(model_->clock());
 
         if (INSTANCEOF(model_, CpuModel)) {
@@ -480,7 +476,9 @@ void BlockConfDialog::updateModel() {
     if (model_ != 0) {
         model_->setName(blockNameLineEdit->text());
         model_->setDescription(blockDescrLineEdit->text());
-        model_->setExecTime(runtimeSpinBox->value());
+        if (model_->hasRuntime()) {
+            model_->setExecTime(runtimeSpinBox->value());
+        }
         model_->setClock(blockClockSpinBox->value());
 
         if (INSTANCEOF(model_, CpuModel)) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.22 2003/09/18 07:45:32 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.23 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,26 +42,13 @@ CpuModel::CpuModel(QString type, QString description)
     offset_ = 0;
     autoOffset_ = true;
     isProducer_ = true;
-
-    // FIX: remove
-    PinModel *pin = new PinModel(this, QString("Input1"));
-    pin->setType(PinModel::INPUT);
-    addPin(pin);
-    pin = new PinModel(this, "another Input");
-    pin->setType(PinModel::INPUT);
-    addPin(pin);
-    pin = new PinModel(this, "Output");
-    pin->setType(PinModel::OUTPUT);
-    addPin(pin);
-    // FIX: end remove
 }
 
 CpuModel::CpuModel(QDomElement cpuElem)
     : BlockModel(QString::null, QString::null)
 {
-    if (!cpuElem.isNull()) {
-        deserialize(cpuElem);
-    }
+    deserialize(cpuElem);
+
     isProducer_ = false;
 
     connect(this, SIGNAL(serialized(CpuModel *)),

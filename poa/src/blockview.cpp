@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.37 2003/09/24 09:09:11 garbeam Exp $
+ * $Id: blockview.cpp,v 1.38 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -153,25 +153,33 @@ void BlockView::arrangePins()
         + BlockView::DEFAULT_FONT_HEIGHT // name
         + BlockView::DEFAULT_HEADER_SPACING
         // separator
-        + BlockView::DEFAULT_HEADER_SPACING
-        // horizontal pins
-        + BlockView::DEFAULT_HEADER_SPACING
-        // vertical pins
         + BlockView::DEFAULT_BOTTOM_SPACING;
-    // horizontal pins
-    unsigned numberOfPins = QMAX(leftPins_.size(), rightPins_.size());
-    height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
-    // vertical pins
+
+    if (leftPins_.size() > 0 || rightPins_.size() > 0) {
+        // horizontal pins
+        height += DEFAULT_HEADER_SPACING;
+        unsigned numberOfPins = QMAX(leftPins_.size(), rightPins_.size());
+        height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
+    }
+
     if (bottomPins_.size() > 0) {
-        height += DEFAULT_FONT_HEIGHT;
+        // vertical pins
+        height += DEFAULT_HEADER_SPACING;
+        if (bottomPins_.size() > 0) {
+            height += DEFAULT_FONT_HEIGHT;
+        }
     }
 
     // calculate width
+    int defaultWidth = BlockView::DEFAULT_WIDTH;
+    if (leftPins_.size() > 0 && rightPins_.size() > 0) {
+        defaultWidth = 2 * defaultWidth + DEFAULT_LABEL_SPACING;
+    }
     int width
         = DEFAULT_LEFT_BORDER
         + bottomPins_.size() * (DEFAULT_LABEL_WIDTH + DEFAULT_LABEL_SPACING)
         + DEFAULT_RIGHT_BORDER;
-    width = QMAX(BlockView::DEFAULT_WIDTH, width);
+    width = QMAX(defaultWidth, width);
 
     // update view
     setSize(width, height);
@@ -309,7 +317,10 @@ void BlockView::drawShape(QPainter &p)
                                  : 0))
             / slotCount;
 
-        int maxWidth = width() / 2 - DEFAULT_LABEL_SPACING;
+        int maxWidth = width();
+        if (leftPins_.size() > 0 && rightPins_.size() > 0) {
+            maxWidth = maxWidth / 2 - DEFAULT_LABEL_SPACING;
+        }
         for (unsigned i = 0; i < slotCount; ++i) {
             if (i < leftPins_.size()) {
                 QString label = Util::squeeze(leftPins_[i]->pinModel()->name(),

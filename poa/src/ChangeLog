@@ -1,3 +1,7 @@
+2003-09-28  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* modelfactory.cpp (generate): Added input and output blocks.
+
 2003-09-23  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* canvasview.cpp (contentsMousePressEvent): Disabled PinView

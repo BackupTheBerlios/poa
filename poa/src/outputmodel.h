@@ -18,31 +18,47 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: outputmodel.h,v 1.1 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: outputmodel.h,v 1.2 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
 
 #ifndef POA_OUTPUTMODEL_H
-#define POA_OUTPUTKMODEL_H
+#define POA_OUTPUTMODEL_H
 
 
-#include "blockmodel.h"
-#include "pinvector.h"
+#include "coremodel.h"
 
 
 /**
  * A block receiving outputs from the system and transmitting those outputs
  * to the environment.
  */
-class OutputModel: public BlockModel
+class OutputModel: public CoreModel
 {
-  public:
-    OutputModel(QString name, QString description, QString type);
-    void addInputPin (PinModel *pin, PinModel *successor = 0);
-    void removeInputPin (PinModel *pin);
+ public:
+    OutputModel(QString type, QString description)
+        : CoreModel(type, description) {}
+
+    OutputModel(QDomElement element)
+        : CoreModel(element) {}
+
+    /**
+     * Returns the XML representation of this instance
+     */
+    QDomElement serialize(QDomDocument *document)
+        {
+            QDomElement root = BlockModel::serialize(document);
+            root.setAttribute("block-type", "output");
+            return root;
+        }
+
+    virtual bool hasEpisodicPins() { return false; }
+
+    virtual bool hasInputPins() { return false; }
+
+    virtual bool hasRuntime() { return false; }
 
 };
-
 
 #endif

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.11 2003/09/27 09:13:46 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.12 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -89,9 +89,9 @@ MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
 }
 
 MuxListViewItem::~MuxListViewItem() {
-    if (clone != 0) {
-        delete clone_;
-    }
+//      if (clone != 0) {
+//          delete clone_;
+//      }
 }
 
 MuxPin *MuxListViewItem::data() const {
@@ -139,7 +139,7 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
 
     if (!name) {
         setName( "MuxConfDialog" );
-        resize(400, 500); 
+        resize(400, 500);
     }
     if (model_->muxType() == MuxModel::MUX) {
         setCaption(tr("Mux configuration"));
@@ -426,11 +426,11 @@ void MuxConfDialog::mappingSelectionChanged() {
     ioComboBox_->setEnabled(selectedMapping);
 
 
-    beginSpinBox->setValue(selectedChild ? 
+    beginSpinBox->setValue(selectedChild ?
             ((MuxMappingListViewItem *)item)->data()->begin() : 0);
-    endSpinBox->setValue(selectedChild ? 
+    endSpinBox->setValue(selectedChild ?
             ((MuxMappingListViewItem *)item)->data()->end() : 0);
-    ioComboBox_->setCurrentText(selectedChild ? 
+    ioComboBox_->setCurrentText(selectedChild ?
             ((MuxMappingListViewItem *)item)->data()->output()->name() : "");
 
     if (selectedMapping) {
@@ -538,7 +538,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
             // so we create a new PinModel
             mapTo =
                 new PinModel(model_, id, mapToName, id * 100, 0,
-                        (type == PinModel::INPUT) ? PinModel::OUTPUT : 
+                        (type == PinModel::INPUT) ? PinModel::OUTPUT :
                         PinModel::INPUT);
             mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
             ioComboBox_->insertItem(mapToName);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.32 2003/09/23 13:49:23 squig Exp $
+ * $Id: blockview.h,v 1.33 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -162,7 +162,7 @@ protected:
     virtual void arrangeVerticalPins();
 
     /** default width of a block */
-    static const int DEFAULT_WIDTH = 150;
+    static const int DEFAULT_WIDTH = 70;
     /** default height of text drawn on the canvas */
     static int DEFAULT_FONT_HEIGHT;
     /** default vertical space between the top of the rectangle and the

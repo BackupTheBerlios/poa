@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.26 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.27 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -74,6 +74,25 @@ PinVector *BlockModel::episodicPins()
     return episodicPins_;
 }
 
+bool BlockModel::hasEpisodicPins()
+{
+    return true;
+}
+
+bool BlockModel::hasInputPins()
+{
+    return true;
+}
+
+bool BlockModel::hasOutputPins()
+{
+    return true;
+}
+
+bool BlockModel::hasRuntime()
+{
+    return true;
+}
 
 PinVector *BlockModel::inputPins()
 {
@@ -189,7 +208,7 @@ void BlockModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
 
-    setExecTime((unsigned int) element.attribute("exectime","0").toUInt());
+    setExecTime(element.attribute("exectime","0").toUInt());
 
     // pins
     inputPins_->clear();

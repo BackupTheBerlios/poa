@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.17 2003/09/24 15:44:28 garbeam Exp $
+ * $Id: librarywindow.cpp,v 1.18 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -26,7 +26,9 @@
 #include "abstractmodel.h"
 #include "cpumodel.h"
 #include "coremodel.h"
+#include "inputmodel.h"
 #include "muxmodel.h"
+#include "outputmodel.h"
 #include "pinmodel.h"
 
 #include <qvariant.h>
@@ -85,26 +87,82 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    CpuModel *cpu = new CpuModel("NIOS 32", "NIOS 32-Bit Cpu");
-    PinModel *pin = new PinModel(cpu, "Input1");
+    // NIOS 32
+    BlockModel *model = new CpuModel("NIOS 32", "NIOS 32-bit CPU");
+    PinModel *pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
-    cpu->addPin(pin);
-    pin = new PinModel(cpu, "Second Input");
-    pin->setType(PinModel::INPUT);
-    cpu->addPin(pin);
-    pin = new PinModel(cpu, "Output");
+    model->addPin(pin);
+    pin = new PinModel(model, "out1");
     pin->setType(PinModel::OUTPUT);
-    cpu->addPin(pin);
-    new LibraryListViewItem(cpuListViewItem,
-                            cpu);
-    new LibraryListViewItem(cpuListViewItem,
-                            new CpuModel("NIOS 16", "NIOS 16-Bit Cpu"));
-    new LibraryListViewItem(coreListViewItem,
-                            new CoreModel("InputBlock", "Coredump"));
+    model->addPin(pin);
+    pin = new PinModel(model, "clock");
+    pin->setType(PinModel::EPISODIC);
+    model->addPin(pin);
+    pin = new PinModel(model, "reset");
+    pin->setType(PinModel::EPISODIC);
+    model->addPin(pin);
+    new LibraryListViewItem(cpuListViewItem, model);
+
+    // NIOS 16
+    model = new CpuModel("NIOS 16", "NIOS 16-bit CPU");
+    pin = new PinModel(model, "in1");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "out1");
+    pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "clock");
+    pin->setType(PinModel::EPISODIC);
+    model->addPin(pin);
+    pin = new PinModel(model, "reset");
+    pin->setType(PinModel::EPISODIC);
+    model->addPin(pin);
+    new LibraryListViewItem(cpuListViewItem, model);
+
+    // full adder
+    model = new CoreModel("Full Adder", "Fast binary adder");
+    pin = new PinModel(model, "in1");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "in2");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "result");
+    pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    new LibraryListViewItem(coreListViewItem, model);
+
+    // input
+    model = new InputModel("Input", "Static input block");
+    pin = new PinModel(model, "in1");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "in2");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "in3");
+    pin->setType(PinModel::INPUT);
+    model->addPin(pin);
+    new LibraryListViewItem(coreListViewItem, model);
+
+    // output
+    model = new OutputModel("Output", "Static output block");
+    pin = new PinModel(model, "out1");
+    pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "out2");
+    pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    pin = new PinModel(model, "out3");
+    pin->setType(PinModel::OUTPUT);
+    model->addPin(pin);
+    new LibraryListViewItem(coreListViewItem, model);
+
+    // mux
     new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("mux", "Multiplexer"));
+                            new MuxModel("Mux", "Multiplexer"));
     new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("demux", "Demultiplexer"));
+                            new MuxModel("Demux", "Demultiplexer"));
 }
 
 /**

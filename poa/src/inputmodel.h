@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: inputmodel.h,v 1.1 2003/09/12 10:09:26 garbeam Exp $
+ * $Id: inputmodel.h,v 1.2 2003/09/28 21:52:11 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,19 +27,36 @@
 #define POA_INPUTMODEL_H
 
 
-#include "blockmodel.h"
-#include "pinvector.h"
+#include "coremodel.h"
 
 
 /**
  * A block providing inputs into the system.
  */
-class InputModel: public BlockModel
+class InputModel: public CoreModel
 {
-  public:
-    InputModel(QString name, QString description, QString type);
-    void addOutputPin (PinModel *pin, PinModel *successor = 0);
-    void removeOutputPin (PinModel *pin);
+ public:
+    InputModel(QString type, QString description)
+        : CoreModel(type, description) {}
+
+    InputModel(QDomElement element)
+        : CoreModel(element) {}
+
+    /**
+     * Returns the XML representation of this instance
+     */
+    QDomElement serialize(QDomDocument *document)
+        {
+            QDomElement root = BlockModel::serialize(document);
+            root.setAttribute("block-type", "input");
+            return root;
+        }
+
+    virtual bool hasEpisodicPins() { return false; }
+
+    virtual bool hasOutputPins() { return false; }
+
+    virtual bool hasRuntime() { return false; }
 
 };
 

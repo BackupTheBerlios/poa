@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.14 2004/01/28 16:35:51 squig Exp $
+ * $Id: codemanager.h,v 1.15 2004/02/09 19:12:12 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -98,6 +98,23 @@ public:
      * Returns path to the CPU specific source directory.
      */
     QString sourcePath();
+
+    /**
+     * Returns <code>true</code> if the template is substitutable.
+     */
+    bool templateIsSubstitutable();
+
+    /**
+     * Prepends substitution comment markers at the beginning of the
+     * template.
+     */
+    void prependSubstitutionMarkers();
+
+    /**
+     * Substitutes current models_ pin values to the template.
+     * Asserts that templateIsSubstitutable() returns <code>true</code>.
+     */
+    void substitute();
 
 private:
     void createDirectory(const QDir &path);

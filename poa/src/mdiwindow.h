@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.1 2003/08/19 14:19:38 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.2 2003/08/20 08:38:56 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,7 @@
  */
 class MdiWindow : public QMainWindow
 {
-    Q_OBJECT
+//    Q_OBJECT
 
 private:
     LayoutCanvas* layoutCanvas_;
@@ -52,8 +52,8 @@ public:
 protected:
     void closeEvent( QCloseEvent * );
 
-signals:
-    void message(const QString&, int );
+//signals:
+//    void message(const QString&, int );
 
 };
 

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.2 2003/08/19 20:00:49 garbeam Exp $
+# $Id: poa.pro,v 1.3 2003/08/20 08:38:56 garbeam Exp $
 #
 ###############################################################################
 
@@ -27,11 +27,10 @@ TEMPLATE = app
 INCLUDEPATH += .
 
 # added for use under BSD and some Linux distris (garbeam)
-INCLUDEPATH	+= $(QTINC)
+#INCLUDEPATH	+= $(QTINC)
 
 # source files
-# note: mdiwindow.h currently removed
-HEADERS +=  blockmodel.h blockview.h codemanager.h connectormodel.h connectorview.h coremodel.h coreview.h cpumodel.h cpuview.h inputblockmodel.h inputblockview.h layoutcanvas.h layoutmanager.h mainwindow.h moduleconfdialog.h modulelibraryitem.h muxmodel.h muxview.h optiondialog.h outputblockmodel.h outputblockview.h pinmodel.h pinvector.h pinview.h viewmap.h
+HEADERS +=  blockmodel.h blockview.h codemanager.h connectormodel.h connectorview.h coremodel.h coreview.h cpumodel.h cpuview.h inputblockmodel.h inputblockview.h layoutcanvas.h layoutmanager.h mainwindow.h mdiwindow.h moduleconfdialog.h modulelibraryitem.h muxmodel.h muxview.h optiondialog.h outputblockmodel.h outputblockview.h pinmodel.h pinvector.h pinview.h viewmap.h
 SOURCES += mainwindow.cpp moduleconfdialog.cpp optiondialog.cpp main.cpp
 
 TARGET = poa

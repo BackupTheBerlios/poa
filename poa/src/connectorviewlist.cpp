@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.5 2003/09/20 10:05:34 squig Exp $
+ * $Id: connectorviewlist.cpp,v 1.6 2003/09/20 21:14:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -71,7 +71,8 @@ ConnectorViewList::ConnectorViewList(PinView *source,
 
 ConnectorViewList::~ConnectorViewList()
 {
-    emit deleted(this);
+    source_->pinModel()->detach();
+    target_->pinModel()->detach();
     deleteAllConnectorViews();
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.33 2003/09/19 15:16:22 vanto Exp $
+ * $Id: blockview.cpp,v 1.34 2003/09/20 21:14:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -140,25 +140,30 @@ void BlockView::arrangePins()
     // calculate height
     unsigned height
         = BlockView::DEFAULT_TOP_SPACING
+        + BlockView::DEFAULT_FONT_HEIGHT // name
         + BlockView::DEFAULT_HEADER_SPACING
-        + BlockView::DEFAULT_HEADER_SPACING;
-
-    // name
-    height += BlockView::DEFAULT_FONT_HEIGHT;
-
-    // pins
+        // separator
+        + BlockView::DEFAULT_HEADER_SPACING
+        // horizontal pins
+        + BlockView::DEFAULT_HEADER_SPACING
+        // vertical pins
+        + BlockView::DEFAULT_BOTTOM_SPACING;
+    // horizontal pins
     unsigned numberOfPins = QMAX(leftPins_.size(), rightPins_.size());
     height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
-
-    height += BlockView::DEFAULT_BOTTOM_SPACING;
-
-    // calculate width
-    int width = bottomPins_.size() * DEFAULT_LABEL_WIDTH;
-    width = QMAX(BlockView::DEFAULT_WIDTH, width);
+    // vertical pins
     if (bottomPins_.size() > 0) {
         height += DEFAULT_FONT_HEIGHT;
     }
 
+    // calculate width
+    int width
+        = DEFAULT_LEFT_BORDER
+        + bottomPins_.size() * (DEFAULT_LABEL_WIDTH + DEFAULT_LABEL_SPACING)
+        + DEFAULT_RIGHT_BORDER;
+    width = QMAX(BlockView::DEFAULT_WIDTH, width);
+
+    // update view
     setSize(width, height);
 
     arrangeVerticalPins();
@@ -265,10 +270,14 @@ void BlockView::drawShape(QPainter &p)
                               - BlockView::DEFAULT_FONT_HEIGHT
                               - BlockView::DEFAULT_HEADER_SPACING
                               - BlockView::DEFAULT_HEADER_SPACING
-                              - BlockView::DEFAULT_BOTTOM_SPACING)
+                              - BlockView::DEFAULT_HEADER_SPACING
+                              - BlockView::DEFAULT_BOTTOM_SPACING
+                              - ((bottomPins_.size() > 0)
+                                 ? DEFAULT_FONT_HEIGHT
+                                 : 0))
             / slotCount;
 
-        int maxWidth = width() / 2 - DEFAULT_CENTER_SPACING;
+        int maxWidth = width() / 2 - DEFAULT_LABEL_SPACING;
         for (unsigned i = 0; i < slotCount; ++i) {
             if (i < leftPins_.size()) {
                 QString label = Util::squeeze(leftPins_[i]->pinModel()->name(),
@@ -287,25 +296,42 @@ void BlockView::drawShape(QPainter &p)
         Q_ASSERT(slotCount == 0);
     }
 
-    textArea = QRect(left,
-                     (int)y() + height() - DEFAULT_FONT_HEIGHT,
-                     DEFAULT_LABEL_WIDTH,
-                     BlockView::DEFAULT_FONT_HEIGHT);
-    for (unsigned i = 0; i < bottomPins_.size(); ++i) {
-        QString label = Util::squeeze(bottomPins_[i]->pinModel()->name(),
-                                      DEFAULT_LABEL_WIDTH, p.font());
-        p.drawText(textArea, Qt::AlignLeft, label);
-        textArea.moveBy(DEFAULT_LABEL_WIDTH, 0);
+    if (bottomPins_.size() > 0) {
+        unsigned width__
+            = (width() - DEFAULT_LEFT_BORDER - DEFAULT_RIGHT_BORDER
+               - bottomPins_.size() * DEFAULT_LABEL_SPACING)
+            / bottomPins_.size();
+        textArea = QRect(left + DEFAULT_LEFT_BORDER,
+                         (int)y() + height() - DEFAULT_FONT_HEIGHT
+                         - DEFAULT_BOTTOM_SPACING,
+                         width__,
+                         BlockView::DEFAULT_FONT_HEIGHT);
+        for (unsigned i = 0; i < bottomPins_.size(); ++i) {
+            QString label = Util::squeeze(bottomPins_[i]->pinModel()->name(),
+                                          width__, p.font());
+            p.drawText(textArea, Qt::AlignHCenter, label);
+            textArea.moveBy(width__ + DEFAULT_LABEL_SPACING, 0);
+        }
     }
-
 }
 
 void BlockView::arrangeHorizontalPins()
 {
+    if (bottomPins_.size() == 0) {
+        return;
+    }
+
+    int x__ = (int)x() + DEFAULT_LEFT_BORDER;
+    int y__ = (int)y() + height();
+    unsigned width__
+        = (width() - DEFAULT_LEFT_BORDER - DEFAULT_RIGHT_BORDER
+           - bottomPins_.size() * DEFAULT_LABEL_SPACING)
+        / bottomPins_.size();
     for (unsigned i = 0; i < bottomPins_.size(); ++i) {
-        bottomPins_[i]->move(x() + i * DEFAULT_LABEL_WIDTH
-                             + DEFAULT_LABEL_WIDTH / 2,
-                               y() + height());
+        bottomPins_[i]->move(x__
+                             + i * DEFAULT_LABEL_SPACING
+                             + i * width__ + width__ / 2,
+                             y__);
     }
 }
 
@@ -315,7 +341,13 @@ void BlockView::arrangeVerticalPins()
         BlockView::DEFAULT_FONT_HEIGHT +
         BlockView::DEFAULT_HEADER_SPACING +
         BlockView::DEFAULT_HEADER_SPACING;
-    int bottom = ((int) y()) + height() - BlockView::DEFAULT_BOTTOM_SPACING;
+    int bottom
+        = ((int) y()) + height()
+        - BlockView::DEFAULT_HEADER_SPACING
+        - BlockView::DEFAULT_BOTTOM_SPACING
+        - ((bottomPins_.size() > 0)
+           ? DEFAULT_FONT_HEIGHT
+           : 0);
 
     unsigned leftSize = leftPins_.size();
     unsigned rightSize = rightPins_.size();

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.4 2003/09/19 16:17:46 keulsn Exp $
+ * $Id: connectorviewlist.h,v 1.5 2003/09/20 21:14:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -115,9 +115,9 @@ protected:
      * Routes a point list.
      */
     static QValueList<QPoint> *routeConnector(QPoint from,
-					      LineDirection fromDir,
-					      QPoint to,
-					      LineDirection toDir);
+                                              LineDirection fromDir,
+                                              QPoint to,
+                                              LineDirection toDir);
 
 
 private:
@@ -142,12 +142,6 @@ public slots:
      */
     void deleteView(PinView *);
 
-signals:
-    /**
-     * Emitted when <code>this</code> is destroyed. Pin views should connect
-     * to this signal to be notified.
-     */
-    void deleted(ConnectorViewList *);
 };
 
 

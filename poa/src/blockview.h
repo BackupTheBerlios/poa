@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.29 2003/09/19 15:16:22 vanto Exp $
+ * $Id: blockview.h,v 1.30 2003/09/20 21:14:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -166,6 +166,7 @@ protected:
     /** default vertical space between
      * <li> the title and the separating horizontal line </li>
      * <li> the separating horizontal line and the pin list </li>
+     * <li> the horizontal pin list and the vertical pin list </li>
      */
     static const int DEFAULT_HEADER_SPACING = 4;
     /** default vertical space between the last pin name and the bottom of
@@ -177,8 +178,8 @@ protected:
     static const int DEFAULT_LEFT_BORDER = 3;
     /** default horizontal space between the text and the right border */
     static const int DEFAULT_RIGHT_BORDER = 5;
-    /** Default vertical space between the left and right text */
-    static const int DEFAULT_CENTER_SPACING = 5;
+    /** Default space between two adjacent labels */
+    static const int DEFAULT_LABEL_SPACING = 5;
     /** Space per episodic pin label. */
     static const int DEFAULT_LABEL_WIDTH = 40;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.2 2003/09/16 16:09:24 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.3 2003/09/17 13:08:29 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,36 +27,54 @@
 #include "cpumodel.h"
 #include "settings.h"
 
+#include <qfile.h>
 #include <qprocess.h>
 #include <qdir.h>
 
-CodeManager::CodeManager(AbstractModel *parent)
+/**
+ * The singleton instance.
+ */
+CodeManager* CodeManager::instance_ = 0;
+
+CodeManager::CodeManager()
 {
-    model_ = parent;
 }
 
 CodeManager::~CodeManager()
 {
 }
 
-QString CodeManager::sourcePath()
+CodeManager *CodeManager::instance()
 {
-    CpuModel *model = (CpuModel *)model_;
-    return QString("%1/CPU_%2_sdk/cpu_%3_.c")
-        .arg(*(model->projectPath()))
-        .arg(model->id())
-        .arg(model->id());
+    if (instance_ == 0) {
+        instance_ = new CodeManager();
+    }
+
+    return instance_;
 }
 
-int CodeManager::compile()
+QString CodeManager::sourcePath(CpuModel *model)
+{
+    return QString("%1/CPU_%2_sdk")
+        .arg(*(model->projectPath()))
+        .arg(model->cpuId());
+}
+
+QString CodeManager::sourceFilePath(CpuModel *model)
+{
+    return QString("%1/src/cpu_%2.c")
+        .arg(sourcePath(model))
+        .arg(model->cpuId());
+}
+
+int CodeManager::compile(CpuModel *model)
 {
     Settings* s = Settings::instance();
-    CpuModel *model = (CpuModel *)model_;
 
     QProcess *proc = new QProcess(this);
     proc->addArgument(s->get("Terminal"));
     proc->addArgument(s->get("Compiler"));
-    proc->addArgument(sourcePath());
+    proc->addArgument(sourcePath(model));
     proc->setWorkingDirectory(QDir(*(model->projectPath())));
 
     proc->launch("");
@@ -64,12 +82,36 @@ int CodeManager::compile()
     return proc->exitStatus();
 }
 
-void CodeManager::save()
+void CodeManager::save(CpuModel *model)
 {
+    // check directory structure
+    QDir cpuDir(sourcePath(model));
+    QDir srcDir(sourcePath(model) + QString("/src"));
+    QDir libDir(sourcePath(model) + QString("/lib"));
+    QDir incDir(sourcePath(model) + QString("/inc"));
+
+    if (!cpuDir.exists()) {
+        cpuDir.mkdir(cpuDir.absPath());
+    }
+    if (!srcDir.exists()) {
+        srcDir.mkdir(srcDir.absPath());
+    }
+    if (!libDir.exists()) {
+        libDir.mkdir(libDir.absPath());
+    }
+    if (!incDir.exists()) {
+        incDir.mkdir(incDir.absPath());
+    }
+
+    // check source file
+    QFile source(sourceFilePath(model));
+    if (!source.exists()) {
+        // TODO: Copy template.
+    }
 
 }
 
-void CodeManager::remove()
+void CodeManager::remove(CpuModel *model)
 {
 
 }

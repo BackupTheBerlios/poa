@@ -18,15 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.cpp,v 1.2 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: cpuview.cpp,v 1.3 2003/09/17 13:08:29 garbeam Exp $
  *
  *****************************************************************************/
 
+#include "codemanager.h"
 #include "cpuview.h"
 #include "cpumodel.h"
 
 QString CpuView::tip()
 {
+    CodeManager *codeManager = CodeManager::instance();
     CpuModel *m = (CpuModel*)model();
     return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><br><hr>" \
                    "<b>Id on CPLD:</b> %4<br>" \
@@ -38,9 +40,9 @@ QString CpuView::tip()
         .arg(m->type())
         .arg(m->description())
         //        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
-        .arg((m->cpuId()==65535)?"not defined":QString::number(m->cpuId()))
+        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
         .arg(m->clock())
         .arg((m->autoOffset())?"auto":QString::number(m->offset())+" ms")
         .arg((m->autoExecTime())?"auto":QString::number(m->execTime())+" ms")
-        .arg(m->code()->sourcePath());
+        .arg(codeManager->sourceFilePath(m));
 }

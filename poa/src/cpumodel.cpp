@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.19 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: cpumodel.cpp,v 1.20 2003/09/17 13:08:29 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "cpumodel.h"
 #include "cpuview.h"
 #include "abstractmodel.h"
+#include "codemanager.h"
 
 #include <qdom.h> // used to provide serialization
 #include <qcanvas.h>
@@ -41,7 +42,7 @@ CpuModel::CpuModel(QString type, QString description)
     clock_ = 0;
     offset_ = 0;
     autoOffset_ = true;
-    code_ = 0;
+    isProducer_ = true;
 
     // FIX: remove
     PinModel *pin = new PinModel(this, QString("Input1"));
@@ -62,17 +63,16 @@ CpuModel::CpuModel(QDomElement cpuElem)
     if (!cpuElem.isNull()) {
         deserialize(cpuElem);
     }
-    code_ = new CodeManager(this);
+    isProducer_ = false;
 }
 
 CpuModel::~CpuModel()
 {
-    delete code_;
 }
 
-CodeManager *CpuModel::code()
+bool CpuModel::isProducer() 
 {
-  return code_;
+    return isProducer_;
 }
 
 int CpuModel::cpuId()
@@ -130,9 +130,12 @@ QCanvasItemList CpuModel::createView(QCanvas *canvas)
 QDomElement CpuModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
+    CodeManager *codeManager = CodeManager::instance();
     root.setAttribute("block-type", "cpu");
-    root.setAttribute("srcfile", code_ != 0 ? code_->sourcePath() : "");
-    root.setAttribute("cpuid", (unsigned int) cpuId_);
+    if (!isProducer_) {
+        root.setAttribute("srcfile", codeManager->sourceFilePath(this));
+    }
+    root.setAttribute("cpuid", cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
     root.setAttribute("offset", (unsigned int)offset_);
@@ -143,12 +146,12 @@ QDomElement CpuModel::serialize(QDomDocument *document)
 
 void CpuModel::deserialize(QDomElement element) {
     BlockModel::deserialize(element);
-    cpuId_ = (unsigned short) element.attribute("cpuid", "0").toUInt();
+    cpuId_ = element.attribute("cpuid", "0").toInt();
 
 
-    setAutoOffset( (element.attribute("auto-offset","true") == "true") );
-    setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
-    setClock( (unsigned int)element.attribute("clock","0").toUInt() );
+    setAutoOffset((element.attribute("auto-offset","true") == "true"));
+    setOffset((unsigned int)element.attribute("offset","0").toUInt());
+    setClock((unsigned int)element.attribute("clock","0").toUInt());
 
     // TRUE if value of autotime contains "TRUE" (case insensitive),
     // FALSE otherwise.

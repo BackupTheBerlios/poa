@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.18 2003/09/16 15:18:13 garbeam Exp $
+ * $Id: cpumodel.h,v 1.19 2003/09/17 13:08:29 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
 #include "blockmodel.h"
-#include "codemanager.h"
 
 #include <qdom.h>
 
@@ -42,13 +41,15 @@ class CpuModel: public BlockModel
 {
 
  public:
-     /**
+    /**
      * Creates a CpuModel instance for the library
+     * <code>isProducer_</code> will be <code>true</code>.
      */
     CpuModel(QString type, QString description);
 
     /**
      * Creates a CpuModel instance for the project out of an xml subtree
+     * <code>isProducer_</code> will be <code>false</code>.
      */
     CpuModel(QDomElement cpuElement);
 
@@ -56,6 +57,12 @@ class CpuModel: public BlockModel
      * Basic destructor.
      */
     ~CpuModel();
+
+    /**
+     * Returns <code>true</code> if this model is a library item
+     * instance, <code>false</code> otherwise.
+     */
+    bool isProducer();
 
     /**
      * Returns the cpu id. This id is used to upload <code>code()</code> to
@@ -67,12 +74,6 @@ class CpuModel: public BlockModel
      * Sets the cpu id
      */
     void setCpuId(const int cpuId);
-
-    /**
-     * Returns the code manager of this CpuModel which is created
-     * implicitly by the contructor of this CpuModel.
-     */
-    CodeManager *code();
 
     /**
      * Indicates if the automatic execution time calculator should be used
@@ -136,12 +137,12 @@ class CpuModel: public BlockModel
 
 
  private:
-    CodeManager *code_;
     QString *path_;
     int cpuId_;
     bool autoExecTime_;
     unsigned long offset_;
     bool autoOffset_;
+    bool isProducer_;
 };
 
 #endif

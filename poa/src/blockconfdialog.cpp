@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.22 2003/09/16 16:09:24 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.23 2003/09/17 13:08:29 garbeam Exp $
  *
  *****************************************************************************/
 
 #include "blockconfdialog.h"
 #include "canvasview.h"
+#include "codemanager.h"
 #include "cpumodel.h"
 #include "coremodel.h"
 #include "inputmodel.h"
@@ -287,6 +288,7 @@ void BlockConfDialog::initRuntimeWidget()
 
 void BlockConfDialog::initCompileEditButtonWidget()
 {
+    CodeManager *codeManager = CodeManager::instance();
 
     // edit/compile button widget
     QWidget *compileEditButtonsWidget = new QWidget(rightWidget);
@@ -302,7 +304,7 @@ void BlockConfDialog::initCompileEditButtonWidget()
         new QPushButton(compileEditButtonsWidget, "compilePushButton");
     compilePushButton->setText(tr("Co&mpile"));
     connect(compilePushButton, SIGNAL(clicked()),
-            ((CpuModel *)model_)->code(), SLOT(compile()));
+            codeManager, SLOT(compile(model_)));
 
 
     compileEditButtonsLayout->addWidget(editCodePushButton);

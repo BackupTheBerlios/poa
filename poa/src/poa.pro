@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.8 2003/08/21 10:46:08 garbeam Exp $
+# $Id: poa.pro,v 1.9 2003/08/21 13:01:28 squig Exp $
 #
 ###############################################################################
 
@@ -30,7 +30,46 @@ INCLUDEPATH += .
 #INCLUDEPATH	+= $(QTINC)
 
 # source files
-HEADERS += aboutdialog.h blockmodel.h blockview.h codemanager.h connectormodel.h connectorview.h coremodel.h coreview.h cpumodel.h cpuview.h inputblockmodel.h inputblockview.h layoutcanvas.h layoutmanager.h mainwindow.h mdiwindow.h moduleconfdialog.h modulelibraryitem.h muxmodel.h muxview.h settingsdialog.h outputblockmodel.h outputblockview.h pinmodel.h pinvector.h pinview.h settings.h viewmap.h gridcanvas.h
-SOURCES += aboutdialog.cpp mainwindow.cpp mdiwindow.cpp moduleconfdialog.cpp settings.cpp settingsdialog.cpp main.cpp layoutcanvas.cpp gridcanvas.cpp
+HEADERS += aboutdialog.h 
+HEADERS += blockmodel.h
+HEADERS += blockview.h
+HEADERS += codemanager.h
+HEADERS += connectormodel.h
+HEADERS += connectorview.h
+HEADERS += coremodel.h
+HEADERS += coreview.h
+HEADERS += cpumodel.h
+HEADERS += cpuview.h
+HEADERS += inputblockmodel.h
+HEADERS += inputblockview.h
+HEADERS += layoutcanvas.h
+HEADERS += layoutmanager.h
+HEADERS += librarywindow.h
+HEADERS += mainwindow.h
+HEADERS += mdiwindow.h
+HEADERS += moduleconfdialog.h 
+HEADERS += modulelibraryitem.h
+HEADERS += muxmodel.h
+HEADERS += muxview.h
+HEADERS += settingsdialog.h
+HEADERS += outputblockmodel.h
+HEADERS += outputblockview.h
+HEADERS += pinmodel.h
+HEADERS += pinvector.h
+HEADERS += pinview.h
+HEADERS += settings.h
+HEADERS += viewmap.h
+HEADERS += gridcanvas.h
+
+SOURCES += aboutdialog.cpp
+SOURCES += gridcanvas.cpp
+SOURCES += layoutcanvas.cpp
+SOURCES += librarywindow.cpp
+SOURCES += main.cpp
+SOURCES += mainwindow.cpp
+SOURCES += mdiwindow.cpp
+SOURCES += moduleconfdialog.cpp
+SOURCES += settings.cpp
+SOURCES += settingsdialog.cpp
 
 TARGET = poa

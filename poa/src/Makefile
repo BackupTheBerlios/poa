@@ -49,12 +49,14 @@ HEADERS = aboutdialog.h \
 		connectorview.h \
 		coremodel.h \
 		coreview.h \
+		cpu.h \
 		cpumodel.h \
 		cpuview.h \
 		inputblockmodel.h \
 		inputblockview.h \
 		layoutcanvas.h \
 		layoutmanager.h \
+		librarywindow.h \
 		mainwindow.h \
 		mdiwindow.h \
 		moduleconfdialog.h \
@@ -71,6 +73,8 @@ HEADERS = aboutdialog.h \
 		viewmap.h \
 		gridcanvas.h
 SOURCES = aboutdialog.cpp \
+		cpu.cpp \
+		librarywindow.cpp \
 		mainwindow.cpp \
 		mdiwindow.cpp \
 		moduleconfdialog.cpp \
@@ -80,6 +84,8 @@ SOURCES = aboutdialog.cpp \
 		layoutcanvas.cpp \
 		gridcanvas.cpp
 OBJECTS = aboutdialog.o \
+		cpu.o \
+		librarywindow.o \
 		mainwindow.o \
 		mdiwindow.o \
 		moduleconfdialog.o \
@@ -93,6 +99,7 @@ UICDECLS =
 UICIMPLS = 
 SRCMOC   = moc_aboutdialog.cpp \
 		moc_layoutcanvas.cpp \
+		moc_librarywindow.cpp \
 		moc_mainwindow.cpp \
 		moc_mdiwindow.cpp \
 		moc_moduleconfdialog.cpp \
@@ -101,6 +108,7 @@ SRCMOC   = moc_aboutdialog.cpp \
 		moc_gridcanvas.cpp
 OBJMOC = moc_aboutdialog.o \
 		moc_layoutcanvas.o \
+		moc_librarywindow.o \
 		moc_mainwindow.o \
 		moc_mdiwindow.o \
 		moc_moduleconfdialog.o \
@@ -175,11 +183,18 @@ FORCE:
 
 aboutdialog.o: aboutdialog.cpp aboutdialog.h
 
+cpu.o: cpu.cpp 
+
+librarywindow.o: librarywindow.cpp librarywindow.h \
+		cpu.h \
+		codemanager.h
+
 mainwindow.o: mainwindow.cpp mainwindow.h \
 		aboutdialog.h \
 		cpuview.h \
 		gridcanvas.h \
 		layoutcanvas.h \
+		librarywindow.h \
 		moduleconfdialog.h \
 		settingsdialog.h \
 		mdiwindow.h \
@@ -257,6 +272,8 @@ moc_layoutcanvas.o: moc_layoutcanvas.cpp layoutcanvas.h viewmap.h \
 		pinmodel.h \
 		connector.h
 
+moc_librarywindow.o: moc_librarywindow.cpp librarywindow.h 
+
 moc_mainwindow.o: moc_mainwindow.cpp mainwindow.h mdiwindow.h
 
 moc_mdiwindow.o: moc_mdiwindow.cpp mdiwindow.h 
@@ -274,6 +291,9 @@ moc_aboutdialog.cpp: $(MOC) aboutdialog.h
 
 moc_layoutcanvas.cpp: $(MOC) layoutcanvas.h
 	$(MOC) layoutcanvas.h -o moc_layoutcanvas.cpp
+
+moc_librarywindow.cpp: $(MOC) librarywindow.h
+	$(MOC) librarywindow.h -o moc_librarywindow.cpp
 
 moc_mainwindow.cpp: $(MOC) mainwindow.h
 	$(MOC) mainwindow.h -o moc_mainwindow.cpp

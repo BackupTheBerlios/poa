@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.12 2003/08/21 10:46:08 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.13 2003/08/21 13:01:28 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "cpuview.h"
 #include "gridcanvas.h"
 #include "layoutcanvas.h"
+#include "librarywindow.h"
 #include "moduleconfdialog.h"
 #include "settingsdialog.h"
 
@@ -87,13 +88,16 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // initialize status bar implicitly
     (void)statusBar();
 
+	// initialize library dock window
+	LibraryWindow* lw = new LibraryWindow(QDockWindow::InDock, this);
+	moveDockWindow(lw, Qt::DockLeft);
+
     // set up mdi workspace
     QVBox* vb = new QVBox(this);
     vb->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     ws = new QWorkspace(vb);
     ws->setScrollBarsEnabled(TRUE);
     setCentralWidget(vb);
-
 
     /////////////////////////////////////////////////////////////////
     // actions

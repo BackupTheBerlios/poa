@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.9 2003/09/19 11:47:37 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.10 2003/09/19 11:49:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -92,6 +92,11 @@ QString CodeManager::sourceFilePath(CpuModel *model)
 int CodeManager::compile(CpuModel *model)
 {
     Settings* s = Settings::instance();
+    QFile source(sourceFilePath(model));
+
+    if (!source.exists()) {
+        save(model);
+    }
 
     // create arguments
     QStringList args = QStringList::split(QChar(' '), s->compilerCmd());

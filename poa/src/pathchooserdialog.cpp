@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.4 2004/02/16 10:40:26 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.5 2004/02/17 01:04:11 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -259,7 +259,7 @@ void PathChooserDialog::updatePaths()
     }
 
     pathsCount_ = pathList.size();
-    paths_ = new (Path*)[pathsCount_];
+    paths_ = new Path*[pathsCount_];
     for (i = 0; i < pathsCount_; ++i) {
 	paths_[i] = pathList.front();
 	pathList.pop_front();

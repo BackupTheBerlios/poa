@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.31 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: muxmodel.h,v 1.32 2004/02/20 19:15:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,8 +33,8 @@
 class MuxModel;
 
 /**
- * Provides range mappings to an output
- * PinModel, e.g. map pins 2-8 of parent pin to output pin.
+ * Provides range mappings between input and output
+ * PinModels.
  */
 class MuxMapping
 {
@@ -48,11 +48,12 @@ public:
 
     /**
      * Basic constructor.
-     * @input the input PinModel.
-     * @output the output (output) PinModel.
-     * @begin the begin of bit range (0 for absolute begin).
-     * @end the end of bit range (<code>input->bits() - 1</code>
-     * for absolute end).
+     * @param input the input PinModel.
+     * @param output the output PinModel.
+     * @param firstInputBit range start
+     * @param lasstInputBit range end 
+     * @param firstOutputBit range start
+     * @param lastOutputBit range end
      */
     MuxMapping(PinModel *input, PinModel *output,
                unsigned firstInputBit, unsigned lastInputBit,
@@ -114,14 +115,6 @@ public:
      */
     void deserialize(MuxModel *parent, QDomElement element);
 
-    /**
-     * Returns clone of <code>this</code>.
-     * @param input the input PinModel which should be used for cloning.
-     * If you need for some reason the original input pin use this
-     * method like this: <code>mapping->clone(mapping->input());</code>
-     */
-    MuxMapping *clone(PinModel *input, PinModel *output);
-
     /** Returns the id of this mapping. */
     unsigned id();
 
@@ -171,22 +164,28 @@ public:
 
     /**
      * Adds a new mux mapping.
+     * If this model will be detroyed, all MuxMappings
+     * will be deleted automatically.
+     * The input and output PinModel must be valid.
      */
     void addMuxMapping(MuxMapping *mapping);
 
     /**
      * Removes the given mux mapping.
+     * The given MuxMapping won't be deleted.
      */
     void removeMuxMapping(MuxMapping *mapping);
 
     /**
-     * Finds a mux mapping by id.
+     * Finds a mux mapping by id. Returns the MuxMapping
+     * if it was fount, <code>0<\code> otherwise.
      */
     MuxMapping *findMuxMappingById(unsigned id);
 
     /**
      * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create elements
+     * @param document the main QDomDocument instance.
+     * Needed to create elements
      */
     QDomElement serialize(QDomDocument *document);
 
@@ -199,7 +198,10 @@ public:
     /** Returns MuxMapping list. */
     QPtrList<MuxMapping> *mappings();
 
-    /** Returns list pointer of all PinModels which are connected by input. */
+    /**
+     *  Returns pointer list of all PinModels which are connected
+     * by the input.
+     * */
     virtual QPtrList<PinModel> connectionsForInputPin(PinModel *input);
 
 

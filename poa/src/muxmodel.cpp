@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.36 2004/01/29 11:05:09 squig Exp $
+ * $Id: muxmodel.cpp,v 1.37 2004/02/20 19:15:38 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,9 +43,8 @@ MuxMapping::MuxMapping(PinModel *input, PinModel *output,
 
 MuxMapping::MuxMapping(MuxModel *parent, QDomElement mapElement)
 {
-    if (!mapElement.isNull()) {
-        deserialize(parent, mapElement);
-    }
+    Q_ASSERT(!mapElement.isNull());
+    deserialize(parent, mapElement);
 }
 
 MuxMapping::~MuxMapping()
@@ -126,14 +125,6 @@ void MuxMapping::deserialize(MuxModel *parent, QDomElement element) {
     lastOutputBit_ = element.attribute("last-output-bit", 0).toUInt();
 }
 
-MuxMapping *MuxMapping::clone(PinModel *input, PinModel *output) {
-    MuxMapping *mapping =
-           new MuxMapping(input, output, firstInputBit_, lastInputBit_,
-                          firstOutputBit_, lastOutputBit_);
-    mapping->setId(id_);
-    return mapping;
-}
-
 unsigned MuxMapping::id() {
     return id_;
 }
@@ -156,6 +147,7 @@ MuxModel::MuxModel(QString type, QString description)
 MuxModel::MuxModel(QDomElement coreElement)
     : BlockModel(QString::null, QString::null)
 {
+    initIdCounter();
     deserialize(coreElement);
 }
 
@@ -188,15 +180,14 @@ void MuxModel::deserialize(QDomElement element)
 
     // deserialize muxmappings
     QDomNode node = element.firstChild();
-    while ( !node.isNull() ) {
+    while (!node.isNull()) {
         if (node.isElement() && node.nodeName() == "muxmapping") {
             QDomElement mappingElem = node.toElement();
             addMuxMapping(new MuxMapping(this, mappingElem));
         }
+        // else don't care
         node = node.nextSibling();
     }
-
-    initIdCounter();
 }
 
 MuxMapping *MuxModel::findMuxMappingById(unsigned id)

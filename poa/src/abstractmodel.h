@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.24 2004/02/16 16:24:01 squig Exp $
+ * $Id: abstractmodel.h,v 1.25 2004/02/20 19:15:38 garbeam Exp $
  *
  *****************************************************************************/
 
 
-#ifndef ABSTRACTMODEL_H
-#define ABSTRACTMODEL_H
+#ifndef POA_ABSTRACTMODEL_H
+#define POA_ABSTRACTMODEL_H
 
 #include "serializable.h"
 class GridCanvas;
@@ -56,7 +56,7 @@ class AbstractModel : public QObject, public Serializable
 public:
 
     /**
-     * Constructs a model.
+     * Abstract model.
      *
      * @param type the library category
      * @param description a short description
@@ -73,7 +73,7 @@ public:
 
     /**
      * Returns the project-unique id of the model. This property is
-     * managed by Project#addBlock(AbstractModel). Not used for
+     * managed by at Lin (*Project#addBlock(AbstractModel)*). Not used for
      * library items.
      */
     virtual uint id() const;
@@ -103,7 +103,7 @@ public:
     virtual void setDescription(const QString &description);
 
     /**
-     * Sets the project-wide id.
+     * Sets the project unique id.
      *
      * @see #id()
      */
@@ -143,6 +143,7 @@ public:
      * Needs to be invoked after the model properties have been
      * changed. Emits the updated() signal to notify the views
      * to repaint.
+     * Emits updated() signal.
      */
     void updatePerformed();
 
@@ -162,10 +163,10 @@ private:
 signals:
 
     /**
-     * Emitted when updatePerformed() is called.
+     * Emitted when a model modification was made.
      */
     virtual void updated();
 
 };
 
-#endif
+#endif // POA_ABSTRACTMODEL_H

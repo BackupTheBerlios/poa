@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.cpp,v 1.13 2004/01/28 16:35:51 squig Exp $
+ * $Id: abstractmodel.cpp,v 1.14 2004/02/20 19:15:38 garbeam Exp $
  *
  *****************************************************************************/
 #include "abstractmodel.h"
@@ -28,17 +28,11 @@ AbstractModel::AbstractModel(QString type, QString description, uint id)
 {
 }
 
-/**
- * Returns a description of the item.
- */
 QString AbstractModel::description() const
 {
     return description_;
 }
 
-/**
- * Returns the project unique id
- */
 uint AbstractModel::id() const
 {
     return id_;
@@ -77,11 +71,6 @@ void AbstractModel::setType(const QString &type)
     type_ = type;
 }
 
-/**
- * Produces the XML representation of this instance like:
- *
- * <cpu name="cpu_XY" id="nn" autotime="true"/>
- */
 QDomElement AbstractModel::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("model-item");
@@ -96,9 +85,6 @@ QDomElement AbstractModel::serializeCopy(QDomDocument *document, Project *)
     return serialize(document);
 }
 
-/**
- * Returns the name of the item.
- */
 QString AbstractModel::type() const
 {
     return type_;
@@ -108,4 +94,3 @@ void AbstractModel::updatePerformed()
 {
     emit(updated());
 }
-

@@ -18,26 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: router.h,v 1.1 2003/12/03 11:13:02 keulsn Exp $
+ * $Id: router.h,v 1.2 2004/02/19 16:09:10 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_ROUTER
-#define POA_ROUTER
+#ifndef POA_ROUTER_H
+#define POA_ROUTER_H
 
 #include <qcanvas.h>
 
+
+/**
+ * Abstract base class for routers. Routers are used to arrange the views
+ * inside a canvas in a agreeable layout.
+ */
 class Router 
 {
 public:
 
     /**
-     * Re-routes all {@link ConnectorViewList}s in <code>items</code>.
+     * Re-routes some objects in <code>items</code>, depending on this's
+     * (abstract) capabilities.
      */
     virtual void route(QCanvasItemList items) = 0;
 
 };
 
 
-#endif // POA_ROUTER
+#endif // POA_ROUTER_H

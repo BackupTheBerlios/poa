@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.8 2004/01/26 16:44:28 keulsn Exp $
+ * $Id: dijkstrarouter.h,v 1.9 2004/02/19 16:09:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -45,13 +45,6 @@ public:
      * by Dijkstra
      */
     virtual void route(ConnectorViewList *view);
-
-    /**
-     * Routes all {@link ConnectorViewList}s in <code>items</code> in their
-     * order. Each one of those objects tries to minimize its number of
-     * inflection points and collisions with other items
-     */
-    virtual void route(QValueList<ConnectorViewList*>& items);
 
 protected:
     virtual QValueList<QPoint> *routeOne(QPoint from,
@@ -83,6 +76,7 @@ public:
      * (antisymmetric, irreflexive, transitive).
      */
     bool operator<(const Node &other) const;
+
     /**
      * Equivalence on <code>Node</code> induced by "less than" operator
      * (reflexive, transitive, symmetric).

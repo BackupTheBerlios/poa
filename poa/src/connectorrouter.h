@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.h,v 1.4 2004/01/09 16:56:24 squig Exp $
+ * $Id: connectorrouter.h,v 1.5 2004/02/19 16:09:10 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#ifndef POA_CONNECTOR_ROUTER
-#define POA_CONNECTOR_ROUTER
+#ifndef POA_CONNECTOR_ROUTER_H
+#define POA_CONNECTOR_ROUTER_H
 
 #include "router.h"
 
@@ -35,11 +35,14 @@
 class BlockView;
 class ConnectorViewList;
 
+/**
+ * Objects of this class can route connector views.
+ */
 class ConnectorRouter : public Router
 {
 public:
     /**
-     * Inherited by <code>Router</code>
+     * Inherited from <code>Router</code>.
      */
     virtual void route(QCanvasItemList items);
 
@@ -49,11 +52,12 @@ public:
     virtual void route(ConnectorViewList *view) = 0;
 
     /**
-     * Routes a set of <code>ConnectorViewList</code>s
+     * Routes a set of <code>ConnectorViewList</code>s performing egoistic
+     * routing.
      */
-    virtual void route(QValueList<ConnectorViewList*>& list) = 0;
+    virtual void route(QValueList<ConnectorViewList*>& items);
 
- private:
+private:
     /**
      * Adds the connectors of all pins of block to routeItems.
      */
@@ -61,5 +65,5 @@ public:
 
 };
 
-#endif
+#endif // POA_CONNECTOR_ROUTER_H
 

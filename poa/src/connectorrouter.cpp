@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.cpp,v 1.6 2004/01/30 14:24:59 keulsn Exp $
+ * $Id: connectorrouter.cpp,v 1.7 2004/02/19 16:09:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -63,8 +63,8 @@ void ConnectorRouter::route(QCanvasItemList items)
     QPtrDictIterator<ConnectorViewList> it2(routeItems);
     for(; it2.current(); ++it2 ) {
         //connectors.append(it2.current()); why? --> linear search (sk 30/01)
-	connectors.prepend(it2.current());
-	(it2.current())->awaitRerouting(true);
+        connectors.prepend(it2.current());
+        (it2.current())->awaitRerouting(true);
     }
     route(connectors);
 }
@@ -78,5 +78,13 @@ void ConnectorRouter::add(QPtrDict<ConnectorViewList> *routeItems,
         if ((*it)->isConnected()) {
             routeItems->replace((*it)->connector(), (*it)->connector());
         }
+    }
+}
+
+void ConnectorRouter::route(QValueList<ConnectorViewList*>& items)
+{
+    QValueList<ConnectorViewList*>::iterator it;
+    for (it = items.begin(); it != items.end(); ++it) {
+        route(*it);
     }
 }

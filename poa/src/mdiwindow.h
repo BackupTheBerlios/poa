@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.3 2003/08/20 11:58:39 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.4 2003/08/20 16:09:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,8 @@
 
 #include <qmainwindow.h>
 
-#include "layoutcanvas.h"
+class LayoutCanvas;
+class QCanvasView;
 
 /*****************************************************************************
  * Defines MDI windows.
@@ -38,8 +39,11 @@ class MdiWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MdiWindow( QWidget* parent, const char* name, int wflags );
+    MdiWindow(LayoutCanvas* canvas, QWidget* parent = 0, const char* name = 0, 
+			  WFlags f = WType_TopLevel);
     ~MdiWindow();
+
+	LayoutCanvas *canvas();
 
     void load( const QString& fn );
     void save();
@@ -49,8 +53,7 @@ protected:
     void closeEvent( QCloseEvent * );
 
 private:
-    LayoutCanvas* layoutCanvas_;
-    QString filename_;
+    QCanvasView* view_;
 
 signals:
     void message(const QString&, int );

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: layoutcanvas.h,v 1.1 2003/08/19 14:19:37 garbeam Exp $
+ * $Id: layoutcanvas.h,v 1.2 2003/08/20 16:09:42 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,16 +35,17 @@
  * Defines the layout canvas displayed by MdiWindow.
  * @author garbeam
  */
-class LayoutCanvas : public QCanvasView {
+class LayoutCanvas : public QCanvas {
 
     Q_OBJECT
 
 private:
 
-    ViewMap *views_;
     LayoutManager *layoutManager_;
 
 public:
+	LayoutCanvas () {};
+
     // Returns an unique key of this blockModelView
     QString *putView(BlockView *blockView);
     BlockView *getView(QString &key);

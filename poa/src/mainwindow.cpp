@@ -18,13 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.9 2003/08/20 15:33:30 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.10 2003/08/20 16:09:42 squig Exp $
  *
  *****************************************************************************/
 
-#include "aboutdialog.h"
-#include "imagedata.h" // contains toolbar icons
 #include "mainwindow.h"
+
+#include "aboutdialog.h"
+#include "cpuview.h"
+#include "layoutcanvas.h"
 #include "moduleconfdialog.h"
 #include "settingsdialog.h"
 
@@ -273,8 +275,6 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
             this, SLOT(openModuleConf()) );
     connect(openSettingsAction, SIGNAL(activated()),
             this, SLOT(openSettings()));
-
-   
 }
 
 void MainWindow::closeWindow()
@@ -400,15 +400,32 @@ void MainWindow::openSettings()
 
 MdiWindow* MainWindow::newLayout()
 {
-    MdiWindow* w = new MdiWindow(ws, 0, WDestructiveClose);
+	LayoutCanvas *doc = new LayoutCanvas();
+	doc->resize(400, 400);
+
+    MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);
 //    connect(w, SIGNAL(message(const QString&, int)),
 //            statusBar(), SLOT(message(const QString&, int)));
     w->setCaption("unnamed layout");
+	w->resize(w->sizeHint());
     // show the very first window in maximized mode
     if (ws->windowList().isEmpty()) {
         w->showMaximized();
     } else {
         w->show();
     }
+
+	// FIX: remove: create dummy items
+	QCanvasPolygonalItem *i
+		= new QCanvasRectangle( rand()%doc->width(),rand()%doc->height(),
+								doc->width()/5,doc->width()/5,doc);
+    int z = rand()%256;
+    i->setBrush( QColor(z,z,z) );
+    i->setPen( QPen(QColor(rand()%32*8,rand()%32*8,rand()%32*8), 6) );
+    i->setZ(z);
+    i->show();
+
+	doc->update();
+
     return w;
 }

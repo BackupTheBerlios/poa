@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.1 2003/08/20 14:06:02 squig Exp $
+ * $Id: settings.cpp,v 1.2 2003/08/20 16:09:42 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -58,4 +58,5 @@ void Settings::set(const QString &key, const QString &value)
 void Settings::write()
 {
 	delete instance_;
+	instance_ = 0;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.63 2004/01/24 16:20:10 squig Exp $
+ * $Id: blockview.cpp,v 1.64 2004/01/24 16:50:53 squig Exp $
  *
  *****************************************************************************/
 
@@ -92,12 +92,6 @@ BlockView::~BlockView()
         delete *it;
     }
 }
-
-bool BlockView::isDraggable()
-{
-    return true;
-}
-
 
 QPoint BlockView::dragBy(int dx, int dy)
 {

@@ -15,6 +15,7 @@ class PinViewTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testCanvas);
     CPPUNIT_TEST(testConnector);
     CPPUNIT_TEST(testModel);
+    CPPUNIT_TEST(testRtti);
     CPPUNIT_TEST(testSignals);
     CPPUNIT_TEST_SUITE_END();
 
@@ -63,6 +64,11 @@ public:
     void testModel()
     {
         CPPUNIT_ASSERT(leftPin->model() == pinModel);
+    }
+
+    void testRtti()
+    {
+        CPPUNIT_ASSERT(leftPin->rtti() == PinView::RTTI);
     }
 
     void testSignals()

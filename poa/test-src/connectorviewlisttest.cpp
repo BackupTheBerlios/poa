@@ -50,6 +50,7 @@ public:
     {
         delete blockView->model();
         delete canvas;
+        delete connector;
     }
 
     void testCanvas()

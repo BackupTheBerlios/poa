@@ -13,9 +13,9 @@ class BlockViewTest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(BlockViewTest);
     CPPUNIT_TEST(testCanvas);
-    CPPUNIT_TEST(testDraggable);
     CPPUNIT_TEST(testModel);
     CPPUNIT_TEST(testPins);
+    CPPUNIT_TEST(testRtti);
     CPPUNIT_TEST(testSignals);
     CPPUNIT_TEST_SUITE_END();
 
@@ -52,11 +52,6 @@ public:
         CPPUNIT_ASSERT(block->canvas() == canvas);
     }
 
-    void testDraggable()
-    {
-        CPPUNIT_ASSERT(block->isDraggable());
-    }
-
     void testModel()
     {
         CPPUNIT_ASSERT(block->model() == blockModel);
@@ -66,6 +61,11 @@ public:
     {
         QValueList<PinView*> list = block->pins();
         CPPUNIT_ASSERT(list.count() == 2);
+    }
+
+    void testRtti()
+    {
+        CPPUNIT_ASSERT(block->rtti() == BlockView::RTTI);
     }
 
     void testSignals()

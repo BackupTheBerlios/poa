@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.5 2003/08/26 23:27:11 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.6 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -39,11 +39,11 @@ QValueList<AbstractModel *> ModelFactory::generate(const QDomNode &node)
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "model-item") {
             QDomElement element = item.toElement();
-	    if (element.attribute("type","") == "cpu") {
-	        l.append(new CpuModel(element));
-	    } else if (element.attribute("type","") == "core") {
-		//l.append(new CoreModel(element));
-	    }
+        if (element.attribute("type","") == "cpu") {
+            l.append(new CpuModel(element));
+        } else if (element.attribute("type","") == "core") {
+            l.append(new CoreModel(element));
+        }
         }
     }
 

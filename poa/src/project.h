@@ -18,15 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.3 2003/08/26 23:27:11 vanto Exp $
+ * $Id: project.h,v 1.4 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
 #define PROJECT_H
 
 #include "abstractmodel.h"
+#include "blockmodel.h"
+#include "gridcanvas.h"
 
 #include <qptrlist.h>
+#include <qdom.h>
+#include <qmap.h>
 
 /*****************************************************************************
  * Basic map container for BlockModel objects.
@@ -38,17 +42,21 @@ class Project : public QObject
 
 public:
     Project();
+    Project(QDomDocument *document);
     ~Project();
 
     void add(AbstractModel *item, int x, int y);
+    void addCanvas(GridCanvas *canvas);
+    const QPtrList<GridCanvas> *canvasList() const;
     QDomDocument serialize();
+    void deserialize(QDomDocument *document);
 
 signals:
     void modelAdded(AbstractModel *item, int x, int y);
 
 private:
     QPtrList<AbstractModel> items_;
-
+    QPtrList<GridCanvas> canvasList_;
 };
 
 #endif // PROJECT_H

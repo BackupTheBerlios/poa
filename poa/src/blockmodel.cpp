@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.8 2003/08/27 12:28:24 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.9 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,6 +38,10 @@ BlockModel::BlockModel(QString name, QString description)
     episodicPins_ = new PinVector();
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
+
+    clock_ = 0;
+    offset_ = 0;
+    autoOffset_ = true;
 }
 
 
@@ -160,7 +164,7 @@ QDomElement BlockModel::serialize(QDomDocument *document)
 void BlockModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
-    setAutoOffset( (element.attribute("auto-offset","false") == "true") );
+    setAutoOffset( (element.attribute("auto-offset","true") == "true") );
     setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
     setClock( (unsigned int)element.attribute("clock","0").toUInt() );
     // pins

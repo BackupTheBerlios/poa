@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.7 2003/08/26 16:53:09 keulsn Exp $
+ * $Id: librarywindow.cpp,v 1.8 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
 
 #include "cpumodel.h"
+#include "coremodel.h"
 #include "abstractmodel.h"
 #include "pinmodel.h"
 
@@ -90,6 +91,8 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(cpuListViewItem,
                             new CpuModel(0, TRUE, "NIOS16",
                                          "NIOS 16-Bit Cpu"));
+    new LibraryListViewItem(coreListViewItem,
+                            new CoreModel("TestCore", "Coredump"));
 }
 
 /*****************************************************************************

@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.24 2003/08/26 16:53:09 keulsn Exp $
+# $Id: poa.pro,v 1.25 2003/08/27 17:50:40 vanto Exp $
 #
 ###############################################################################
 
@@ -74,6 +74,7 @@ SOURCES += abstractmodel.cpp
 SOURCES += blockmodel.cpp
 SOURCES += blockview.cpp
 SOURCES += canvasview.cpp
+SOURCES += coremodel.cpp
 SOURCES += cpumodel.cpp
 SOURCES += gridcanvas.cpp
 SOURCES += librarywindow.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.33 2003/08/27 10:50:22 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.34 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -38,9 +38,12 @@
 #include <qaction.h>
 #include <qapplication.h>
 #include <qcombobox.h>
+#include <qfile.h>
+#include <qfiledialog.h>
 #include <qimage.h>
 #include <qlayout.h>
 #include <qmenubar.h>
+#include <qmessagebox.h>
 #include <qpixmap.h>
 #include <qpopupmenu.h>
 #include <qtoolbar.h>
@@ -393,9 +396,11 @@ void MainWindow::fileNew()
 
     project_ = new Project();
 
-    GridCanvas *canvas = new GridCanvas(project_);
-
-    MdiWindow* w = new MdiWindow(canvas, ws, 0, WDestructiveClose);
+    //    GridCanvas *canvas = new GridCanvas(project_);
+    //    project_->addCanvas(canvas);
+    //    const QPtrList<GridCanvas> *list = project_->canvasList();
+    //    GridCanvas *canvas = list->getFirst();
+    MdiWindow *w = new MdiWindow(project_->canvasList()->getFirst(), ws, 0, WDestructiveClose);
     w->setCaption(tr("Unnamed Layout"));
     w->setIcon(QPixmap(ICON_PATH + "document.xpm"));
     w->resize(w->sizeHint());
@@ -412,15 +417,44 @@ void MainWindow::fileNew()
 
 void MainWindow::fileOpen()
 {
-    qWarning( "MainWindow::fileOpen(): Not implemented yet!" );
+    //qWarning( "MainWindow::fileOpen(): Not implemented yet!" );
+    if (!closeAll()) {
+        return;
+    }
+
+    if (project_) {
+        delete project_;
+    }
+
+    QString fn = QFileDialog::getOpenFileName( QString::null, QString::null, this);
+    if (!fn.isEmpty()) {
+        QFile file(fn);
+        if (file.open(IO_ReadOnly)) {
+            QDomDocument doc;
+            if (doc.setContent(&file)) {
+                project_ = new Project(&doc);
+            } else {
+                QMessageBox::warning( 0, "File error",
+                              QString("Cannot open project file: "+fn));
+            }
+            file.close();
+        }
+    }
 }
 
 void MainWindow::fileSave()
 {
     if (project_) {
-        qWarning((project_->serialize()).toString());
+        QString fn = QFileDialog::getSaveFileName( QString::null, QString::null, this);
+        if ( !fn.isEmpty() ) {
+            QFile file(fn);
+            if (file.open(IO_WriteOnly)) {
+                QTextStream ts(&file);
+                project_->serialize().save(ts, 2);
+                file.close();
+            }
+        }
     }
-    //qWarning( "MainWindow::fileSave(): Not implemented yet!" );
 }
 
 void MainWindow::fileSaveAs()

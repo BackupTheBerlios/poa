@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.11 2003/08/27 17:44:36 keulsn Exp $
+ * $Id: blockview.h,v 1.12 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 #include <qcanvas.h>
 #include <qvaluevector.h>
+#include <qdom.h>
 
 #include "abstractview.h"
 class BlockModel;
@@ -80,6 +81,9 @@ public:
     virtual void moveBy(double dx, double dy);
 
     virtual int rtti() const;
+
+    QDomElement serialize(QDomDocument *document);
+    void deserialize(QDomElement element);
 
 protected:
 

@@ -18,14 +18,23 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.4 2003/08/27 12:28:24 vanto Exp $
+ * $Id: project.cpp,v 1.5 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
+#include "blockview.h"
 #include "project.h"
+#include "gridcanvas.h"
+#include <typeinfo>
 
 Project::Project()
 {
+    GridCanvas *can = new GridCanvas(this);
+    addCanvas(can);
+}
 
+Project::Project(QDomDocument *document)
+{
+    deserialize(document);
 }
 
 Project::~Project()
@@ -38,21 +47,60 @@ void Project::add(AbstractModel *item, int x, int y)
     emit modelAdded(item, x, y);
 }
 
+void Project::addCanvas(GridCanvas *canvas)
+{
+    canvasList_.append(canvas);
+}
+
+const QPtrList<GridCanvas> *Project::canvasList() const {
+    return &canvasList_;
+}
+
 QDomDocument Project::serialize()
 {
+    typedef QMap<AbstractModel *, unsigned int> IdMap;
+    IdMap idMap;
+
     QDomDocument doc;
     QDomElement proj = doc.createElement("project");
     doc.appendChild(proj);
-    QDomElement mlist = doc.createElement("models");
+    QDomElement mlist = doc.createElement("model");
     proj.appendChild(mlist);
     QDomElement vlist = doc.createElement("views");
     proj.appendChild(vlist);
 
     // create model list
     AbstractModel *model;
+    unsigned int i = 0;
     for (model = items_.first(); model; model = items_.next()) {
-        mlist.appendChild(model->serialize(&doc));
+        i++;
+        QDomElement mElem = model->serialize(&doc);
+        mElem.setAttribute("id",i);
+        mlist.appendChild(mElem);
+        idMap[model] = i;
+    }
+
+    // create view list
+    GridCanvas *canvas;
+    i = 0;
+    for (canvas = canvasList_.first(); canvas; canvas = canvasList_.next()) {
+        QDomElement vElem = doc.createElement("view");
+        vElem.setAttribute("id",++i);
+        QCanvasItemList canvasItems = canvas->allItems();
+        QCanvasItemList::iterator it;
+        for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
+            BlockView *bv = (dynamic_cast<BlockView *> (*it));
+            if (bv != 0) {
+                QDomElement viElem = bv->serialize(&doc);
+                viElem.setAttribute("model-id", idMap[bv->model()]);
+                vElem.appendChild(viElem);
+            }
+        }
+        vlist.appendChild(vElem);
     }
     return doc;
 }
 
+void Project::deserialize(QDomDocument *document) {
+    qWarning(document->toString());
+}

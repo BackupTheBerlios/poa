@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.11 2003/08/26 23:27:11 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.12 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -71,14 +71,14 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     QDomElement root = BlockModel::serialize(document); //= document->createElement("cpu");
     root.setAttribute("type", "cpu");
     root.setAttribute("srcfile", code_);
-    root.setAttribute("id", (unsigned int) id_);
+    root.setAttribute("cpuid", (unsigned int) id_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     return root;
 }
 
 void CpuModel::deserialize(QDomElement element) {
     BlockModel::deserialize(element);
-    id_ = (unsigned short) element.attribute("id", "400").toUInt();
+    id_ = (unsigned short) element.attribute("cpuid", "0").toUInt();
     // TRUE if value of autotime contains "TRUE" (case insensitive),
     // FALSE otherwise.
     autoExecTime_ =

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.h,v 1.3 2003/08/26 23:27:11 vanto Exp $
+ * $Id: coremodel.h,v 1.4 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -35,17 +35,13 @@
  */
 class CoreModel: public BlockModel
 {
-	
+
  public:
-    CoreModel(unsigned short id, QString name);
+    CoreModel(QString name, QString description);
     CoreModel(QDomElement coreElement);
 
     QDomElement serialize(QDomDocument *document);
-    void deserialize(QDomElement element);
-
- private:
-    unsigned short id_;
-    
+    //void deserialize(QDomElement element);
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.cpp,v 1.2 2003/08/20 14:06:02 squig Exp $
+ * $Id: aboutdialog.cpp,v 1.3 2003/08/27 17:50:40 vanto Exp $
  *
  *****************************************************************************/
 #include "aboutdialog.h"
@@ -30,17 +30,17 @@
 /*****************************************************************************
  * Constructs the dialog.
  */
-AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal, 
-						 WFlags flags)
+AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal,
+                         WFlags flags)
     : QTabDialog(parent, name, modal, flags)
 {
-	this->setCaption(tr("About POA"));
-	this->setOkButton();
-	this->resize(400, 400);
+    this->setCaption(tr("About POA"));
+    this->setOkButton();
+    this->resize(400, 400);
 
-	addFileTab("README", tr("About"));
-	addFileTab("AUTHORS", tr("Authors"));
-	addFileTab("COPYING", tr("License Agreement"));
+    addFileTab("README", tr("About"));
+    addFileTab("AUTHORS", tr("Authors"));
+    addFileTab("COPYING", tr("License Agreement"));
 }
 
 /*****************************************************************************
@@ -56,14 +56,15 @@ AboutDialog::~AboutDialog()
  */
 void AboutDialog::addFileTab(const QString &filename, const QString &label)
 {
-	QTextEdit* page = new QTextEdit;
-	page->setReadOnly(TRUE);
-	page->setWordWrap(QTextEdit::NoWrap);
+    QTextEdit* page = new QTextEdit;
+    page->setReadOnly(TRUE);
+    page->setWordWrap(QTextEdit::NoWrap);
 
-	QFile file(filename);
+    QFile file(filename);
     if (file.open(IO_ReadOnly)) {
         QTextStream ts(&file);
         page->setText(ts.read());
+        file.close();
     }
-	this->addTab(page, label);
+    this->addTab(page, label);
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.9 2003/09/08 13:35:04 squig Exp $
+ * $Id: pinview.cpp,v 1.10 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ PinView::~PinView()
 
 AbstractModel *PinView::model()
 {
-    return 0;
+    return model_;
 }
 
 PinView::DockPosition PinView::dockPosition()

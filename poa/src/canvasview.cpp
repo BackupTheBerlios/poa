@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.24 2003/09/08 13:35:04 squig Exp $
+ * $Id: canvasview.cpp,v 1.25 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -57,10 +57,12 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
 {
     setAcceptDrops(true);
     setDragAutoScroll(true);
+    tooltip_ = new CanvasToolTip(this);
 }
 
 CanvasView::~CanvasView()
 {
+    delete tooltip_;
     // no need to delete child widgets, Qt does it all for us
 }
 
@@ -235,4 +237,26 @@ void CanvasView::setAction(CanvasViewAction *action)
 QPoint CanvasView::toCanvas(QPoint pos)
 {
     return inverseWorldMatrix().map(viewportToContents(pos));
+}
+
+CanvasToolTip::CanvasToolTip( QWidget * parent )
+    : QToolTip( parent )
+{
+    // no explicit initialization needed
+}
+
+
+void CanvasToolTip::maybeTip( const QPoint &pos )
+{
+    if ( !parentWidget()->inherits( "CanvasView" ) )
+    return;
+
+    QPoint p = ((QCanvasView*)parentWidget())->inverseWorldMatrix().map(pos);
+    QCanvasItemList l = ((QCanvasView*)parentWidget())->canvas()->collisions(p);
+    if (!l.isEmpty()) {
+        // first item is top item
+        QCanvasItem *topItem = l.first();
+        AbstractView *item = dynamic_cast<AbstractView*>(topItem);
+        tip( QRect(pos.x(),pos.y(),2,2),  item->model()->tip());
+    }
 }

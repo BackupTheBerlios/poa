@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.14 2003/08/29 17:59:38 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.15 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -34,6 +34,7 @@ CpuModel::CpuModel(QString type, QString description)
 {
     cpuId_ = 0;
     autoExecTime_ = 0;
+    code_ = QString::null;
 
     // FIX: remove
     PinModel *firstPin = new PinModel(this, QString("Input1"));
@@ -79,6 +80,15 @@ bool CpuModel::autoExecTime()
 void CpuModel::setAutoExecTime(const bool autoExecTime)
 {
     autoExecTime_ = autoExecTime;
+}
+
+QString CpuModel::tip()
+{
+    return QString("<b>CPU</b><br><u>%2</u> (%3)<br><i>%4</i><br>" \
+                   "<table><tr><td>Execution time</td><td>%4</td></tr>" \
+                   "<tr><td>Source:</td>%5<td></td></tr>")
+        .arg(cpuId_).arg(name()).arg(type()).arg(description())
+        .arg((code_ == QString::null)?"not defined":"defined");
 }
 
 /**

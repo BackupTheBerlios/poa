@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.8 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: pinmodel.h,v 1.9 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,8 @@
 #include <qcanvas.h>
 #include <qdom.h>
 
+#include "abstractmodel.h"
+
 class BlockView;
 class BlockModel;
 class ConnectorModel;
@@ -38,7 +40,7 @@ class QDomElement;
 #include "pinview.h"
 
 
-class PinModel
+class PinModel : public AbstractModel
 {
 
 public:
@@ -79,13 +81,13 @@ public:
 
 
     /**
-     * Returns this' id. 
+     * Returns this' id.
      * The id is set by the BlockModel which contains this pin.
      */
     unsigned id();
 
     /**
-     * Sets this' id. 
+     * Sets this' id.
      * Used by the BlockModel
      */
     void setId(const unsigned id);
@@ -94,7 +96,7 @@ public:
      * Returns this' name
      */
     QString name();
-    
+
     /**
      * Sets this' name
      */
@@ -121,14 +123,25 @@ public:
     void setBits(unsigned int bits);
 
     /**
+     * DON'T USE THIS, use createView(BlockView, DockPosition)
+     * instead!
+     */
+    QCanvasItemList createView(QCanvas *canvas);
+
+    /**
      * Creates the CanvasItems for this.
      */
     PinView *createView(BlockView *block,
             PinView::DockPosition dockPosition);
 
     /**
+     * Returns the tooltip text
+     */
+    virtual QString tip();
+
+    /**
      * Serializes this instance to a xml subtree
-     * @param document the main QDomDocument instance. Needed to create 
+     * @param document the main QDomDocument instance. Needed to create
      * elements
      */
     QDomElement serialize(QDomDocument *document);

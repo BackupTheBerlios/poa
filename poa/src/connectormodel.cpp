@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.cpp,v 1.5 2003/09/07 19:07:46 squig Exp $
+ * $Id: connectormodel.cpp,v 1.6 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -86,6 +86,11 @@ QCanvasItemList ConnectorModel::createView(QCanvas *canvas)
                                             targetView,
                                             canvas);
     return view->allSegments();
+}
+
+QString ConnectorModel::tip()
+{
+    return QString("Connector");
 }
 
 QDomElement ConnectorModel::serialize(QDomDocument *document)

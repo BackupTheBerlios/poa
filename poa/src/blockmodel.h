@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.15 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: blockmodel.h,v 1.16 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -82,7 +82,7 @@ public:
      * Returns a list of all input pins of this.
      */
     PinVector *inputPins();
-    
+
     /**
      * Returns a list of all output pins of this.
      */
@@ -90,13 +90,13 @@ public:
 
 
     /**
-     * Sets the clock count in milliseconds of this. 
+     * Sets the clock count in milliseconds of this.
      * @todo Move this to CpuModel?
      */
     void setClock(unsigned int clock);
 
     /**
-     * Returns the clock count in milliseconds of this. 
+     * Returns the clock count in milliseconds of this.
      * @todo Move this to CpuModel?
      */
     unsigned int clock();
@@ -108,7 +108,7 @@ public:
     void setOffset(unsigned int offset);
 
     /**
-     * Returns the starting offset in milliseconds of this. 
+     * Returns the starting offset in milliseconds of this.
      * @todo Move this to CpuModel?
      */
     unsigned int offset();
@@ -117,7 +117,7 @@ public:
      * Toggles the automatic offset calculation.
      */
     void setAutoOffset(bool autoOffset);
-    
+
     /**
      * Indicates if the automatic offset calculation should be used.
      */
@@ -138,7 +138,7 @@ public:
      * Adds an output pin to this
      */
     void addOutputPin(PinModel *pin, PinModel *successor = 0);
-    
+
     /**
      * Removes an output pin from this
      */
@@ -175,6 +175,11 @@ public:
      * Creates the CanvasItems for this.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
+
+    /**
+     * Returns tooltip text
+     */
+    virtual QString tip();
 
 private:
 

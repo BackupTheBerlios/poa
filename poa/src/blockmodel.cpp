@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.13 2003/08/29 23:51:08 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.14 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -170,6 +170,13 @@ QCanvasItemList BlockModel::createView(QCanvas *canvas)
     list.append(view);
     view->addPinViewsTo(list);
     return list;
+}
+
+QString BlockModel::tip()
+{
+    return QString("<table><tr><td><b>Clock:</b></td><td>")+QString::number(clock())
+        +QString("ms</td></tr><tr><td><b>Offset:</b></td><td>")+QString::number(offset())
+        +QString("ms</td></tr></table>");
 }
 
 QDomElement BlockModel::serialize(QDomDocument *document)

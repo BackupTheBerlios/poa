@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.20 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: canvasview.h,v 1.21 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 class AbstractModel;
 class AbstractView;
+class CanvasToolTip;
 class CanvasViewAction;
 class GridCanvas;
 class Project;
@@ -34,12 +35,15 @@ class PinView;
 
 #include <qvariant.h>
 #include <qcanvas.h>
+#include <qtooltip.h>
+
 class QCanvasItemList;
 class QDragEnterEvent;
 class QDropEvent;
 class QMouseEvent;
 class QKeyEvent;
 class QPoint;
+class QToolTip;
 
 /**
  * Defines a view on a {@link QCanvas} that belongs to a {@link Project}.
@@ -162,7 +166,17 @@ private:
     PinView *startPin_;
     /** The action that is currently active if any, else 0 */
     CanvasViewAction *action_;
+    /** The Tooltip instance */
+    CanvasToolTip *tooltip_;
+};
 
+class CanvasToolTip : public QToolTip
+{
+ public:
+    CanvasToolTip( QWidget * parent );
+
+ protected:
+    void maybeTip( const QPoint & );
 };
 
 #endif // CANVASVIEW_H

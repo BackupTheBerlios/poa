@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.14 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: cpumodel.h,v 1.15 2003/09/09 14:04:44 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -79,6 +79,11 @@ class CpuModel: public BlockModel
      * Toggles the usage of the automatic execution time calculator
      */
     void setAutoExecTime(const bool autoExecTime);
+
+    /**
+     * Returns the tooltip text
+     */
+    QString tip();
 
     /**
      * Serializes this instance to a xml subtree

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.34 2004/01/18 23:15:12 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.35 2004/01/19 16:39:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -43,9 +43,7 @@
 #include <math.h>
 
 #include "scheduledialog.h"
-#include "blocktree.h"
 #include "canvasview.h"
-#include "blockmodel.h"
 #include "muxmodel.h"
 #include "codemanager.h"
 #include "cpumodel.h"
@@ -91,78 +89,11 @@ ScheduleDialog::~ScheduleDialog()
     }
 }
 
-// Recursively build tree
-void ScheduleDialog::buildBranch(BlockTree *bt)
-{
-    QValueList<PinModel*> l = bt->getBlock()->pins();
-    for (QValueList<PinModel*>::Iterator pin = l.begin(); pin != l.end(); ++pin) {
-        if (((*pin)->type() == PinModel::OUTPUT) && (*pin)->connected()) {
-            BlockModel* block = (*pin)->connected()->parent();
-
-            // In case of Mux get list of connecting blocks from Mux
-            if (INSTANCEOF(block, MuxModel)) {
-                QPtrList<PinModel> pins =
-                    ((MuxModel*)block)->connectionsForInputPin((*pin)->connected());
-                // Check all output pins for this input pin
-                for (QPtrListIterator<PinModel> muxit(pins); muxit != 0; ++muxit) {
-                    if (!(*muxit)->connected()) continue;
-                    block = (*muxit)->connected()->parent();
-                    // Only add model recursively if not already in tree
-
-                    if (blocksToTree_.contains(block)) {
-                        // add back reference only and stop recursion.
-                        bt->addBranch(block)->setBackReference(true);
-                    } else {
-                        BlockTree *lb = bt->addBranch(block);
-                        blocksToTree_.insert(block, lb);
-                        blocks_.append(lb);
-                        buildBranch(lb);
-                    }
-                }
-            } else {    // No mux, straight connection
-
-                if (blocksToTree_.contains(block)) {
-                    // add back reference only and stop recursion.
-                    bt->addBranch(block)->setBackReference(true);
-                } else {
-                    BlockTree *lb = bt->addBranch(block);
-                    blocksToTree_.insert(block, lb);
-                    blocks_.append(lb);
-                    buildBranch(lb);
-                }
-            }
-        }
-    }
-}
-
-void ScheduleDialog::buildTree()
-{
-    // First look for all input blocks
-    for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0; ++it) {
-        if (INSTANCEOF(*it, BlockModel))  {
-            BlockModel* bm = dynamic_cast<BlockModel*>(*it);
-            if (!bm->hasInputPins() && !bm->hasEpisodicPins()) {
-                BlockTree* bt = new BlockTree(bm);
-                inputBlocks.append(bt);
-                if (!blocks_.contains(bt)) {
-                    blocks_.append(bt);
-                }
-            }
-        }
-    }
-
-    graph_ = new BlockGraph(project_);
-
-    // Then built the trees from the input blocks on
-    blocksToTree_.clear();
-    for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
-        buildBranch(*inpit);
-    }
-}
-
 void ScheduleDialog::updateModel()
 {
-    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
+    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
+         it != blocks_.end(); ++it) {
+
         (*it)->commit();
     }
 
@@ -171,22 +102,25 @@ void ScheduleDialog::updateModel()
     }
 }
 
-void ScheduleDialog::fillTimingTable(BlockTree* bt)
+void ScheduleDialog::fillTimingTable(BlockNode* node)
 {
     int i = timingTable->numRows();
     timingTable->setNumRows(i + 1);
 
     QTableItem *i1 = new QTableItem(timingTable, QTableItem::Never,
-        bt->getBlock()->name());
+                                    node->model()->name());
     timingTable->setItem(i, 0, i1);
 
-    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::RUNTIME);
+    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping, node,
+                                     SpinBoxItem::RUNTIME);
     timingTable->setItem(i, 1, i2);
 
-    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::CLOCK);
+    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping, node,
+                                     SpinBoxItem::CLOCK);
     timingTable->setItem(i, 2, i3);
 
-    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::OFFSET);
+    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping, node,
+                                     SpinBoxItem::OFFSET);
     timingTable->setItem(i, 3, i4);
 }
 
@@ -210,7 +144,16 @@ void ScheduleDialog::initLayout()
 
 void ScheduleDialog::initTimingWidget()
 {
-    buildTree();
+    graph_ = new BlockGraph(project_);
+    blocks_ = graph_->blocks();
+    // remove all MuxModel nodes from list
+    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
+         it != blocks_.end(); ++it) {
+
+        if (INSTANCEOF((*it)->model(), MuxModel)) {
+            it = blocks_.remove(it);
+        }
+    }
     timingTable = new QTable(0, 4, topWidget, "timingWidget");
     timingTable->horizontalHeader()->setLabel(0, tr( "Block" ));
     timingTable->horizontalHeader()->setLabel(1, tr( "Laufzeit" ));
@@ -225,7 +168,9 @@ void ScheduleDialog::initTimingWidget()
     connect(timingTable, SIGNAL(valueChanged(int, int)),
             this, SLOT(modelChanged(int,int)));
 
-    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
+    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
+         it != blocks_.end(); ++it) {
+
         fillTimingTable(*it);
     }
     topLayout->addWidget(timingTable);
@@ -280,14 +225,20 @@ void ScheduleDialog::initCanvas()
 {
     // calculate pix per ns (find block with highest clock to draw it
     // BLOCKS_PER_CANVAS times.
-    int max_clock = 0;
-    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
-        max_clock = QMAX(max_clock, (*it)->getClock());
+    unsigned int max_clock = 0;
+    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
+         it != blocks_.end(); ++it) {
+
+        max_clock = QMAX(max_clock, (*it)->clock());
     }
-    pixPerNs_ = (double)CANVAS_WIDTH / (max_clock * BLOCKS_PER_CANVAS);
+    pixPerNs_ = (max_clock > 0)
+        ? (double)CANVAS_WIDTH / (max_clock * BLOCKS_PER_CANVAS)
+        : 1.0;
 
     drawRuler();
-    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
+    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
+         it != blocks_.end(); ++it) {
+
         drawTimings(*it);
     }
 
@@ -351,12 +302,11 @@ void ScheduleDialog::drawRuler()
     }
 }
 
-void ScheduleDialog::drawTimings(BlockTree* bt)
+void ScheduleDialog::drawTimings(BlockNode* node)
 {
     // draw labels
-    QCanvasText* text = new QCanvasText(bt->getBlock()->name(),
-                                        labelCanvas);
-    int line = blocks_.find(bt);
+    QCanvasText* text = new QCanvasText(node->model()->name(), labelCanvas);
+    int line = blocks_.findIndex(node);
     int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
     text->move(WIDGET_SPACING, y);
     text->show();
@@ -370,7 +320,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
     }
 
     // check if block is configured correctly
-    if (bt->getClock() <= 0) {
+    if (node->clock() <= 0) {
         // draw info and skip
         QCanvasRectangle *box = new QCanvasRectangle(canvas);
         box->setSize(canvas->width(),
@@ -391,38 +341,34 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
     }
 
     // draw blocks
-    int t = bt->getOffset();
+    int t = node->offset();
     double X = t * pixPerNs_;
     while (X < canvas->width()) {
         // draw block
-        QRect thisBlock = calcBlockPosition(bt, t);
+        QRect thisBlock = calcBlockPosition(node, t);
         QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);
         box->setBrush(QBrush(white));
         box->setZ(2);
         box->show();
 
         // draw lines for all connected 'children'
-        for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
-            BlockTree *target = *it;
-
-            // block lookup
-            if (target->getBackReference()) {
-                target = blocksToTree_[target->getBlock()];
-            }
+        QPtrList<BlockNode> neighbours = node->neighbours();
+        for (QPtrListIterator<BlockNode> it(neighbours); it != 0; ++it) {
+            BlockNode *target = *it;
 
             // skip if child has no clock
-            if (target->getClock() <= 0) {
+            if (target->clock() <= 0) {
                 continue;
             }
 
             // find next start time for the target block
-            int targetTime = target->getOffset();
-            while (targetTime <= t + bt->getRuntime()) {
-                targetTime += target->getClock();
+            unsigned int targetTime = target->offset();
+            while (targetTime <= t + node->runtime()) {
+                targetTime += target->clock();
             }
 
             // check if this block is the next source for the target block
-            if (t + (2 * bt->getRuntime()) + bt->getClock() < targetTime  ) {
+            if (t + (2 * node->runtime()) + node->clock() < targetTime  ) {
                 continue;
             }
 
@@ -441,21 +387,21 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
 
         }
 
-        t += bt->getClock();
+        t += node->clock();
         X = rint(t * pixPerNs_);
     }
 
     return;
 }
 
-QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)
+QRect ScheduleDialog::calcBlockPosition(BlockNode *node, int time)
 {
-    int line = blocks_.find(bt);
+    int line = blocks_.findIndex(node);
     Q_ASSERT(line != -1);
 
     int x = (int)(WIDGET_SPACING + rint(time * pixPerNs_ * zoom_));
     int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
-    int w = (int)QMAX(5, rint(bt->getRuntime() * pixPerNs_ * zoom_));
+    int w = (int)QMAX(5, rint(node->runtime() * pixPerNs_ * zoom_));
     int h = BOX_HEIGHT;
 
     return QRect(x, y, w, h);
@@ -540,28 +486,45 @@ void ScheduleDialog::modelChanged(int, int)
     initCanvas();
 }
 
+void ScheduleDialog::swapRows(int index1, int index2)
+{
+    Q_ASSERT(index1 != index2);
+    Q_ASSERT(index1 >= 0);
+    Q_ASSERT(index1 < (int)blocks_.size());
+    Q_ASSERT(index2 >= 0);
+    Q_ASSERT(index2 < (int)blocks_.size());
+    Q_ASSERT((int)blocks_.size() == timingTable->numRows());
+
+    BlockNode *node = blocks_[index1];
+    blocks_[index1] = blocks_[index2];
+    blocks_[index2] = node;
+
+    timingTable->swapRows(index1, index2);
+    timingTable->clearSelection();
+    timingTable->updateContents();
+
+    modelChanged(QMIN(index1, index2), QMAX(index1, index2));
+}
+
 void ScheduleDialog::moveRowUp()
 {
-    //    inputBlocks.insert(toIndex, inputBlocks.take(fromIndex));
-    inputBlocks.insert(timingTable->currentRow() - 1,
-                       inputBlocks.take(timingTable->currentRow()));
-    qDebug(QString::number(timingTable->currentRow()));
-    qDebug("-1");
-    modelChanged(0,0);
+    int i = timingTable->currentRow();
+    if (i > 0) {
+        swapRows(i, i - 1);
+    }
 }
 
 void ScheduleDialog::moveRowDown()
 {
-    //    inputBlocks.insert(toIndex, inputBlocks.take(fromIndex));
-    inputBlocks.insert(timingTable->currentRow() + 1,
-                       inputBlocks.take(timingTable->currentRow()));
-    qDebug(QString::number(timingTable->currentRow()));
-    qDebug("+1");
-    modelChanged(0,0);
+    int i = timingTable->currentRow();
+    if (i < timingTable->numRows() - 1) {
+        swapRows(i, i + 1);
+    }
 }
 
-SpinBoxItem::SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field )
-    : QTableItem(t, et, "0"), spinbox_(0), blocktree_(bt), field_(field)
+SpinBoxItem::SpinBoxItem(QTable *t, EditType et, BlockNode *node,
+                         NodeField field)
+    : QTableItem(t, et, "0"), spinbox_(0), node_(node), field_(field)
 {
     setText(QString::number(value()));
     // we do not want this item to be replaced
@@ -590,9 +553,9 @@ void SpinBoxItem::setContentFromEditor( QWidget *w )
 int SpinBoxItem::value() const
 {
     switch (field_) {
-    case RUNTIME: return blocktree_->getRuntime();
-    case CLOCK: return blocktree_->getClock();
-    case OFFSET: return blocktree_->getOffset();
+    case RUNTIME: return node_->runtime();
+    case CLOCK: return node_->clock();
+    case OFFSET: return node_->offset();
     default: return 0;
     }
 }
@@ -600,9 +563,9 @@ int SpinBoxItem::value() const
 void SpinBoxItem::setValue(int value)
 {
     switch (field_) {
-    case RUNTIME: blocktree_->setRuntime(value); break;
-    case CLOCK: blocktree_->setClock(value); break;
-    case OFFSET: blocktree_->setOffset(value); break;
+    case RUNTIME: node_->setRuntime(value); break;
+    case CLOCK: node_->setClock(value); break;
+    case OFFSET: node_->setOffset(value); break;
     }
 }
 

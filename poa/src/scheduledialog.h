@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.18 2004/01/18 23:15:12 squig Exp $
+ * $Id: scheduledialog.h,v 1.19 2004/01/19 16:39:20 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,6 @@
 #include <qspinbox.h>
 
 #include "blockgraph.h"
-#include "blocktree.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
 #include "project.h"
@@ -91,16 +90,13 @@ private:
     Project *project_;
     bool modified_;
 
-    QPtrList<BlockTree> inputBlocks;
-    QPtrList<BlockTree> blocks_;
-    QMap<BlockModel*, BlockTree*> blocksToTree_;
-
     BlockGraph *graph_;
+    QValueList<BlockNode*> blocks_;
 
-    void buildBranch(BlockTree *bt);
-    void buildTree();
-    void fillTimingTable(BlockTree* bt);
-    void drawTimings(BlockTree* bt);
+    void buildBranch(BlockNode *node);
+    void buildNode();
+    void fillTimingTable(BlockNode* node);
+    void drawTimings(BlockNode* node);
 
     /**
      * Draws the ruler.
@@ -110,7 +106,7 @@ private:
     /**
      * Calculates the position of the given block at the given time
      */
-    QRect calcBlockPosition(BlockTree *bt, int time);
+    QRect calcBlockPosition(BlockNode *node, int time);
 
     /**
      * Clears all graph widget canvases.
@@ -143,6 +139,8 @@ private:
      * Updates model_'s content by using current dialog's content.
      */
     void updateModel();
+
+    void swapRows(int index1, int index2);
 
 private slots:
 
@@ -190,7 +188,7 @@ private slots:
 };
 
 /**
- * This class provides a spin box editor for a BlockTree object in a
+ * This class provides a spin box editor for a BlockNode object in a
  * QTable.
  */
 class SpinBoxItem : public QTableItem
@@ -198,10 +196,10 @@ class SpinBoxItem : public QTableItem
 
  public:
     /**
-     * Type of the blocktree field.
+     * Type of the blocknode field.
      */
-    enum BTField {RUNTIME, CLOCK, OFFSET};
-    SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field);
+    enum NodeField {RUNTIME, CLOCK, OFFSET};
+    SpinBoxItem(QTable *t, EditType et, BlockNode *node, NodeField field);
 
     /**
      * Creates this editor on demand.
@@ -215,16 +213,16 @@ class SpinBoxItem : public QTableItem
 
  private:
     QSpinBox *spinbox_;
-    BlockTree *blocktree_;
-    BTField field_;
+    BlockNode *node_;
+    NodeField field_;
 
     /**
-     * Sets the value to the corresponding property in the blocktree
+     * Sets the value to the corresponding property in the blocknode
      * object.
      */
     void setValue(int value);
     /**
-     * Returns a value from the blocktree object, depending on the field.
+     * Returns a value from the blocknode object, depending on the field.
      */
     int value() const;
 

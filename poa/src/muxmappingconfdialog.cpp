@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.8 2004/01/29 19:42:27 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.9 2004/02/04 11:27:55 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -95,22 +95,28 @@ void MuxMappingConfDialog::initLayout() {
         = new QHBoxLayout(ioWidget, WIDGET_SPACING);
 
     QGroupBox *inputGroupBox = new QGroupBox(tr("Input"), ioWidget);
+    QBoxLayout *inputGroupBoxLayout
+        = new QVBoxLayout(inputGroupBox, 3 * WIDGET_SPACING);
+
+    QWidget *inputWidget = new QWidget(inputGroupBox);
     QBoxLayout *inputLayout
-        = new QVBoxLayout(inputGroupBox, 5 * WIDGET_SPACING);
+        = new QVBoxLayout(inputWidget, WIDGET_SPACING);
 
     QGroupBox *outputGroupBox = new QGroupBox(tr("Output"), ioWidget);
-    QBoxLayout *outputLayout
-        = new QVBoxLayout(outputGroupBox, 5 * WIDGET_SPACING);
+    QBoxLayout *outputGroupBoxLayout
+        = new QVBoxLayout(outputGroupBox, 3 * WIDGET_SPACING);
 
-    inputComboBox_ = new PinItemComboBox(inputGroupBox);
-    outputComboBox_ = new PinItemComboBox(outputGroupBox);
-    inputComboBox_->setEditable(true);
-    outputComboBox_->setEditable(true);
-    inputComboBox_->setAutoCompletion(true);
-    outputComboBox_->setAutoCompletion(true);
+    QWidget *outputWidget = new QWidget(outputGroupBox);
+    QBoxLayout *outputLayout
+        = new QVBoxLayout(outputWidget, WIDGET_SPACING);
+
+    inputComboBox_ = new PinItemComboBox(inputWidget);
+    outputComboBox_ = new PinItemComboBox(outputWidget);
+    inputComboBox_->setDuplicatesEnabled(false);
+    outputComboBox_->setDuplicatesEnabled(false);
 
     // inputs range widget
-    QWidget *inputRangeWidget = new QWidget(inputGroupBox);
+    QWidget *inputRangeWidget = new QWidget(inputWidget);
     QBoxLayout *inputRangeLayout
         = new QHBoxLayout(inputRangeWidget, WIDGET_SPACING);
 
@@ -125,7 +131,7 @@ void MuxMappingConfDialog::initLayout() {
     inputRangeLayout->addWidget(lastInputBitSpinBox_);
 
     // outputs range widget
-    QWidget *outputRangeWidget = new QWidget(outputGroupBox);
+    QWidget *outputRangeWidget = new QWidget(outputWidget);
     QBoxLayout *outputRangeLayout
         = new QHBoxLayout(outputRangeWidget, WIDGET_SPACING);
 
@@ -144,6 +150,9 @@ void MuxMappingConfDialog::initLayout() {
     inputLayout->addWidget(inputRangeWidget);
     outputLayout->addWidget(outputComboBox_);
     outputLayout->addWidget(outputRangeWidget);
+
+    inputGroupBoxLayout->addWidget(inputWidget);
+    outputGroupBoxLayout->addWidget(outputWidget);
 
     ioLayout->addWidget(inputGroupBox);
     ioLayout->addWidget(outputGroupBox);
@@ -186,6 +195,8 @@ void MuxMappingConfDialog::sync() {
             outputComboBox_->insertItem(item);
         }
     }
+    inputComboBox_->removeItem(0);
+    outputComboBox_->removeItem(0);
     inputComboBox_->setCurrentText(muxMappingItem_->text(0));
     outputComboBox_->setCurrentText(muxMappingItem_->text(2));
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.56 2004/02/12 19:07:10 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.57 2004/02/13 00:38:15 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -514,8 +514,8 @@ void ScheduleDialog::autoSchedule()
 void ScheduleDialog::print()
 {
     int tableHeight = (blocks_.count() + 1) * PRINT_ITEM_HEIGHT;
-    QCanvas *printCanvas = 
-        new QCanvas(PRINT_CANVAS_WIDTH, tableHeight + canvas->height());
+    QCanvas *printCanvas = new QCanvas(PRINT_CANVAS_WIDTH, 
+        tableHeight + PRINT_ITEM_HEIGHT + canvas->height());
 
     // first draw timing table
     int y = 0;

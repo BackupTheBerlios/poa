@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.43 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.44 2003/10/01 16:12:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -218,7 +218,7 @@ void CanvasView::deselectAll()
 
         (*current)->setSelected(false);
     }
-    emit(selectionChanged(false));
+    emit(selectionChanged(0));
 }
 
 void CanvasView::doAutoScroll()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.22 2003/09/23 15:49:25 keulsn Exp $
+ * $Id: pinview.cpp,v 1.23 2003/10/01 16:12:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -138,7 +138,8 @@ LineDirection PinView::connectorTargetDir()
         break;
     default:
         Q_ASSERT(false);
-        break;
+        // make compiler happy
+        return UP;
     }
     return dir;
 }

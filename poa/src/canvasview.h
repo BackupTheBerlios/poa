@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.26 2003/09/21 21:05:51 vanto Exp $
+ * $Id: canvasview.h,v 1.27 2003/10/01 16:12:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -103,9 +103,9 @@ signals:
     /**
      * Emitted when the selection changes.
      *
-     * @param selected true, if at least one item is selected, false otherwise
+     * @param item, the item that was seleted; 0, if no item is selected
      */
-    void selectionChanged(QCanvasItem *);
+    void selectionChanged(QCanvasItem *item);
 
 protected:
 

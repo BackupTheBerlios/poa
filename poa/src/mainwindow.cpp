@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.64 2003/10/01 15:55:17 squig Exp $
+ * $Id: mainwindow.cpp,v 1.65 2003/10/01 16:12:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -785,18 +785,16 @@ void MainWindow::selectionChanged(QCanvasItem *item)
     if (INSTANCEOF(item, BlockView)) {
         editCutAction->setEnabled(true);
         editCopyAction->setEnabled(true);
-        editRemoveAction->setEnabled(true);
-    }
-    else if (INSTANCEOF(item, ConnectorViewSegment)) {
-        editCutAction->setEnabled(false);
-        editCopyAction->setEnabled(false);
-        editRemoveAction->setEnabled(true);
+        openBlockConfAction->setEnabled(true);
+        invokeCompilerAction->setEnabled(true);
     }
     else {
         editCutAction->setEnabled(false);
         editCopyAction->setEnabled(false);
-        editRemoveAction->setEnabled(false);
+        openBlockConfAction->setEnabled(false);
+        invokeCompilerAction->setEnabled(false);
     }
+    editRemoveAction->setEnabled(item != 0);
 }
 
 void MainWindow::zoomIn()

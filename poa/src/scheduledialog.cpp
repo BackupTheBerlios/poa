@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.1 2004/01/05 15:48:49 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.2 2004/01/09 16:52:13 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,10 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qlayout.h>
-#include <qtable.h> 
+#include <qslider.h>
+#include <qsplitter.h>
+#include <qtable.h>
+#include <qwmatrix.h>
 #include <math.h>
 
 #include "scheduledialog.h"
@@ -48,16 +51,16 @@
 #include "poa.h"
 #include "project.h"
 
-const int CANVAS_WIDTH = 800;		// Canvas width
-const int X_ORIGIN = 50;			// Blocks start at this origin
-const int BOX_HEIGHT = 10;			// Height of one box in diagram
-const int BOX_YSPACING = 20;		// Space between two boxes
-const double PIX_PER_NS = 1.0;		// Pixels per nanosecond
+const int CANVAS_WIDTH = 800;       // Canvas width
+const int X_ORIGIN = 50;            // Blocks start at this origin
+const int BOX_HEIGHT = 10;          // Height of one box in diagram
+const int BOX_YSPACING = 20;        // Space between two boxes
+const double PIX_PER_NS = 1.0;      // Pixels per nanosecond
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name, 
-							   bool modal, WFlags fl)
+ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
+                               bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
     if (!name) {
@@ -66,191 +69,218 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     resize(700, 500);
     setCaption(tr("Scheduling"));
 
-	project_ = pro;
+    project_ = pro;
     initLayout();
 }
 
 ScheduleDialog::~ScheduleDialog()
 {
-	delete canvas;
+    delete canvas;
+    delete labelCanvas;
 }
 
 // Recursively build tree
 void ScheduleDialog::buildBranch(BlockTree *bt)
 {
-	QValueList<PinModel*> l = bt->getBlock()->pins();
+    QValueList<PinModel*> l = bt->getBlock()->pins();
     for (QValueList<PinModel*>::Iterator pin = l.begin(); pin != l.end(); ++pin) {
-		if (((*pin)->type() == PinModel::OUTPUT) && (*pin)->connected()) {
-			BlockModel* block = (*pin)->connected()->parent();
+        if (((*pin)->type() == PinModel::OUTPUT) && (*pin)->connected()) {
+            BlockModel* block = (*pin)->connected()->parent();
 
-			// In case of Mux get list of connecting blocks from Mux
-			if (INSTANCEOF(block, MuxModel)) {
-				QPtrList<PinModel> pins =
-					((MuxModel*)block)->connectionsForInputPin((*pin)->connected());
-				// Check all output pins for this input pin
-				for (QPtrListIterator<PinModel> muxit(pins); muxit != 0; ++muxit) {
-					if (!(*muxit)->connected()) continue;
-					block = (*muxit)->connected()->parent();
-					// Only add model recursively if not already in tree
-					if (!bt->contains(block)) {
-						buildBranch(bt->addBranch(block));
-					} else {
-						// Add back reference only and stop recursion
-						bt->addBranch(block)->setBackReference(true);
-					}
-				}
-			} else {	// No mux, straight connection
-				// Only add model recursively if not already in tree
-				if (!bt->contains(block)) {
-					buildBranch(bt->addBranch(block));
-				} else {
-					// Add back reference only and stop recursion
-					bt->addBranch(block)->setBackReference(true);
-				}
-			}
-		}
-	}
+            // In case of Mux get list of connecting blocks from Mux
+            if (INSTANCEOF(block, MuxModel)) {
+                QPtrList<PinModel> pins =
+                    ((MuxModel*)block)->connectionsForInputPin((*pin)->connected());
+                // Check all output pins for this input pin
+                for (QPtrListIterator<PinModel> muxit(pins); muxit != 0; ++muxit) {
+                    if (!(*muxit)->connected()) continue;
+                    block = (*muxit)->connected()->parent();
+                    // Only add model recursively if not already in tree
+                    if (!bt->contains(block)) {
+                        buildBranch(bt->addBranch(block));
+                    } else {
+                        // Add back reference only and stop recursion
+                        bt->addBranch(block)->setBackReference(true);
+                    }
+                }
+            } else {    // No mux, straight connection
+                // Only add model recursively if not already in tree
+                if (!bt->contains(block)) {
+                    buildBranch(bt->addBranch(block));
+                } else {
+                    // Add back reference only and stop recursion
+                    bt->addBranch(block)->setBackReference(true);
+                }
+            }
+        }
+    }
 }
 
 void ScheduleDialog::buildTree()
 {
-	// First look for all input blocks
-	for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0; ++it) {		
-		if (INSTANCEOF(*it, BlockModel))  {
-			BlockModel* bm = dynamic_cast<BlockModel*>(*it);
-			if (!bm->hasInputPins() && !bm->hasEpisodicPins()) {				
-				BlockTree* bt = new BlockTree(bm);
-				inputBlocks.append(bt);
-			}
-		}
+    // First look for all input blocks
+    for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0; ++it) {
+        if (INSTANCEOF(*it, BlockModel))  {
+            BlockModel* bm = dynamic_cast<BlockModel*>(*it);
+            if (!bm->hasInputPins() && !bm->hasEpisodicPins()) {
+                BlockTree* bt = new BlockTree(bm);
+                inputBlocks.append(bt);
+            }
+        }
     }
 
-	// Then built the trees from the input blocks on
-	for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
-		buildBranch(*inpit);
+    // Then built the trees from the input blocks on
+    for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
+        buildBranch(*inpit);
     }
 }
 
-void ScheduleDialog::fillTimingTable(BlockTree* bt) 
+void ScheduleDialog::fillTimingTable(BlockTree* bt)
 {
-	int i = timingTable->numRows();
-	timingTable->setNumRows(i + 1);
+    int i = timingTable->numRows();
+    timingTable->setNumRows(i + 1);
 
-	QTableItem *i1 = new QTableItem(timingTable, QTableItem::Never, 
-		bt->getBlock()->name());
-	timingTable->setItem(i, 0, i1);
+    QTableItem *i1 = new QTableItem(timingTable, QTableItem::Never,
+        bt->getBlock()->name());
+    timingTable->setItem(i, 0, i1);
 
-	QTableItem *i2 = new QTableItem(timingTable, QTableItem::Never, 
-		QString::number(bt->getRuntime()));
-	timingTable->setItem(i, 1, i2);
+    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+        QString::number(bt->getRuntime()));
+    timingTable->setItem(i, 1, i2);
 
-	QTableItem *i3 = new QTableItem(timingTable, QTableItem::Never, 
-		QString::number(bt->getClock()));
-	timingTable->setItem(i, 2, i3);
+    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+        QString::number(bt->getClock()));
+    timingTable->setItem(i, 2, i3);
 
-	QTableItem *i4 = new QTableItem(timingTable, QTableItem::Never, 
-		QString::number(bt->getOffset()));
-	timingTable->setItem(i, 3, i4);
+    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+        QString::number(bt->getOffset()));
+    timingTable->setItem(i, 3, i4);
 
-	for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
-		if (!(*it)->getBackReference()) 
-			fillTimingTable(*it);
-	}
+    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
+        if (!(*it)->getBackReference())
+            fillTimingTable(*it);
+    }
 }
 
 void ScheduleDialog::initLayout()
 {
     dialogLayout = new QVBoxLayout(this, WIDGET_SPACING);
-    topWidget = new QWidget(this);
+    splitterWidget = new QSplitter(QSplitter::Vertical, this);
+    topWidget = new QWidget(splitterWidget);
     topLayout = new QHBoxLayout(topWidget, WIDGET_SPACING);
-    middleWidget = new QWidget(this);
-    middleLayout = new QVBoxLayout(middleWidget, WIDGET_SPACING);
+    middleWidget = new QWidget(splitterWidget);
+    middleLayout = new QHBoxLayout(middleWidget, 0);
     bottomWidget = new QWidget(this);
 
     initTimingWidget();
     initGraphWidget();
     initBottomWidget();
 
-    dialogLayout->addWidget(topWidget);
-    dialogLayout->addWidget(middleWidget);
+    //    dialogLayout->addWidget(topWidget);
+    //    dialogLayout->addWidget(middleWidget);
+    dialogLayout->addWidget(splitterWidget);
     dialogLayout->addWidget(bottomWidget);
 }
 
 void ScheduleDialog::initTimingWidget()
 {
-	buildTree();
-	timingTable = new QTable(0, 4, topWidget, "timingWidget");
-	timingTable->horizontalHeader()->setLabel(0, tr( "Block" ));
-	timingTable->horizontalHeader()->setLabel(1, tr( "Laufzeit" ));
-	timingTable->horizontalHeader()->setLabel(2, tr( "Takt" ));
-	timingTable->horizontalHeader()->setLabel(3, tr( "Offset" ));
+    buildTree();
+    timingTable = new QTable(0, 4, topWidget, "timingWidget");
+    timingTable->horizontalHeader()->setLabel(0, tr( "Block" ));
+    timingTable->horizontalHeader()->setLabel(1, tr( "Laufzeit" ));
+    timingTable->horizontalHeader()->setLabel(2, tr( "Takt" ));
+    timingTable->horizontalHeader()->setLabel(3, tr( "Offset" ));
 
-	for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
-		fillTimingTable(*it);
+    timingTable->setSelectionMode(QTable::SingleRow);
+    timingTable->setReadOnly(false);
+    timingTable->setFocusStyle(QTable::FollowStyle);
+
+    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+        fillTimingTable(*it);
     }
     topLayout->addWidget(timingTable);
 }
 
 void ScheduleDialog::initGraphWidget()
 {
-	canvas = new QCanvas();
-	canvas->setBackgroundColor(QObject::white);
-	canvasView = new QCanvasView(canvas, middleWidget);
-	middleLayout->addWidget(canvasView);
+    labelCanvas = new QCanvas();
+    labelCanvas->setBackgroundColor(QObject::lightGray);
+    labelCanvasView = new QCanvasView(labelCanvas, middleWidget);
+    labelCanvasView->setVScrollBarMode(QScrollView::AlwaysOff);
+    labelCanvasView->setHScrollBarMode(QScrollView::AlwaysOn);
+    middleLayout->addWidget(labelCanvasView);
 
-	// determine canvas size
-	int cnt = 0;
-	int worstTime = 0;
-	for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
-		cnt += (*inpit)->count();
+    canvas = new QCanvas();
+    canvas->setBackgroundColor(QObject::white);
+    canvasView = new QCanvasView(canvas, middleWidget);
+    zoomMatrix = QWMatrix(1,0,0,1,0,0);
+    middleLayout->addWidget(canvasView);
+
+    connect(canvasView, SIGNAL(contentsMoving(int, int)),
+            labelCanvasView, SLOT(setContentsPos(int, int)));
+
+    // determine canvas size
+    int cnt = 0;
+    int worstTime = 0;
+    for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
+        cnt += (*inpit)->count();
 
     }
-	canvas->resize(CANVAS_WIDTH, cnt * (BOX_HEIGHT + BOX_YSPACING));
+    canvas->resize(CANVAS_WIDTH, cnt * (BOX_HEIGHT + BOX_YSPACING));
+    labelCanvas->resize(50, cnt * (BOX_HEIGHT + BOX_YSPACING));
 
-	int Y = 0;
-	for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
-		int time = 0;
-		drawTimings(*it, &Y, &time);
-	}
+    int Y = WIDGET_SPACING;
+    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+        int time = 0;
+        drawTimings(*it, &Y, &time);
+    }
 }
 
 bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 {
-	if (*time == 0) {
-		QCanvasText* text = new QCanvasText(bt->getBlock()->name(), canvas);
-		text->move(0, *Y);
-		text->show();
-	}
+    if (*time == 0) {
+        QCanvasText* text = new QCanvasText(bt->getBlock()->name(), labelCanvas);
+        text->move(WIDGET_SPACING, *Y);
+        text->show();
 
-	int t = bt->getOffset();
+        // resize label canvas if label doesnt fit.
+        if (text->boundingRect().width() +
+            (2 * WIDGET_SPACING) > labelCanvas->width()) {
+            qDebug("Resize canvas");
+            labelCanvas->resize(text->boundingRect().width()
+                                + (2 * WIDGET_SPACING), labelCanvas->height());
+        }
+    }
 
-	int X = rint(t * PIX_PER_NS + 50);
-	while (X < canvas->width()) {
+    int t = bt->getOffset();
 
-		if (bt->getClock() <= 0) {
-			return false;
-		}
+    int X = rint(t * PIX_PER_NS);
+    while (X < canvas->width()) {
 
-		QCanvasRectangle* box = new QCanvasRectangle(0, 0, 0, 0, canvas);
-		box->move(X, *Y);
-		box->setSize(rint(/*bt->getRuntime() * PIX_PER_NS*/ 20), BOX_HEIGHT);
-		box->show();
+        if (bt->getClock() <= 0) {
+            return false;
+        }
 
-//		QCanvasLine* line = new QCanvasLine(canvas);
-//		(*lit)->setPoints(100, 100, 150, 150);
-//		(*lit)->show();
+        QCanvasRectangle* box = new QCanvasRectangle(0, 0, 0, 0, canvas);
+        box->move(X, *Y);
+        box->setSize(rint(/*bt->getRuntime() * PIX_PER_NS*/ 20), BOX_HEIGHT);
+        box->show();
 
-		t += bt->getClock();
-		X = rint(t * PIX_PER_NS + 50);
-	}
+//      QCanvasLine* line = new QCanvasLine(canvas);
+//      (*lit)->setPoints(100, 100, 150, 150);
+//      (*lit)->show();
 
-	*Y += BOX_HEIGHT + BOX_YSPACING;
+        t += bt->getClock();
+        X = rint(t * PIX_PER_NS);
+    }
 
-	for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
-		drawTimings(*it, Y, time);
-	}
+    *Y += BOX_HEIGHT + BOX_YSPACING;
 
-	return true;
+    for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
+        drawTimings(*it, Y, time);
+    }
+
+    return true;
 }
 
 void ScheduleDialog::initBottomWidget()
@@ -277,6 +307,16 @@ void ScheduleDialog::initBottomWidget()
     cancelPushButton->setText(tr("&Cancel"));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(cancel()));
 
+    // zoom slider
+    zoomSlider = new QSlider( Horizontal, bottomWidget, "slider" );
+    zoomSlider->setRange( 0, 99 );
+    zoomSlider->setValue( 0 );
+    connect( zoomSlider, SIGNAL(valueChanged(int)),
+                 SLOT(zoomChanged(int)) );
+
+
+    bottomLayout->addWidget(zoomSlider);
+
     bottomLayout->addWidget(okPushButton);
     bottomLayout->addWidget(helpPushButton);
     bottomLayout->addWidget(applyPushButton);
@@ -297,5 +337,37 @@ void ScheduleDialog::ok()
 {
 //    updateModel();
     accept();
+}
+
+void ScheduleDialog::zoomChanged(int zoom)
+{
+    zoomMatrix.setMatrix(1.0 + (zoom/5),0,0,1,0,0);
+    canvasView->setWorldMatrix(zoomMatrix);
+}
+
+
+SpinBoxItem::SpinBoxItem(QTable *t, EditType et, const QString &text )
+    : QTableItem(t, et, "0"), spinbox(0)
+{
+    // we do not want this item to be replaced
+    setReplaceable(false);
+}
+
+QWidget *SpinBoxItem::createEditor() const
+{
+    // create a spinbox editor
+    ((SpinBoxItem*)this)->spinbox = new QSpinBox(table()->viewport());
+    QObject::connect(spinbox, SIGNAL(valueChanged(int)), table(), SLOT(doValueChanged()));
+    spinbox->setValue(text().toUInt());
+    return spinbox;
+}
+
+void SpinBoxItem::setContentFromEditor( QWidget *w )
+{
+    if ( w->inherits( "QSpinBox" )) {
+        setText(QString::number(((QSpinBox*)w)->value()));
+    } else {
+        QTableItem::setContentFromEditor(w);
+    }
 }
 

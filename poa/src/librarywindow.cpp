@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.26 2003/12/20 15:51:05 kilgus Exp $
+ * $Id: librarywindow.cpp,v 1.27 2004/01/09 16:52:13 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -117,15 +117,19 @@ void LibraryWindow::initializeLibrary()
     model = new CpuModel("CPU", "Default CPU");
     pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
+    pin->setPosition(1);
     model->addPin(pin);
     pin = new PinModel(model, "out1");
+    pin->setPosition(1);
     pin->setType(PinModel::OUTPUT);
     model->addPin(pin);
     pin = new PinModel(model, "clock");
     pin->setType(PinModel::EPISODIC);
+    pin->setPosition(1);
     model->addPin(pin);
     pin = new PinModel(model, "reset");
     pin->setType(PinModel::EPISODIC);
+    pin->setPosition(2);
     model->addPin(pin);
     new LibraryListViewItem(cpuListViewItem, model);
 
@@ -133,9 +137,11 @@ void LibraryWindow::initializeLibrary()
     model = new BlockModel("Core", "Default core");
     pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
+    pin->setPosition(1);
     model->addPin(pin);
     pin = new PinModel(model, "out1");
     pin->setType(PinModel::OUTPUT);
+    pin->setPosition(1);
     model->addPin(pin);
     new LibraryListViewItem(coreListViewItem, model);
 
@@ -146,12 +152,15 @@ void LibraryWindow::initializeLibrary()
     model->setHasRuntime(false);
     pin = new PinModel(model, "out1");
     pin->setType(PinModel::OUTPUT);
+    pin->setPosition(1);
     model->addPin(pin);
     pin = new PinModel(model, "out2");
     pin->setType(PinModel::OUTPUT);
+    pin->setPosition(2);
     model->addPin(pin);
     pin = new PinModel(model, "out3");
     pin->setType(PinModel::OUTPUT);
+    pin->setPosition(3);
     model->addPin(pin);
     new LibraryListViewItem(ioListViewItem, model);
 
@@ -162,12 +171,15 @@ void LibraryWindow::initializeLibrary()
     model->setHasRuntime(false);
     pin = new PinModel(model, "in1");
     pin->setType(PinModel::INPUT);
+    pin->setPosition(1);
     model->addPin(pin);
     pin = new PinModel(model, "in2");
     pin->setType(PinModel::INPUT);
+    pin->setPosition(2);
     model->addPin(pin);
     pin = new PinModel(model, "in3");
     pin->setType(PinModel::INPUT);
+    pin->setPosition(3);
     model->addPin(pin);
     new LibraryListViewItem(ioListViewItem, model);
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.1 2004/01/05 15:48:49 kilgus Exp $
+ * $Id: scheduledialog.h,v 1.2 2004/01/09 16:52:13 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,8 +29,10 @@
 #include <qlistview.h>
 #include <qptrlist.h>
 #include <qvariant.h>
-#include <qtable.h> 
+#include <qtable.h>
 #include <qcanvas.h>
+#include <qwmatrix.h>
+#include <qspinbox.h>
 
 #include "blocktree.h"
 #include "blockmodel.h"
@@ -40,41 +42,50 @@
 class QBoxLayout;
 class QPushButton;
 class QTable;
+class QSlider;
+class QSplitter;
 
 class ScheduleDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    ScheduleDialog(Project* Pro, QWidget* parent = 0, const char* name = 0, 
-    			   bool modal = FALSE, WFlags fl = 0);
+    ScheduleDialog(Project* Pro, QWidget* parent = 0, const char* name = 0,
+                   bool modal = FALSE, WFlags fl = 0);
     ~ScheduleDialog();
 
 private:
     QBoxLayout *dialogLayout;
     QBoxLayout *topLayout;
     QBoxLayout *middleLayout;
+    QSplitter *splitterWidget;
     QWidget *topWidget;
     QWidget *middleWidget;
     QWidget *bottomWidget;
 
-	QTable *timingTable;
+    QTable *timingTable;
 
-	QCanvas *canvas;
-	QCanvasView *canvasView;
+    QCanvas *canvas;
+    QCanvasView *canvasView;
+
+    QCanvas *labelCanvas;
+    QCanvasView *labelCanvasView;
 
     QPushButton *applyPushButton;
     QPushButton *helpPushButton;
     QPushButton *cancelPushButton;
     QPushButton *okPushButton;
 
-	Project *project_;
-	QPtrList<BlockTree> inputBlocks;
+    QSlider *zoomSlider;
+    QWMatrix zoomMatrix;
 
-	void buildBranch(BlockTree *bt);
-	void buildTree();
-	void fillTimingTable(BlockTree* bt);
-	bool drawTimings(BlockTree* bt, int* Y, int* time);
+    Project *project_;
+    QPtrList<BlockTree> inputBlocks;
+
+    void buildBranch(BlockTree *bt);
+    void buildTree();
+    void fillTimingTable(BlockTree* bt);
+    bool drawTimings(BlockTree* bt, int* Y, int* time);
 
     /**
      * Initializes layout.
@@ -89,7 +100,7 @@ private:
     /**
      * Initializes graph widget.
      */
-	void initGraphWidget();
+    void initGraphWidget();
 
     /**
      * Initializes bottom widget.
@@ -124,6 +135,24 @@ private slots:
      * this dialog.
      */
     void ok();
+
+    /**
+     * Changes the zooming
+     */
+    void zoomChanged(int);
+};
+
+
+class SpinBoxItem : public QTableItem
+{
+public:
+    SpinBoxItem(QTable *t, EditType et, const QString &text);
+    QWidget *createEditor() const;
+    void setContentFromEditor( QWidget *w );
+
+private:
+    QSpinBox *spinbox;
+
 };
 
 #endif // POA_SCHEDULEDIALOG_H

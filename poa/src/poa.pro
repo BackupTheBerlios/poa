@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.14 2003/08/22 10:08:54 garbeam Exp $
+# $Id: poa.pro,v 1.15 2003/08/22 10:14:19 squig Exp $
 #
 ###############################################################################
 
@@ -40,6 +40,7 @@ contains (UNAME, OpenBSD) {
 HEADERS += aboutdialog.h 
 HEADERS += blockmodel.h
 HEADERS += blockview.h
+HEADERS += canvasview.h
 HEADERS += codemanager.h
 HEADERS += connectormodel.h
 HEADERS += connectorview.h
@@ -69,6 +70,7 @@ HEADERS += viewmap.h
 HEADERS += gridcanvas.h
 
 SOURCES += aboutdialog.cpp
+SOURCES += canvasview.cpp
 SOURCES += cpu.cpp
 SOURCES += cpumodel.cpp
 SOURCES += gridcanvas.cpp

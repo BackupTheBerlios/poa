@@ -18,11 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.9 2003/08/21 16:25:18 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.10 2003/08/22 10:14:19 squig Exp $
  *
  *****************************************************************************/
 
 #include "mdiwindow.h"
+
+#include "canvasview.h"
 
 #include <qvariant.h>
 #include <qcanvas.h>
@@ -38,7 +40,7 @@ MdiWindow::MdiWindow(QCanvas* canvas, QWidget* parent, const char* name, WFlags 
 {
     zoomLevel_ = 1.0;
 
-    view_ = new QCanvasView(canvas, this);
+    view_ = new CanvasView(canvas, this);
     setCentralWidget(view_);
 }
 

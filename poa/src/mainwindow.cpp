@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.21 2003/08/22 10:08:54 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.22 2003/08/22 10:14:19 squig Exp $
  *
  *****************************************************************************/
 
@@ -51,8 +51,8 @@
 #define DEFAULT_ZOOM_LEVEL 4
 
 
-/** 
- * Constructs a MainWindow which is a child of 'parent', with the 
+/**
+ * Constructs a MainWindow which is a child of 'parent', with the
  * name 'name' and widget flags set to 'f'.
  */
 MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
@@ -166,14 +166,14 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
                     QKeySequence("F8"), this, "invokeCompilerAction");
 
     invokeDownloadAction =
-        new QAction("Download", image_download, "&Download", 
+        new QAction("Download", image_download, "&Download",
                     QKeySequence("F7"), this, "invokeDownloadAction");
 
     openSettingsAction =
         new QAction("Configure POA", "Configure &POA...", 0,
                     this, "openSettingsAction");
 
-    tileHorizontalAction = 
+    tileHorizontalAction =
         new QAction("Tile horizontal", "Tile &horizontal", 0,
                     this, "tileHorizontalAction");
 
@@ -188,7 +188,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     //
 
     // common
-    commonToolBar = new QToolBar(tr("common toolbar"), this, DockTop); 
+    commonToolBar = new QToolBar(tr("common toolbar"), this, DockTop);
     fileNewAction->addTo(commonToolBar);
     fileOpenAction->addTo(commonToolBar);
     fileSaveAction->addTo(commonToolBar);
@@ -198,14 +198,14 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     editPasteAction->addTo(commonToolBar);
 
     // utility
-    utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop); 
+    utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
     openModuleConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
     invokeCompilerAction->addTo(utilToolBar);
     invokeDownloadAction->addTo(utilToolBar);
 
     // draw
-    drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop); 
+    drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop);
     drawLineAction->addTo(drawToolBar);
     drawToolBar->addSeparator();
     zoomComboBox = new QComboBox(FALSE, drawToolBar);
@@ -226,7 +226,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // menus
 
     menubar = new QMenuBar(this, "menubar");
-    fileMenu = new QPopupMenu(this); 
+    fileMenu = new QPopupMenu(this);
     fileNewAction->addTo(fileMenu);
     fileOpenAction->addTo(fileMenu);
     fileMenu->insertSeparator();
@@ -237,14 +237,14 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     menubar->insertItem(trUtf8("&File"), fileMenu);
 
     // edit
-    editMenu = new QPopupMenu(this); 
+    editMenu = new QPopupMenu(this);
     editCutAction->addTo(editMenu);
     editCopyAction->addTo(editMenu);
     editPasteAction->addTo(editMenu);
     menubar->insertItem(trUtf8("&Edit"), editMenu);
 
     // tools
-    toolsMenu = new QPopupMenu(this); 
+    toolsMenu = new QPopupMenu(this);
     menubar->insertItem(trUtf8("&Tools"), toolsMenu);
     openModuleConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
@@ -252,7 +252,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     invokeDownloadAction->addTo(toolsMenu);
 
     // draw
-    drawMenu = new QPopupMenu(this); 
+    drawMenu = new QPopupMenu(this);
     menubar->insertItem(trUtf8("&Draw"), drawMenu);
     drawLineAction->addTo(drawMenu);
     drawMenu->insertSeparator();
@@ -273,7 +273,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     cascadeAction->addTo(windowMenu);
 
     // help
-    helpMenu = new QPopupMenu(this); 
+    helpMenu = new QPopupMenu(this);
     helpContentsAction->addTo(helpMenu);
     helpMenu->insertSeparator();
     helpAboutAction->addTo(helpMenu);

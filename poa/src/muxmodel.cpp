@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.26 2003/12/10 15:11:29 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.27 2003/12/10 15:35:23 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,13 +42,10 @@ MuxMapping::MuxMapping(PinModel *input, PinModel *output,
     lastOutputBit_ = lastOutputBit;
 }
 
-MuxMapping::MuxMapping(PinModel *input, PinModel *output,
-                       QDomElement mapElement)
+MuxMapping::MuxMapping(MuxModel *parent, QDomElement mapElement)
 {
-    input_ = input;
-    output_ = output;
     if (!mapElement.isNull()) {
-        deserialize(mapElement);
+        deserialize(parent, mapElement);
     }
 }
 
@@ -107,21 +104,24 @@ void MuxMapping::setLastOutputBit(unsigned lastOutputBit) {
 QDomElement MuxMapping::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("muxmapping");
-#if 0
-    root.setAttribute("output-name", output_->name());
+    root.setAttribute("input-id", input_->id());
     root.setAttribute("output-id", output_->id());
-    root.setAttribute("begin", begin_);
-    root.setAttribute("end", end_);
-#endif
+    root.setAttribute("first-input-bit", firstInputBit_);
+    root.setAttribute("last-input-bit", lastInputBit_);
+    root.setAttribute("first-output-bit", firstOutputBit_);
+    root.setAttribute("last-output-bit", lastOutputBit_);
     return root;
 }
 
-void MuxMapping::deserialize(QDomElement element) {
-#if 0
-    // 0 for fallback
-    begin_ = element.attribute("begin", "0").toUInt();
-    end_ = element.attribute("end", "0").toUInt();
-#endif
+void MuxMapping::deserialize(MuxModel *parent, QDomElement element) {
+    unsigned id = element.attribute("input-id", 0).toUInt();
+    input_ = parent->findPinById(id);
+    id = element.attribute("output-id", 0).toUInt();
+    output_ = parent->findPinById(id);
+    firstInputBit_ = element.attribute("first-input-bit", 0).toUInt();
+    lastInputBit_ = element.attribute("last-input-bit", 0).toUInt();
+    firstOutputBit_ = element.attribute("first-output-bit", 0).toUInt();
+    lastOutputBit_ = element.attribute("last-output-bit", 0).toUInt();
 }
 
 MuxMapping *MuxMapping::clone(PinModel *input, PinModel *output) {
@@ -170,10 +170,7 @@ QCanvasItemList MuxModel::createView(QCanvas *canvas)
 
 QDomElement MuxModel::serialize(QDomDocument *document)
 {
-    QDomElement root = AbstractModel::serialize(document);
-#if 0
-    root.setAttribute("name", name());
-    root.setAttribute("type", type());
+    QDomElement root = BlockModel::serialize(document);
     if (type_ == MUX) {
         root.setAttribute("block-type", "mux");
     }
@@ -181,50 +178,29 @@ QDomElement MuxModel::serialize(QDomDocument *document)
         root.setAttribute("block-type", "demux");
     }
 
-    // serialize output pins
-    QPtrListIterator<PinModel> itOut(outputPins_);
-    while (itOut != 0) {
-        QDomElement pinElem = itOut.current()->serialize(document);
-        pinElem.setAttribute("type", "muxoutput");
-        root.appendChild(pinElem);
-        ++itOut;
+    // serialize muxmappings
+    for (QPtrListIterator<MuxMapping> it(mappings_); it != 0; ++it) {
+        QDomElement mappingElem = it.current()->serialize(document);
+        root.appendChild(mappingElem);
     }
 
-    // serialize MuxPins - will also serailize MuxMappings
-    QPtrListIterator<MuxPin> it(muxPins_);
-    while (it != 0) {
-        QDomElement pinElem = it.current()->serialize(document);
-        pinElem.setAttribute("type","muxpin");
-        root.appendChild(pinElem);
-        ++it;
-    }
-#endif
     return root;
 }
 
 void MuxModel::deserialize(QDomElement element)
 {
-#if 0
-    AbstractModel::deserialize(element);
+    BlockModel::deserialize(element);
     type_ = (element.attribute("block-type", "mux") == "mux") ? MUX : DEMUX;
 
+    // deserialize muxmappings
     QDomNode node = element.firstChild();
     while ( !node.isNull() ) {
-        if (node.isElement() && node.nodeName() == "pin") {
-            QDomElement pinElem = node.toElement();
-            if (pinElem.attribute("type","") == "muxoutput") {
-                PinModel *output = new PinModel(this, pinElem);
-                output->setType(PinModel::OUTPUT);
-                addOutput(output);
-            }
-        } else if (node.isElement() && node.nodeName() == "muxpin") {
-            QDomElement muxPinElem = node.toElement();
-            MuxPin *muxPin = new MuxPin(this, muxPinElem);
-            addMuxPin(muxPin);
+        if (node.isElement() && node.nodeName() == "muxmapping") {
+            QDomElement mappingElem = node.toElement();
+            addMuxMapping(new MuxMapping(this, mappingElem));
         }
         node = node.nextSibling();
-     }
-#endif
+    }
 }
 
 MuxModel::MuxType MuxModel::muxType() {

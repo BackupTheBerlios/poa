@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.24 2003/12/10 15:11:29 garbeam Exp $
+ * $Id: muxmodel.h,v 1.25 2003/12/10 15:35:23 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,8 @@
 #include "blockmodel.h"
 
 #include <qptrlist.h>
+
+class MuxModel;
 
 /**
  * Provides range mappings to an output
@@ -42,7 +44,7 @@ public:
     /**
      * Dom constructor.
      */
-    MuxMapping(PinModel *input, PinModel *output, QDomElement mapElement);
+    MuxMapping(MuxModel *parent, QDomElement mapElement);
 
     /**
      * Basic constructor.
@@ -110,7 +112,7 @@ public:
     /**
      * Deserializes the MuxMapping.
      */
-    void deserialize(QDomElement element);
+    void deserialize(MuxModel *parent, QDomElement element);
 
     /**
      * Returns clone of <code>this</code>. 

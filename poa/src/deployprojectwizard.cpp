@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.13 2004/01/26 16:04:53 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.14 2004/01/27 06:26:26 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -129,11 +129,6 @@ void DeployProjectWizard::setupDownloadPage()
     for (QPtrListIterator<CpuModel> it(cpuModels); it != 0; ++it) {
         cpuComboBox->insertItem((*it)->name());
     }
-    if (cpuModels.count() > 0) {
-        cpuSelected(0);
-    }
-    connect(cpuComboBox, SIGNAL(activated(int)), this, SLOT(cpuSelected(int)));
-
     QBoxLayout *cpuLayout = new QHBoxLayout(cpuWidget, WIDGET_SPACING);
     cpuLayout->addWidget(cpuLabel);
     cpuLayout->addWidget(cpuComboBox);
@@ -141,6 +136,11 @@ void DeployProjectWizard::setupDownloadPage()
 
     QGroupBox *detailsGroupBox = new QVGroupBox("Details", page);
     cpuDetailsLabel_ = new QLabel(detailsGroupBox);
+
+    if (cpuModels.count() > 0) {
+        cpuSelected(0);
+    }
+    connect(cpuComboBox, SIGNAL(activated(int)), this, SLOT(cpuSelected(int)));
 
     QWidget *buttonWidget = new QWidget(page);
     QPushButton *compileButton = new QPushButton("Compile", buttonWidget);

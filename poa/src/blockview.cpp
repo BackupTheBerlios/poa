@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.58 2004/01/22 22:10:27 vanto Exp $
+ * $Id: blockview.cpp,v 1.59 2004/01/22 22:20:58 vanto Exp $
  *
  *****************************************************************************/
 
@@ -330,7 +330,7 @@ void BlockView::updateProperties()
         setBrush(QBrush(Settings::instance()->defaultBrushColor()));
     }*/
     GridCanvas *gc = dynamic_cast<GridCanvas*>(canvas());
-    Q_ASSERT(gc == 0);
+    Q_ASSERT(gc != 0);
     if (gc == 0) {
         return;
     }
@@ -339,11 +339,9 @@ void BlockView::updateProperties()
     }
     else if (isSelected()) {
         setBrush(QBrush(gc->colorManager()->selectedColor(this->model())));
-        setBrush(QBrush(Settings::instance()->selectedColor()));
     }
     else {
         setBrush(QBrush(gc->colorManager()->color(this->model())));
-        setBrush(QBrush(Settings::instance()->defaultBrushColor()));
     }
 }
 

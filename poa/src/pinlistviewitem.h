@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.h,v 1.4 2004/01/20 17:59:42 squig Exp $
+ * $Id: pinlistviewitem.h,v 1.5 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -37,22 +37,16 @@ class PinListViewItem : public QListViewItem
 public:
 
     /**
-     * Creates a IO list view item for the given abstract model
-     */
-    PinListViewItem(QListView *parent, QListViewItem *after = 0,
-                    PinModel::PinType type = PinModel::INPUT);
-
-    /**
-     * Creates a IO list view item for the given abstract model
+     * Creates a PinListViewItem for the given data.
      */
     PinListViewItem(QListView *parent, QListViewItem *after,
-                    PinModel *clone = 0, PinModel *origin = 0);
+                    PinModel::PinType type);
 
     /**
-     * Creates a IO list view item for the given abstract model
+     * Creates a PinListViewItem for the given data.
      */
     PinListViewItem(QListViewItem *parent, QListViewItem *after,
-                    PinModel *clone = 0, PinModel *origin = 0);
+                    PinModel::PinType type, PinModel *pin);
 
     /**
      * Default destructor
@@ -62,29 +56,26 @@ public:
     /**
      * Returns the PinModel, represented by this view item
      */
-    PinModel *data() const;
+    PinModel *pin() const;
 
     /**
-     * Returns the origin PinModel, represented by this view item
+     * Sets the PinModel, represented by this view item
      */
-    PinModel *origData() const;
+    void setPin(PinModel *pin);
 
     /**
-     * Sets the original pin.
-     */
-    void PinListViewItem::setOrigPin(PinModel *pin);
-
-    /**
-     * Returns type of this view item (used for items without
-     * models like root items.
+     * Returns type of this view item.
      */
     PinModel::PinType type();
 
+    /** Creates a new PinModel from this item. */
+    PinModel *createPin() const;
+
     /**
-     * Returns <code>true</code>, if this is a root item,
-     * <code>false</code> otherwise.
+     * Commits all changes to the dedicated PinModel or just
+     * creates a new one, if this is a new pin.
      */
-    bool isRoot();
+    void commit() const;
 
     virtual void okRename(int col);
 
@@ -100,11 +91,8 @@ private:
 
     void initialize();
 
-    PinModel *clone_;
-    PinModel *origin_;
+    PinModel *pin_;
     PinModel::PinType type_;
-    bool root_;
-
 };
 
 #endif // POA_PINLISTVIEWITEM_H

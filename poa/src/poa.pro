@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.79 2004/01/28 01:49:37 kilgus Exp $
+# $Id: poa.pro,v 1.80 2004/01/28 02:20:40 garbeam Exp $
 #
 ###############################################################################
 
@@ -48,6 +48,7 @@ include(poa.local)
 HEADERS += aboutdialog.h 
 HEADERS += abstractmodel.h
 HEADERS += blockconfdialog.h 
+HEADERS += blockconfwidget.h 
 HEADERS += blockgraph.h
 HEADERS += blockmodel.h
 HEADERS += blockview.h
@@ -77,6 +78,7 @@ HEADERS += modelfactory.h
 HEADERS += moveable.h
 HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
+HEADERS += muxmappingconfdialog.h
 HEADERS += muxmodel.h
 HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
@@ -102,6 +104,7 @@ HEADERS += util.h
 SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
 SOURCES += blockconfdialog.cpp
+SOURCES += blockconfwidget.cpp
 SOURCES += blockmodel.cpp
 SOURCES += blockgraph.cpp
 SOURCES += blockview.cpp
@@ -128,6 +131,7 @@ SOURCES += mdiwindow.cpp
 SOURCES += modelfactory.cpp
 SOURCES += moveaction.cpp
 SOURCES += muxconfdialog.cpp
+SOURCES += muxmappingconfdialog.cpp
 SOURCES += muxmodel.cpp
 SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp

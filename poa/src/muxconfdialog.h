@@ -18,14 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.22 2004/01/20 16:16:09 vanto Exp $
+ * $Id: muxconfdialog.h,v 1.23 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_MUXCONFDIALOG_H
 #define POA_MUXCONFDIALOG_H
 
-#include <qvariant.h>
 #include <qdialog.h>
 #include <qlistview.h>
 #include <qptrlist.h>
@@ -33,16 +32,12 @@
 #include "pinmodel.h"
 #include "muxmodel.h"
 
+class BlockConfWidget;
 class PinListViewItem;
 
 class QBoxLayout;
-class QComboBox;
-class QGroupBox;
-class QLabel;
 class QLineEdit;
 class QPushButton;
-class QSpinBox;
-class QRadioButton;
 
 /**
  * Provides the MuxMapping view items.
@@ -55,7 +50,7 @@ public:
      * Creates a MuxMapping list view item for the given abstract model
      */
     MuxMappingListViewItem(QListView *parent, QListViewItem *after,
-                           MuxMapping *clone = 0, MuxMapping *origin = 0);
+                           MuxMapping *mapping = 0);
 
     /**
      * Default destructor
@@ -65,17 +60,7 @@ public:
     /**
      * Returns the MuxMapping, represented by this view item
      */
-    MuxMapping *data() const;
-
-    /**
-     * Returns the origin MuxMapping, represented by this view item
-     */
-    MuxMapping *origData() const;
-
-    /**
-     * Sets original mapping.
-     */
-    void setOrigMapping(MuxMapping *mapping);
+    MuxMapping *mapping() const;
 
     /**
      * Updates the view with current contents of the MuxMapping.
@@ -83,8 +68,7 @@ public:
     void update();
 
 private:
-    MuxMapping *clone_;
-    MuxMapping *origin_;
+    MuxMapping *mapping_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,9 +93,6 @@ private:
     /** Initializes top widget. */
     void initTopWidget();
 
-    /** Initializes I/O widget. */
-    void initIOWidget();
-
     /** Initializes mapping widget. */
     void initMappingWidget();
 
@@ -122,19 +103,19 @@ private:
     void initConnections();
 
     /** Syncs this dialog with <code>model_</code>. */
-    void syncModel();
+    void sync();
 
-    /** Syncs the <code>model_</code> with this dialog. */
-    void updateModel();
+    /** Commits all changes to the <code>model_</code>. */
+    void commit();
 
     /** Finds and returns PinModel by id. */
-    PinModel *findPinById(PinModel::PinType, unsigned id);
+//    PinModel *findPinById(PinModel::PinType, unsigned id);
 
     /** Finds and returns PinListViewItem by PinModel. */
-    PinListViewItem *findPinListViewItemByPinModel(PinModel *pin);
+//    PinListViewItem *findPinListViewItemByPinModel(PinModel *pin);
 
     /** Rearranges all positions. */
-    void updatePositions(QListView *lv);
+//    void updatePositions(QListView *lv);
 
     /** Updates all mappings after an I/O has been updated. */
     void updateMappings();
@@ -147,41 +128,17 @@ private:
     void removeDependentMappings(PinModel *pin);
 
     QLineEdit* nameLineEdit;
-    QLineEdit *inputNameLineEdit;
-    QLineEdit *outputNameLineEdit;
-    QPushButton *addInputPushButton;
-    QPushButton *updateInputPushButton_;
-    QPushButton *removeInputPushButton_;
-    QPushButton *addOutputPushButton;
-    QPushButton *updateOutputPushButton_;
-    QPushButton *removeOutputPushButton_;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;
     QPushButton* applyPushButton;
-    QPushButton* addMappingPushButton_;
-    QPushButton* updateMappingPushButton_;
-    QPushButton* removeMappingPushButton_;
-    QSpinBox *firstInputBitSpinBox;
-    QSpinBox *lastInputBitSpinBox;
-    QSpinBox *firstOutputBitSpinBox;
-    QSpinBox *lastOutputBitSpinBox;
-    QSpinBox *inputBitsSpinBox;
-    QSpinBox *outputBitsSpinBox;
     QListView* mappingListView;
-    QListView* inputListView;
-    QListView* outputListView;
     QBoxLayout *dialogLayout_;
 
     MuxModel *model_;
-
-    QPtrList<PinModel> deletedPins_;
-    QPtrList<PinModel> updatedPins_;
-    QPtrList<PinModel> newPins_;
+    BlockConfWidget *blockConfWidget_;
 
     QPtrList<MuxMapping> deletedMappings_;
-    QPtrList<MuxMapping> updatedMappings_;
-    QPtrList<MuxMapping> newMappings_;
 
 private slots:
 
@@ -196,11 +153,6 @@ private slots:
     void removeMapping();
 
     /**
-     * Updates a mapping.
-     */
-    void updateMapping();
-
-    /**
      * Applies the changes to the model.
      */
     void apply();
@@ -210,23 +162,6 @@ private slots:
      */
     void ok();
 
-    /** Adds a new input. */
-    void addInput();
-
-    /** Updates the selected input. */
-    void updateInput();
-
-    /** Removes the selected input. */
-    void removeInput();
-
-    /** Adds a new output. */
-    void addOutput();
-
-    /** Updates the selected output. */
-    void updateOutput();
-
-    /** Removes the selected output. */
-    void removeOutput();
 };
 
 #endif // POA_MUXCONFDIALOG_H

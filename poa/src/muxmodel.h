@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.30 2004/01/18 17:33:51 squig Exp $
+ * $Id: muxmodel.h,v 1.31 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -155,11 +155,6 @@ class MuxModel: public BlockModel
 public:
 
     /**
-     * Defines the enum MuxType.
-     */
-    enum MuxType {MUX, DEMUX};
-
-    /**
      * Creates a MuxModel instance for the library
      */
     MuxModel(QString type, QString description);
@@ -201,11 +196,6 @@ public:
     void deserialize(QDomElement element);
 
 
-    /**
-     * Returns the type of this muxmodel.
-     */
-    MuxType muxType();
-
     /** Returns MuxMapping list. */
     QPtrList<MuxMapping> *mappings();
 
@@ -219,8 +209,6 @@ private:
 
     /** MuxMapping's */
     QPtrList<MuxMapping> mappings_;
-
-    MuxType type_;
 
     unsigned idCounter_;
 

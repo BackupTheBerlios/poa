@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.25 2004/01/20 17:59:42 squig Exp $
+ * $Id: blockconfdialog.h,v 1.26 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,25 +26,14 @@
 #define POA_BLOCKCONFDIALOG_H
 
 #include <qdialog.h>
-#include <qlistview.h>
-#include <qptrlist.h>
-#include <qvariant.h>
 
 #include "blockmodel.h"
 #include "pinmodel.h"
 
-class PinListViewItem;
+class BlockConfWidget;
 class QBoxLayout;
-class QVBoxLayout;
-class QHBoxLayout;
-class QGridLayout;
-class QButtonGroup;
-class QGroupBox;
-class QLabel;
 class QLineEdit;
-class QListView;
 class QPushButton;
-class QRadioButton;
 class QSpinBox;
 
 /**
@@ -60,8 +49,6 @@ public:
     ~BlockConfDialog();
 
 private:
-    QListView *ioListView;
-
     QSpinBox *clockSpinBox;
     QSpinBox *offsetSpinBox;
     QSpinBox *runtimeSpinBox;
@@ -69,41 +56,21 @@ private:
 
     QLineEdit *blockNameLineEdit;
     QLineEdit *blockDescrLineEdit;
-    QLineEdit *ioNameLineEdit;
-    QLineEdit *addressLineEdit;
-    QLineEdit *bitsLineEdit;
 
     QBoxLayout *dialogLayout;
     QBoxLayout *topLayout;
-    QBoxLayout *leftLayout;
     QBoxLayout *rightLayout;
     QWidget *topWidget;
-    QWidget *leftWidget;
     QWidget *rightWidget;
     QWidget *bottomWidget;
 
-    QPushButton *newIoPushButton;
-    QPushButton *updateIoPushButton;
-    QPushButton *removeIoPushButton;
-
-    PinListViewItem *inputRoot_;
-    PinListViewItem *outputRoot_;
-    PinListViewItem *episodicRoot_;
-
     BlockModel *model_;
-    QPtrList<PinModel> deletedPins_;
-    QPtrList<PinModel> updatedPins_;
-    QPtrList<PinModel> newPins_;
+    BlockConfWidget *blockConfWidget_;
 
     /**
      * Initializes layout.
      */
     void initLayout();
-
-    /**
-     * Initializes list view widget.
-     */
-    void initListView();
 
     /**
      * Initializes block widget.
@@ -134,17 +101,12 @@ private:
     /**
      * Synchronizes dialog with model_'s content.
      */
-    void syncModel();
+    void sync();
 
     /**
-     * Updates model_'s content by using current dialog's content.
+     * Commits all current dialog's content to model.
      */
-    void updateModel();
-
-    /**
-     * Updates all positions.
-     */
-    void updatePositions(PinModel::PinType type);
+    void commit();
 
 private slots:
 
@@ -169,31 +131,6 @@ private slots:
      * Calculates the runtime of a cpu.
      */
     void calcRuntime();
-
-    void mouseButtonClicked(int button, QListViewItem *item,
-                            const QPoint & pos, int c);
-
-    /**
-     * Adds a new I/O item to the dedicated I/O group.
-     */
-    void newIo();
-
-    /**
-     * Updates the currently selected I/O item with
-     * modified values, BUT without any semantical check, yet.
-     */
-    void updateIo();
-
-    /**
-     * Removes the selected I/O item from the list view.
-     */
-    void removeIo();
-
-    /**
-     * Disables/enables I/O manipulation buttons, if
-     * a list view item was (de)selected.
-     */
-    void ioSelectionChanged();
 
     /**
      * Invokes compiler on the current cpuModel.

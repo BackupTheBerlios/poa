@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.5 2004/01/20 17:59:42 squig Exp $
+ * $Id: pinlistviewitem.cpp,v 1.6 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,32 +32,21 @@ PinListViewItem::PinListViewItem(QListView *parent,
     : QListViewItem(parent, after)
 {
     type_ = type;
-    clone_ = origin_ = 0;
+    pin_ = 0;
 
     setOpen(true);
+    update();
 }
 
-PinListViewItem::PinListViewItem(QListView *parent, QListViewItem *after,
-                                 PinModel *clone, PinModel *origin)
+PinListViewItem::PinListViewItem(QListViewItem *parent, QListViewItem *after,
+                                 PinModel::PinType type, PinModel *pin)
     : QListViewItem(parent, after)
 {
-    type_ = clone->type();
-    clone_ = clone;
-    origin_ = origin;
+    type_ = type;
+    pin_ = pin;
 
     initialize();
-}
-
-PinListViewItem::PinListViewItem(QListViewItem *parent,
-                                 QListViewItem *after,
-                                 PinModel *clone, PinModel *origin)
-    : QListViewItem(parent, after)
-{
-    type_ = clone->type();
-    clone_ = clone;
-    origin_ = origin;
-
-    initialize();
+    update();
 }
 
 void PinListViewItem::initialize()
@@ -65,98 +54,132 @@ void PinListViewItem::initialize()
     setOpen(false);
     setRenameEnabled(1, true);
     setRenameEnabled(2, true);
-    setRenameEnabled(3, true);
-
-    update();
+    if (type_ != PinModel::EPISODIC) {
+        setRenameEnabled(3, true);
+    }
 }
 
 void PinListViewItem::update()
 {
-    if (clone_ != 0) {
-        setText(0, QString::number(clone_->position(), 10));
-        setText(1, clone_->name());
-        setText(2, QString::number(clone_->bits(), 10));
-        if (clone_->type() != PinModel::EPISODIC) {
-            setText(3, QString::number(clone_->address(), 16));
+    if (isOpen()) {
+        switch (type_) {
+        case PinModel::INPUT:
+            setText(0, "input pins");
+            break;
+        case PinModel::OUTPUT:
+            setText(0, "output pins");
+            break;
+        case PinModel::EPISODIC:
+            setText(0, "episodic pins");
+            break;
         }
+    }
+    else if (pin_ != 0) {
+        setText(0, QString::number(pin_->position(), 10));
+        setText(1, pin_->name());
+        setText(2, QString::number(pin_->bits(), 10));
+        if (type_ != PinModel::EPISODIC) {
+            setText(3, QString::number(pin_->address(), 16));
+        }
+
     }
 }
 
 PinListViewItem::~PinListViewItem()
 {
-    if (clone_ != 0) {
-        delete clone_;
-    }
 }
 
-int PinListViewItem::compare(QListViewItem *i, int col, bool ascending ) const {
-    if (col == 0) { // first colum
-        PinModel *nextPin = ((PinListViewItem *)i)->data();
-        if (nextPin && clone_)  {
+int PinListViewItem::compare(QListViewItem *next,
+                             int col, bool ascending) const
+{
+    if (col == 0 && !isOpen()) { // first colum
+        if (next)  {
             if (ascending) {
-                return clone_->position() - nextPin->position();
+                return text(0).toInt() - next->text(0).toInt();
             }
             else {
-                return nextPin->position() - clone_->position();
+                return next->text(0).toInt() - text(0).toInt();
             }
         }
-        else if (clone_) {
-            return clone_->position();
-        }
         else {
-            return 0;
+            return text(0).toInt();
         }
     }
     else {
-        return key(col, ascending).compare(i->key(col, ascending));
+        return key(col, ascending).compare(next->key(col, ascending));
     }
 }
 
 
-PinModel *PinListViewItem::data() const
+PinModel *PinListViewItem::pin() const
 {
-    return clone_;
+    return pin_;
+}
+
+void PinListViewItem::setPin(PinModel *pin) {
+    pin_ = pin;
+}
+
+void PinListViewItem::commit() const {
+
+    if (pin_) {
+        bool ok;
+        int value = text(0).toUInt(&ok, 10);
+        if (ok) {
+            pin_->setPosition(value);
+        }
+        pin_->setName(text(1));
+        value = text(2).toUInt(&ok, 10);
+        if (ok) {
+            pin_->setBits(value);
+        }
+        value = text(3).toUInt(&ok, 16);
+        if (ok) {
+            pin_->setAddress(value);
+        }
+    }
+}
+
+PinModel *PinListViewItem::createPin() const {
+
+    PinModel *pin = new PinModel(0, text(1));
+    bool ok;
+    int value = text(0).toUInt(&ok, 10);
+    if (ok) {
+        pin->setPosition(value);
+    }
+    value = text(2).toUInt(&ok, 10);
+    if (ok) {
+        pin->setBits(value);
+    }
+    value = text(3).toUInt(&ok, 16);
+    if (ok) {
+        pin->setAddress(value);
+    }
+    pin->setType(type_);
+    return pin;
 }
 
 void PinListViewItem::okRename(int col)
 {
     QListViewItem::okRename(col);
 
-    PinModel *pin = data();
-    if (pin != 0) {
-        pin->setName(text(1));
+    if (pin_ != 0) {
+        pin_->setName(text(1));
         bool ok;
         int value = text(2).toUInt(&ok, 10);
         if (ok) {
-            pin->setBits(value);
+            pin_->setBits(value);
         }
         value = text(3).toUInt(&ok, 16);
         if (ok) {
-            pin->setAddress(value);
+            pin_->setAddress(value);
         }
     }
-//  if (item->origData() != 0) {
-//      updatedPins_.append(pin);
-//  }
-//  updatePositions(item->type());
 
     update();
-}
-
-PinModel *PinListViewItem::origData() const
-{
-    return origin_;
-}
-
-void PinListViewItem::setOrigPin(PinModel *pin) {
-    origin_ = pin;
 }
 
 PinModel::PinType PinListViewItem::type() {
     return type_;
 }
-
-bool PinListViewItem::isRoot() {
-    return isOpen();
-}
-

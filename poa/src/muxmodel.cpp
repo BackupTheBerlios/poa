@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.33 2004/01/12 20:04:05 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.34 2004/01/28 02:20:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -148,7 +148,6 @@ MuxModel::MuxModel(QString type, QString description)
     : BlockModel(type, description)
 {
     setName(QString("new %1").arg(type));
-    type_ = (type == "Mux") ? MUX : DEMUX;
     initIdCounter();
     setDescription(description);
 }
@@ -173,12 +172,7 @@ MuxModel::~MuxModel()
 QDomElement MuxModel::serialize(QDomDocument *document)
 {
     QDomElement root = BlockModel::serialize(document);
-    if (type_ == MUX) {
-        root.setAttribute("block-type", "mux");
-    }
-    else {
-        root.setAttribute("block-type", "demux");
-    }
+    root.setAttribute("block-type", "mux");
 
     // serialize muxmappings
     for (QPtrListIterator<MuxMapping> it(mappings_); it != 0; ++it) {
@@ -192,7 +186,6 @@ QDomElement MuxModel::serialize(QDomDocument *document)
 void MuxModel::deserialize(QDomElement element)
 {
     BlockModel::deserialize(element);
-    type_ = (element.attribute("block-type", "mux") == "mux") ? MUX : DEMUX;
 
     // deserialize muxmappings
     QDomNode node = element.firstChild();
@@ -219,10 +212,6 @@ MuxMapping *MuxModel::findMuxMappingById(unsigned id)
 
     // not found
     return 0;
-}
-
-MuxModel::MuxType MuxModel::muxType() {
-    return type_;
 }
 
 void MuxModel::addMuxMapping(MuxMapping *mapping) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.7 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: connectorview.cpp,v 1.8 2003/09/15 17:38:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -36,7 +36,7 @@ ConnectorView::ConnectorView(
     from_ = from;
     to_ = to;
 
-    //connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
     connect(to->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
     bool changeDirection;
     bool positiveDirection;
@@ -126,7 +126,7 @@ ConnectorView::ConnectorView(QPoint start,
 {
     from_ = from;
     to_ = to;
-    //connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
+    connect(from->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
     connect(to->pinModel(), SIGNAL(deleted()), this, SLOT(deleteView()));
     orientation_ = orientation;
     first_ = true;

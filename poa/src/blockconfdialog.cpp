@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.16 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.17 2003/09/15 17:38:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,7 +31,6 @@
 #include "outputmodel.h"
 #include "pinvector.h"
 #include "poa.h"
-#include "project.h"
 
 #include <qvariant.h>
 #include <qbuttongroup.h>

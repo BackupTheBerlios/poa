@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.5 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.6 2003/09/17 16:50:14 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -71,10 +71,13 @@ int CodeManager::compile(CpuModel *model)
     Settings* s = Settings::instance();
 
     QProcess *proc = new QProcess(this);
-    proc->addArgument(s->terminalCmd());
-    proc->addArgument(s->compilerCmd());
-    proc->addArgument(sourcePath(model));
-    proc->setWorkingDirectory(QDir(*(model->projectPath())));
+    proc->addArgument("xterm");
+    proc->addArgument("-c");
+    proc->addArgument("/bin/bash");
+//    proc->addArgument(s->terminalCmd());
+//    proc->addArgument(s->compilerCmd());
+    proc->addArgument(sourceFilePath(model));
+    //proc->setWorkingDirectory(QDir(*(model->projectPath())));
 
     proc->launch("");
 

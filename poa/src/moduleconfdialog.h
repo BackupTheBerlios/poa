@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.6 2003/09/02 20:22:53 garbeam Exp $
+ * $Id: moduleconfdialog.h,v 1.7 2003/09/03 08:33:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -83,11 +83,16 @@ private:
     QListViewItem *periodicalRoot;
 
 private slots:
-
     /**
      * Adds a new I/O item to the dedicated I/O group.
      */
     void addIo();
+
+    /**
+     * Updates the currently selected I/O item with 
+     * modified values, BUT without any semantical check, yet.
+     */
+    void updateIo();
 
     /**
      * Removes the selected I/O item from the list view.
@@ -100,8 +105,16 @@ private slots:
      */
     void ioSelectionChanged();
 
+    /**
+     * Disables/enables offset spin box, if the manual
+     * offset setting is enabled.
+     */
     void toggleManualOffset();
 
+    /**
+     * Disables/enables runtime spin box, if the manual
+     * runtime setting is enabled.
+     */
     void toggleManualRuntime();
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.8 2003/09/02 20:22:53 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.9 2003/09/03 08:33:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -123,6 +123,8 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     updateIoPushButton =
         new QPushButton(ioButtonsWidget, "updateIoPushButton");
     updateIoPushButton->setText(tr("&Update"));
+    connect(updateIoPushButton, SIGNAL(clicked()),
+            this, SLOT(updateIo()));
 
     removeIoPushButton =
         new QPushButton(ioButtonsWidget, "removeIoPushButton");
@@ -298,6 +300,7 @@ void ModuleConfDialog::addIo()
     QListViewItem *root = ioListView->selectedItem();
 
     if (root != 0) {
+        // Only parent items are open.
         while (!root->isOpen()) {
             root = root->parent();
         }
@@ -311,6 +314,19 @@ void ModuleConfDialog::addIo()
            child->setText(2,
                           QString::number(root->childCount() * 100, 16));
         }
+    }
+}
+
+void ModuleConfDialog::updateIo()
+{
+    QListViewItem *item = ioListView->selectedItem();
+
+    // Only parent items are open.
+    if (item != 0 && !item->isOpen()) {
+        item->setText(0, ioNumberLineEdit->text());
+        item->setText(1, dataLineEdit->text());
+        item->setText(2, addressLineEdit->text());
+        item->setText(3, bitsLineEdit->text());
     }
 }
 

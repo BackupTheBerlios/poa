@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.3 2004/01/09 17:55:33 vanto Exp $
+ * $Id: scheduledialog.h,v 1.4 2004/01/09 21:40:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -62,6 +62,7 @@ private:
     QWidget *topWidget;
     QWidget *middleWidget;
     QWidget *bottomWidget;
+    QCanvasRectangle *highlightCanvasRectangle;
 
     QTable *timingTable;
 
@@ -135,6 +136,8 @@ private slots:
      * this dialog.
      */
     void ok();
+
+    void updateHighlighter(int row, int column);
 
     /**
      * Changes the zooming

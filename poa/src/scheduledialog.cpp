@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.3 2004/01/09 17:55:33 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.4 2004/01/09 21:40:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -224,19 +224,32 @@ void ScheduleDialog::initGraphWidget()
 
     // determine canvas size
     int cnt = 0;
-    int worstTime = 0;
+    //int worstTime = 0;
     for (QPtrListIterator<BlockTree> inpit(inputBlocks); inpit != 0; ++inpit) {
         cnt += (*inpit)->count();
 
     }
-    canvas->resize(CANVAS_WIDTH, cnt * (BOX_HEIGHT + BOX_YSPACING));
-    labelCanvas->resize(50, cnt * (BOX_HEIGHT + BOX_YSPACING));
+    canvas->resize(CANVAS_WIDTH, cnt * (BOX_HEIGHT + 2 * BOX_YSPACING));
+    labelCanvas->resize(50, cnt * (BOX_HEIGHT + 2 * BOX_YSPACING));
 
-    int Y = WIDGET_SPACING;
+    int Y = BOX_YSPACING;
     for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
         int time = 0;
         drawTimings(*it, &Y, &time);
     }
+
+    // create highlighter
+    highlightCanvasRectangle = new QCanvasRectangle(canvas);
+    highlightCanvasRectangle->setSize(canvas->width(),
+                                      BOX_HEIGHT + BOX_YSPACING);
+    highlightCanvasRectangle->setBrush(QBrush(lightGray));
+    highlightCanvasRectangle->setPen(QPen(white));
+    highlightCanvasRectangle->move(0, BOX_YSPACING / 2);
+    highlightCanvasRectangle->setZ(0);
+    highlightCanvasRectangle->show();
+
+    connect(timingTable, SIGNAL(currentChanged(int, int)),
+            this, SLOT(updateHighlighter(int, int)));
 }
 
 bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
@@ -257,7 +270,7 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 
     int t = bt->getOffset();
 
-    int X = rint(t * PIX_PER_NS);
+    int X = WIDGET_SPACING + rint(t * PIX_PER_NS);
     while (X < canvas->width()) {
 
         if (bt->getClock() <= 0) {
@@ -266,7 +279,10 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
 
         QCanvasRectangle* box = new QCanvasRectangle(0, 0, 0, 0, canvas);
         box->move(X, *Y);
-        box->setSize(rint(/*bt->getRuntime() * PIX_PER_NS*/ 20), BOX_HEIGHT);
+        int w = QMAX(5, rint(bt->getRuntime() * PIX_PER_NS));
+        box->setBrush(QBrush(white));
+        box->setSize(w, BOX_HEIGHT);
+        box->setZ(1);
         box->show();
 
 //      QCanvasLine* line = new QCanvasLine(canvas);
@@ -340,6 +356,13 @@ void ScheduleDialog::ok()
 {
 //    updateModel();
     accept();
+}
+
+void ScheduleDialog::updateHighlighter(int row, int)
+{
+    highlightCanvasRectangle->move
+        (0, BOX_YSPACING / 2 + row * (BOX_YSPACING + BOX_HEIGHT));
+    canvas->update();
 }
 
 void ScheduleDialog::zoomChanged(int zoom)

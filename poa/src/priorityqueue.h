@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.3 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: priorityqueue.h,v 1.4 2004/01/09 21:40:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,6 @@
 
 
 #include "poa.h"
-
 
 class PriorityItem;
 
@@ -163,7 +162,7 @@ public:
      * </code>second->higherPriority(first)</code>.
      */
     static PriorityItem *maxPriority(PriorityItem *first,
-				     PriorityItem *second);
+                     PriorityItem *second);
 
 protected:
 

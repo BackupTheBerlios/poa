@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.76 2004/01/09 16:56:24 squig Exp $
+ * $Id: mainwindow.cpp,v 1.77 2004/01/09 21:40:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -350,6 +350,8 @@ void MainWindow::connectActions()
     connect(fileSaveAsAction, SIGNAL(activated()), this, SLOT(fileSaveAs()));
     connect(fileExitAction, SIGNAL(activated()),
             qApp, SLOT(closeAllWindows()));
+    connect(defaultRouteAction_, SIGNAL(activated()),
+            this, SLOT(defaultRoute()));
     connect(editCutAction, SIGNAL(activated()), this, SLOT(editCut()));
     connect(editCopyAction, SIGNAL(activated()), this, SLOT(editCopy()));
     connect(editPasteAction, SIGNAL(activated()), this, SLOT(editPaste()));
@@ -377,6 +379,7 @@ void MainWindow::connectActions()
     connect(cascadeAction, SIGNAL(activated()), ws, SLOT(cascade()));
     connect(ws, SIGNAL(windowActivated(QWidget*)),
             this, SLOT(windowActivated(QWidget*)));
+    connect(smartRouteAction_, SIGNAL(activated()), this, SLOT(smartRoute()));
     connect(zoomComboBox, SIGNAL(activated(const QString&)),
             this, SLOT(zoomTo(const QString&)));
     connect(zoomNormalAction, SIGNAL(activated()), this, SLOT(zoomNormal()));

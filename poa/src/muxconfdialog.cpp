@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.33 2004/01/09 16:48:15 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.34 2004/01/09 21:40:38 squig Exp $
  *
  *****************************************************************************/
 
@@ -296,6 +296,7 @@ void MuxConfDialog::initBottomWidget() {
     cancelPushButton = new QPushButton(bottomWidget, "cancelPushButton");
     cancelPushButton->setText(tr("&Cancel"));
 
+    bottomLayout->addStretch(1);
     bottomLayout->addWidget(helpPushButton);
     bottomLayout->addWidget(okPushButton);
     bottomLayout->addWidget(applyPushButton);

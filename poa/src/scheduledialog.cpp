@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.19 2004/01/11 16:18:56 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.20 2004/01/11 16:26:59 vanto Exp $
  *
  *****************************************************************************/
 
@@ -332,9 +332,10 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
     int X = rint(t * PIX_PER_NS);
     while (X < canvas->width()) {
 
+        *Y += BOX_HEIGHT + BOX_YSPACING;
+
         if (bt->getClock() <= 0) {
-            //return false;
-            continue;
+            return false;
         }
 
         QRect thisBlock = calcBlockPosition(bt, t);
@@ -381,8 +382,6 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
         t += bt->getClock();
         X = rint(t * PIX_PER_NS);
     }
-
-    *Y += BOX_HEIGHT + BOX_YSPACING;
 
     return true;
 }

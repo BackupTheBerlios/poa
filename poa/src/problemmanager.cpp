@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.4 2004/01/19 21:14:30 squig Exp $
+ * $Id: problemmanager.cpp,v 1.5 2004/01/21 10:28:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -232,10 +232,10 @@ ProblemManager::~ProblemManager()
 void ProblemManager::report()
 {
     // iterate through all blocks
-    for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0;
-         ++it) {
+    for (QPtrListIterator<AbstractModel> it0(*project_->blocks()); it0 != 0;
+         ++it0) {
 
-        BlockModel *block = dynamic_cast<BlockModel*>(*it);
+        BlockModel *block = dynamic_cast<BlockModel*>(*it0);
         if (block != 0) {
             checkBlock(block);
         }
@@ -244,15 +244,15 @@ void ProblemManager::report()
     // iterate through reachable blocks
     BlockGraph graph(project_);
     QValueList<BlockNode*> blocks = graph.blocks();
-    for (QValueList<BlockNode*>::Iterator it = blocks.begin();
-         it != blocks.end(); ++it) {
+    for (QValueList<BlockNode*>::Iterator it1 = blocks.begin();
+         it1 != blocks.end(); ++it1) {
 
-        QPtrList<BlockNode> neighbours = (*it)->neighbours();
+        QPtrList<BlockNode> neighbours = (*it1)->neighbours();
         for (QPtrListIterator<BlockNode> it2(neighbours); it2 != 0;
              ++it2) {
 
-            if ((*it)->clock() != (*it2)->clock()) {
-                new DifferentClockReport(blockRoot_, (*it)->model(),
+            if ((*it1)->clock() != (*it2)->clock()) {
+                new DifferentClockReport(blockRoot_, (*it1)->model(),
                                          (*it2)->model());
             }
         }

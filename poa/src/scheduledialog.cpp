@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.40 2004/01/20 19:15:39 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.41 2004/01/21 10:28:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -171,10 +171,10 @@ void ScheduleDialog::initTimingWidget()
     connect(timingTable, SIGNAL(valueChanged(int, int)),
             this, SLOT(modelChanged(int,int)));
 
-    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
-         it != blocks_.end(); ++it) {
+    for (QValueList<BlockNode*>::Iterator it2 = blocks_.begin();
+         it2 != blocks_.end(); ++it2) {
 
-        fillTimingTable(*it);
+        fillTimingTable(*it2);
     }
     topLayout->addWidget(timingTable);
 
@@ -239,10 +239,10 @@ void ScheduleDialog::initCanvas()
         : 1.0;
 
     drawRuler();
-    for (QValueList<BlockNode*>::Iterator it = blocks_.begin();
-         it != blocks_.end(); ++it) {
+    for (QValueList<BlockNode*>::Iterator it2 = blocks_.begin();
+         it2 != blocks_.end(); ++it2) {
 
-        drawTimings(*it);
+        drawTimings(*it2);
     }
 
     // create highlighter

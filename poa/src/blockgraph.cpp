@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.6 2004/01/19 15:25:40 squig Exp $
+ * $Id: blockgraph.cpp,v 1.7 2004/01/21 10:28:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -158,16 +158,16 @@ BlockGraph::BlockGraph(Project *project)
 
     // iterate through all pins
     QValueList<PinNode*> pins = nodeByPin_.values();
-    for (QValueList<PinNode*>::Iterator it = pins.begin(); it != pins.end();
-         ++it) {
+    for (QValueList<PinNode*>::Iterator it2 = pins.begin(); it2 != pins.end();
+         ++it2) {
 
-        QPtrList<PinNode> neighbours = (*it)->neighbours();
-        for (QPtrListIterator<PinNode> it2(neighbours); it2 != 0;
-             ++it2) {
+        QPtrList<PinNode> neighbours = (*it2)->neighbours();
+        for (QPtrListIterator<PinNode> it3(neighbours); it3 != 0;
+             ++it3) {
 
-            if ((*it)->parent() != (*it2)->parent()) {
+            if ((*it2)->parent() != (*it3)->parent()) {
                 QPtrList<PinNode> seen;
-                addBlockNeighbour(*it, *it2, seen);
+                addBlockNeighbour(*it2, *it3, seen);
             }
         }
     }
@@ -183,10 +183,10 @@ BlockGraph::~BlockGraph()
     }
 
     QValueList<PinNode*> pins = nodeByPin_.values();
-    for (QValueList<PinNode*>::Iterator it = pins.begin(); it != pins.end();
-         ++it) {
+    for (QValueList<PinNode*>::Iterator it2 = pins.begin(); it2 != pins.end();
+         ++it2) {
 
-        delete *it;
+        delete *it2;
     }
 }
 

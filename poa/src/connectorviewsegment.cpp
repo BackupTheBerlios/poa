@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.10 2004/01/19 21:14:30 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.11 2004/01/21 10:28:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -77,7 +77,7 @@ void ConnectorViewSegment::updateProperties()
     }
     else {
         setZ(0);
-        setPen(QPen(Qt::darkBlue, 2));
+        setPen(QPen(QObject::darkBlue, 2));
     }
 
 }

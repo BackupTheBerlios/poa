@@ -1,3 +1,0 @@
-mainwindow.h:
-
-   Add QWorkspace* workspace_;

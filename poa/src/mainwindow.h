@@ -45,16 +45,11 @@ public:
     QAction* fileOpenAction;
     QAction* fileSaveAction;
     QAction* fileSaveAsAction;
-    QAction* filePrintAction;
     QAction* fileExitAction;
-    QAction* editUndoAction;
-    QAction* editRedoAction;
     QAction* editCutAction;
     QAction* editCopyAction;
     QAction* editPasteAction;
-    QAction* editFindAction;
     QAction* helpContentsAction;
-    QAction* helpIndexAction;
     QAction* helpAboutAction;
 
     QAction* openModuleConfDialogAction;
@@ -70,15 +65,10 @@ public slots:
     virtual void fileOpen();
     virtual void fileSave();
     virtual void fileSaveAs();
-    virtual void filePrint();
     virtual void fileExit();
-    virtual void editUndo();
-    virtual void editRedo();
     virtual void editCut();
     virtual void editCopy();
     virtual void editPaste();
-    virtual void editFind();
-    virtual void helpIndex();
     virtual void helpContents();
     virtual void helpAbout();
     virtual void openModuleConfDialog();

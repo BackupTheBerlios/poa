@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.49 2003/10/01 15:24:06 squig Exp $
+# $Id: poa.pro,v 1.50 2003/10/01 15:26:45 squig Exp $
 #
 ###############################################################################
 
@@ -76,6 +76,7 @@ HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += poa.h
 HEADERS += reachedpoint.h
+HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += gridcanvas.h
 HEADERS += tooltipable.h

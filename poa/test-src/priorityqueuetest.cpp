@@ -43,6 +43,7 @@ class PriorityQueueTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testDescending);
     CPPUNIT_TEST(test2Up1Down);
     CPPUNIT_TEST(test2Up1DownChanging);
+    CPPUNIT_TEST(testChanging);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -206,6 +207,118 @@ public:
 	    delete items[i];
 	}
     }
+
+    void testChanging()
+    {
+	IntegerItem *items[100];
+	int i;
+	for (i = 0; i < 100; ++i) {
+	    checkIntegrity();
+	    CPPUNIT_ASSERT((int) queue_.size() == i);
+	    items[i] = new IntegerItem(i);
+	    queue_.insert(items[i]);
+	}
+	checkIntegrity();
+	
+	for (i = 99; i >= 0; --i) {
+            CPPUNIT_ASSERT((int) queue_.size() == 100);
+	    items[i]->change(2 * (100 - i));
+	    checkIntegrity();
+	}
+
+        i = 100;
+	while (!queue_.isEmpty()) {
+	    CPPUNIT_ASSERT((int) queue_.size() == i);
+	    checkIntegrity();
+	    --i;
+	    CPPUNIT_ASSERT(queue_.removeHead() == items[i]);
+	}
+	checkIntegrity();
+	CPPUNIT_ASSERT(i == 0);
+
+	for (i = 0; i < 100; ++i) {
+	    delete items[i];
+	}
+    }
+
+    void testRemoving()
+    {
+	IntegerItem *items[100];
+	int i;
+	for (i = 0; i < 100; i += 2) {
+	    items[i] = new IntegerItem(i);
+	}
+	for (i = 1; i < 100; i += 2) {
+	    items[i] = new IntegerItem(i * 5);
+	}
+	for (i = 0; i < 100; ++i) {
+	    queue_.insert(items[i]);
+	}
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.size() == 100);
+	CPPUNIT_ASSERT(queue_.head() == items[0]);
+	
+	for (i = 10; i < 20; ++i) {
+	    queue_.remove(items[i]);
+	    checkIntegrity();
+	}
+	CPPUNIT_ASSERT(queue_.size() == 90);
+	CPPUNIT_ASSERT(queue_.head() == items[0]);
+	for (i = 30; i < 40; ++i) {
+	    queue_.remove(items[i]);
+	    checkIntegrity();
+	}
+	CPPUNIT_ASSERT(queue_.size() == 80);
+	CPPUNIT_ASSERT(queue_.head() == items[0]);
+	for (i = 99; i >= 80; --i) {
+	    queue_.remove(items[i]);
+	    checkIntegrity();
+	}
+	CPPUNIT_ASSERT(queue_.size() == 70);
+	CPPUNIT_ASSERT(queue_.head() == items[0]);
+	items[0]->change(17);
+	CPPUNIT_ASSERT(queue_.head() == items[2]);
+
+	for (i = 50; i < 60; ++i) {
+	    queue_.remove(items[i]);
+	    checkIntegrity();
+	}
+	CPPUNIT_ASSERT(queue_.size() == 60);
+	CPPUNIT_ASSERT(queue_.head() == items[2]);
+	items[2]->change(113);
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[4]);
+	items[4]->change(7);
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[1]);
+	queue_.removeHead();
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[6]);
+	items[6]->change(1);
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[6]);
+	items[6]->change(8);
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.removeHead() == items[4]);
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[8] || queue_.head() == items[6]);
+	queue_.removeHead();
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[8] || queue_.head() == items[6]);
+	queue_.removeHead();
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.head() == items[2]);
+	CPPUNIT_ASSERT(queue_.size() == 56);
+
+	queue_.clear();
+	checkIntegrity();
+	CPPUNIT_ASSERT(queue_.size() == 0 && queue_.isEmpty());
+       
+	for (i = 0; i < 100; ++i) {
+	    delete items[i];
+	}
+    }
+
 };
 
 /// \brief You have to register the test suite "ComplexNumberTest". In this

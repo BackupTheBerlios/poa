@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.7 2003/08/28 15:31:10 vanto Exp $
+ * $Id: project.cpp,v 1.8 2003/08/28 15:44:34 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -129,15 +129,14 @@ void Project::deserialize(QDomDocument *document) {
 
         GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
 
-        qWarning(vEl.attribute("id",""));
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
-                //add(idMap[viEl.attribute("model-id","0")]);
-                canvas->addView(idMap[viEl.attribute("model-id","0")],
+                 canvas->addView(idMap[viEl.attribute("model-id","0")],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
             }
         }
     }
 }
+x

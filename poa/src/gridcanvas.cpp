@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.11 2003/08/28 15:31:10 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.12 2003/08/28 15:44:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -35,18 +35,13 @@
 
 GridCanvas::GridCanvas(QString name)
 {
-    name_ = name;
+    setName(name);
     currentZ_ = 0;
     setGridSize(Settings::instance()->gridSize());
     setDoubleBuffering(TRUE);
 
     connect(Settings::instance(), SIGNAL(gridSizeChanged(int)),
             this, SLOT(setGridSize(int)));
-}
-
-QString GridCanvas::name()
-{
-    return name_;
 }
 
 void GridCanvas::addView(AbstractModel *item, int x, int y)

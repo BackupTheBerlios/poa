@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.9 2003/08/28 15:31:10 vanto Exp $
+ * $Id: gridcanvas.h,v 1.10 2003/08/28 15:44:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -40,7 +40,6 @@ class GridCanvas : public QCanvas {
 public:
     GridCanvas(QString name);
     void addView(AbstractModel *item, int x, int y);
-    QString name();
 
 public slots:
     void setGridSize(int gridSize);
@@ -52,7 +51,6 @@ private:
      * an equal z value
      */
     unsigned currentZ_;
-    QString name_;
 };
 
 #endif // POA_GRIDCANVAS_H

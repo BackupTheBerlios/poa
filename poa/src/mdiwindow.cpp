@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.16 2003/08/28 15:31:10 vanto Exp $
+ * $Id: mdiwindow.cpp,v 1.17 2003/08/28 15:44:34 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,7 @@ MdiWindow::MdiWindow(CanvasView *view, QWidget* parent,
 
     view_->reparent(this,0,QPoint());
     setCentralWidget(view_);
-    setCaption(view->project()->name()+" ["+view->canvas()->name()+"]");
+    setCaption(view->project()->name()+" - "+view->canvas()->name());
     setIcon(QPixmap(ICON_PATH + "document.xpm"));
     resize(sizeHint());
 }

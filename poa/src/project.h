@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.7 2003/08/28 23:07:13 vanto Exp $
+ * $Id: project.h,v 1.8 2003/08/29 10:45:49 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -89,13 +89,13 @@ public:
 
 private:
     /*
-     * Deserialized the given xml document to this project
+     * Deserializes the given xml document to this project
      */
     void deserialize(QDomDocument *document);
 
     /* List of <code>AbstractModel</code>s */
     QPtrList<AbstractModel> items_;
-    /* List of <code>GridCanvas</code>'s /*
+    /* List of <code>GridCanvas</code>'s */
     QPtrList<GridCanvas> canvasList_;
     /* project name */
     QString name_;

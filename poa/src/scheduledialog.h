@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.24 2004/01/25 14:29:41 vanto Exp $
+ * $Id: scheduledialog.h,v 1.25 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -37,6 +37,7 @@
 
 #include "blockgraph.h"
 #include "blockmodel.h"
+#include "gridcanvas.h"
 #include "pinmodel.h"
 #include "project.h"
 
@@ -55,8 +56,8 @@ class ScheduleDialog : public QDialog
     Q_OBJECT
 
 public:
-    ScheduleDialog(Project* Pro, QWidget* parent = 0, const char* name = 0,
-                   bool modal = FALSE, WFlags fl = 0);
+    ScheduleDialog(GridCanvas *canvas, Project* Pro, QWidget* parent = 0,
+                   const char* name = 0, bool modal = FALSE, WFlags fl = 0);
     ~ScheduleDialog();
 
 private:
@@ -89,6 +90,8 @@ private:
 
     BlockGraph *graph_;
     QValueList<BlockNode*> blocks_;
+
+    ColorManager *colormanager_;
 
     /**
      * Fills the table with timing information.

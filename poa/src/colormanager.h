@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.8 2004/01/26 16:50:27 squig Exp $
+ * $Id: colormanager.h,v 1.9 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -67,29 +67,23 @@ class ColorManager : public QObject,
     ~ColorManager();
 
     /**
-     * Returns the color of the given block. The color depends on the
-     * block's clock value.
-     */
-    QColor color(const BlockModel *model, int luminance = 100);
-
-    /**
      * Returns the 'normal' color of the given model.
      * Calls color(BlockModel*) if the given model represents a block.
      * In all others cases, the default settings will be used.
      */
-    QColor color(AbstractModel *model, int luminance = 100);
+    QColor color(AbstractModel *model);
 
     /**
      * Returns activated color of the given model.
      *  - Returns the default settings.
      */
-    QColor activatedColor(AbstractModel *model, int luminance = 100);
+    QColor activatedColor(AbstractModel *model);
 
     /**
      * Returns selected color of the given model.
      *  - Returns the default settings.
      */
-    QColor selectedColor(AbstractModel *model, int luminance = 100);
+    QColor selectedColor(AbstractModel *model);
 
     /**
      * \copydoc Moveable::item()

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.102 2004/01/22 21:42:09 squig Exp $
+ * $Id: mainwindow.cpp,v 1.103 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -938,7 +938,7 @@ void MainWindow::openScheduling()
     CanvasView *view = activeView();
     if (view != 0) {
         ScheduleDialog *dialog
-            = new ScheduleDialog(activeView()->project(), this);
+            = new ScheduleDialog(activeView()->gridCanvas(), activeView()->project(), this);
         dialog->exec();
         delete dialog;
     }

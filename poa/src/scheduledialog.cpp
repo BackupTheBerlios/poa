@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.45 2004/01/25 15:11:30 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.46 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -66,7 +66,7 @@ const double RAD2DEG = 57.2958;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
+ScheduleDialog::ScheduleDialog(GridCanvas *canvas, Project* pro, QWidget* parent, const char* name,
                                bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
@@ -77,6 +77,7 @@ ScheduleDialog::ScheduleDialog(Project* pro, QWidget* parent, const char* name,
     setCaption(tr("Scheduling"));
 
     project_ = pro;
+    colormanager_ = canvas->colorManager();
     graph_ = 0;
     modified_ = false;
     zoom_ = 1.0;
@@ -351,7 +352,8 @@ void ScheduleDialog::drawTimings(BlockNode* node)
         // draw block
         QRect thisBlock = calcBlockPosition(node, t);
         QCanvasRectangle* box = new FancyRectangle(thisBlock, canvas);
-        box->setBrush(QBrush(white));
+        //        box->setBrush(QBrush(white));
+        box->setBrush(QBrush(colormanager_->color(node->model())));
         box->setZ(2);
         box->show();
 
@@ -694,7 +696,8 @@ void FancyRectangle::drawShape(QPainter &p)
     p.drawPoint((int)x() + width() - 1, (int)y());
     p.drawPoint((int)x() + width() - 1, (int)y() + height() - 1);
 
-    p.setPen(QPen(QColor(196, 194, 205), 1));
+    //    p.setPen(QPen(QColor(196, 194, 205), 1));
+    p.setPen(QPen(p.brush().color().dark(120), 1));
     p.drawLine((int)x() + 1, (int)y() + height() - 2,
                (int)x() + width() - 2, (int)y() + height() - 2);
     p.drawLine((int)x() + width() - 2, (int)y() + height() - 1,

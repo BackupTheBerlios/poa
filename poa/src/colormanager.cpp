@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.11 2004/01/26 16:50:27 squig Exp $
+ * $Id: colormanager.cpp,v 1.12 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -48,45 +48,42 @@ ColorManager::~ColorManager()
 {
 }
 
-QColor ColorManager::color(const BlockModel *model, int luminance)
+QColor ColorManager::color(AbstractModel *model)
 {
-    if (!nsToPalIndex_.contains(model->clock())) {
+    BlockModel *bm = dynamic_cast<BlockModel*>(model);
+
+    if (bm == 0) {
+        return Settings::instance()->defaultBrushColor();
+    }
+
+    if (!models_.contains(bm)) {
         // insert model into modellist
         //        models_->inSort(model);
-        models_.append(model);
+        models_.append(bm);
 
         // connect to update event
-        connect(model, SIGNAL(updated()),
+        connect(bm, SIGNAL(updated()),
                 this, SLOT(updateMap()));
 
         // connect to delete event
-        connect(model, SIGNAL(deleted(BlockModel *)),
+        connect(bm, SIGNAL(deleted(BlockModel *)),
                 this, SLOT(deleteModel(BlockModel *)));
 
         // update mapping and widget size
         updateMap();
     }
 
-    return palette_->color(nsToPalIndex_[model->clock()]).light(luminance);
+    return (bm->clock() == 0)
+        ?Settings::instance()->defaultBrushColor()
+        :palette_->color(nsToPalIndex_[bm->clock()]);
 }
 
-QColor ColorManager::color(AbstractModel *model, int luminance)
-{
-    BlockModel *bm = dynamic_cast<BlockModel*>(model);
-    if ((bm != 0) && (bm->clock() != 0)) {
-        return color(bm, luminance);
-
-    }
-
-    return Settings::instance()->defaultBrushColor();
-}
-
-QColor ColorManager::activatedColor(AbstractModel*, int)
+QColor ColorManager::activatedColor(AbstractModel*)
 {
     return Settings::instance()->activatedColor();
 }
 
-QColor ColorManager::selectedColor(AbstractModel*, int)
+QColor ColorManager::selectedColor(AbstractModel*)
 {
     return Settings::instance()->selectedColor();
 }
@@ -108,7 +105,8 @@ void ColorManager::updateMap()
         reqNs += model->clock();
 
         // insert mapping
-        if (!nsToPalIndex_.contains(model->clock())) {
+        if ((!nsToPalIndex_.contains(model->clock()))
+            && (model->clock() != 0)) {
             nsToPalIndex_.insert(model->clock(), palPosition_++);
         }
     }

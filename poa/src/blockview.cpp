@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.67 2004/01/25 15:53:31 vanto Exp $
+ * $Id: blockview.cpp,v 1.68 2004/01/26 19:17:18 vanto Exp $
  *
  *****************************************************************************/
 
@@ -266,9 +266,11 @@ int BlockView::rtti() const
 
 void BlockView::setSelected(bool yes)
 {
-    QCanvasRectangle::setSelected(yes);
-    setZ(static_cast<GridCanvas *>(canvas())->incZ());
-    updateProperties();
+    if (yes != isSelected()) {
+        QCanvasRectangle::setSelected(yes);
+        setZ(static_cast<GridCanvas *>(canvas())->incZ());
+        updateProperties();
+    }
 }
 
 void BlockView::setZ(double z)
@@ -310,7 +312,6 @@ void BlockView::drawShape(QPainter &p)
 
     // draw decorations
     p.setPen(QPen(brush().color().light(45), 1));
-
     p.drawLine((int)x() + 1, (int)y() + height() - 2,
                (int)x() + width() - 2, (int)y() + height() - 2);
     p.drawLine((int)x() + width() - 2, (int)y() + height() - 1,
@@ -551,6 +552,7 @@ void BlockView::sort(QValueList<PinView *> &list)
 void BlockView::updateView()
 {
     arrangePins();
+    updateProperties();
     update();
     canvas()->update();
 }

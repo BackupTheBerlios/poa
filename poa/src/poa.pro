@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.51 2003/10/01 15:55:17 squig Exp $
+# $Id: poa.pro,v 1.52 2003/10/01 17:04:37 squig Exp $
 #
 ###############################################################################
 
@@ -36,7 +36,7 @@ QMAKE_DEL_DIR = rm -rf
 #QMAKE_CXXFLAGS = -DVERSION=0.1.0
 
 DISTFILES += AUTHORS BUGS COPYING README TODO about.html 
-DISTFILES += templates/*.c templates/*.h icons/*.xpm icons/*.png
+DISTFILES += templates/*.c icons/*.xpm icons/*.png
 
 include(poa.local)
 

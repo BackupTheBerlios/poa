@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.h,v 1.3 2004/02/01 17:18:48 squig Exp $
+ * $Id: srecord.h,v 1.4 2004/02/01 20:28:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,11 @@
 
 #include <qobject.h>
 
+/**
+ * Represents a single line in an srec file. See
+ * http://www.amelek.gda.pl/avr/uisp/srecord.htm for information on
+ * the srec format.
+ */
 class SRecord : public QObject
 {
     Q_OBJECT
@@ -39,30 +44,52 @@ public:
     enum Record_Type { S1 };
 
     /**
-     * Construct an srecord object parsing line.
-     *
-     * More infos about the srec format can be fount at
-     * http://www.amelek.gda.pl/avr/uisp/srecord.htm
+     * Construct an srecord object parsing line reading up to length
+     * characters. The checksum is not validated!
+
+     * @throw PoaException if the format of line is not correct
      */
     SRecord(const char *line, const unsigned int length);
 
+    ~SRecord();
+
+    /**
+     * Returns the address.
+     */
     unsigned int address() const;
 
-    const char *data() const;
+    /**
+     * Returns an array of characters.
+     *
+     * @see #dataSize()
+     */
+    const unsigned char *data() const;
 
+    /**
+     * Returns the number of data characters.
+     */
     unsigned int dataSize() const;
 
+    /**
+     * Returns the minimum number of bytes for a valid record.
+     */
     static unsigned int minLength();
 
+    /**
+     * Returns the record type.
+     */
     Record_Type type() const;
 
+    /**
+     * Returns the checksum.
+     */
     unsigned int checksum() const;
 
 private:
 
     Record_Type type_;
     unsigned int address_;
-    QString data_;
+    unsigned char *data_;
     unsigned int checksum_;
     unsigned int count_;
 };

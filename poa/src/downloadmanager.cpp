@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.10 2004/02/01 17:18:48 squig Exp $
+ * $Id: downloadmanager.cpp,v 1.11 2004/02/01 20:28:57 squig Exp $
  *
  *****************************************************************************/
 
@@ -104,28 +104,17 @@ bool DownloadManager::run(const char* portname)
     initializeAndOpen(port);
 
     // send header
-    port.putch(0xff);
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, 0xff);
 
     // send adress
-    port.putch(0x01);
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, 0x01);
 
     // send size
-    port.putch((unsigned char)0);
-    port.flush();
-    qApp->processEvents(4);
-
-    port.putch((unsigned char)0);
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, 0x00);
+    sendChar(port, 0x00);
 
     // send command, 0x05 = RUN
-    port.putch(0x05);
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, 0x05);
 
     port.close();
     return true;
@@ -136,29 +125,18 @@ bool DownloadManager::download(const char* portname)
     QextSerialPort port(portname);
     initializeAndOpen(port);
 
-    //send header
-    port.putch(0xff);
-    port.flush();
-    qApp->processEvents(4);
+    // send header
+    sendChar(port, 0xff);
 
-    //send adress
-    port.putch(0x01);
-    port.flush();
-    qApp->processEvents(4);
+    // send adress
+    sendChar(port, 0x01);
 
     // send size: high byte first, then low byte
-    port.putch((unsigned char)(filesize() >> 8));
-    port.flush();
-    qApp->processEvents(4);
-
-    port.putch((unsigned char)(filesize()));
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, filesize() >> 8);
+    sendChar(port, filesize());
 
     // send command: 0x01 = LOAD
-    port.putch(0x01);
-    port.flush();
-    qApp->processEvents(4);
+    sendChar(port, 0x01);
 
     // send data
     QProgressDialog progress(tr("Downloading file to CPU..."),
@@ -167,7 +145,7 @@ bool DownloadManager::download(const char* portname)
     QPtrListIterator<SRecord> it(records_);
     SRecord *record;
     while ((record = it.current()) != 0) {
-        const char *data = record->data();
+        const unsigned char *data = record->data();
         int length = record->dataSize();
         for (int i = 0; i < length; i++) {
             port.putch(data[i]);
@@ -177,6 +155,7 @@ bool DownloadManager::download(const char* portname)
             qApp->processEvents(4);
 
             if (progress.wasCancelled()) {
+                port.close();
                 return false;
             }
         }
@@ -184,6 +163,16 @@ bool DownloadManager::download(const char* portname)
 
     port.close();
     return true;
+}
+
+void DownloadManager::sendChar(QextSerialPort &port, const unsigned char data)
+{
+    if (port.putch(data) != data) {
+        port.close();
+        throw new PoaException("Could not write to serial port.");
+    }
+    port.flush();
+    qApp->processEvents(4);
 }
 
 

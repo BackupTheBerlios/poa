@@ -14,6 +14,7 @@ class SRecordTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testData);
     CPPUNIT_TEST(testDataSize);
     CPPUNIT_TEST_EXCEPTION(testInvalidAddress, PoaException);
+    CPPUNIT_TEST_EXCEPTION(testInvalidChecksum, PoaException);
     CPPUNIT_TEST_EXCEPTION(testInvalidCount, PoaException);
     CPPUNIT_TEST_EXCEPTION(testInvalidCountTooLow, PoaException);
     CPPUNIT_TEST_EXCEPTION(testInvalidCountTooHigh, PoaException);
@@ -84,6 +85,11 @@ public:
     void testInvalidAddress()
     {
         SRecord("S103ZZZZ00", 10);
+    }
+
+    void testInvalidChecksum()
+    {
+        SRecord("S1030000ZZ", 10);
     }
 
     void testInvalidCount()

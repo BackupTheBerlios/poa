@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.5 2005/02/10 14:21:16 garbeam Exp $
+% $Id: pir.tex,v 1.6 2005/02/10 14:26:10 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -113,15 +113,20 @@ zwischen zwei Bildern nach dem Lucas \& Kanade \cite{Lucas81} Verfahren.
 
 \subsection{CalcOpticalFlowBM}
 Dieser Algorithmus berechnet den optischen Bewegungsfluss für
-Ausschnitte einer frei definierbaren Größe zwischen zwei Bildern.
-Um so gröber die Ausschnitte gewählt werden, desto
-performanter arbeitet der Algorithmus.
+Segmente einer frei definierbaren Größe zwischen zwei Bildern.
+Um so gröber die Segmente gewählt werden, desto performanter arbeitet der
+Algorithmus.
 
 \subsection{CalcOpticalFlowPyrLK}
 Dieser Algorithmus \cite{Bouget00} basiert auf einer iterativen Version der optischen
 Fluss-Pyramiden nach Lucas \& Kanade. Er berechnet den optischen
 Bewegungsfluss auf einer Menge von Punkten zwischen zwei Bildern. Es
 werden Bewegungen mit Sub-Pixel Genauigkeit gefunden.
+
+\subsection{SegmentMotion}
+Dieser Algorithmus sucht alle bewegten Segmente zwischen zwei Bildern
+und vergibt für jede Bewegung in einer Segmentmaske Werte zwischen
+$1..N$, je nach Bewegungsintensität.
 
 \subsection{Eigene Implementierung}
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.4 2003/09/19 20:21:04 garbeam Exp $
+ * $Id: muxmodel.h,v 1.5 2003/09/20 17:12:26 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,11 +26,77 @@
 #ifndef POA_MUXMODEL_H
 #define POA_MUXMODEL_H
 
-
 #include "abstractmodel.h"
 #include "pinvector.h"
 #include "pinmodel.h"
 
+/**
+ * Provides range mappings from an input PinModel to an output
+ * PinModel, e.g. map pins 2-8 of input pin to output pin.
+ */
+class MuxMapping : public QObject
+{
+
+    Q_OBJECT
+
+public:
+
+    /**
+     * Basic constructor.
+     * @input the input PinModel.
+     * @output the output (output) PinModel.
+     * @begin the begin of bit range (0 for absolute begin).
+     * @end the end of bit range (<code>input->bits() - 1</code>
+     * for absolute end).
+     */
+    MuxMapping(PinModel *input, PinModel *output,
+               unsigned begin, unsigned end);
+
+    virtual ~MuxMapping();
+
+    /**
+     * Returns the input PinModel.
+     */
+    PinModel *input();
+
+    /**
+     * Returns the output PinModel.
+     */
+    PinModel *output();
+
+    /**
+     * Returns the begin of range bits.
+     */
+    unsigned begin();
+
+    /**
+     * Sets the begin of range bits.
+     */
+    void setBegin(unsigned begin);
+
+    /**
+     * Returns the end of range bits (at least <code>begin() + 1</code>).
+     */
+    unsigned end();
+
+    /**
+     * Sets the end of range bits.
+     */
+    void setEnd(unsigned end);
+
+private:
+
+    PinModel *input_;
+    PinModel *output_;
+    unsigned begin_;
+    unsigned end_;
+
+public slots:
+    /**
+     * Deletes this mapping.
+     */
+    void deleteMapping();
+};
 
 /**
  * A block that has both: inputs and outputs. Outputs are directly dependent
@@ -41,7 +107,7 @@ class MuxModel: public AbstractModel
 
     Q_OBJECT
 
-  public:
+public:
     /**
      * Creates a MuxModel instance for the library
      */
@@ -58,6 +124,12 @@ class MuxModel: public AbstractModel
     MuxModel(QDomElement coreElement);
 
     /**
+     * Removes the given pin from this MuxModel and any related
+     * Mappings(!). 
+     */
+    void removePin(PinModel *pin);
+
+    /**
      * Creates the CanvasItems for this.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
@@ -71,8 +143,16 @@ class MuxModel: public AbstractModel
     /**
      * Deserializes an xml subtree and sets this' properties
      */
-    //void deserialize(QDomElement element);
+    void deserialize(QDomElement element);
 
+private:
+
+    /** Contains all I/O mappings, see {@link MuxMapping} for detail */
+    QPtrList<MuxMapping> mappings_;
+
+    /** input and output pins */
+    PinVector *inputPins_;
+    PinVector *outputPins_;
 };
 
 

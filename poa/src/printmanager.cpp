@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: printmanager.cpp,v 1.7 2004/02/20 17:31:44 kilgus Exp $
+ * $Id: printmanager.cpp,v 1.8 2004/02/22 01:55:08 squig Exp $
  *
  *****************************************************************************/
 
@@ -94,8 +94,7 @@ void PrintManager::print(QCanvas *canvas)
                         }
 
                         // Draw header
-                        QString pageString("Page ");
-                        pageString.append(QString::number(page));
+                        QString pageString = tr("Page %1").arg(page);
                         painter.setFont(f);
                         painter.setPen(QPen(Qt::black));
                         painter.drawText(x, y + fontHeight, title_);
@@ -103,7 +102,7 @@ void PrintManager::print(QCanvas *canvas)
                             y + fontHeight, pageString);
 
                         // Draw graphics (clip to leave header space out)
-                        painter.setClipRect(0, headerSpace, 
+                        painter.setClipRect(0, headerSpace,
                             pageWidth, pageHeight);
                         painter.translate(0, headerSpace);
                         canvas->drawArea(rect, &painter, false);

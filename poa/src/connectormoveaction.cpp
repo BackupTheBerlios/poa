@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormoveaction.cpp,v 1.9 2004/02/20 20:54:57 kilgus Exp $
+ * $Id: connectormoveaction.cpp,v 1.10 2004/02/22 01:55:08 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@ ConnectorMoveAction::ConnectorMoveAction(CanvasView *view, QMouseEvent *e,
 // Onle a halve circle is returned (0..179)
 int cart2deg(int x, int y)
 {
-    int angle = abs((int)(atan2(y, x) * 180.0 / PI));
+    int angle = QABS((int)(atan2(y, x) * 180.0 / PI));
     if (angle == 180) angle = 0;
     return angle;
 }
@@ -99,7 +99,7 @@ QPoint ConnectorMoveAction::dragBy(int dx, int dy)
                 state--;
                 continue;
             }
-            angle = cart2deg((*lastIt).x() - (*it).x(), 
+            angle = cart2deg((*lastIt).x() - (*it).x(),
                              (*lastIt).y() - (*it).y());
 
             if ((state > 2) && (lastAngle == angle)) {
@@ -143,8 +143,8 @@ void ConnectorMoveAction::mouseMoveEvent(QMouseEvent *e)
     int dx = 0;
     int dy = 0;
 
-    if (Settings::instance()->snapToGrid() && 
-        !(e->stateAfter() & Qt::ControlButton)) 
+    if (Settings::instance()->snapToGrid() &&
+        !(e->stateAfter() & Qt::ControlButton))
     {
         QPoint oldPos = QPoint((int)item_->x(), (int)item_->y());
 

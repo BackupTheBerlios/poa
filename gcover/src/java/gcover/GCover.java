@@ -13,14 +13,42 @@ import gcover.util.Formatter;
  * GCover
  * 
  * @author Tammo van Lessen
- * @version $Id: GCover.java,v 1.1 2003/07/15 18:06:32 vanto Exp $
+ * @version $Id: GCover.java,v 1.2 2004/01/07 16:00:10 squig Exp $
  */
 public class GCover {
 
 	public static void main(String[] args) {
-		Project prj = new Project();
-		Builder.parseDir(prj, args[0]);
+		if (args.length >= 1 
+			&& (args[0].equals("-h") || args[0].equals("--help"))) {
+
+			printHelp();
+			System.exit(0);
+		}
+		else if (args.length < 2) { 
+			printHelp();
+			System.exit(1);
+		}
+
+		run(args[0], args[1]);
+	}
+
+	public static void run(String inputDir, String outputDir)
+	{
+		Project project = new Project();
+
+		// build
+		Builder.parseDir(project, inputDir);
 		
+		// generate output
+		Outputter out = new XHTMLOutputter(outputDir);
+		out.output(project);
+
+		// copy resources
+		
+	}
+
+	public static void printDebug(Project prj)
+	{
 		System.out.println("Files:");
 		for (int i=0; i<prj.getFiles().length; i++) {
 			System.out.println(prj.getFiles()[i].getName()+":");
@@ -42,7 +70,15 @@ public class GCover {
 		System.out.println("\tcoverage: "+Formatter.formatNumber(prj.getCoverage()*100,2)+"%");
 		System.out.println("\tinstrumented lines: "+prj.getInstrumentedLinesCount());
 		System.out.println("\texecuted lines: "+prj.getExecutedLinesCount());
-		Outputter out = new XHTMLOutputter(args[1]);
-		out.output(prj);
 	}
+
+	public static void printHelp()
+	{
+		System.err.println("usage: java -jar gcover.jar input-path output-path");
+		System.err.println();
+		System.err.println("       input-path  - the directory containing .gcov files");
+		System.err.println("       output-path - the directory that will contain the html files ");
+		System.err.println();
+	}
+
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.36 2004/01/05 15:48:06 kilgus Exp $
+ * $Id: blockmodel.cpp,v 1.37 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,6 +45,7 @@ BlockModel::BlockModel(QString type, QString description)
     execTime_ = 0;
     currentPinId_ = 0;
     name_ = type;
+    offset_ = 0;
 
     pinById_ = QMap<uint, PinModel*>();
 }
@@ -246,6 +247,7 @@ QDomElement BlockModel::serialize(QDomDocument *document)
     root.setAttribute("name", name());
     root.setAttribute("exectime", (unsigned int)execTime_);
     root.setAttribute("clock", (unsigned int)clock_);
+    root.setAttribute("offset", (unsigned int)offset_);
 
     /*    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
         PinModel *pin = it.current();
@@ -285,6 +287,7 @@ void BlockModel::deserialize(QDomElement element)
     setHasInputPins(element.attribute("hasInputPins", "") == "true");
     setHasOutputPins(element.attribute("hasOutputPins", "") == "true");
     setHasRuntime(element.attribute("hasRuntime", "") == "true");
+    setOffset((unsigned int)element.attribute("offset","0").toUInt());
 
     // pins
     /*    inputPins_.clear();
@@ -310,6 +313,16 @@ void BlockModel::deserialize(QDomElement element)
         node = node.nextSibling();
      }
 
+}
+
+void BlockModel::setOffset(unsigned int offset)
+{
+    offset_ = offset;
+}
+
+unsigned int BlockModel::offset()
+{
+    return offset_;
 }
 
 QString BlockModel::tip()

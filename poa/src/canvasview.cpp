@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.51 2003/12/20 16:09:26 kilgus Exp $
+ * $Id: canvasview.cpp,v 1.52 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -239,6 +239,9 @@ void CanvasView::dropEvent(QDropEvent *e)
                 ModelFactory::clearProperties(*it);
 
                 project()->addBlock(*it);
+                if (Settings::instance()->snapToGrid()) {
+                    pos = gridCanvas()->toGrid(pos);
+                }
                 gridCanvas()->addView(*it, pos.x(), pos.y());
 
                 if (INSTANCEOF(*it, MuxModel)) {

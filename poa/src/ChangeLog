@@ -1,3 +1,15 @@
+2004-01-09  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* blockmodel.cpp (BlockModel): Moved offset property from cpu
+	model to this class.
+
+	* canvasview.cpp (dropEvent): Snap dropped items to grid.
+
+	* settings.cpp: Added serial port setting.
+
+	* settingsdialog.cpp (SettingsDialog): Replaced radio buttons by
+	combo box.
+
 2003-12-17  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* librarywindow.cpp (LibraryWindow): Tweaked colors.

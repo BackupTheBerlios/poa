@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.cpp,v 1.1 2004/01/05 15:48:49 kilgus Exp $
+ * $Id: blocktree.cpp,v 1.2 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,89 +27,89 @@
 
 BlockTree::BlockTree(BlockModel* bm)
 {
-	block_ = bm;
-	parent_ = NULL;
-	runtime_ = bm->execTime();
-	clock_ = bm->clock();
-	offset_ = 0;
-	backReference_ = false;
+    block_ = bm;
+    parent_ = NULL;
+    runtime_ = bm->execTime();
+    clock_ = bm->clock();
+    offset_ = bm->offset();
+    backReference_ = false;
 }
 
 BlockTree::~BlockTree()
 {
-	for (QPtrListIterator<BlockTree> it(branches_); it != 0; ++it) {
-		delete it;
+    for (QPtrListIterator<BlockTree> it(branches_); it != 0; ++it) {
+        delete it;
     }
     branches_.clear();
 }
 
-void BlockTree::addBranch(BlockTree* bt) 
+void BlockTree::addBranch(BlockTree* bt)
 {
-	bt->parent_ = this;
-	branches_.append(bt);
+    bt->parent_ = this;
+    branches_.append(bt);
 }
 
-BlockTree* BlockTree::addBranch(BlockModel* bm) 
+BlockTree* BlockTree::addBranch(BlockModel* bm)
 {
-	BlockTree* bt = new BlockTree(bm);
-	bt->parent_ = this;
-	branches_.append(bt);
-	return bt;
+    BlockTree* bt = new BlockTree(bm);
+    bt->parent_ = this;
+    branches_.append(bt);
+    return bt;
 }
 
 BlockModel* BlockTree::getBlock()
 {
-	return block_;
+    return block_;
 }
 
 QPtrList<BlockTree>* BlockTree::getBranches()
 {
-	return &branches_;
+    return &branches_;
 }
 
-bool BlockTree::contains(BlockModel* bm) 
+bool BlockTree::contains(BlockModel* bm)
 {
-	BlockTree* bt = this;
-	do {
-		if (bt->block_ == bm) return true;
-		bt = bt->parent_;
-	} while (bt != NULL);
+    BlockTree* bt = this;
+    do {
+        if (bt->block_ == bm) return true;
+        bt = bt->parent_;
+    } while (bt != NULL);
 
-	return false;
+    return false;
 }
 
 int BlockTree::count()
 {
-	int cnt = 1;
-	for (QPtrListIterator<BlockTree> it(branches_); it != 0; ++it) {
-		cnt += (*it)->count();
+    int cnt = 1;
+    for (QPtrListIterator<BlockTree> it(branches_); it != 0; ++it) {
+        cnt += (*it)->count();
     }
-	return cnt;
+    return cnt;
 }
 
 int BlockTree::getRuntime() {
-	return runtime_;
+    return runtime_;
 }
 
 int BlockTree::getClock() {
-	return clock_;
+    return clock_;
 }
 
 int BlockTree::getOffset() {
-	return offset_;
+    return offset_;
 }
 
 void BlockTree::setOffset(int ofs) {
-	offset_ = ofs;
+    offset_ = ofs;
 }
 
 void BlockTree::setBackReference(bool b)
 {
-	backReference_ = b;
+    backReference_ = b;
 }
-	
+
 bool BlockTree::getBackReference()
 {
-	return backReference_;
+    return backReference_;
 }
 

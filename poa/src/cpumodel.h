@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.22 2003/11/24 16:37:41 squig Exp $
+ * $Id: cpumodel.h,v 1.23 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -87,18 +87,6 @@ class CpuModel: public BlockModel
     void setAutoExecTime(const bool autoExecTime);
 
     /**
-     * Sets the starting offset in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    void setOffset(unsigned int offset);
-
-    /**
-     * Returns the starting offset in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    unsigned int offset();
-
-    /**
      * Toggles the automatic offset calculation.
      */
     void setAutoOffset(bool autoOffset);
@@ -139,7 +127,6 @@ class CpuModel: public BlockModel
     QString *path_;
     int cpuId_;
     bool autoExecTime_;
-    unsigned long offset_;
     bool autoOffset_;
     bool isProducer_;
 

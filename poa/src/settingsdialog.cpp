@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.11 2003/12/10 13:40:01 papier Exp $
+ * $Id: settingsdialog.cpp,v 1.12 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -27,6 +27,7 @@
 
 #include <qvariant.h>
 #include <qbuttongroup.h>
+#include <qcombobox.h>
 #include <qfiledialog.h>
 #include <qlabel.h>
 #include <qlineedit.h>
@@ -73,7 +74,9 @@ SettingsDialog::~SettingsDialog()
 QWidget *SettingsDialog::createGeneralTab()
 {
     QWidget *tab = new QWidget(this);
-    QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
+    // the number of vertical items should be one more than the number
+    // of actual widgets, in order to align all widgets north
+    QGridLayout *grid = new QGridLayout(tab, 4, 2, 5, 5);
 
     grid->addWidget(new QLabel(tr("Grid Size"), tab), 0, 0);
     gridSizeSpinBox_ = new QSpinBox(1, 100, 1, tab);
@@ -89,32 +92,32 @@ QWidget *SettingsDialog::createPathTab()
 {
     QPushButton *button;
     QWidget *tab = new QWidget(this);
-    QGridLayout *grid = new QGridLayout(tab, 4, 3, 5, 5);
+    QGridLayout *grid = new QGridLayout(tab, 5, 3, 5, 5);
 
     grid->addWidget(new QLabel(tr("External Editor"), tab), 0, 0);
-    editorLineEdit = new QLineEdit(tab);
-    grid->addWidget(editorLineEdit, 0, 1);
+    editorLineEdit_ = new QLineEdit(tab);
+    grid->addWidget(editorLineEdit_, 0, 1);
     button = new QPushButton("...", tab);
     grid->addWidget(button, 0, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalEditor()));
 
     grid->addWidget(new QLabel(tr("External Compiler"), tab), 1, 0);
-    compilerLineEdit = new QLineEdit(tab);
-    grid->addWidget(compilerLineEdit, 1, 1);
+    compilerLineEdit_ = new QLineEdit(tab);
+    grid->addWidget(compilerLineEdit_, 1, 1);
     button = new QPushButton("...", tab);
     grid->addWidget(button, 1, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseExternalCompiler()));
 
     grid->addWidget(new QLabel(tr("C Source Template Path"), tab), 2, 0);
-    cTemplateLineEdit = new QLineEdit(tab);
-    grid->addWidget(cTemplateLineEdit, 2, 1);
+    cTemplateLineEdit_ = new QLineEdit(tab);
+    grid->addWidget(cTemplateLineEdit_, 2, 1);
     button = new QPushButton("...", tab);
     grid->addWidget(button, 2, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseTemplatePath()));
 
     grid->addWidget(new QLabel(tr("External Download Tool"), tab), 3, 0);
-    downloadLineEdit = new QLineEdit(tab);
-    grid->addWidget(downloadLineEdit, 3, 1);
+    downloadLineEdit_ = new QLineEdit(tab);
+    grid->addWidget(downloadLineEdit_, 3, 1);
     button = new QPushButton("...", tab);
     grid->addWidget(button, 3, 2);
     connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
@@ -128,12 +131,29 @@ QWidget *SettingsDialog::createPathTab()
 QWidget *SettingsDialog::createDownloadTab()
 {
   QWidget *tab = new QWidget(this);
-  QGridLayout *box =new QGridLayout(tab, 1, 1, 4, -1, 0);
-  QButtonGroup *ports = new QButtonGroup(tr("Serial Port:"), tab, 0);
-  box->addWidget(ports, 0, 0, 0);
-  QGridLayout *grid = new QGridLayout(ports, 2 , 1, 4, -1, 0);
-  grid->addWidget(new QRadioButton(tr("/dev/ttyS0 (POSIX) Com1 (MS)"), ports,0 ), 0, 0);
-  grid->addWidget(new QRadioButton(tr("/dev/ttyS1 (POSIX) Com2 (MS)"), ports,0 ), 1, 0);
+  QGridLayout *grid =new QGridLayout(tab, 4, 3, 5, 5);
+
+  grid->addWidget(new QLabel(tr("Serial Port"), tab), 0, 0);
+  serialPortComboBox_ = new QComboBox(tab);
+  serialPortComboBox_->setEditable(true);
+#ifdef _TTY_WIN_
+  serialPortComboBox_->insertItem("COM1");
+  serialPortComboBox_->insertItem("COM2");
+  serialPortComboBox_->insertItem("COM3");
+  serialPortComboBox_->insertItem("COM4");
+#else
+  serialPortComboBox_->insertItem("/dev/ttyS0");
+  serialPortComboBox_->insertItem("/dev/ttyS1");
+  serialPortComboBox_->insertItem("/dev/ttyS2");
+  serialPortComboBox_->insertItem("/dev/ttyS3");
+#endif
+  grid->addWidget(serialPortComboBox_, 0, 1);
+
+//   QButtonGroup *ports = new QButtonGroup(tr("Serial Port:"), tab, 0);
+//   box->addWidget(ports, 0, 0, 0);
+//   QGridLayout *grid = new QGridLayout(ports, 2 , 1, 4, -1, 0);
+//   grid->addWidget(new QRadioButton(tr("/dev/ttyS0 (POSIX) Com1 (MS)"), ports,0 ), 0, 0);
+//   grid->addWidget(new QRadioButton(tr("/dev/ttyS1 (POSIX) Com2 (MS)"), ports,0 ), 1, 0);
 
   return tab;
 }
@@ -149,10 +169,13 @@ void SettingsDialog::setup()
     gridSizeSpinBox_->setValue(s->gridSize());
 
     // path tab
-    editorLineEdit->setText(s->get("Editor"));
-    compilerLineEdit->setText(s->compilerCmd());
-    cTemplateLineEdit->setText(s->templatePath());
-    downloadLineEdit->setText(s->get("Download Path"));
+    editorLineEdit_->setText(s->get("Editor"));
+    compilerLineEdit_->setText(s->compilerCmd());
+    cTemplateLineEdit_->setText(s->templatePath());
+    downloadLineEdit_->setText(s->get("Download Path"));
+
+    // download tab
+    serialPortComboBox_->setCurrentText(s->get("Serial Port"));
 }
 
 /**
@@ -166,52 +189,55 @@ void SettingsDialog::applySettings()
     s->setGridSize(gridSizeSpinBox_->value());
 
     // path tab
-    s->set("Editor", editorLineEdit->text());
-    s->set("Compiler", compilerLineEdit->text());
-    s->set("Template Path", cTemplateLineEdit->text());
-    s->set("Download Tool", downloadLineEdit->text());
+    s->set("Editor", editorLineEdit_->text());
+    s->set("Compiler", compilerLineEdit_->text());
+    s->set("Template Path", cTemplateLineEdit_->text());
+    s->set("Download Tool", downloadLineEdit_->text());
+
+    // download tab
+    s->set("Serial Port", serialPortComboBox_->currentText());
 }
 
 void SettingsDialog::chooseExternalEditor()
 {
-    QString s = QFileDialog::getOpenFileName(editorLineEdit->text(),
+    QString s = QFileDialog::getOpenFileName(editorLineEdit_->text(),
                                              QString::null,
                                              this, "open file dialog",
                                              tr("Select External Editor"));
     if (s != QString::null) {
-        editorLineEdit->setText(s);
+        editorLineEdit_->setText(s);
     }
 }
 
 void SettingsDialog::chooseExternalCompiler()
 {
-    QString s = QFileDialog::getOpenFileName(compilerLineEdit->text(),
+    QString s = QFileDialog::getOpenFileName(compilerLineEdit_->text(),
                                              QString::null,
                                              this, "open file dialog",
                                              tr("Select External Compiler"));
     if (s != QString::null) {
-        compilerLineEdit->setText(s);
+        compilerLineEdit_->setText(s);
     }
 }
 
 void SettingsDialog::chooseTemplatePath()
 {
-  QString s = QFileDialog::getOpenFileName(cTemplateLineEdit->text(),
+  QString s = QFileDialog::getOpenFileName(cTemplateLineEdit_->text(),
                         QString("Source files (*.c *.h)"),
                         this, "get existingdirectory",
                         tr("Select C Source Template Path"));
   if (s !=QString::null) {
-    cTemplateLineEdit->setText(s);
+    cTemplateLineEdit_->setText(s);
   }
 }
 
 void SettingsDialog::chooseDownloadTool()
 {
-  QString s= QFileDialog::getOpenFileName(downloadLineEdit->text(),
+  QString s= QFileDialog::getOpenFileName(downloadLineEdit_->text(),
                      QString::null,
                      this, "open file dialog",
                      tr("Select External Download Tool"));
   if (s != QString::null) {
-    downloadLineEdit->setText(s);
+    downloadLineEdit_->setText(s);
   }
 }

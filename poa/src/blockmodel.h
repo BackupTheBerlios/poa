@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.35 2003/12/10 14:43:35 squig Exp $
+ * $Id: blockmodel.h,v 1.36 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -167,6 +167,18 @@ public:
     PinModel *findPinById(const unsigned id);
 
     /**
+     * Sets the starting offset in milliseconds of this.
+     * @todo Move this to CpuModel?
+     */
+    void setOffset(unsigned int offset);
+
+    /**
+     * Returns the starting offset in milliseconds of this.
+     * @todo Move this to CpuModel?
+     */
+    unsigned int offset();
+
+    /**
      * Serializes this instance to a xml subtree
      * @param document the main QDomDocument instance. Needed to create elements
      */
@@ -196,6 +208,7 @@ protected:
     bool hasInputPins_;
     bool hasOutputPins_;
     bool hasRuntime_;
+    unsigned long offset_;
 
     QMap<uint, PinModel *> pinById_;
 

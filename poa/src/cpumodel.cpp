@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.25 2003/11/24 16:37:41 squig Exp $
+ * $Id: cpumodel.cpp,v 1.26 2004/01/09 14:05:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,6 @@ CpuModel::CpuModel(QString type, QString description)
     cpuId_ = -1;
     autoExecTime_ = 0;
     clock_ = 0;
-    offset_ = 0;
     autoOffset_ = true;
     isProducer_ = true;
 }
@@ -83,16 +82,6 @@ void CpuModel::setAutoExecTime(const bool autoExecTime)
     autoExecTime_ = autoExecTime;
 }
 
-void CpuModel::setOffset(unsigned int offset)
-{
-    offset_ = offset;
-}
-
-unsigned int CpuModel::offset()
-{
-    return offset_;
-}
-
 void CpuModel::setAutoOffset(bool autoOffset)
 {
     autoOffset_ = autoOffset;
@@ -117,7 +106,6 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("cpuid", cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
     root.setAttribute("auto-offset", autoOffset_? "true":"false");
-    root.setAttribute("offset", (unsigned int)offset_);
     root.setAttribute("clock", (unsigned int)clock_);
 
     emit serialized(this);
@@ -131,7 +119,6 @@ void CpuModel::deserialize(QDomElement element) {
 
 
     setAutoOffset((element.attribute("auto-offset","true") == "true"));
-    setOffset((unsigned int)element.attribute("offset","0").toUInt());
     setClock((unsigned int)element.attribute("clock","0").toUInt());
 
     // TRUE if value of autotime contains "TRUE" (case insensitive),

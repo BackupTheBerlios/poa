@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.23 2004/01/13 14:55:41 keulsn Exp $
+ * $Id: connectorviewlist.cpp,v 1.24 2004/01/13 15:01:08 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -116,7 +116,7 @@ QValueList<QPoint> ConnectorViewList::points()
     ConnectorViewSegment *nextSegment = segments_.last();
     ConnectorViewSegment *current = 0;
     while (nextSegment != 0) {
-	ConnectorViewSegment *current = nextSegment;
+	current = nextSegment;
 	list.prepend(current->endPoint());
 	nextSegment = segments_.prev();
     }

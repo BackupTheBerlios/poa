@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.3 2004/01/22 22:10:27 vanto Exp $
+ * $Id: colormanager.h,v 1.4 2004/01/22 23:45:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,15 +34,21 @@
 
 class Palette;
 
+/**
+ * Provides a color manager.
+ * This class manages the association between cpu's clock value and colors.
+ * For each clock value in the project (per canvas), the color manager
+ * provides an individual color.
+ */
 class ColorManager
 {
-    //    Q_OBJECT
+
  public:
 
     /**
      * Instanciates a color manager.
      */
-    ColorManager();
+    ColorManager(Palette *palette);
 
     /**
      * Default destructor.
@@ -50,33 +56,97 @@ class ColorManager
     ~ColorManager();
 
     /**
-     * Returns the
+     * Returns the color of the given block. The color depends on the
+     * block's clock value.
      */
-    QColor color_(const BlockModel *model, int luminance = 100);
+    QColor color(const BlockModel *model, int luminance = 100);
+
+    /**
+     * Returns the 'normal' color of the given model.
+     * Calls color(BlockModel*) if the given model represents a cpu.
+     * In all others cases, the default settings will be used.
+     */
     QColor color(AbstractModel *model, int luminance = 100);
+
+    /**
+     * Returns activated color of the given model.
+     *  - Returns the default settings.
+     */
     QColor activatedColor(AbstractModel *model, int luminance = 100);
+
+    /**
+     * Returns selected color of the given model.
+     *  - Returns the default settings.
+     */
     QColor selectedColor(AbstractModel *model, int luminance = 100);
 
+
  private:
+    /* current palette */
     Palette *palette_;
+
+    /* maps nanoseconds to a palette entry */
     QMap<int, int> nsToPalIndex_;
+
+    /* points to the next palette entry */
     int palPosition_;
 
 };
 
+
+/**
+ * Provides a palette implementation.
+ * Contains QColor elements.
+ */
 class Palette
 {
 
  public:
+
+    /**
+     * Instanciates a palette.
+     */
     Palette(QString name);
+
+    /**
+     * Returns the name of the palette.
+     */
     QString name();
+
+    /**
+     * Returns the color for the given index.
+     */
     QColor color(int index) const;
+
+    /**
+     * Returns the size of the palette.
+     */
     int size();
+
+    /**
+     * Adds a color to the palette.
+     */
     void addColor(const QColor color);
 
+
+    /**
+     * Returns a static palette (strong colors).
+     */
+    static Palette *strongPalette();
+
+    /**
+     * Returns a static palette (light colors).
+     */
+    static Palette *lightPalette();
+
+
  private:
+    /** the name of the palette. */
     QString name_;
+
+    /** the palette */
     QValueList<QColor> colorList_;
+
 };
 
 #endif // POA_COLORMANAGER_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.61 2004/01/22 22:36:13 vanto Exp $
+ * $Id: blockview.cpp,v 1.62 2004/01/22 23:45:50 vanto Exp $
  *
  *****************************************************************************/
 
@@ -65,9 +65,9 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
 {
     this->model_ = model;
 
-    BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font()).height();
+    BlockView::DEFAULT_FONT_HEIGHT = QFontMetrics(QApplication::font())
+        .height();
 
-    //    setBrush(white);
     updateProperties();
     setPen(QPen(Settings::instance()->defaultColor(), 2));
 

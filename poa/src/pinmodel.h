@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.29 2003/12/10 14:43:35 squig Exp $
+ * $Id: pinmodel.h,v 1.30 2004/01/12 14:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,9 @@ class ConnectorModel;
 class QDomDocument;
 class QDomElement;
 
-
+/**
+ * Stores the properties of a pin that is part of a {@link BlockModel}.
+ */
 class PinModel : public QObject
 {
     Q_OBJECT

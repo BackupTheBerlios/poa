@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.30 2004/01/09 16:48:15 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.31 2004/01/12 14:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -170,8 +170,6 @@ MuxModel::~MuxModel()
         delete mapping;
     }
     mappings_.clear();
-
-    emit deleted();
 }
 
 QCanvasItemList MuxModel::createView(QCanvas *canvas)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.28 2004/01/09 16:56:24 squig Exp $
+ * $Id: librarywindow.cpp,v 1.29 2004/01/12 14:35:50 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -151,15 +151,15 @@ void LibraryWindow::initializeLibrary()
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
     model->setHasRuntime(false);
-    pin = new PinModel(model, "out1");
+    pin = new PinModel(model, "out1", 32, 0);
     pin->setType(PinModel::OUTPUT);
     pin->setPosition(1);
     model->addPin(pin);
-    pin = new PinModel(model, "out2");
+    pin = new PinModel(model, "out2", 32, 32);
     pin->setType(PinModel::OUTPUT);
     pin->setPosition(2);
     model->addPin(pin);
-    pin = new PinModel(model, "out3");
+    pin = new PinModel(model, "out3", 32, 64);
     pin->setType(PinModel::OUTPUT);
     pin->setPosition(3);
     model->addPin(pin);
@@ -170,15 +170,15 @@ void LibraryWindow::initializeLibrary()
     model->setHasEpisodicPins(false);
     model->setHasOutputPins(false);
     model->setHasRuntime(false);
-    pin = new PinModel(model, "in1");
+    pin = new PinModel(model, "in1", 32, 0);
     pin->setType(PinModel::INPUT);
     pin->setPosition(1);
     model->addPin(pin);
-    pin = new PinModel(model, "in2");
+    pin = new PinModel(model, "in2", 32, 32);
     pin->setType(PinModel::INPUT);
     pin->setPosition(2);
     model->addPin(pin);
-    pin = new PinModel(model, "in3");
+    pin = new PinModel(model, "in3", 32, 64);
     pin->setType(PinModel::INPUT);
     pin->setPosition(3);
     model->addPin(pin);
@@ -186,9 +186,7 @@ void LibraryWindow::initializeLibrary()
 
     // mux
     new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("Mux", "Multiplexer"));
-    new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("Demux", "Demultiplexer"));
+                            new MuxModel("Mux", "Multiplexer / Demultiplexer"));
 
     // read library file
     // FIX: this is copy & paste code from project.cpp

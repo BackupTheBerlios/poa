@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.21 2004/01/09 16:56:24 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.22 2004/01/12 14:35:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -72,12 +72,13 @@ void MdiWindow::closeEvent( QCloseEvent *e )
 {
     Project *project = MainWindow::instance()->activeView()->project();
     if (project != 0 && project->isModified()) {
-        switch( QMessageBox::information( this, "POA",
-                                          "The document contains unsaved changes\n"
-                                          "Do you want to save the changes before exiting?",
-                                          "&Save", "&Discard", "Cancel",
-                                          0,      // Enter == button 0
-                                          2 ) ) { // Escape == button 2
+        int ans = QMessageBox::information
+            (this, "POA", "The document contains unsaved changes\n"
+             "Do you want to save the changes before exiting?",
+             "&Save", "&Discard", "Cancel",
+             0, // Enter == button 0
+             2); // Escape == button 2
+        switch(ans) {
         case 0: // Save clicked or Alt+S pressed or Enter pressed.
             MainWindow::instance()->fileSave();
             e->accept();
@@ -140,5 +141,7 @@ double MdiWindow::zoomLevel()
 
 void MdiWindow::setModified(bool modified)
 {
-    setCaption(view_->project()->name()+" - "+view_->canvas()->name() + QString((modified)?"*":""));
+    setCaption(view_->project()->name() + " - "
+               + view_->canvas()->name() + QString((modified) ? "*" : ""));
+
 }

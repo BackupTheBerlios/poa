@@ -1,3 +1,8 @@
+2004-01-12  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* muxmodel.cpp (MuxModel): Removed emit deleted(), the signal is
+	emitted by ~BlockModel().
+
 2004-01-09  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* mainwindow.cpp (windowActivated): Disable actions when no

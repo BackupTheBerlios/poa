@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.78 2004/01/12 00:26:59 squig Exp $
+ * $Id: mainwindow.cpp,v 1.79 2004/01/12 14:35:50 squig Exp $
  *
  *****************************************************************************/
 
@@ -164,6 +164,8 @@ void MainWindow::initializeActions()
                     QKeySequence("Ctrl+S"), this, "fileSaveAction");
     fileSaveAsAction =
         new QAction("Save As...", "Save &As...", 0, this, "fileSaveAsAction");
+    // FIX
+    fileSaveAsAction->setEnabled(false);
     fileExitAction =
         new QAction("Exit", "E&xit", 0, this, "fileExitAction");
     editCutAction =
@@ -764,6 +766,8 @@ void MainWindow::openProject(QString path)
                 SLOT(selectionChanged(QCanvasItem *)));
 
         connect(project_, SIGNAL(modified(bool)), w, SLOT(setModified(bool)));
+        connect(project_, SIGNAL(modified(bool)),
+                fileSaveAction, SLOT(setEnabled(bool)));
     }
     catch (const PoaException e){
         delete project_;
@@ -861,6 +865,7 @@ void MainWindow::windowActivated(QWidget* w)
 
         checkClipboardContent();
         //FIX: invokeDeployAction->setEnabled(true);
+        fileSaveAction->setEnabled(m->view()->project()->isModified());
         invokeSchedulingAction->setEnabled(true);
         zoomComboBox->setEnabled(true);
         zoomComboBox->setEditText
@@ -875,8 +880,8 @@ void MainWindow::windowActivated(QWidget* w)
         invokeDeployAction->setEnabled(false);
         invokeSchedulingAction->setEnabled(false);
         openBlockConfAction->setEnabled(false);
+        fileSaveAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
-        invokeSchedulingAction->setEnabled(false);
     }
 }
 

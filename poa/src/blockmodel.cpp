@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.37 2004/01/09 14:05:29 squig Exp $
+ * $Id: blockmodel.cpp,v 1.38 2004/01/12 14:35:50 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@ BlockModel::BlockModel(QString type, QString description)
     setHasOutputPins(true);
     setHasRuntime(true);
 
+    clock_ = 0;
     execTime_ = 0;
     currentPinId_ = 0;
     name_ = type;

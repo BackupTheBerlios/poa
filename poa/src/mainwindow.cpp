@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.72 2003/12/10 16:12:15 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.73 2003/12/17 15:33:02 vanto Exp $
  *
  *****************************************************************************/
 
@@ -71,6 +71,9 @@
 #include <qpushbutton.h>
 #include <qlabel.h>
 #include <qlineedit.h>
+
+#include "poaexception.h"
+
 /**
  * Constructs the main window.
  *
@@ -553,10 +556,12 @@ void MainWindow::fileOpen()
 void MainWindow::fileSave()
 {
     if (project_) {
-        if (!project_->save()) {
+        try {
+            project_->save();
+        } catch (const PoaException e) {
             QMessageBox::warning
                 (this, tr("File error"),
-                 tr("Cannot save project %1").arg(project_->name()));
+                 e.message());
         }
     }
 }
@@ -707,13 +712,15 @@ void MainWindow::openProject(QString path)
         return;
     }
 
-    if (project_) {
+    if (project_ != 0) {
         delete project_;
     }
 
     project_ = new Project(path);
 
-    if (project_->open()) {
+    try {
+        project_->open();
+
         GridCanvas *canvas = project_->canvasList()->getFirst();
         CanvasView *view = new CanvasView(project_, canvas);
 
@@ -726,10 +733,12 @@ void MainWindow::openProject(QString path)
 
         connect(project_, SIGNAL(modified(bool)), w, SLOT(setModified(bool)));
     }
-    else {
+    catch (const PoaException e){
+        delete project_;
+        project_ = 0;
         QMessageBox::warning
             (this, tr("File error"),
-             tr("Cannot open project %1").arg(path));
+             e.message());
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.25 2003/12/03 18:26:12 vanto Exp $
+ * $Id: project.h,v 1.26 2003/12/17 15:33:07 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -124,12 +124,12 @@ public:
     /**
      * Saves the project
      */
-    bool save();
+    void save();
 
     /*
      * Loads the project content
      */
-    bool open();
+    void open();
 
 signals:
     void modified(bool);

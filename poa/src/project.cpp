@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.36 2003/12/17 13:49:51 squig Exp $
+ * $Id: project.cpp,v 1.37 2003/12/17 15:33:07 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -36,6 +36,8 @@
 #include <qdir.h>
 #include <qdom.h>
 #include <qfileinfo.h>
+
+#include "poaexception.h"
 
 Project::Project(QString path)
     : filename_(QString::null)
@@ -61,7 +63,7 @@ Project::~Project()
     }
 }
 
-bool Project::open()
+void Project::open()
 {
     currentBlockId_ = 0;
     blocks_.clear();
@@ -71,20 +73,24 @@ bool Project::open()
     if (file.open(IO_ReadOnly)) {
         QDomDocument doc;
         if (doc.setContent(&file)) {
-            deserialize(&doc);
+            //            try {
+                deserialize(&doc);
+                //            } catch (std::runtime_error) {
+                //                throw;
+                //            }
             Settings::instance()->addToRecentProjects(path_);
-            file.close();
+            //            file.close();
             setModified(false);
-            return true;
+        } else {
+            throw PoaException(tr("Could not parse project file in %1").arg(path_));
         }
         file.close();
+    } else {
+        throw PoaException(tr("Could not open project file in %1.").arg(path_));
     }
-    // FIX: what if the previously opened file was modified?
-    setModified(false);
-    return false;
 }
 
-bool Project::save()
+void Project::save()
 {
     //FIX: Fehlerbehandlung
     QDir dir(path_);
@@ -95,9 +101,9 @@ bool Project::save()
         serialize().save(ts, 2);
         file.close();
         setModified(false);
-        return true;
+    } else {
+        throw PoaException(tr("Could not save project %1.").arg(name_));
     }
-    return false;
 }
 
 void Project::addBlock(AbstractModel *item)
@@ -231,14 +237,12 @@ void Project::deserialize(QDomDocument *document) {
 
     QDomNodeList mList = document->elementsByTagName("model");
     if (mList.count() != 1) {
-        qWarning("not a valid project file");
-        return;
+        throw PoaException(tr("Project could not be loaded. %1 does not contain a valid project file.").arg(name_));
     }
 
     QDomNodeList bList = mList.item(0).toElement().elementsByTagName("blocks");
     if (bList.count() != 1) {
-        qWarning("not a valid project file");
-        return;
+        throw PoaException(tr("Project could not be loaded. %1 does not contain a valid project file.").arg(name_));
     }
 
     // create model instances
@@ -262,7 +266,9 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
-                // FIX: null pointer checks!
+                if (idMap[viEl.attribute("model-id","0").toUInt()] == 0) {
+                    throw PoaException(tr("The project file contains inconsistent data. Project could not be loaded.").arg(name_));
+                }
                 canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
@@ -279,8 +285,7 @@ void Project::deserialize(QDomDocument *document) {
                 idMap[conEl.attribute("target-block","0").toUInt()]);
 
             if (sb == 0 && tb == 0) {
-                qWarning("Could not connect non-existent blocks.");
-                return;
+                throw PoaException(tr("Could not load the project. %1 does not contain a valid project file.").arg(name_));
             }
 
             uint sid = conEl.attribute("source-pin","0").toUInt();

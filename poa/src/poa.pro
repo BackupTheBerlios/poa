@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.63 2003/12/17 10:39:18 garbeam Exp $
+# $Id: poa.pro,v 1.64 2003/12/17 15:33:06 vanto Exp $
 #
 ###############################################################################
 
@@ -74,6 +74,7 @@ HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
 HEADERS += poa.h
+HEADERS += poaexception.h
 HEADERS += priorityqueue.h
 HEADERS += processdialog.h
 HEADERS += project.h

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.18 2004/06/16 12:00:12 squig Exp $
+%% $Id: design.tex,v 1.19 2004/06/16 12:54:57 vanto Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -108,8 +108,8 @@ In den Model-Klassen wird das Datenmodell eines Projekts
 repräsentiert. In POA werden Daten in Objekten der Klassen
 \cn{BlockModel} und \cn{PinModel}, sowie abgeleiteter Klassen
 gespeichert. Die Klasse \cn{Projekt} verwaltet die Model-Objekte. Sie
-dient als Container und stellt Methoden zur serialisierung und
-deserialisierung von Projekten in einem POA spezifischen XML-Format
+dient als Container und stellt Methoden zur Serialisierung und
+Deserialisierung von Projekten in einem POA-spezifischen XML-Format
 zur Verfügung. Wird ein Projekt verändert, d.h. ein Block hinzugefügt,
 entfernt oder verändert, muss die Methode \m{setModified()}
 aufgerufen werden.
@@ -121,10 +121,11 @@ aus einem XML Dokument ist in den Model-Klassen gekapselt. So ist es zum
 Einen möglich, jedes Objekt unabhängig vom Projekt zu serialisieren,
 zum Anderen vereinfacht es die Wartbarkeit. Bei Erweiterungen der
 Model-Klasse um weitere Datenfelder müssen nur die \m{serialize()} und
-\m{deserialize()} Methoden angepasst werden, der Code in der Klasse \cn{Project}
-bleibt gleich. Wichtig ist hier, dass bei abgeleiteten Klassen immer
-die serialize/deserialize-Methoden der Superklasse aufgerufen werden,
-da sich der Mechanismus auf die gesamte Klassenhierarchie verteilt. 
+\m{deserialize()} Methoden angepasst werden, der Code in der Klasse
+\cn{Project} bleibt gleich. Wichtig ist hier, dass bei abgeleiteten
+Klassen immer die serialize/deserialize-Methoden der Superklasse
+aufgerufen werden, da sich der Mechanismus auf die gesamte
+Klassenhierarchie verteilt.  
 
 Für die Erzeugung von Objektinstanzen bei der Deserialisierung ist die
 Klasse \cn{ModelFactory} zuständig. Sie erzeugt anhand der
@@ -133,11 +134,13 @@ entsprechende Model-Objekt. Über die Methoden \m{addBlock()} und
 \m{removeBlock()} werden dem Projekt neue Modellblöcke bekannt
 gemacht bzw. wieder entfernt.
 
-\subsubsection{Klassenhierarchie}
+\subsubsection{Blöcke}
 
 Die Model-Klassen sind von der abstrakten Klasse \cn{AbstractModel}
-abgeleitet. Die Methode \m{createView(GridCanvas*)} erzeugt für
-eine Model-Object eine korrespondierendes View-Object. Eine Aufruf der
+abgeleitet. Die Felder der abstrakten Klasse enhalten die gemeinsamen
+Metadaten aller Blöcke und werden in der Blockbibliothek angezeigt.
+Die Methode \m{createView(GridCanvas*)} erzeugt für
+eine Model-Object eine korrespondierendes View-Objekt. Eine Aufruf der
 Methode \m{updatePerformed()} benachrichtigt das View-Object über
 Änderungen im Zustand des Model-Objects und sollte aufgerufen werden,
 wenn z.B. die Taktraten eines Blocks geändert wurde.
@@ -146,41 +149,31 @@ Die Klasse \cn{BlockModel} ist von \cn{AbstractModel} abgeleitet und
 repräsentiert Blöcke mit Pins. Ausserdem werden in ihr Informationen
 zum Laufzeitverhalten der Blöcke abgelegt. Über die Methoden
 \m{addPin(PinModel*)} bzw. \m{deletePin(PinModel*)} wird dem Block ein
-Pin hinzugefügt bzw. wieder entfernt. Bei Aufruf der Methode
-\m{addPin(PinModel*)}, erfolgt eine Benachrichtigung an das
+Pin hinzugefügt bzw. wieder entfernt. Wurde dem Block ein Pin
+hinzugefügt, erfolgt eine Benachrichtigung an das 
 korrespondierende View-Objekt über das Signal \m{pinAdded(PinModel*)}.
 Wird ein \cn{BlockModel}-Objekt gelöscht wird das Signal
 \m{deleted(BlockModel*)} gesendet, und das View-Objekt gelöscht.
 
-Die nächste Verfeinerung der Vererbungshierarchie ermöglicht die
-Spezialisierung auf CPUs und Muxes, die es ermöglichen, Verbindungen
-zwischen Blöcken zu multiplexen. Ein CPU-Block (\cn{CpuModel}) erhält
-die neuen Felder \m{autoRuntime}, \m{cpuId} und \m{source}.  Diese
-Felder ermöglichen die automatische Laufzeitdauerberechnung, die
-Erfassung der Id, die die CPU auf dem CPLD identifiziert sowie der
-C-Quellcode der NIOS-CPU.  Ein Mux-Block (\cn{MuxModel}) verwaltet
-einen Container mit \cn{MuxMapping}-Objekten. In diesen wird das
-Mapping von Pins auf Pins mit unterschiedlichen Bitbreiten ermöglicht.
+Es gibt zwei Sonderfälle im Datenmodell: Die CPUs und die
+Multiplexer-Blöcke. Diese werden durch die Klassen \cn{CpuModel} und
+\cn{MuxModel} abgebildet und erben von \cn{Blockmodel}.
 
-Instanzen der Klasse \cn{PinModel} repräsentieren die einzelnen Pins
-eines Blocks. Wenn eine Verbindung zwischen zwei Blöcken hergestellt
-wird, so müssen auch die Pins über darüber benachrichtigt werden. Das
-geschieht über einen Aufruf der Methode \m{attach(PinModel*
-  connectTo)}. Wurde eine Verbindung erstellt, gibt die Methode
-\m{connected()} gibt den Pin des anderen Blocks zurück. Ausserdem
-haben Pins einen Namen (\m{name}), eine Adresse (\m{address}), eine
-Bitbreite (\m{bits}), eine Id (\m{id}), sowie eine Position
-(\m{position}), die die Reihenfolge der Pins wiederspiegelt. Der Typ
-eines Pins kann die Werte \m{PinType::INPUT}, \m{PinType::OUTPUT} und
-\m{PinType::EPISODIC} annehmen. Über den Konstruktor wird dem Pin der
-Vaterblock mitgeteilt. Dieser kann über \m{parent()} abgefragt werden.
+\subsubsection{Pins}
+Die Klasse \cn{PinModel} repräsentiert die Pins eines Blocks. Ihre
+Instanzen werden von den BlockModels verwaltet. Eine Verbindung
+zwischen zwei Pins wird mittels \m{attach(PinModel *connectTo)}
+hergstellt. Damit wird auch das BlockView benachrichtigt. Der Typ
+(\m{type}) des Pins entscheidet, ob es sich bei dem Pin um einen
+Eingangs-, Ausgangs- oder einen episodischen Pin handelt.
+Über den Konstruktor muss dem Pin der Vaterblock mitgeteilt werden.
+
 Die Signale \m{deleted(), detached()} und \m{updated()} benachtigten
 interessierte Klassen, wenn ein Pin entfernt werden soll, wenn eine
 Verbindung gelöst wurde oder wenn Eigenschaften des Pins verändert
-wurden. In der derzeitige Implementierung hören nur die
-\cn{BlockView}-Instanzen auf diese Signale.
+wurden. 
 
-\subsubsection{Drag and Drop}
+\subsubsection{Drag and Drop, Zwischenablage}
 
 Zum visuellen erzeugen von Blöcken wird bei POA die Drag\&Drop-Idee
 verwendet. Dazu zieht der Benutzer ein Objekt aus der Blockbibliothek

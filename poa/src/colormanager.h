@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.h,v 1.6 2004/01/24 00:06:22 vanto Exp $
+ * $Id: colormanager.h,v 1.7 2004/01/25 18:18:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@ class SortedBlockList;
 /**
  * Provides a color manager and a palette widget.
  *
- * This class manages the association between cpu's clock value and colors.
+ * This class manages the association between block's clock value and colors.
  * For each clock value in the project (per canvas), the color manager
  * provides an individual color.
  *
@@ -74,7 +74,7 @@ class ColorManager : public QObject,
 
     /**
      * Returns the 'normal' color of the given model.
-     * Calls color(BlockModel*) if the given model represents a cpu.
+     * Calls color(BlockModel*) if the given model represents a block.
      * In all others cases, the default settings will be used.
      */
     QColor color(AbstractModel *model, int luminance = 100);
@@ -129,16 +129,19 @@ class ColorManager : public QObject,
      */
     void updateWigetSize(int clock);
 
-    /* current palette */
+    /** current palette */
     Palette *palette_;
 
-    /* maps nanoseconds to a palette entry */
+    /** maps nanoseconds to a palette entry */
     QMap<int, int> nsToPalIndex_;
 
-    /* holds all registered cpu models */
-    SortedBlockList *models_;
+    /** holds all registered block models */
+    QPtrList<BlockModel> models_;
 
-    /* points to the next palette entry */
+    /** default height of text drawn on the canvas */
+    static int FONT_HEIGHT;
+
+    /** points to the next palette entry */
     int palPosition_;
 
  private slots:
@@ -148,6 +151,10 @@ class ColorManager : public QObject,
       */
      void updateMap();
 
+    /**
+     * Handles model's delete signal.
+     */
+     void deleteModel(BlockModel *);
 };
 
 
@@ -189,12 +196,12 @@ class Palette
     /**
      * Returns a static palette (strong colors).
      */
-    static Palette *strongPalette();
+    static Palette *createStrongPalette();
 
     /**
      * Returns a static palette (light colors).
      */
-    static Palette *lightPalette();
+    static Palette *createLightPalette();
 
 
  private:
@@ -207,16 +214,5 @@ class Palette
 
 };
 
-
-/**
- * Provides a sorted block list
- */
-class SortedBlockList : public QPtrList<BlockModel>
-{
-
- protected:
-    int compareItems(QPtrCollection::Item item1,
-                     QPtrCollection::Item item2);
-};
 
 #endif // POA_COLORMANAGER_H

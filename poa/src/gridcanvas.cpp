@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.33 2004/01/23 01:41:26 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.34 2004/01/25 18:18:09 vanto Exp $
  *
  *****************************************************************************/
 
@@ -40,7 +40,7 @@ GridCanvas::GridCanvas(QString name)
     currentZ_ = 0;
     router_ = new DirectRouter();
 
-    palette_ = Palette::lightPalette();
+    palette_ = Palette::createLightPalette();
     colormanager_ = new ColorManager(this, palette_);
 
     setName(name);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.50 2004/01/24 00:06:22 vanto Exp $
+ * $Id: project.cpp,v 1.51 2004/01/25 18:18:09 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -283,6 +283,13 @@ void Project::deserialize(QDomDocument *document) {
 
         GridCanvas *canvas = newCanvas(vEl.attribute("name","name"));
 
+        // load palette
+        QDomNodeList paletteElements = vEl.elementsByTagName("palette-view");
+        if (paletteElements.count() > 0) {
+            QDomElement paletteElement = paletteElements.item(0).toElement();
+            canvas->colorManager()->deserialize(paletteElement);
+        }
+
         // create view items
         QDomNodeList viList = vEl.elementsByTagName("view-item");
         for (j = 0; j < viList.count(); j++) {
@@ -356,15 +363,6 @@ void Project::deserialize(QDomDocument *document) {
                             textElement.attribute("y","0").toUInt());
         }
 
-        // set palette position
-        QDomNodeList paletteElements = vEl.elementsByTagName("palette-view");
-        if (paletteElements.count() > 0) {
-            QDomElement paletteElement = paletteElements.item(0).toElement();
-            canvas->colorManager()->moveBy(paletteElement
-                                           .attribute("x", "0").toUInt(),
-                                           paletteElement
-                                           .attribute("y", "0").toUInt());
-        }
     }
 }
 

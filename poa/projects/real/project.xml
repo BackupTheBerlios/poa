@@ -1,0 +1,200 @@
+<project>
+  <model>
+    <blocks>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="false" clock="31250" runtime="0" hasEpisodicPins="false" type="Input" id="1" name="Strom 1" auto-offset="true" hasRuntime="false" block-type="block" >
+        <pin address="0" bits="10" position="0" type="output" id="0" name="Strom 1a" />
+        <pin address="200" bits="10" position="1" type="output" id="257" name="Strom 1b" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="false" clock="62500" runtime="0" hasEpisodicPins="false" type="Input" id="2" name="Sensor 1" auto-offset="true" hasRuntime="false" block-type="block" >
+        <pin address="0" bits="48" position="0" type="output" id="0" name="Lage 1" />
+        <pin address="200" bits="48" position="1" type="output" id="257" name="Geschw. 1" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="false" clock="1000" runtime="0" hasEpisodicPins="false" type="Input" id="3" name="Bus" auto-offset="true" hasRuntime="false" block-type="block" >
+        <pin address="0" bits="48" position="1" type="output" id="0" name="Lagesollwert" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="1" hasEpisodicPins="true" type="Core" id="4" name="Stromfilter" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="10" position="1" type="input" id="0" name="Strom 1a" />
+        <pin address="0" bits="10" position="1" type="output" id="1" name="Strom aF" />
+        <pin address="10" bits="10" position="2" type="input" id="157025209" name="Strom 1b" />
+        <pin address="10" bits="10" position="2" type="output" id="157025210" name="Strom bF" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="5" hasEpisodicPins="true" type="Core" id="5" name="Stromregler" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="10" position="1" type="input" id="0" name="Strom aF" />
+        <pin address="0" bits="8" position="1" type="output" id="1" name="Stell a" />
+        <pin address="10" bits="10" position="2" type="input" id="157422969" name="Strom bF" />
+        <pin address="0" bits="10" position="3" type="input" id="157422970" name="Stromsoll a" />
+        <pin address="0" bits="10" position="4" type="input" id="157422971" name="Stromsoll b" />
+        <pin address="0" bits="8" position="2" type="output" id="157422972" name="Stell b" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="2" hasEpisodicPins="true" type="Core" id="6" name="Entkopplung" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="10" position="1" type="input" id="0" name="Sollstrom" />
+        <pin address="0" bits="10" position="1" type="output" id="1" name="Stromsoll a" />
+        <pin address="0" bits="1" position="2" type="input" id="157453177" name="Lage" />
+        <pin address="0" bits="10" position="2" type="output" id="157453178" name="Stromsoll b" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="62500" runtime="5" hasEpisodicPins="true" type="CPU" id="7" name="Drehzahlregler" auto-offset="true" cpuid="1" auto-runtime="false" hasRuntime="true" block-type="cpu" >
+        <pin address="0" bits="48" position="1" type="input" id="0" name="Solldrehzahl" />
+        <pin address="0" bits="10" position="1" type="output" id="1" name="Sollstrom" />
+        <pin address="0" bits="32" position="1" type="episodic" id="2" name="clock" />
+        <pin address="0" bits="32" position="2" type="episodic" id="3" name="reset" />
+        <pin address="0" bits="48" position="1" type="input" id="4" name="Geschw. 1" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="250000" runtime="5" hasEpisodicPins="true" type="CPU" id="9" name="Lageregler" auto-offset="true" cpuid="2" auto-runtime="false" hasRuntime="true" block-type="cpu" >
+        <pin address="0" bits="48" position="1" type="input" id="0" name="Lagesollwert" />
+        <pin address="0" bits="48" position="1" type="output" id="1" name="Solldrehzahl" />
+        <pin address="0" bits="32" position="1" type="episodic" id="2" name="clock" />
+        <pin address="0" bits="32" position="2" type="episodic" id="3" name="reset" />
+        <pin address="0" bits="48" position="1" type="input" id="4" name="Lage 1" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="1" hasEpisodicPins="true" type="Output" id="10" name="PWMausgabe" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="1" position="1" type="input" id="0" name="out a" />
+        <pin address="1" bits="1" position="2" type="input" id="1" name="out b" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="1" hasEpisodicPins="true" type="Core" id="11" name="PWI 1a" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="8" position="1" type="input" id="0" name="Stell a" />
+        <pin address="0" bits="1" position="1" type="output" id="1" name="out a" />
+      </model-item>
+      <model-item offset="0" desc="" hasOutputPins="true" hasInputPins="true" clock="31250" runtime="1" hasEpisodicPins="true" type="Core" id="12" name="PWI 1b" auto-offset="true" hasRuntime="true" block-type="block" >
+        <pin address="0" bits="8" position="1" type="input" id="0" name="Stell b" />
+        <pin address="0" bits="1" position="1" type="output" id="1" name="out b" />
+      </model-item>
+    </blocks>
+  </model>
+  <views>
+    <view name="1" >
+      <connector-view target-pin="0" target-block="12" source-pin="157422972" source-block="5" >
+        <points>
+          <point x="526" y="200" />
+          <point x="542" y="200" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="1" target-block="10" source-pin="1" source-block="12" >
+        <points>
+          <point x="700" y="200" />
+          <point x="722" y="200" />
+          <point x="722" y="149" />
+          <point x="743" y="149" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="0" target-block="7" source-pin="1" source-block="9" >
+        <points>
+          <point x="301" y="235" />
+          <point x="311" y="235" />
+          <point x="311" y="355" />
+          <point x="208" y="355" />
+          <point x="208" y="485" />
+          <point x="218" y="485" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="157422970" target-block="5" source-pin="1" source-block="6" >
+        <points>
+          <point x="601" y="485" />
+          <point x="636" y="485" />
+          <point x="636" y="355" />
+          <point x="333" y="355" />
+          <point x="333" y="215" />
+          <point x="368" y="215" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="157422969" target-block="5" source-pin="157025210" source-block="4" >
+        <points>
+          <point x="301" y="74" />
+          <point x="330" y="74" />
+          <point x="330" y="200" />
+          <point x="368" y="200" />
+        </points>
+      </connector-view>
+      <view-item x="150" y="25" model-id="4" />
+      <view-item x="225" y="450" model-id="7" />
+      <connector-view target-pin="157422971" target-block="5" source-pin="157453178" source-block="6" >
+        <points>
+          <point x="601" y="499" />
+          <point x="611" y="499" />
+          <point x="611" y="369" />
+          <point x="358" y="369" />
+          <point x="358" y="230" />
+          <point x="368" y="230" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="157025209" target-block="4" source-pin="257" source-block="1" >
+        <points>
+          <point x="126" y="74" />
+          <point x="143" y="74" />
+        </points>
+      </connector-view>
+      <view-item x="750" y="100" model-id="10" />
+      <connector-view target-pin="4" target-block="7" source-pin="257" source-block="2" >
+        <points>
+          <point x="126" y="299" />
+          <point x="167" y="299" />
+          <point x="167" y="501" />
+          <point x="218" y="501" />
+        </points>
+      </connector-view>
+      <view-item x="375" y="150" model-id="5" />
+      <view-item x="450" y="450" model-id="6" />
+      <view-item x="150" y="200" model-id="9" />
+      <connector-view target-pin="0" target-block="9" source-pin="0" source-block="3" >
+        <points>
+          <point x="126" y="210" />
+          <point x="135" y="210" />
+          <point x="135" y="235" />
+          <point x="143" y="235" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="4" target-block="9" source-pin="0" source-block="2" >
+        <points>
+          <point x="126" y="285" />
+          <point x="135" y="285" />
+          <point x="135" y="251" />
+          <point x="143" y="251" />
+        </points>
+      </connector-view>
+      <palette-view last-pal-entry="4" x="850" y="25" name="Light Palette" >
+        <mapping ns="1000" pal-entry="2" />
+        <mapping ns="31250" pal-entry="0" />
+        <mapping ns="62500" pal-entry="1" />
+        <mapping ns="250000" pal-entry="3" />
+      </palette-view>
+      <view-item x="549" y="165" model-id="12" />
+      <connector-view target-pin="0" target-block="11" source-pin="1" source-block="5" >
+        <points>
+          <point x="526" y="185" />
+          <point x="535" y="185" />
+          <point x="535" y="135" />
+          <point x="543" y="135" />
+        </points>
+      </connector-view>
+      <view-item x="50" y="175" model-id="3" />
+      <view-item x="50" y="25" model-id="1" />
+      <connector-view target-pin="0" target-block="5" source-pin="1" source-block="4" >
+        <points>
+          <point x="301" y="60" />
+          <point x="355" y="60" />
+          <point x="355" y="185" />
+          <point x="368" y="185" />
+        </points>
+      </connector-view>
+      <connector-view target-pin="0" target-block="10" source-pin="1" source-block="11" >
+        <points>
+          <point x="701" y="135" />
+          <point x="743" y="135" />
+        </points>
+      </connector-view>
+      <view-item x="550" y="100" model-id="11" />
+      <connector-view target-pin="0" target-block="4" source-pin="0" source-block="1" >
+        <points>
+          <point x="126" y="60" />
+          <point x="143" y="60" />
+        </points>
+      </connector-view>
+      <view-item x="50" y="250" model-id="2" />
+      <connector-view target-pin="0" target-block="6" source-pin="1" source-block="7" >
+        <points>
+          <point x="376" y="485" />
+          <point x="443" y="485" />
+        </points>
+      </connector-view>
+    </view>
+  </views>
+</project>

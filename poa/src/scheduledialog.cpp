@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.53 2004/01/30 14:43:20 papier Exp $
+ * $Id: scheduledialog.cpp,v 1.54 2004/02/06 14:32:29 vanto Exp $
  *
  *****************************************************************************/
 
@@ -437,9 +437,10 @@ void ScheduleDialog::initBottomWidget()
     okPushButton->setDefault(TRUE);
     connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
 
-    // help button
-    QPushButton *helpPushButton = new QPushButton(bottomWidget);
-    helpPushButton->setText(tr("&Help"));
+    // auto button
+    QPushButton *autoPushButton = new QPushButton(bottomWidget);
+    autoPushButton->setText(tr("A&uto"));
+    connect(autoPushButton, SIGNAL(clicked()), this, SLOT(autoSchedule()));
 
     // apply button
     QPushButton *applyPushButton = new QPushButton(bottomWidget);
@@ -462,7 +463,7 @@ void ScheduleDialog::initBottomWidget()
     bottomLayout->addWidget(zoomSlider);
 
     bottomLayout->addWidget(okPushButton);
-    bottomLayout->addWidget(helpPushButton);
+    bottomLayout->addWidget(autoPushButton);
     bottomLayout->addWidget(applyPushButton);
     bottomLayout->addWidget(cancelPushButton);
 }
@@ -481,6 +482,11 @@ void ScheduleDialog::ok()
 {
     updateModel();
     accept();
+}
+
+void ScheduleDialog::autoSchedule()
+{
+    // do something
 }
 
 void ScheduleDialog::updateHighlighter(int row, int)

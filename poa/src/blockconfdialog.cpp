@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.44 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: blockconfdialog.cpp,v 1.45 2004/01/09 14:40:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -304,8 +304,8 @@ void BlockConfDialog::initListView()
     ioListView = new QListView(leftWidget, "ioListView");
     ioListView->addColumn(tr("Position"));
     ioListView->addColumn(tr("I/O Name"));
-    ioListView->addColumn(tr("Address"));
     ioListView->addColumn(tr("Bits"));
+    ioListView->addColumn(tr("Address"));
     ioListView->setAllColumnsShowFocus(TRUE);
     ioListView->setMinimumWidth(300);
     ioListView->setSorting(10); // 10 > number of columns

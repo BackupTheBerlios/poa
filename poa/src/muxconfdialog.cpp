@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.31 2004/01/07 17:31:41 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.32 2004/01/09 14:40:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -179,6 +179,7 @@ void MuxConfDialog::initIOWidget() {
     ioChooserLayout->addWidget(outputRadioButton_);
 
     ioBitsSpinBox = new QSpinBox(editWidget, "ioBitsSpinBox");
+    ioBitsSpinBox->setMinValue(1);
 
     addIoPushButton =
         new QPushButton(buttonWidget, "addIoPushButton");
@@ -186,9 +187,9 @@ void MuxConfDialog::initIOWidget() {
     updateIoPushButton_ =
         new QPushButton(buttonWidget, "updateIoPushButton_");
     updateIoPushButton_->setText(tr("Update I/O"));
-    removeIoPushButton =
-        new QPushButton(buttonWidget, "removeIoPushButton");
-    removeIoPushButton->setText(tr("Remove I/O"));
+    removeIoPushButton_ =
+        new QPushButton(buttonWidget, "removeIoPushButton_");
+    removeIoPushButton_->setText(tr("Remove I/O"));
 
     editLayout->addWidget(new QLabel(tr("I/O name"), editWidget));
     editLayout->addWidget(ioNameLineEdit);
@@ -197,7 +198,7 @@ void MuxConfDialog::initIOWidget() {
 
     buttonLayout->addWidget(addIoPushButton);
     buttonLayout->addWidget(updateIoPushButton_);
-    buttonLayout->addWidget(removeIoPushButton);
+    buttonLayout->addWidget(removeIoPushButton_);
 
     ioLayout->addWidget(ioTopWidget);
     ioLayout->addWidget(ioChooser);
@@ -308,7 +309,7 @@ void MuxConfDialog::initConnections() {
 
     connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
     connect(updateIoPushButton_, SIGNAL(clicked()), this, SLOT(updateIo()));
-    connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
+    connect(removeIoPushButton_, SIGNAL(clicked()), this, SLOT(removeIo()));
     connect(addMappingPushButton_, SIGNAL(clicked()), this, SLOT(addMapping()));
     connect(updateMappingPushButton_, SIGNAL(clicked()),
         this, SLOT(updateMapping()));
@@ -541,6 +542,29 @@ void MuxConfDialog::listViewSelectionChanged() {
 
     addMappingPushButton_->setEnabled(inputListView->selectedItem() &&
                                       outputListView->selectedItem());
+
+    PinListViewItem *pinItem = 0;
+    if (inputRadioButton_->isChecked()) {
+        pinItem = (PinListViewItem *)inputListView->selectedItem();
+    }
+    else {
+        pinItem = (PinListViewItem *)outputListView->selectedItem();
+    }
+
+    if (pinItem) {
+        PinModel *pin = pinItem->data();
+        ioNameLineEdit->setText(pin->name());
+        ioBitsSpinBox->setValue(pin->bits());
+    }
+    else {
+        ioNameLineEdit->setText("");
+        ioBitsSpinBox->setValue(1);
+    }
+
+    updateIoPushButton_->setEnabled(pinItem);
+    removeIoPushButton_->setEnabled(pinItem);
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -560,6 +584,34 @@ void MuxConfDialog::addMapping() {
 
     PinModel *input = inputItem->data();
     PinModel *output = outputItem->data();
+
+    unsigned fIBit = firstInputBitSpinBox->value();
+    unsigned lIBit = lastInputBitSpinBox->value();
+    unsigned fOBit = firstOutputBitSpinBox->value();
+    unsigned lOBit = lastOutputBitSpinBox->value();
+
+
+    // check if choosen ranges are valid with IOs
+    bool proceed = ((fIBit < input->bits()) &&
+                    (lIBit < input->bits()) &&
+                    (fIBit <= lIBit)) &&
+                   ((fOBit < output->bits()) &&
+                    (lOBit < output->bits()) &&
+                    (fOBit <= lOBit));
+
+    if (!proceed) {
+
+        switch (QMessageBox::warning(this, "POA",
+                "The selected I/O bit ranges are not valid.\n\n"
+                "Proceed anyway?\n\n",
+                "Yes",
+                "No", 0, 0, 1 ))
+        {
+        case 1: // don't proceed.
+            return;
+            break;
+        }
+    }
 
     MuxMapping *mapping =
         new MuxMapping(input, output, firstInputBitSpinBox->value(),
@@ -636,6 +688,20 @@ void MuxConfDialog::addIo() {
         parent = outputListView;
         type = PinModel::OUTPUT;
     }
+
+    if (ioNameLineEdit->text() == "") {
+        switch(QMessageBox::warning(this, "POA",
+                "The new I/O has no name.\n\n"
+                "Proceed anyway?\n\n",
+                "Yes",
+                "No", 0, 0, 1 ) )
+        {
+        case 1: // don't proceed.
+            return;
+            break;
+        }
+    }
+
     PinListViewItem *predecessor = (PinListViewItem *)parent->selectedItem();
     int childCount = 0;
     if (predecessor) {
@@ -647,6 +713,8 @@ void MuxConfDialog::addIo() {
     newPins_.append(pin);
     new PinListViewItem(parent, predecessor, pin, 0);
     updatePositions(parent);
+    ioNameLineEdit->setText("");
+    ioBitsSpinBox->setValue(0);
 }
 
 void MuxConfDialog::updateIo() {
@@ -657,6 +725,19 @@ void MuxConfDialog::updateIo() {
     }
     else {
         parent = outputListView;
+    }
+
+    if (ioNameLineEdit->text() == "") {
+        switch(QMessageBox::warning(this, "POA",
+                "The I/O has no name.\n\n"
+                "Proceed anyway?\n\n",
+                "Yes",
+                "No", 0, 0, 1 ) )
+        {
+        case 1: // don't proceed.
+            return;
+            break;
+        }
     }
 
     PinListViewItem *selected =
@@ -674,6 +755,7 @@ void MuxConfDialog::updateIo() {
             updatedPins_.append(pin);
         }
         updatePositions(parent);
+        selected->update();
     }
 
     updateMappings();

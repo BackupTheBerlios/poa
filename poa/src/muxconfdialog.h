@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.18 2004/01/07 17:31:41 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.19 2004/01/09 14:40:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -148,7 +148,7 @@ private:
     QLineEdit *ioNameLineEdit;
     QPushButton *addIoPushButton;
     QPushButton *updateIoPushButton_;
-    QPushButton *removeIoPushButton;
+    QPushButton *removeIoPushButton_;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;

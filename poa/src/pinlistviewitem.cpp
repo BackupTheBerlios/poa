@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.2 2003/12/17 15:58:45 garbeam Exp $
+ * $Id: pinlistviewitem.cpp,v 1.3 2004/01/09 14:40:32 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -66,10 +66,10 @@ void PinListViewItem::update() {
     if (clone_ != 0) {
         setText(0, QString::number(clone_->position(), 10));
         setText(1, clone_->name());
+        setText(2, QString::number(clone_->bits(), 10));
         if (clone_->type() != PinModel::EPISODIC) {
-            setText(2, QString::number(clone_->address(), 16));
+            setText(3, QString::number(clone_->address(), 16));
         }
-        setText(3, QString::number(clone_->bits(), 10));
     }
 }
 

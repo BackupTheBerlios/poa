@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.80 2004/01/28 02:20:40 garbeam Exp $
+# $Id: poa.pro,v 1.81 2004/01/29 13:33:29 squig Exp $
 #
 ###############################################################################
 
@@ -149,6 +149,8 @@ SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += textview.cpp
 SOURCES += util.cpp
+
+TRANSLATIONS = poa_de.ts
 
 ###############################################################################
 # Qextserialport

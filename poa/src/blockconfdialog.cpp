@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.24 2003/09/17 15:03:36 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.25 2003/09/17 15:38:52 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -304,6 +304,7 @@ void BlockConfDialog::initCompileEditButtonWidget()
     editCodePushButton =
         new QPushButton(compileEditButtonsWidget, "editCodePushButton" );
     editCodePushButton->setText(tr("&Edit code"));
+    connect(editCodePushButton, SIGNAL(clicked()), this, SLOT(edit()));
 
     compilePushButton =
         new QPushButton(compileEditButtonsWidget, "compilePushButton");
@@ -676,5 +677,17 @@ void BlockConfDialog::compile()
         // emit the current <code>model_</code>.
         CodeManager *codeManager = CodeManager::instance();
         codeManager->compile(model);
+    }
+}
+
+void BlockConfDialog::edit()
+{
+    if (INSTANCEOF(model_, CpuModel)) {
+        CpuModel *model = (CpuModel *)model_;
+        // Note: This additional slot is needed, because the
+        // clicked() signal of QPushButton is not able to
+        // emit the current <code>model_</code>.
+        CodeManager *codeManager = CodeManager::instance();
+        codeManager->edit(model);
     }
 }

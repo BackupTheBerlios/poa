@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.17 2003/09/17 14:38:27 garbeam Exp $
+ * $Id: settings.h,v 1.18 2003/09/17 15:38:52 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -67,6 +67,7 @@ public:
     QString templatePath();
     QString terminalCmd();
     QString compilerCmd();
+    QString editorCmd();
 
 public slots:
     void setGridSize(int gridSize);

@@ -18,11 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.2 2003/09/29 19:10:05 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.3 2003/09/30 20:05:52 papier Exp $
  *
  *****************************************************************************/
 
 #include "deployprojectwizard.h"
+#include "project.h"
+#include "abstractmodel.h"
+#include "blockmodel.h"
+#include "pinmodel.h"
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -63,14 +67,6 @@ void DeployProjectWizard::setupCheckPage()
 {
     CheckPage = new QWidget( this, "CheckPage" );
 
-    ErrorsGroupBox = new QGroupBox( CheckPage, "ErrorsGroupBox" );
-    ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) ); 
-    ErrorsGroupBox->setTitle( trUtf8( "Errors:" ) );
-
-    ErrorsTextEdit = new QTextEdit( ErrorsGroupBox, "ErrorsTextEdit" );
-    ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) ); 
-    ErrorsTextEdit->setText( trUtf8( "pin xy is not connected" ) );
-
     CheckListView = new QListView( CheckPage, "CheckupListView" );
     CheckListView->addColumn( trUtf8( "Checkup" ) );
     CheckListView->addColumn( trUtf8( "Correct?" ) );
@@ -82,6 +78,15 @@ void DeployProjectWizard::setupCheckPage()
     CheckListItem->setText( 0, trUtf8( "other checks" ) );
 
     CheckListView->setGeometry( QRect( 0, 0, 580, 270 ) ); 
+
+    ErrorsGroupBox = new QGroupBox( CheckPage, "ErrorsGroupBox" );
+    ErrorsGroupBox->setGeometry( QRect( 0, 271, 580, 130 ) ); 
+    ErrorsGroupBox->setTitle( trUtf8( "Errors:" ) );
+
+    ErrorsTextEdit = new QTextEdit( ErrorsGroupBox, "ErrorsTextEdit" );
+    ErrorsTextEdit->setGeometry( QRect( 10, 20, 560, 104 ) ); 
+    ErrorsTextEdit->setText( trUtf8( "pin xy is not connected" ) );
+
     addPage( CheckPage, trUtf8( "Plausibility checkup" ) );
 }
 
@@ -161,7 +166,44 @@ void DeployProjectWizard::setupDownloadPage()
 void DeployProjectWizard::showPage(QWidget* page)
 {
   QWizard::showPage(page);
+
+  if (page == CheckPage){
+
+  }
+  else if (page == CompilePage){
+
+  }
+  else if (page == SchedulingPage){
+
+  }
+  else if (page == DownloadPage){
+
+  }
+
 }
+
+bool DeployProjectWizard::allPinsConnected(QPtrList<AbstractModel>* blocks){
+  /*  for (uint i=0; i < blocks.count(); ++i){
+    if blocks.at(i).hasInputPins() {
+      for (PinVector::iterator j = blocks.at(i).inputPins().begin();
+	   j != blocks.at(i).inputPins().end();
+	   ++j){
+	if (*j).*connected() == null {
+	  // pin is not connected!!
+	}
+      }
+    }
+    if blocks.take(i).hasOutputPins() {
+    }
+    //nessary?? Or are Episodic Pins always connected??
+    if block.take(i).hasEpisodicPins() {
+    }
+  }
+  */
+  return true;
+}
+
+
 
 /*  
  *  Destroys the object and frees any allocated resources

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.2 2003/09/29 19:10:05 papier Exp $
+ * $Id: deployprojectwizard.h,v 1.3 2003/09/30 20:05:52 papier Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,11 @@
 
 #include <qvariant.h>
 #include <qwizard.h>
+
+#include "abstractmodel.h"
+#include "blockmodel.h"
+#include "pinmodel.h"
+
 class QVBoxLayout; 
 class QHBoxLayout; 
 class QGridLayout; 
@@ -70,6 +75,8 @@ protected:
     void setupCompilePage();
     void setupSchedulingPage();
     void setupDownloadPage();
+
+    bool allPinsConnected(QPtrList<AbstractModel>* blocks);
 };
 
 #endif // DEPLOYPROJECTWIZARD_H

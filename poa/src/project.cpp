@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.25 2003/09/23 14:48:51 garbeam Exp $
+ * $Id: project.cpp,v 1.26 2003/09/30 20:05:52 papier Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -155,6 +155,11 @@ GridCanvas *Project::newCanvas(const QString name)
 
 const QPtrList<GridCanvas> *Project::canvasList() const {
     return &canvasList_;
+}
+
+QPtrList<AbstractModel> *Project::blocks() 
+{
+  return &blocks_;
 }
 
 QDomDocument Project::serialize()

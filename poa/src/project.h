@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.22 2003/09/23 14:48:51 garbeam Exp $
+ * $Id: project.h,v 1.23 2003/09/30 20:05:52 papier Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -97,6 +97,11 @@ public:
      * Returns a QPtrList of all canvases
      */
     const QPtrList<GridCanvas> *canvasList() const;
+
+    /**
+     * Returns a QPtrList of all blocks
+     */
+    QPtrList<AbstractModel> *Project::blocks();
 
     /**
      * Serializes this project to xml

@@ -37,7 +37,7 @@ import org.apache.ecs.xhtml.*;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.5 2004/01/07 17:42:17 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.6 2004/01/07 20:39:01 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -124,6 +124,8 @@ public class XHTMLOutputter implements Outputter {
 	
 	public void output(FileInfo file) {
 // 		try {
+		System.out.println("Generating " + file.getName() + ".html");
+
 			XhtmlDocument doc = createDocument("GCover - Code Coverage for "+file.getName());
 			table reportHeader = new table().setWidth("100%");
 			reportHeader.addElement(

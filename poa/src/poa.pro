@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.15 2003/08/22 10:14:19 squig Exp $
+# $Id: poa.pro,v 1.16 2003/08/22 12:18:49 keulsn Exp $
 #
 ###############################################################################
 
@@ -45,7 +45,7 @@ HEADERS += codemanager.h
 HEADERS += connectormodel.h
 HEADERS += connectorview.h
 HEADERS += coremodel.h
-HEADERS += coreview.h
+# HEADERS += coreview.h
 HEADERS += cpu.h
 HEADERS += cpumodel.h
 HEADERS += cpuview.h

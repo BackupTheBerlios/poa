@@ -15,7 +15,7 @@ import java.util.List;
  * File
  * 
  * @author Tammo van Lessen
- * @version $Id: FileInfo.java,v 1.3 2004/01/11 16:01:34 squig Exp $
+ * @version $Id: FileInfo.java,v 1.4 2004/01/14 15:33:15 squig Exp $
  */
 public class FileInfo implements Comparable {
 
@@ -25,6 +25,12 @@ public class FileInfo implements Comparable {
 	private int executedLines = 0;
 	private String filename;
 	private List lines = new ArrayList();
+	
+	private double branchesExecutedRate = -1;
+	private double branchesTakenRate = -1;
+	private int branchesTotal = -1;
+	private double callsExecutedRate = -1;
+	private int callsTotal = -1;
 	
 	public FileInfo(String packageName, String filename) {
 		this.filename = filename;
@@ -39,7 +45,7 @@ public class FileInfo implements Comparable {
 	}
 
 	/**
-	 * @return
+	 * @return the filename without path
 	 */
 	public String getName() {
 		return filename;
@@ -91,6 +97,46 @@ public class FileInfo implements Comparable {
 	public int getLinesOfCode()
 	{
 		return lines.size();
+	}
+
+	public void setBranchesExecutedRate(double branchesExecutedRate) {
+		this.branchesExecutedRate = branchesExecutedRate;
+	}
+
+	public double getBranchesExecutedRate() {
+		return branchesExecutedRate;
+	}
+
+	public void setBranchesTakenRate(double branchesTakenRate) {
+		this.branchesTakenRate = branchesTakenRate;
+	}
+
+	public double getBranchesTakenRate() {
+		return branchesTakenRate;
+	}
+
+	public void setBranchesTotal(int branchesTotal) {
+		this.branchesTotal = branchesTotal;
+	}
+
+	public int getBranchesTotal() {
+		return branchesTotal;
+	}
+
+	public void setCallsExecutedRate(double callsExecutedRate) {
+		this.callsExecutedRate = callsExecutedRate;
+	}
+
+	public double getCallsExecutedRate() {
+		return callsExecutedRate;
+	}
+
+	public void setCallsTotal(int callsTotal) {
+		this.callsTotal = callsTotal;
+	}
+
+	public int getCallsTotal() {
+		return callsTotal;
 	}
 
 }

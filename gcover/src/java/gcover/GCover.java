@@ -1,11 +1,11 @@
 /*
- *  GCover
+ *  GCover - Code coverage report generator for gcov
  *
- *  Copyright by Tammo van Lessen, Steffen Pingel
+ *  Copyright (C) 2004 by Tammo van Lessen, Steffen Pingel 
  *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
- *  Version 2 as published by the Free Software Foundation.
+ *  version 2 as published by the Free Software Foundation.
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,8 +15,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
  */
 package gcover;
+
+import java.io.IOException;
 
 import gcover.output.*;
 import gcover.util.Formatter;
@@ -26,7 +29,7 @@ import gcover.util.Formatter;
  * 
  * @author Tammo van Lessen
  * @author Steffen Pingel
- * @version $Id: GCover.java,v 1.4 2004/01/11 16:01:34 squig Exp $
+ * @version $Id: GCover.java,v 1.5 2004/01/14 15:33:15 squig Exp $
  */
 public class GCover {
 
@@ -42,10 +45,11 @@ public class GCover {
 			System.exit(1);
 		}
 
-		run(args[0], args[1]);
+		run(args[0], args[1], (args.length > 2) ? args[2] : null);
 	}
 
-	public static void run(String inputDir, String outputDir)
+	public static void run(String inputDir, String outputDir, 
+						   String gcovOutputFilename)
 	{
 		Project project = new Project();
 
@@ -55,6 +59,16 @@ public class GCover {
 		// debug
 		//printDebug(project);
 		
+		if (gcovOutputFilename != null) {
+			// add branch information
+			try {
+				GCovOutputParser.parse(project, gcovOutputFilename);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		// generate output
 		Outputter out = new XHTMLOutputter(outputDir);
 		out.output(project);		

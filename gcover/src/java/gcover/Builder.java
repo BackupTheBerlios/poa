@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
  * Builder
  * 
  * @author Tammo van Lessen
- * @version $Id: Builder.java,v 1.4 2004/01/12 19:02:30 squig Exp $
+ * @version $Id: Builder.java,v 1.5 2004/01/14 15:33:15 squig Exp $
  */
 public class Builder {
 
@@ -114,11 +114,13 @@ public class Builder {
 			} else {
 				li.setInstrumented(true);
 				String linePrefix = line.substring(0, 16).trim();
-				int execCount;
-				if (linePrefix.equals("######")) {
-					execCount = 0;
-				} else {
-					execCount = Integer.parseInt(linePrefix);
+				int execCount = 0;
+				if (!linePrefix.equals("######")) {
+					try {
+						execCount = Integer.parseInt(linePrefix);
+					}
+					catch (NumberFormatException e) {
+					}
 				}
 				li.setExecCount(execCount);
 				li.setSourceLine(line.substring(16));
@@ -132,20 +134,30 @@ public class Builder {
 
 		public LineInfo parse(String line)
 		{
+			if (line.startsWith("call") || line.startsWith("branch")) {
+				// ignore branch coverage information
+				return null;
+			}
+			
 			LineInfo li = new LineInfo();
 			StringTokenizer t = new StringTokenizer(line, ":");
 			if (t.hasMoreTokens()) {
 				String token = t.nextToken().trim();
+				int execCount = 0;
 				if (token.equals("-")) {
 					li.setInstrumented(false);
-					li.setExecCount(0);
 				}
 				else {
-					li.setInstrumented(true);
-					li.setExecCount(token.equals("#####") 
-									? 0
-									: Integer.parseInt(token));
+					li.setInstrumented(true);				
+					if (!token.equals("#####")) {
+						try {
+							execCount = Integer.parseInt(token);
+						}
+						catch (NumberFormatException e) {
+						}
+					}
 				}
+				li.setExecCount(execCount);
 				
 				if (t.hasMoreTokens()) {
 					token = t.nextToken().trim();

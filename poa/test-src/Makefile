@@ -62,10 +62,10 @@ depend:
 	makedepend -f Makefile.depend -- -I../src -- $(SOURCES)
 
 gcover:
-	cd ../src; find -name "*.cpp" -exec gcov {} \;
+	cd ../src; find -name "*.cpp" -exec gcov -b {} \; > gcov.out
 	for i in ../src/*.gcov; do test -e `echo $$i | sed -e s/\.gcov$$//` || rm $$i; done
 	rm -f ../src/moc_*.gcov
-	java -jar ../../gcover/target/gcover-0.2-uber.jar ../src ../target/docs/gcover
+	java -jar ../../gcover/target/gcover-0.2-uber.jar ../src ../target/docs/gcover gcov.out
 
 poa:
 	make -C ../src	

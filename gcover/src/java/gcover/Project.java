@@ -15,29 +15,18 @@ import java.util.Map;
  * Project
  * 
  * @author Tammo van Lessen
- * @version $Id: Project.java,v 1.3 2004/01/11 16:01:34 squig Exp $
+ * @version $Id: Project.java,v 1.4 2004/01/14 15:33:15 squig Exp $
  */
 public class Project {
 
-	private List files = new ArrayList();
-	private Map packages = new HashMap();
+	private Map fileByName = new Hashtable();
 	private long instrumentedLines = 0;
 	private long executedLines = 0;
 	private long linesOfCode = 0;
 
-	public int getFileCount()
-	{
-		return files.size();
-	}
-
-	public FileInfo[] getFiles() {
-		FileInfo[] array = (FileInfo[])files.toArray(new FileInfo[0]);
-		Arrays.sort(array);
-		return array;
-	}
-	
 	public void addFile(FileInfo file) {
-		files.add(file);
+		fileByName.put(file.getName(), file);
+
 		instrumentedLines += file.getInstrumentedLinesCount();
 		executedLines += file.getExecutedLinesCount();
 		linesOfCode += file.getLinesOfCode();
@@ -49,6 +38,23 @@ public class Project {
 
 	public long getExecutedLinesCount() {
 		return executedLines;
+	}
+
+	public FileInfo getFile(String filename)
+	{
+		return (FileInfo)fileByName.get(filename);
+	}
+
+	public int getFileCount()
+	{
+		return fileByName.size();
+	}
+
+	public FileInfo[] getFiles() {
+		FileInfo[] array
+			= (FileInfo[])fileByName.values().toArray(new FileInfo[0]);
+		Arrays.sort(array);
+		return array;
 	}
 	
 	public long getInstrumentedLinesCount() {

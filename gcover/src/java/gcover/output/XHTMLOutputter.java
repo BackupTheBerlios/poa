@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.apache.ecs.Element;
 import org.apache.ecs.Entities;
 import org.apache.ecs.StringElement;
 import org.apache.ecs.XhtmlDocument;
@@ -57,10 +58,12 @@ import org.apache.ecs.xhtml.tr;
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.10 2004/01/12 13:45:59 squig Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.11 2004/01/14 15:33:15 squig Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
+	public static final int barLength = 100;
+	
 	private File dir;
 	
 	public XHTMLOutputter(String basedir) {
@@ -227,7 +230,6 @@ public class XHTMLOutputter implements Outputter {
 		System.out.println("Generating overview.html");
 
 		XhtmlDocument doc = createDocument("GCover - Overview");
-		int cov = (int)(project.getCoverage()*100);
 
 		// header
 		table headerView = new table();
@@ -259,10 +261,9 @@ public class XHTMLOutputter implements Outputter {
 			.addElement(new tr()
 				.addElement(new td())
 				.addElement(new td("Total: ").setVAlign("top")
-					.addElement(new b(Formatter.formatNumber(cov,2)+"%"))
+					.addElement(new b(formatRate(project.getCoverage())))
 					.addElement(new br())
-					.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
-					.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
+					.addElement(createBar(project.getCoverage()))
 					.setAlign("right")));
 		doc.appendBody(new div().addElement(headerView).setClass("headerView"));
 		doc.appendBody(new br());
@@ -272,30 +273,48 @@ public class XHTMLOutputter implements Outputter {
 		fileView.setCellPadding(2).setCellSpacing(0).setClass("fileView");
 		tbody fileViewBody = new tbody();
 		fileView.addElement(fileViewBody);
-
+		
 		fileViewBody
 			.addElement(new tr()
 				.addElement(new th("Filename"))
+				.addElement(new th("Branches Executed"))
+				.addElement(new th("Branches Taken"))
+				.addElement(new th("Calls"))
 				.addElement(new th("Total").setColSpan(2)));
 
 		Arrays.sort(files, new FileInfoCoverageComparator());
 		for (int i=0; i<files.length; i++) {
 			FileInfo file = files[i];
-			cov = (int)(file.getCoverage()*100);
-
 			fileViewBody
 				.addElement(new tr()
 					.addElement(new td(new a(file.getName()+".html", file.getName())))
-					.addElement(new td()
-						.addElement(Formatter.formatNumber(file.getCoverage()*100,2)+"%").setAlign("right"))
-					.addElement(new td()
-						.addElement(new img().setSrc("green.png").setHeight(12).setWidth(cov))
-						.addElement(new img().setSrc("red.png").setHeight(12).setWidth(100 - cov))
-));
+					.addElement(new td(formatRate(file.getBranchesExecutedRate())).setAlign("center"))
+					.addElement(new td(formatRate(file.getBranchesTakenRate())).setAlign("center"))
+					.addElement(new td(formatRate(file.getCallsExecutedRate())).setAlign("center"))
+					.addElement(new td(new b(formatRate(file.getCoverage()))).setAlign("right"))
+					.addElement(new td(createBar(file.getCoverage()))));
 		}
 		doc.appendBody(fileView);
 
 		writeDocument(doc, "overview.html");
+	}
+
+	public static Element createBar(double value) {
+		if (value <= 0.0) {
+			return new img().setSrc("red.png").setHeight(12).setWidth(barLength);
+		}
+		else if (value >= 1.0) {
+			return new img().setSrc("green.png").setHeight(12).setWidth(barLength);
+		}
+		else {
+			int greenWidth = (int)(value * barLength);
+			return new img().setSrc("green.png").setHeight(12).setWidth(greenWidth)
+				.addElement(new img().setSrc("red.png").setHeight(12).setWidth(barLength - greenWidth));
+		}
+	}
+
+	public static String formatRate(double rate) {
+		return (rate < 0.0) ? "-" : Formatter.formatNumber(rate * 100, 2) + "%";
 	}
 
 	public static class FileInfoCoverageComparator implements Comparator {

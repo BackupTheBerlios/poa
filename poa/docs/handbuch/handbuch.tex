@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
-%% Angebot
-%% $Id: handbuch.tex,v 1.12 2004/03/04 19:29:00 neco Exp $
+%% Handbuch
+%% $Id: handbuch.tex,v 1.13 2004/03/05 03:06:28 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.12 $
-\RCSdef $Date: 2004/03/04 19:29:00 $
+\RCSdef $Revision: 1.13 $
+\RCSdef $Date: 2004/03/05 03:06:28 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -41,6 +41,11 @@
 
 {\parindent=0cm
 \Huge Handbuch
+\normalsize
+\par zum Release 0.3.0
+\par 
+Screenshots in diesem Dokument wurden unter Linux gemacht.\newline
+Es k"onnte unter Umst"anden unter Windows Abweichungen geben.
 }
 
 
@@ -118,8 +123,20 @@ Abschnitten eingegangen.
 \section{Systemanforderungen an POA}
 POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 \begin{itemize}
-\item 32-Bit-Windows (95/98/ME/NT4.0/2000/XP)
-\item Linux
+\item 32-Bit-Windows (95/98/ME/NT4.0/2000/XP)\newline
+Systemanforderungen:
+\begin{itemize}
+\item QT 3.0
+\item VisualStudio
+\item C++ Compiler: gcc 2.95 oder h"oher
+\end{itemize}
+
+\item Linux auf i386-kompatiblen Rechnern (X-Windows) \newline
+Systemanforderungen:
+\begin{itemize}
+\item QT 3.0
+\item C++ Compiler: gcc 2.95 oder h"oher
+\end{itemize}
 \end{itemize}
 
 
@@ -146,7 +163,7 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 \end{figure}
 
 Die Men"uleiste besteht aus den Men"us Project, Edit, View, Tools, Settings, Windows und Help.\par
-
+\newpage
 Die hier Kurz beschriebenen Funktionen werden in den folgenden Abschnitten n"aher erkl"art.\par
 
 \begin{itemize}
@@ -155,9 +172,9 @@ Unter Project hat man die M"oglichkeit Projekte anzulegen, zu "offnen, abzuspeic
 \item {\bf Edit:}	Cut, Copy, Paste\newline
 Unter diesem Men"upunkt kann man die Aktionen Ausschneiden, Kopieren und Einf"ugen ausf"uhren.
 \item {\bf View:}	Zoom in, Zoom normal, Zoom out\newline
-Unter View ist es m"oglich den Inhalt im Arbeitsfenster anzuzoomen.
+Unter View ist es m"oglich den Inhalt im Arbeitsfenster an- und auszuzoomen.
 \item {\bf Tools:} 	Configuration, Route, Scheduling, Deploy Project\newline
-Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren, CPU-Prgrammcode zu kompilieren und es auf das CPLD-Board herunterzuladen.
+Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke graphisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren, den CPU-Prgrammcode zu kompilieren und es auf das CPLD-Board herunterzuladen.
 \item {\bf Settings:}	Show Grid, Configure POA\newline
 Unter Settings k"onnen Grundeinstellungen an POA vorgenommen werden. Hier kann z.B. das Raster, die Programmsprache eingestellt und externe Tools (Editor, Compiler, ...) eingebunden werden.
 \item {\bf Windows:} 	Tile, Tile Horizontal, Cascade\newline
@@ -210,8 +227,8 @@ Die wichtigsten Aktionen k"onnen auch mit den Befehlsbuttons in der Symbolleiste
 \section{Allgemein}
 \subsection{Farbgebung}
 POA bietet durch die F"arbung der Bl"ocke nach Ihrer Taktzahl eine komfortabele "Ubersicht "uber die Bl"ocke. D.h. gleichgetaktete Bl"ocke werden auch in der gleiche Farbe angezeigt.\newline
-In der {\bf Takttabelle}, standardm"a"sig in oberen linken Rand des Layouts, sind die Farben und die dazugeh"origen Taktzeiten aufgelistet. Die {\bf Takttabelle} kann frei verschoben werden, indem man die Tabelle mit der linken Maustaste ausw"ahlt und mit gedr"uckter Taste den Mauszeiger im Arbeitsfenster bewegt.\par
-Markierte Objekte werden immer grau gef"arbt.\newline
+In der {\bf Takttabelle}, standardm"a"sig im oberen linken Rand des Layouts, sind die Farben und die dazugeh"origen Taktzeiten aufgelistet. Die {\bf Takttabelle} kann frei verschoben werden, indem man die Tabelle mit der linken Maustaste ausw"ahlt und mit gedr"uckter Taste den Mauszeiger im Arbeitsfenster bewegt.\par
+Markierte Objekte werden immer grau angezeigt.\newline
 Verbindungen werden immer blau gezeichnet, es sei denn es besteht ein Konflikt zwischen den Pins. Dann wird die Verbindung rot markiert.
 
 
@@ -221,10 +238,11 @@ Mit der Tooltipfunktion bietet POA eine komfortabele L"osung, um Kurzinformation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Beschriftung des Layouts}
 \subsubsection{Layoutbeschriftung setzen}
-Um im Layout Beschriftungen (z.B. Kommentare) vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Annotate} in der Symbolleiste klicken. Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Annotate} w"ahlen. Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, wird ien Dialog mi einem Textfeld "offnet, in den man den gew"unschten Text eingeben kann. Bei Best"atigung mit {\bf OK} wird der Dialog geschlossen und der Text wird an die gew"unschte Stelle gesetzt.\par
+Um im Layout Beschriftungen (z.B. Kommentare) vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Annotate} in der Symbolleiste klicken.% Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Annotate} w"ahlen.%
+Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, wird ein Dialog mit einem Textfeld "offnet, in den man den gew"unschten Text eingeben kann. Bei Best"atigung mit {\bf OK} wird der Dialog geschlossen und der Text wird an die gew"unschte Stelle gesetzt.\par
 Um dem Cursermodus verlassen zu k"onnen, muss man nur das Symbol {\bf Mauszeiger} in der Symbolleiste anklicken.
 \subsubsection{Layoutbeschriftung verschieben}
-Zum Verschieben der Layoutbeschriftung, muss man die Beschriftung mit der linken Maustaste ausw"ahlen und die Taste dabei ger"uckt lassen. Jetzt kann man die Layoutbeschriftung frei im Arbeitsfenster auf die gew"unchte Position verschieben. Beim Loslassen der Maustaste wird die Beschriftung an diese Stelle gesetzt.
+Zum Verschieben der Layoutbeschriftung, muss man die Beschriftung mit der linken Maustaste ausw"ahlen und die Taste dabei gedr"uckt lassen. Jetzt kann man die Layoutbeschriftung frei im Arbeitsfenster auf die gew"unschte Position verschieben. Beim Loslassen der Maustaste wird die Beschriftung an diese Stelle gesetzt.
 \subsubsection{Layoutbeschriftung l"oschen}
 Um eine Beschriftung im Layout zu l"oschen, muss man den zu l"oschenden Text im Layout mit der rechten Maustaste ausw"ahlen und im Kontextmen"u den Eintrag {\bf Remove} w"ahlen. Altenativ kann man auch das Symbol {\bf Remove} in der Symbolleiste anklicken.
 Dabei wird die Beschriftung an dieser Stelle unwiderruflich gel"oscht.
@@ -232,12 +250,12 @@ Dabei wird die Beschriftung an dieser Stelle unwiderruflich gel"oscht.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Zoomen}
-Die Zoomfunktion hat man die M"oglichkeit das Layout heran- oder wegzuzommem. POA unterst"utzt das Zoomen zwischen 10{\%} und 500{\%}. Die Standardeinstellung, d.h. die Normalansicht, ist bei einem Zoomfaktor von 100\%.\newline
+Mit der Zoomfunktion hat man die M"oglichkeit das Layout heran- oder wegzuzommem. POA unterst"utzt das Zoomen zwischen 10{\%} und 500{\%}. Die Standardeinstellung, d.h. die Normalansicht, ist bei einem Zoomfaktor von 100\%.\newline
 Zum "Andern des Zoomfaktors, kann man entweder die Zoomsymbole in der Symbolleiste oder die Eintr"age im Men"u {\bf View} w"ahlen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Beschreibung der Standard Buttons}
+\subsection{Die Standard Button}
 \begin{figure}[htbp]
 
 \begin{center}
@@ -281,11 +299,11 @@ Man kann das Raster anzeigen lassen oder ausblenden. Dazu w"ahlt man im Untermen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Sprache einstellen}
 POA unterst"utzt die Sprachen Deutsch und Englisch.\par
-Zur Ver"anderung der Sprache muss man im Untermen"u von {\bf Settings} den Eintrag {\bf Configure POA} ausw"ahlen. Im aufklappenden Dialog kann man unter dem Dateireiter {\bf General} in der Auswahlbox {\bf Language} zwischen Englisch und Deutsch w"ahlen.\par
+Zur Ver"anderung der Sprache muss man im Untermen"u von {\bf Settings} den Eintrag {\bf Configure POA} ausw"ahlen. Im aufklappenden Dialog kann man unter dem Dateireiter {\bf General} in der Auswahlbox {\bf Language} zwischen Englisch und Deutsch w"ahlen. Die "Anderungen bez"uglich der Sprachauswahl werden erst bei einem Neustart von POA wirksam.\par
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Externe Programme einbinden}
-POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und komfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen auf die CPLD wird ein Download Tool ben"otigt.\par
+POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und komfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen des kompilierten Quellcodes auf die CPLD wird ein Download Tool ben"otigt.\par
 Zur Einbindung der externen Programme muss man im Untermen"u von {\bf Settings} den Eintrag {\bf Configure POA} w"ahlen. Im aufklappenden Dialog kann man unter dem Dateireiter {\bf Paths} die gew"unschten Programme einbinden.
 
 \begin{figure}[htbp]
@@ -329,7 +347,7 @@ Um einen C Source Template Pfad anzugeben, w"ahlt man unter dem Dateireiter {\bf
 \end{center}
 
 \end{figure}
-F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann man in der Auswahlbox den Seriellen Port, an dem das Board angeschlossen ist, einstellen.\par
+F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann man in der Auswahlbox den Seriellen Port, an dem das CPLD-Board angeschlossen ist, einstellen.\par
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,15 +360,14 @@ F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann 
 
 \includegraphics[width=10cm]{Directory}
 
-\caption{Projekt Directory}\label{test}
+\caption{Project Directory}\label{test}
 
 \end{center}
 
 \end{figure}
 
 \subsection{Neues Projekt anlegen}
-Durch Anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann. Dazu kann man im Verzeichnisbaum das Verzeichnis suchen, in dem der Zielordner angelegt wird. Zum Erstellen des Zielordners klickt man auf das Symbol {\bf Create New Folder}. Es wird ein neuer Ordner angelegt, dem nun ein Name vergeben werden kann. Um das neue Projekt hier anzulegen, muss den Zielordner "offnen und auf {\bf OK} klicken.\newline
-Ein neues Projekt kann auch durch einen Mausklick auf das Symbol {\bf New} in der Symbolleiste angelegt werden.\newline
+Durch Anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt oder altenativ dazu mit der Maus auf das Symbol {\bf New} in der Symbolleiste geklickt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann. Dazu kann man im Verzeichnisbaum das Verzeichnis suchen, in dem der Zielordner angelegt wird. Zum Erstellen des Zielordners klickt man auf das Symbol {\bf Create New Folder}. Dabei wird ein neuer Ordner angelegt, dem nun ein Name vergeben werden kann. Um das neue Projekt hier anzulegen, muss man den Zielordner "offnen und auf {\bf OK} klicken.\newline
 Es kann nur ein Projekt pro Verzeichnis angelegt werden.\par
 Wird ein neues Projekt angelegt, dann wird dadurch auch das Arbeitsfenster im Hauptfenster aktiviert.
 
@@ -381,8 +398,8 @@ Mit dem Eintrag {\bf Save as} kann das Projekt in ein anderes Verzeichnis gespei
 \end{center}
 
 \end{figure}
-POA bietet die M"oglichkeit das entworfene Layout und die grafische Darstellung des Scheduling zu drucken oder als druckbare Datei zu speichern.
-Im Untermen"u {\bf Project} den Eintrag {\bf Print} oder in der Symbolleiste den {\bf Drucker} w"ahlen. Im nun aufklappendem Dialog kann man die gew"unschten Druckeinstellungen vornehmen und den Druckauftrag an den ausgew"ahlten Drucker mit der Best"atigung durch {\bf OK} schicken.\par
+POA bietet die M"oglichkeit das entworfene Layout und die graphische Darstellung des Scheduling zu drucken oder als druckbare Datei zu speichern.
+Dazu kann man im Untermen"u {\bf Project} den Eintrag {\bf Print} oder in der Symbolleiste den {\bf Drucker} w"ahlen. Im nun aufklappendem Dialog kann man die gew"unschten Druckeinstellungen vornehmen und den Druckauftrag an den ausgew"ahlten Drucker mit der Best"atigung durch {\bf OK} schicken.\par
 Mit {\bf Cancel} werden die Einstellungen verworfen.\par
 
 
@@ -416,29 +433,30 @@ Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber di
 \end{figure}
 
 \subsubsection{Blockname "andern}
-Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekr"aftigen Namen zu geben.\par
+Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil den Bl"ocken einen aussagekr"aftigen Namen zu geben. Aussagekr"aftige Namen sorgen auch daf"ur, dass man sofort wei"s, wof"ur ein Block gut ist. \par
 Im Textfeld {\bf Name} kann man den neuen Namen des Blocks eingeben.
 \subsubsection{Block beschreiben}
-Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben. Diese erscheinen im Tooltip, wenn man mit dem Mauszeiger auf den Block zeigt oder im der Infobox, wenn der in die Blockbibliothek aufgenommen ist.\par
-Die Blockbeschreibung hat den Vorteil, dass man sp"ater auch noch leicht nachvollziehen kann, wof"ur dieser Block gut ist.\par
+Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben. Diese erscheinen im Tooltip, wenn man mit dem Mauszeiger auf den Block zeigt oder im der Infobox, wenn der Block in die Blockbibliothek aufgenommen ist.\par
+Die Blockbeschreibung hat den Vorteil, dass man sp"ater auch noch leicht nachvollziehen kann, wasf"ur Eigenschaften dieser Block hat.\par
 Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Neue Pins erzeugen}
 In der Pinbibliothek k"onnen blockabh"angig drei verschiedene Arten von Pins ("'Episodic Pin"', "'Input Pin"' und "'Output Pin"') verwaltet werden. Je nach Pinart w"ahlt man in der Bibliothek die entsprechende Kategorie. Dabei wird der {\bf New} Button aktiviert. Mit einem Klick auf den aktivierten {\bf New} Button wird ein neuer Pin erzeugt. \par
 \subsubsection{Pins l"oschen}
-Dazu w"ahlt man in der Pinbibliothek den zu l"oschende Pin aus. Der {\bf Remove} Button wird nun aktiviert. Mit einem Mausklick auf den {\bf Remove} Button wird der Pin gel"oscht. Wenn an diesem Pin eine Verbindung angedockt war, wird diese Verbindung automatisch gel"oscht.
+Dazu w"ahlt man in der Pinbibliothek den zu l"oschende Pin aus. Der {\bf Remove} Button wird nun aktiviert. Mit einem Mausklick auf den {\bf Remove} Button wird der Pin gel"oscht. Wenn an diesem Pin eine Verbindung angedockt war, wird diese Verbindung automatisch mitgel"oscht.
 \subsubsection{"Anderungen an Pins vornehmen}
 Dazu w"ahlt man in der Pinbibliothek den zu "andernde Pin aus.\par
 Unter der Spalte {\bf Name} kann man dem Pin einen Namen geben oder einen vorhandenen Namen "andern.\par
-Unter der Spalte {\bf Bits} kann die Anzahl der Bits, d.h. die Bitbreite, f"ur ein Pin ge"andert werden. Es ist M"oglich eine Bitbreite von 0 bis 64 anzugeben.\par
+Unter der Spalte {\bf Bits} kann die Anzahl der Bits, d.h. die Bitbreite, f"ur ein Pin ge"andert werden. Es ist m"oglich eine Bitbreite von 0 bis 64 anzugeben.\par
 Unter der Spalte {\bf Address} kann eine Adressierung f"ur die Input-Pins und Output-Pins vornehmen werden.\par
 \subsubsection{Offset eingeben}
-Um das Offset an dem Block einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Offset} klicken und die Offsetzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Der Offset ist f"ur das Scheduling, d.h. f"ur die Optimierung der Gesamtlaufzeit, wichtig. Die Offsetzeit ist diejenige Zeit, mit der ein Block versp"atet gestartet wird.
+Um den Offset an einem Block anzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Offset} klicken und die Offsetzeit dort in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
 Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Takt eingeben}
-Um die Taktrate des Blocks einzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Clock} klicken und die Taktfrequenz in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Um die Taktrate eines Blocks anzugeben, kann man entweder direkt mit der Maus ins Textfeld {\bf Clock} klicken und die Taktfrequenz dort in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
 Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Laufzeit eingeben}
-Um die Laufzeit des Blocks einzugeben, kann man entweder direkt mit der Maus ins Textfeld{\bf Runtime} klicken und die Laufzeit in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
+Um die Laufzeit eines Blocks anzugeben, kann man entweder direkt mit der Maus ins Textfeld{\bf Runtime} klicken und die Laufzeit dort in Nanosekunden eingeben oder man benutzt die Pfeiltasten neben dem Textfeld.\par
 Diese Option ist f"ur {\bf Multiplexer} und {\bf Inputbl"ocke} nicht verf"ugbar.
 
 
@@ -512,7 +530,7 @@ Zum Kompilieren des erzeugten CPU-Programmcodes wird ein externer Compiler gesta
 
 Multiplexer dienen dazu mehrere Eingangssignale auf ein Ausgangssignal zu reduzieren oder umgekehrt ein  Eingangssignal auf mehrere Ausgangssignale zu verteilen.
 Im {\bf Mapping}Bereich des Konfigurationsdialogs wird die aktuelle Zuordnung der Bits des Eingangspins auf die des Ausgangspins angezeigt.\par
-Um eine neue Zuordnung zu erstellen, muss man auf den Button {\bf New} klicken. Dabei wird ein neuer Dialog ge"offnet. In diesem Dialog (Mux mapping configuration) hat man die M"oglichkeit den Eingangsbits bestimmte Ausgangsbits zuzuordnen. Dazu w"ahltnewline man in der Auswahlbox {\bf Input} den Eingangspin und in der Auswahlbox {\bf Output} den Ausgangspin des Multiplexers. In den Textfeldern {\bf first bit} und {\bf last bit} kann die Zuordnung zwischen Eingangsbits und Ausgangsbits vorgenommen werden.\par
+Um eine neue Zuordnung zu erstellen, muss man auf den Button {\bf New} klicken. Dabei wird ein neuer Dialog ge"offnet. In diesem Dialog (Mux mapping configuration) hat man die M"oglichkeit den Eingangsbits bestimmte Ausgangsbits zuzuordnen. Dazu w"ahlt man in der Auswahlbox {\bf Input} den Eingangspin und in der Auswahlbox {\bf Output} den Ausgangspin des Multiplexers. In den Textfeldern {\bf first bit} und {\bf last bit} kann die Zuordnung zwischen Eingangsbits und Ausgangsbits vorgenommen werden.\par
 
 Um eine vorhandene Zuordnung zu ver"andern, muss der entsprechende Eintrag in der Mappingtabelle markiert werden. Dabei werden die Buttons {\bf Update} und {\bf Remove} aktiviert.\newline
 Mit {\bf Update} wird der Dialog {\bf Mux mapping configuration} ge"offnet. Hier kann man wie oben beschrieben, die "Anderungen in der Zuordnung vornehmen.\newline
@@ -538,14 +556,14 @@ Die Blockbibliothek verwaltet standardm"a"sig die von POA vorgegeben Standardbl"
 Bl"ocke, die einmal konfiguriert worden sind und oft wiederverwendet werden sollen, 
 k"onnen in der Blockbibliothek auch verwaltet werden. Dadurch wird die Wiederverwendung
 von Bl"ocken erleichtert und die Bl"ocke f"ur andere Projekte zur Verf"ugung gestellt.\par
-In der Infobox unter der Blockbibliothek werden Informationen zu den ausgew"ahlten Bl"ocken aus der Bibliothek angezeigt. Die Informationen kommen aus der Beschreibung der Bl"ocke in der Blockkonfiguration.
+In der Infobox unter der Blockbibliothek werden Informationen zu den ausgew"ahlten Bl"ocken aus der Bibliothek angezeigt. Die Informationen kommen aus der Beschreibung der Bl"ocke, welche bei der Blockkonfiguration eingetragen worden sind.
 \subsubsection{Block in die Blockbibliothek aufnehmen}
 Um ein Block in die Bibliothek aufzunehmen, klickt man mit der rechten Maustaste
 auf den Block und w"ahlt im Kontextmen"u den Eintrag {\bf Save To Library}. Je nach Art des Blocks kann man den Block in die entsprechende Kategorie setzten. Dazu w"ahlt man im ge"offneten Dialog den Blocktyp in der Auswahlbox aus. Nach den Best"atigen mit {\bf OK}, wird dieser Block in der Blockbibliothek aufgenommen.\newline
 Bl"ocke, die in die Bibliothek aufgenommen werden, werden projektunabh"angig gespeichert
 und stehen bei jedem Neustart von POA zur Verf"ugung.
 \subsubsection{Blocktyp in der Blockbibliothek "andern}
-Dazu muss man den Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den Eintrag {\bf Change Type} w"ahlen. Im geo"ffneten Dialog kann man in der Auswahlbox gen gew"unschten Blocktyp ausw"ahlen und mit {\bf OK} best"atigen. Der Block wird nun in die gew"unschten Kategorie verschoben.
+Dazu muss man den Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den Eintrag {\bf Change Type} w"ahlen. Im geo"ffneten Dialog kann man in der Auswahlbox den gew"unschten Blocktyp ausw"ahlen und mit {\bf OK} best"atigen. Der Block wird nun in die gew"unschten Kategorie verschoben.
 \subsubsection{Block in der Blockbibliothek umbenennen}
 Dazu muss man den Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den Eintrag {\bf Rename} w"ahlen. Der nun gehighlightete Name kann "uberschrieben und mit der Eingabebest"atigung gespeichert werden.
 \subsubsection{Block aus der Blockbibliothek entfernen}
@@ -586,7 +604,7 @@ Wenn ein Block gel"oscht wird, werden alle Verbindungen zu diesem Block auch unw
 
 \subsubsection{Bl"ocke miteinander verbinden}
 Hierzu klickt man mit der linken Maustaste auf den Pin des Blocks und l"a"st die Maustaste gedr"uckt. Die Verbindungsm"oglichkeiten werden nun gr"un angezeigt. Man kann jetzt mit dem Mauszeiger an ein Pin eines anderen Blocks andocken. Dabei muss die linke Maustaste immer gedr"uckt bleiben. Nachdem man am Pin angedockt hat, kann man die Maustaste wieder los lassen und die Verbindung (Connector) wird nun automatisch gezogen. Verbindungen k"onnen nur durch senkrechte oder waagrechte Linien dargestellt werden.\par
-Wenn eine Verbindung zwischen zwei Pins unterschiedlicher Bitbreite gezogen wird, wird die Verbindung rot markiert und ein Dialog wird ge"offnet. Im Dialog wird auf das Problem hingewiesen, und man hat hier die M"oglichkeit die Bitbreiten zu "andern. Indem man die Pins angleicht, d.h. entweder der Ausgangspin des einen Blocks "ubernimmt die Bitbreite des Eingangspins des Anderen oder umgekehrt, je nach dem welche {\bf Set} Taste bet"atigt wird. Nach dem Angleichen der Pins werden die "Anderungen an den Pins gespeichert, der Dialog wird geschlossen und die Verbindung standardm"a"sig blau gef"arbt.\newline
+Wenn eine Verbindung zwischen zwei Pins unterschiedlicher Bitbreite gezogen wird, wird die Verbindung rot markiert und ein Dialog wird ge"offnet. Im Dialog wird auf das Problem hingewiesen, und man hat hier die M"oglichkeit die Bitbreiten zu "andern. Indem man die Pins angleicht, d.h. entweder der Ausgangspin des einen Blocks "ubernimmt die Bitbreite des Eingangspins des Anderen oder umgekehrt, je nach dem welche {\bf Set} Taste bet"atigt wird. Nach dem Angleichen der Pins werden die "Anderungen an den Bl"ocken gespeichert, der Dialog wird geschlossen und die Verbindung standardm"a"sig blau gef"arbt.\newline
 Wird die Taste {\bf Cancel} gedr"uckt, bleiben die Pins unver"andert und die Verbindung bleibt rot (Konfliktfarbe).
 
 \begin{figure}[htbp]
@@ -636,8 +654,8 @@ Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ah
 
 Durch das Scheduling kann man eine Optimierung der Gesamtlaufzeit f"ur das CPLD-Board erreichen, indem man zum Beispiel die Offsetzeit der einzelnen Bl"ocke variiert oder Taktzeiten und Laufzeiten "andert, falls diese nicht schon festgelegt sind.\par
 Den Scheduling Dialog kann man entweder "uber die Men"uleiste (Tools -> Scheduling) oder mit einem Kilck auf {\bf Scheduling} Symbol in der Symbolleiste "offnen.
-Die aktuelle Konfiguration der Bl"ocke wird im Scheduling Dialog in der oberen Tabelle, in der alle Bl"ocke aufgelistet sind, angezeigt. Man hat die M"oglichkeit hier die Konfiguration (Laufzeit, Takt, Offset) der Bl"ocke zu "andern. Mit einem Doppelkick in Zelle der Tabelle kann man nun entweder direkt "uber die Tastertur oder mit den Pfeiltasten in der Zelle die Ver"anderungen vornehmen.\par
-Die Reihenfolge in der Tabelle bestimmt auch die Reihenfolge des Ablaufgraphen im unteren Teil des Dialogs. Aufgrund "Ubersichtlichkeit im Ablaufgraphen ist es von Vorteil die Reihenfolge der Bl"ocke "andern zu k"onnen. Dazu muss man den Block mit der Maus markieren. Den markierten Block kann man nun mit den gr"unen Pfeiltasten nach oben oder unten verschieben. Mit dem Schieberegler kann man die "Ubersichtlichkeit im Ablaufgraphen weiter verbessern, indem man den Schieberegler nach rechts zieht und dadurch die Scalierung vergr"o"sert.\par
+Die aktuelle Konfiguration der Bl"ocke wird im Scheduling Dialog in der oberen Tabelle, in der alle Bl"ocke aufgelistet sind, angezeigt. Man hat die M"oglichkeit hier die Konfiguration (Laufzeit, Takt, Offset) der Bl"ocke zu "andern. Mit einem Doppelkick in die Zelle der Tabelle kann man nun entweder direkt "uber die Tastertur oder mit den Pfeiltasten in der Zelle die Ver"anderungen vornehmen.\par
+Die Reihenfolge in der Tabelle bestimmt auch die Reihenfolge des Ablaufgraphen im unteren Teil des Dialogs. Aufgrund der "Ubersichtlichkeit im Ablaufgraphen ist es von Vorteil die Reihenfolge der Bl"ocke "andern zu k"onnen. Dazu muss man den Block mit der Maus markieren. Den markierten Block kann man nun mit den gr"unen Pfeiltasten nach oben oder unten verschieben. Mit dem Schieberegler kann man die "Ubersichtlichkeit im Ablaufgraphen weiter verbessern, indem man den Schieberegler nach rechts zieht und dadurch die Scalierung vergr"o"sert.\par
 
 F"ur die manuelle Optimierung m"ussen die Offsets in der Tabelle per Hand eingegeben werden. Komfortabler geht die Optimierung, wenn man den {\bf Auto} Button dr"uckt. Dabei wird der {\bf Auto Scheduling} Dialog ge"offnet.
 \begin{figure}[htbp]

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.9 2004/01/25 18:18:09 vanto Exp $
+ * $Id: colormanager.cpp,v 1.10 2004/01/25 18:47:45 vanto Exp $
  *
  *****************************************************************************/
 
@@ -213,7 +213,7 @@ void ColorManager::drawShape(QPainter &p)
     QCanvasRectangle::drawShape(p);
 
     QRect textArea((int)x(),
-                   (int)y(),
+                   (int)y() + VSPACE,
                    width(),
                    FONT_HEIGHT);
 

@@ -1,0 +1,149 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Projektplan
+%% $Id: projektplan.tex,v 1.1 2003/05/31 16:16:29 garbeam Exp $
+%% Achtung: Diese Datei wird ins Angebot inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\milestone}[4]{
+\paragraph* {#1} { (#2) }
+\\[0.3cm]
+Ergebnis: \begin {bfseries} #3 \end {bfseries}
+\\[0.3cm]
+#4
+}
+
+\chapter {Einleitung}
+\section {Beschreibung des Projektplan}
+
+Dieses Dokument ist Teil eines Angebotes über eine Projektdurchführung
+im Rahmen des Studienprojektes B ``Programmierumgebung Offener
+Antrieb'' am ISW, Universität Stuttgart.
+
+Der Projektplan gibt zu diesem Zeitpunkt eine grobe Einschätzung des
+zu erwartenden Projektverlaufes wieder. Der Plan wird während des
+Projektes laufend angepasst.
+
+\section {Entwicklungsphilosophie}
+
+Das Projekt ist im wesentlichen durch zwei Bedingungen geprägt:\\
+
+Auf der funktionalen Ebene sind die Anforderungen unscharf und
+unterliegen ständigen Änderungen, da die Hardware, die von der zu
+erstellenden Software programmiert werden soll, parallel dazu
+entwickelt wird. Daraus ergeben sich auch während des Projektverlaufes 
+neue Anforderungen.
+
+Die zweite Einschränkung betrifft den zeitlichen Ablauf des Projekts. Bis
+Mitte Oktober 2003 wird für eine Präsentation ein lauffähiger
+Prototyp der Software benötigt.
+
+Um diesen Bedingungen gerecht zu werden dient ein
+Inkrementell-Iteratives Prozessmodell (siehe Balzert, Helmut: Lehrbuch
+der Software-Technik, Band 2, Spektrum, 1998) zur Entwicklung. Im
+wesentlichen wird zu Anfang des Projektes eine Anforderungsanalyse
+durchgeführt und ein Prototyp erstellt. Dieser wird dann in
+sogenannten Sprints verbessert bis der gewünschte Zustand erreicht
+ist. Zu Anfang jedes Sprints werden in einer priorisierten Liste die
+Ziele für den Sprint festgelegt und innerhalb von 2 Wochen fertig
+gestellt. 
+
+\chapter {Projektbeschreibung}
+
+\section {Rollenverteilung}
+\label {Rollenverteilung}
+
+Es gibt verschiedene Aufgaben während der Durchführung dieses Projektes
+zu erledigen. Damit eine einfache Aufteilung und Übersicht über die
+Aufgaben und Mitarbeiter möglich wird, wird für jede anstehende Aufgabe 
+eine dazugehörige Rolle eingeführt. 
+
+\begin{itemize}
+  
+\item{Architekt} Der Architekt ist für die Erstellung des Entwurfs
+  verantwortlich. Er überwacht während des gesammten Projektverlaufes,
+  dass die Architektur eingehalten und den Anforderungen entsprechend
+  angepasst wird.
+  
+\item{Qualitätssicherung} Während des Projektes sollen Testrahmen
+  erstellt werden, die in der Wartung wiederverwendet werden können.
+  Mit diesen Testrahmen wird dann in der Testphase das Programm gegen
+  die Spezifikation getestet.
+  
+\item{Handbuchbeauftragter} Parallel zu den Sprints soll eine
+  Online-Hilfe entstehen, die die Funktionalität des System
+  beschreibt.
+
+\item{Configuration Management}
+  Unter der Verwaltung des Configuration Managements stehen die Dokumente (zum
+  Beispiel Handbuch bzw. Onlinehilfe, Spezifikation, Reviewprotokolle, ...) und 
+  der erstellte Quelltext. Dies soll mit dem Revisionskontrollsystem CVS 
+  realisiert werden.
+  
+\item{Qualitätssicherung} Die Qualit"atssicherung erstell Richtlinien
+  zur Codierung und zum verwendeten Prozessmodell. Diese Richtlinien
+  sind für die Mitarbeiter verbindlich.  Desweiteren erstellt die
+  Qualit"atssicherung Checklisten, die helfen beim Abschluss der
+  einzelnen Phasen alle wichtigen und notwendigen Aktionen
+  durchzuführen. Es wird eine Liste von empfohlenen Entwurfsmustern
+  (´´Design Patterns'') erstellt, die dann beim Entwurf und in der
+  Codierung angewendet werden. Dies hat zum Ziel, dass die
+  Wartungsf"ahigkeit des Programmes sichergestellt wird.
+  
+\item{Projektleiter} Der Projektleiter vertritt zum einen die
+  Interessen der Projektgruppe nach außen gegenüber dem Auftraggeber,
+  koordiniert die Zeitplanung z.B. die Urlaubsplanung
+  und fördert den internen Informationsaustausch z.B. durch Team-Meetings. \\
+  Die Integration der einzelnen Module wird am von jedem
+  Implementierungszykluses vorgenommen und vom Projektleiter
+  "uberwacht.
+  
+\item{Stellvertretender Projektleiter} Der stellvertretende
+  Projektleiter unterset"utzt den Projektleiter in seinen Aufgaben und
+  k"ummert sich speziell um die Zeitplaneinhaltung. Desweiteren gibt
+  er interne Meilensteine frei.
+
+\end{itemize}
+
+\chapter {Projektplan}
+
+\section {Meilensteine}
+\label {Meilensteine}
+
+Das Projekt ist, wie aus dem Zeitplan ersichtlich, in mehrere Phasen
+eingeteilt. Die Meilensteine dienen dazu, den erfolgreichen Abschluss
+einer Phase zu überprüfen. Zum erfolgreichen Erreichen eines
+Meilensteines müssen bestimmte Dokumente oder Softwareprogramme
+fertiggestellt werden. Diese sind bei den Meilensteinen unter Ergebnis
+angegeben. Die Meilensteinabnahme ist erforderlich, um zur nächsten 
+Phase überzugehen bzw. eine auf den Ergebnissen aufbauende Tätigkeit 
+durchzuführen. Dies wird nicht getan, bis die Meilensteinabnahme erfolgt ist.
+
+\subsection {Interner Meilenstein}
+
+Interne Meilensteine dienen der Fortschrittskontrolle innerhalb des
+Projektteams. Der Auftraggeber ist an internen Meilensteinen nicht
+beteiligt. Wie unter \ref{Rollenverteilung} beschrieben, nimmt der
+stellvertretende Projektleiter die internen Meilensteine ab.
+
+\subsection {Externer Meilenstein}
+
+Die Erstellten Dokumente oder Softwareprogramme werden dem
+Auftraggeber vorgelegt. Sollten die erzielten Ergebnisse nicht
+den Erwartungen entsprechen, müssen diese nachgebessert
+werden. Sollten dadurch erhebliche Verzögerungen im Projekt auftreten,
+muss der Zeitplan entsprechend angepasst werden. Der Auftraggeber nimmt
+den Meilenstein ab.
+
+\milestone {M1: Angebot}{extern}{Angebot}
+{Das vorliegende Dokument.}
+
+\milestone {M2: Prototyp Präsentation}{extern}{Lauffähiger Prototyp}
+{Der Prototyp, der auf der Messe präsentiert werden soll.}
+
+\milestone {M3: Prototyp Endgültig}{extern}{Lauffähiger Prototyp}
+{Ein mit Funktionalität erweiterter Prototyp.}
+
+\milestone {M4: Auslieferung}{extern}{Software}
+{Auslieferung des erstellten Systems.}
+

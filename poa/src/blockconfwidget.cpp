@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.9 2004/01/28 21:11:46 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.10 2004/01/29 11:23:43 squig Exp $
  *
  *****************************************************************************/
 
@@ -99,7 +99,6 @@ void BlockConfWidget::initLayout() {
     ioListView_->addColumn(tr("Address"));
     ioListView_->setAllColumnsShowFocus(TRUE);
     ioListView_->setMinimumWidth(300);
-    ioListView_->setSorting(10); // 10 > number of columns
     ioListView_->setDefaultRenameAction(QListView::Accept);
     connect(ioListView_, SIGNAL(selectionChanged()),
             this, SLOT(ioSelectionChanged()));
@@ -186,7 +185,6 @@ void BlockConfWidget::sync() {
 
     ioListView_->setSorting(0);
     ioListView_->sort();
-    ioListView_->setSorting(10);
 }
 
 void BlockConfWidget::cancelRename()
@@ -248,7 +246,6 @@ void BlockConfWidget::updatePositions(PinModel::PinType type)
     }
     ioListView_->setSorting(0);
     ioListView_->sort();
-    ioListView_->setSorting(10);
 }
 
 void BlockConfWidget::mouseButtonClicked(int button,

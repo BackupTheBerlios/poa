@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.16 2003/12/02 09:59:50 vanto Exp $
+ * $Id: blockconfdialog.h,v 1.17 2003/12/03 13:11:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -164,6 +164,8 @@ private:
 
     BlockModel *model_;
     QPtrList<PinModel> deletedPins_;
+    QPtrList<PinModel> updatedPins_;
+    QPtrList<PinModel> newPins_;
 
     /**
      * Initializes layout.
@@ -210,6 +212,11 @@ private:
      * Updates model_'s content by using current dialog's content.
      */
     void updateModel();
+
+    /**
+     * Updates all positions.
+     */
+    void updatePositions(PinModel::PinType type);
 
 private slots:
 

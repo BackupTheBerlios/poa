@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.33 2003/12/02 09:59:50 vanto Exp $
+ * $Id: blockconfdialog.cpp,v 1.34 2003/12/03 13:11:17 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -708,4 +708,11 @@ void BlockConfDialog::edit()
                                  " filesystem.", "&OK");
         }
     }
+}
+
+void BlockConfDialog::updatePositions(PinModel::PinType type) {
+
+    //for (QPtrListIterator<
+
+
 }

@@ -1,4 +1,4 @@
-$Id: richtlinien.txt,v 1.4 2003/05/27 21:21:24 garbeam Exp $
+$Id: richtlinien.txt,v 1.5 2003/05/28 09:03:31 garbeam Exp $
 
 Richtlinien zur POA-Enwticklung
 ===============================
@@ -19,8 +19,8 @@ Inhalt
 2.2     CVS (concurrent version system)
 2.2.1     Grundsätzliche Einrichtung
 2.2.2     Lokale Arbeitskopie aus dem CVS Repository anlegen
-2.1.3     Updaten
-2.1.4     Änderungen commiten
+2.2.3     Updaten
+2.2.4     Änderungen commiten
 2.3     scp (secure copy)
 2.3.1     Öffentlich verfügbare Binärdatei hochladen
 2.3.2     Nicht-öffentliche (Binär-)Datei hochladen
@@ -159,7 +159,7 @@ cvs update -Ad (Kurzform: cvs up -Ad)
 -------------------------
 Bevor Änderungen committed werden, wird zuvor noch einmal auf den
 aktuellen Stand der Version im CVS Repository upgedatet, um evtl. 
-Konflikte zu identifizieren und ggf. zu beheben (siehe 2.1.3).
+Konflikte zu identifizieren und ggf. zu beheben (siehe 2.2.3).
 
 Sofern neue Dateien/Verzeichnisse angelegt wurden, müssen diese mit
 folgendem Befehl in das Repository hinzugefügt werden:
@@ -191,6 +191,17 @@ scp <Datei> <Username>@shell.berlios.de:/home/groups/poa/htdocs/<Ziel>
 Dadurch ist die Datei u.a. via http Protokoll unter:
 
 http://poa.berlios.de/<Ziel>
+
+abrufbar.
+
+Außerdem kann man Binärdateien auch auf den anonym erreichbaren ftp
+Space via:
+
+scp <Datei> <Username>@shell.berlios.de:/home/groups/ftp/pub/poa/<Ziel>
+
+hochladen. Dadurch ist die Datei via ftp Protokoll unter:
+
+ftp://ftp.berlios.de/pub/poa/<Ziel>
 
 abrufbar.
 

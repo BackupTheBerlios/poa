@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: xmlwriter.h,v 1.1 2003/07/14 19:52:42 garbeam Exp $
+ * $Id: xmlwriter.h,v 1.2 2003/07/14 20:01:49 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,4 +43,4 @@ public:
 
 };
 
-#endif // POA_TAG_H
+#endif // POA_XMLWRITER_H

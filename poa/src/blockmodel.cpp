@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.35 2003/12/03 18:26:12 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.36 2004/01/05 15:48:06 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -245,6 +245,7 @@ QDomElement BlockModel::serialize(QDomDocument *document)
     root.setAttribute("block-type", "block");
     root.setAttribute("name", name());
     root.setAttribute("exectime", (unsigned int)execTime_);
+    root.setAttribute("clock", (unsigned int)clock_);
 
     /*    for (QPtrListIterator<PinModel> it(inputPins_); it != 0; ++it) {
         PinModel *pin = it.current();
@@ -279,6 +280,7 @@ void BlockModel::deserialize(QDomElement element)
     AbstractModel::deserialize(element);
 
     setExecTime(element.attribute("exectime","0").toUInt());
+    setClock(element.attribute("clock","0").toUInt());
     setHasEpisodicPins(element.attribute("hasEpisodicPins", "") == "true");
     setHasInputPins(element.attribute("hasInputPins", "") == "true");
     setHasOutputPins(element.attribute("hasOutputPins", "") == "true");

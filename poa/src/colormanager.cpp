@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: colormanager.cpp,v 1.20 2004/01/28 17:37:23 vanto Exp $
+ * $Id: colormanager.cpp,v 1.21 2004/01/28 17:38:23 vanto Exp $
  *
  *****************************************************************************/
 
@@ -160,7 +160,7 @@ void ColorManager::recalculateSize()
 
         // calculate max width
         width = QMAX(width, metrics.width(QString::number(it.key()) + " ns")
-                     + SAMPLE_SIZE + 4 * HSPACE);
+                     + SAMPLE_SIZE + 3 * HSPACE);
 
     }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.19 2003/09/19 15:16:22 vanto Exp $
+ * $Id: pinview.cpp,v 1.20 2003/09/19 20:21:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -199,4 +199,10 @@ QString PinView::tip()
 void PinView::deleteView()
 {
     delete this;
+}
+
+
+BlockView *PinView::parent()
+{
+    return block_;
 }

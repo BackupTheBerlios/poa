@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.16 2003/09/19 15:16:22 vanto Exp $
+ * $Id: pinview.h,v 1.17 2003/09/19 20:21:04 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -107,6 +107,12 @@ public:
      * Return the tooltip text
      */
     QString tip();
+
+
+    /**
+     * Returns the parent BlockView.
+     */
+    BlockView *parent();
 
 private:
     /**

@@ -1,3 +1,7 @@
+2003-09-12  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* canvasview.cpp (maybeTip): Fixed jumping tooltips.
+
 2003-09-11  Steffen Pingel  <squig@users.sourceforge.net>
 
 	* mainwindow.cpp (showGridAction): Added show grid action.

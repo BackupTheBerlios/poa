@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.23 2003/09/11 13:17:14 squig Exp $
+ * $Id: canvasview.h,v 1.24 2003/09/12 13:22:43 squig Exp $
  *
  *****************************************************************************/
 
@@ -190,10 +190,10 @@ private:
 class CanvasToolTip : public QToolTip
 {
  public:
-    CanvasToolTip( QWidget * parent );
+    CanvasToolTip(QCanvasView *parent);
 
  protected:
-    void maybeTip( const QPoint & );
+    void maybeTip(const QPoint &);
 };
 
 #endif // CANVASVIEW_H

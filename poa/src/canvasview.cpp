@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.31 2003/09/11 16:30:24 squig Exp $
+ * $Id: canvasview.cpp,v 1.32 2003/09/12 13:22:43 squig Exp $
  *
  *****************************************************************************/
 
@@ -287,26 +287,26 @@ QPoint CanvasView::toCanvas(QPoint pos)
     return inverseWorldMatrix().map(viewportToContents(pos));
 }
 
-CanvasToolTip::CanvasToolTip( QWidget * parent )
-    : QToolTip( parent )
+CanvasToolTip::CanvasToolTip(QCanvasView *parent)
+    : QToolTip(parent)
 {
     // no explicit initialization needed
 }
 
-
-void CanvasToolTip::maybeTip( const QPoint &pos )
+void CanvasToolTip::maybeTip(const QPoint &pos)
 {
-    if ( !parentWidget()->inherits( "CanvasView" ) )
-    return;
+    QCanvasView *view = static_cast<QCanvasView *>(parentWidget());
 
-    QPoint p = ((QCanvasView*)parentWidget())->inverseWorldMatrix().map(pos);
-    QCanvasItemList l = ((QCanvasView*)parentWidget())->canvas()->collisions(p);
+    QPoint p = view->inverseWorldMatrix().map(pos);
+    QCanvasItemList l = view->canvas()->collisions(p);
     if (!l.isEmpty()) {
         // first item is top item
         QCanvasItem *topItem = l.first();
         Tooltipable *item = dynamic_cast<Tooltipable*>(topItem);
         if (item != 0) {
-            tip( QRect(pos.x(),pos.y(),5,5),  item->tip());
+            QRect r
+                = view->inverseWorldMatrix().mapRect(topItem->boundingRect());
+            tip(r, item->tip());
         }
         /*        if (INSTANCEOF(item, BlockView)) {
             tip( ((QCanvasRectangle*)item)->rect(),  item->model()->tip());

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.13 2003/12/20 16:13:17 kilgus Exp $
+ * $Id: poa.h,v 1.14 2003/12/20 16:28:19 kilgus Exp $
  *
  *****************************************************************************/
 

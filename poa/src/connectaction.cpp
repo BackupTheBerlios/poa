@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.10 2003/12/20 16:10:07 kilgus Exp $
+ * $Id: connectaction.cpp,v 1.11 2003/12/20 16:28:19 kilgus Exp $
  *
  *****************************************************************************/
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.8 2004/01/28 10:14:08 squig Exp $
+ * $Id: blockgraph.cpp,v 1.9 2004/01/28 16:36:53 vanto Exp $
  *
  *****************************************************************************/
 
@@ -69,6 +69,7 @@ void BlockNode::commit()
     block_->setClock(clock_);
     block_->setOffset(offset_);
     block_->setRuntime(runtime_);
+    block_->updatePerformed();
 }
 
 BlockModel *BlockNode::model() const

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.25 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.26 2003/09/23 14:48:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -688,6 +688,12 @@ void BlockConfDialog::edit()
         // clicked() signal of QPushButton is not able to
         // emit the current <code>model_</code>.
         CodeManager *codeManager = CodeManager::instance();
-        codeManager->edit(model);
+        if (!codeManager->edit(model)) {
+            QMessageBox::critical(this, "POA", "The code cannot be edited.\n\n"
+                                 "This may depend on a bad configuration of the"
+                                 " external editor or\n"
+                                 "you have no read/write permission to the"
+                                 " filesystem.", "&OK");
+        }
     }
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.21 2003/09/19 15:16:22 vanto Exp $
+ * $Id: project.h,v 1.22 2003/09/23 14:48:51 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -86,11 +86,6 @@ public:
      * Returns the <code>project</code>'s name
      */
     QString name();
-
-    /**
-     * Returns the <code>project</code>s path
-     */
-    QString path();
 
     /**
      * Creates a new Canvas with the given name

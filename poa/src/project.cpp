@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.24 2003/09/22 12:36:43 vanto Exp $
+ * $Id: project.cpp,v 1.25 2003/09/23 14:48:51 garbeam Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -44,7 +44,7 @@ Project::Project(QString path)
 
     QDir dir(path);
     name_ = dir.path();
-    path_ = path;
+    path_ = dir.canonicalPath();
 }
 
 Project::~Project()
@@ -110,7 +110,7 @@ void Project::addBlock(AbstractModel *item)
     if (INSTANCEOF(item, CpuModel))
     {
         ((CpuModel *)item)->setCpuId(currentBlockId_);
-        ((CpuModel *)item)->setProjectPath(&path_);
+        ((CpuModel *)item)->setProjectPath(new QString(path_));
     }
 
     blocks_.append(item);
@@ -144,11 +144,6 @@ void Project::createViews(AbstractModel *item, int x, int y)
 QString Project::name()
 {
     return name_;
-}
-
-QString Project::path()
-{
-    return path_;
 }
 
 GridCanvas *Project::newCanvas(const QString name)

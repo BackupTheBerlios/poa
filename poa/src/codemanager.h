@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.h,v 1.11 2003/09/18 16:32:39 garbeam Exp $
+ * $Id: codemanager.h,v 1.12 2003/09/23 14:48:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -84,10 +84,11 @@ public:
     int compile(CpuModel *model);
 
     /**
-     * Opens the external editor with the source code of this CPU.
+     * Opens the external editor with the source code of this CPU and
+     * returns <code>true</code> if editor launch was successful.
      * If the CPU_NN_sdk directory does not exist, it will be created.
      */
-    void edit(CpuModel *model);
+    bool edit(CpuModel *model);
 
 
 protected:

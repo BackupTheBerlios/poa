@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.10 2003/09/19 11:49:51 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.11 2003/09/23 14:48:51 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -106,7 +106,7 @@ int CodeManager::compile(CpuModel *model)
     return dialog->run(sourcePath(model), args);
 }
 
-void CodeManager::edit(CpuModel *model)
+bool CodeManager::edit(CpuModel *model)
 {
     Settings* s = Settings::instance();
     QFile source(sourceFilePath(model));
@@ -122,8 +122,7 @@ void CodeManager::edit(CpuModel *model)
     proc->setArguments(args);
     proc->setWorkingDirectory(QDir(sourcePath(model)));
 
-    proc->launch("");
-
+    return proc->launch("");
 }
 
 void CodeManager::save(CpuModel *model)

@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.20 2004/06/08 08:14:16 keulsn Exp $
+%% $Id: abschlussbericht.tex,v 1.21 2004/06/08 09:50:44 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.20 $
-\RCSdef $Date: 2004/06/08 08:14:16 $
+\RCSdef $Revision: 1.21 $
+\RCSdef $Date: 2004/06/08 09:50:44 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -290,7 +290,7 @@ gcov Ausgabe ist umständlich und wird deswegen von Entwicklern oft
 gemieden.
 
 Um die Ergebnisse anschaulich und einfach verfügbar zu machen, wurde
-gcover entwickelt. GCover wertet die Ausgabe von gcov aus und stellt
+GCover entwickelt. GCover wertet die Ausgabe von gcov aus und stellt
 die Anweisungsüberdeckung in einem HTML Frameset ähnlich dem
 verbreiteten JavaDoc von Sun dar.
 
@@ -306,7 +306,7 @@ der Quellcode der Datei angezeigt. Die Zahl in der linken Spalte gibt
 die Zeilennummer und die Anzahl der Ausführungen der jeweiligen Zeile
 an. Nicht überdeckte Zeilen werden rot unterlegt.
 
-Gcover wurde im POA Projekt eingesetzt, um die Vollständigkeit des mit
+GCover wurde im POA Projekt eingesetzt, um die Vollständigkeit des mit
 CppUnit durchgeführten Regressionstests zu überprüfen. Es diente den
 Entwicklern als Hilfsmittel um nicht ausgeführte Zeilen zu finden und
 die Tests entsprechend anzupassen.
@@ -325,11 +325,15 @@ Betreuer stand Dipl.-Ing. Peter Pruschek zur Verfügung.
 
 \section{Das Team}
 
-Der Auftragnehmer bestand wie bereits erwähnt aus einem Entwicklerteam
-von sieben Studenten der Softwaretechnik, die zu Beginn des Projekts
-im sechsten Semester studierten, namentlich Necati Aydin, Anselm
-Garbe, Stefan Hauser, Steffen Keul, Marcel Kilgus, Steffen Pingel und
-Tammo van Lessen.
+Der Auftragnehmer bestand wie aus einem Entwicklerteam von sieben
+Studenten der Softwaretechnik, die zu Beginn des Projekts im sechsten
+Semester studierten, namentlich Necati Aydin, Anselm Garbe, Stefan
+Hauser, Steffen Keul, Marcel Kilgus, Steffen Pingel und Tammo van
+Lessen.
+
+\begin{center}
+\includegraphics[width=10cm]{Fotos/group_1}
+\end{center}
 
 \subsection{Rollen}
 
@@ -500,12 +504,12 @@ Aufgaben verteilt.
      3 & Prototyp Messe (1. Iteration) & 560 & 04.08. - 01.10.03 & M2: Prototyp Messe \\
      4 & 2. Iteration & 440 & 01.11. - 16.01.04 & \\
      5 & 3. Iteration & 420 & 19.01. - 26.03.04 & \\
-     6 & Handbuch & 200 & 19.01. - 26.03.04 & \\
+     6 & Handbuch & 100 & 19.01. - 26.03.04 & \\
      7 & Auslieferung & 15 & 26.03.04 & M4: Auslieferung \\
      8 & Nachbesserung & 30 & 27.03. - 19.04.04 & \\
      9 & Abschlussbericht und Präsentation & 150 & 17.06.04 & \\
     \hline
-       & & 2135\\
+       & & 2035\\
   \end{tabular}
   \caption{Projektablauf}
 \end{figure}
@@ -656,19 +660,13 @@ mit einem ausgedruckten Exemplar des Abschlussberichts wird ein Poster
 mit einer UML Darstellung der POA Architektur und eine CD, die
 sämtliche Projektergebnisse beinhaltet, ausgeliefert werden.
 
-\section{Zeitverteilung}
-
-FIX: fehlt noch
-
-Die Zeitaufwände der einzelnen Entwickler waren homogen verteilt.
+\section{Arbeitszeitverteilung}
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=15cm]{zeitverteilung}
+  \includegraphics[width=10cm]{zeitverteilung}
   \caption{Zeitliche Aufwandsverteiung auf die Entwickler}
 \end{figure}
-
-Bei den Tätigkeiten überwiegt der Anteil der Implementierung. 
 
 \begin{figure}[h!]
   \centering
@@ -686,7 +684,16 @@ Bearbeitung verfügbar waren.
 
 \subsubsection{Bibliotheken}
 
-FIX: Qt, qextserial, CppUnit
+Die für die Implementierung von POA eingesetzten Bibliotheken sind:
+
+\begin{itemize}
+\item Trolltech Qt
+  3.0.5\footnote{http://www.trolltech.com/products/qt/}
+\item QExtSerialPort 0.5 von Wayne Roth zur Ansteuerung der seriellen
+  Schnittstelle
+\item CppUnit 1.9.11\footnote{http://cppunit.sourceforge.net/} als
+  Regressionstest Framework
+\end{itemize}
 
 \subsubsection{Maven}
 
@@ -756,10 +763,10 @@ Datenbank mit erfassten Berichten zu löschen.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Statistische Analyse}
 
-FIX: fehlt noch
-
 \section{Versions Kontrolle}
 \label{cvs analyse}
+
+\subsubsection{Quellcodeumfang}
 
 \begin{figure}[h!]
   \centering
@@ -784,15 +791,28 @@ mehr Quellcode entfernt als eingefügt. Im folgenden ist die Zunahme
 der Quellcodezeilen nach der Weihnachtspause wieder linear bis zur
 Fertigstellung von POA.
 
+\subsubsection{Umfang der Module}
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=15cm]{size_by_module}
   \caption{Verteilung der Quellcode Zeilenanzahl auf die Module}
 \end{figure}
 
-Dieses Diagramm zeigt den hohen Anteil der graphischen
-Benutzeroberfläche (GUI, View). Wobei auch anderen Modulen wie
-Scheduling und Download Benutzerschnittstellen enthalten sind.
+Dieses Diagramm zeigt Größenverhältnisse der Module, gemessen in
+Quellcodezeilen. Es ist zu berücksichtigen, dass der Anteil der
+graphischen Benutzeroberfläche (GUI) weit höher ist als das Diagramm
+vermuten lässt. Nahezu alle Module enthalten eine graphische
+Benutzerschnittstelle in Form von Dialogen, die Teile der
+Programmlogik implementiert und in dem Diagramm zu dem jeweiligen
+Modul gezählt wurden. Die View Komponente besteht ausschliesslich aus
+Anzeigeklassen und ist Submodul der GUI. 
+
+Zu bedauern ist der geringe Anteil des Test Moduls. Gemessen wurden
+die Klassen des Regressionstest. Erklärt werden kann dies mit dem
+hohen Anteil an schwierig automatisiert testbarem GUI Quellcode. 
+
+\subsubsection{Entwicklerkooperation}
 
 \label{developer by file}
 \begin{figure}[h!]
@@ -817,14 +837,33 @@ Scheduling und Download Benutzerschnittstellen enthalten sind.
 \end{figure}
 
 Diese Tabelle zeigt zu einer Liste von Quellcode Dateien, die Anzahl
-von Entwicklern die jeweils gemeinsam an einer Datei gearbeitet
-haben. Es sind nur die Top zehn Dateien angegeben, aber jede Datei wurde
-von mindestens zwei Teammitgliedern bearbeitet.
+von Entwicklern die jeweils gemeinsam an einer Datei gearbeitet haben.
+Es sind nur die Top zehn Dateien angegeben, aber auch in einer Liste
+aller Dateien würden sich nie weniger als zwei Bearbeiter pro Datei
+finden lassen. 
+
+Es gab innerhalb des Teams für die Implementierung eines Moduls
+jeweils einen bekannten zuständigen Entwickler, der im besonderen mit
+dem Quellcode vertraut war. Mit diesem wurde vor grösseren Änderungen
+innerhalb seines Zuständigkeitsbereichs durch andere Entwickler
+rücksprache gehalten, so daß Konflikte im vorraus vermieden werden
+konnten. Kleinere Änderungen oder Fehlerkorrekturen konnten im
+Zweifelsfall auch nachträglich oder über das Quellcode Repository
+kommuniziert werden.
+
+Diese Form des ``Collective Code Ownership'' ist sehr positiv zu
+bewerten. Es hat Reibungsverluste bei Änderungen und die Entstehung
+von Quellcode, der nur von einem einzelnen Entwickler verstanden und
+gewartet werden kann, vermieden. Alleine durch die Kenntniss, daß
+Quellcode von anderen gelesen wird, konnte die Lesbarkeit und Qualität
+erhöht werden.
+
+\subsubsection{Arbeitzeit}
 
 \begin{figure}[h!]
   \centering
   \includegraphics[width=15cm]{commit_by_hour}
-  \caption{Uhrzeiten der CVS Repository Aktivitäten}
+  \caption{Uhrzeiten der CVS Repository Aktivität}
 \end{figure}
 
 Das Diagramm zeigt die Uhrzeiten der Aktivitäten im Quellcode
@@ -841,9 +880,7 @@ allerdings sehr unwahrscheinlich erscheinen. Es gibt eine ausgeprägte
 Bandbreite von bevorzugten Arbeitszeiten wobei die Nachtarbeiter
 eindeutig die Mehrheit im Team stellen. 
 
-Der Versuch Teammeetings vormittags 14.00 Uhr 
-
-\subsection{Evolution}
+\subsubsection{Entwicklung des Quellcodes}
 
 \begin{figure}[h!]
   \centering
@@ -851,15 +888,47 @@ Der Versuch Teammeetings vormittags 14.00 Uhr
   \caption{Änderungshistorie der Versionen}
 \end{figure}
 
+Die Versionshistorie, auch Software Evolution genannt, zeigt die
+Art der Veränderung zwischen den einzelnen Versionen.
+
 \section{Metriken}
 
-\subsection{Testüberdeckung}
+Die unten angegebenen Metriken wurden mit der Software SLOCCount bzw.
+gemessen.
+
+\begin{figure}[h!]
+  \begin {tabular}[l]{ll}
+    Quellcodezeilen insgesammt & 28,614 \\
+    Anweisungszeilen & 17,451 \\
+    Kommentarzeilen & 7,414 \\
+    Leerzeilen & 3,749 \\
+  \end {tabular}
+  \caption{Quellcode Metriken}
+\end{figure}
+
+Die Ergebnisse in der unten angegeben Tabelle geben den Umfang des
+Regressionstests an. Wird die Testüberdeckung nur in Bezug auf die
+getesteten Klassen gemessen, ergibt sich eine Testüberdeckung von
+68,30%. 
+
+\begin{figure}[h!]
+  \begin {tabular}[l]{ll}
+    Getestete Anweisungszeilen & 7,867 \\
+    Ausgeführte Anweisungszeilen & 2,494 \\
+    Testüberdeckung & 31,70\% \\
+  \end {tabular}
+  \caption{Testüberdeckung}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Persönliche Berichte}
 
 \section{Necati Aydin}
 \section{Anselm Garbe}
+
+\begin{center}
+\includegraphics[width=5cm]{Fotos/anselm}
+\end{center}
 
 \subsection{Tätigkeiten}
 Seit Projektbeginn war ich neben den allgemeinen
@@ -943,6 +1012,10 @@ Das die POA Entwicklung ein voller Erfolg war dürfte vor allem auf die
 Team-Zusammensetzung zurückzuführen sein.
 
 \section{Stefan Hauser}
+
+\begin{center}
+\includegraphics[width=5cm]{Fotos/stefan}
+\end{center}
 
 \subsection{Team}
 Das POA-Team war eine Gruppe, deren Teilnehmer sehr unterschiedliche 
@@ -1181,6 +1254,11 @@ Vorgehens in der praktischen Anwendung auseinander zu setzen.
 
 
 \section{Marcel Kilgus}
+
+\begin{center}
+\includegraphics[width=5cm]{Fotos/marcel}
+\end{center}
+
 \subsection{Aufgaben}
 Aufgrund meiner weit über 10 Jahre Erfahrung mit Maschinencode und der
 Emulation von Prozessoren oblag mir das Seminarthema der
@@ -1273,6 +1351,10 @@ gewachsen.
 
 \section{Steffen Pingel}
 
+\begin{center}
+\includegraphics[width=5cm]{Fotos/steffen_p}
+\end{center}
+
 \subsection{Aufgaben}
 
 Ich habe vielfältige Aufgaben während des POA Projekts übernommen. In
@@ -1335,7 +1417,7 @@ Suite von automatisierten Regression-Tests, die vorwiegend von mir
 erstellt wurden. Die Qualität der Tests wurde anhand der
 Anweisungsüberdeckung mit dem Werkzeug gcov gemessen.
 
-Die Ausgabe von gcov wurde mit gcover graphisch als HTML Seiten
+Die Ausgabe von gcov wurde mit GCover graphisch als HTML Seiten
 aufbereitet. GCover ist als Teilprojekt von POA entstanden (siehe auch
 \ref{gcover} und orientiert sich an anderen Werkzeugen zur Messung der
 Testüberdeckung, von denen allerdings kein kostenloses zur Auswertung
@@ -1383,6 +1465,11 @@ Das entstandene Produkt erfüllt die Anforderungen des Kunden und ist
 qualitativ gut.
 
 \section{Tammo van Lessen}
+
+\begin{center}
+\includegraphics[width=5cm]{Fotos/tammo}
+\end{center}
+
 \subsection{Aufgaben}
 
 Der Abschnitt Studienprojekt B begann für mich mit der Auswahl eines

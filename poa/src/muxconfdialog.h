@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.11 2003/09/29 18:59:12 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.12 2003/09/30 10:22:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -160,6 +160,12 @@ public:
      * Returns the origin PinModel.
      */
     PinModel *origData() const;
+
+    /**
+     * Sets the <code>origin_<code> PinModel of this combo box
+     * item.
+     */
+    void setOrigData(PinModel *origin);
 
 private:
     PinModel *clone_;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.19 2003/09/29 20:48:14 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.20 2003/09/30 10:22:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -135,6 +135,10 @@ PinModel *MapToComboBoxItem::data() const {
 
 PinModel *MapToComboBoxItem::origData() const {
     return origin_;
+}
+
+void MapToComboBoxItem::setOrigData(PinModel *origin) {
+    origin_ = origin;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -361,7 +365,9 @@ void MuxConfDialog::updateModel() {
             }
             else {
                 // new pin
-                model_->addOutput(currPin->clone());
+                PinModel *newOuput = currPin->clone();
+                model_->addOutput(newOuput);
+                item->setOrigData(newOuput);
             }
         }
 
@@ -369,15 +375,15 @@ void MuxConfDialog::updateModel() {
         // delete everything which was deleted by the user
         for (unsigned i = 0; i < deletedMuxPins_.count(); i++) {
             MuxPin *pin = deletedMuxPins_.at(i);
-            deletedMuxPins_.remove(i);
             model_->removeMuxPin(pin);
         }
+        deletedMuxPins_.clear();
 
         for (unsigned i = 0; i < deletedMappings_.count(); i++) {
             MuxMapping *mapping = deletedMappings_.at(i);
-            deletedMappings_.remove(i);
             model_->removeMuxMapping(mapping);
         }
+        deletedMappings_.clear();
 
         // Flush mux pin list. Already deleted MuxPins
         // won't resist anymore in the model, not deleted
@@ -402,9 +408,9 @@ void MuxConfDialog::updateModel() {
                     QPtrList<MuxMapping> *origMappings = origPin->mappings();
                     for (unsigned i = 0; i < origMappings->count(); i++) {
                         MuxMapping *mapping = origMappings->at(i);
-                        origMappings->remove(i);
                         delete mapping;
                     }
+                    origMappings->clear();
                     model_->addMuxPin(origPin, true);
                     QPtrList<MuxMapping> *currMappings = currPin->mappings();
                     for (unsigned i = 0; i < currMappings->count(); i++) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.29 2003/09/29 13:54:17 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.30 2003/09/30 10:22:59 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -576,7 +576,6 @@ void BlockConfDialog::removeIo()
             root = (PinListViewItem *)root->parent();
         }
         PinModel *origin = item->origData();
-        bool remove = true;
         if (origin != 0) {
             if(origin->connected() == 0) {
                 // Save deleted pins, to clean up views
@@ -604,16 +603,14 @@ void BlockConfDialog::removeIo()
                         deletedPins_->addBefore(origin);
                         break;
                     case 1: // Cancel removal.
-                        remove = false;
+                        return;
                         break;
                 }
             }
         }
 
-        if (remove) {
-            root->takeItem(item);
-            delete item;
-        }
+        root->takeItem(item);
+        delete item;
     }
 }
 

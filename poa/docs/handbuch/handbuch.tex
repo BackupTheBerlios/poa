@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.10 2004/03/03 20:51:53 neco Exp $
+%% $Id: handbuch.tex,v 1.11 2004/03/04 02:20:24 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.10 $
-\RCSdef $Date: 2004/03/03 20:51:53 $
+\RCSdef $Revision: 1.11 $
+\RCSdef $Date: 2004/03/04 02:20:24 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -72,7 +72,7 @@ M"oglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
 Daher wird am ISW eine Plattform f"ur die Antriebsregelung entwickelt,
 auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalit"aten
 zu integrieren. Diese Plattform wird am ISW\footnote{Institut f"ur Steuerungstechnik
-der Werkzeugmaschinen und Fertigungseinrichtungen} an der UniversitÃ¤t Stuttgart kurz
+der Werkzeugmaschinen und Fertigungseinrichtungen} an der Universit"at Stuttgart kurz
 als ``Offener Antrieb'' bezeichnet.  \par
 Die hardwaretechnische Realisierung erfolgt in Form einer Einsteckplatine.
 Zentrales Element des Offenen Antriebes ist der Altera ``APEX'' Baustein. Es
@@ -81,7 +81,7 @@ das sich frei programmieren l"asst. Der Anwender hat die M"oglichkeit, die
 Funktion des Bausteins seinen Bed"urfnissen anzupassen.\par
 Um die Offenheit f"ur jeden Anwender nutzbar zu machen, wird f"ur das CPLD eine
 Architektur festgelegt, die es erm"oglicht, einzelne Funktionalit"aten in Form
-von Bl"ocken zu implementieren. Diese Bl"ocke k"onnen aus festprogrammierten
+von Bl"ocken zu implementieren. Diese Bl"ocke k"onnen aus fest programmierten
 Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Block kann
 auf die Signale aller anderen Bl"ocke zugreifen und stellt seine eigenen
 Ausgangssignale allen anderen Bl"ocken zur Verf"ugung.\par
@@ -151,17 +151,17 @@ Die hier Kurz beschriebenen Funktionen werden in den folgenden Abschnitten n"ahe
 
 \begin{itemize}
 \item {\bf Project:}	New, Open, Save, Save as, Print, Recent, Exit\newline
-Unter Project hat man die M"oglichkeit Projekte anzulegen, zu "offnen, abzuspeichern, auszudrucken und POA zu benden.
+Unter Project hat man die M"oglichkeit Projekte anzulegen, zu "offnen, abzuspeichern, auszudrucken und POA zu beenden.
 \item {\bf Edit:}	Cut, Copy, Paste\newline
 Unter diesem Men"upunkt kann man die Aktionen Ausschneiden, Kopieren und Einf"ugen ausf"uhren.
 \item {\bf View:}	Zoom in, Zoom normal, Zoom out\newline
 Unter View ist es m"oglich den Inhalt im Arbeitsfenster anzuzoomen.
 \item {\bf Tools:} 	Configuration, Route, Scheduling, Deploy Project\newline
-Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren.
+Unter Tools k"onnen markierte Bl"ocke konfiguriert oder markierte Verbindungen geroutet werden. Au"serdem kann man hier im Untermen"u Scheduling den Ablauf f"ur die Bl"ocke grafisch darstellen und manipulieren. Das Untermen"u Deploy Project bietet die M"oglichkeit am Projekt ein Konsistenzcheck durchzuf"uhren, CPU-Prgrammcode zu kompilieren und es auf das Board herunterzuladen.
 \item {\bf Settings:}	Show Grid, Configure POA\newline
 Unter Settings k"onnen Grundeinstellungen an POA vorgenommen werden. Hier kann z.B. das Raster, die Programmsprache eingestellt und externe Tools (Editor, Compiler, ...) eingebunden werden.
-\item {\bf Windows:} 	Tile, Tile Horizotal, Cascade\newline
-Hier k"onnen, falls mehrere Projekte gleichzeitig ge"offnet sind, die Arbeitsfenster je nach Wunsch nebeneinander, "ubereinander oder kaskardiert angezeigt werden.
+\item {\bf Windows:} 	Tile, Tile Horizontal, Cascade\newline
+Hier k"onnen, falls mehrere Projekte gleichzeitig ge"offnet sind, die Arbeitsfenster je nach Wunsch nebeneinander, "ubereinander oder kaskadiert angezeigt werden.
 \item {\bf Help:} 	Contens, About\newline
 Unter Help finden allgemeine Informationen "uber POA.\par
 \end{itemize}
@@ -207,12 +207,26 @@ Die wichtigsten Aktionen k"onnen auch mit den Befehlsbuttons in der Symbolleiste
 
 \chapter{Referenz}
 
-\section{Beschreibung der Standard Tasten}
+\section{Allgemein}
+\subsection{Farbgebung}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Beschriftung des Layouts}
+Um im Layout Beschriftungen vorzunehmen, muss man mit dem Mauszeiger auf das Symbol {\bf Anutate} in der Symbolleiste klicken. Alternativ kann man auch mit linken Maustaste ins Arbeitsfenster klicken und im Kontextme"u den Eintrag {\bf Anutate} w"ahlen. Der Mauszeiger wird zu einem Curser, den man nun frei im Arbeitsfenster positionieren kann. Klickt man mit dem Curser an die Stelle, wo die Beschriftung hin soll, "offnet sich ein Textfeld, in den man den gewünschten Text eingeben kann.\par
+Um dem Cursermodus verlassen zu k"onnen, muss man nur das Symbol {\bf Mauszeiger} in der Symbolleiste anklicken.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Zoomen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Beschreibung der Standard Buttons}
 \begin{figure}[htbp]
 
 \begin{center}
 
-%%\includegraphics[width=10cm]{OK1}
+\includegraphics[width=10cm]{Button}
 
 \caption{Tasten}\label{test}
 
@@ -254,7 +268,7 @@ Zur Ver"anderung der Sprache muss man im Untermen"u von {\bf Settings} den Eintr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Externe Programme einbinden}
-POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und konfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen auf die CPLD wird ein Download Tool ben"otigt.\par
+POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und komfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen auf die CPLD wird ein Download Tool ben"otigt.\par
 Zur Einbindung der externen Programme muss man im Untermen"u von {\bf Settings} den Eintrag {\bf Configure POA} w"ahlen. Im aufklappenden Dialog kann man unter dem Dateireiter {\bf Paths} die gew"unschten Programme einbinden.
 
 \begin{figure}[htbp]
@@ -365,7 +379,7 @@ Bl"ocke, wie CPUs, Cores etc. k"onnen per Drag`n Drop aus der Blockbibliothek in
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Blockkonfiguration allgemein}
-Beim Erzeugen eines Blocks wird ein Kofigurationsdialog automatisch ge"offnet. Hier hat man je nach Block verschiedene Konfigurationsm"oglichkeiten. Der Konfigurationsdialog kann auch sp"ater ge"offnet werden. Dazu w"ahlt man den zu konfigurierenden Block mit der rechten Maustaste aus und w"ahlt im Kontextmen"u den Eintrag {\bf Configuration}, oder man f"uhrt ein Doppelklick mit der linken Maustaste auf den Block aus.\par
+Beim Erzeugen eines Blocks wird ein Konfigurationsdialog automatisch ge"offnet. Hier hat man je nach Block verschiedene Konfigurationsm"oglichkeiten. Der Konfigurationsdialog kann auch sp"ater ge"offnet werden. Dazu w"ahlt man den zu konfigurierenden Block mit der rechten Maustaste aus und w"ahlt im Kontextmen"u den Eintrag {\bf Configuration}, oder man f"uhrt ein Doppelklick mit der linken Maustaste auf den Block aus.\par
 Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber die Men"uleiste oder Symbolleiste ausf"uhren. \par
 
 \begin{figure}[htbp]
@@ -381,14 +395,14 @@ Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber di
 \end{figure}
 
 \subsubsection{Blockname "andern}
-Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekrÃ¤ftigen Namen zu geben.\par
+Zur eindeutigen Identifizierung der Bl"ocke ist es von Vorteil der Bl"ocken einen aussagekr"aftigen Namen zu geben.\par
 Im Textfeld {\bf Name} kann man den neuen Namen des Blocks eingeben.
 \subsubsection{Block beschreiben}
 Im Textfeld {\bf Description} kann man Beschreibungen oder Komentare zum Block eingeben.\par
 Die Blockbeschreibung hat den Vorteil, dass man sp"ater auch noch leicht nachvollziehen kann, wof"ur dieser Block gut ist.\par
 Diese Option ist f"ur {\bf Multiplexer} nicht verf"ugbar.
 \subsubsection{Neue Pins erzeugen}
-In der Pinbibliothek k"onnen blockabh"angig drei verschiedene Arten von Pins ("'Episodic Pin"', "'Input Pin"' und "'Output Pin"') verwaltet werden. Je nach Pinart w"ahlt man in der Bibliothek die entsprechende Kategorie. Dabei wird der {\bf New} Button aktiviert. Mit einem Kick auf den aktivierten {\bf New} Button wird ein neuer Pin erzeugt. \par
+In der Pinbibliothek k"onnen blockabh"angig drei verschiedene Arten von Pins ("'Episodic Pin"', "'Input Pin"' und "'Output Pin"') verwaltet werden. Je nach Pinart w"ahlt man in der Bibliothek die entsprechende Kategorie. Dabei wird der {\bf New} Button aktiviert. Mit einem Klick auf den aktivierten {\bf New} Button wird ein neuer Pin erzeugt. \par
 \subsubsection{Pins l"oschen}
 Dazu w"ahlt man in der Pinbibliothek den zu l"oschende Pin aus. Der {\bf Remove} Button wird nun aktiviert. Mit einem Mausklick auf den {\bf Remove} Button wird der Pin gel"oscht. Wenn an diesem Pin eine Verbindung angedockt war, wird diese Verbindung automatisch gel"oscht.
 \subsubsection{"Anderungen an Pins vornehmen}
@@ -501,7 +515,7 @@ Mit {\bf Remove} kann man die ausgew"ahlte Zuordnung l"oschen.\par
 \subsection{Blockbibliothek}
 Bl"ocke, die einmal konfiguriert worden sind und oft wiederverwendet werden sollen, 
 k"onnen in der Blockbibliothek verwaltet werden. Dadurch wird die Wiederverwendung 
-von Bl"ocken erleichtert und die Bl"ocke für andere Projekte zur Verf"ugung gestellt.\par
+von Bl"ocken erleichtert und die Bl"ocke f"ur andere Projekte zur Verf"ugung gestellt.\par
 Um ein Block in die Bibliothek aufzunehmen, klickt man mit der linken Maustaste 
 auf den Block und l"a"st die Taste gedr"uckt. Je nach Art des Blocks kann man den Block
 in die entsprechende Kategorie verschieben. Wenn die Maustaste wieder losgelassen
@@ -521,12 +535,12 @@ Zum Verschieben eines Blocks, w"ahlt man den Block mit der linken Maustaste aus,
 \subsection{Block kopieren und einf"ugen}
 Wenn man mehrere identische Bl"ocke f"ur das Layout in einem oder in verschiedenen Projekten ben"otigt, eignet sich dazu die "'copy and paste"' Funktion. Hierzu w"ahlt man den Block mit der rechten Maustaste aus. Im Kontextmen"u w"ahlt man den Eintrag {\bf Copy}. Wenn man nun mit der linken Maustaste auf ein freies Feld im Arbeitsfenster klickt, kann man im Kontextmen"u den Eintrag {\bf Paste} w"ahlen, um eine Kopie des ausgew"ahlten Blocks zu erzeugen.
 Die Kopie wird automatisch im linken oberen Rand des Arbeitsfensters positioniert.\newline
-Altenativ kann diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausgef"uhrt werden.
+Alternativ kann diese Aktion auch "uber die Men"uleiste bzw. Symbolleiste ausgef"uhrt werden.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block ausschneiden und einf"ugen}
-Hierbei geht man wie zuvor im Abschnitt "'Block kopieren und einf"ugen"' vor, mit der Aunahme, dass statt der Aktion {\bf Copy} die Aktion {\bf Cut} w"ahlt wird. \par
+Hierbei geht man wie zuvor im Abschnitt "'Block kopieren und einf"ugen"' vor, mit der Ausnahme, dass statt der Aktion {\bf Copy} die Aktion {\bf Cut} w"ahlt wird. \par
 Wenn ein Block ausgeschnitten wird, werden alle Verbindungen zu diesem Block unwiderruflich gel"oscht.
 
 
@@ -566,7 +580,7 @@ Es gibt zwei verschiedene M"oglichkeiten des automatischen Routens:
 \item der Smart Router kann nach Erzeugung einer Verbindung eingesetzt werden, um eventuell "uberlappende Verbindungen "uberlappungsfrei darzustellen.
 \end{itemize}
 Wenn man eine Verbindung automatisch routen m"ochte, w"ahlt man die Verbindung mit rechten Maustaste aus. Im Kontextmen"u den Eintrag {\bf Routen} w"ahlen und unter {\bf Routen} auf den gew"unschten Router ({\bf Default Router} oder {\bf Smart Router}) klicken.\newline
-Der Smart Router kann auch durch ein Doppelkilck auf die Verbindung gestartet werden.
+Der Smart Router kann auch durch ein Doppelklick auf die Verbindung gestartet werden.
 
 \subsubsection{Verbindung manuell routen}
 Zum manuellen Routen muss man die Verbindung mit der linken Maustaste ausw"ahlen. Nun kann man mit gedr"uckter Maustaste einen Verbindungsabschnitt entweder horizontal oder vertikal verschieben. Das hei"st ein horizontaler Verbindungsabschnitt kann nur vertikal verschoben werden und ein vertikaler Verbindungsabschnitt nur horizontal. Beim Verschieben der einzelnen Abschnitte werden die anh"angenden Linien automatisch nachgezogen, sodass eine Verbindung immer bestehen bleibt.
@@ -574,16 +588,55 @@ Zum manuellen Routen muss man die Verbindung mit der linken Maustaste ausw"ahlen
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Verbindung l"oschen}
 Die zul"oschende Verbindung mit der rechten Maustaste ausw"ahlen. Im Kontextmen"u w"ahlt man nun den Eintrag {\bf Remove} und die Verbindung wird unwiderruflich gel"oscht.
-Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ahlen und danach das Symbol {\bf L"oschen} in der Symbolleiste bzw. den Eintrag {\bf Remove} in der Men"uleiste anklicken oder die {\bf Enfernen} Taste auf der Tastatur dr"ucken.
+Alternativ kann man die zul"oschende Verbindung mit der linken Maustaste ausw"ahlen und danach das Symbol {\bf L"oschen} in der Symbolleiste bzw. den Eintrag {\bf Remove} in der Men"uleiste anklicken oder die {\bf Entfernen} Taste auf der Tastatur dr"ucken.
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scheduling}
-\section{Deploy Project}
-{\bf Deploy Projekt} erm"oglicht dem Benutzer eine Plausibilit"atspr"ufung durchzuf"uhren.
-\section{Allgemein}
-\subsection{Farbgebung}
-\subsection{Beschriftung des Layouts}
-\subsection{Zoomen}
+\begin{figure}[htbp]
 
+\begin{center}
+
+\includegraphics[width=15cm]{Scheduling1}
+
+\caption{Scheduling}\label{test}
+
+\end{center}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Deploy Project}
+{\bf Deploy Project} erm"oglicht dem Benutzer eine Plausibilit"atspr"ufung durchzuf"uhren, um eventuelle Fehler vor dem Downloadvorgang zu beseitigen. Bei der Pr"ufung des Projekt wird nach Inkonsistenz in den Bl"ocken und Verbindungen gesucht. Wird ein Probleme bzw. Fehler entdeckt, so bekommt dieser einen Status (kritical, warning). Wenn keine Fehler entdeckt werden, wird der Status der Bl"ocke oder Verbindungen auf {\bf OK} gesetzt.\newline
+Au"ser Plausibilit"atspr"ufung kan man unter {\bf Deploy Project} den Programmcode der CPUs kompilieren und einzeln auf das CPLD-Board herunterladen.
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{Deploy}
+
+\caption{Deploy}\label{test}
+
+\end{center}
+\end{figure}
+Um eine Plausibilit"atspr"ufung durchzuf"uhren, w"ahlt man im Men"u {\bf Tools} das Untermen"u {\bf Deploy Project}. Es wird der Dialog {\bf Deploy Project} ge"offnet, welcher die Befunde der Pr"ufung und deren Status kurz in einer Tabelle wiedergibt. Klickt man auf einen Eintrag in der Tabelle, so erscheint eine detailliertere Beschreibung des markierten Befunds.\par
+Mit {\bf Cancel} kann man den Dialog verlassen und eventuelle Fehler korrigieren, um danach mit der Pr"ufung fortzufahren.\newline
+Mit {\bf Next} kommt man in den n"achsten Dialog, in dem man den Programmcode der CPUs kompilieren und herunterladen kann. Dazu w"ahlt man in der Auswahlbox die CPU aus. Wenn man nun auf den Button {\bf Compile} dr"uckt, wird mit dem externe C-Compiler der zur CPU geh"orende Programmcode kompiliert. Dabei wird der {\bf POA Terminal} ge"offnet, um entsprechende Meldung auszugeben. Wird der {\bf Download} Button gedr"uckt, so wird das externe Download-Tool gestartet, um den kompilierten Code als {\bf Binary File} auf das CPLD-Board herunterzuladen.
+Im {\bf Details} Bereich wird das Verzeichnis des Quellcodes und das der Bin"ardatei angegeben. Au"serdem kann man hier noch das Datum der letzten "Anderung unter {\bf Last Modified} ersehen.
+\begin{figure}[htbp]
+
+\begin{center}
+
+\includegraphics[width=10cm]{Deploy2}
+
+\caption{Deploy}\label{test}
+
+\end{center}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \include{definitionen}
 \end{document}

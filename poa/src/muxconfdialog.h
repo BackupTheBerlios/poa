@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.15 2003/12/17 11:31:54 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.16 2003/12/17 15:58:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,10 +30,11 @@
 #include <qlistview.h>
 #include <qptrlist.h>
 
+#include "pinmodel.h"
+
 class MuxMapping;
 class MuxModel;
 class PinListViewItem;
-class PinModel;
 
 class QBoxLayout;
 class QComboBox;
@@ -53,8 +54,8 @@ public:
     /**
      * Creates a MuxMapping list view item for the given abstract model
      */
-    MuxMappingListViewItem(QListViewItem *parent, MuxMapping*clone = 0,
-                           MuxMapping *origin = 0);
+    MuxMappingListViewItem(QListView *parent, QListViewItem *after,
+                           MuxMapping *clone = 0, MuxMapping *origin = 0);
 
     /**
      * Default destructor
@@ -135,6 +136,9 @@ private:
     /** Removes the Mapping given by <code>item</code>. */
     void removeMapping(MuxMappingListViewItem *item);
 
+    /** Finds and returns PinModel by id. */
+    PinModel *findPinById(PinModel::PinType, unsigned id);
+
     QLineEdit* nameLineEdit;
     QLineEdit *ioNameLineEdit;
     QPushButton *addIoPushButton;
@@ -146,9 +150,10 @@ private:
     QPushButton* addPushButton;
     QPushButton* updatePushButton;
     QPushButton* removePushButton;
-    QComboBox* ioComboBox_;
-    QSpinBox* endSpinBox;
-    QSpinBox* beginSpinBox;
+    QSpinBox *firstInputBitSpinBox;
+    QSpinBox *lastInputBitSpinBox;
+    QSpinBox *firstOutputBitSpinBox;
+    QSpinBox *lastOutputBitSpinBox;
     QSpinBox *ioBitsSpinBox;
     QListView* mappingListView;
     QListView* inputListView;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.cpp,v 1.1 2003/12/17 10:39:18 garbeam Exp $
+ * $Id: pinlistviewitem.cpp,v 1.2 2003/12/17 15:58:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,18 @@ PinListViewItem::PinListViewItem(QListView *parent,
     setOpen(true);
     type_ = type;
     clone_ = origin_ = 0;
+}
+
+PinListViewItem::PinListViewItem(QListView *parent, QListViewItem *after,
+                                 PinModel *clone, PinModel *origin)
+    : QListViewItem(parent, after)
+{
+    setOpen(false);
+    type_ = clone->type();
+    clone_ = clone;
+    origin_ = origin;
+
+    update();
 }
 
 PinListViewItem::PinListViewItem(QListViewItem *parent,

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.h,v 1.1 2003/12/17 10:39:18 garbeam Exp $
+ * $Id: pinlistviewitem.h,v 1.2 2003/12/17 15:58:45 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,12 @@ public:
      */
     PinListViewItem(QListView *parent, QListViewItem *after = 0,
             PinModel::PinType type = PinModel::INPUT);
+
+    /**
+     * Creates a IO list view item for the given abstract model
+     */
+    PinListViewItem(QListView *parent, QListViewItem *after,
+                    PinModel *clone = 0, PinModel *origin = 0);
 
     /**
      * Creates a IO list view item for the given abstract model

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.17 2003/09/18 14:54:32 vanto Exp $
+ * $Id: pinmodel.h,v 1.18 2003/09/20 17:25:49 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -52,27 +52,27 @@ public:
 
     /**
      * Creates a new <code>PinModel</code>.
-     * @param parent is the parent BlockModel.
+     * @param parent is the parent AbstractModel.
      * @param id is its id.
      * @param name is its name.
      * @param address is its address.
      * @param bits is its bits.
      */
-    PinModel(BlockModel *parent, unsigned id, const QString &name,
+    PinModel(AbstractModel *parent, unsigned id, const QString &name,
              unsigned address, unsigned bits, PinType type);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code>.
-     * @param parent is the parent BlockModel
+     * @param parent is the parent AbstractModel
      */
-    PinModel(BlockModel *parent, const QString &name);
+    PinModel(AbstractModel *parent, const QString &name);
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code> and de-
      * serializes the given xml subtree to set this' properties.
-     * @param parent is the parent BlockModel
+     * @param parent is the parent AbstractModel
      */
-    PinModel(BlockModel *parent, QDomElement pinElem);
+    PinModel(AbstractModel *parent, QDomElement pinElem);
 
     /**
      * Default destructor
@@ -80,9 +80,9 @@ public:
     virtual ~PinModel();
 
     /**
-     * Returns this' parent (BlockModel)
+     * Returns this' parent (AbstractModel)
      */
-    BlockModel *parent();
+    AbstractModel *parent();
 
 
     /**
@@ -190,7 +190,7 @@ private:
 
     unsigned id_;
     QString name_;
-    BlockModel *parent_;
+    AbstractModel *parent_;
     unsigned address_;
     unsigned bits_;   // data type to be used in C source and width of pin
                       // one pin can be wider than one bit.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.11 2004/02/11 13:45:02 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.12 2004/03/24 14:52:16 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -241,8 +241,8 @@ void MuxMappingConfDialog::inputSelectionChanged(int index) {
     index = 0;
     PinListViewItem *item = inputComboBox_->selectedItem();
     unsigned value = item->text(2).toUInt();
-    firstInputBitSpinBox_->setMaxValue(value);
-    lastInputBitSpinBox_->setMaxValue(value);
+    firstInputBitSpinBox_->setMaxValue(value - 1);
+    lastInputBitSpinBox_->setMaxValue(value - 1);
 }
 
 void MuxMappingConfDialog::outputSelectionChanged(int index) {
@@ -250,6 +250,6 @@ void MuxMappingConfDialog::outputSelectionChanged(int index) {
     index = 0;
     PinListViewItem *item = outputComboBox_->selectedItem();
     unsigned value = item->text(2).toUInt();
-    firstOutputBitSpinBox_->setMaxValue(value);
-    lastOutputBitSpinBox_->setMaxValue(value);
+    firstOutputBitSpinBox_->setMaxValue(value - 1);
+    lastOutputBitSpinBox_->setMaxValue(value - 1);
 }

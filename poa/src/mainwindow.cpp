@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.100 2004/01/22 12:11:29 squig Exp $
+ * $Id: mainwindow.cpp,v 1.101 2004/01/22 20:49:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -301,7 +301,6 @@ void MainWindow::initializeMenu()
     QPopupMenu *viewMenu;
     QPopupMenu *toolsMenu;
     QPopupMenu *settingsMenu;
-    QPopupMenu *windowMenu;
     QPopupMenu *helpMenu;
 
     fileMenu = new QPopupMenu(this);
@@ -356,11 +355,11 @@ void MainWindow::initializeMenu()
     openSettingsAction->addTo(settingsMenu);
 
     // window
-    windowMenu = new QPopupMenu(this);
-    //menuBar()->insertItem(tr("&Window"), windowMenu);
-    tileAction->addTo(windowMenu);
-    tileHorizontalAction->addTo(windowMenu);
-    cascadeAction->addTo(windowMenu);
+    windowMenu_ = new QPopupMenu(this);
+    menuBar()->insertItem(tr("&Window"), windowMenu_);
+    tileAction->addTo(windowMenu_);
+    tileHorizontalAction->addTo(windowMenu_);
+    cascadeAction->addTo(windowMenu_);
 
     // help
     helpMenu = new QPopupMenu(this);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.19 2003/12/03 18:26:12 vanto Exp $
+ * $Id: mdiwindow.h,v 1.20 2004/01/22 20:49:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -54,6 +54,11 @@ public:
     ~MdiWindow();
 
     /**
+     * Resizes the canvas, if its size changed according to this' zoom level
+     */
+    void resizeCanvas();
+
+    /**
      * Returns the content of the window.
      */
     CanvasView *view() const;
@@ -62,11 +67,6 @@ public:
      * Returns the current zoom level of this mdi window
      */
     double zoomLevel();
-
-    /**
-     * Resizes the canvas, if its size changed according to this' zoom level
-     */
-    void resizeCanvas();
 
 public slots:
     void setZoomLevel(double zoomLevel);
@@ -88,8 +88,10 @@ protected:
     virtual void resizeEvent(QResizeEvent *e);
 
 private:
+
     CanvasView *view_;
     double zoomLevel_;
+
 };
 
 #endif // MDIWINDOW_H

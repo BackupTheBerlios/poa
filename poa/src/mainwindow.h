@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.37 2004/01/22 12:07:42 squig Exp $
+ * $Id: mainwindow.h,v 1.38 2004/01/22 20:49:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -155,7 +155,6 @@ public slots:
     virtual void openScheduling();
     virtual void openSettings();
     virtual void openDeployWizard();
-    //    virtual void saveProject();
     virtual void saveToLibrary();
     virtual void smartRoute();
     virtual void windowActivated(QWidget *w);
@@ -223,6 +222,7 @@ private:
     QAction *cascadeAction;
     QAction *saveToLibraryAction_;
     QAction *tileAction;
+    QPopupMenu *windowMenu_;
 
 private slots:
     void closeWindow();

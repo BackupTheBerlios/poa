@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.23 2004/01/21 23:38:21 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.24 2004/01/22 20:49:09 squig Exp $
  *
  *****************************************************************************/
 
@@ -122,6 +122,13 @@ void MdiWindow::resizeEvent(QResizeEvent *e)
     resizeCanvas();
 }
 
+void MdiWindow::setModified(bool modified)
+{
+    setCaption(view_->project()->name() + " - "
+               + view_->canvas()->name() + QString((modified) ? "*" : ""));
+
+}
+
 void MdiWindow::setZoomLevel(double zoomLevel)
 {
     if (zoomLevel != 0 && zoomLevel != zoomLevel_) {
@@ -137,11 +144,4 @@ void MdiWindow::setZoomLevel(double zoomLevel)
 double MdiWindow::zoomLevel()
 {
     return zoomLevel_;
-}
-
-void MdiWindow::setModified(bool modified)
-{
-    setCaption(view_->project()->name() + " - "
-               + view_->canvas()->name() + QString((modified) ? "*" : ""));
-
 }

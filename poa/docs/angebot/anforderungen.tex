@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.5 2003/06/01 20:12:00 keulsn Exp $
+%% $Id: anforderungen.tex,v 1.6 2003/06/07 16:01:04 garbeam Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -42,8 +42,8 @@ Ausgangssignale allen anderen Modulen zur Verfügung.\par
 Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
 von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
 Netzwerk konfiguriert werden kann.\par
-Die detaillierten Anforderungen der hiermit angebotenen Programmierumgebung
-``Offener Antrieb`` erschliessen sich nur aus dem Zusammenhang des im Folgenden
+Die detaillierten Anforderungen der hiermit angebotenen ``Programmierumgebung
+Offener Antrieb'' erschliessen sich nur aus dem Zusammenhang des im Folgenden
 dargelegten Kataloges der Funktionalen Anforderungen. 
 
 
@@ -51,8 +51,8 @@ dargelegten Kataloges der Funktionalen Anforderungen.
 %% Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 
-Die Programmierumgebung ``Offener Antrieb`` soll eine grafische Oberfläche
-mit folgenden wesentliche Funktionalitäten bieten:
+Die ``Programmierumgebung Offener Antrieb'' soll eine englisch-sprachige,
+grafische Oberfläche mit folgenden wesentliche Funktionalitäten bieten:
 \begin{itemize}
 \item Darstellung und Manipulation rasterisierter CPLD Layouts
 \item Verwaltung und Editierung einer CPLD-Modulbibliothek zur CPLD-Layout
@@ -88,17 +88,14 @@ in einer geeigneten Verzeichnisstruktur abgelegt.
 %% CPLD-Modulbibliothek
 \subsection{CPLD-Modulbibliothek}
 Die Modulbibliothek ist eine CPLD-Layout übergreifende Sammlung von
-Funktionsblöcken (CPUs, Cores, E/A-Blöcke), die in CPLD-Layouts einbettbar
-sein sollen. Bereits vorhandene, in CPLD-Layout eingebettete Funktionsblöcke,
-die umkonfiguriert oder editiert wurden (z.B. spezieller Code in einem
-CPU-Block), und demnach noch nicht in der Modulbibliothek existieren,
-sollen in die Modulbibliothek exportierbar sein.\par
-Funktionsblöcke sollen CPLD-Layout-unabhängig aus der Modulbibliothek
-entferbar, editierbar und umkonfigurierbar sein (mit Ausnahme der drei
-Grundfunktionsblöcke).\par
-Die Modulbibliothek soll permanent gespeichert werden und bei jedem
-Systemaufruf automatisch geladen werden. Eine Verwaltung verschiedener
-Modulbibliotheken wird nicht angeboten.
+Funktionsblöcken (CPU, Cores, E/A-Blöcke), die in CPLD-Layouts einbettbar
+sein sollen. Die Funktionsblöcke sollen in einer XML-Struktur verwaltet
+werden.\par
+Als Initialbefüllung werden verschiedene Core-Blöcke, ein E/A-Block und
+ein CPU-Block angeboten. Die Modulbibliothek ist nur durch Editierung der
+zugrundeliegenden XML-Struktur veränderbar.\par
+Die Modulbibliothek soll bei jedem Systemaufruf automatisch geladen werden.
+Eine Verwaltung verschiedener Modulbibliotheken wird nicht angeboten.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Funktionsblock
@@ -190,3 +187,4 @@ Codierrichtline und Kommentierung sichergestellt.
 %%% Local Variables: 
 %%% TeX-master: "angebot"
 %%% End: 
+%%% vim:tw=79:

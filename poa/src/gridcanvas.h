@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.21 2003/09/22 12:36:43 vanto Exp $
+ * $Id: gridcanvas.h,v 1.22 2003/09/23 13:49:23 squig Exp $
  *
  *****************************************************************************/
 
@@ -62,6 +62,11 @@ public:
      * Adds ConnectorViews between the two given PinViews.
      */
     void addConnectorView(ConnectorViewList *);
+
+    /**
+     * Increases the z-layer and returns the increased value.
+     */
+    double GridCanvas::incZ();
 
     /**
      * Returns grid coordiante that is closest to <code>p</code>.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.22 2003/09/22 12:36:43 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.23 2003/09/23 13:49:23 squig Exp $
  *
  *****************************************************************************/
 
@@ -34,9 +34,9 @@
 #include <qsize.h>
 
 GridCanvas::GridCanvas(QString name)
+    : currentZ_(0)
 {
     setName(name);
-    currentZ_ = 0;
     setDoubleBuffering(TRUE);
 
     connect(Settings::instance(), SIGNAL(gridSizeChanged(int)),
@@ -50,14 +50,12 @@ void GridCanvas::addConnectorView(ConnectorViewList *viewList)
     //    ConnectorViewList *viewList = new ConnectorViewList(source, target, this);
     connectors_.append(viewList);
 
-    ++currentZ_;
-
     QCanvasItemList segments = viewList->allSegments();
     for (QCanvasItemList::Iterator it = segments.begin();
      it != segments.end();
      ++it) {
 
-        (*it)->setZ(currentZ_);
+        (*it)->setZ(0);
         (*it)->show();
     }
     update();
@@ -65,13 +63,13 @@ void GridCanvas::addConnectorView(ConnectorViewList *viewList)
 
 void GridCanvas::addView(AbstractModel *item, int x, int y)
 {
-    ++currentZ_;
+    double z = incZ();;
     QCanvasItemList l = item->createView(this);
     for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
         if (x || y) {
             (*it)->moveBy(x, y);
         }
-        (*it)->setZ(currentZ_);
+        (*it)->setZ(z);
         (*it)->show();
     }
     connect(item, SIGNAL(updated()), this, SLOT(updateAll()));
@@ -124,6 +122,11 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
             painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
         }
     }
+}
+
+double GridCanvas::incZ()
+{
+    return ++currentZ_;
 }
 
 QPoint GridCanvas::toGrid(QPoint p)

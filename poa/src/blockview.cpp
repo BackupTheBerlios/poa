@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.35 2003/09/23 09:53:07 garbeam Exp $
+ * $Id: blockview.cpp,v 1.36 2003/09/23 13:49:23 squig Exp $
  *
  *****************************************************************************/
 
@@ -224,7 +224,29 @@ int BlockView::rtti() const
 void BlockView::setSelected(bool yes)
 {
     QCanvasRectangle::setSelected(yes);
+    setZ(static_cast<GridCanvas *>(canvas())->incZ());
     updateProperties();
+}
+
+void BlockView::setZ(double z)
+{
+    QCanvasRectangle::setZ(z);
+
+    QValueListIterator<PinView *> current = leftPins_.begin();
+    while (current != leftPins_.end()) {
+        (*current)->setZ(z);
+        ++current;
+    }
+    current = rightPins_.begin();
+    while (current != rightPins_.end()) {
+        (*current)->setZ(z);
+        ++current;
+    }
+    current = bottomPins_.begin();
+    while (current != bottomPins_.end()) {
+        (*current)->setZ(z);
+        ++current;
+    }
 }
 
 void BlockView::updateProperties()

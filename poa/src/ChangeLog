@@ -1,18 +1,25 @@
+2003-09-23  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* canvasview.cpp (contentsMousePressEvent): Disabled PinView
+	popup. 
+
+	* blockview.cpp: Raise block on select.
+
 2003-09-21  Tammo van Lessen  <vanto@users.sourceforge.net>
 
-	* connectorviewsegment.cpp (setSelected): make connectors 
-	selectable and removable
+	* connectorviewsegment.cpp (setSelected): Make connectors 
+	selectable and removable.
 
-	* mainwindow.cpp: playing Haldenspezialist
+	* mainwindow.cpp: Playing Haldenspezialist
 	(fileNew): file new fixed.
 
-	* aboutdialog.cpp (addFileTab): playing Haldenspezialist
+	* aboutdialog.cpp (addFileTab): Playing Haldenspezialist.
 
 	* connectorviewlist.cpp (ConnectorViewList): Connect to the
 	PinModel's delete signal.
 
 	* canvasview.cpp (CanvasView): Add connector popup, 
-	assure that qt deletes the popupmenus automaticaly
+	assure that qt deletes the popupmenus automaticaly.
 
 2003-09-19  Tammo van Lessen  <vanto@users.sourceforge.net>
 

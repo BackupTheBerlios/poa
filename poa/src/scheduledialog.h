@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.16 2004/01/18 17:20:02 vanto Exp $
+ * $Id: scheduledialog.h,v 1.17 2004/01/18 19:58:17 vanto Exp $
  *
  *****************************************************************************/
 
@@ -59,10 +59,12 @@ private:
     QBoxLayout *dialogLayout;
     QBoxLayout *topLayout;
     QBoxLayout *middleLayout;
+    QBoxLayout *rightLayout_;
     QSplitter *splitterWidget;
     QWidget *topWidget;
     QWidget *middleWidget;
     QWidget *bottomWidget;
+    QWidget *rightWidget_;
     QCanvasRectangle *highlightCanvasRectangle;
 
     QTable *timingTable;
@@ -77,6 +79,9 @@ private:
     QPushButton *helpPushButton;
     QPushButton *cancelPushButton;
     QPushButton *okPushButton;
+
+    QPushButton *upPushButton_;
+    QPushButton *downPushButton_;
 
     QSlider *zoomSlider;
     double zoom_;
@@ -174,9 +179,14 @@ private slots:
     void modelChanged(int row, int col);
 
     /**
-     * A row has been swapped.
+     * Move selected row up.
      */
-    void rowMoved(int section, int fromIndex, int toIndex);
+    void moveRowUp();
+
+    /**
+     * Move selected row down.
+     */
+    void moveRowDown();
 };
 
 /**
@@ -231,7 +241,6 @@ class ArrowLine : public QCanvasLine
     virtual void drawShape(QPainter &p);
 
  private:
-    static const double RAD2DEG;
     double computeAngle(int sx, int sy, int ex, int ey);
 
 };

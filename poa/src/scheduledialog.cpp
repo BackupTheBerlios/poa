@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.32 2004/01/18 17:33:51 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.33 2004/01/18 19:58:17 vanto Exp $
  *
  *****************************************************************************/
 
@@ -59,9 +59,9 @@ const int BOX_HEIGHT = 10;          // Height of one box in diagram
 const int BOX_YSPACING = 20;        // Space between two boxes
 const int RULER_HEIGHT = 25;
 const int BLOCKS_PER_CANVAS = 10;
-const int RULER_SNAP = 250;    // nanoseconds to snap the rulerbar to.
+const int RULER_SNAP = 250;         // nanoseconds to snap the rulerbar to.
 const int RULER_INTERVAL = 50;      // show a rulerbar every X pixels (+snap)
-const double ArrowLine::RAD2DEG = 57.2958;
+const double RAD2DEG = 57.2958;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -215,18 +215,32 @@ void ScheduleDialog::initTimingWidget()
     timingTable->setSelectionMode(QTable::SingleRow);
     timingTable->setReadOnly(false);
     timingTable->setFocusStyle(QTable::FollowStyle);
-    timingTable->setRowMovingEnabled(true);
+    timingTable->setRowMovingEnabled(false);
 
     connect(timingTable, SIGNAL(valueChanged(int, int)),
             this, SLOT(modelChanged(int,int)));
-
-    connect(timingTable->verticalHeader(), SIGNAL(indexChange(int, int, int)),
-            this, SLOT(rowMoved(int, int, int)));
 
     for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         fillTimingTable(*it);
     }
     topLayout->addWidget(timingTable);
+
+    rightWidget_ = new QWidget(topWidget);
+    rightLayout_ = new QVBoxLayout(rightWidget_, WIDGET_SPACING);
+    topLayout->addWidget(rightWidget_);
+
+    upPushButton_ = new QPushButton(rightWidget_, "upPushButton");
+    upPushButton_->setText("+");
+    connect(upPushButton_, SIGNAL(clicked()),
+            SLOT(moveRowUp()));
+
+    downPushButton_ = new QPushButton(rightWidget_, "downPushButton");
+    downPushButton_->setText("-");
+    connect(downPushButton_, SIGNAL(clicked()),
+            SLOT(moveRowDown()));
+
+    rightLayout_->addWidget(upPushButton_);
+    rightLayout_->addWidget(downPushButton_);
 }
 
 void ScheduleDialog::initGraphWidget()
@@ -403,7 +417,7 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
             }
 
             // check if this block is the next source for the target block
-            if (t + (2 * bt->getRuntime()) + bt->getClock() <= targetTime  ) {
+            if (t + (2 * bt->getRuntime()) + bt->getClock() < targetTime  ) {
                 continue;
             }
 
@@ -521,10 +535,23 @@ void ScheduleDialog::modelChanged(int, int)
     initCanvas();
 }
 
-void ScheduleDialog::rowMoved(int section, int fromIndex, int toIndex)
+void ScheduleDialog::moveRowUp()
 {
-    qDebug("Move: Section:"+QString::number(section)+",from: "+QString::number(fromIndex)+", to: "+QString::number(toIndex));
     //    inputBlocks.insert(toIndex, inputBlocks.take(fromIndex));
+    inputBlocks.insert(timingTable->currentRow() - 1,
+                       inputBlocks.take(timingTable->currentRow()));
+    qDebug(QString::number(timingTable->currentRow()));
+    qDebug("-1");
+    modelChanged(0,0);
+}
+
+void ScheduleDialog::moveRowDown()
+{
+    //    inputBlocks.insert(toIndex, inputBlocks.take(fromIndex));
+    inputBlocks.insert(timingTable->currentRow() + 1,
+                       inputBlocks.take(timingTable->currentRow()));
+    qDebug(QString::number(timingTable->currentRow()));
+    qDebug("+1");
     modelChanged(0,0);
 }
 

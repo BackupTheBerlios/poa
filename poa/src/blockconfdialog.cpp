@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.61 2004/01/28 18:16:52 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.62 2004/01/28 20:37:44 squig Exp $
  *
  *****************************************************************************/
 
@@ -73,7 +73,6 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, Project *project,
 
 BlockConfDialog::~BlockConfDialog()
 {
-    delete blockConfWidget_;
 }
 
 void BlockConfDialog::initLayout()

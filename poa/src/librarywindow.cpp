@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.37 2004/01/21 20:38:39 squig Exp $
+ * $Id: librarywindow.cpp,v 1.38 2004/01/28 20:37:44 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -126,7 +126,6 @@ void LibraryWindow::addDefaultItems()
     model = new BlockModel("Input", "Default input block");
     model->setHasEpisodicPins(false);
     model->setHasInputPins(false);
-    model->setHasRuntime(false);
     model->addPin(new PinModel(model, "out1", 0, 32, PinModel::OUTPUT, 1));
     model->addPin(new PinModel(model, "out2", 32, 32, PinModel::OUTPUT, 2));
     model->addPin(new PinModel(model, "out3", 64, 32, PinModel::OUTPUT, 3));
@@ -134,6 +133,8 @@ void LibraryWindow::addDefaultItems()
 
     // output
     model = new BlockModel("Output", "Default output block");
+    model->setHasEpisodicPins(false);
+    model->setHasOutputPins(false);
     model->addPin(new PinModel(model, "in1", 0, 32, PinModel::INPUT, 1));
     model->addPin(new PinModel(model, "in2", 32, 32, PinModel::INPUT, 2));
     model->addPin(new PinModel(model, "in3", 64, 32, PinModel::INPUT, 3));

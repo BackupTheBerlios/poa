@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.6 2004/01/28 18:16:52 squig Exp $
+ * $Id: blockconfwidget.cpp,v 1.7 2004/01/28 20:37:44 squig Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,8 @@ BlockConfWidget::BlockConfWidget(BlockModel *model, QWidget* parent) :
     ioSelectionChanged();
 }
 
-BlockConfWidget::~BlockConfWidget() {
+BlockConfWidget::~BlockConfWidget()
+{
     if (inputRoot_) {
         delete inputRoot_;
     }
@@ -151,10 +152,17 @@ void BlockConfWidget::sync() {
     }
     ioListView_->clear();
 
-    inputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::INPUT);
-    outputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::OUTPUT);
-    if (INSTANCEOF(model_, CpuModel)) {
+    if (model_->hasInputPins()) {
+        inputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::INPUT);
+        inputRoot_->setText(0, "Input Pins");
+    }
+    if (model_->hasOutputPins()) {
+        outputRoot_ = new PinListViewItem(ioListView_, 0, PinModel::OUTPUT);
+        outputRoot_->setText(0, "Output Pins");
+    }
+    if (model_->hasEpisodicPins()) {
         episodicRoot_ = new PinListViewItem(ioListView_, 0, PinModel::EPISODIC);
+        episodicRoot_->setText(0, "Episodic Pins");
     }
 
     QValueList<PinModel *> pinList = model_->pins();
@@ -164,18 +172,13 @@ void BlockConfWidget::sync() {
         PinModel *pin = (*it);
         switch (pin->type()) {
         case PinModel::INPUT:
-            new PinListViewItem(inputRoot_, 0,
-                                PinModel::INPUT, pin);
+            new PinListViewItem(inputRoot_, 0, PinModel::INPUT, pin);
             break;
         case PinModel::OUTPUT:
-            new PinListViewItem(outputRoot_, 0,
-                                PinModel::OUTPUT, pin);
+            new PinListViewItem(outputRoot_, 0, PinModel::OUTPUT, pin);
             break;
         case PinModel::EPISODIC:
-            if (episodicRoot_) {
-                new PinListViewItem(episodicRoot_, 0,
-                                    PinModel::EPISODIC, pin);
-            }
+            new PinListViewItem(episodicRoot_, 0, PinModel::EPISODIC, pin);
             break;
         }
     }
@@ -197,14 +200,15 @@ void BlockConfWidget::commit() {
     QListViewItemIterator it(ioListView_);
     for ( ; it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
-        if (!item->isOpen()) {
-
+        if (!item->isRoot()) {
             PinModel *pin = item->pin();
-            if (!pin) { // new pin
-                pin = item->createPin();
+            if (!pin) {
+                // new pin
+                pin = item->createPin(model_);
                 model_->addPin(pin);
             }
-            else { // update pin
+            else {
+                // update pin
                 item->commit();
             }
         }
@@ -214,17 +218,16 @@ void BlockConfWidget::commit() {
     sync();
 }
 
-void BlockConfWidget::updatePositions(PinModel::PinType type) {
-
+void BlockConfWidget::updatePositions(PinModel::PinType type)
+{
     unsigned position = BlockModel::FIRST_PIN_POSISION;
     for (QListViewItemIterator it(ioListView_); it.current(); ++it) {
         PinListViewItem *item = (PinListViewItem *)it.current();
-        if (!item->isOpen()) {
+        if (!item->isRoot()) {
             if (item->type() == type) {
-                item->setText(0, QString::number(position, 10));
-                position++;
+                item->setText(0, QString::number(position));
+                ++position;
             }
-            item->update();
         }
     }
     ioListView_->setSorting(0);
@@ -248,19 +251,17 @@ void BlockConfWidget::mouseButtonClicked(int button,
     }
 }
 
-void BlockConfWidget::newIo() {
-
-    PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
-    PinListViewItem *root = item;
-
-    if (root != 0) {
-        while (!root->isOpen()) {
-            root = (PinListViewItem *)root->parent();
-        }
+void BlockConfWidget::newIo()
+{
+    PinListViewItem *selectedItem
+        = (PinListViewItem *)ioListView_->selectedItem();
+    if (selectedItem != 0) {
         PinListViewItem *item
-            = new PinListViewItem(root, item != root ? item : 0,
-                                  root->type(), 0);
-        updatePositions(root->type());
+            = (selectedItem->isRoot())
+            ? new PinListViewItem(selectedItem, 0, selectedItem->type(), 0)
+            : new PinListViewItem(selectedItem->parent(), selectedItem,
+                                  selectedItem->type(), 0);
+        updatePositions(selectedItem->type());
         item->startRename(1);
     }
 }
@@ -268,13 +269,7 @@ void BlockConfWidget::newIo() {
 void BlockConfWidget::removeIo() {
 
     PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
-    PinListViewItem *root = item;
-
-    if (root != 0) {
-        while (!root->isOpen()) {
-            root = (PinListViewItem *)root->parent();
-        }
-
+    if (item != 0) {
         PinModel *pin = item->pin();
         if (pin != 0) {
             if (pin->connected() == 0) {
@@ -307,31 +302,20 @@ void BlockConfWidget::removeIo() {
             }
         }
 
-        root->takeItem(item);
+        item->parent()->takeItem(item);
         updatePositions(item->type());
         delete item;
     }
 }
 
-void BlockConfWidget::swapItems(PinListViewItem *item1,
-                                PinListViewItem *item2)
-{
-    QString tmp = item1->text(0);
-    item1->setText(0, item2->text(0));
-    item2->setText(0, tmp);
-    ioListView_->setSorting(0);
-    ioListView_->sort();
-    ioListView_->setSorting(10);
-}
-
 void BlockConfWidget::moveRowUp()
 {
     PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
-    if (item && !item->isOpen()) {
-
+    if (item != 0 && !item->isRoot()) {
         PinListViewItem *itemAbove = (PinListViewItem *)item->itemAbove();
-        if (itemAbove && !itemAbove->isOpen()) {
-            swapItems(item, itemAbove);
+        if (!itemAbove->isRoot()) {
+            itemAbove->moveItem(item);
+            updatePositions(item->type());
         }
     }
 }
@@ -339,11 +323,11 @@ void BlockConfWidget::moveRowUp()
 void BlockConfWidget::moveRowDown()
 {
     PinListViewItem *item = (PinListViewItem *)ioListView_->selectedItem();
-    if (item && !item->isOpen()) {
-
+    if (item && !item->isRoot()) {
         PinListViewItem *itemBelow = (PinListViewItem *)item->itemBelow();
-        if (itemBelow && !itemBelow->isOpen()) {
-            swapItems(item, itemBelow);
+        if (itemBelow && !itemBelow->isRoot()) {
+            item->moveItem(itemBelow);
+            updatePositions(item->type());
         }
     }
 }
@@ -353,7 +337,7 @@ void BlockConfWidget::ioSelectionChanged() {
     //PinListViewItem *root = item;
 
     bool enabled = item != 0;
-    bool isChild = enabled && !item->isOpen();
+    bool isChild = enabled && !item->isRoot();
     bool isEpisodic = false;
 
     if (isChild) {

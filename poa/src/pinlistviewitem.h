@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinlistviewitem.h,v 1.6 2004/01/28 17:35:17 squig Exp $
+ * $Id: pinlistviewitem.h,v 1.7 2004/01/28 20:37:44 squig Exp $
  *
  *****************************************************************************/
 
@@ -54,22 +54,26 @@ public:
     ~PinListViewItem();
 
     /**
+     * Returns true, if item is root item like "Input Pins" and
+     * therefore does not store a pin.
+     */
+    bool isRoot();
+
+    /**
      * Returns the PinModel, represented by this view item
      */
     PinModel *pin() const;
-
-    /**
-     * Sets the PinModel, represented by this view item
-     */
-    void setPin(PinModel *pin);
 
     /**
      * Returns type of this view item.
      */
     PinModel::PinType type();
 
-    /** Creates a new PinModel from this item. */
-    PinModel *createPin() const;
+    /**
+     * Creates a new PinModel from this item and sets the pin to the
+     * newly created one.
+     */
+    PinModel *createPin(BlockModel* block);
 
     /**
      * Cancels any renaming.
@@ -94,10 +98,9 @@ public:
 
 private:
 
-    void initialize();
-
     PinModel *pin_;
     PinModel::PinType type_;
+    bool root_;
 };
 
 #endif // POA_PINLISTVIEWITEM_H

@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch
-%% $Id: handbuch.tex,v 1.17 2004/03/19 16:45:47 neco Exp $
+%% $Id: handbuch.tex,v 1.18 2004/03/19 17:06:24 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.17 $
-\RCSdef $Date: 2004/03/19 16:45:47 $
+\RCSdef $Revision: 1.18 $
+\RCSdef $Date: 2004/03/19 17:06:24 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -305,7 +305,7 @@ Zur Ver"anderung der Sprache muss man im Untermen"u von {\bf Settings} den Eintr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Externe Programme einbinden}
-POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und komfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen des kompilierten Quellcodes auf die CPLD wird ein Download Tool ben"otigt.\par
+POA bietet die M"oglichkeit externe Programme einzubinden und sie direkt und komfortabel aus POA heraus zu starten. Mit einem Editor kann der Quellcode f"ur die CPU in der Programmiersprache C  verfasst werden. Zum Kompilieren ben"otigt POA einen C-Compiler und f"ur das Herunterladen des kompilierten Quellcodes auf die CPLD wird das interne Download Tool verwendet.\par
 Zur Einbindung der externen Programme muss man im Untermen"u von {\bf Settings} den Eintrag {\bf Configure POA} w"ahlen. Im aufklappenden Dialog kann man unter dem Reiter {\bf Paths} die gew"unschten Programme einbinden.
 
 \begin{figure}[htbp]
@@ -711,7 +711,7 @@ Nach der Plausibilit"atspr"ufung kan man unter {\bf Deploy Project} den Programm
 \end{figure}
 Um eine Plausibilit"atspr"ufung durchzuf"uhren, w"ahlt man im Men"u {\bf Tools} das Untermen"u {\bf Deploy Project}. Es wird der Dialog {\bf Deploy Project} ge"offnet, welcher die Befunde der Pr"ufung und deren Status kurz in einer Tabelle wiedergibt. Klickt man auf einen Eintrag in der Tabelle, so erscheint eine detailliertere Beschreibung des markierten Befunds.\par
 Mit {\bf Cancel} kann man den Dialog verlassen und eventuelle Fehler korrigieren, um danach mit der Pr"ufung fortzufahren.\newline
-Mit {\bf Next} kommt man in den n"achsten Dialog, in dem man den Programmcode der CPUs kompilieren und herunterladen kann. Dazu w"ahlt man in der Auswahlbox die CPU aus. Wenn man nun auf den Button {\bf Compile} dr"uckt, wird mit dem externe C-Compiler der zur CPU geh"orende Programmcode kompiliert. Dabei wird der {\bf POA Terminal} ge"offnet, um entsprechende Meldung auszugeben. Wird der {\bf Download} Button gedr"uckt, so wird das Download-Tool gestartet, um den kompilierten Code als {\bf Binary File} auf das CPLD-Board herunterzuladen.
+Mit {\bf Next} kommt man in den n"achsten Dialog, in dem man den Programmcode der CPUs kompilieren und herunterladen kann. Dazu w"ahlt man in der Auswahlbox die CPU aus. Wenn man nun auf den Button {\bf Compile} dr"uckt, wird mit dem externe C-Compiler der zur CPU geh"orende Programmcode kompiliert. Dabei wird der {\bf POA Terminal} ge"offnet, um entsprechende Meldung auszugeben. Wird der {\bf Download} Button gedr"uckt, so wird der Download gestartet, um den kompilierten Code als {\bf Binary File} auf das CPLD-Board herunterzuladen.
 Im {\bf Details} Bereich wird das Verzeichnis des Quellcodes und das der Bin"ardatei angegeben. Au"serdem kann man hier noch das Datum der letzten "Anderung unter {\bf Last Modified} ersehen.\par
 \begin{figure}[htbp]
 

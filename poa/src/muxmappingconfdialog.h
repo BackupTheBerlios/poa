@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.h,v 1.6 2004/02/04 12:55:31 garbeam Exp $
+ * $Id: muxmappingconfdialog.h,v 1.7 2004/02/05 00:26:47 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -29,13 +29,13 @@
 #include <qdialog.h>
 #include <qlistview.h>
 #include <qptrvector.h>
+#include "pinlistviewitem.h"
 
 class QSpinBox;
 class QString;
 
 class MuxModel;
 class MuxMappingListViewItem;
-class PinListViewItem;
 
 /**
  * PinItemComboBox

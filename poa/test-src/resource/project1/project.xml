@@ -1,0 +1,92 @@
+<project>
+<model>
+<blocks>
+<model-item desc="" exectime="0" type="Input" id="1" name="PWM" block-type="input" >
+<pin address="0" bits="32" type="input" id="1" name="TV1" />
+    <pin address="0" bits="32" type="input" id="2" name="TV2" />
+    <pin address="0" bits="32" type="input" id="3" name="TV3" />
+    <pin address="400" bits="3" type="input" id="4" name="Freigabe" />   </model-item>
+   <model-item autotime="false" offset="0" desc="" exectime="0" clock="0" type="NIOS 32" id="2" auto-offset="true" name="NIOS 32" cpuid="2" srcfile="/root/ISW/Studenten/poa/src/Projects/FTK/CPU_2_sdk/src/cpu_2.c" block-type="cpu" >
+<pin address="0" bits="32" type="input" id="1" name="Lage1" />
+    <pin address="200" bits="32" type="input" id="2" name="Geschwinidgkeit1" />
+    <pin address="300" bits="32" type="input" id="3" name="RXD" />
+    <pin address="0" bits="32" type="output" id="2" name="PWM_TV1" />
+    <pin address="200" bits="32" type="output" id="2" name="PWM_TV2" />
+    <pin address="300" bits="32" type="output" id="3" name="PWM_TV3" />
+    <pin address="400" bits="3" type="output" id="4" name="Freigabe_PWM" />
+    <pin address="500" bits="32" type="output" id="5" name="TXD" />
+    <pin address="0" bits="32" type="episodic" id="3" name="clock" />
+    <pin address="0" bits="32" type="episodic" id="4" name="reset" />   </model-item>
+   <model-item desc="" exectime="0" type="Output" id="3" name="WMS" block-type="output" >
+<pin address="0" bits="32" type="output" id="1" name="Lage1" />
+    <pin address="0" bits="32" type="output" id="2" name="Lage2" />
+    <pin address="0" bits="32" type="output" id="3" name="Geschwinidgkeit1" />
+    <pin address="400" bits="32" type="output" id="4" name="Geschwindigkeit2" />   </model-item>
+   <model-item desc="" exectime="0" type="Output" id="4" name="Seriell_in" block-type="output" >
+<pin address="0" bits="32" type="output" id="1" name="RXD" />   </model-item>
+   <model-item desc="" exectime="0" type="Input" id="5" name="Seriell_out" block-type="input" >
+<pin address="0" bits="32" type="input" id="1" name="TXD" />   </model-item>
+   <model-item autotime="false" offset="0" desc="" exectime="0" clock="0" type="NIOS 32" id="6" auto-offset="true" name="Lageregler" cpuid="6" srcfile="/root/ISW/Studenten/poa/src/Projects/FTK/CPU_6_sdk/src/cpu_6.c" block-type="cpu" >
+<pin address="0" bits="32" type="input" id="1" name="Ist-Lage" />
+    <pin address="200" bits="32" type="input" id="2" name="Soll-Lage" />
+    <pin address="0" bits="32" type="output" id="2" name="Stellwert" />
+    <pin address="0" bits="32" type="episodic" id="3" name="clock" />
+    <pin address="0" bits="32" type="episodic" id="3" name="Kv" />
+    <pin address="0" bits="32" type="episodic" id="4" name="reset" />   </model-item>
+   <model-item autotime="false" offset="0" desc="" exectime="0" clock="0" type="NIOS 32" id="7" auto-offset="true" name="Lage-Oversampling" cpuid="7" srcfile="/root/ISW/Studenten/poa/src/Projects/FTK/CPU_7_sdk/src/cpu_7.c" block-type="cpu" >
+<pin address="0" bits="32" type="input" id="1" name="Lage_in" />
+    <pin address="0" bits="32" type="output" id="2" name="LageOVS_out" />
+    <pin address="0" bits="32" type="episodic" id="3" name="clock" />
+    <pin address="0" bits="32" type="episodic" id="4" name="reset" />   </model-item>
+   <model-item autotime="false" offset="0" desc="" exectime="0" clock="0" type="NIOS 32" id="8" auto-offset="true" name="Prozesskraftrekonstruktion" cpuid="8" srcfile="/root/ISW/Studenten/poa/src/Projects/FTK/CPU_8_sdk/src/cpu_8.c" block-type="cpu" >
+<pin address="0" bits="32" type="input" id="1" name="Motorstrom" />
+    <pin address="200" bits="32" type="input" id="2" name="Laget" />
+    <pin address="0" bits="32" type="output" id="2" name="Kraft" />
+    <pin address="0" bits="32" type="episodic" id="3" name="clock" />
+    <pin address="0" bits="32" type="episodic" id="4" name="reset" />   </model-item>  </blocks> </model>
+ <views>
+<view name="1" >
+<connector-view target-pin="1" target-block="5" source-pin="5" source-block="2" >
+<points>
+<point x="581" y="255" />
+     <point x="562" y="199" />
+     <point x="553" y="199" />
+     <point x="562" y="255" />    </points>   </connector-view>
+   <view-item x="70" y="100" model-id="3" />
+   <view-item x="400" y="100" model-id="2" />
+   <connector-view target-pin="4" target-block="1" source-pin="4" source-block="2" >
+<points>
+<point x="701" y="180" />
+     <point x="553" y="183" />    </points>   </connector-view>
+   <connector-view target-pin="1" target-block="4" source-pin="3" source-block="2" >
+<points>
+<point x="358" y="255" />
+     <point x="380" y="167" />
+     <point x="391" y="167" />
+     <point x="380" y="255" />    </points>   </connector-view>
+   <view-item x="100" y="380" model-id="6" />
+   <view-item x="280" y="220" model-id="4" />
+   <view-item x="710" y="100" model-id="1" />
+   <view-item x="590" y="220" model-id="5" />
+   <connector-view target-pin="2" target-block="2" source-pin="2" source-block="3" >
+<points>
+<point x="391" y="151" />
+     <point x="148" y="150" />    </points>   </connector-view>
+   <view-item x="270" y="490" model-id="7" />
+   <view-item x="520" y="400" model-id="8" />
+   <connector-view target-pin="1" target-block="1" source-pin="2" source-block="2" >
+<points>
+<point x="701" y="135" />
+     <point x="553" y="135" />    </points>   </connector-view>
+   <connector-view target-pin="1" target-block="2" source-pin="1" source-block="3" >
+<points>
+<point x="391" y="135" />
+     <point x="148" y="135" />    </points>   </connector-view>
+   <connector-view target-pin="3" target-block="1" source-pin="3" source-block="2" >
+<points>
+<point x="701" y="165" />
+     <point x="553" y="167" />    </points>   </connector-view>
+   <connector-view target-pin="2" target-block="1" source-pin="2" source-block="2" >
+<points>
+<point x="701" y="150" />
+     <point x="553" y="151" />    </points>   </connector-view>  </view> </views></project>

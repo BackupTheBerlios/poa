@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.40 2003/12/10 15:00:02 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.41 2003/12/17 10:39:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -47,95 +47,8 @@
 #include "codemanager.h"
 #include "cpumodel.h"
 #include "mainwindow.h"
+#include "pinlistviewitem.h"
 #include "poa.h"
-
-PinListViewItem::PinListViewItem(QListView *parent,
-                                 QListViewItem *after,
-                                 PinModel::PinType type)
-    : QListViewItem(parent, after)
-{
-    setOpen(true);
-    type_ = type;
-    clone_ = origin_ = 0;
-}
-
-PinListViewItem::PinListViewItem(QListViewItem *parent,
-                                 QListViewItem *after,
-                                 PinModel *clone, PinModel *origin)
-    : QListViewItem(parent, after)
-{
-    setOpen(false);
-    type_ = clone->type();
-    clone_ = clone;
-    origin_ = origin;
-
-    update();
-}
-
-void PinListViewItem::update() {
-
-    if (clone_ != 0) {
-        setText(0, QString::number(clone_->position(), 10));
-        setText(1, clone_->name());
-        if (clone_->type() != PinModel::EPISODIC) {
-            setText(2, QString::number(clone_->address(), 16));
-        }
-        setText(3, QString::number(clone_->bits(), 10));
-    }
-}
-
-PinListViewItem::~PinListViewItem()
-{
-    if (clone_ != 0) {
-        delete clone_;
-    }
-}
-
-int PinListViewItem::compare(QListViewItem *i, int col, bool ascending ) const {
-    if (col == 0) { // first colum
-        PinModel *nextPin = ((PinListViewItem *)i)->data();
-        if (nextPin && clone_)  {
-            if (ascending) {
-                return clone_->position() - nextPin->position();
-            }
-            else {
-                return nextPin->position() - clone_->position();
-            }
-        }
-        else if (clone_) {
-            return clone_->position();
-        }
-        else {
-            return 0;
-        }
-    }
-    else {
-        return key(col, ascending).compare(i->key(col, ascending));
-    }
-}
-
-
-PinModel *PinListViewItem::data() const
-{
-    return clone_;
-}
-
-PinModel *PinListViewItem::origData() const
-{
-    return origin_;
-}
-
-void PinListViewItem::setOrigPin(PinModel *pin) {
-    origin_ = pin;
-}
-
-PinModel::PinType PinListViewItem::type() {
-    return type_;
-}
-
-bool PinListViewItem::isRoot() {
-    return isOpen();
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 

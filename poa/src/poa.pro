@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.62 2003/12/15 04:07:09 keulsn Exp $
+# $Id: poa.pro,v 1.63 2003/12/17 10:39:18 garbeam Exp $
 #
 ###############################################################################
 
@@ -70,6 +70,7 @@ HEADERS += moveaction.h
 HEADERS += muxconfdialog.h
 HEADERS += muxmodel.h
 HEADERS += muxview.h
+HEADERS += pinlistviewitem.h
 HEADERS += pinmodel.h
 HEADERS += pinview.h
 HEADERS += poa.h
@@ -110,6 +111,7 @@ SOURCES += moveaction.cpp
 SOURCES += muxconfdialog.cpp
 SOURCES += muxmodel.cpp
 SOURCES += muxview.cpp
+SOURCES += pinlistviewitem.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp
 SOURCES += poa.cpp

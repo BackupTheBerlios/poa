@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.25 2003/12/03 13:21:58 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.26 2003/12/17 10:39:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,9 +43,8 @@
 #include <qvariant.h>
 #include <qwhatsthis.h>
 
-MuxMappingListViewItem::MuxMappingListViewItem(QListViewItem *parent,
-                                               MuxMapping *clone,
-                                               MuxMapping *origin)
+MuxMappingListViewItem::MuxMappingListViewItem(
+    QListViewItem *parent, MuxMapping *clone, MuxMapping *origin)
     : QListViewItem(parent)
 {
     setOpen(false);
@@ -56,7 +55,6 @@ MuxMappingListViewItem::MuxMappingListViewItem(QListViewItem *parent,
 }
 
 MuxMappingListViewItem::~MuxMappingListViewItem() {
-    // delete clone only when it's not needed manually
 }
 
 MuxMapping *MuxMappingListViewItem::data() const {
@@ -73,9 +71,12 @@ void MuxMappingListViewItem::setOrigMapping(MuxMapping *mapping) {
 
 void MuxMappingListViewItem::update() {
     if (clone_ != 0) {
-        setText(0, clone_->output()->name());
-        //setText(1, QString::number(clone_->begin()));
-        //setText(2, QString::number(clone_->end()));
+        setText(0, clone_->input()->name());
+        setText(1, QString::number(clone_->firstInputBit()) + " - "
+                   + QString::number(clone_->lastInputBit()));
+        setText(2, clone_->output()->name());
+        setText(1, QString::number(clone_->firstOutputBit()) + " - "
+                   + QString::number(clone_->lastOutputBit()));
     }
 }
 
@@ -300,13 +301,14 @@ MuxConfDialog::~MuxConfDialog()
 }
 
 void MuxConfDialog::syncModel() {
+
 #if 0
     Q_ASSERT(model_ != 0);
     if (model_ != 0) {
         nameLineEdit->setText(model_->name());
 
-        QPtrListIterator<PinModel> outputIter(*model_->outputPins());
-        PinModel *pin;
+        for (QPtrListIterator<MuxMapping> it(*model_->mappings()); it != 0;)
+        {
         while ((pin = outputIter.current()) != 0) {
             ++outputIter;
             mappedToIos_.append(new MapToComboBoxItem(pin->clone(), pin));

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.19 2003/12/10 15:00:02 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.20 2003/12/17 10:39:18 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@
 #include "blockmodel.h"
 #include "pinmodel.h"
 
+class PinListViewItem;
 class QBoxLayout;
 class QVBoxLayout;
 class QHBoxLayout;
@@ -45,73 +46,6 @@ class QListView;
 class QPushButton;
 class QRadioButton;
 class QSpinBox;
-
-/**
- * Provides the I/O view items.
- */
-class PinListViewItem : public QListViewItem
-{
-public:
-
-    /**
-     * Creates a IO list view item for the given abstract model
-     */
-    PinListViewItem(QListView *parent, QListViewItem *after = 0,
-            PinModel::PinType type = PinModel::INPUT);
-
-    /**
-     * Creates a IO list view item for the given abstract model
-     */
-    PinListViewItem(QListViewItem *parent, QListViewItem *after,
-                    PinModel *clone = 0, PinModel *origin = 0);
-
-    /**
-     * Default destructor
-     */
-    ~PinListViewItem();
-
-    /**
-     * Returns the PinModel, represented by this view item
-     */
-    PinModel *data() const;
-
-    /**
-     * Returns the origin PinModel, represented by this view item
-     */
-    PinModel *origData() const;
-
-    /**
-     * Sets the original pin.
-     */
-    void PinListViewItem::setOrigPin(PinModel *pin);
-
-    /**
-     * Returns type of this view item (used for items without
-     * models like root items.
-     */
-    PinModel::PinType type();
-
-    /**
-     * Returns <code>true</code>, if this is a root item,
-     * <code>false</code> otherwise.
-     */
-    bool isRoot();
-
-    /**
-     * Updates the view with current contents of the pin model.
-     */
-    void update();
-
-    /** Overloaded compare method. */
-    int compare(QListViewItem *i, int col, bool ascending ) const;
-
-private:
-    PinModel *clone_;
-    PinModel *origin_;
-    PinModel::PinType type_;
-    bool root_;
-};
-
 
 class BlockConfDialog : public QDialog
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.13 2003/09/29 09:52:41 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.14 2003/09/29 10:23:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -540,9 +540,7 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
             // the given mapTo name does not exist yet,
             // so we create a new PinModel
             mapTo =
-                new PinModel(model_, id, mapToName, id * 100, 0,
-                        (type == PinModel::INPUT) ? PinModel::OUTPUT :
-                        PinModel::INPUT);
+                new PinModel(model_, id, mapToName, id * 100, 0, type);
             mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
             ioComboBox_->insertItem(mapToName);
         }
@@ -567,7 +565,6 @@ void MuxConfDialog::addMapping(MuxListViewItem *item) {
 
         // update ListView
         new MuxMappingListViewItem(item, mapping, 0);
-
     }
 
 }

@@ -1,0 +1,24 @@
+<statcvs>
+  <settings>
+    <webRepository>
+      http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/poa/
+    </webRepository>
+    <authors type="map">
+      <setting key="squig">Steffen Pingel</setting>
+      <setting key="vanto">Tammo van Lessen</setting>
+    </authors>
+    <projectName>POA</projectName>
+    <outputDir>xdocs/statcvs-xml</outputDir>
+    <renderer>xdoc</renderer>
+
+    <include>src/**/*.cpp;src/**/*.h;test-src/**/*.cpp;test-src/**/*.h</include>
+    <exclude>src/qextserialport/**;src/design/**;src/examples/**</exclude>
+
+    <modules type="map">
+      <setting key="GUI">src/*dialog*;src/*window*;src/*widget*;src/*action*</setting>
+      <setting key="Model">src/*model*</setting>
+      <setting key="View">src/*view*</setting>
+      <setting key="Test">test-src/**</setting>
+    </modules>
+  </settings>
+</statcvs>

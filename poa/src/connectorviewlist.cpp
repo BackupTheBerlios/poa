@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.26 2004/01/18 23:15:11 squig Exp $
+ * $Id: connectorviewlist.cpp,v 1.27 2004/01/20 15:45:01 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -142,7 +142,8 @@ QString ConnectorViewList::tip()
         .arg(target()->model()->name())
         .arg(target()->model()->parent()->name())
         .arg((target()->model()->bits() != source()->model()->bits())
-             ? "Source and target have different widths!"
+             // patched by garbeam: ambigious overload (gcc-2.95/Qt-3.2.x)
+             ? QString("Source and target have different widths!")
              : QString::number(target()->model()->bits()));
 }
 

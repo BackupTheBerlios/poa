@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.35 2004/01/17 12:47:14 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.36 2004/01/20 15:45:01 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -634,6 +634,7 @@ void MuxConfDialog::removeMapping() {
         return;
     }
 
+    MuxMapping *mapping = selected->data();
     MuxMapping *origMapping = selected->origData();
 
     if (origMapping != 0) {
@@ -644,6 +645,9 @@ void MuxConfDialog::removeMapping() {
         deletedMappings_.append(origMapping);
     }
 
+    if (newMappings_.contains(mapping)) {
+        newMappings_.remove(mapping);
+    }
     mappingListView->takeItem(selected);
     delete selected;
 }
@@ -811,6 +815,9 @@ void MuxConfDialog::removeInput() {
         }
     }
 
+    if (newPins_.contains(pin)) {
+        newPins_.remove(pin);
+    }
     inputListView->takeItem(selected);
     updatePositions(inputListView);
     delete selected;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.52 2004/01/19 21:14:30 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.53 2004/01/20 15:45:01 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -463,6 +463,7 @@ void BlockConfDialog::removeIo()
             root = (PinListViewItem *)root->parent();
         }
 
+        PinModel *pin = item->data();
         PinModel *origPin = item->origData();
         if (origPin != 0) {
             if (origPin->connected() == 0) {
@@ -501,6 +502,9 @@ void BlockConfDialog::removeIo()
             }
         }
 
+        if (newPins_.contains(pin)) {
+            newPins_.remove(pin);
+        }
         root->takeItem(item);
         updatePositions(item->type());
         delete item;

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.11 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: muxmodel.h,v 1.12 2003/09/24 15:44:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -32,33 +32,24 @@
 #include <qptrlist.h>
 
 /**
- * Provides range mappings from an input PinModel to an output
- * PinModel, e.g. map pins 2-8 of input pin to output pin.
+ * Provides range mappings to an output
+ * PinModel, e.g. map pins 2-8 of parent pin to output pin.
  */
-class MuxMapping : public QObject
+class MuxMapping
 {
-
-    Q_OBJECT
 
 public:
 
     /**
      * Basic constructor.
-     * @input the input PinModel.
      * @output the output (output) PinModel.
      * @begin the begin of bit range (0 for absolute begin).
      * @end the end of bit range (<code>input->bits() - 1</code>
      * for absolute end).
      */
-    MuxMapping(PinModel *input, PinModel *output,
-               unsigned begin, unsigned end);
+    MuxMapping(PinModel *output, unsigned begin, unsigned end);
 
     virtual ~MuxMapping();
-
-    /**
-     * Returns the input PinModel.
-     */
-    PinModel *input();
 
     /**
      * Returns the output PinModel.
@@ -90,22 +81,58 @@ public:
      */
     QDomElement serialize(QDomDocument *document);
 
-    /** Clones this MuxMapping */
-    MuxMapping *clone();
-
 private:
 
-    PinModel *input_;
     PinModel *output_;
     unsigned begin_;
     unsigned end_;
 
-public slots:
-    /**
-     * Deletes this mapping.
-     */
-    void deleteMapping();
 };
+
+//////////////////////////////////////////////////////////////////////////////
+
+class MuxPin 
+{
+
+public:
+
+    MuxPin(PinModel *model);
+    ~MuxPin();
+
+    /**
+     * Adds the given mapping to this mux pin.
+     */
+    void addMapping(MuxMapping *mapping);
+
+    /**
+     * Removes the given mapping from this mux pin.
+     */
+    void removeMapping(MuxMapping *mapping);
+
+    /**
+     * Returns QPtrList of mux mappings.
+     */
+    QPtrList<MuxMapping> *mappings();
+
+    /**
+     * Returns the pin model.
+     */
+    PinModel *model();
+
+    /**
+     * Serializes this MuxPin.
+     */
+    QDomElement serialize(QDomDocument *document);
+
+private:
+
+    PinModel *model_;
+
+    QPtrList<MuxMapping> mappings_;
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A block that has both: inputs and outputs. Outputs are directly dependent
@@ -146,36 +173,24 @@ public:
      * will be added to the current bits value of output PinModel
      * by this method.
      */
-    void addMuxMapping(PinModel *input, PinModel *output,
+    void addMuxMapping(MuxPin *input, PinModel *output,
                        unsigned begin, unsigned end, bool setOutputBits = true);
 
     /**
-     * Overloaded for convenience.
-     * Adds a new MuxMapping. Creates a new output PinModel and sets
-     * it bits value to <code>(end - begin)</code>.
+     * Adds a new mux pin and returns it.
      */
-    void addMuxMapping(PinModel *input, unsigned begin, unsigned end);
+    MuxPin *addPin();
 
     /**
-     * Adds a new pin to the dedicated PinVector (given by <code>type</code>)
-     * and returns it.
+     * Removes MuxMapping.
      */
-    PinModel *addPin(PinModel::PinType type);
-
-    /**
-     * Removes all MuxMappings which are related to <code>pin</code>.
-     * If <code>pin</code> is an ouput pin and has more bits than
-     * the specific mapping, it will be shrinked, otherwise it will
-     * be removed.
-     * If <code>pin</code> is an pinput pin, it won't be deleted.
-     */
-    void removeMuxMappings(PinModel *pin);
+    void removeMuxMapping(MuxPin *pin, MuxMapping *mapping);
 
     /**
      * Removes the given pin from this MuxModel and any related
      * Mappings(!). 
      */
-    void removePin(PinModel *pin);
+    void removeMuxPin(MuxPin *pin);
 
     /**
      * Creates the CanvasItems for this.
@@ -200,29 +215,14 @@ public:
     MuxType muxType();
 
     /**
-     * Returns mappings pointer list.
+     * Returns mux pin pointer list.
      */
-    QPtrList<MuxMapping> *mappings();
-
-    /**
-     * Returns input pin list.
-     */
-    QPtrList<PinModel> *inputs();
-
-    /**
-     * Returns outputs pointer list.
-     */
-    QPtrList<PinModel> *outputs();
-
+    QPtrList<MuxPin> *muxPins();
 
 private:
 
-    /** Contains all I/O mappings, see {@link MuxMapping} for detail */
-    QPtrList<MuxMapping> mappings_;
-
-    /** input and output pins */
-    QPtrList<PinModel> inputPins_;
-    QPtrList<PinModel> outputPins_;
+    /** Contains all I/O mappings */
+    QPtrList<MuxPin> muxPins_;
 
     MuxType type_;
 

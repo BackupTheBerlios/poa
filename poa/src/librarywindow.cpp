@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.16 2003/09/23 10:53:39 garbeam Exp $
+ * $Id: librarywindow.cpp,v 1.17 2003/09/24 15:44:28 garbeam Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -102,7 +102,7 @@ void LibraryWindow::initializeLibrary()
     new LibraryListViewItem(coreListViewItem,
                             new CoreModel("InputBlock", "Coredump"));
     new LibraryListViewItem(muxListViewItem,
-                            new MuxModel("mux", "Demultiplexer"));
+                            new MuxModel("mux", "Multiplexer"));
     new LibraryListViewItem(muxListViewItem,
                             new MuxModel("demux", "Demultiplexer"));
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.3 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.4 2003/09/24 15:44:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,11 @@
 
 #include <qvariant.h>
 #include <qdialog.h>
+#include <qlistview.h>
+#include <qptrlist.h>
 
 class PinModel;
+class MuxMapping;
 class MuxModel;
 
 class QBoxLayout;
@@ -36,13 +39,91 @@ class QComboBox;
 class QGroupBox;
 class QLabel;
 class QLineEdit;
-class QListView;
-class QListViewItem;
 class QPushButton;
 class QSpinBox;
 
+/**
+ * Provides the MuxMapping view items.
+ */
+class MuxMappingListViewItem : public QListViewItem
+{
+public:
+
+    /**
+     * Creates a MuxMapping list view item for the given abstract model
+     */
+    MuxMappingListViewItem(QListViewItem *parent, MuxMapping*clone = 0,
+                           MuxMapping *origin = 0);
+
+    /**
+     * Default destructor
+     */
+    ~MuxMappingListViewItem();
+
+    /**
+     * Returns the PinModel, represented by this view item
+     */
+    MuxMapping *data() const;
+
+    /**
+     * Returns the origin PinModel, represented by this view item
+     */
+    MuxMapping *origData() const;
+
+    /**
+     * Updates the view with current contents of the MuxMapping.
+     */
+    void update();
+
+private:
+    MuxMapping *clone_;
+    MuxMapping *origin_;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Provides the mux view items.
+ */
+class MuxListViewItem : public QListViewItem
+{
+public:
+
+    /**
+     * Creates a IO list view item for the given abstract model
+     */
+    MuxListViewItem(QListView *parent, QListViewItem *after,
+                    PinModel *clone = 0, PinModel *origin = 0);
+
+    /**
+     * Default destructor
+     */
+    ~MuxListViewItem();
+
+    /**
+     * Returns the PinModel, represented by this view item
+     */
+    PinModel *data() const;
+
+    /**
+     * Returns the origin PinModel, represented by this view item
+     */
+    PinModel *origData() const;
+
+    /**
+     * Updates the view with current contents of the pin model.
+     */
+    void update();
+
+private:
+    PinModel *clone_;
+    PinModel *origin_;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 class MuxConfDialog : public QDialog
-{ 
+{
     Q_OBJECT
 
 public:
@@ -88,8 +169,8 @@ private:
 
     MuxModel *model_;
 
-    /** Contains all temparary info */
-    MuxModel *tmpModel_;
+    QPtrList<MuxMapping> deletedMappings_;
+    QPtrList<PinModel> deletedPins_;
 
 private slots:
 

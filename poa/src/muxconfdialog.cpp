@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.3 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.4 2003/09/24 15:44:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,6 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qlineedit.h>
-#include <qlistview.h>
 #include <qpixmap.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
@@ -43,19 +42,78 @@
 #include <qvariant.h>
 #include <qwhatsthis.h>
 
+MuxMappingListViewItem::MuxMappingListViewItem(QListViewItem *parent,
+                                               MuxMapping *clone,
+                                               MuxMapping *origin)
+    : QListViewItem(parent)
+{
+    setOpen(false);
+    clone_ = clone;
+    origin_ = origin;
+}
+
+MuxMappingListViewItem::~MuxMappingListViewItem() {
+    delete clone_;
+}
+
+MuxMapping *MuxMappingListViewItem::data() const {
+    return clone_;
+}
+
+MuxMapping *MuxMappingListViewItem::origData() const {
+    return origin_;
+}
+
+void MuxMappingListViewItem::update() {
+    if (clone_ != 0) {
+        setText(0, clone_->output()->name());
+        setText(1, QString::number(clone_->begin()));
+        setText(2, QString::number(clone_->end()));
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MuxListViewItem::MuxListViewItem(QListView *parent, QListViewItem *after,
+                                 PinModel *clone, PinModel *origin)
+    : QListViewItem(parent, after)
+{
+    setOpen(true);
+    clone_ = clone;
+    origin_ = origin;
+}
+
+MuxListViewItem::~MuxListViewItem() {
+    delete clone_;
+}
+
+PinModel *MuxListViewItem::data() const {
+    return clone_;
+}
+
+PinModel *MuxListViewItem::origData() const {
+    return origin_;
+}
+
+void MuxListViewItem::update() {
+    if (clone_ != 0) {
+        setText(0, clone_->name());
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
                              const char* name, bool modal, WFlags fl)
     : QDialog(parent, name, modal, fl)
 {
     model_ = model;
-    tmpModel_ = 0;
 
     if (!name) {
         setName( "MuxConfDialog" );
         resize(400, 500); 
     }
-    if (model_->type() == MuxModel::MUX) {
+    if (model_->muxType() == MuxModel::MUX) {
         setCaption(tr("Mux configuration"));
     }
     else {
@@ -65,6 +123,7 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
     initLayout();
     initConnections();
     mappingSelectionChanged();
+    syncModel();
 
 }
 
@@ -194,24 +253,15 @@ void MuxConfDialog::initConnections() {
  */
 MuxConfDialog::~MuxConfDialog()
 {
-    if (tmpModel_ != 0) {
-        delete tmpModel_;
-    }
 }
 
 void MuxConfDialog::syncModel() {
 
     Q_ASSERT(model_ != 0);
+    if (model_ != 0) {
 
-    if (tmpModel_ != 0) {
-        delete tmpModel_;
+        nameLineEdit->setText(model_->name());
     }
-
-    tmpModel_ = new MuxModel(model_->type(), model_->description());
-
-    // TODO: mappings cloning, outpt & input cloning
-
-
 }
 
 
@@ -235,7 +285,7 @@ void MuxConfDialog::mappingSelectionChanged() {
         addPushButton->setText(tr("&Add"));
     }
     else {
-        if (model_->type() == MuxModel::MUX) {
+        if (model_->muxType() == MuxModel::MUX) {
             addPushButton->setText(tr("&New Input"));
         }
         else {

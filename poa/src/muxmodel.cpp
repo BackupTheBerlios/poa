@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.9 2003/09/24 11:11:19 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.10 2003/09/24 15:44:28 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,12 +26,9 @@
 
 #include "muxview.h"
 
-MuxMapping::MuxMapping(PinModel *input, PinModel *output,
-                       unsigned begin, unsigned end)
+MuxMapping::MuxMapping(PinModel *output, unsigned begin, unsigned end)
 {
     Q_ASSERT(begin < end);
-    input_ = input;
-    connect(input_, SIGNAL(deleted()), this, SLOT(deleteMapping()));
     output_ = output;
     begin_ = begin;
     end_ = end;
@@ -40,11 +37,6 @@ MuxMapping::MuxMapping(PinModel *input, PinModel *output,
 MuxMapping::~MuxMapping()
 {
 
-}
-
-PinModel *MuxMapping::input()
-{
-    return input_;
 }
 
 PinModel *MuxMapping::output()
@@ -74,23 +66,63 @@ void MuxMapping::setEnd(unsigned end)
     end_ = end;
 }
 
-void MuxMapping::deleteMapping()
-{
-    delete this;
-}
-
 QDomElement MuxMapping::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("muxmapping");
-    root.setAttribute("input-id", input_->id());
     root.setAttribute("output-id", output_->id());
     root.setAttribute("begin", begin_);
     root.setAttribute("end", end_);
     return root;
 }
 
-MuxMapping *MuxMapping::clone() {
-    return new MuxMapping(output_, input_, begin_, end_);
+///////////////////////////////////////////////////////////////////////////////
+
+MuxPin::MuxPin(PinModel *model) {
+    model_ = model;
+}
+
+MuxPin::~MuxPin() {
+    for (unsigned i = 0; i < mappings_.count(); i++) {
+        MuxMapping *mapping = mappings_.at(i);
+        mappings_.remove(mapping);
+        delete mapping;
+    }
+}
+
+void MuxPin::addMapping(MuxMapping *mapping) {
+    mappings_.append(mapping);
+}
+
+void MuxPin::removeMapping(MuxMapping *mapping) {
+    mappings_.remove(mapping);
+
+    PinModel *output = mapping->output();
+    if (output->bits() > (mapping->end() - mapping->begin())) {
+        output->setBits(output->bits() - (mapping->end() - mapping->begin()));
+    }
+}
+
+QPtrList<MuxMapping> *MuxPin::mappings() {
+    return &mappings_;
+}
+
+PinModel *MuxPin::model() {
+    return model_;
+}
+
+QDomElement MuxPin::serialize(QDomDocument *document)
+{
+    QDomElement root = document->createElement("muxpin");
+    QDomElement pinElem = model_->serialize(document);
+    root.appendChild(pinElem);
+
+    for (unsigned i = 0; i < mappings_.count(); i++) {
+        QDomElement mappingElem = mappings_.at(i)->serialize(document);
+        mappingElem.setAttribute("type", "muxmapping");
+        root.appendChild(mappingElem);
+    }
+
+    return root;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,59 +145,30 @@ MuxModel::MuxModel(QDomElement coreElement)
 
 MuxModel::~MuxModel()
 {
-    for (QPtrListIterator<MuxMapping> it(mappings_); it.current() != 0; ++it) {
-        delete *it;
-    }
-
-    for (QPtrListIterator<PinModel> it(inputPins_); it.current() != 0; ++it) {
-        delete *it;
-    }
-
-    for (QPtrListIterator<PinModel> it(outputPins_); it.current() != 0; ++it) {
+    for (QPtrListIterator<MuxPin> it(muxPins_); it.current() != 0; ++it) {
         delete *it;
     }
 
     emit deleted();
 }
 
-PinModel *MuxModel::addPin(PinModel::PinType type)
+MuxPin *MuxModel::addPin()
 {
-    QPtrList<PinModel> *l;
     unsigned id;
     unsigned bits;
 
-    Q_ASSERT(type != PinModel::EPISODIC);
+    bits = 32;
+    id = muxPins_.count() + 1;
+    PinModel::PinType type = (type_ == MUX) ? PinModel::INPUT : PinModel::OUTPUT;
 
-    switch(type) {
-    case PinModel::INPUT:
-        bits = 32;
-        id = inputPins_.count() + 1;
-        l = &inputPins_;
-        break;
-    case PinModel::OUTPUT:
-        bits = 0;
-        id = outputPins_.count() + 1;
-        l = &outputPins_;
-        break;
-    case PinModel::EPISODIC:
-        // assertion true, so do nothing.
-        break;
-    }
-
-    PinModel *pin = new PinModel(this, id, QString("Output %1").arg(id), 0, bits, type);
-    l->append(pin);
-
-    delete l; // l was only temporary used.
+    MuxPin *pin = new MuxPin(new PinModel(
+                    this, id, QString("Output %1").arg(id), 0, bits, type));
+    muxPins_.append(pin);
 
     return pin;
 }
 
-void MuxModel::addMuxMapping(PinModel *input, unsigned begin, unsigned end)
-{
-    addMuxMapping(input, addPin(PinModel::OUTPUT), begin, end);
-}
-
-void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
+void MuxModel::addMuxMapping(MuxPin *input, PinModel *output,
                              unsigned begin, unsigned end, bool setOutputBits)
 {
     Q_ASSERT(output != 0);
@@ -173,48 +176,18 @@ void MuxModel::addMuxMapping(PinModel *input, PinModel *output,
     if (setOutputBits) {
         output->setBits(output->bits() + (begin - end));
     }
-    MuxMapping *mapping = new MuxMapping(input, output, begin, end);
-
-    mappings_.append(mapping);
+    MuxMapping *mapping = new MuxMapping(output, begin, end);
+    input->addMapping(mapping);
 }
 
-void MuxModel::removeMuxMappings(PinModel *pin)
+void MuxModel::removeMuxMapping(MuxPin *pin, MuxMapping *mapping)
 {
-    for (QPtrListIterator<MuxMapping> it(mappings_); it.current() != 0; ++it) {
-        MuxMapping *mapping = (*it);
-
-        if (mapping->input() == pin || mapping->output() == pin) {
-
-            PinModel *output = mapping->output();
-            unsigned bits = mapping->end() - mapping->begin();
-            if (output->bits() > bits) {
-                // there are other existing mappings, so reset bits
-                // of the current output pin.
-                output->setBits(output->bits() - bits);
-            }
-            else {
-                outputPins_.remove(output);
-                delete output;
-            }
-            mappings_.remove(mapping);
-            delete mapping;
-        }
-    }
+    pin->removeMapping(mapping);
 }
 
-void MuxModel::removePin(PinModel *pin)
+void MuxModel::removeMuxPin(MuxPin *pin)
 {
-    switch (pin->type()) {
-    case PinModel::INPUT:
-        inputPins_.remove(pin);
-        break;
-    case PinModel::OUTPUT:
-        outputPins_.remove(pin);
-        break;
-    case PinModel::EPISODIC:
-        qDebug("Warning: Cannot remove EPISODIC pin from MuxModel");
-        break;
-    }
+    muxPins_.remove(pin);
 }
 
 QCanvasItemList MuxModel::createView(QCanvas *canvas)
@@ -231,6 +204,7 @@ QDomElement MuxModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
     root.setAttribute("name", name());
+    root.setAttribute("type", type());
     if (type_ == MUX) {
         root.setAttribute("block-type", "mux");
     }
@@ -238,37 +212,18 @@ QDomElement MuxModel::serialize(QDomDocument *document)
         root.setAttribute("block-type", "demux");
     }
 
-    for (unsigned i = 0; i < inputPins_.count(); i++) {
-        QDomElement pinElem = inputPins_.at(i)->serialize(document);
-        pinElem.setAttribute("type","input");
+    for (unsigned i = 0; i < muxPins_.count(); i++) {
+        QDomElement pinElem = muxPins_.at(i)->serialize(document);
+        pinElem.setAttribute("type","muxpin");
         root.appendChild(pinElem);
     }
-    for (unsigned i = 0; i < outputPins_.count(); i++) {
-        QDomElement pinElem = outputPins_.at(i)->serialize(document);
-        pinElem.setAttribute("type","output");
-        root.appendChild(pinElem);
-    }
-    for (unsigned i = 0; i < mappings_.count(); i++) {
-        QDomElement mappingElem = mappings_.at(i)->serialize(document);
-        mappingElem.setAttribute("type", "muxmapping");
-        root.appendChild(mappingElem);
-    }
-
     return root;
 }
 
 void MuxModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
-
-    if (element.attribute("block-type", "") == "mux") {
-        type_ = MUX;
-        setType("mux");
-    }
-    else {
-        type_ = DEMUX;
-        setType("demux");
-    }
+    type_ = (element.attribute("type", "mux") == "mux") ? MUX : DEMUX;
 
     // TODO: MuxMappings
     QDomNode node = element.firstChild();
@@ -278,10 +233,8 @@ void MuxModel::deserialize(QDomElement element)
             PinModel *pinModel = new PinModel(0, pin);
             if (pin.attribute("type", "") == "input") {
                 pinModel->setType(PinModel::INPUT);
-                inputPins_.append(pinModel);
             } else if (pin.attribute("type","") == "output") {
                 pinModel->setType(PinModel::OUTPUT);
-                outputPins_.append(pinModel);
             }
         }
         node = node.nextSibling();
@@ -292,14 +245,6 @@ MuxModel::MuxType MuxModel::muxType() {
     return type_;
 }
 
-QPtrList<MuxMapping> *MuxModel::mappings() {
-    return &mappings_;
-}
-
-QPtrList<PinModel> *MuxModel::outputs() {
-    return &outputPins_;
-}
-
-QPtrList<PinModel> *MuxModel::inputs() {
-    return &inputPins_;
+QPtrList<MuxPin> *MuxModel::muxPins() {
+    return &muxPins_;
 }

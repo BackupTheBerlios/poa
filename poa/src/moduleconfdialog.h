@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.h,v 1.4 2003/09/02 13:07:57 garbeam Exp $
+ * $Id: moduleconfdialog.h,v 1.5 2003/09/02 13:35:55 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -45,7 +45,8 @@ class ModuleConfDialog : public QDialog
     Q_OBJECT
 
 public:
-    ModuleConfDialog( QWidget* parent = 0, const char* name = 0, bool modal = FALSE, WFlags fl = 0 );
+    ModuleConfDialog(QWidget* parent = 0, const char* name = 0,
+                     bool modal = FALSE, WFlags fl = 0 );
     ~ModuleConfDialog();
 
     QListView *ioListView;
@@ -84,8 +85,21 @@ private:
 
 private slots:
 
+    /**
+     * Adds a new I/O item to the dedicated I/O group.
+     */
     void addIo();
+
+    /**
+     * Removes the selected I/O item from the list view.
+     */
     void removeIo();
+
+    /**
+     * Disables/enables I/O manipulation buttons, if
+     * a list view item was (de)selected.
+     */
+    void ioSelectionChanged();
 };
 
 #endif // MODULECONFDIALOG_H

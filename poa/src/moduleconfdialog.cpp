@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.6 2003/09/02 13:07:57 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.7 2003/09/02 13:35:55 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -46,9 +46,9 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     : QDialog(parent, name, modal, fl)
 {
     if (!name) {
-        setName( "ModuleConfDialog" );
+        setName("ModuleConfDialog");
     }
-    resize(400, 500); 
+    resize(400, 500);
     setCaption(tr("Block configuration"));
 
     QBoxLayout *dialogLayout = new QVBoxLayout(this, 5);
@@ -69,6 +69,8 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     ioListView->addColumn(tr("address"));
     ioListView->addColumn(tr("bits"));
     ioListView->setAllColumnsShowFocus(TRUE);
+    connect(ioListView, SIGNAL(selectionChanged()),
+            this, SLOT(ioSelectionChanged()));
 
     // inputs root
     inputRoot = new QListViewItem(ioListView, 0);
@@ -263,6 +265,9 @@ ModuleConfDialog::ModuleConfDialog(QWidget* parent, const char* name,
     // dialog
     dialogLayout->addWidget(topWidget);
     dialogLayout->addWidget(bottomWidget);
+
+    // disable list view manipulation buttons
+    ioSelectionChanged();
 }
 
 /**
@@ -306,4 +311,13 @@ void ModuleConfDialog::removeIo()
         root->takeItem(item);
         delete item;
     }
+}
+
+void ModuleConfDialog::ioSelectionChanged() {
+    bool enabled = ioListView->selectedItem() != 0;
+    bool isChild = enabled && !ioListView->selectedItem()->isOpen();
+
+    addIoPushButton->setEnabled(enabled);
+    updateIoPushButton->setEnabled(isChild);
+    removeIoPushButton->setEnabled(isChild);
 }

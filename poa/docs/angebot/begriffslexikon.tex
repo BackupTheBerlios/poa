@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: begriffslexikon.tex,v 1.3 2003/06/12 11:35:47 papier Exp $
+%% $Id: begriffslexikon.tex,v 1.4 2003/06/12 19:27:53 garbeam Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\begriff}[2]
 {\item \bfseries{#1} \textnormal{#2}}
@@ -9,33 +9,26 @@
 \chapter{Begriffslexikon}
 \begin{itemize}
 
-\begriff{Block}{Synonym: Funktionsblock}
+\begriff{Block}{siehe Funktionsblock}
 
-\begriff{Bus}{Mehrere Signalleitungen, die von einem Funktionsblock A
-  zu einem Funktionsblock B führen, werden der Übersichtlichkeit in
-  der Darstellung zusammengefasst und als Bus bezeichnet.}
+\begriff{Bus}{Mehrere Signalleitungen, die von einem Funktionsblock ausgehen.}
 
 \begriff{Core}{Eine festgelegte Logik mit bekannter Laufzeit.}
 
-\begriff{CPLD}{Complex Programmable Logic Device;
-  Freibprogrammierbarer Baustein, auf den der Anwender mit Hilfe der
-  zu erstellenden ``Prgrammierumgebung Offener Antrieb'' seinen
-  Bedürfnissen anpassen kann.}
+\begriff{CPLD}{Complex Programmable Logic Device}
 
-\begriff{CPU}{Eine CPU auf Basis von NIOS.}
+\begriff{CPU}{Ein CPU-Block (auf Basis von NIOS).}
 
-\begriff{Download}{Kopieren des compilierten CPLD-Layouts auf den CPLD.}
+\begriff{Download}{Herunterladen eines vollständig compilierten CPLD-Layouts
+auf den CPLD.}
 
-\begriff{Funktionsblock}{Ein Funktionsblock ist das virtuelle Abbild
-  eines Cores, einer CPU oder eines Ein- bzw. Ausgabeblocks sein.}
+\begriff{Funktionsblock}{Virtuelles Abbild eines Cores, einer CPU oder
+eines Ein- bzw. Ausgabeblocks.}
 
 \begriff{Plausibilitätsprüfung}{Prüfung des CPLD-Layouts auf
-  unverküpfte und falsch verknüpfte E/As.}
+un- und falsch verknüpfte E/As.}
 
-\begriff{Optimierung}{Voraussetzung: plausibles CPLD-Layout; Es werden
-  die Laufzeiten der CPU- und core-Blöcke ermittelt und durch setzten
-  von Offsets die Gesamtlaufzeit möglichst verkürzt.}
-
+\begriff{Optimierung}{Verkürzung der Gesamtlaufzeit eines CPLD-Takt-Zyklus.}
 
 \end{itemize}
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.20 2004/01/11 16:26:59 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.21 2004/01/11 17:01:26 vanto Exp $
  *
  *****************************************************************************/
 
@@ -251,10 +251,9 @@ void ScheduleDialog::initGraphWidget()
 
 void ScheduleDialog::initCanvas()
 {
-    int Y = BOX_YSPACING;
+    drawRuler();
     for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
-        int time = 0;
-        drawTimings(*it, &Y, &time);
+        drawTimings(*it);
     }
 
     // create highlighter
@@ -288,43 +287,46 @@ void ScheduleDialog::clearCanvas()
     }
 }
 
-bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
+void ScheduleDialog::drawRuler()
+{
+    // draw ruler
+    int x = WIDGET_SPACING;
+    QCanvasText *text = new QCanvasText(QString::number(RULER_TICK)+" ns",
+                                        canvas);
+    text->move(x, 1);
+    text->setColor(gray);
+
+    text->show();
+    while (x < canvas->width()) {
+        x += PIX_PER_NS * zoom_ * RULER_TICK;
+        // draw short line
+        QCanvasLine *tick = new QCanvasLine(canvas);
+        tick->setPoints(x, 0, x, 10);
+        tick->setPen(gray);
+        tick->show();
+        // draw long line
+        tick = new QCanvasLine(canvas);
+        tick->setPoints(x, 10, x, canvas->height());
+        tick->setPen(lightGray);
+        tick->show();
+    }
+}
+
+void ScheduleDialog::drawTimings(BlockTree* bt)
 {
     // draw labels
-    if (*time == 0) {
-        QCanvasText* text = new QCanvasText(bt->getBlock()->name(),
-                                            labelCanvas);
-        text->move(WIDGET_SPACING, *Y);
-        text->show();
+    QCanvasText* text = new QCanvasText(bt->getBlock()->name(),
+                                        labelCanvas);
+    int line = blocks_.find(bt);
+    int y = line * (BOX_HEIGHT + BOX_YSPACING) + RULER_HEIGHT;
+    text->move(WIDGET_SPACING, y);
+    text->show();
 
-        // resize canvas if label doesn't fit.
-        if (text->boundingRect().width() +
-            (2 * WIDGET_SPACING) > labelCanvas->width()) {
-            qDebug("Resize canvas");
-            labelCanvas->resize(text->boundingRect().width()
-                                + (2 * WIDGET_SPACING), labelCanvas->height());
-        }
-
-        // draw ruler
-        int x = WIDGET_SPACING;
-        text = new QCanvasText(QString::number(RULER_TICK)+" ns", canvas);
-        text->move(x, 1);
-        text->setColor(gray);
-
-        text->show();
-        while (x < canvas->width()) {
-            x += PIX_PER_NS * zoom_ * RULER_TICK;
-            // draw short line
-            QCanvasLine *tick = new QCanvasLine(canvas);
-            tick->setPoints(x, 0, x, 10);
-            tick->setPen(gray);
-            tick->show();
-            // draw long line
-            tick = new QCanvasLine(canvas);
-            tick->setPoints(x, 10, x, canvas->height());
-            tick->setPen(lightGray);
-            tick->show();
-        }
+    // resize canvas if label doesn't fit.
+    if (text->boundingRect().width() +
+        (2 * WIDGET_SPACING) > labelCanvas->width()) {
+        labelCanvas->resize(text->boundingRect().width()
+                            + (2 * WIDGET_SPACING), labelCanvas->height());
     }
 
     // draw blocks
@@ -332,12 +334,28 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
     int X = rint(t * PIX_PER_NS);
     while (X < canvas->width()) {
 
-        *Y += BOX_HEIGHT + BOX_YSPACING;
-
+        // is block configured?
         if (bt->getClock() <= 0) {
-            return false;
+            // no, draw info and skip
+            QCanvasRectangle *box = new QCanvasRectangle(canvas);
+            box->setSize(canvas->width(),
+                         BOX_HEIGHT + BOX_YSPACING);
+            box->setBrush(red);
+            box->setPen(white);
+            box->move(0, RULER_HEIGHT - BOX_YSPACING
+                      / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
+            box->setZ(1);
+            box->show();
+
+            QCanvasText *text = new QCanvasText(tr("Please configure this block properly."), canvas);
+            text->move(WIDGET_SPACING, y);
+            text->setColor(white);
+            text->setZ(2);
+            text->show();
+            return;
         }
 
+        // draw block
         QRect thisBlock = calcBlockPosition(bt, t);
         QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);
         box->setBrush(QBrush(white));
@@ -383,7 +401,7 @@ bool ScheduleDialog::drawTimings(BlockTree* bt, int* Y, int* time)
         X = rint(t * PIX_PER_NS);
     }
 
-    return true;
+    return;
 }
 
 QRect ScheduleDialog::calcBlockPosition(BlockTree *bt, int time)

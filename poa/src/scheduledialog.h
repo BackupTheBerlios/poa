@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.11 2004/01/11 16:01:29 vanto Exp $
+ * $Id: scheduledialog.h,v 1.12 2004/01/11 17:01:26 vanto Exp $
  *
  *****************************************************************************/
 
@@ -88,14 +88,19 @@ private:
     void buildBranch(BlockTree *bt);
     void buildTree();
     void fillTimingTable(BlockTree* bt);
-    bool drawTimings(BlockTree* bt, int* Y, int* time);
+    void drawTimings(BlockTree* bt);
 
-    /*
+    /**
+     * Draws the ruler.
+     */
+    void drawRuler();
+
+    /**
      * Calculates the position of the given block at the given time
      */
     QRect calcBlockPosition(BlockTree *bt, int time);
 
-    /*
+    /**
      * Clears all graph widget canvases.
      */
     void clearCanvas();

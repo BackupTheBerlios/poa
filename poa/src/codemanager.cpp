@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.21 2004/02/10 10:19:06 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.22 2004/02/11 13:38:48 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -176,7 +176,7 @@ QString CodeManager::sourceCode()
 
 bool CodeManager::templateIsSubstitutable() {
 
-    Q_ASSERT(!model_->source().isNull());
+    Q_ASSERT(model_->source().isNull());
     QString source = sourceCode();
     // only one block is allowed!
     return (source.find("/*!POA!*/") != -1) &&
@@ -184,7 +184,7 @@ bool CodeManager::templateIsSubstitutable() {
 }
 
 void CodeManager::prependSubstitutionMarkers() {
-    Q_ASSERT(!model_->source().isNull());
+    Q_ASSERT(model_->source().isNull());
     QString source = sourceCode();
     source.prepend("\n/*!POA!*/\n\n/*!AOP!*/\n");
     model_->setSource(source);

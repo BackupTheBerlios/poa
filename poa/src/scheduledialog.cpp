@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.18 2004/01/11 16:17:43 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.19 2004/01/11 16:18:56 vanto Exp $
  *
  *****************************************************************************/
 
@@ -153,7 +153,7 @@ void ScheduleDialog::buildTree()
 
 void ScheduleDialog::updateModel()
 {
-    for (QPtrListIterator<BlockTree> it(inputBlocks); it != 0; ++it) {
+    for (QPtrListIterator<BlockTree> it(blocks_); it != 0; ++it) {
         (*it)->commit();
     }
 }

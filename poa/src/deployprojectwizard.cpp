@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.5 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: deployprojectwizard.cpp,v 1.6 2003/12/03 12:57:41 papier Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 #include "abstractmodel.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
+
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -41,7 +42,7 @@
 #include <qwhatsthis.h>
 #include <qimage.h>
 #include <qpixmap.h>
-
+#include <qptrlist.h>
 
 /* 
  *  Constructs the DeployProjectWizard.
@@ -204,7 +205,17 @@ bool DeployProjectWizard::allPinsConnected(/*QPtrList<AbstractModel>* blocks*/){
   return true;
 }
 
+bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
+  QPtrListIterator<AbstractModel> it(blocks);
+  AbstractModel *block;
+  while ( (block = it.current()) != 0) {
+    ++it;
+    //  if  Bock is CPU...
 
+    
+  }
+  return true;
+}
 
 /*  
  *  Destroys the object and frees any allocated resources

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.h,v 1.4 2003/10/01 10:23:52 garbeam Exp $
+ * $Id: deployprojectwizard.h,v 1.5 2003/12/03 12:57:41 papier Exp $
  *
  *****************************************************************************/
 
@@ -76,7 +76,16 @@ protected:
     void setupSchedulingPage();
     void setupDownloadPage();
 
-    bool allPinsConnected(/*QPtrList<AbstractModel>* blocks*/);
+    /**
+     * a consitency check
+     */
+    bool allPinsConnected(/*QPtrList<AbstractModel> blocks*/);
+
+    /**
+     * comiles the source for every cpu, if not already done
+     */
+    bool compileAll(QPtrList<AbstractModel> blocks);
+
 };
 
 #endif // DEPLOYPROJECTWIZARD_H

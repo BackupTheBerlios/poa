@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.84 2004/02/09 01:29:49 keulsn Exp $
+# $Id: poa.pro,v 1.85 2004/02/13 17:07:57 keulsn Exp $
 #
 ###############################################################################
 
@@ -96,6 +96,7 @@ HEADERS += removeable.h
 HEADERS += router.h
 HEADERS += runtimemanager.h
 HEADERS += scheduledialog.h
+HEADERS += scheduler.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
@@ -149,6 +150,7 @@ SOURCES += problemmanager.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += scheduledialog.cpp
+SOURCES += scheduler.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += srecord.cpp

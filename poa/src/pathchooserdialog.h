@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.h,v 1.1 2004/02/09 01:29:49 keulsn Exp $
+ * $Id: pathchooserdialog.h,v 1.2 2004/02/13 17:07:57 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -32,6 +32,7 @@
 class BlockGraph;
 class BlockNode;
 #include "pinmodel.h"
+#include "scheduler.h"
 
 
 class PathChooserDialog : public QDialog
@@ -56,6 +57,7 @@ protected:
 
 private:
     void loadBlocks();
+    void freePaths();
     static void updatePinCombo(QComboBox *box,
 			       BlockNode *block,
 			       PinModel::PinType type,
@@ -65,11 +67,14 @@ private:
     BlockNode **blocks_;
     PinModel **outPins_;
     PinModel **inPins_;
+    Path **paths_;
+    unsigned int pathsCount_;
     QComboBox *sourceBlock_;
     QComboBox *sourcePin_;
     QComboBox *targetBlock_;
     QComboBox *targetPin_;
     QListBox *pathChooser_;
+    Scheduler scheduler_;
 };
 
 #endif // POA_PATHCHOOSERDIALOG

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.2 2004/02/10 17:09:05 kilgus Exp $
+ * $Id: pathchooserdialog.cpp,v 1.3 2004/02/13 17:07:57 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -33,12 +33,15 @@
 
 
 PathChooserDialog::PathChooserDialog(BlockGraph *graph)
+    : scheduler_(graph)
 {
     Q_ASSERT(graph != 0);
     graph_ = graph;
     outPins_ = 0;
     inPins_ = 0;
     blocks_ = 0;
+    paths_ = 0;
+    pathsCount_ = 0;
 
     setCaption(tr("Path Chooser"));
     QBoxLayout *topPane = new QVBoxLayout(this, 10, 5);
@@ -134,6 +137,19 @@ PathChooserDialog::~PathChooserDialog()
     if (outPins_ != 0) {
 	delete [] outPins_;
     }
+    freePaths();
+}
+
+void PathChooserDialog::freePaths()
+{
+    if (paths_ != 0) {
+	for (unsigned i = 0; i < pathsCount_; ++i) {
+	    delete paths_[i];
+	}
+	delete [] paths_;
+	paths_ = 0;
+	pathsCount_ = 0;
+    }
 }
 
 void PathChooserDialog::updatePinCombo(QComboBox *box,
@@ -191,6 +207,31 @@ void PathChooserDialog::updateOutPins()
 
 void PathChooserDialog::updatePaths()
 {
+    unsigned i;
+
+    freePaths();
+    PathQueue queue;
+    int fromIndex = sourceBlock_->currentItem();
+    int toIndex = targetBlock_->currentItem();
+    if (fromIndex > 0 && toIndex > 0) {
+	BlockNode *from = blocks_[fromIndex];
+	BlockNode *to = blocks_[toIndex];
+	scheduler_.allPaths(queue, from, to);
+    }
+
+    pathsCount_ = queue.size();
+    paths_ = new (Path*)[pathsCount_];
+    for (i = 0; i < pathsCount_; ++i) {
+	Q_ASSERT(!queue.isEmpty());
+	paths_[i] = queue.removeHead();
+    }
+
+    while (pathChooser_->count() > 0) {
+	pathChooser_->removeItem(0);
+    }
+    for (i = 0; i < pathsCount_; ++i) {
+	pathChooser_->insertItem(paths_[i]->getText(), i);
+    }
 }
 
 void PathChooserDialog::sourceBlockActivated(int)

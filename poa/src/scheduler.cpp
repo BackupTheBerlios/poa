@@ -18,96 +18,123 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.cpp,v 1.1 2004/02/09 01:29:49 keulsn Exp $
+ * $Id: scheduler.cpp,v 1.2 2004/02/13 17:07:57 keulsn Exp $
  *
  *****************************************************************************/
 
 #include "scheduler.h"
 
-#include <qmap.h>
+#include <qptrlist.h>
+#include <qvaluelist.h>
+#include <limits.h>
 
 
-typedef QMap<BlockNode*, int> BlockMap;
-typedef QValueList<BlockNode*> BlockList;
-typedef pair<BlockNode*, BlockNode*> Edge;
 
 class DepthFirstNode
 {
+public:
     DepthFirstNode(BlockNode *block, DepthFirstNode *pred);
-    
-    bool isStaticPred(const DepthFirstNode *block) const;
-    DepthFirstNode *prev() const;
 
+    void addPredecessor(DepthFirstNode *node);
+    const DepthFirstNodeList getPredecessors() const;
+
+    BlockNode *node() const;
+
+    int time;
+    int lowest;
+
+private:
     BlockNode *block_;
-    DepthFirstNode *pred_;
+    DepthFirstNodeList pred_;
 };
 
 typedef QMap<BlockNode*, DepthFirstNode*> DepthFirstMap;
 typedef QMapIterator<BlockNode*, DepthFirstNode*> DepthFirstMapIterator;
 
 
-class EdgeList : public QValueList<Edge>
+
+/******************
+ * DepthFirstNode *
+ ******************/
+
+DepthFirstNode::DepthFirstNode(BlockNode *block, DepthFirstNode *pred)
 {
-public:
-    void pushEdges(const BlockNode& node);
-};
+    block_ = block;
+    pred_.prepend(pred);
+    time = -1;
+    lowest = INT_MAX;
+}
 
-
-class BlockTraversal
+void DepthFirstNode::addPredecessor(DepthFirstNode *node)
 {
-public:
-    BlockTraversal(PinNode *from, PinNode *to);
+    pred_.prepend(node);
+}
 
-    bool variableOffset() const;
-
-    BlockNode *block() const;
-    BlockModel *model() const;
-
-    void commit();
-
-private:
-    PinNode *in_;
-    PinNode *out_;
-    unsigned long offset_;
-};
-
-
-class Path : public PriorityItem
+const DepthFirstNodeList DepthFirstNode::getPredecessors() const
 {
-public:
-    virtual bool higherPriority(const PriorityItem *other) const;
+    return pred_;
+}
 
-private:
-    BlockTraversal *first_;
-};
-
-
-
-/************
- * EdgeList *
- ************/
-
-void EdgeList::pushEdges(const BlockNode& node)
+BlockNode *DepthFirstNode::node() const
 {
-    const QPtrList<BlockNode> neighbours = node.neighbours();
-    QPtrListIterator<BlockNode> current(neighbours);
-    for (; current != 0; ++current) {
-	this->prepend(Edge(node, current));
-    }
+    return block_;
 }
 
 
+/********
+ * Path *
+ ********/
 
-/******************
- * BlockTraversal *
- ******************/
+Path::Path(BlockNode *target) {
+    runtime_ = 0;
+    prepend(target);
+}
 
-BlockTraversal::BlockTraversal(PinNode *from, PinNode *to)
+Path::Path(const Path &other) 
+    : PriorityItem()
 {
-    in_ = from;
-    out_ = to;
-    Q_ASSERT((from == 0 && to != 0 && to->isInput() || from != 0 && to == 0)
-	     || (from != 0 && to != 0 && from->parent() == to->parent()));
+    runtime_ = other.runtime_;
+    nodes_ = other.nodes_;
+}
+
+Path::~Path()
+{
+}
+
+void Path::prepend(BlockNode *node) {
+    Q_ASSERT(node != 0);
+    nodes_.prepend(node);
+    runtime_ += node->model()->runtime();
+    updatePriority();
+}
+
+void Path::removeFirst()
+{
+    if (!nodes_.isEmpty()) {
+	BlockNode *first = nodes_.front();
+	nodes_.pop_front();
+	runtime_ -= first->runtime();
+	updatePriority();
+    }
+}
+
+bool Path::higherPriority(const PriorityItem *other) const {
+    const Path *otherPath = dynamic_cast<const Path*>(other);
+    Q_ASSERT(otherPath != 0);
+    return this->runtime_ < otherPath->runtime_;
+}
+
+QString Path::getText() const
+{
+    QValueList<BlockNode*>::const_iterator it = nodes_.begin();
+    QString text;
+    if (it != nodes_.end()) {
+	text = (*it)->model()->name();
+	while (++it != nodes_.end()) {
+	    text += " - " + (*it)->model()->name();
+	}
+    }
+    return text;
 }
 
 
@@ -115,6 +142,8 @@ BlockTraversal::BlockTraversal(PinNode *from, PinNode *to)
 /*************
  * Scheduler *
  *************/
+
+const int Scheduler::infinity = INT_MAX;
 
 Scheduler::Scheduler(BlockGraph *graph)
 {
@@ -125,91 +154,122 @@ Scheduler::~Scheduler()
 {
 }
 
-Result Scheduler::optimizeBetween(PinNode *from, PinNode *to)
-{
-    if (isCyclic()) {
-	return CYCLIC;
-    }
-    // repeat
-    //   find (probably) shortest path
-    //   assign offsets
-    // until is shortest path
-    PathQueue freshPaths(findAllPaths(from, to));
-    if (freshPaths.isEmpty()) {
-	return PARTITIONED;
-    }
-    PathQueue triedPaths;
-    Path *path;
-    bool minimized;
-    do {
-	path = freshPaths.removeHead();
-	minimized = tryMinimization(path);
-	triedPaths.add(path);
-    } while (!minimized || freshPaths.isEmpty());
-    path = triedPaths.removeHead();
-    // clean up unused paths
-    while (!freshPaths.isEmpty()) {
-	delete freshPaths.removeHead();
-    }
-    while (!triedPaths.isEmpty()) {
-	delete triedPaths.removeHead();
-    }
 
-    // optimize remaining blocks
-}
-
-bool Scheduler::isCyclic() const
+void Scheduler::firstPass(DepthFirstNode &current,
+			  int &time,
+			  BlockMap &blockMap,
+			  DepthFirstNodeList &cycleStack)
 {
-    // Build depth-first tree. If any node A can reach a node B
-    // and B lies on the path from A to the root, then and only then
-    // the graph contains a strongly connected component (which is
-    // equal to the presence of a cycle).
-    Q_ASSERT(graph_ != 0);
-    DepthFirstMap allNodes;
-    BlockList next;
-    bool cycleFound = false;
-    {
-	BlockList blocks = graph_->blocks();
-	if (!blocks.isEmpty()) {
-	    next.push_front(blocks.first());
-	}
-    }
-    DepthFirstNode *currentNode = 0;
-    while (!next.isEmpty() && !cycleFound) {
-	// fetch next
-	DepthFirstNode *previousNode = currentNode;
-	BlockNode *current = next.front();
-	next.pop_front();
-	// process
-	DepthFirstMap::iterator it = allNodes.find(current);
-	if (it != allNodes.end()) {
-	    // found the node, check if that is a cylce
-	    // otherwise ignore edge
-	    currentNode = *it;
-	    DepthFirstNode *searcher = previousNode;
-	    while (!cycleFound && searcher != 0) {
-		cycleFound = searcher == currentNode;
-		searcher = searcher->prev();
-	    }
+    current.time = time;
+    current.lowest = time;
+    int min = time;
+    ++time;
+
+    cycleStack.push_front(&current);
+
+    const QPtrList<BlockNode> allNeighbours = current.node()->neighbours();
+    QPtrListIterator<BlockNode> adj(allNeighbours);
+    BlockNode *nn;
+    while ((nn = adj()) != 0) {
+	DepthFirstNode *neighbour;
+	BlockMap::iterator it = blockMap.find(nn);
+	if (it != blockMap.end()) {
+	    neighbour = *it;
 	}
 	else {
-	    // new node found
-	    currentNode = new DepthFirstNode(current, previousNode);
-	    allNodes[current] = currentNode;
+	    blockMap[nn] = neighbour = new DepthFirstNode(nn, &current);
+	}
 
-	    // push adjacent
-	    QPtrList<BlockNode> neighbours = current->neighbours();
-	    QPtrListIterator<BlockNode> adjacent(neighbours);
-	    while (!adjacent.isEmpty()) {
-		next.push_front(adjacent++);
-	    }
+	if (neighbour->time < 0) {
+	    // new node hit
+	    neighbour->addPredecessor(&current);
+	    firstPass(*neighbour, time, blockMap, cycleStack);
+	}
+	else if (neighbour->time <= current.time) {
+	    // upward edge in the depth first search-tree --> cycle detected,
+	    // ignore this edge
+	}
+	else {
+	    // cross-edge in the depth first tree
+	    Q_ASSERT(neighbour->time == infinity);
+	    neighbour->addPredecessor(&current);
+	}
+
+	if (neighbour->lowest < min) {
+	    min = neighbour->lowest;
 	}
     }
-    DepthFirstMapIterator currentItem;
-    for (currentItem = allNodes.begin(); currentItem != allNodes.end();
-	 ++currentItem) {
 
-	delete *currentItem;
+    if (min < current.lowest) {
+	// current has backward edges, but current is not the first node in
+	// the cycle
+	current.lowest = min;
     }
-    return cycleFound;
+    else {
+	// cycle completed
+	DepthFirstNode *item;
+	do {
+	    item = cycleStack.front();
+	    cycleStack.pop_front();
+	    item->time = infinity;
+	} while (item != &current);
+    }
+}
+
+
+void Scheduler::extractPaths(PathQueue &paths,
+			     const DepthFirstNode &latest,
+			     Path &current)
+{
+    // use backtracking to find all paths
+    DepthFirstNodeList preds = latest.getPredecessors();
+    DepthFirstNodeList::const_iterator adj = preds.begin();
+    if (adj == preds.end()) {
+	// first node reached
+	paths.insert(new Path(current));	
+    }
+    else {
+	do {
+	    DepthFirstNode *next = *adj;
+	    current.prepend(next->node());
+	    extractPaths(paths, *next, current);
+	    current.removeFirst();
+	} while (++adj != preds.end());
+    }
+    
+}
+
+
+void Scheduler::allPaths(PathQueue &paths, BlockNode *from, BlockNode *to)
+{
+    // Use a modification of Tarjan's algorithm to find all paths that do not
+    // contain any cycle
+    DepthFirstNode *fromNode = new DepthFirstNode(from, 0);
+    BlockMap blockMap;
+    blockMap[from] = fromNode;
+    int time;
+    DepthFirstNodeList cycleStack;
+
+    firstPass(*fromNode, time, blockMap, cycleStack);
+
+    paths.clear();
+
+    BlockMap::iterator it = blockMap.find(to);
+    if (it != blockMap.end()) {
+	DepthFirstNode *toNode = *it;
+
+	Path current(toNode->node());
+	extractPaths(paths, *toNode, current);
+    }
+    else {
+	// to is not reachable from source node from --> there are no paths
+    }
+
+    QValueList<DepthFirstNode*> values = blockMap.values();
+    blockMap.clear();
+    for (QValueListIterator<DepthFirstNode*> valueIt = values.begin();
+	 valueIt != values.end(); valueIt = values.remove(valueIt)) {
+
+        delete *valueIt;
+    }
 }

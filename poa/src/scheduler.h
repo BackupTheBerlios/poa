@@ -18,14 +18,48 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduler.h,v 1.1 2004/02/09 01:29:49 keulsn Exp $
+ * $Id: scheduler.h,v 1.2 2004/02/13 17:07:57 keulsn Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_SCHEDULER
 #define POA_SCHEDULER
 
+#include <qmap.h>
+
 #include "blockgraph.h"
+#include "blockmodel.h"
+#include "genericpriorityqueue.h"
+
+
+class Path : public PriorityItem
+{
+public:
+    Path(BlockNode *target);
+    Path(const Path &other);
+    virtual ~Path();
+
+    void prepend(BlockNode *node);
+    void removeFirst();
+
+    BlockNode *node();
+
+    QString getText() const;
+
+    virtual bool higherPriority(const PriorityItem *other) const;
+
+private:
+    QValueList<BlockNode*> nodes_;
+    unsigned int runtime_;
+};
+
+typedef GenericPriorityQueue<Path> PathQueue;
+
+class DepthFirstNode;
+typedef QMap<BlockNode*, DepthFirstNode*> BlockMap;
+typedef QValueList<DepthFirstNode*> DepthFirstNodeList;
+
+
 
 class Scheduler
 {
@@ -33,14 +67,22 @@ public:
     Scheduler(BlockGraph *graph);
     virtual ~Scheduler();
 
-    enum {OPTIMIZED = 0, CYCLIC, PARTITIONED} Result;
+    void allPaths(PathQueue &paths, BlockNode *from, BlockNode *to);
+    
+protected:
 
-    Result optimizeBetween(PinNode *from, PinNode *to);
+    void firstPass(DepthFirstNode &current,
+		   int &time,
+		   BlockMap &blockMap,
+		   DepthFirstNodeList &cycleStack);
 
-    bool isCyclic() const;
-
+    void extractPaths(PathQueue &paths,
+		      const DepthFirstNode &latest,
+		      Path &current);
+	
 private:
     BlockGraph *graph_;
+    static const int infinity;
 };
 
 #endif // POA_SCHEDULER

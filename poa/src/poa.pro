@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.78 2004/01/27 16:39:56 squig Exp $
+# $Id: poa.pro,v 1.79 2004/01/28 01:49:37 kilgus Exp $
 #
 ###############################################################################
 
@@ -59,6 +59,7 @@ HEADERS += connectaction.h
 HEADERS += connectorrouter.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
+HEADERS += connectormoveaction.h
 HEADERS += copyable.h
 HEADERS += cpumodel.h
 HEADERS += dijkstrarouter.h
@@ -112,6 +113,7 @@ SOURCES += connectaction.cpp
 SOURCES += connectorrouter.cpp
 SOURCES += connectorviewlist.cpp
 SOURCES += connectorviewsegment.cpp
+SOURCES += connectormoveaction.cpp
 SOURCES += cpumodel.cpp
 SOURCES += dijkstrarouter.cpp
 SOURCES += directrouter.cpp

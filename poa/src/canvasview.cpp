@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.58 2004/01/27 16:56:55 squig Exp $
+ * $Id: canvasview.cpp,v 1.59 2004/01/28 01:49:37 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include "canvasviewaction.h"
 #include "connectaction.h"
 #include "connectorviewsegment.h"
+#include "connectormoveaction.h"
 #include "cpumodel.h"
 #include "pinmodel.h"
 #include "pinview.h"
@@ -186,9 +187,16 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
                 setAction(new MoveAction(this, e, item));
             }
             else {
-                PinView *pinItem = dynamic_cast<PinView*>(topItem);
-                if (pinItem != 0 && !pinItem->isConnected()) {
-                    setAction(new ConnectAction(this, e, pinItem));
+				ConnectorViewSegment *segment = 
+					dynamic_cast<ConnectorViewSegment*>(topItem);
+				if (segment != 0) {
+					setAction(new ConnectorMoveAction(this, e, segment));
+				} else
+				{
+	                PinView *pinItem = dynamic_cast<PinView*>(topItem);
+    	            if (pinItem != 0 && !pinItem->isConnected()) {
+        	            setAction(new ConnectAction(this, e, pinItem));
+					}
                 }
             }
 

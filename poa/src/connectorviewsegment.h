@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.7 2004/01/18 23:15:11 squig Exp $
+ * $Id: connectorviewsegment.h,v 1.8 2004/01/28 01:49:37 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,8 @@
 #include "poa.h"
 #include "removeable.h"
 #include "settings.h"
+#include "moveable.h"
+
 class ConnectorViewList;
 class Project;
 

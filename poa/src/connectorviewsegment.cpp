@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.11 2004/01/21 10:28:10 kilgus Exp $
+ * $Id: connectorviewsegment.cpp,v 1.12 2004/01/28 01:49:37 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -64,6 +64,7 @@ void ConnectorViewSegment::select(bool yes)
 void ConnectorViewSegment::updateProperties()
 {
     if (isActive()) {
+
         setPen(QPen(Settings::instance()->activatedColor(), 2));
     }
     else if (isSelected()) {
@@ -91,4 +92,3 @@ ConnectorViewList *ConnectorViewSegment::viewList()
 {
     return viewList_;
 }
-

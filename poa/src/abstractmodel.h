@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.13 2003/09/09 14:04:44 vanto Exp $
+ * $Id: abstractmodel.h,v 1.14 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -95,11 +95,6 @@ public:
      * Creates the corresponding view objects.
      */
     virtual QCanvasItemList createView(QCanvas *canvas) = 0;
-
-    /**
-     * Returns the tooltip text
-     */
-    virtual QString tip() = 0;
 
 private:
     QString type_;

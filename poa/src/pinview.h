@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.9 2003/09/08 13:35:04 squig Exp $
+ * $Id: pinview.h,v 1.10 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,8 @@
 #include <qvaluevector.h>
 
 #include "abstractview.h"
+#include "tooltipable.h"
+
 class BlockView;
 class CanvasView;
 class PinModel;
@@ -36,7 +38,8 @@ class PinModel;
 /**
  * Definition of a Pin view.
  */
-class PinView: public AbstractView, public QCanvasRectangle
+class PinView: public AbstractView, public QCanvasRectangle,
+               public Tooltipable
 {
 
 public:
@@ -97,6 +100,11 @@ public:
      * Sets the brush to red if Pin is selected, otherwise black
      */
     virtual void setSelected(bool yes);
+
+    /**
+     * Return the tooltip text
+     */
+    QString tip();
 
 private:
     /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.15 2003/09/09 14:04:44 vanto Exp $
+ * $Id: cpumodel.h,v 1.16 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 #ifndef POA_CPUMODEL_H
@@ -27,6 +27,9 @@
 #include "blockmodel.h"
 
 #include <qdom.h>
+
+class QCanvas;
+class QCanvasItemList;
 
 /**
  * A block that executes some source code everytime it is triggered.
@@ -48,6 +51,17 @@ class CpuModel: public BlockModel
     CpuModel(QDomElement cpuElement);
 
     /**
+     * Returns the cpu id. This id is used to upload <code>code()</code> to
+     * corresponding cpu on the cpld board
+     */
+    int cpuId();
+
+    /**
+     * Sets the cpu id
+     */
+    void setCpuId(const int cpuId);
+
+    /**
      * Returns a representation (filename or what? //TODO) of the sourcecode
      * associated with this CpuModel
      */
@@ -60,17 +74,6 @@ class CpuModel: public BlockModel
     void setCode(const QString &code);
 
     /**
-     * Returns the cpu id. This id is used to upload <code>code()</code> to
-     * corresponding cpu on the cpld board
-     */
-    unsigned int cpuId();
-
-    /**
-     * Sets the cpu id
-     */
-    void setCpuId(const unsigned int cpuId);
-
-    /**
      * Indicates if the automatic execution time calculator should be used
      */
     bool autoExecTime();
@@ -81,9 +84,44 @@ class CpuModel: public BlockModel
     void setAutoExecTime(const bool autoExecTime);
 
     /**
-     * Returns the tooltip text
+     * Sets the clock count in milliseconds of this.
+     * @todo Move this to CpuModel?
      */
-    QString tip();
+    void setClock(unsigned int clock);
+
+    /**
+     * Returns the clock count in milliseconds of this.
+     * @todo Move this to CpuModel?
+     */
+    unsigned int clock();
+
+    /**
+     * Sets the starting offset in milliseconds of this.
+     * @todo Move this to CpuModel?
+     */
+    void setOffset(unsigned int offset);
+
+    /**
+     * Returns the starting offset in milliseconds of this.
+     * @todo Move this to CpuModel?
+     */
+    unsigned int offset();
+
+    /**
+     * Toggles the automatic offset calculation.
+     */
+    void setAutoOffset(bool autoOffset);
+
+    /**
+     * Indicates if the automatic offset calculation should be used.
+     */
+    bool autoOffset();
+
+    /**
+     * Creates the CanvasItems for this.
+     */
+    virtual QCanvasItemList createView(QCanvas *canvas);
+
 
     /**
      * Serializes this instance to a xml subtree
@@ -98,9 +136,11 @@ class CpuModel: public BlockModel
 
  private:
     QString code_;
-    unsigned int cpuId_;
+    int cpuId_;
     bool autoExecTime_;
-
+    unsigned long clock_;
+    unsigned long offset_;
+    bool autoOffset_;
 };
 
 #endif

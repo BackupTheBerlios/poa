@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.h,v 1.7 2003/09/04 14:45:10 squig Exp $
+ * $Id: connectorview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include <qcanvas.h>
 
 class ConnectorModel;
+#include "tooltipable.h"
 #include "pinview.h"
 
 
@@ -47,7 +48,7 @@ class ConnectorView;
  * propagation some items may be removed or new items may be inserted into
  * the list.
  */
-class ConnectorView: public QCanvasLine
+class ConnectorView: public QCanvasLine, public Tooltipable
 {
 
 public:
@@ -98,10 +99,16 @@ public:
      */
     LineOrientation orientation();
 
+    /**
+     * Returns the tooltip text
+     */
+    QString tip();
+
 protected:
     ConnectorView(QPoint start,
           LineOrientation orientation,
           PinView *to,
+          ConnectorModel *model,
           QCanvas *canvas);
 
     void setStartPoint(QPoint start);

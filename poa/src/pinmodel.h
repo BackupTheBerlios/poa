@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.9 2003/09/09 14:04:44 vanto Exp $
+ * $Id: pinmodel.h,v 1.10 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,8 +29,6 @@
 #include <qcanvas.h>
 #include <qdom.h>
 
-#include "abstractmodel.h"
-
 class BlockView;
 class BlockModel;
 class ConnectorModel;
@@ -40,10 +38,15 @@ class QDomElement;
 #include "pinview.h"
 
 
-class PinModel : public AbstractModel
+class PinModel
 {
 
 public:
+
+    /**
+     * Defines the type of this pin
+     */
+    enum PinType {INPUT, OUTPUT, EPISODIC};
 
     /**
      * Creates a view for <code>PinModel</code> on <code>canvas</code>.
@@ -79,6 +82,15 @@ public:
      */
     void detach();
 
+    /**
+     * Returns the type of this pin
+     */
+    PinType type();
+
+    /**
+     * Sets the type of this pin
+     */
+    void setType(PinType type);
 
     /**
      * Returns this' id.
@@ -135,11 +147,6 @@ public:
             PinView::DockPosition dockPosition);
 
     /**
-     * Returns the tooltip text
-     */
-    virtual QString tip();
-
-    /**
      * Serializes this instance to a xml subtree
      * @param document the main QDomDocument instance. Needed to create
      * elements
@@ -160,6 +167,7 @@ private:
     unsigned bits_;   // data type to be used in C source and width of pin
                       // one pin can be wider than one bit.
     ConnectorModel *connector_;
+    PinType type_;
 
 //public slots:
 //

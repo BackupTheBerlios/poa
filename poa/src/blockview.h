@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.21 2003/09/08 13:35:04 squig Exp $
+ * $Id: blockview.h,v 1.22 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -71,7 +71,7 @@ public:
     /**
      * Returns the model for <code>this</code>.
      */
-    AbstractModel *model();
+    virtual AbstractModel *model();
 
     /**
      * @return true

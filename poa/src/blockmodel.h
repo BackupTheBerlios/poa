@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.16 2003/09/09 14:04:44 vanto Exp $
+ * $Id: blockmodel.h,v 1.17 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -88,41 +88,15 @@ public:
      */
     PinVector *outputPins();
 
+    /**
+     * Returns the runtime (in ms) of this block
+     */
+    unsigned int execTime();
 
     /**
-     * Sets the clock count in milliseconds of this.
-     * @todo Move this to CpuModel?
+     * Sets the runtime (in ms) of this block
      */
-    void setClock(unsigned int clock);
-
-    /**
-     * Returns the clock count in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    unsigned int clock();
-
-    /**
-     * Sets the starting offset in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    void setOffset(unsigned int offset);
-
-    /**
-     * Returns the starting offset in milliseconds of this.
-     * @todo Move this to CpuModel?
-     */
-    unsigned int offset();
-
-    /**
-     * Toggles the automatic offset calculation.
-     */
-    void setAutoOffset(bool autoOffset);
-
-    /**
-     * Indicates if the automatic offset calculation should be used.
-     */
-    bool autoOffset();
-
+    void setExecTime(const unsigned int time);
 
     /**
      * Adds an input pin to this
@@ -174,22 +148,15 @@ public:
     /**
      * Creates the CanvasItems for this.
      */
-    virtual QCanvasItemList createView(QCanvas *canvas);
-
-    /**
-     * Returns tooltip text
-     */
-    virtual QString tip();
+    virtual QCanvasItemList createView(QCanvas *canvas) = 0;
 
 private:
 
     PinVector *episodicPins_;
     PinVector *outputPins_;
     PinVector *inputPins_;
-    unsigned long clock_;
-    unsigned long offset_;
-    bool autoOffset_;
     unsigned currentPinId_;
+    unsigned int execTime_;
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.h,v 1.8 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: coremodel.h,v 1.9 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,9 @@
 
 #include "blockmodel.h"
 #include <qdom.h>
+
+class QCanvas;
+class QCanvasItemList;
 
 /**
  * A block that calculates one specific function everytime it is triggered.
@@ -46,6 +49,11 @@ class CoreModel: public BlockModel
      * Creates a CoreModel instance for the project out of an xml subtree
      */
     CoreModel(QDomElement coreElement);
+
+    /**
+     * Creates the CanvasItems for this.
+     */
+    virtual QCanvasItemList createView(QCanvas *canvas);
 
     /**
      * Serializes this instance to a xml subtree

@@ -18,15 +18,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
+ * $Id: coreview.h,v 1.3 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_CPUVIEW_H
-#define POA_CPUVIEW_H
+#ifndef POA_COREVIEW_H
+#define POA_COREVIEW_H
 
 #include "abstractview.h"
-#include "cpumodel.h"
+#include "coremodel.h"
 #include "blockview.h"
 #include "inputblockview.h"
 #include "outputblockview.h"
@@ -40,14 +40,14 @@ class BlockModel;
 /**
  * Definition of a cpu view.
  */
-class CpuView: public BlockView, public Tooltipable
+class CoreView: public BlockView, public Tooltipable
 {
 
 public:
     /**
      * Creates a new CpuView on the given canvas
      */
-    CpuView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
+    CoreView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
 
     /**
      * Returns the tooltip text

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.13 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: librarywindow.cpp,v 1.14 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -81,7 +81,7 @@ LibraryWindow::~LibraryWindow()
  */
 void LibraryWindow::initializeLibrary()
 {
-    CpuModel *cpu = new CpuModel("NIOS32", "NIOS 32-Bit Cpu");
+    CpuModel *cpu = new CpuModel("NIOS 32", "NIOS 32-Bit Cpu");
     PinModel *firstPin = new PinModel(cpu, "Input1");
     cpu->addInputPin(firstPin);
     cpu->addInputPin(new PinModel(cpu, "Second Input"), firstPin);

@@ -18,42 +18,24 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
+ * $Id: tooltipable.h,v 1.1 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
-
-#ifndef POA_CPUVIEW_H
-#define POA_CPUVIEW_H
-
-#include "abstractview.h"
-#include "cpumodel.h"
-#include "blockview.h"
-#include "inputblockview.h"
-#include "outputblockview.h"
-#include "tooltipable.h"
-
-#include <qvariant.h>
-#include <qcanvas.h>
-
-class BlockModel;
+#ifndef POA_TOOLTIPABLE_H
+#define POA_TOOLTIPABLE_H
 
 /**
- * Definition of a cpu view.
+ * An interface that provides tooltip information.
  */
-class CpuView: public BlockView, public Tooltipable
+class Tooltipable
 {
 
-public:
-    /**
-     * Creates a new CpuView on the given canvas
-     */
-    CpuView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
-
+ public:
     /**
      * Returns the tooltip text
      */
-    QString tip();
+    virtual QString tip() = 0;
 
 };
 
-#endif // POA_CPUVIEW_H
+#endif // POA_TOOLTIPABLE_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.14 2003/09/09 14:04:44 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.15 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -39,9 +39,7 @@ BlockModel::BlockModel(QString type, QString description)
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
 
-    clock_ = 0;
-    offset_ = 0;
-    autoOffset_ = true;
+    execTime_ = 0;
     currentPinId_ = 0;
 }
 
@@ -71,34 +69,14 @@ PinVector *BlockModel::outputPins()
     return outputPins_;
 }
 
-void BlockModel::setClock(unsigned int clock)
+void BlockModel::setExecTime(unsigned int time)
 {
-    clock_ = clock;
+    execTime_ = time;
 }
 
-unsigned int BlockModel::clock()
+unsigned int BlockModel::execTime()
 {
-    return clock_;
-}
-
-void BlockModel::setOffset(unsigned int offset)
-{
-    offset_ = offset;
-}
-
-unsigned int BlockModel::offset()
-{
-    return offset_;
-}
-
-void BlockModel::setAutoOffset(bool autoOffset)
-{
-    autoOffset_ = autoOffset;
-}
-
-bool BlockModel::autoOffset()
-{
-    return autoOffset_;
+    return execTime_;
 }
 
 void BlockModel::addInputPin(PinModel *pin, PinModel *successor)
@@ -108,6 +86,7 @@ void BlockModel::addInputPin(PinModel *pin, PinModel *successor)
     } else if (pin->id() > currentPinId_) {
         currentPinId_ = pin->id();
     }
+    pin->setType(PinModel::INPUT);
     inputPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -125,6 +104,7 @@ void BlockModel::addOutputPin(PinModel *pin, PinModel *successor)
     } else if (pin->id() > currentPinId_) {
         currentPinId_ = pin->id();
     }
+    pin->setType(PinModel::OUTPUT);
     outputPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -142,6 +122,7 @@ void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor)
     } else if (pin->id() > currentPinId_) {
         currentPinId_ = pin->id();
     }
+    pin->setType(PinModel::EPISODIC);
     episodicPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -163,29 +144,11 @@ PinModel *BlockModel::findPinById(unsigned id)
     return pin;
 }
 
-QCanvasItemList BlockModel::createView(QCanvas *canvas)
-{
-    QCanvasItemList list;
-    BlockView *view = new BlockView (this, canvas);
-    list.append(view);
-    view->addPinViewsTo(list);
-    return list;
-}
-
-QString BlockModel::tip()
-{
-    return QString("<table><tr><td><b>Clock:</b></td><td>")+QString::number(clock())
-        +QString("ms</td></tr><tr><td><b>Offset:</b></td><td>")+QString::number(offset())
-        +QString("ms</td></tr></table>");
-}
-
 QDomElement BlockModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
-    root.setAttribute("auto-offset", autoOffset_? "true":"false");
-    root.setAttribute("offset", (unsigned int)offset_);
-    root.setAttribute("clock", (unsigned int)clock_);
     root.setAttribute("name", name());
+    root.setAttribute("exectime", (unsigned int)execTime_);
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
         QDomElement pinElem = inputPins_->at(i)->serialize(document);
@@ -209,10 +172,10 @@ QDomElement BlockModel::serialize(QDomDocument *document)
 void BlockModel::deserialize(QDomElement element)
 {
     AbstractModel::deserialize(element);
-    setAutoOffset( (element.attribute("auto-offset","true") == "true") );
-    setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
-    setClock( (unsigned int)element.attribute("clock","0").toUInt() );
+
     setName( element.attribute("name","unnamed") );
+    setExecTime((unsigned int) element.attribute("exectime","0").toUInt());
+
     // pins
     inputPins_->clear();
     outputPins_->clear();

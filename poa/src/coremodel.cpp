@@ -18,12 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.cpp,v 1.3 2003/08/29 17:59:38 vanto Exp $
+ * $Id: coremodel.cpp,v 1.4 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 #include "coremodel.h"
+#include "coreview.h"
 #include "abstractmodel.h"
 
+#include <qcanvas.h>
 #include <qdom.h> // used to provide serialization
 #include <qtextstream.h>
 
@@ -46,6 +48,15 @@ CoreModel::CoreModel(QDomElement coreElement)
     if (!coreElement.isNull()) {
         BlockModel::deserialize(coreElement);
     }
+}
+
+QCanvasItemList CoreModel::createView(QCanvas *canvas)
+{
+    QCanvasItemList list;
+    CoreView *view = new CoreView (this, canvas);
+    list.append(view);
+    view->addPinViewsTo(list);
+    return list;
 }
 
 /**

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.cpp,v 1.6 2003/09/09 14:04:44 vanto Exp $
+ * $Id: connectormodel.cpp,v 1.7 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -42,10 +42,21 @@ ConnectorModel::ConnectorModel(PinModel *source, PinModel *target)
 
     target_->attach(this);
     source_->attach(this);
+    width_ = 0;
 }
 
 ConnectorModel::~ConnectorModel()
 {
+}
+
+PinModel *ConnectorModel::source()
+{
+    return source_;
+}
+
+PinModel *ConnectorModel::target()
+{
+    return target_;
 }
 
 unsigned ConnectorModel::width()
@@ -86,11 +97,6 @@ QCanvasItemList ConnectorModel::createView(QCanvas *canvas)
                                             targetView,
                                             canvas);
     return view->allSegments();
-}
-
-QString ConnectorModel::tip()
-{
-    return QString("Connector");
 }
 
 QDomElement ConnectorModel::serialize(QDomDocument *document)

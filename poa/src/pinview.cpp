@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.10 2003/09/09 14:04:44 vanto Exp $
+ * $Id: pinview.cpp,v 1.11 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ PinView::~PinView()
 
 AbstractModel *PinView::model()
 {
-    return model_;
+    return 0;
 }
 
 PinView::DockPosition PinView::dockPosition()
@@ -126,4 +126,29 @@ void PinView::updateProperties()
         setPen(Settings::instance()->defaultColor());
         setBrush(QBrush(Settings::instance()->defaultColor()));
     }
+}
+
+QString PinView::tip()
+{
+    QString pt("Unkown type");
+    switch (pinModel()->type()) {
+    case PinModel::INPUT:
+        pt = "Input pin";
+        break;
+    case PinModel::OUTPUT:
+        pt = "Output pin";
+        break;
+    case PinModel::EPISODIC:
+        pt = "Episodic pin";
+        break;
+    }
+
+    return QString("<b>Pin %1</b><br><u>%2</u> (%3)<hr>" \
+                   "<b>Address:</b> 0x%4<br>" \
+                   "<b>Width:</b>%5 bits")
+        .arg(pinModel()->id())
+        .arg(pinModel()->name())
+        .arg(pt)
+        .arg(pinModel()->address())
+        .arg(pinModel()->bits());
 }

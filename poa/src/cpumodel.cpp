@@ -18,13 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.15 2003/09/09 14:04:44 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.16 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
+
+#include "blockview.h"
 #include "cpumodel.h"
+#include "cpuview.h"
 #include "abstractmodel.h"
 
 #include <qdom.h> // used to provide serialization
+#include <qcanvas.h>
 #include <qtextstream.h>
 
 #include "pinmodel.h"
@@ -32,8 +36,11 @@
 CpuModel::CpuModel(QString type, QString description)
     : BlockModel(type, description)
 {
-    cpuId_ = 0;
+    cpuId_ = -1;
     autoExecTime_ = 0;
+    clock_ = 0;
+    offset_ = 0;
+    autoOffset_ = true;
     code_ = QString::null;
 
     // FIX: remove
@@ -62,12 +69,12 @@ void CpuModel::setCode(const QString &code)
   code_ = code;
 }
 
-unsigned int CpuModel::cpuId()
+int CpuModel::cpuId()
 {
     return cpuId_;
 }
 
-void CpuModel::setCpuId(const unsigned int cpuId)
+void CpuModel::setCpuId(const int cpuId)
 {
     cpuId_ = cpuId;
 }
@@ -82,13 +89,43 @@ void CpuModel::setAutoExecTime(const bool autoExecTime)
     autoExecTime_ = autoExecTime;
 }
 
-QString CpuModel::tip()
+void CpuModel::setClock(unsigned int clock)
 {
-    return QString("<b>CPU</b><br><u>%2</u> (%3)<br><i>%4</i><br>" \
-                   "<table><tr><td>Execution time</td><td>%4</td></tr>" \
-                   "<tr><td>Source:</td>%5<td></td></tr>")
-        .arg(cpuId_).arg(name()).arg(type()).arg(description())
-        .arg((code_ == QString::null)?"not defined":"defined");
+    clock_ = clock;
+}
+
+unsigned int CpuModel::clock()
+{
+    return clock_;
+}
+
+void CpuModel::setOffset(unsigned int offset)
+{
+    offset_ = offset;
+}
+
+unsigned int CpuModel::offset()
+{
+    return offset_;
+}
+
+void CpuModel::setAutoOffset(bool autoOffset)
+{
+    autoOffset_ = autoOffset;
+}
+
+bool CpuModel::autoOffset()
+{
+    return autoOffset_;
+}
+
+QCanvasItemList CpuModel::createView(QCanvas *canvas)
+{
+    QCanvasItemList list;
+    CpuView *view = new CpuView (this, canvas);
+    list.append(view);
+    view->addPinViewsTo(list);
+    return list;
 }
 
 /**
@@ -101,15 +138,25 @@ QDomElement CpuModel::serialize(QDomDocument *document)
     root.setAttribute("srcfile", code_);
     root.setAttribute("cpuid", (unsigned int) cpuId_);
     root.setAttribute("autotime", autoExecTime_ ? "true" : "false");
+    root.setAttribute("auto-offset", autoOffset_? "true":"false");
+    root.setAttribute("offset", (unsigned int)offset_);
+    root.setAttribute("clock", (unsigned int)clock_);
+
     return root;
 }
 
 void CpuModel::deserialize(QDomElement element) {
     BlockModel::deserialize(element);
     cpuId_ = (unsigned short) element.attribute("cpuid", "0").toUInt();
+
+
+    setAutoOffset( (element.attribute("auto-offset","true") == "true") );
+    setOffset( (unsigned int)element.attribute("offset","0").toUInt() );
+    setClock( (unsigned int)element.attribute("clock","0").toUInt() );
+
     // TRUE if value of autotime contains "TRUE" (case insensitive),
     // FALSE otherwise.
     autoExecTime_ =
         element.attribute("autotime", "true").contains("true", false);
-    setCode(element.attribute("srcfile",""));
+    setCode(element.attribute("srcfile",QString::null));
 }

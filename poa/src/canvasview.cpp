@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.25 2003/09/09 14:04:44 vanto Exp $
+ * $Id: canvasview.cpp,v 1.26 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -256,7 +256,15 @@ void CanvasToolTip::maybeTip( const QPoint &pos )
     if (!l.isEmpty()) {
         // first item is top item
         QCanvasItem *topItem = l.first();
-        AbstractView *item = dynamic_cast<AbstractView*>(topItem);
-        tip( QRect(pos.x(),pos.y(),2,2),  item->model()->tip());
+        Tooltipable *item = dynamic_cast<Tooltipable*>(topItem);
+        if (item != 0) {
+            tip( QRect(pos.x(),pos.y(),5,5),  item->tip());
+        }
+        /*        if (INSTANCEOF(item, BlockView)) {
+            tip( ((QCanvasRectangle*)item)->rect(),  item->model()->tip());
+        }
+        else {*/
+        //            tip( QRect(pos.x(),pos.y(),5,5),  item->tip());
+            /*        }*/
     }
 }

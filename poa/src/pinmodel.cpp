@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.6 2003/09/09 14:04:44 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.7 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -34,7 +34,6 @@
 
 
 PinModel::PinModel(BlockModel *parent, const QString &name)
-    : AbstractModel("connector", "Connector")
 {
     name_ = name;
     parent_ = parent;
@@ -78,6 +77,15 @@ void PinModel::detach()
     }
 }
 
+PinModel::PinType PinModel::type()
+{
+    return type_;
+}
+
+void PinModel::setType(PinModel::PinType type)
+{
+    type_ = type;
+}
 
 unsigned PinModel::id()
 {
@@ -121,24 +129,11 @@ unsigned int PinModel::bits()
     return bits_;
 }
 
-QCanvasItemList PinModel::createView(QCanvas *canvas)
-{
-    // returns an empty list
-    return QCanvasItemList();
-}
-
 PinView *PinModel::createView(BlockView *block,
                   PinView::DockPosition dockPosition)
 {
     PinView *view = new PinView(this, block, dockPosition);
     return view;
-}
-
-QString PinModel::tip()
-{
-    return QString("<b>Pin %1<br>%2</b><table><tr><td>Address</td><td>0x%3" \
-                   "</td></tr><tr><td>Width</td><td>%4 bits</td></tr></table>")
-        .arg(id_).arg(name_).arg(address_).arg(bits_);
 }
 
 QDomElement PinModel::serialize(QDomDocument *document)

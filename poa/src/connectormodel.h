@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.h,v 1.6 2003/09/09 14:04:44 vanto Exp $
+ * $Id: connectormodel.h,v 1.7 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -75,11 +75,6 @@ public:
      * Sets the width of this connector
      */
     void setWidth(const unsigned width);
-
-    /**
-     * Returns the tooltip text
-     */
-    virtual QString tip();
 
     /**
      * Serializes this instance to a xml subtree

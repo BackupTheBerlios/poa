@@ -18,42 +18,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
+ * $Id: cpuview.cpp,v 1.1 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_CPUVIEW_H
-#define POA_CPUVIEW_H
-
-#include "abstractview.h"
+#include "cpuview.h"
 #include "cpumodel.h"
-#include "blockview.h"
-#include "inputblockview.h"
-#include "outputblockview.h"
-#include "tooltipable.h"
 
-#include <qvariant.h>
-#include <qcanvas.h>
-
-class BlockModel;
-
-/**
- * Definition of a cpu view.
- */
-class CpuView: public BlockView, public Tooltipable
+QString CpuView::tip()
 {
-
-public:
-    /**
-     * Creates a new CpuView on the given canvas
-     */
-    CpuView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
-
-    /**
-     * Returns the tooltip text
-     */
-    QString tip();
-
-};
-
-#endif // POA_CPUVIEW_H
+    CpuModel *m = (CpuModel*)model();
+    return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><br><hr>" \
+                   "<b>Id on CPLD:</b> %4<br>" \
+                   "<b>Clock:</b> %5 ms<br>" \
+                   "<b>Offset:</b> %6<br>" \
+                   "<b>Execution time:</b> %7<br>" \
+                   "<b>Source:</b> %8")
+        .arg(m->name())
+        .arg(m->type())
+        .arg(m->description())
+        //        .arg((m->cpuId()==-1)?"not defined":QString::number(m->cpuId()))
+        .arg((m->cpuId()==65535)?"not defined":QString::number(m->cpuId()))
+        .arg(m->clock())
+        .arg((m->autoOffset())?"auto":QString::number(m->offset())+" ms")
+        .arg((m->autoExecTime())?"auto":QString::number(m->execTime())+" ms")
+        .arg((m->code().isEmpty())?"not defined":"defined",10);
+}

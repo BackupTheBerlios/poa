@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.2 2003/09/08 13:35:04 squig Exp $
+ * $Id: connectaction.cpp,v 1.3 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
@@ -101,7 +101,7 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
             view()->project()->addConnector(cm);
             view()->project()->createViews(cm);
 
-            qWarning("Connect: "
+            qDebug("Connect: "
                      + QString(source_->pinModel()->parent()->name())
                      + ":" + QString(source_->pinModel()->name()) + "\n"
                      + "to " + QString(target->pinModel()->parent()->name())

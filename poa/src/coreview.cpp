@@ -18,42 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpuview.h,v 1.8 2003/09/09 23:21:22 vanto Exp $
+ * $Id: coreview.cpp,v 1.1 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
-#ifndef POA_CPUVIEW_H
-#define POA_CPUVIEW_H
+#include "coreview.h"
+#include "coremodel.h"
 
-#include "abstractview.h"
-#include "cpumodel.h"
-#include "blockview.h"
-#include "inputblockview.h"
-#include "outputblockview.h"
-#include "tooltipable.h"
-
-#include <qvariant.h>
-#include <qcanvas.h>
-
-class BlockModel;
-
-/**
- * Definition of a cpu view.
- */
-class CpuView: public BlockView, public Tooltipable
+QString CoreView::tip()
 {
+    CoreModel *m = (CoreModel*)model();
+    return QString("<b>Core</b><br><u>%1</u> (%2)<br><i>%3</i><br><hr>" \
+                   "<b>Execution time:</b> %7")
+        .arg(m->name())
+        .arg(m->type())
+        .arg(m->description())
+        .arg(QString::number(m->execTime())+" ms");
 
-public:
-    /**
-     * Creates a new CpuView on the given canvas
-     */
-    CpuView(BlockModel *model, QCanvas* canvas) : BlockView(model, canvas) {};
-
-    /**
-     * Returns the tooltip text
-     */
-    QString tip();
-
-};
-
-#endif // POA_CPUVIEW_H
+}

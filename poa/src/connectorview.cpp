@@ -18,18 +18,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorview.cpp,v 1.3 2003/08/29 18:35:16 keulsn Exp $
+ * $Id: connectorview.cpp,v 1.4 2003/09/09 23:21:22 vanto Exp $
  *
  *****************************************************************************/
 
 
 #include "connectorview.h"
-
+#include "connectormodel.h"
+#include "pinmodel.h"
+#include "blockmodel.h"
 
 ConnectorView::ConnectorView(ConnectorModel *model,
-			     PinView *from,
-			     PinView *to,
-			     QCanvas *canvas)
+                 PinView *from,
+                 PinView *to,
+                 QCanvas *canvas)
     : QCanvasLine(canvas)
 {
     model_ = model;
@@ -39,104 +41,108 @@ ConnectorView::ConnectorView(ConnectorModel *model,
 
     switch (dock) {
     case PinView::PIN_LEFT:
-	changeDirection = (to->connectorPoint().x()
-			   >= from->connectorPoint().x());
-	setOrientation(HORIZONTAL);
-	positiveDirection = false;
-	break;
+    changeDirection = (to->connectorPoint().x()
+               >= from->connectorPoint().x());
+    setOrientation(HORIZONTAL);
+    positiveDirection = false;
+    break;
     case PinView::PIN_RIGHT:
-	changeDirection = (to->connectorPoint().x()
-			   <= from->connectorPoint().x());
-	setOrientation(HORIZONTAL);
-	positiveDirection = true;
-	break;
+    changeDirection = (to->connectorPoint().x()
+               <= from->connectorPoint().x());
+    setOrientation(HORIZONTAL);
+    positiveDirection = true;
+    break;
     case PinView::PIN_TOP:
-	changeDirection = (to->connectorPoint().y()
-			   >= from->connectorPoint().y());
-	setOrientation(VERTICAL);
-	positiveDirection = false;
-	break;
+    changeDirection = (to->connectorPoint().y()
+               >= from->connectorPoint().y());
+    setOrientation(VERTICAL);
+    positiveDirection = false;
+    break;
     case PinView::PIN_BOTTOM:
-	changeDirection = (to->connectorPoint().y()
-			   <= from->connectorPoint().y());
-	setOrientation(VERTICAL);
-	positiveDirection = true;
-	break;
+    changeDirection = (to->connectorPoint().y()
+               <= from->connectorPoint().y());
+    setOrientation(VERTICAL);
+    positiveDirection = true;
+    break;
     }
     dockToSource(from);
 
     if (changeDirection) {
-	// must add a short line, then turn around and find a way towards
-	// the pin
-	QPoint nextPoint = startPoint();
-	if (orientation_ == HORIZONTAL) {
-	    if (positiveDirection) {
-		nextPoint.setX(nextPoint.x() + DEFAULT_DOCK_LINE_LENGTH);
-	    } else {
-		nextPoint.setX(nextPoint.x() - DEFAULT_DOCK_LINE_LENGTH);
-	    }
-	} else {
-	    if (positiveDirection) {
-		nextPoint.setY(nextPoint.y() + DEFAULT_DOCK_LINE_LENGTH);
-	    } else {
-		nextPoint.setY(nextPoint.y() - DEFAULT_DOCK_LINE_LENGTH);
-	    }
-	}
-	
-	ConnectorView *nextSegment =
-	    new ConnectorView(nextPoint,
-			      inflection(orientation_),
-			      to,
-			      canvas);
-	dockToTarget(nextSegment);
+    // must add a short line, then turn around and find a way towards
+    // the pin
+    QPoint nextPoint = startPoint();
+    if (orientation_ == HORIZONTAL) {
+        if (positiveDirection) {
+        nextPoint.setX(nextPoint.x() + DEFAULT_DOCK_LINE_LENGTH);
+        } else {
+        nextPoint.setX(nextPoint.x() - DEFAULT_DOCK_LINE_LENGTH);
+        }
     } else {
-	// find inflection point
-	QPoint point = firstInflectionPoint(startPoint(),
-					    orientation_,
-					    to->connectorPoint(),
-					    to->dockPosition());
-	if (point == to->connectorPoint()) {
-	    // pin is reached directly
-	    dockToTarget(to);
-	} else {
-	    // add inflection point
-	    ConnectorView *nextSegment =
-		new ConnectorView(point,
-				  inflection(orientation_),
-				  to,
-				  canvas);
-	    dockToTarget(nextSegment);
-	}
+        if (positiveDirection) {
+        nextPoint.setY(nextPoint.y() + DEFAULT_DOCK_LINE_LENGTH);
+        } else {
+        nextPoint.setY(nextPoint.y() - DEFAULT_DOCK_LINE_LENGTH);
+        }
+    }
+
+    ConnectorView *nextSegment =
+        new ConnectorView(nextPoint,
+                  inflection(orientation_),
+                  to,
+                  model_,
+                  canvas);
+    dockToTarget(nextSegment);
+    } else {
+    // find inflection point
+    QPoint point = firstInflectionPoint(startPoint(),
+                        orientation_,
+                        to->connectorPoint(),
+                        to->dockPosition());
+    if (point == to->connectorPoint()) {
+        // pin is reached directly
+        dockToTarget(to);
+    } else {
+        // add inflection point
+        ConnectorView *nextSegment =
+        new ConnectorView(point,
+                  inflection(orientation_),
+                  to,
+                  model_,
+                  canvas);
+        dockToTarget(nextSegment);
+    }
     }
 }
 
 ConnectorView::ConnectorView(QPoint start,
-			     LineOrientation orientation,
-			     PinView *to,
-			     QCanvas *canvas)
+                             LineOrientation orientation,
+                             PinView *to,
+                             ConnectorModel *model,
+                             QCanvas *canvas)
     : QCanvasLine(canvas)
 {
-    model_ = 0;
+    model_ = model;
     orientation_ = orientation;
     first_ = true;
     prev_.pin = 0;
     setPoints(start.x(), start.y(), start.x(), start.y());
 
     QPoint point = firstInflectionPoint(startPoint(),
-					orientation_,
-					to->connectorPoint(),
-					to->dockPosition());
+                    orientation_,
+                    to->connectorPoint(),
+                    to->dockPosition());
     if (point == to->connectorPoint()) {
-	// pin is reached directly
-	dockToTarget(to);
+    // pin is reached directly
+    dockToTarget(to);
     } else {
-	// add inflection point
-	ConnectorView *nextSegment =
-	    new ConnectorView(point,
-			      inflection(orientation_),
-			      to,
-			      canvas);
-	dockToTarget(nextSegment);
+    // add inflection point
+    ConnectorView *nextSegment =
+        new ConnectorView(point,
+                  inflection(orientation_),
+                  to,
+                  model_,
+                  canvas);
+    dockToTarget(nextSegment);
     }
 }
 
@@ -155,12 +161,12 @@ QCanvasItemList ConnectorView::allSegments()
     ConnectorView *current = this;
 
     while (current != 0) {
-	list.prepend(current);
-	if (current->last_) {
-	    current = 0;
-	} else {
-	    current = current->next_.connector;
-	}
+    list.prepend(current);
+    if (current->last_) {
+        current = 0;
+    } else {
+        current = current->next_.connector;
+    }
     }
     return list;
 }
@@ -170,15 +176,15 @@ ConnectorView::LineOrientation ConnectorView::inflection
 {
     switch (orientation) {
     case HORIZONTAL:
-	return VERTICAL;
+    return VERTICAL;
     case VERTICAL:
-	return HORIZONTAL;
+    return HORIZONTAL;
     case UNKNOWN:
-	return UNKNOWN;
+    return UNKNOWN;
     default:
-	// never happens, avoid compiler warning
-	Q_ASSERT(false);
-	return UNKNOWN;
+    // never happens, avoid compiler warning
+    Q_ASSERT(false);
+    return UNKNOWN;
     }
 }
 
@@ -231,32 +237,32 @@ void ConnectorView::dockToSource(PinView *source)
 
     switch (source->dockPosition()) {
     case PinView::PIN_LEFT:
-	x = sourcePoint.x() - 1;
-	y = sourcePoint.y();
-	Q_ASSERT(orientation_ == HORIZONTAL);
-	break;
+    x = sourcePoint.x() - 1;
+    y = sourcePoint.y();
+    Q_ASSERT(orientation_ == HORIZONTAL);
+    break;
     case PinView::PIN_RIGHT:
-	x = sourcePoint.x() + 1;
-	y = sourcePoint.y();
-	Q_ASSERT(orientation_ == HORIZONTAL);
-	break;
+    x = sourcePoint.x() + 1;
+    y = sourcePoint.y();
+    Q_ASSERT(orientation_ == HORIZONTAL);
+    break;
     case PinView::PIN_TOP:
-	x = sourcePoint.x();
-	y = sourcePoint.y() - 1;
-	Q_ASSERT(orientation_ == VERTICAL);
-	break;
+    x = sourcePoint.x();
+    y = sourcePoint.y() - 1;
+    Q_ASSERT(orientation_ == VERTICAL);
+    break;
     case PinView::PIN_BOTTOM:
-	x = sourcePoint.x();
-	y = sourcePoint.y() + 1;
-	Q_ASSERT(orientation_ == VERTICAL);
-	break;
+    x = sourcePoint.x();
+    y = sourcePoint.y() + 1;
+    Q_ASSERT(orientation_ == VERTICAL);
+    break;
     }
     if (orientation_ == HORIZONTAL) {
-	setPoints(x, y, oldX, y);
+    setPoints(x, y, oldX, y);
     } else if (orientation_ == VERTICAL) {
-	setPoints(x, y, x, oldY);
+    setPoints(x, y, x, oldY);
     } else {
-	setPoints(x, y, x, y);
+    setPoints(x, y, x, y);
     }
 }
 
@@ -266,9 +272,9 @@ void ConnectorView::dockToSource(ConnectorView *from)
     this->setPrevConnector(from);
     from->setNextConnector(this);
     Q_ASSERT((orientation_ == HORIZONTAL
-	      && this->endPoint().y() == from->endPoint().y())
-	     || (orientation_ == VERTICAL
-		 && this->endPoint().x() == from->endPoint().x()));
+          && this->endPoint().y() == from->endPoint().y())
+         || (orientation_ == VERTICAL
+         && this->endPoint().x() == from->endPoint().x()));
     setStartPoint(from->endPoint());
 }
 
@@ -284,33 +290,33 @@ void ConnectorView::dockToTarget(PinView *target)
 
     switch (target->dockPosition()) {
     case PinView::PIN_LEFT:
-	x = targetPoint.x() - 1;
-	y = targetPoint.y();
-	Q_ASSERT(orientation_ == HORIZONTAL);
-	break;
+    x = targetPoint.x() - 1;
+    y = targetPoint.y();
+    Q_ASSERT(orientation_ == HORIZONTAL);
+    break;
     case PinView::PIN_RIGHT:
-	x = targetPoint.x() + 1;
-	y = targetPoint.y();
-	Q_ASSERT(orientation_ == HORIZONTAL);
-	break;
+    x = targetPoint.x() + 1;
+    y = targetPoint.y();
+    Q_ASSERT(orientation_ == HORIZONTAL);
+    break;
     case PinView::PIN_TOP:
-	x = targetPoint.x();
-	y = targetPoint.y() - 1;
-	Q_ASSERT(orientation_ == VERTICAL);
-	break;
+    x = targetPoint.x();
+    y = targetPoint.y() - 1;
+    Q_ASSERT(orientation_ == VERTICAL);
+    break;
     case PinView::PIN_BOTTOM:
-	x = targetPoint.x();
-	y = targetPoint.y() + 1;
-	Q_ASSERT(orientation_ == VERTICAL);
-	break;
+    x = targetPoint.x();
+    y = targetPoint.y() + 1;
+    Q_ASSERT(orientation_ == VERTICAL);
+    break;
     }
 
     if (orientation_ == HORIZONTAL) {
-	setPoints(oldX, y, x, y);
+    setPoints(oldX, y, x, y);
     } else if (orientation_ == VERTICAL) {
-	setPoints(x, oldY, x, y);
+    setPoints(x, oldY, x, y);
     } else {
-	setPoints(x, y, x, y);
+    setPoints(x, y, x, y);
     }
 }
 
@@ -320,9 +326,9 @@ void ConnectorView::dockToTarget(ConnectorView *to)
     this->setNextConnector(to);
     to->setPrevConnector(this);
     Q_ASSERT((orientation_ == HORIZONTAL
-	      && this->startPoint().y() == to->startPoint().y())
-	     || (orientation_ == VERTICAL
-		 && this->startPoint().x() == to->startPoint().x()));
+          && this->startPoint().y() == to->startPoint().y())
+         || (orientation_ == VERTICAL
+         && this->startPoint().x() == to->startPoint().x()));
     setEndPoint(to->startPoint());
 }
 
@@ -332,49 +338,62 @@ void ConnectorView::setOrientation(LineOrientation orientation)
 }
 
 QPoint ConnectorView::firstInflectionPoint(QPoint start,
-					   LineOrientation orientation,
-					   QPoint end,
-					   PinView::DockPosition dock)
+                       LineOrientation orientation,
+                       QPoint end,
+                       PinView::DockPosition dock)
 {
     LineOrientation targetOrientation;
     switch (dock) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-	targetOrientation = HORIZONTAL;
-	break;
+    targetOrientation = HORIZONTAL;
+    break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-	targetOrientation = VERTICAL;
-	break;
+    targetOrientation = VERTICAL;
+    break;
     default:
-	// never happens
-	targetOrientation = UNKNOWN;
-	break;
+    // never happens
+    targetOrientation = UNKNOWN;
+    break;
     }
 
     if (orientation == HORIZONTAL) {
-	if (targetOrientation == HORIZONTAL) {
-	    if (start.y() == end.y()) {
-		return end;
-	    } else {
-		return QPoint((start.x() + end.x()) / 2, start.y());
-	    }
-	} else {
-	    Q_ASSERT(targetOrientation == VERTICAL);
-	    return QPoint(end.x(), start.y());
-	}
+    if (targetOrientation == HORIZONTAL) {
+        if (start.y() == end.y()) {
+        return end;
+        } else {
+        return QPoint((start.x() + end.x()) / 2, start.y());
+        }
+    } else {
+        Q_ASSERT(targetOrientation == VERTICAL);
+        return QPoint(end.x(), start.y());
+    }
 
     } else {
-	Q_ASSERT(orientation == VERTICAL);
-	if (targetOrientation == HORIZONTAL) {
-	    return QPoint(start.x(), end.y());
-	} else {
-	    Q_ASSERT(targetOrientation == VERTICAL);
-	    if (start.x() == end.x()) {
-		return end;
-	    } else {
-		return QPoint(start.x(), (start.y() + end.y()) / 2);
-	    }
-	}
+    Q_ASSERT(orientation == VERTICAL);
+    if (targetOrientation == HORIZONTAL) {
+        return QPoint(start.x(), end.y());
+    } else {
+        Q_ASSERT(targetOrientation == VERTICAL);
+        if (start.x() == end.x()) {
+        return end;
+        } else {
+        return QPoint(start.x(), (start.y() + end.y()) / 2);
+        }
     }
+    }
+}
+
+QString ConnectorView::tip()
+{
+    return QString("<b>Connector</b><br><hr>" \
+                   "<b>Source:</b> <u>%1</u>::%2<br>" \
+                   "<b>Target:</b> <u>%3</u>::%4<br>" \
+                   "<b>Width:</b> %5")
+        .arg(model()->source()->name())
+        .arg(model()->source()->parent()->name())
+        .arg(model()->target()->name())
+        .arg(model()->target()->parent()->name())
+        .arg(model()->width());
 }

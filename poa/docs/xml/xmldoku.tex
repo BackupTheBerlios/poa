@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Entwurf
+%% $Id: xmldoku.tex,v 1.1 2004/05/18 23:51:49 vanto Exp $
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
+\usepackage{../common/header}
+
+\RCSdef $Revision: 1.1 $
+\RCSdef $Date: 2004/05/18 23:51:49 $
+
+\newcommand\version{Version \today \xspace}
+%\newcommand\version{Version 1.0\xspace}
+
+\title {\huge \product\\[0.5cm]\large Entwurf\\[0.5cm] \version
+  \\[1cm] \Large \company}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Deckblatt
+
+\begin{titlepage}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+{\Huge
+\raggedright
+\textbf{POA} \\
+\huge Programmierumgebung Offener Antrieb
+\rule{\textwidth}{0.75pt}
+\par
+}
+\begin{flushleft}
+\normalsize
+\version
+\end{flushleft}
+\vfill
+
+{\parindent=0cm
+\Huge POA Projekt-Dateiformat
+}
+
+
+\setcounter{footnote}{0}
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Versionsgeschichte
+
+\section*{Versionsgeschichte}
+
+\begin{itemize}
+
+\item Version 1.0 (1.4.2003)
+
+  Diese Version wurde dem Auftraggeber vorgelegt.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Inhaltsverzeichnis
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Format
+\include{format}
+
+\end{document}
+%%% vim:tw=79:

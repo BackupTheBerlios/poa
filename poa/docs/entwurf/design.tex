@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Entwurf
-%% $Id: design.tex,v 1.14 2004/06/15 21:48:33 squig Exp $
+%% $Id: design.tex,v 1.15 2004/06/15 22:36:48 vanto Exp $
 %% Achtung: Diese Datei wird in den Entwurf inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -198,7 +198,7 @@ des {\bf Serialize}-Interfaces angepasst werden, der Code im {\bf
 Klassen immer die serialize/deserialize-Methoden der Superklasse
 aufgerufen werden, da sich der Mechanismus auf die gesamte
 Klassenhierarchie verteilt. Um anhand der Model-Typenbezeichnung in
-dem XML Dokument die richtige Klasse zu instanziieren, wird die Klasse
+dem XML Dokument die richtige Klasse zu instanzieren, wird die Klasse
 {\bf ModelFactory} verwendet. Sie liest das XML-Attribut
 ''block-type'' aus und wählt so die Implementierung aus.
 Über die Methoden \emph{addBlock()} und \emph{removeBlock()} werden

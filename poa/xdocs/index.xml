@@ -34,6 +34,10 @@
 		</p>
 
       </section>
+
+	  <section name="Team">
+	    <p><img src="images/team.jpg"/></p>
+	  </section>
 	  
 	</body>
   </document>

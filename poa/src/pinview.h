@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.14 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: pinview.h,v 1.15 2003/09/18 08:41:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,8 @@ class PinModel;
 class PinView: public AbstractView, public QCanvasRectangle,
                public Tooltipable
 {
+
+    Q_OBJECT
 
 public:
 
@@ -114,6 +116,14 @@ private:
 
     DockPosition dockPosition_;
     PinModel *model_;
+
+
+public slots:
+    void deleteView();
+
+signals:
+    void deleted(PinView *);
+
 };
 
 #endif // POA_PINVIEW_H

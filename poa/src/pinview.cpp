@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.15 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: pinview.cpp,v 1.16 2003/09/18 08:41:21 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -53,9 +53,9 @@ PinView::PinView(PinModel *model, BlockView *block,
     }
 }
 
-
 PinView::~PinView()
 {
+    emit deleted(this);
 }
 
 AbstractModel *PinView::model()
@@ -192,4 +192,9 @@ QString PinView::tip()
         .arg(pt)
         .arg(pinModel()->address())
         .arg(pinModel()->bits());
+}
+
+void PinView::deleteView()
+{
+        delete this;
 }

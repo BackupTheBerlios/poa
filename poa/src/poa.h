@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.h,v 1.18 2004/01/29 13:43:16 vanto Exp $
+ * $Id: poa.h,v 1.19 2004/02/11 09:51:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -49,7 +49,7 @@ QString image(QRect r);
 
 
 /** Direction of a line to be drawn on a canvas. */
-enum LineDirection {UNKNOWN, UP, DOWN, LEFT, RIGHT};
+enum LineDirection { UP, DOWN, LEFT, RIGHT };
 
 /**
  * Returns the reverse direction.

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: directrouter.cpp,v 1.4 2003/12/18 01:52:01 kilgus Exp $
+ * $Id: directrouter.cpp,v 1.5 2004/02/11 09:51:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,9 +42,9 @@ void DirectRouter::route(ConnectorViewList *view)
     LineDirection sourceDir = source->connectorSourceDir();
     LineDirection targetDir = target->connectorTargetDir();
     QValueList<QPoint> *points = routeOne(sourcePoint,
-					  sourceDir,
-					  targetPoint,
-					  targetDir);
+                      sourceDir,
+                      targetPoint,
+                      targetDir);
     view->applyPointList(*points);
     delete points;
 }
@@ -53,20 +53,18 @@ void DirectRouter::route(ConnectorViewList *view)
 void DirectRouter::route(QValueList<ConnectorViewList*>& list)
 {
     for (QValueList<ConnectorViewList*>::iterator it = list.begin();
-	 it != list.end(); ++it) {
+     it != list.end(); ++it) {
 
-	route(*it);
+    route(*it);
     }
 }
 
 
 QValueList<QPoint> *DirectRouter::routeOne(QPoint from,
-					   LineDirection fromDir,
-					   QPoint to,
-					   LineDirection toDir)
+                       LineDirection fromDir,
+                       QPoint to,
+                       LineDirection toDir)
 {
-    Q_ASSERT(fromDir != UNKNOWN);
-
     int x;
     int y;
     Grid grid(from, to, 10);
@@ -91,11 +89,7 @@ QValueList<QPoint> *DirectRouter::routeOne(QPoint from,
 
     QPoint next = from;
 
-    if (toDir == UNKNOWN) {
-        // FIX: implementation missing
-        Q_ASSERT(false);
-    }
-    else if (fromDir == toDir) {
+    if (fromDir == toDir) {
         if (fromDist >= 0 && fromAlternateDist == 0) {
             // straight line, already done.
         }
@@ -131,31 +125,31 @@ QValueList<QPoint> *DirectRouter::routeOne(QPoint from,
         }
     }
     else if (isRightAngle(fromDir, toDir)) {
-	if (fromDist >= 1 && toDir == fromAlternateDir) {
+    if (fromDist >= 1 && toDir == fromAlternateDir) {
             // one bending
             next = grid.move(from, fromDir, fromDist);
             list->append(next);
-	}
-	else if (fromDist >= 2 && isTurn(toDir, fromAlternateDir)) {
-	    // bend 3 times
-	    next = grid.move(from, fromDir, fromDist / 2);
-	    list->append(next);
-	    next = grid.move(next, fromAlternateDir,
-			     QABS(fromAlternateDist) + 1);
-	    list->append(next);
-	    next = grid.move(next, fromDir, (fromDist + 1) / 2);
-	    list->append(next);
+    }
+    else if (fromDist >= 2 && isTurn(toDir, fromAlternateDir)) {
+        // bend 3 times
+        next = grid.move(from, fromDir, fromDist / 2);
+        list->append(next);
+        next = grid.move(next, fromAlternateDir,
+                 QABS(fromAlternateDist) + 1);
+        list->append(next);
+        next = grid.move(next, fromDir, (fromDist + 1) / 2);
+        list->append(next);
         }
-	else if (fromDist == 1 && isTurn(toDir, fromAlternateDir)) {
-	    // spiral
-	    next = grid.move(from, fromDir, fromDist + 1);
-	    list->append(next);
-	    next = grid.move(next, fromAlternateDir, 
-			     QABS(fromAlternateDist) + 1);
-	    list->append(next);
-	    next = grid.move(next, reverse(fromDir), 1);
-	    list->append(next);
-	}
+    else if (fromDist == 1 && isTurn(toDir, fromAlternateDir)) {
+        // spiral
+        next = grid.move(from, fromDir, fromDist + 1);
+        list->append(next);
+        next = grid.move(next, fromAlternateDir,
+                 QABS(fromAlternateDist) + 1);
+        list->append(next);
+        next = grid.move(next, reverse(fromDir), 1);
+        list->append(next);
+    }
         else if (fromAlternateDist >= 2 && toDir == fromAlternateDir) {
                   // && fromDist <= 0
             // U-turn then one bending
@@ -180,12 +174,7 @@ QValueList<QPoint> *DirectRouter::routeOne(QPoint from,
         else { // 0 <= fromAlternateDist <= 1 && fromDist <= 0
             // spiral
             LineDirection dir;
-            if (fromAlternateDir != UNKNOWN) {
-                dir = reverse(fromAlternateDir);
-            }
-            else {
-                dir = turnLeft(fromDir);
-            }
+            dir = reverse(fromAlternateDir);
             next = grid.move(from, fromDir, 1);
             list->append(next);
             next = grid.move(next, dir, 1);
@@ -205,17 +194,17 @@ QValueList<QPoint> *DirectRouter::routeOne(QPoint from,
             next = grid.move(next, turnRight(fromDir), 1);
             list->append(next);
         }
-	else if (fromAlternateDist == 0) {
-		 // && fromDist < 0
-	    next = grid.move(from, fromDir, 1);
-	    list->append(next);
-	    next = grid.move(next, turnLeft(fromDir), 1);
-	    list->append(next);
-	    next = grid.move(next, reverse(fromDir), (QABS(fromDist) + 1) / 2);
-	    list->append(next);
-	    next = grid.move(next, turnRight(fromDir), 1);
-	    list->append(next);
-	}
+    else if (fromAlternateDist == 0) {
+         // && fromDist < 0
+        next = grid.move(from, fromDir, 1);
+        list->append(next);
+        next = grid.move(next, turnLeft(fromDir), 1);
+        list->append(next);
+        next = grid.move(next, reverse(fromDir), (QABS(fromDist) + 1) / 2);
+        list->append(next);
+        next = grid.move(next, turnRight(fromDir), 1);
+        list->append(next);
+    }
         else {
             // U-turn
             if (fromDist >= 0) {

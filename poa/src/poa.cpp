@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.10 2004/02/05 14:00:23 papier Exp $
+ * $Id: poa.cpp,v 1.11 2004/02/11 09:51:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -45,13 +45,8 @@ LineDirection reverse(LineDirection dir)
         return LEFT;
     case UP:
         return DOWN;
-    case DOWN:
+    default: //case DOWN:
         return UP;
-    case UNKNOWN:
-        return UNKNOWN;
-    default:
-        Q_ASSERT(false);
-        return UNKNOWN;
     }
 }
 
@@ -64,11 +59,8 @@ int distInDir(LineDirection dir, int x, int y)
         return x;
     case UP:
         return -y;
-    case DOWN:
+    default: //case DOWN:
         return y;
-    default:
-        Q_ASSERT(false);
-        return 0;
     }
 }
 
@@ -84,16 +76,13 @@ LineDirection alternateDir(LineDirection dir, int x, int y)
             return UP;
         }
     case UP:
-    case DOWN:
+    default: //case DOWN:
         if (x > 0) {
             return RIGHT;
         }
         else {
             return LEFT;
         }
-    default:
-        Q_ASSERT(false);
-        return UNKNOWN;
     }
 }
 
@@ -105,23 +94,17 @@ bool isRightAngle(LineDirection first, LineDirection second)
     case RIGHT:
         return second == UP || second == DOWN;
     case UP:
-    case DOWN:
+    default: //case DOWN:
         return second == LEFT || second == RIGHT;
-    case UNKNOWN:
-        return false;
-    default:
-        Q_ASSERT(false);
-        return false;
     }
 }
 
 bool isTurn(LineDirection first, LineDirection second)
 {
-  Q_ASSERT(first != UNKNOWN && second != UNKNOWN);
-  return first == LEFT && second == RIGHT
-    || first == RIGHT && second == LEFT
-    || first == UP && second == DOWN
-    || first == DOWN && second == UP;
+    return first == LEFT && second == RIGHT
+        || first == RIGHT && second == LEFT
+        || first == UP && second == DOWN
+        || first == DOWN && second == UP;
 }
 
 LineDirection turnLeft(LineDirection dir)
@@ -133,11 +116,8 @@ LineDirection turnLeft(LineDirection dir)
         return RIGHT;
     case RIGHT:
         return UP;
-    case UP:
+    default: //case UP:
         return LEFT;
-    default:
-        Q_ASSERT(false);
-        return UNKNOWN;
     }
 }
 
@@ -155,10 +135,8 @@ QString image(LineDirection dir)
         return QString("right");
     case UP:
         return QString("up");
-    case DOWN:
+    default: //case DOWN:
         return QString("down");
-    default:
-        return QString::null;
     }
 }
 

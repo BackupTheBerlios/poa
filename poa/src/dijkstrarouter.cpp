@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.cpp,v 1.7 2004/01/30 14:24:59 keulsn Exp $
+ * $Id: dijkstrarouter.cpp,v 1.8 2004/02/11 09:51:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -49,15 +49,15 @@ Node::Node(QPoint point, LineDirection dir)
 bool Node::operator<(const Node &other) const
 {
     if (point_.x() == other.point_.x()) {
-	if (point_.y() == other.point_.y()) {
-	    return dir_ < other.dir_;
-	}
-	else {
-	    return point_.y() < other.point_.y();
-	}
+    if (point_.y() == other.point_.y()) {
+        return dir_ < other.dir_;
     }
     else {
-	return point_.x() < other.point_.x();
+        return point_.y() < other.point_.y();
+    }
+    }
+    else {
+    return point_.x() < other.point_.x();
     }
 }
 
@@ -98,8 +98,8 @@ PossiblePoint::PossiblePoint(Node node)
 
 
 PossiblePoint::PossiblePoint(PossiblePoint *prev,
-			     Node node,
-			     unsigned weight)
+                 Node node,
+                 unsigned weight)
     : node_(node)
 {
     prev_ = prev;
@@ -112,7 +112,7 @@ PossiblePoint::PossiblePoint(PossiblePoint *prev,
 bool PossiblePoint::higherPriority(const PriorityItem *other) const
 {
     const PossiblePoint *otherPoint =
-	dynamic_cast<const PossiblePoint*>(other);
+    dynamic_cast<const PossiblePoint*>(other);
     Q_ASSERT(otherPoint != 0);
     return this->weight() < otherPoint->weight();
 }
@@ -140,9 +140,9 @@ unsigned PossiblePoint::weight() const
 void PossiblePoint::reach(PossiblePoint *prev, unsigned newWeight)
 {
     if (newWeight < weight_) {
-	prev_ = prev;
-	weight_ = newWeight;
-	updatePriority();
+    prev_ = prev;
+    weight_ = newWeight;
+    updatePriority();
     }
 }
 
@@ -152,11 +152,11 @@ PossiblePoint *PossiblePoint::prev() const
 }
 
 unsigned PossiblePoint::calcWeight(PossiblePoint *prev,
-				   QPoint next,
-				   Weighting *weighting)
+                   QPoint next,
+                   Weighting *weighting)
 {
     return prev->weight() +
-	weighting->weight(prev->point(), next) + 200;
+    weighting->weight(prev->point(), next) + 200;
 }
 
 
@@ -181,7 +181,7 @@ Weighting::Weighting(QPoint from, QPoint to, QCanvas *canvas):
     // enlargen weighting area by fringe
     topLeft = grid_.move(topLeft, -Weighting::fringe_, -Weighting::fringe_);
     bottomRight = grid_.move(bottomRight, Weighting::fringe_,
-			     Weighting::fringe_);
+                 Weighting::fringe_);
 
     // size in grid steps
     int width, height;
@@ -194,58 +194,58 @@ Weighting::Weighting(QPoint from, QPoint to, QCanvas *canvas):
     int x, y;
     weighting_ = new unsigned*[height];
     for (y = 0; y < height; ++y) {
-	weighting_[y] = new unsigned[width];
-	for (x = 0; x < width; ++x) {
-	    weighting_[y][x] = 1;
-	}
+    weighting_[y] = new unsigned[width];
+    for (x = 0; x < width; ++x) {
+        weighting_[y][x] = 1;
+    }
     }
 
     // suppose all canvas items are rectangular
     QCanvasItemList items = canvas->allItems();
     for (QCanvasItemList::const_iterator current = items.begin();
-	 current != items.end(); ++current) {
+     current != items.end(); ++current) {
 
-	ConnectorViewSegment *currentSegment = 
-	    dynamic_cast<ConnectorViewSegment*>(*current);
-	if (currentSegment != 0) {
-	    ConnectorViewList *currentViewList = currentSegment->viewList();
-	    if (currentViewList != 0 && currentViewList->awaitsRerouting()) {
-		continue;
-	    }
-	}
+    ConnectorViewSegment *currentSegment =
+        dynamic_cast<ConnectorViewSegment*>(*current);
+    if (currentSegment != 0) {
+        ConnectorViewList *currentViewList = currentSegment->viewList();
+        if (currentViewList != 0 && currentViewList->awaitsRerouting()) {
+        continue;
+        }
+    }
 
-	QRect bounding = (*current)->boundingRect();
-	int left;
-	int top;
-	int right;
-	int bottom;
-	topLeft = grid_.closestGridPoint(bounding.topLeft());
-	grid_.getGridDistance(origin_, topLeft, left, top);
-	bottomRight = grid_.closestGridPoint(bounding.bottomRight());
-	grid_.getGridDistance(origin_, bottomRight, right, bottom);
-	QRect cover = rect_.intersect(QRect(left,
-					    top, 
-					    right - left + 1,
-					    bottom - top + 1));
-	for (y = cover.top(); y <= cover.bottom(); ++y) {
-	    for (x = cover.left(); x <= cover.right(); ++x) {
-		weighting_[y - rect_.top()][x - rect_.left()] += 1000;
-	    }
-	}
+    QRect bounding = (*current)->boundingRect();
+    int left;
+    int top;
+    int right;
+    int bottom;
+    topLeft = grid_.closestGridPoint(bounding.topLeft());
+    grid_.getGridDistance(origin_, topLeft, left, top);
+    bottomRight = grid_.closestGridPoint(bounding.bottomRight());
+    grid_.getGridDistance(origin_, bottomRight, right, bottom);
+    QRect cover = rect_.intersect(QRect(left,
+                        top,
+                        right - left + 1,
+                        bottom - top + 1));
+    for (y = cover.top(); y <= cover.bottom(); ++y) {
+        for (x = cover.left(); x <= cover.right(); ++x) {
+        weighting_[y - rect_.top()][x - rect_.left()] += 1000;
+        }
+    }
     }
 
     //    for (y = rect_.top(); y <= rect_.bottom(); ++y) {
-    //	qDebug("y = " + QString::number(y));
-    //	for (x = rect_.left(); x <= rect_.right(); ++x) {
-    //	    qDebug(QString::number(weighting_[y][x]));
-    //	}
+    //  qDebug("y = " + QString::number(y));
+    //  for (x = rect_.left(); x <= rect_.right(); ++x) {
+    //      qDebug(QString::number(weighting_[y][x]));
+    //  }
     //    }
 }
 
 Weighting::~Weighting()
 {
     for (int y = 0; y < rect_.height(); ++y) {
-	delete [] (weighting_[y]);
+    delete [] (weighting_[y]);
     }
     delete [] weighting_;
 }
@@ -272,16 +272,16 @@ QPoint Weighting::move(QPoint gridPoint, LineDirection dir, int distance) const
 {
     switch (dir) {
     case LEFT:
-	return QPoint(gridPoint.x() - distance, gridPoint.y());
+    return QPoint(gridPoint.x() - distance, gridPoint.y());
     case RIGHT:
-	return QPoint(gridPoint.x() + distance, gridPoint.y());
+    return QPoint(gridPoint.x() + distance, gridPoint.y());
     case UP:
-	return QPoint(gridPoint.x(), gridPoint.y() - distance);
+    return QPoint(gridPoint.x(), gridPoint.y() - distance);
     case DOWN:
-	return QPoint(gridPoint.x(), gridPoint.y() + distance);
+    return QPoint(gridPoint.x(), gridPoint.y() + distance);
     default:
-	Q_ASSERT(false);
-	return QPoint(0, 0);
+    Q_ASSERT(false);
+    return QPoint(0, 0);
     }
 }
 
@@ -294,9 +294,9 @@ unsigned Weighting::weight(QPoint from, QPoint to)
     int height = QABS(from.y() - to.y()) + 1;
     QRect rect(xMin, yMin, width, height);
     for (int y = rect.top(); y <= rect.bottom(); ++y) {
-	for (int x = rect.left(); x <= rect.right(); ++x) {
-	    value += weighting_[y][x];
-	}
+    for (int x = rect.left(); x <= rect.right(); ++x) {
+        value += weighting_[y][x];
+    }
     }
     return value;
 }
@@ -316,29 +316,29 @@ typedef GenericPriorityQueue<PossiblePoint> PossiblePointQueue;
 typedef std::map<Node, PossiblePoint*> PossiblePointMap;
 
 void seeNode(Node node, PossiblePoint *predecessor,
-	     PossiblePointQueue &unreached, PossiblePointMap &seen,
-	     unsigned weight)
+         PossiblePointQueue &unreached, PossiblePointMap &seen,
+         unsigned weight)
 {
     PossiblePointMap::iterator pos = seen.find(node);
     PossiblePoint *reachedPoint;
     if (pos == seen.end()) {
-	reachedPoint = new PossiblePoint(predecessor, node, weight);
-	seen[node] = reachedPoint;
-	unreached.insert(reachedPoint);
+    reachedPoint = new PossiblePoint(predecessor, node, weight);
+    seen[node] = reachedPoint;
+    unreached.insert(reachedPoint);
     }
     else {
-	reachedPoint = (*pos).second;
-	Q_ASSERT(reachedPoint != 0);
-	reachedPoint->reach(predecessor, weight);
+    reachedPoint = (*pos).second;
+    Q_ASSERT(reachedPoint != 0);
+    reachedPoint->reach(predecessor, weight);
     }
 }
 
 
 QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
-					     LineDirection fromDir,
-					     QPoint to,
-					     LineDirection toDir,
-					     QCanvas *canvas)
+                         LineDirection fromDir,
+                         QPoint to,
+                         LineDirection toDir,
+                         QCanvas *canvas)
 {
     PossiblePointQueue unreached;
     PossiblePointMap seen;
@@ -346,8 +346,6 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     Weighting weighting(from, to, canvas);
     QRect searchRect = weighting.rect();
 
-    Q_ASSERT(fromDir != UNKNOWN);
-    Q_ASSERT(toDir != UNKNOWN);
     Node startNode(weighting.gridPoint(from), fromDir);
     Node endNode(weighting.gridPoint(to), toDir);
     seeNode(startNode, 0, unreached, seen, 0);
@@ -359,26 +357,26 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
     PossiblePoint *current = unreached.removeHead();
     Q_ASSERT(current->node() == startNode);
     while (current != target && !unreached.isEmpty()) {
-	unsigned currentWeight = current->weight() + 200;
-	for (int i = 1; true; ++i) {
-	    // Q_ASSERT(unreached.checkIntegrity() == QString::null);
+    unsigned currentWeight = current->weight() + 200;
+    for (int i = 1; true; ++i) {
+        // Q_ASSERT(unreached.checkIntegrity() == QString::null);
 
-	    QPoint newPoint = weighting.move(current->point(), 
-					     current->direction(),
-					     i);
-	    if (!searchRect.contains(newPoint)) {
-	        break;
-	    }
-	    currentWeight += weighting.weightAt(newPoint);
-	    if (currentWeight > target->weight()) {
-		break;
-	    }
+        QPoint newPoint = weighting.move(current->point(),
+                         current->direction(),
+                         i);
+        if (!searchRect.contains(newPoint)) {
+            break;
+        }
+        currentWeight += weighting.weightAt(newPoint);
+        if (currentWeight > target->weight()) {
+        break;
+        }
 
-	    Node newNode(newPoint, current->direction());
-	    if (newNode == endNode) {
-		//qDebug("target seen: " + QString::number(target->weight()));
-		seeNode(newNode, current, unreached, seen, currentWeight);
-		//qDebug("update:      " + QString::number(target->weight()));
+        Node newNode(newPoint, current->direction());
+        if (newNode == endNode) {
+        //qDebug("target seen: " + QString::number(target->weight()));
+        seeNode(newNode, current, unreached, seen, currentWeight);
+        //qDebug("update:      " + QString::number(target->weight()));
             }
 
             newNode = Node(newPoint, turnLeft(current->direction()));
@@ -408,7 +406,7 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
         result = new QValueList<QPoint>;
         result->prepend(to);
 
-        //qDebug(image(current->point()) + ": " 
+        //qDebug(image(current->point()) + ": "
         //       + QString::number(current->weight()));
 
         current = current->prev();
@@ -424,19 +422,19 @@ QValueList<QPoint> *DijkstraRouter::routeOne(QPoint from,
 
 
         //qDebug(image(current->point()) + ": " +
-	//       QString::number(current->weight()));
+    //       QString::number(current->weight()));
 
-	result->prepend(from);
+    result->prepend(from);
     }
     else {
-	result = 0;
+    result = 0;
     }
     // clean up the mess
     unreached.clear();
     PossiblePointMap::iterator seenIt = seen.begin();
     while (seenIt != seen.end()) {
-	delete (*seenIt).second;
-	++seenIt;
+    delete (*seenIt).second;
+    ++seenIt;
     }
     return result;
 }
@@ -450,14 +448,14 @@ void DijkstraRouter::route(ConnectorViewList *view)
     PinView *target = view->target();
     view->awaitRerouting(true);
     QValueList<QPoint> *points = routeOne(source->connectorPoint(),
-					  source->connectorSourceDir(),
-					  target->connectorPoint(),
-					  target->connectorTargetDir(),
-					  canvas);
+                      source->connectorSourceDir(),
+                      target->connectorPoint(),
+                      target->connectorTargetDir(),
+                      canvas);
     if (points != 0) {
-	view->applyPointList(*points);
-	Q_ASSERT(!view->awaitsRerouting());
-	delete points;
+    view->applyPointList(*points);
+    Q_ASSERT(!view->awaitsRerouting());
+    delete points;
     }
 }
 
@@ -465,7 +463,7 @@ void DijkstraRouter::route(QValueList<ConnectorViewList*>& items)
 {
     QValueList<ConnectorViewList*>::iterator it;
     for (it = items.begin(); it != items.end(); ++it) {
-	route(*it);
+    route(*it);
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.30 2004/01/13 00:28:29 squig Exp $
+ * $Id: cpumodel.cpp,v 1.31 2004/01/14 13:30:29 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -130,7 +130,7 @@ QString CpuModel::tip()
     CodeManager *codeManager = CodeManager::instance();
     return QString("<b>CPU</b><br><u>%1</u> (%2)<br><i>%3</i><hr>" \
                    "<b>Id on CPLD:</b> %4<br>" \
-                   "<b>Clock:</b> %5 ms<br>" \
+                   "<b>Clock:</b> %5 ns<br>" \
                    "<b>Offset:</b> %6<br>" \
                    "<b>Execution time:</b> %7<br>" \
                    "<b>Source:</b> %8")
@@ -141,7 +141,7 @@ QString CpuModel::tip()
         // garbeam: patched to work with Qt 3.2.x - ambigious overload
         .arg((this->cpuId()==-1)?QString("not defined"):QString::number(this->cpuId()))
         .arg(this->clock())
-        .arg((this->autoOffset())?QString("auto"):QString::number(this->offset())+" ms")
-        .arg((this->autoExecTime())?QString("auto"):QString::number(this->execTime())+" ms")
+        .arg((this->autoOffset())?QString("auto"):QString::number(this->offset())+" ns")
+        .arg((this->autoExecTime())?QString("auto"):QString::number(this->execTime())+" ns")
         .arg(codeManager->sourceFilePath(this));
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.39 2004/01/12 19:13:57 squig Exp $
+ * $Id: blockmodel.cpp,v 1.40 2004/01/14 13:30:29 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -336,7 +336,7 @@ QString BlockModel::tip()
         .arg(this->type())
         .arg(this->description());
     if (hasRuntime()) {
-        s.append(QString("<hr><b>Execution time:</b> %4 ms")
+        s.append(QString("<hr><b>Execution time:</b> %4 ns")
                  .arg(QString::number(this->execTime())));
     }
 

@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.9 2004/03/03 17:07:38 neco Exp $
+%% $Id: handbuch.tex,v 1.10 2004/03/03 20:51:53 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\RCSdef $Revision: 1.9 $
-\RCSdef $Date: 2004/03/03 17:07:38 $
+\RCSdef $Revision: 1.10 $
+\RCSdef $Date: 2004/03/03 20:51:53 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -315,7 +315,7 @@ F"ur Downloadeinstellungen w"ahlt man den Dateireiter {\bf Download}. Hier kann 
 \end{figure}
 
 \subsection{Neues Projekt anlegen}
-Durch anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann.\newline
+Durch Anklicken des Men"us {\bf Project} in der Men"uleiste erscheint ein Untermen"u {\bf New}. Wenn dies ausgew"ahlt wird, wird ein Dailog ge"offnet, in dem man das Verzeichnis f"ur das neue Projekt anlegen kann.\newline
 Ein neues Projekt kann auch durch einen Mausklick auf das Symbol {\bf New} in der Symbolleiste angelegt werden.\newline
 Es kann nur ein Projekt pro Verzeichnis angelegt werden.\par
 Wird ein neues Projekt angelegt, dann wird dadurch auch das Arbeitsfenster im Hauptfenster aktiviert.
@@ -361,10 +361,10 @@ Mit {\bf Cancel} werden die Einstellungen verworfen.\par
 \section{Bl"ocke}
 
 \subsection{Bl"ocke erzeugen}
-Bl"ocke, wie CPUs, Cores etc. k"onnen per Drag'n Drop aus der Blockbibliothek in das Arbeitsfenster gezogen werden und dadurch erzeugt werden. Wenn man ein Block ins Arbeitsfenster gezogen hat und die Maustaste wieder loslÃ¤st, wird automatisch das Konfigurationsfenster f"ur den Block ge"offnet. Hier hat man die M"oglichkeit verschiedene Einstellungen vornehmen.
+Bl"ocke, wie CPUs, Cores etc. k"onnen per Drag`n Drop aus der Blockbibliothek in das Arbeitsfenster gezogen werden und dadurch erzeugt werden. Wenn man ein Block ins Arbeitsfenster gezogen hat und die Maustaste wieder losl"a"st, wird automatisch das Konfigurationsfenster f"ur den Block ge"offnet. Hier hat man die M"oglichkeit verschiedene Einstellungen vornehmen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bl"ockkonfiguration allgemein}
+\subsection{Blockkonfiguration allgemein}
 Beim Erzeugen eines Blocks wird ein Kofigurationsdialog automatisch ge"offnet. Hier hat man je nach Block verschiedene Konfigurationsm"oglichkeiten. Der Konfigurationsdialog kann auch sp"ater ge"offnet werden. Dazu w"ahlt man den zu konfigurierenden Block mit der rechten Maustaste aus und w"ahlt im Kontextmen"u den Eintrag {\bf Configuration}, oder man f"uhrt ein Doppelklick mit der linken Maustaste auf den Block aus.\par
 Alternativ dazu kann man f"ur den ausgew"ahlten Block die Funktion auch "uber die Men"uleiste oder Symbolleiste ausf"uhren. \par
 
@@ -496,6 +496,21 @@ Mit {\bf Update} wird der Dialog {\bf Mux mapping configuration} ge"offnet. Hier
 
 Mit {\bf Remove} kann man die ausgew"ahlte Zuordnung l"oschen.\par
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Blockbibliothek}
+Bl"ocke, die einmal konfiguriert worden sind und oft wiederverwendet werden sollen, 
+k"onnen in der Blockbibliothek verwaltet werden. Dadurch wird die Wiederverwendung 
+von Bl"ocken erleichtert und die Bl"ocke für andere Projekte zur Verf"ugung gestellt.\par
+Um ein Block in die Bibliothek aufzunehmen, klickt man mit der linken Maustaste 
+auf den Block und l"a"st die Taste gedr"uckt. Je nach Art des Blocks kann man den Block
+in die entsprechende Kategorie verschieben. Wenn die Maustaste wieder losgelassen
+wird, wird dieser Block in der Blockbibliothek aufgenommen.\newline
+Bl"ocke, die in die Bibliothek aufgenommen werden, werden projektunabh"angig gespeichert
+und stehen bei jedem Neustart von POA zur Verf"ugung.\par
+Bl"ocke k"onnen auch wieder aus der Bibliothek entfernt werden. Dazu muss man den
+Block in der Bibliothek mit der rechten Maustaste markieren und im Kontextmen"u den 
+Eintrag {\bf Remove} w"ahlen. Der ausgew"ahlte Block wird dabei unwiderruflich gel"oscht. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Block in Arbeitsfenster verschieben}

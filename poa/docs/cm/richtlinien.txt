@@ -1,6 +1,6 @@
-$Id: richtlinien.txt,v 1.6 2003/06/01 08:35:03 garbeam Exp $
+$Id: richtlinien.txt,v 1.7 2003/06/16 17:39:38 garbeam Exp $
 
-Richtlinien zur POA-Enwticklung
+Richtlinien zur POA-Entwicklung
 ===============================
 
 Inhalt
@@ -14,16 +14,14 @@ Inhalt
 1.3     Zeiterfassung
 1.4     Entwicklungsumgebung
 
-2.    Projektorganisation, CVS und scp
+2.    Projektorganisation, CVS
 2.1     Projektorganisation
-2.2     CVS (concurrent version system)
+2.2     CVS für öffentliche Dateien
 2.2.1     Grundsätzliche Einrichtung
-2.2.2     Lokale Arbeitskopie aus dem CVS Repository anlegen
+2.2.2     Lokale Arbeitskopie aus dem öffentlichen CVS Repository anlegen
 2.2.3     Updaten
 2.2.4     Änderungen commiten
-2.3     scp (secure copy)
-2.3.1     Öffentlich verfügbare Binärdatei hochladen
-2.3.2     Nicht-öffentliche (Binär-)Datei hochladen
+2.3     CVS für nicht-öffentliche Dateien
 2.4     Zeiterfassung
 
 -------------------------------------------------------------------------------
@@ -59,14 +57,9 @@ folgende Forderungen an Dateiformate:
 
 1.2 Dateiverwaltungssystem
 --------------------------
-Als Dateiverwaltungssystem für ASCII-Dateien (dazu zählen sämtliche
-C++ Sourcen, Textdateien, LaTeX-Sourcedateien, etc.) wird CVS eingesetzt,
-Binärdateien werden in einer adäquaten Verzeichnisstruktur auf dem
-Entwicklungsserver bei BerliOS.de im Projektverzeichnis mit scp
-abgelegt und gepflegt und nicht(!) ins CVS Repository eingecheckt.
-Regelungen bzgl. der Verzeichnisstruktur, des Repositoryservers und der
-grundsätzlichen Bedienung von scp und CVS werden in Kapitel 2.2 und 2.3
-erläutert.
+Als Dateiverwaltungssystem für ASCII- und Binär-Dateien wird CVS eingesetzt.
+Regelungen der CVS Repositorys und der grundsätzlichen Bedienung CVS werden
+in Kapitel 2.2 und 2.3 erläutert.
 
 
 1.3 Zeiterfassung
@@ -95,7 +88,7 @@ die pdflatex Tools generiert).
 -------------------------------------------------------------------------------
 
 
-2. Projektorganisation, CVS und scp
+2. Projektorganisation, CVS
 
 
 2.1 Projektorganisation
@@ -106,9 +99,13 @@ Entwicklungsaufwandes wird auf dem eigens dafür eingerichteten System
 auf duck.informatik.uni-stuttgart.de durchgeführt. Näheres hierzu
 unter 2.4.
 
+Nicht-öffentliche Dateien werden in ein eigens dazu eingerichtetes
+Repository eingecheckt, auf das nur das POA-Team Zugriff hat.
+Näheres hierzu in Kapitel 2.3.
 
-2.2 CVS (concurrent version system)
------------------------------------
+
+2.2 CVS für öffentliche Dateien
+-------------------------------
 
 2.2.1 Grundsätzliche Einrichtung
 --------------------------------
@@ -130,8 +127,8 @@ aber nicht notwendig, siehe folgender Link:
 http://cvsbook.red-bean.com/cvsbook.html
 
 
-2.2.2 Lokale Arbeitskopie aus dem CVS Repository anlegen
---------------------------------------------------------
+2.2.2 Lokale Arbeitskopie aus dem öffentlichen CVS Repository anlegen
+---------------------------------------------------------------------
 Es muß sichergestellt sein, dass CVS_RSH=ssh bereits gesetzt ist.
 Um POA erstmals auszuchecken folgendes Kommando eingeben:
 
@@ -171,59 +168,25 @@ cvs add <Liste der Datei-/Verzeichnisnamen, die noch nicht im CVS sind>
 cvs commit (Kurzform: cvs ci) 
 
 
-2.3 scp (secure copy)
----------------------
-Binärdateien und Dateien, auf die nicht öffentlich zugegriffen werden
-soll, werden im Projektverzeichnis unter:
+2.3 CVS für nicht-öffentliche Dateien
+------------------------------------------
 
-/home/groups/poa/htdocs/
+Die grundsätzliche Bedienung ist äquivalent zu der Bedienung, wie in
+Kapitel 2.2 beschrieben.
 
-an geeigneter Stelle via scp abgelegt. 
+Einziger Unterschied ist die CVS Root:
 
+<Username>@shell.berlios.de:/home/groups/poa/htdocs/non-pub.cvs
 
-2.3.1 Öffentlich verfügbare Binärdatei hochladen
-------------------------------------------------
-Um eine Binärdatei (z.B. ein generiertes PDF) im Projektverzeichnis
-öffentlich verfügbar abzulegen, wird folgender Befehl verwendet:
+Hier werden alle nicht öffentlichen Dateien eingecheckt.
+Derzeit existiert das Modul "non-pub" in diesem CVS Repository,
+es kann via:
 
-scp <Datei> <Username>@shell.berlios.de:/home/groups/poa/htdocs/<Ziel>
+cvs -d <Username>@shell.berlios.de:/home/groups/poa/htdocs/non-pub.cvs \
+co non-pub
 
-Dadurch ist die Datei u.a. via http Protokoll unter:
+ausgecheckt werden.
 
-http://poa.berlios.de/<Ziel>
-
-abrufbar.
-
-Außerdem kann man Binärdateien auch auf den anonym erreichbaren ftp
-Space via:
-
-scp <Datei> <Username>@shell.berlios.de:/home/groups/ftp/pub/poa/<Ziel>
-
-hochladen. Dadurch ist die Datei via ftp Protokoll unter:
-
-ftp://ftp.berlios.de/pub/poa/<Ziel>
-
-abrufbar.
-
-
-2.3.2 Nicht-öffentliche (Binär-)Datei hochladen
------------------------------------------------
-Nicht öffentliche Dateien werden an eine geeignete Stelle unter:
-
-scp <Datei> <Username>@shell.berlios.de:/home/groups/poa/htdocs/intern/<Ziel>
-
-kopiert.
-
-Anschließend muß man sich via ssh einloggen und die Dateirechte einschränken:
-
-ssh <Username>@shell.berlios.de
-
-cd /home/groups/poa/htdocs/intern
-
-chmod o-rwx <Ziel>
-
-(z.B. befinden sich die Sitzungsprotokolle nur für Teammitglieder via ssh
- lesbar unter /home/groups/poa/htdocs/intern/protocols)
 
 
 2.4 Zeiterfassung

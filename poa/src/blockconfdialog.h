@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.28 2004/02/09 20:34:07 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.29 2004/02/13 17:39:03 vanto Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@ class CpuModel;
 class Project;
 
 class QBoxLayout;
+class QLabel;
 class QLineEdit;
 class QPushButton;
 class QSpinBox;
@@ -58,6 +59,8 @@ private:
     QLineEdit *blockNameLineEdit;
     QLineEdit *blockDescrLineEdit;
 
+    QLabel *cpuIdWarning_;
+
     QBoxLayout *dialogLayout;
     QBoxLayout *topLayout;
     QBoxLayout *rightLayout;
@@ -68,6 +71,8 @@ private:
     Project *project_;
     BlockModel *model_;
     BlockConfWidget *blockConfWidget_;
+
+    QMap<int,CpuModel *> cpuIds_;
 
     /**
      * Initializes layout.
@@ -148,6 +153,12 @@ private slots:
      * Opens the editor of the current cpuModel.
      */
     void edit();
+
+    /**
+     * Checks if the given Id is already in use and shows/hides
+     * the warning icon.
+     */
+    void checkIfValidCpuId(int);
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.66 2004/02/10 10:19:06 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.67 2004/02/13 17:39:03 vanto Exp $
  *
  *****************************************************************************/
 
@@ -47,7 +47,9 @@
 #include "pinmodel.h"
 #include "poa.h"
 #include "poaexception.h"
+#include "project.h"
 #include "runtimemanager.h"
+#include "util.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +66,19 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, Project *project,
 
     model_ = model;
     project_ = project;
+
+    // initialize cpu id set.
+    cpuIds_.clear();
+    for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0;
+         ++it) {
+
+        CpuModel *cpu = dynamic_cast<CpuModel*>(*it);
+
+        // add all cpus but itself
+        if (cpu != 0 && cpu != model) {
+            cpuIds_.insert(cpu->cpuId(), cpu);
+        }
+    }
 
     initLayout();
 
@@ -117,9 +132,24 @@ void BlockConfDialog::initBlockWidget()
                           WIDGET_SPACING, WIDGET_SPACING);
 
     if (INSTANCEOF(model_, CpuModel)) {
-        cpuIdSpinBox = new QSpinBox(blockWidget, "cpuIdSpinBox");
+        QWidget *cpuWidget = new QWidget(blockWidget);
+        QGridLayout *cpuLayout = new QGridLayout(cpuWidget, 1, 2, 1, 1);
+
+        cpuIdSpinBox = new QSpinBox(cpuWidget, "cpuIdSpinBox");
+        connect(cpuIdSpinBox, SIGNAL(valueChanged(int)),
+                this, SLOT(checkIfValidCpuId(int)));
+
+        cpuIdWarning_ = new QLabel(cpuWidget);
+        cpuIdWarning_->setPixmap(QPixmap(Util::findIcon("warning.gif")));
+        QToolTip::add(cpuIdWarning_, tr("This ID is already in use"));
+
+        checkIfValidCpuId(cpuIdSpinBox->value());
+
+        cpuLayout->addWidget(cpuIdSpinBox, 0, 0);
+        cpuLayout->addWidget(cpuIdWarning_, 0, 1);
+
         blockLayout->addWidget(new QLabel(tr("ID"), blockWidget), 0, 0);
-        blockLayout->addWidget(cpuIdSpinBox, 0, 1);
+        blockLayout->addWidget(cpuWidget, 0, 1);
     }
 
     blockNameLineEdit = new QLineEdit(blockWidget, "blockNameLineEdit" );
@@ -344,6 +374,16 @@ void BlockConfDialog::ok()
 {
     if (commit()) {
         accept();
+    }
+}
+
+void BlockConfDialog::checkIfValidCpuId(int cpuId)
+{
+    if (cpuIds_.contains(cpuId)) {
+        cpuIdWarning_->show();
+    }
+    else {
+        cpuIdWarning_->hide();
     }
 }
 

@@ -1,0 +1,14 @@
+<project
+  xmlns:j="jelly:core"
+  default="site-update">
+
+  <!-- ================================================== -->
+  <!-- Perform the nightly build process                  -->
+  <!-- ================================================== -->
+  <goal name="site-update"
+      description="Updates the web site automatically">
+    <cvs command="-q update -Pd"/>
+    <attainGoal name="clean"/>
+    <attainGoal name="site:deploy"/>
+  </goal>
+</project>

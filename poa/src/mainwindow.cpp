@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.48 2003/09/17 16:49:33 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.49 2003/09/18 16:35:40 vanto Exp $
  *
  *****************************************************************************/
 
@@ -102,6 +102,8 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     initializeActions();
     initializeToolbars();
     initializeMenu();
+
+    QMimeSourceFactory::defaultFactory()->setImage("poalogo", QImage(ICON_PATH + "poa.gif"));
 
     connectActions();
     connect(Settings::instance(), SIGNAL(recentProjectsChanged()),

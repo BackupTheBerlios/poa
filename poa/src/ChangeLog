@@ -1,5 +1,7 @@
 2003-09-18  Tammo van Lessen  <vanto@users.sourceforge.net>
 
+	* README: Logo added
+
 	* main.cpp (main): Load project via commandline arg
 
 	* pinmodel.cpp (isConnectable): Added isConnectable for pins

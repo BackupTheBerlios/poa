@@ -17,24 +17,15 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.ecs.Entities;
-import org.apache.ecs.XhtmlDocument;
+import org.apache.ecs.*;
 import org.apache.ecs.Doctype.XHtml10Strict;
-import org.apache.ecs.xhtml.b;
-import org.apache.ecs.xhtml.div;
-import org.apache.ecs.xhtml.img;
-import org.apache.ecs.xhtml.link;
-import org.apache.ecs.xhtml.pre;
-import org.apache.ecs.xhtml.span;
-import org.apache.ecs.xhtml.table;
-import org.apache.ecs.xhtml.tbody;
-import org.apache.ecs.xhtml.td;
-import org.apache.ecs.xhtml.tr;
+import org.apache.ecs.xhtml.*;
 
 /**
  * XHTMLOutputter
  * 
  * @author Tammo van Lessen
- * @version $Id: XHTMLOutputter.java,v 1.2 2003/07/24 21:22:49 vanto Exp $
+ * @version $Id: XHTMLOutputter.java,v 1.3 2004/01/07 14:37:12 vanto Exp $
  */
 public class XHTMLOutputter implements Outputter {
 
@@ -52,8 +43,27 @@ public class XHTMLOutputter implements Outputter {
 	 */
 	public void output(Project prj) {
 		FileInfo[] files = prj.getFiles();
+		XhtmlDocument doc = new XhtmlDocument();
+		doc.setDoctype(new XHtml10Strict());
+		doc.appendHead(new link().setType("text/css").setRel("Stylesheet").setHref("style.css"));
+
+		body content = new body();
+		doc.appendBody(content);
 		for (int i=0; i<files.length; i++) {
 			output(files[i]);
+			content.setBgColor("white");
+			content.addElement(new a(files[i].getName()+".html",files[i].getName()));
+			content.addElement(new StringElement("&nbsp;("+Formatter.formatNumber(files[i].getCoverage()*100,2)+"%)"));
+			content.addElement(new br());
+		}
+		try {
+			FileWriter fw = new FileWriter(dir.getAbsolutePath()+File.separatorChar+"files.html");
+			//doc.output(fw);
+			doc.getHtml().setPrettyPrint(true);
+			fw.write(doc.toString());
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	

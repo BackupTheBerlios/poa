@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
  * Builder
  * 
  * @author Tammo van Lessen
- * @version $Id: Builder.java,v 1.3 2004/01/11 16:01:34 squig Exp $
+ * @version $Id: Builder.java,v 1.4 2004/01/12 19:02:30 squig Exp $
  */
 public class Builder {
 
@@ -49,6 +49,13 @@ public class Builder {
 			while ((line = lnr.readLine()) != null) {
 				LineInfo li = parser.parse(line);
 				if (li != null) {
+					// special hack for QT files, QT_OBJECT macros are 
+					// never executed but cause header files to have
+					// a single uncovered line
+					if (li.getSourceLine().trim().equals("Q_OBJECT")) {
+						li.setInstrumented(false);
+						li.setExecCount(0);
+					}
 					file.addLine(li);
 				}			
 			}
@@ -67,8 +74,10 @@ public class Builder {
 		for (int i = 0; i<files.length; i++) {
 			try {
 				FileInfo file = parse(files[i]);
-				Package.getPackage(file.getPackageName()).addFile(file);
-				project.addFile(file);
+				if (file.getInstrumentedLinesCount() > 0) {
+					Package.getPackage(file.getPackageName()).addFile(file);
+					project.addFile(file);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

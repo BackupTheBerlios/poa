@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.48 2003/12/10 15:34:50 squig Exp $
+ * $Id: blockview.cpp,v 1.49 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include <qbrush.h>
 #include <qcanvas.h>
 #include <qpainter.h>
+#include <qvaluelist.h>
 
 #include <math.h> // why don't we use cmath?
 
@@ -34,6 +35,7 @@
 #include "blockconfdialog.h"
 #include "blockmodel.h"
 #include "canvasview.h"
+#include "gridcanvas.h"
 #include "mainwindow.h"
 #include "muxmodel.h"
 #include "pinmodel.h"
@@ -83,6 +85,17 @@ QSize BlockView::dragBy(double dx, double dy)
     moveBy(rint(dx), rint(dy));
     return QSize((int) dx, (int) dy);
 }
+
+double BlockView::currentX()
+{
+    return x();
+}
+
+double BlockView::currentY()
+{
+    return y();
+}
+
 
 void BlockView::addPin(PinModel *pin)
 {
@@ -135,6 +148,33 @@ void BlockView::addPinViewsTo(QCanvasItemList &list)
     }
 }
 
+
+void addToList(QValueList<ConnectorViewList*> &list,
+	       QValueList<PinView*> *pins)
+{
+    QValueList<PinView*>::const_iterator it;	    
+
+    for (it = pins->begin(); it != pins->end(); ++it) {
+	ConnectorViewList *connector = (*it)->connector();
+	if (connector != 0) {
+	    list.prepend(connector);
+	}
+    }
+}
+
+void BlockView::arrangeConnectors()
+{
+    GridCanvas *ownCanvas = dynamic_cast<GridCanvas*>(canvas());
+    if (ownCanvas != 0) {
+	QValueList<ConnectorViewList*> list;
+	
+	addToList(list, &leftPins_);
+	addToList(list, &rightPins_);
+	addToList(list, &bottomPins_);
+	ownCanvas->reRoute(list);
+    }
+}
+
 void BlockView::arrangePins()
 {
     // calculate height
@@ -176,6 +216,7 @@ void BlockView::arrangePins()
 
     arrangeVerticalPins();
     arrangeHorizontalPins();
+    arrangeConnectors();
 }
 
 AbstractModel *BlockView::model()
@@ -187,6 +228,7 @@ void BlockView::moveBy(double dx, double dy)
 {
     QCanvasRectangle::moveBy(dx, dy);
     arrangePins();
+    arrangeConnectors();
 
     /*    QValueList<PinView*>::iterator current = leftPins_.begin();
           while (current != leftPins_.end()) {

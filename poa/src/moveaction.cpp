@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.cpp,v 1.1 2003/09/07 19:07:46 squig Exp $
+ * $Id: moveaction.cpp,v 1.2 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -26,12 +26,13 @@
 
 #include "canvasview.h"
 #include "gridcanvas.h"
+#include "moveable.h"
 #include "settings.h"
 
-#include <qcanvas.h>
+//#include <qcanvas.h>
 #include <qwmatrix.h>
 
-MoveAction::MoveAction(CanvasView *view, QMouseEvent *e, QCanvasItem *item)
+MoveAction::MoveAction(CanvasView *view, QMouseEvent *e, Moveable *item)
     : CanvasViewAction(view), item_(item)
 {
     startPoint_ = view->inverseWorldMatrix().map(e->pos());
@@ -43,16 +44,16 @@ void MoveAction::mouseMoveEvent(QMouseEvent *e)
 
     if (Settings::instance()->snapToGrid() &&
         !(e->stateAfter() & Qt::ControlButton)) {
-        QPoint oldPos = QPoint((int)item_->x(), (int)item_->y());
+        QPoint oldPos = QPoint((int)item_->currentX(), (int)item_->currentY());
 
         // move to closest grid coordinate
         QPoint newPos = view()->gridCanvas()->toGrid(oldPos + p - startPoint_);
-        item_->moveBy(newPos.x() - oldPos.x(), newPos.y() - oldPos.y());
+        item_->dragBy(newPos.x() - oldPos.x(), newPos.y() - oldPos.y());
 
         startPoint_ += newPos - oldPos;
     }
     else {
-        item_->moveBy(p.x() - startPoint_.x(), p.y() - startPoint_.y());
+        item_->dragBy(p.x() - startPoint_.x(), p.y() - startPoint_.y());
         startPoint_ = p;
     }
 

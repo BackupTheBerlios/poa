@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.h,v 1.1 2003/09/07 19:07:46 squig Exp $
+ * $Id: moveaction.h,v 1.2 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -27,9 +27,9 @@
 
 #include "canvasviewaction.h"
 class CanvasView;
+class Moveable;
 
 #include <qpoint.h>
-class QCanvasItem;
 class QMouseEvent;
 
 /**
@@ -41,7 +41,7 @@ class MoveAction : public CanvasViewAction
 {
 
 public:
-    MoveAction(CanvasView *view, QMouseEvent *e, QCanvasItem *item);
+    MoveAction(CanvasView *view, QMouseEvent *e, Moveable *item);
 
     /**
      * Moves the item to the new position.
@@ -55,7 +55,7 @@ public:
 
 private:
     /** The item that is currently in moving state. */
-    QCanvasItem *item_;
+    Moveable *item_;
     /** The point where the move started in canvas coordinates. */
     QPoint startPoint_;
 

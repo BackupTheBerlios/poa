@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.25 2003/11/24 20:11:59 squig Exp $
+ * $Id: gridcanvas.cpp,v 1.26 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
-#include "gridcanvas.h"
 #include "connectorviewlist.h"
+#include "directrouter.h"
+#include "gridcanvas.h"
 #include "project.h"
 #include "settings.h"
 
@@ -34,8 +35,10 @@
 #include <qsize.h>
 
 GridCanvas::GridCanvas(QString name)
-    : currentZ_(0)
 {
+    currentZ_ = 0;
+    router_ = new DirectRouter();
+
     setName(name);
     setDoubleBuffering(TRUE);
 
@@ -45,9 +48,15 @@ GridCanvas::GridCanvas(QString name)
             this, SLOT(updateAll()));
 }
 
+GridCanvas::~GridCanvas()
+{
+    delete router_;
+}
+
 void GridCanvas::addConnectorView(ConnectorViewList *viewList)
 {
-    //    ConnectorViewList *viewList = new ConnectorViewList(source, target, this);
+    router_->route(viewList);
+
     QCanvasItemList segments = viewList->allSegments();
     for (QCanvasItemList::Iterator it = segments.begin();
      it != segments.end();
@@ -121,6 +130,12 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
         }
     }
 }
+
+void GridCanvas::reRoute(QValueList<ConnectorViewList*>& list)
+{
+    router_->route(list);
+}
+
 
 double GridCanvas::incZ()
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorrouter.h,v 1.2 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: connectorrouter.h,v 1.3 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 #include "router.h"
 
 #include <qcanvas.h>
+#include <qvaluelist.h>
 
 class ConnectorViewList;
 
@@ -45,6 +46,11 @@ public:
      * Routes one <code>ConnectorViewList</code>
      */
     virtual void route(ConnectorViewList *view) = 0;
+
+    /**
+     * Routes a set of <code>ConnectorViewList</code>s
+     */
+    virtual void route(QValueList<ConnectorViewList*>& list) = 0;
 };
 
 #endif

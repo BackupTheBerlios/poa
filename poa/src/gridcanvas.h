@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.23 2003/11/24 20:11:59 squig Exp $
+ * $Id: gridcanvas.h,v 1.24 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@ class QString;
 
 #include "connectorviewlist.h"
 class AbstractModel;
+class ConnectorRouter;
 class Project;
 
 /**
@@ -51,6 +52,8 @@ public:
      */
     GridCanvas(QString name);
 
+    virtual ~GridCanvas();
+
     /**
      * Adds a view for the given <code>model</code> to the canvas at
      * (x,y)-coords This method creates the view instance (and its
@@ -59,14 +62,23 @@ public:
     void addView(AbstractModel *item, int x = 0, int y = 0);
 
     /**
-     * Adds ConnectorViews between the two given PinViews.
+     * Adds ConnectorViews between the two given PinViews. Uses an egoistic
+     * router to route <code>viewList</code>
      */
-    void addConnectorView(ConnectorViewList *);
+    void addConnectorView(ConnectorViewList *viewList);
+
+    /**
+     * To be called whenever a set of <code>ConnectorViewList</code>s has
+     * changed and needs to be rerouted. This member executes very efficiently
+     * and can be called during moving operations. Thus the resulting routing
+     * might be ugly.
+     */
+    void reRoute(QValueList<ConnectorViewList*>& list);
 
     /**
      * Increases the z-layer and returns the increased value.
      */
-    double GridCanvas::incZ();
+    double incZ();
 
     /**
      * Returns grid coordiante that is closest to <code>p</code>.
@@ -81,6 +93,11 @@ protected:
     virtual void drawBackground(QPainter &painter, const QRect &clip);
 
 private:
+
+    /**
+     * Egoistic router for adding new <code>ConnectorViewList</code>s.
+     */
+    ConnectorRouter *router_;
 
     /**
      * Counter for z-layer. Everytime a an item is added to the canvas,

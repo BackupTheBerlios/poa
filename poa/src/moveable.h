@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveable.h,v 1.1 2003/11/24 20:56:58 squig Exp $
+ * $Id: moveable.h,v 1.2 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -47,6 +47,16 @@ public:
      *         have to be equal to <code>QSize (dx, dy)</code>.
      */
     virtual QSize dragBy(double, double) = 0;
+
+    /**
+     * Returns <code>this</code>'s current position's x-coordinate.
+     */
+    virtual double currentX() = 0;
+
+    /**
+     * Returns <code>this</code>'s current position's y-coordinate.
+     */
+    virtual double currentY() = 0;
 
 };
 #endif

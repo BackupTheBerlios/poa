@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.48 2003/12/10 16:12:15 garbeam Exp $
+ * $Id: canvasview.cpp,v 1.49 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -138,7 +138,7 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             // notify item that is has been clicked
             Moveable *item = dynamic_cast<Moveable*>(topItem);
             if (item != 0) {
-                setAction(new MoveAction(this, e, topItem));
+                setAction(new MoveAction(this, e, item));
             }
 
             PinView *pinItem = dynamic_cast<PinView*>(topItem);

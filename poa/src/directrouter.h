@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: directrouter.h,v 1.2 2003/12/03 14:43:54 keulsn Exp $
+ * $Id: directrouter.h,v 1.3 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -41,8 +41,18 @@ class DirectRouter : public ConnectorRouter
      */
     virtual void route(ConnectorViewList *view);
 
+    /**
+     * Routes a set of <code>ConnectorViewList</code>s
+     */
+    virtual void route(QValueList<ConnectorViewList*>& list);
+
 protected:
 
+    /**
+     * Calculates direct routing for connector from a point and starting
+     * direction to a different point and target direction. Returns a list
+     * of 2 or more {@link QPoint}-objects to be connected by lines.
+     */
     QValueList<QPoint> *routeOne(QPoint from,
 				 LineDirection fromDir,
 				 QPoint to,

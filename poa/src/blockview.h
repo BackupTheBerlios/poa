@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.39 2003/12/10 14:43:35 squig Exp $
+ * $Id: blockview.h,v 1.40 2003/12/11 15:40:10 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -99,6 +99,16 @@ public:
      */
     virtual QSize dragBy(double dx, double dy);
 
+    /**
+     * Synonym for <code>x()</code>. Needed for {@link Moveable}.
+     */
+    virtual double currentX();
+
+    /**
+     * Synonym for <code>y()</code>. Needed for {@link Moveable}.
+     */
+    virtual double currentY();
+
 /*     /\** */
 /*      * Activates a {@link MovingAction } for <code>view</code> that moves */
 /*      * the BlockView. */
@@ -168,6 +178,11 @@ public slots:
 protected:
 
     virtual void drawShape (QPainter &p);
+
+    /**
+     * Forces rerouting of all incident connector views.
+     */
+    virtual void arrangeConnectors();
 
     /**
      * Recalculates height and rearranges all pins.

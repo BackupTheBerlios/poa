@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.1 2003/08/21 10:46:37 garbeam Exp $
+ * $Id: gridcanvas.h,v 1.2 2003/08/21 13:18:30 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define POA_GRIDCANVAS_H
 
 #include <qcanvas.h>
+#include <qpixmap.h>
 
 /*****************************************************************************
  * Defines the grid canvas.
@@ -36,12 +37,13 @@ class GridCanvas : public QCanvas {
     Q_OBJECT
 
 public:
-    GridCanvas(int h, int w);
+    GridCanvas();
 
-//protected:
-//    virtual void drawBackground(QPainter &, const QRect &);
+public slots:
+    void redrawGrid();
 
 private:
+    QPixmap *tile;
 
 };
 

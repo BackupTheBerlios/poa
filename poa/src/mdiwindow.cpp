@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.5 2003/08/21 10:46:08 garbeam Exp $
+ * $Id: mdiwindow.cpp,v 1.6 2003/08/21 13:18:31 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -43,7 +43,7 @@ MdiWindow::~MdiWindow()
     // no need to delete child widgets, Qt does it all for us
 }
 
-QCanvas *MdiWindow::getCanvas()
+QCanvas *MdiWindow::canvas()
 {
     return (QCanvas *)view_->canvas();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.13 2003/08/21 13:01:28 squig Exp $
+ * $Id: mainwindow.cpp,v 1.14 2003/08/21 13:18:30 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -88,9 +88,9 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // initialize status bar implicitly
     (void)statusBar();
 
-	// initialize library dock window
-	LibraryWindow* lw = new LibraryWindow(QDockWindow::InDock, this);
-	moveDockWindow(lw, Qt::DockLeft);
+    // initialize library dock window
+    LibraryWindow* lw = new LibraryWindow(QDockWindow::InDock, this);
+    moveDockWindow(lw, Qt::DockLeft);
 
     // set up mdi workspace
     QVBox* vb = new QVBox(this);
@@ -309,7 +309,7 @@ void MainWindow::closeWindow()
 }
 
 void MainWindow::tileHorizontal()
-{        
+{
     // primitive horizontal tiling
     QWidgetList windows = ws->windowList();
     if ( !windows.count() )
@@ -417,7 +417,7 @@ void MainWindow::openSettings()
 MdiWindow* MainWindow::newDoc()
 {
 //    LayoutCanvas *doc = new LayoutCanvas();
-    GridCanvas *doc = new GridCanvas(100, 400);
+    GridCanvas *doc = new GridCanvas();
 //    doc->resize(400, 400);
 
     MdiWindow* w = new MdiWindow(doc, ws, 0, WDestructiveClose);

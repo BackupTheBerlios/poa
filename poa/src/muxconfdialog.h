@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.8 2003/09/25 16:27:41 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.9 2003/09/26 16:34:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -62,12 +62,12 @@ public:
     ~MuxMappingListViewItem();
 
     /**
-     * Returns the PinModel, represented by this view item
+     * Returns the MuxMapping, represented by this view item
      */
     MuxMapping *data() const;
 
     /**
-     * Returns the origin PinModel, represented by this view item
+     * Returns the origin MuxMapping, represented by this view item
      */
     MuxMapping *origData() const;
 

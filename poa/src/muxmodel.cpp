@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.14 2003/09/25 16:27:41 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.15 2003/09/26 16:34:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -26,9 +26,11 @@
 
 #include "muxview.h"
 
-MuxMapping::MuxMapping(PinModel *output, unsigned begin, unsigned end)
+MuxMapping::MuxMapping(MuxPin *muxPin, PinModel *output,
+                       unsigned begin, unsigned end)
 {
     Q_ASSERT(begin <= end);
+    muxPin_ = muxPin;
     output_ = output;
     begin_ = begin;
     end_ = end;
@@ -36,6 +38,11 @@ MuxMapping::MuxMapping(PinModel *output, unsigned begin, unsigned end)
 
 MuxMapping::~MuxMapping()
 {
+}
+
+MuxPin *MuxMapping::muxPin()
+{
+    return muxPin_;
 }
 
 PinModel *MuxMapping::output()
@@ -75,7 +82,7 @@ QDomElement MuxMapping::serialize(QDomDocument *document)
 }
 
 MuxMapping *MuxMapping::clone() {
-    return new MuxMapping(output_->clone(), begin_, end_);
+    return new MuxMapping(muxPin_, output_->clone(), begin_, end_);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,19 +96,6 @@ MuxPin::~MuxPin() {
         MuxMapping *mapping = mappings_.at(i);
         mappings_.remove(i);
         delete mapping;
-    }
-}
-
-void MuxPin::addMapping(MuxMapping *mapping) {
-    mappings_.append(mapping);
-}
-
-void MuxPin::removeMapping(MuxMapping *mapping) {
-    mappings_.remove(mapping);
-
-    PinModel *output = mapping->output();
-    if (output->bits() > (mapping->end() - mapping->begin())) {
-        output->setBits(output->bits() - (mapping->end() - mapping->begin()));
     }
 }
 
@@ -129,10 +123,12 @@ QDomElement MuxPin::serialize(QDomDocument *document)
 }
 
 MuxPin *MuxPin::clone() {
+    Q_ASSERT(model_ != 0);
     MuxPin *clonePin = new MuxPin(model_->clone());
 
+    QPtrList<MuxMapping> *mappings = clonePin->mappings();
     for (unsigned i = 0; i < mappings_.count(); i++) {
-        clonePin->addMapping(mappings_.at(i)->clone());
+        mappings->append(mappings_.at(i)->clone());
     }
 
     return clonePin;
@@ -234,4 +230,36 @@ MuxModel::MuxType MuxModel::muxType() {
 
 QPtrList<MuxPin> *MuxModel::muxPins() {
     return &muxPins_;
+}
+
+QPtrList<PinModel> *MuxModel::outputPins() {
+    return &outputPins_;
+}
+
+void MuxModel::addMuxMapping(MuxMapping *mapping) {
+
+    MuxPin *pin = mapping->muxPin();
+    QPtrList<MuxMapping> *mappings = pin->mappings();
+    mappings->append(mapping);
+
+    if (!outputPins_.containsRef(mapping->output())) {
+        outputPins_.append(mapping->output());
+    }
+}
+
+void MuxModel::removeMuxMapping(MuxMapping *mapping) {
+
+    MuxPin *pin = mapping->muxPin();
+    QPtrList<MuxMapping> *mappings = pin->mappings();
+    mappings->remove(mapping);
+
+    PinModel *output = mapping->output();
+    if (output->bits() > (mapping->end() - mapping->begin())) {
+        output->setBits(output->bits() - (mapping->end() - mapping->begin()));
+    }
+    else {
+        // it was the last MuxMapping related to output
+        outputPins_.remove(output);
+        delete output; // Notifies also the dedicated view
+    }
 }

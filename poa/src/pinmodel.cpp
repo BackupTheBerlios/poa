@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.21 2003/09/22 12:36:43 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.22 2003/09/26 16:34:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -191,5 +191,6 @@ void PinModel::deserialize(QDomElement element)
 
 PinModel *PinModel::clone()
 {
+    Q_ASSERT(parent_ != 0);
     return new PinModel(parent_, id_, name_, address_, bits_, type_);
 }

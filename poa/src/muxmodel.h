@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.14 2003/09/25 16:27:42 garbeam Exp $
+ * $Id: muxmodel.h,v 1.15 2003/09/26 16:34:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,9 @@
 
 #include <qptrlist.h>
 
+// forward declaration for MuxMapping
+class MuxPin;
+
 /**
  * Provides range mappings to an output
  * PinModel, e.g. map pins 2-8 of parent pin to output pin.
@@ -42,14 +45,21 @@ public:
 
     /**
      * Basic constructor.
+     * @input the input PinModel.
      * @output the output (output) PinModel.
      * @begin the begin of bit range (0 for absolute begin).
      * @end the end of bit range (<code>input->bits() - 1</code>
      * for absolute end).
      */
-    MuxMapping(PinModel *output, unsigned begin, unsigned end);
+    MuxMapping(MuxPin *muxPin, PinModel *output,
+               unsigned begin, unsigned end);
 
     virtual ~MuxMapping();
+
+    /**
+     * Returns the input PinModel.
+     */
+    MuxPin *muxPin();
 
     /**
      * Returns the output PinModel.
@@ -88,6 +98,7 @@ public:
 
 private:
 
+    MuxPin *muxPin_;
     PinModel *output_;
     unsigned begin_;
     unsigned end_;
@@ -103,16 +114,6 @@ public:
 
     MuxPin(PinModel *model);
     ~MuxPin();
-
-    /**
-     * Adds the given mapping to this mux pin.
-     */
-    void addMapping(MuxMapping *mapping);
-
-    /**
-     * Removes the given mapping from this mux pin.
-     */
-    void removeMapping(MuxMapping *mapping);
 
     /**
      * Returns QPtrList of mux mappings.
@@ -187,6 +188,16 @@ public:
     void removeMuxPin(MuxPin *pin);
 
     /**
+     * Adds a new mux mapping.
+     */
+    void addMuxMapping(MuxMapping *mapping);
+
+    /**
+     * Removes the given mux mapping.
+     */
+    void removeMuxMapping(MuxMapping *mapping);
+
+    /**
      * Creates the CanvasItems for this.
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
@@ -209,14 +220,22 @@ public:
     MuxType muxType();
 
     /**
-     * Returns mux pin pointer list.
+     * Returns pointer of mux pin pointer list.
      */
     QPtrList<MuxPin> *muxPins();
+
+    /**
+     * Returns pointer of output pinmodel list.
+     */
+    QPtrList<PinModel> *outputPins();
 
 private:
 
     /** Contains all I/O mappings */
     QPtrList<MuxPin> muxPins_;
+
+    /** Contains all output pins */
+    QPtrList<PinModel> outputPins_;
 
     MuxType type_;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.26 2003/09/23 14:48:51 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.27 2003/09/26 16:34:43 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -89,7 +89,9 @@ void PinListViewItem::update() {
 
 PinListViewItem::~PinListViewItem()
 {
-    delete clone_;
+    if (clone_ != 0) {
+        delete clone_;
+    }
 }
 
 PinModel *PinListViewItem::data() const

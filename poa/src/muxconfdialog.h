@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.h,v 1.17 2003/12/17 17:19:30 garbeam Exp $
+ * $Id: muxconfdialog.h,v 1.18 2004/01/07 17:31:41 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -125,32 +125,37 @@ private:
     /** Syncs the <code>model_</code> with this dialog. */
     void updateModel();
 
-    /** Adds a new MuxMapping to the selected item. */
-    void addMapping();
-
-    /** Adds a new IO to the mappings list view. */
-    void addIo();
-
-    /** Removes the IO given by <code>item</code>. */
-    void removeIo();
-
-    /** Removes the Mapping given by <code>item</code>. */
-    void removeMapping(MuxMappingListViewItem *item);
-
     /** Finds and returns PinModel by id. */
     PinModel *findPinById(PinModel::PinType, unsigned id);
+
+    /** Finds and returns PinListViewItem by PinModel. */
+    PinListViewItem *findPinListViewItemByPinModel(PinModel *pin);
+
+    /** Rearranges all positions. */
+    void updatePositions(QListView *lv);
+
+    /** Updates all mappings after an I/O has been updated. */
+    void updateMappings();
+
+    /** Returns <code>true</code> if there's a dependent MuxMapping
+        to the given PinModel. */
+    bool existDependentMapping(PinModel *pin);
+
+    /** Removes all dependent MuxMapping's. */
+    void removeDependentMappings(PinModel *pin);
 
     QLineEdit* nameLineEdit;
     QLineEdit *ioNameLineEdit;
     QPushButton *addIoPushButton;
+    QPushButton *updateIoPushButton_;
     QPushButton *removeIoPushButton;
     QPushButton* helpPushButton;
     QPushButton* okPushButton;
     QPushButton* cancelPushButton;
     QPushButton* applyPushButton;
-    QPushButton* addPushButton;
-    QPushButton* updatePushButton;
-    QPushButton* removePushButton;
+    QPushButton* addMappingPushButton_;
+    QPushButton* updateMappingPushButton_;
+    QPushButton* removeMappingPushButton_;
     QSpinBox *firstInputBitSpinBox;
     QSpinBox *lastInputBitSpinBox;
     QSpinBox *firstOutputBitSpinBox;
@@ -160,20 +165,30 @@ private:
     QListView* inputListView;
     QListView* outputListView;
     QBoxLayout *dialogLayout_;
+    QRadioButton *inputRadioButton_;
+    QRadioButton *outputRadioButton_;
 
     MuxModel *model_;
 
     QPtrList<PinModel> deletedPins_;
+    QPtrList<PinModel> updatedPins_;
+    QPtrList<PinModel> newPins_;
+
+    QPtrList<MuxMapping> deletedMappings_;
+    QPtrList<MuxMapping> updatedMappings_;
+    QPtrList<MuxMapping> newMappings_;
 
 private slots:
 
     /** Magic selection, button title changing. */
+    void listViewSelectionChanged();
     void mappingSelectionChanged();
 
-    /**
-     * Removes a selected IO with its mappings or a selected mapping.
-     */
-    void removeIoOrMapping();
+    /** Adds a new MuxMapping. */
+    void addMapping();
+
+    /** Remove the selected MuxMapping. */
+    void removeMapping();
 
     /**
      * Updates a mapping.
@@ -190,8 +205,14 @@ private slots:
      */
     void ok();
 
-    void newIo();
+    /** Adds a new IO. */
+    void addIo();
 
+    /** Updates the selected IO. */
+    void updateIo();
+
+    /** Removes the selected IO. */
+    void removeIo();
 };
 
 #endif // POA_MUXCONFDIALOG_H

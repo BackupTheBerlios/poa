@@ -18,10 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.30 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: muxconfdialog.cpp,v 1.31 2004/01/07 17:31:41 garbeam Exp $
  *
  *****************************************************************************/
 
+#include <qbuttongroup.h>
 #include <qcombobox.h>
 #include <qgroupbox.h>
 #include <qheader.h>
@@ -77,7 +78,7 @@ void MuxMappingListViewItem::update() {
         setText(1, QString::number(clone_->firstInputBit()) + " - "
                    + QString::number(clone_->lastInputBit()));
         setText(2, clone_->output()->name());
-        setText(1, QString::number(clone_->firstOutputBit()) + " - "
+        setText(3, QString::number(clone_->firstOutputBit()) + " - "
                    + QString::number(clone_->lastOutputBit()));
     }
 }
@@ -102,8 +103,8 @@ MuxConfDialog::MuxConfDialog(MuxModel *model, QWidget* parent,
     }
 
     initLayout();
-    //initConnections();
-    //mappingSelectionChanged();
+    initConnections();
+    listViewSelectionChanged();
     //syncModel();
 
 }
@@ -135,60 +136,73 @@ void MuxConfDialog::initIOWidget() {
 
     QGroupBox *ioGroupBox = new QGroupBox(this, "ioGroupBox");
     ioGroupBox->setTitle(tr("I/Os"));
-    QBoxLayout *ioLayout = new QHBoxLayout(ioGroupBox, 3 * WIDGET_SPACING);
+    QBoxLayout *ioLayout = new QVBoxLayout(ioGroupBox, 3 * WIDGET_SPACING);
 
-    QWidget *leftWidget = new QWidget(ioGroupBox);
-    QBoxLayout *leftLayout =
-        new QVBoxLayout(leftWidget, 3 * WIDGET_SPACING);
+    QWidget *ioTopWidget = new QWidget(ioGroupBox);
+    QBoxLayout *ioTopLayout =
+        new QHBoxLayout(ioTopWidget, WIDGET_SPACING);
 
-    inputListView = new QListView(leftWidget, "inputListView");
+    QButtonGroup *ioChooser = new QButtonGroup(ioGroupBox);
+    QBoxLayout *ioChooserLayout =
+        new QHBoxLayout(ioChooser, WIDGET_SPACING);
+
+    QWidget *editWidget = new QWidget(ioGroupBox);
+    QBoxLayout *editLayout =
+        new QHBoxLayout(editWidget, WIDGET_SPACING);
+
+    QWidget *buttonWidget = new QWidget(ioGroupBox);
+    QBoxLayout *buttonLayout =
+        new QHBoxLayout(buttonWidget, WIDGET_SPACING);
+
+    inputListView = new QListView(ioTopWidget, "inputListView");
+    inputListView->setAllColumnsShowFocus(TRUE);
     inputListView->addColumn(tr("Position"));
     inputListView->addColumn(tr("I/O name"));
     inputListView->addColumn(tr("Bits"));
 
-    QWidget *rightWidget = new QWidget(ioGroupBox);
-    QBoxLayout *rightLayout =
-        new QVBoxLayout(rightWidget, 3 *WIDGET_SPACING);
-
-    outputListView = new QListView(rightWidget, "outputListView");
+    outputListView = new QListView(ioTopWidget, "outputListView");
+    outputListView->setAllColumnsShowFocus(TRUE);
     outputListView->addColumn(tr("Position"));
     outputListView->addColumn(tr("I/O name"));
     outputListView->addColumn(tr("Bits"));
 
-    QWidget *nameWidget = new QWidget(leftWidget);
-    QBoxLayout *nameLayout =
-        new QHBoxLayout(nameWidget, WIDGET_SPACING);
-    ioNameLineEdit =
-        new QLineEdit(nameWidget, "ioNameLineEdit");
-    nameLayout->addWidget(new QLabel(tr("I/O name"), nameWidget));
-    nameLayout->addWidget(ioNameLineEdit);
+    ioTopLayout->addWidget(inputListView);
+    ioTopLayout->addWidget(outputListView);
 
-    QWidget *bitsWidget = new QWidget(rightWidget);
-    QBoxLayout *bitsLayout =
-        new QHBoxLayout(bitsWidget, WIDGET_SPACING);
-    ioBitsSpinBox = new QSpinBox(bitsWidget, "ioBitsSpinBox");
-    bitsLayout->addWidget(new QLabel(tr("bits"), bitsWidget));
-    bitsLayout->addWidget(ioBitsSpinBox);
+    ioNameLineEdit = new QLineEdit(editWidget, "ioNameLineEdit");
+
+    inputRadioButton_ = new QRadioButton("input", ioChooser);
+    inputRadioButton_->setChecked(true);
+    outputRadioButton_ = new QRadioButton("output", ioChooser);
+
+    ioChooserLayout->addWidget(inputRadioButton_);
+    ioChooserLayout->addWidget(outputRadioButton_);
+
+    ioBitsSpinBox = new QSpinBox(editWidget, "ioBitsSpinBox");
 
     addIoPushButton =
-        new QPushButton(leftWidget, "addIoPushButton");
-    addIoPushButton->setText("Add I/O");
+        new QPushButton(buttonWidget, "addIoPushButton");
+    addIoPushButton->setText(tr("Add I/O"));
+    updateIoPushButton_ =
+        new QPushButton(buttonWidget, "updateIoPushButton_");
+    updateIoPushButton_->setText(tr("Update I/O"));
     removeIoPushButton =
-        new QPushButton(rightWidget, "removeIoPushButton");
-    removeIoPushButton->setText("Remove I/O");
+        new QPushButton(buttonWidget, "removeIoPushButton");
+    removeIoPushButton->setText(tr("Remove I/O"));
 
-    leftLayout->addWidget(new QRadioButton(tr("inputs"), leftWidget));
-    leftLayout->addWidget(inputListView);
-    leftLayout->addWidget(nameWidget);
-    leftLayout->addWidget(addIoPushButton);
+    editLayout->addWidget(new QLabel(tr("I/O name"), editWidget));
+    editLayout->addWidget(ioNameLineEdit);
+    editLayout->addWidget(new QLabel(tr("bits"), editWidget));
+    editLayout->addWidget(ioBitsSpinBox);
 
-    rightLayout->addWidget(new QRadioButton(tr("outputs"), rightWidget));
-    rightLayout->addWidget(outputListView);
-    rightLayout->addWidget(bitsWidget);
-    rightLayout->addWidget(removeIoPushButton);
+    buttonLayout->addWidget(addIoPushButton);
+    buttonLayout->addWidget(updateIoPushButton_);
+    buttonLayout->addWidget(removeIoPushButton);
 
-    ioLayout->addWidget(leftWidget);
-    ioLayout->addWidget(rightWidget);
+    ioLayout->addWidget(ioTopWidget);
+    ioLayout->addWidget(ioChooser);
+    ioLayout->addWidget(editWidget);
+    ioLayout->addWidget(buttonWidget);
 
     dialogLayout_->addWidget(ioGroupBox);
 }
@@ -232,21 +246,23 @@ void MuxConfDialog::initMappingWidget() {
     QBoxLayout *buttonLayout =
         new QHBoxLayout(buttonWidget, WIDGET_SPACING);
 
-    addPushButton = new QPushButton(buttonWidget, "addPushButton");
-    addPushButton->setText(tr("&Add"));
+    addMappingPushButton_ = new QPushButton(buttonWidget, "addMappingPushButton");
+    addMappingPushButton_->setText(tr("&Add"));
 
-    updatePushButton = new QPushButton(buttonWidget, "updatePushButton");
-    updatePushButton->setText(tr("&Update"));
+    updateMappingPushButton_ = new QPushButton(buttonWidget, "updateMappingPushButton_");
+    updateMappingPushButton_->setText(tr("&Update"));
 
-    removePushButton = new QPushButton(buttonWidget, "removePushButton");
-    removePushButton->setText(tr("Remove"));
+    removeMappingPushButton_ =
+        new QPushButton(buttonWidget, "removeMappingPushButton_");
+    removeMappingPushButton_->setText(tr("Remove"));
 
-    buttonLayout->addWidget(addPushButton);
-    buttonLayout->addWidget(updatePushButton);
-    buttonLayout->addWidget(removePushButton);
+    buttonLayout->addWidget(addMappingPushButton_);
+    buttonLayout->addWidget(updateMappingPushButton_);
+    buttonLayout->addWidget(removeMappingPushButton_);
 
     // prepare mapping ListView
     mappingListView = new QListView(mappingGroupBox, "mappingsListView");
+    mappingListView->setAllColumnsShowFocus(TRUE);
     mappingListView->addColumn(tr("Input"));
     mappingListView->addColumn(tr("Range"));
     mappingListView->addColumn(tr("Output"));
@@ -290,12 +306,21 @@ void MuxConfDialog::initBottomWidget() {
 
 void MuxConfDialog::initConnections() {
 
-    
-    connect(updatePushButton, SIGNAL(clicked()), this, SLOT(updateMapping()));
-    connect(removePushButton, SIGNAL(clicked()), this, SLOT(removeIoOrMapping()));
-    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
-    connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(addIoPushButton, SIGNAL(clicked()), this, SLOT(addIo()));
+    connect(updateIoPushButton_, SIGNAL(clicked()), this, SLOT(updateIo()));
+    connect(removeIoPushButton, SIGNAL(clicked()), this, SLOT(removeIo()));
+    connect(addMappingPushButton_, SIGNAL(clicked()), this, SLOT(addMapping()));
+    connect(updateMappingPushButton_, SIGNAL(clicked()),
+        this, SLOT(updateMapping()));
+    connect(removeMappingPushButton_, SIGNAL(clicked()),
+        this, SLOT(removeMapping()));
+//    connect(okPushButton, SIGNAL(clicked()), this, SLOT(ok()));
+ //   connect(applyPushButton, SIGNAL(clicked()), this, SLOT(apply()));
     connect(cancelPushButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(inputListView, SIGNAL(selectionChanged()),
+            this, SLOT(listViewSelectionChanged()));
+    connect(outputListView, SIGNAL(selectionChanged()),
+            this, SLOT(listViewSelectionChanged()));
     connect(mappingListView, SIGNAL(selectionChanged()),
             this, SLOT(mappingSelectionChanged()));
 }
@@ -306,6 +331,15 @@ void MuxConfDialog::initConnections() {
 MuxConfDialog::~MuxConfDialog()
 {
     mappingListView->clear();
+}
+
+void MuxConfDialog::apply() {
+    updateModel();
+}
+
+void MuxConfDialog::ok() {
+    updateModel();
+    accept();
 }
 
 void MuxConfDialog::syncModel() {
@@ -476,271 +510,266 @@ void MuxConfDialog::updateModel() {
 #endif
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// List view selection stuff
+
 void MuxConfDialog::mappingSelectionChanged() {
 
-    QListViewItem *item = mappingListView->selectedItem();
+    MuxMappingListViewItem *item =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
     bool selectedMapping = (item != 0);
-    bool selectedChild = selectedMapping && !item->isOpen();
-
-    updatePushButton->setEnabled(selectedChild);
-    addPushButton->setEnabled(!selectedChild);
-    removePushButton->setEnabled(selectedMapping);
-    //beginSpinBox->setEnabled(selectedMapping);
-
-
-    //beginSpinBox->setValue(selectedChild ?
-    //        ((MuxMappingListViewItem *)item)->data()->firstInputBit() : 0);
 
     if (selectedMapping) {
-        addPushButton->setText(tr("&Add"));
+        PinListViewItem *pinItem =
+            findPinListViewItemByPinModel(item->data()->input());
+        inputListView->setSelected(pinItem, TRUE);
+        pinItem =
+            findPinListViewItemByPinModel(item->data()->output());
+        outputListView->setSelected(pinItem, TRUE);
     }
-    else {
-        if (model_->muxType() == MuxModel::MUX) {
-            addPushButton->setText(tr("&New Input"));
-        }
-        else {
-            addPushButton->setText(tr("&New Output"));
-        }
-    }
+    listViewSelectionChanged();
+}
+
+void MuxConfDialog::listViewSelectionChanged() {
+
+    MuxMappingListViewItem *item =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
+    bool selectedMapping = (item != 0);
+
+    updateMappingPushButton_->setEnabled(selectedMapping);
+    removeMappingPushButton_->setEnabled(selectedMapping);
+
+    addMappingPushButton_->setEnabled(inputListView->selectedItem() &&
+                                      outputListView->selectedItem());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Add IO/Mapping Slot/Helpers
+// Mapping manipulation stuff
 //
-void MuxConfDialog::addIo() {
-
-}
 
 void MuxConfDialog::addMapping() {
 
-    PinModel::PinType type;
-    QString name;
+    PinListViewItem *inputItem =
+        (PinListViewItem *)inputListView->selectedItem();
+    PinListViewItem *outputItem =
+        (PinListViewItem *)outputListView->selectedItem();
 
-    if (model_->muxType() == MuxModel::MUX) {
-        type = PinModel::OUTPUT;
-        name = "output";
-    }
-    else {
-        type = PinModel::INPUT;
-        name = "input";
+    if (!inputItem || !outputItem) {
+        return;
     }
 
-    QString mapToName = "";
-    unsigned id =0;// mappedToIos_.count() + 1;
+    PinModel *input = inputItem->data();
+    PinModel *output = outputItem->data();
 
-    if (mapToName == "") {
-        mapToName = QString("%1 %2").arg(name).arg(id);
-        switch(QMessageBox::warning(this, "POA",
-                    "Cannot create a new mapping without a valid\n" +
-                    name + " name.\n\n"
-                    "Should I create a new Mapping with\n" +
-                    name + ": " + mapToName,
-                    "Yes",
-                    "No", 0, 0, 1 ) )
-        {
-        case 0: // YES
-            break;
-        case 1: // NO
-            return;
-            break;
+    MuxMapping *mapping =
+        new MuxMapping(input, output, firstInputBitSpinBox->value(),
+                       lastInputBitSpinBox->value(),
+                       firstOutputBitSpinBox->value(),
+                       lastOutputBitSpinBox->value());
+
+    MuxMappingListViewItem *predecessor =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
+    new MuxMappingListViewItem(mappingListView, predecessor, mapping, 0);
+    newMappings_.append(mapping);
+}
+
+void MuxConfDialog::removeMapping() {
+
+    MuxMappingListViewItem *selected =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
+
+    if (!selected) {
+        return;
+    }
+
+    MuxMapping *origMapping = selected->origData();
+
+    if (origMapping != 0) {
+        deletedMappings_.append(origMapping);
+    }
+
+    mappingListView->takeItem(selected);
+    delete selected;
+}
+
+void MuxConfDialog::updateMapping() {
+
+    MuxMappingListViewItem *selected =
+        (MuxMappingListViewItem *)mappingListView->selectedItem();
+    PinListViewItem *inputItem =
+        (PinListViewItem *)inputListView->selectedItem();
+    PinListViewItem *outputItem =
+        (PinListViewItem *)outputListView->selectedItem();
+
+    if (!selected || !inputItem || !outputItem) {
+        return;
+    }
+
+    MuxMapping *mapping = selected->data();
+    if (mapping) {
+        mapping->setInput(inputItem->data());
+        mapping->setOutput(outputItem->data());
+        mapping->setFirstInputBit(firstInputBitSpinBox->value());
+        mapping->setLastInputBit(lastInputBitSpinBox->value());
+        mapping->setFirstOutputBit(firstOutputBitSpinBox->value());
+        mapping->setLastOutputBit(lastOutputBitSpinBox->value());
+
+        if (selected->origData() != 0) {
+            updatedMappings_.append(mapping);
         }
+        selected->update();
     }
-
-    ////////////////////////////////////////////////////////////
-    // Proceeds if the selected mapTo IO exist or should be
-    // created.
-    //
-
-    // Get model for name, if it already exists
-    PinModel *mapTo = 0;//ioForString(mapToName);
-
-    if (mapTo == 0) {
-        // the given mapTo name does not exist yet,
-        // so we create a new PinModel
-
-        mapTo =
-            new PinModel(model_, mapToName, id * 100, 0, type);
-//        mappedToIos_.append(new MapToComboBoxItem(mapTo, 0));
-    }
-
-    //PinModel *currPin = item->data();
-    //PinModel *origPin = item->origData();
-    MuxMapping *mapping;
-
-/*
-    if (origPin != 0) {
-        mapping = new MuxMapping(origPin, mapTo,
-                beginSpinBox->value(),
-    }
-    else {
-        mapping = new MuxMapping(currPin, mapTo,
-                beginSpinBox->value(),
-    }
-*/
-    QPtrList<MuxMapping> *mappings = model_->mappings();
-    mappings->append(mapping);
-
-    // update ListView
-    new MuxMappingListViewItem(0, 0, mapping, 0);
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Remove IO/Mapping Slot/Helpers
+// IO manipulation stuff
 //
+void MuxConfDialog::addIo() {
+    // determine list view
+    QListView *parent = 0;
+    PinModel::PinType type;
+    if (inputRadioButton_->isChecked()) {
+        parent = inputListView;
+        type = PinModel::INPUT;
+    }
+    else {
+        parent = outputListView;
+        type = PinModel::OUTPUT;
+    }
+    PinListViewItem *predecessor = (PinListViewItem *)parent->selectedItem();
+    int childCount = 0;
+    if (predecessor) {
+        childCount = predecessor->childCount() + 1;
+    }
+    PinModel *pin = new PinModel(model_,
+            ioNameLineEdit->text(),
+            0, ioBitsSpinBox->value(), type);
+    newPins_.append(pin);
+    new PinListViewItem(parent, predecessor, pin, 0);
+    updatePositions(parent);
+}
+
+void MuxConfDialog::updateIo() {
+
+    QListView *parent = 0;
+    if (inputRadioButton_->isChecked()) {
+        parent = inputListView;
+    }
+    else {
+        parent = outputListView;
+    }
+
+    PinListViewItem *selected =
+        (PinListViewItem *)parent->selectedItem();
+
+    if (!selected) {
+        return;
+    }
+
+    PinModel *pin = selected->data();
+    if (pin != 0) {
+        pin->setName(ioNameLineEdit->text());
+        pin->setBits(ioBitsSpinBox->value());
+        if (selected->origData() != 0) {
+            updatedPins_.append(pin);
+        }
+        updatePositions(parent);
+    }
+
+    updateMappings();
+}
+
 void MuxConfDialog::removeIo() {
 
-    PinModel *origInputPin = 0;//item->origData();
-    PinModel *connected = 0;
-    if (origInputPin != 0) {
-        PinModel *origPin = 0; //origInputPin->model();
-        if (origPin != 0) {
-            connected = origPin->connected();
-        }
+    QListView *parent = 0;
+    if (inputRadioButton_->isChecked()) {
+        parent = inputListView;
     }
-#if 0
-    if ((item->childCount() > 0) || connected != 0) {
-        QString warnMessage = (item->childCount() > 0) ?
-            item->text(0) + " has " +
-            QString::number(item->childCount()) +
-            " outgoing mappings.\n\n"
-            "All mappings and any outgoing or incoming\n"
-            "connections will be removed.\n":
-            "All mappings and any outgoing or incoming\n"
-            "connections will be removed.\n";
+    else {
+        parent = outputListView;
+    }
+    PinListViewItem *selected = (PinListViewItem *)parent->selectedItem();
 
+    if (!selected) {
+        return;
+    }
+
+    PinModel *pin = selected->data();
+    if (existDependentMapping(pin)) {
         switch(QMessageBox::warning(this, "POA",
-               warnMessage, "Ok", "Cancel", 0, 0, 1))
+                "The selected I/O is dependent for at least one mapping.\n\n"
+                "All dependent mappings will be deleted.\n\n",
+                "Ok",
+                "Cancel", 0, 0, 1 ) )
         {
         case 0: // The user clicked OK, so all related connections
             // will be removed after applying changes.
-            deletedPins_.append(origInputPin);
+            removeDependentMappings(pin);
             break;
         case 1: // Cancel removal.
             return;
             break;
         }
     }
-    else if (origInputPin != 0) {
-        deletedPins_.append(origInputPin);
-    }
 
-    mappingListView->takeItem(item);
-    // Note: item will be deleted by its parent mappingListView.
-#endif
-}
-
-void MuxConfDialog::removeMapping(MuxMappingListViewItem *item) {
-
-    MuxMapping *origMapping = item->origData();
-
-    QListViewItem *iter = (QListViewItem *)item;
-    // determine parent
-    while (!iter->isOpen()) {
-        iter = iter->parent();
-    }
-
-    if (origMapping != 0) {
-        PinModel *origPin = origMapping->output();
-        if (origPin != 0) {
+    PinModel *origPin = selected->origData();
+    if (origPin != 0) {
+        if (origPin->connected() == 0) {
+            // Save deleted pins, to clean up views
+            // if the changes will be applied.
+            deletedPins_.append(origPin);
+        }
+        else {
+            // there exists a connection between the selected pin
+            // and another one
             PinModel *connected = origPin->connected();
-            if (connected != 0) {
-                switch(QMessageBox::warning(this, "POA",
-                            item->text(0) + " is connected to " +
-                            connected->name() + " of " +
-                            connected->parent()->name() + ".\n\n"
-                            "This connection will be removed after you"
-                            "apply your changes.\n",
-                            "Ok", "Cancel", 0, 0, 1))
-                {
-                case 0: // The user clicked OK, so all related connections
-                    // will be removed after applying changes.
-                    break;
-                case 1: // Cancel removal.
-                    return;
-                    break;
-                }
+            switch(QMessageBox::warning(this, "POA",
+                        "The selected I/O is connected to I/O <i>id=" +
+                        QString::number(connected->id()) + " name=" +
+                        connected->name() + " of " +
+                        connected->parent()->name() + "</i>.\n\n"
+                        "The connection will be removed if you apply "
+                        "your changes.\n\n",
+                        "Ok",
+                        "Cancel", 0, 0, 1 ) )
+            {
+            case 0: // The user clicked OK, so all related connections
+                // will be removed after applying changes.
+                deletedPins_.append(origPin);
+                break;
+            case 1: // Cancel removal.
+                return;
+                break;
             }
         }
     }
 
-    // remove mapping also from current parent
-    MuxMapping *mapping = item->data();
-    //PinModel *pin = 0; //parentItem->data();
-    QPtrList<MuxMapping> *mappings = model_->mappings();
-    mappings->remove(mapping);
-
-    // finally, we delete the item from the list
-    //parentItem->takeItem(item);
-
-}
-
-void MuxConfDialog::removeIoOrMapping() {
-
-    QListViewItem *item = mappingListView->selectedItem();
-
-    if (item != 0) {
-
-        if (item->isOpen()) {
-        }
-        else {
-            removeMapping((MuxMappingListViewItem *)item);
-        }
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Update IO/Mapping
-//
-void MuxConfDialog::updateMapping() {
-
-    // It's only possible to update a mapping, not a parent IO
-    QListViewItem *item = mappingListView->selectedItem();
-
-    if (item != 0) {
-        if (!item->isOpen()) {
-
-            //MuxMapping *mapping = ((MuxMappingListViewItem *)item)->data();
-
-            //((MuxMappingListViewItem *)item)->update();
-        }
-    }
-}
-
-void MuxConfDialog::apply() {
-    updateModel();
-}
-
-void MuxConfDialog::ok() {
-    updateModel();
-    accept();
-}
-
-void MuxConfDialog::newIo()
-{
-    // determine list view
-#if 0
-    PinListViewItem *item = (PinListViewItem *)ioListView->selectedItem();
-
-    if (item != 0) {
-        PinListViewItem *parentItem = item;
-        while (!parentItem->isOpen()) {
-            parentItem = (PinListViewItem *)parentItem->parent();
-        }
-        int childCount = parentItem->childCount() + 1;
-        PinModel *pin = new PinModel(model_,
-                "data" + QString::number(childCount),
-                childCount * 100, 32, parentItem->type());
-        newPins_.append(pin);
-        new PinListViewItem(parentItem, item != parentItem ? item : 0, pin);
-        updatePositions(parentItem->type());
-    }
-#endif
+    parent->takeItem(selected);
+    updatePositions(parent);
+    delete selected;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Helper
 //
+
+PinListViewItem *MuxConfDialog::findPinListViewItemByPinModel(PinModel *pin) {
+
+    QListViewItemIterator it(
+        (pin->type() == PinModel::INPUT) ? inputListView : outputListView);
+
+    for ( ; it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+
+        if (pin == item->data()) {
+            return item;
+        }
+    }
+
+    // not found
+    return 0;
+}
+
 PinModel *MuxConfDialog::findPinById(PinModel::PinType type, unsigned id)
 {
 
@@ -759,4 +788,61 @@ PinModel *MuxConfDialog::findPinById(PinModel::PinType type, unsigned id)
 
     // not found
     return 0;
+}
+
+void MuxConfDialog::updatePositions(QListView *lv) {
+
+    unsigned position = 0;
+    for (QListViewItemIterator it(lv); it.current(); ++it) {
+        PinListViewItem *item = (PinListViewItem *)it.current();
+        PinModel *pin = item->data();
+        pin->setPosition(position);
+        PinModel *origPin = item->origData();
+        if (origPin && origPin->position() != position) {
+            updatedPins_.append(pin);
+        }
+        position++;
+        item->update();
+    }
+}
+
+void MuxConfDialog::updateMappings() {
+
+    for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
+        MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
+        item->update();
+    }
+}
+
+bool MuxConfDialog::existDependentMapping(PinModel *pin) {
+
+    for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
+        MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
+        MuxMapping *mapping = item->data();
+        if (mapping->input() == pin || mapping->output() == pin) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void MuxConfDialog::removeDependentMappings(PinModel *pin) {
+
+    for (QListViewItemIterator it(mappingListView); it.current(); ++it) {
+        MuxMappingListViewItem *item = (MuxMappingListViewItem *)it.current();
+
+        MuxMapping *mapping = item->data();
+
+        if (mapping->input() == pin || mapping->output() == pin) {
+
+            MuxMapping *origMapping = item->origData();
+            if (origMapping != 0) {
+                deletedMappings_.append(origMapping);
+            }
+
+            mappingListView->takeItem(item);
+            delete item;
+        }
+    }
 }

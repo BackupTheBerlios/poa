@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moveaction.cpp,v 1.5 2004/01/22 22:46:51 squig Exp $
+ * $Id: moveaction.cpp,v 1.6 2004/01/26 15:27:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -61,10 +61,10 @@ void MoveAction::mouseMoveEvent(QMouseEvent *e)
 
     // make sure item is not moved outside of canvas
     if (item_->item()->x() + dx < 0) {
-        dx = (int)item_->item()->x();
+        dx = -(int)item_->item()->x();
     }
     if (item_->item()->y() + dy < 0) {
-        dy = (int)item_->item()->y();
+        dy = -(int)item_->item()->y();
     }
 
     if (dx != 0 || dy != 0) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.cpp,v 1.5 2004/01/19 13:56:18 squig Exp $
+ * $Id: blockgraph.cpp,v 1.6 2004/01/19 15:25:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -76,7 +76,7 @@ BlockModel *BlockNode::model() const
     return block_;
 }
 
-QPtrList<BlockNode> BlockNode::neighbours() const
+const QPtrList<BlockNode> &BlockNode::neighbours() const
 {
     return neighbours_;
 }
@@ -131,7 +131,7 @@ PinModel *PinNode::model()
     return pin_;
 }
 
-QPtrList<PinNode> PinNode::neighbours() const
+const QPtrList<PinNode> &PinNode::neighbours() const
 {
     return neighbours_;
 }
@@ -157,11 +157,12 @@ BlockGraph::BlockGraph(Project *project)
     }
 
     // iterate through all pins
-    QValueList<PinNode*> pins = nodeByModel_.values();
+    QValueList<PinNode*> pins = nodeByPin_.values();
     for (QValueList<PinNode*>::Iterator it = pins.begin(); it != pins.end();
          ++it) {
 
-        for (QPtrListIterator<PinNode> it2((*it)->neighbours()); it2 != 0;
+        QPtrList<PinNode> neighbours = (*it)->neighbours();
+        for (QPtrListIterator<PinNode> it2(neighbours); it2 != 0;
              ++it2) {
 
             if ((*it)->parent() != (*it2)->parent()) {
@@ -169,6 +170,23 @@ BlockGraph::BlockGraph(Project *project)
                 addBlockNeighbour(*it, *it2, seen);
             }
         }
+    }
+}
+
+BlockGraph::~BlockGraph()
+{
+    QValueList<BlockNode*> blocks = nodeByBlock_.values();
+    for (QValueList<BlockNode*>::Iterator it = blocks.begin();
+         it != blocks.end(); ++it) {
+
+        delete *it;
+    }
+
+    QValueList<PinNode*> pins = nodeByPin_.values();
+    for (QValueList<PinNode*>::Iterator it = pins.begin(); it != pins.end();
+         ++it) {
+
+        delete *it;
     }
 }
 
@@ -189,13 +207,13 @@ PinNode *BlockGraph::addInput(PinModel *pin)
 {
     Q_ASSERT(pin->type() == PinModel::INPUT);
 
-    ModelNodeMap::const_iterator nodeIt = nodeByModel_.find(pin);
-    if (nodeIt != nodeByModel_.end()) {
+    QMap<PinModel*, PinNode*>::const_iterator nodeIt = nodeByPin_.find(pin);
+    if (nodeIt != nodeByPin_.end()) {
         return *nodeIt;
     }
 
     PinNode *node = new PinNode(addBlock(pin->parent()), pin);
-    nodeByModel_[pin] = node;
+    nodeByPin_[pin] = node;
 
     // Check all output pins for this input pin
     QPtrList<PinModel> pins = pin->parent()->connectionsForInputPin(pin);
@@ -210,14 +228,13 @@ PinNode *BlockGraph::addOutput(PinModel *pin)
 {
     Q_ASSERT(pin->type() == PinModel::OUTPUT);
 
-    ModelNodeMap::const_iterator nodeIt = nodeByModel_.find(pin);
-    if (nodeIt != nodeByModel_.end()) {
+    QMap<PinModel*, PinNode*>::const_iterator nodeIt = nodeByPin_.find(pin);
+    if (nodeIt != nodeByPin_.end()) {
         return *nodeIt;
     }
 
-    BlockNode *parent = addBlock(pin->parent());
-    PinNode *node = new PinNode(parent, pin);
-    nodeByModel_[pin] = node;
+    PinNode *node = new PinNode(addBlock(pin->parent()), pin);
+    nodeByPin_[pin] = node;
 
     PinModel *target = pin->connected();
     if (target != 0 && target->type() == PinModel::INPUT) {
@@ -240,17 +257,21 @@ BlockNode *BlockGraph::addBlock(BlockModel *block)
 }
 
 void BlockGraph::addBlockNeighbour(PinNode *source, PinNode *target,
-                                   QPtrList<PinNode> seen)
+                                   QPtrList<PinNode> &seen)
 {
     if (INSTANCEOF(target->parent()->model(), MuxModel)) {
         // iterate through output pins
-        for (QPtrListIterator<PinNode> it(target->neighbours()); it != 0;
+        QPtrList<PinNode> neighbours = target->neighbours();
+        for (QPtrListIterator<PinNode> it(neighbours); it != 0;
              ++it) {
+
+            Q_ASSERT(target->parent() == (*it)->parent());
 
             if (!seen.contains(*it)) {
                 seen.append(*it);
-                for (QPtrListIterator<PinNode> it2 = (*it)->neighbours();
-                     it2 != 0; ++it2) {
+                QPtrList<PinNode> neighbours2 = (*it)->neighbours();
+                for (QPtrListIterator<PinNode> it2(neighbours2); it2 != 0;
+                     ++it2) {
 
                     addBlockNeighbour(source, *it2, seen);
                 }
@@ -258,6 +279,9 @@ void BlockGraph::addBlockNeighbour(PinNode *source, PinNode *target,
         }
     }
     else {
+        qDebug(QString("added connection %1 -> %2")
+               .arg(source->parent()->model()->name())
+               .arg(target->parent()->model()->name()));
         source->parent()->addNeighbour(target->parent());
     }
 }
@@ -269,7 +293,7 @@ QValueList<BlockNode*> BlockGraph::blocks() const
 
 QValueList<PinNode*> BlockGraph::pins() const
 {
-    return nodeByModel_.values();
+    return nodeByPin_.values();
 }
 
 
@@ -283,7 +307,7 @@ QValueList<PinNode*> BlockGraph::pins() const
 //          for (QValueList<PinModel*>::Iterator it2 = pins.begin();
 //               it2 != pins.end(); ++it2) {
 //              qDebug("Push: " + (*it2)->name());
-//              pending.append(nodeByModel_[*it2]);
+//              pending.append(nodeByPin_[*it2]);
 //          }
 //      }
 

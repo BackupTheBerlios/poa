@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockgraph.h,v 1.4 2004/01/19 11:23:07 squig Exp $
+ * $Id: blockgraph.h,v 1.5 2004/01/19 15:25:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -71,7 +71,7 @@ public:
     /**
      * Returns a list of neighbours.
      */
-    QPtrList<BlockNode> neighbours() const;
+    const QPtrList<BlockNode> &neighbours() const;
 
     /**
      * Returns the starting offset of the block.
@@ -125,7 +125,7 @@ public:
 
     void addNeighbour(PinNode *neighbour);
     PinModel *model();
-    QPtrList<PinNode> neighbours() const;
+    const QPtrList<PinNode> &neighbours() const;
     BlockNode *parent() const;
 
 private:
@@ -140,22 +140,21 @@ class BlockGraph
 public:
 
     BlockGraph(Project *project);
+    ~BlockGraph();
 
     QValueList<BlockNode*> blocks() const;
     QValueList<PinNode*> pins() const;
 
 private:
 
-    typedef QMap<PinModel*, PinNode*> ModelNodeMap;
-
     void addInputBlock(BlockModel *model);
     PinNode *addInput(PinModel *pin);
     PinNode *addOutput(PinModel *pin);
     BlockNode *addBlock(BlockModel *block);
     void addBlockNeighbour(PinNode *source, PinNode *target,
-                           QPtrList<PinNode> seen);
+                           QPtrList<PinNode> &seen);
 
-    ModelNodeMap nodeByModel_;
+    QMap<PinModel*, PinNode*> nodeByPin_;
     QMap<BlockModel*, BlockNode*> nodeByBlock_;
     QPtrList<BlockNode> inputBlocks_;
 };

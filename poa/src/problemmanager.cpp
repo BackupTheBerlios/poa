@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.2 2004/01/19 13:56:18 squig Exp $
+ * $Id: problemmanager.cpp,v 1.3 2004/01/19 15:25:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,10 @@
 #include "pinmodel.h"
 #include "problemmanager.h"
 
+#include <qmessagebox.h>
 #include <qpushbutton.h>
+
+//--- ProblemReportItem ---
 
 ProblemReportItem::ProblemReportItem(QListViewItem *parent, QString status,
                                      QString shortDescription)
@@ -75,6 +78,16 @@ void ProblemReportItem::setShortDescription(const QString shortDescription)
 void ProblemReportItem::setStatus(const QString status)
 {
     setText(1, status);
+
+    if (status == "Warning") {
+        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Warning));
+    }
+    else if (status == "Critical") {
+        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Critical));
+    }
+    else {
+        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Information));
+    }
 }
 
 QString ProblemReportItem::shortDescription() const
@@ -86,6 +99,8 @@ QString ProblemReportItem::status() const
 {
     return text(1);
 }
+
+//--- DisconnectedPinReport ---
 
 DisconnectedPinReport::DisconnectedPinReport(QListViewItem *parent,
                                              PinModel *pin)
@@ -114,18 +129,19 @@ void DisconnectedPinReport::deletePin()
     }
 }
 
+//--- DifferentWidthReport ---
+
 DifferentWidthReport::DifferentWidthReport(QListViewItem *parent,
                                            PinModel *source, PinModel *target)
-    : ProblemReportItem(parent, "Error")
+    : ProblemReportItem(parent, "Critical")
 {
-    // FIX: connect to deleted signals
     source_ = source;
     target_ = target;
 
     setShortDescription(QString("%1 has a different width than %2")
                         .arg(source->absName()).arg(target->absName()));
-    setLongDescription("Connected pins need to have the same number of bits. "
-                       "You can use a Mux in order to connect pins with different widhts.");
+    setLongDescription("Connected blocks need to have the same number of bits. "
+                       "You can use a Mux in order to connect blocks with different widhts.");
 }
 
 void DifferentWidthReport::addWidgets(QWidget *widget)
@@ -153,6 +169,48 @@ void DifferentWidthReport::adjustTarget()
     setFixed(true);
 }
 
+//--- DifferentClockReport ---
+
+DifferentClockReport::DifferentClockReport(QListViewItem *parent,
+                                           BlockModel *source, BlockModel *target)
+    : ProblemReportItem(parent, "Warning")
+{
+    // FIX: connect to deleted signals
+    source_ = source;
+    target_ = target;
+
+    setShortDescription(QString("%1 has a different clock than %2")
+                        .arg(source->name()).arg(target->name()));
+    setLongDescription("Connected blocks should have the same clock.");
+}
+
+void DifferentClockReport::addWidgets(QWidget *widget)
+{
+    QPushButton *adjustSourceButton = new QPushButton(widget);
+    adjustSourceButton->setText
+        (QString("Set %1 clock to %2").arg(source_->name()).arg(target_->clock()));
+    connect(adjustSourceButton, SIGNAL(clicked()), this, SLOT(adjustSource()));
+
+    QPushButton *adjustTargetButton = new QPushButton(widget);
+    adjustTargetButton->setText
+        (QString("Set %1 clock to %2").arg(target_->name()).arg(source_->clock()));
+    connect(adjustTargetButton, SIGNAL(clicked()), this, SLOT(adjustTarget()));
+}
+
+void DifferentClockReport::adjustSource()
+{
+    source_->setClock(target_->clock());
+    setFixed(true);
+}
+
+void DifferentClockReport::adjustTarget()
+{
+    target_->setClock(source_->clock());
+    setFixed(true);
+}
+
+//--- ProblemManager ---
+
 ProblemManager::ProblemManager(Project *project, QListView *listView)
     : project_(project)
 {
@@ -169,12 +227,30 @@ ProblemManager::~ProblemManager()
 
 void ProblemManager::report()
 {
+    // iterate through all blocks
     for (QPtrListIterator<AbstractModel> it(*project_->blocks()); it != 0;
          ++it) {
 
         BlockModel *block = dynamic_cast<BlockModel*>(*it);
         if (block != 0) {
             checkBlock(block);
+        }
+    }
+
+    // iterate through reachable blocks
+    BlockGraph graph(project_);
+    QValueList<BlockNode*> blocks = graph.blocks();
+    for (QValueList<BlockNode*>::Iterator it = blocks.begin();
+         it != blocks.end(); ++it) {
+
+        QPtrList<BlockNode> neighbours = (*it)->neighbours();
+        for (QPtrListIterator<BlockNode> it2(neighbours); it2 != 0;
+             ++it2) {
+
+            if ((*it)->clock() != (*it2)->clock()) {
+                new DifferentClockReport(blockRoot_, (*it)->model(),
+                                         (*it2)->model());
+            }
         }
     }
 
@@ -188,31 +264,28 @@ void ProblemManager::checkBlock(BlockModel *block)
     for (QValueList<PinModel*>::Iterator it = pins.begin(); it != pins.end();
          ++it) {
 
-        checkConnected((*it));
+        // convenience access
+        PinModel *pin = *it;
 
-        if ((*it)->type() == PinModel::OUTPUT
-            || ((*it)->type() == PinModel::EPISODIC
-                && (*it)->connected() != 0
-                && (*it)->connected()->type() != PinModel::OUTPUT)) {
+        // check if pin is connected at all
+        if (pin->connected() == 0) {
+            new DisconnectedPinReport(blockRoot_, pin);
+        }
+        else {
+            // check if pin is connected to pin with the same width
+            // the type is considered to make sure that connections are
+            // only checked once
+            if (pin->type() == PinModel::OUTPUT
+                || (pin->type() == PinModel::EPISODIC
+                    && pin->connected()->type() != PinModel::OUTPUT)) {
 
-            checkConnectionBits((*it));
+                if (pin->bits() != pin->connected()->bits()) {
+                    new DifferentWidthReport(connectionRoot_, pin,
+                                             pin->connected());
+                }
+            }
         }
     }
-}
-
-void ProblemManager::checkConnected(PinModel *pin)
-{
-    if (pin->connected() == 0) {
-        new DisconnectedPinReport(blockRoot_, pin);
-    }
-}
-
-void ProblemManager::checkConnectionBits(PinModel *pin)
-{
-    if (pin->connected() && pin->bits() != pin->connected()->bits()) {
-        new DifferentWidthReport(connectionRoot_, pin, pin->connected());
-    }
-
 }
 
 void ProblemManager::updateRoot(QListViewItem *item)

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.36 2003/11/26 11:09:18 garbeam Exp $
+ * $Id: blockview.h,v 1.37 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,6 +35,7 @@
 
 #include "copyable.h"
 #include "moveable.h"
+#include "removeable.h"
 #include "serializable.h"
 #include "tooltipable.h"
 class AbstractModel;
@@ -49,8 +50,13 @@ class PinView;
  * <code>this->move</code> or <code>this->moveBy</code>) then all pin views
  * are moved as well. The pin views must not be moved separately.
  */
-class BlockView: public QObject, public QCanvasRectangle, public Copyable,
-                 public Moveable, public Serializable, public Tooltipable
+class BlockView: public QObject,
+                 public QCanvasRectangle,
+                 public Copyable,
+                 public Moveable,
+                 public Removeable,
+                 public Serializable,
+                 public Tooltipable
 {
     Q_OBJECT
 
@@ -111,6 +117,11 @@ public:
      * @see #addPinViewsTo
      */
     virtual void moveBy(double dx, double dy);
+
+    /**
+     * Invoked when the item is removed by the user.
+     */
+    virtual void remove(Project *project);
 
     /**
      * Run Time Type Identification

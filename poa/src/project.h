@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.23 2003/09/30 20:05:52 papier Exp $
+ * $Id: project.h,v 1.24 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -36,7 +36,7 @@
 #include <qmap.h>
 
 /**
- * Project
+ * Stores the model items for a project.
  * Contains the model and a list of canvases
  */
 class Project : public QObject
@@ -50,6 +50,7 @@ public:
      * @param document will be deserialized, if != 0
      */
     Project(QString path);
+
 
     /**
      * Destroys the project

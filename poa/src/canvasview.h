@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.27 2003/10/01 16:12:40 squig Exp $
+ * $Id: canvasview.h,v 1.28 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -180,14 +180,8 @@ private:
     CanvasViewAction *action_;
     /** The Tooltip instance. */
     CanvasToolTip *tooltip_;
-    /** The popup menu for the background. */
-    QPopupMenu *backgroundPopupMenu;
-    /** The popup menu for blocks. */
-    QPopupMenu *blockViewPopupMenu;
-    /** The popup menu for pins. */
-    QPopupMenu *pinViewPopupMenu;
-    /** The popup menu for connectors */
-    QPopupMenu *connectorViewPopupMenu;
+    /** The popup menu. */
+    QPopupMenu *popupMenu;
 };
 
 class CanvasToolTip : public QToolTip

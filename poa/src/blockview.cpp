@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.44 2003/11/26 15:52:45 garbeam Exp $
+ * $Id: blockview.cpp,v 1.45 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -210,6 +210,11 @@ void BlockView::moveBy(double dx, double dy)
           (*current)->moveBy(dx, dy);
           ++current;
           }*/
+}
+
+void BlockView::remove(Project *project)
+{
+    project->removeBlock(model());
 }
 
 QValueList<PinView*> *BlockView::pinList(PinView *pin)

@@ -18,30 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.66 2003/11/24 20:11:59 squig Exp $
+ * $Id: mainwindow.cpp,v 1.67 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
 #include "mainwindow.h"
 
 #include "aboutdialog.h"
+#include "blockconfdialog.h"
 #include "blockview.h"
 #include "canvasview.h"
+#include "cpumodel.h"
 #include "connectorviewlist.h"
 #include "connectorviewsegment.h"
 #include "copyable.h"
-#include "project.h"
+#include "deployprojectwizard.h"
 #include "gridcanvas.h"
 #include "librarywindow.h"
 #include "modelfactory.h"
-#include "blockconfdialog.h"
+#include "moveable.h"
 #include "muxconfdialog.h"
 #include "muxmodel.h"
 #include "poa.h"
 #include "project.h"
+#include "project.h"
+#include "removeable.h"
 #include "settings.h"
 #include "settingsdialog.h"
-#include "deployprojectwizard.h"
 
 #include <qaction.h>
 #include <qapplication.h>
@@ -592,6 +595,10 @@ void MainWindow::editPaste()
                 QValueList<AbstractModel *> l = ModelFactory::generate(doc);
                 for (QValueList<AbstractModel *>::Iterator it = l.begin();
                      it != l.end(); ++it) {
+
+                    // virginize item
+                    ModelFactory::clearProperties(*it);
+
                     view->project()->addBlock(*it);
                     view->gridCanvas()->addView(*it);
                 }
@@ -609,26 +616,11 @@ void MainWindow::editRemove()
         if (!items.isEmpty()) {
             for (QCanvasItemList::iterator current = items.begin();
                  current != items.end(); ++current) {
-                // FIX
-//                  AbstractView *item = dynamic_cast<AbstractView *>(*current);
-//                  if (item != 0 && item->model() != 0) {
-//                      if (INSTANCEOF(item, BlockView)) {
-//                          project_->removeBlock(item->model());
-//                      }
-//                      else Q_ASSERT("Irgensoeinanderesding removed");
-//                  }
-//                  else {
-//                      ConnectorViewSegment *conn = dynamic_cast<ConnectorViewSegment *>(*current);
-//                      if (conn != 0 && conn->viewList() != 0) {
-//                          // delete segment from list and mem
-//                          ConnectorViewList *l = conn->viewList();
-//                          l->deleteSegment(conn);
-//                          // if list is empty, delete it
-//                          if (l->allSegments().empty()) {
-//                              delete l;
-//                          }
-//                      }
-//                  }
+
+                Removeable *item = dynamic_cast<Removeable *>(*current);
+                if (item != 0) {
+                    item->remove(project_);
+                }
             }
         }
         view->canvas()->update();
@@ -784,19 +776,11 @@ void MainWindow::windowActivated(QWidget* w)
 
 void MainWindow::selectionChanged(QCanvasItem *item)
 {
-    if (INSTANCEOF(item, BlockView)) {
-        editCutAction->setEnabled(true);
-        editCopyAction->setEnabled(true);
-        openBlockConfAction->setEnabled(true);
-        invokeCompilerAction->setEnabled(true);
-    }
-    else {
-        editCutAction->setEnabled(false);
-        editCopyAction->setEnabled(false);
-        openBlockConfAction->setEnabled(false);
-        invokeCompilerAction->setEnabled(false);
-    }
-    editRemoveAction->setEnabled(item != 0);
+    editCutAction->setEnabled(INSTANCEOF(item, Copyable));
+    editCopyAction->setEnabled(INSTANCEOF(item, Copyable));
+    openBlockConfAction->setEnabled(INSTANCEOF(item, BlockModel));
+    invokeCompilerAction->setEnabled(INSTANCEOF(item, CpuModel));
+    editRemoveAction->setEnabled(INSTANCEOF(item, Removeable));
 }
 
 void MainWindow::zoomIn()

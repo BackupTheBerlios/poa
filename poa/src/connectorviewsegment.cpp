@@ -18,13 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.cpp,v 1.6 2003/11/24 20:11:59 squig Exp $
+ * $Id: connectorviewsegment.cpp,v 1.7 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
 #include "connectorviewlist.h"
 #include "connectorviewsegment.h"
 #include "gridcanvas.h"
+#include "project.h"
 
 #include <qcanvas.h>
 
@@ -41,6 +42,16 @@ ConnectorViewSegment::ConnectorViewSegment(QPoint from,
 
 ConnectorViewSegment::~ConnectorViewSegment()
 {
+}
+
+void ConnectorViewSegment::remove(Project *)
+{
+    // delete segment from list and mem
+    viewList_->deleteSegment(this);
+    // if list is empty, delete it
+    if (viewList_->allSegments().empty()) {
+        delete viewList_;
+    }
 }
 
 QString ConnectorViewSegment::tip()

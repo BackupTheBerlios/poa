@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.45 2003/11/24 20:11:58 squig Exp $
+ * $Id: canvasview.cpp,v 1.46 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -65,24 +65,16 @@ CanvasView::CanvasView(Project *project, GridCanvas *canvas, QWidget *parent,
     setDragAutoScroll(true);
     tooltip_ = new CanvasToolTip(this);
 
-    backgroundPopupMenu = new QPopupMenu(this);
-    MainWindow::instance()->showGridAction()->addTo(backgroundPopupMenu);
-    backgroundPopupMenu->insertSeparator();
-    MainWindow::instance()->pasteAction()->addTo(backgroundPopupMenu);
-
-    blockViewPopupMenu = new QPopupMenu(this);
-    MainWindow::instance()->blockConfAction()->addTo(blockViewPopupMenu);
-    blockViewPopupMenu->insertSeparator();
-    MainWindow::instance()->cutAction()->addTo(blockViewPopupMenu);
-    MainWindow::instance()->copyAction()->addTo(blockViewPopupMenu);
-    MainWindow::instance()->pasteAction()->addTo(blockViewPopupMenu);
-    blockViewPopupMenu->insertSeparator();
-    MainWindow::instance()->removeAction()->addTo(blockViewPopupMenu);
-
-    pinViewPopupMenu = new QPopupMenu(this);
-
-    connectorViewPopupMenu = new QPopupMenu(this);
-    MainWindow::instance()->removeAction()->addTo(connectorViewPopupMenu);
+    popupMenu = new QPopupMenu(this);
+    MainWindow::instance()->blockConfAction()->addTo(popupMenu);
+    popupMenu->insertSeparator();
+    MainWindow::instance()->cutAction()->addTo(popupMenu);
+    MainWindow::instance()->copyAction()->addTo(popupMenu);
+    MainWindow::instance()->pasteAction()->addTo(popupMenu);
+    popupMenu->insertSeparator();
+    MainWindow::instance()->removeAction()->addTo(popupMenu);
+    popupMenu->insertSeparator();
+    MainWindow::instance()->showGridAction()->addTo(popupMenu);
 }
 
 CanvasView::~CanvasView()
@@ -169,24 +161,9 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
 
             selectItem(topItem);
             canvas()->update();
+        }
 
-            if (INSTANCEOF(topItem, BlockView)) {
-                blockViewPopupMenu->exec
-                    (contentsToViewport(mapToGlobal(e->pos())));
-            }
-            else if (INSTANCEOF(topItem, PinView)) {
-//                 pinViewPopupMenu->exec
-//                     (contentsToViewport(mapToGlobal(e->pos())));
-            }
-            else if (INSTANCEOF(topItem, ConnectorViewSegment)) {
-                connectorViewPopupMenu->exec
-                    (contentsToViewport(mapToGlobal(e->pos())));
-            }
-        }
-        else {
-            backgroundPopupMenu->exec
-                (contentsToViewport(mapToGlobal(e->pos())));
-        }
+        popupMenu->exec(contentsToViewport(mapToGlobal(e->pos())));
     }
 }
 
@@ -257,6 +234,10 @@ void CanvasView::dropEvent(QDropEvent *e)
             QValueList<AbstractModel *> l = ModelFactory::generate(doc);
             for (QValueList<AbstractModel *>::Iterator it = l.begin();
                  it != l.end(); ++it) {
+
+                // virginize item
+                ModelFactory::clearProperties(*it);
+
                 project()->addBlock(*it);
                 gridCanvas()->addView(*it, pos.x(), pos.y());
 

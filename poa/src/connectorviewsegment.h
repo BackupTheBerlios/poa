@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.5 2003/11/24 20:11:59 squig Exp $
+ * $Id: connectorviewsegment.h,v 1.6 2003/11/26 16:27:10 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,10 +31,10 @@
 #include "tooltipable.h"
 #include "pinview.h"
 #include "poa.h"
+#include "removeable.h"
 #include "settings.h"
-
 class ConnectorViewList;
-
+class Project;
 
 /**
  * Definition of a segment of a connector view.
@@ -44,6 +44,7 @@ class ConnectorViewList;
  */
 class ConnectorViewSegment: public QObject,
                             public QCanvasLine,
+                            public Removeable,
                             public Tooltipable
 {
     Q_OBJECT
@@ -65,15 +66,14 @@ public:
     virtual ~ConnectorViewSegment();
 
     /**
+     * Invoked when the item is removed by the user.
+     */
+    virtual void remove(Project *project);
+
+    /**
      * Returns the tooltip text.
      */
     QString tip();
-
-    /**
-     * Returns a list containing all segments belonging to one connector
-     * view.
-     */
-    ConnectorViewList *viewList();
 
     /*
      * Invoked by ConnectorViewList.
@@ -84,6 +84,12 @@ public:
      * Selects this connector.
      */
     void setSelected(bool);
+
+    /**
+     * Returns a list containing all segments belonging to one connector
+     * view.
+     */
+    ConnectorViewList *viewList();
 
 private:
     /** List of all segments */

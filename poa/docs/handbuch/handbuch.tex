@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Handbuch
-%% $Id: handbuch.tex,v 1.21 2004/03/24 14:45:54 garbeam Exp $
+%% $Id: handbuch.tex,v 1.22 2004/03/25 01:34:32 kilgus Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
-\RCSdef $Revision: 1.21 $
-\RCSdef $Date: 2004/03/24 14:45:54 $
+\RCSdef $Revision: 1.22 $
+\RCSdef $Date: 2004/03/25 01:34:32 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -126,8 +126,7 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 Systemanforderungen:
 \begin{itemize}
 \item QT 3.0
-\item VisualStudio
-\item C++ Compiler: gcc 2.95 oder h"oher
+\item C++ Compiler: VisualStudio 6/.NET, alternativ MinGW gcc 2.95 oder h"oher
 \end{itemize}
 
 \item Linux auf allen Rechnerplattformen mit QT und X-Windows \newline
@@ -335,6 +334,91 @@ Unterabschnitt \textbf{'POA Kompilierung vorbereiten'} aus dem vorherigen
 Abschnitt.
 
 \section{Installation unter Windows}
+
+Für die Dekomprimierung der Programmdateien wird eine Komprimierungsprogram
+wie WinZIP, PowerArchiver oder Ähnliches benötigt.
+
+\subsubsection{POA Release dekomprimieren}
+Das Release ist entweder in .tar.gz oder in .zip Form vorhanden.
+Der Inhalt davon sollte in ein beliebiges Verzeichnis dekomprimiert
+werden.
+
+Sollte noch kein POA Release heruntergeladen worden sein, kann dies
+durch Besuch der POA Website auf {\it http://poa.berlios.de/} und dort
+unter dem Menüpunkt \textbf{Download} nachgeholt werden.
+
+\subsubsection{POA Kompilierung vorbereiten}
+Nach der Dekomprimierung sollte eine Eingabeaufforderung geöffnet (Start -
+Programme - Zubehör - Eingabeaufforderung oder alternativ Start - Ausführen -
+\textbf{cmd} eingeben - OK) und in das Verzeichnis mit den Dateien gewechselt 
+werden. Dies geht z.B. mit den Befehlen
+
+\begin{verbatim}
+C:\> d:
+D:\> cd poa-1.0
+\end{verbatim}
+
+In diesem Verzeichnis befinden sich viele C++ Source Dateien sowie ein
+Installationsskript. Da POA Releases als Source ausgeliefert werden,
+muss POA zunächst kompiliert werden. Hierzu muss sichergestellt werden,
+dass einige Umgebungsvariablen für QT3 richtig gesetzt sind und die
+ausführbaren QT3-Tools in der {\it PATH} Umgebungsvariablen verfügbar
+sind. Bei einer korrekten Installation dürfte dies als gegeben
+vorauszusetzen sein.
+
+\subsubsection{POA kompilieren}
+Um POA mit VisualStudio zu kompilieren werden nun folgende Befehle 
+eingegeben.
+
+\begin{verbatim}
+> qmake poa.pro
+> nmake
+\end{verbatim}
+
+Alternativ für MinGW gcc
+
+\begin{verbatim}
+> qmake poa.pro
+> make
+\end{verbatim}
+
+Die Kompilierung kann je nach System einige Zeit dauern, sollte jedoch
+spätestens nach 15 Minuten beendet sein.\par
+Nachdem die Kompilierung beendet ist, sollte sichergestellt werden, das
+eine ausführbare Datei namens {\it poa.exe} im aktuellen Verzeichnis 
+existiert:
+
+\begin{verbatim}
+> dir /b poa.exe
+poa.exe
+\end{verbatim}
+
+Wenn dies der Fall ist, kann POA bereits aus dem aktuellen Verzeichnis
+gestartet werden ({\it poa} eingeben). Falls eine Installation in ein
+benutzerdefiniertes Verzeichnis gewünscht ist, kann aber auch das
+Installationsskript verwendet werden.
+
+\subsubsection{POA in benutzerdefiniertes Verzeichnis installieren}
+Zur Installation in das Verzeichnis c:$\backslash$poa 
+wird folgender Befehl eingegeben.
+
+\begin{verbatim}
+> install
+\end{verbatim}
+
+Soll das Programm unter ein anderes Verzeichnis als c:$\backslash$ 
+installiert werden, so kann dies dem Programm als Parameter mitgeteilt 
+werden:
+
+\begin{verbatim}
+> install c:\programme
+\end{verbatim}
+
+In diesem Fall wird POA in das Verzeichnis 
+{\it c:$\backslash$programme$\backslash$poa} installiert.\par
+Damit ist die Installation von POA bereits abgeschlossen. Sollte POA in
+ein globales Verzeichnis installiert worden sein, kann das aktuelle
+Verzeichnis wieder entfernt werden.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

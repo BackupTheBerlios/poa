@@ -18,16 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.4 2004/01/09 21:40:38 squig Exp $
+ * $Id: priorityqueue.h,v 1.5 2004/01/09 22:16:27 squig Exp $
  *
  *****************************************************************************/
 
 
 #ifndef POA_PRIORITY_QUEUE_H
 #define POA_PRIORITY_QUEUE_H
-
-
-#include "poa.h"
 
 class PriorityItem;
 

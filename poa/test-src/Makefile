@@ -1,5 +1,5 @@
-CFLAGS   = -pipe -Wall -W -g -D_REENTRANT  -DQT_THREAD_SUPPORT
-CXXFLAGS = -pipe -Wall -W -g -D_REENTRANT  -DQT_THREAD_SUPPORT
+CFLAGS   = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
+CXXFLAGS = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
 CPPUNIT_PATH = $(shell test $(shell hostname -s)=gspc54 && echo ../cppunit/lib/gspc54 || ../cppunit/lib)
 CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L$(CPPUNIT_PATH) -lcppunit)
 LDFLAGS  = $(CPPUNIT_LDFLAGS) -L$(QTDIR)/lib  -L/usr/X11R6/lib -lqt-mt -lpthread -lXext -lX11 -lm
@@ -47,8 +47,11 @@ checkqt: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 $(CPPUNIT_PATH)/libqttestrunner.so
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./mainqt
 
 clean:
-	rm ../src/*.o	
-	rm *.o
+	rm ../src/*.o ../src/qextserialbase/*.o	*.o
+
+coverageclean:
+	rm ../src/*.da ../src/qextserialbase/*.da *.da
+	rm ../src/*.gcov ../src/qextserialbase/*.gcov *.gcov
 
 depend:
 	touch Makefile.depend

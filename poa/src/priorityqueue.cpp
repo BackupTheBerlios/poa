@@ -18,17 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.6 2004/01/09 21:40:38 squig Exp $
+ * $Id: priorityqueue.cpp,v 1.7 2004/01/09 22:16:27 squig Exp $
  *
  *****************************************************************************/
 
-#include "priorityqueue.h"
 
 #include <utility>
 #include <qvaluelist.h>
 
 #include "poa.h"
-
+#include "priorityqueue.h"
 
 
 PriorityQueue::PriorityQueue()
@@ -282,7 +281,7 @@ QString PriorityQueue::checkIntegrity()
     unsigned wrongPrio = 0;
     unsigned wrongSize = 0;
     unsigned wrongParent = 0;
-    typedef pair<PriorityItem*, PriorityItem*> ParentChild;
+    typedef std::pair<PriorityItem*, PriorityItem*> ParentChild;
     QValueList<ParentChild> list;
     list.push_front(ParentChild(0, head));
 

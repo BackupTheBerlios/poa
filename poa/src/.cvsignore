@@ -7,3 +7,7 @@ poa.db
 poa.local
 .*
 *.swp
+*.bb
+*.bbg
+*.da
+*.gcov

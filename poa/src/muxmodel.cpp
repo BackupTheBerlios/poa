@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.31 2004/01/12 14:35:51 squig Exp $
+ * $Id: muxmodel.cpp,v 1.32 2004/01/12 19:56:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -170,16 +170,6 @@ MuxModel::~MuxModel()
         delete mapping;
     }
     mappings_.clear();
-}
-
-QCanvasItemList MuxModel::createView(QCanvas *canvas)
-{
-    QCanvasItemList l;
-    MuxView *view = new MuxView(this, canvas);
-    l.append(view);
-    view->addPinViewsTo(l);
-
-    return l;
 }
 
 QDomElement MuxModel::serialize(QDomDocument *document)

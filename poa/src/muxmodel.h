@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.h,v 1.28 2004/01/09 16:48:15 garbeam Exp $
+ * $Id: muxmodel.h,v 1.29 2004/01/12 19:56:36 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -188,11 +188,6 @@ public:
      * Finds a mux mapping by id.
      */
     MuxMapping *findMuxMappingById(unsigned id);
-
-    /**
-     * Creates the CanvasItems for this.
-     */
-    virtual QCanvasItemList createView(QCanvas *canvas);
 
     /**
      * Serializes this instance to a xml subtree

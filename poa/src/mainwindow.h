@@ -18,12 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.21 2003/09/19 15:16:22 vanto Exp $
+ * $Id: mainwindow.h,v 1.22 2003/09/25 17:25:19 papier Exp $
  *
  *****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef POA_MAINWINDOW_H
+#define POA_MAINWINDOW_H
 
 #include "mdiwindow.h"
 class CanvasView;
@@ -121,7 +121,9 @@ public slots:
     virtual void openBlockConf();
     virtual void openProject(QString filename);
     virtual void openRecentProject(int index);
+    virtual void openScheduling();
     virtual void openSettings();
+    virtual void openDeployProject();
     //    virtual void saveProject();
     virtual void windowActivated(QWidget *w);
     virtual void zoomTo(const QString &level);
@@ -166,9 +168,10 @@ private:
     QAction *zoomNormalAction;
     QAction *drawLineAction;
     QAction *openBlockConfAction;
+    QAction *invokeSchedulingAction;
     QAction *invokeCompilerAction;
     QAction *invokeDownloadAction;
-
+    QAction *invokeDeployAction;
     QAction *openSettingsAction;
     QAction *tileHorizontalAction;
     QAction *cascadeAction;
@@ -181,4 +184,4 @@ private slots:
     void selectionChanged(QCanvasItem *);
 };
 
-#endif // MAINWINDOW_H
+#endif // POA_MAINWINDOW_H

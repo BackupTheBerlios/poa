@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.56 2003/09/25 16:27:41 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.57 2003/09/25 17:25:19 papier Exp $
  *
  *****************************************************************************/
 
@@ -41,6 +41,7 @@
 #include "project.h"
 #include "settings.h"
 #include "settingsdialog.h"
+#include "deployprojectwizard.h"
 
 #include <qaction.h>
 #include <qapplication.h>
@@ -119,9 +120,11 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
 
 void MainWindow::initializeActions()
 {
+    QPixmap image_compile(ICON_PATH + "compile.png");
     QPixmap image_configure(ICON_PATH + "configure.png");
     QPixmap image_contents(ICON_PATH + "contents.png");
     QPixmap image_download(ICON_PATH + "dowload.png");
+    QPixmap image_deploy(ICON_PATH + "wizard.png");
     QPixmap image_editcopy(ICON_PATH + "editcopy.png");
     QPixmap image_editcut(ICON_PATH + "editcut.png");
     QPixmap image_editdelete(ICON_PATH + "editdelete.png");
@@ -129,6 +132,7 @@ void MainWindow::initializeActions()
     QPixmap image_filesave(ICON_PATH + "filesave.png");
     QPixmap image_help(ICON_PATH + "help.png");
     QPixmap image_line(ICON_PATH + "line.xpm");
+    QPixmap image_scheduling(ICON_PATH + "scheduling.png");
     QPixmap image_zoomin(ICON_PATH + "zoomin.png");
     QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
     QPixmap image_zoomout(ICON_PATH + "zoomout.png");
@@ -182,11 +186,17 @@ void MainWindow::initializeActions()
         new QAction("Zoom normal", image_zoomnormal, "Zoom &normal",
                     QKeySequence("Ctrl+="), this, "zoomNormalAction");
     invokeCompilerAction =
-        new QAction("Compile", QPixmap(ICON_PATH + "compile.png"), "&Compile",
+        new QAction("Compile", image_compile, "&Compile",
                     QKeySequence("F8"), this, "invokeCompilerAction");
     invokeDownloadAction =
         new QAction("Download", image_download, "&Download",
                     QKeySequence("F7"), this, "invokeDownloadAction");
+    invokeSchedulingAction =
+        new QAction("Scheduling", image_scheduling, "&Scheduling",
+		    QKeySequence("F6"), this, "invokeSchedulingAction");
+    invokeDeployAction =
+        new QAction("Deploy Project", image_deploy, "Deploy &Project",
+		    QKeySequence("F5"), this, "invokeDeployAction");
     openSettingsAction =
         new QAction("Configure POA", "Configure &POA...", 0,
                     this, "openSettingsAction");
@@ -222,8 +232,10 @@ void MainWindow::initializeToolbars()
     utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop);
     openBlockConfAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
+    invokeSchedulingAction->addTo(utilToolBar);
     invokeCompilerAction->addTo(utilToolBar);
     invokeDownloadAction->addTo(utilToolBar);
+    invokeDeployAction->addTo(utilToolBar);
 
     // view
     viewToolBar = new QToolBar(tr("view toolbar"), this, DockTop);
@@ -284,8 +296,10 @@ void MainWindow::initializeMenu()
     menuBar()->insertItem(tr("&Tools"), toolsMenu);
     openBlockConfAction->addTo(toolsMenu);
     toolsMenu->insertSeparator();
+    invokeSchedulingAction->addTo(toolsMenu);
     invokeCompilerAction->addTo(toolsMenu);
     invokeDownloadAction->addTo(toolsMenu);
+    invokeDeployAction->addTo(toolsMenu);
 
     // settings
     settingsMenu = new QPopupMenu(this);
@@ -334,6 +348,8 @@ void MainWindow::connectActions()
             Settings::instance(), SLOT(setShowGrid(bool)));
     connect(Settings::instance(), SIGNAL(showGridChanged(bool)),
             settingsShowGridAction_, SLOT(setOn(bool)));
+    connect(invokeDeployAction, SIGNAL(activated()),
+	    this, SLOT(openDeployPoject()));
     connect(tileHorizontalAction, SIGNAL(activated()),
             this, SLOT(tileHorizontal()));
     connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
@@ -704,10 +720,22 @@ void MainWindow::openRecentProject(int i)
     }
 }
 
+void MainWindow::openScheduling()
+{
+
+}
+
+
 void MainWindow::openSettings()
 {
     SettingsDialog *dialog = new SettingsDialog(this);
     dialog->show();
+}
+
+void MainWindow::openDeployProject()
+{
+    DeployProjectWizard *wizard = new DeployProjectWizard(this);
+    wizard->show();
 }
 
 QAction *MainWindow::pasteAction()

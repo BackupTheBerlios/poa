@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.46 2003/09/23 17:10:59 garbeam Exp $
+# $Id: poa.pro,v 1.47 2003/09/25 17:25:19 papier Exp $
 #
 ###############################################################################
 
@@ -72,6 +72,7 @@ HEADERS += settings.h
 HEADERS += gridcanvas.h
 HEADERS += tooltipable.h
 HEADERS += util.h
+HEADERS += deployprojectwizard.h
 
 SOURCES += aboutdialog.cpp
 SOURCES += abstractmodel.cpp
@@ -107,6 +108,7 @@ SOURCES += project.cpp
 SOURCES += settings.cpp
 SOURCES += settingsdialog.cpp
 SOURCES += util.cpp
+SOURCES += deployprojectwizard.cpp
 
 TARGET = poa
 

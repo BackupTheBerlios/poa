@@ -1,0 +1,404 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>Deploy_Project</class>
+<widget class="QWizard">
+    <property name="name">
+        <cstring>deployProjectWizard</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Deploy Project</string>
+    </property>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>page</cstring>
+        </property>
+        <attribute name="title">
+            <string>Plausibility checkup</string>
+        </attribute>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>ErrorsGroupBox</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>271</y>
+                    <width>580</width>
+                    <height>130</height>
+                </rect>
+            </property>
+            <property name="title">
+                <string>Errors:</string>
+            </property>
+            <widget class="QTextEdit">
+                <property name="name">
+                    <cstring>ErrorsTextEdit</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>10</x>
+                        <y>20</y>
+                        <width>560</width>
+                        <height>104</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>pin xy is not connected</string>
+                </property>
+            </widget>
+        </widget>
+        <widget class="QListView">
+            <column>
+                <property name="text">
+                    <string>Checkup</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Correct?</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+        <item>
+            <property name="text">
+                <string>pin connections</string>
+            </property>
+            <property name="text">
+                <string>all pins connected</string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>other checks</string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+            <property name="name">
+                <cstring>CheckupListView</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>580</width>
+                    <height>270</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>page</cstring>
+        </property>
+        <attribute name="title">
+            <string>Compile</string>
+        </attribute>
+        <widget class="QListView">
+            <column>
+                <property name="text">
+                    <string>CPU</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Compile</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+        <item>
+            <property name="text">
+                <string>CPU 1</string>
+            </property>
+            <property name="text">
+                <string>done</string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU 2</string>
+            </property>
+            <property name="text">
+                <string>in progress</string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU 3</string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU 4</string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU 5</string>
+            </property>
+            <property name="text">
+                <string>done</string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU 6</string>
+            </property>
+            <property name="text">
+                <string>done</string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+        <item>
+            <property name="text">
+                <string>CPU x</string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+            <property name="name">
+                <cstring>CompileListView</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>580</width>
+                    <height>410</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>page</cstring>
+        </property>
+        <attribute name="title">
+            <string>Scheduling</string>
+        </attribute>
+        <widget class="QListView">
+            <column>
+                <property name="text">
+                    <string>Block</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Runtime</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+            <column>
+                <property name="text">
+                    <string>Offset</string>
+                </property>
+                <property name="clickable">
+                    <bool>true</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>true</bool>
+                </property>
+            </column>
+        <item>
+            <property name="text">
+                <string>New Item</string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+            <property name="pixmap">
+                <pixmap></pixmap>
+            </property>
+        </item>
+            <property name="name">
+                <cstring>SchedulingListView</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>580</width>
+                    <height>410</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>page</cstring>
+        </property>
+        <attribute name="title">
+            <string>Compile and download Project</string>
+        </attribute>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>CompileTextLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>140</x>
+                    <y>70</y>
+                    <width>161</width>
+                    <height>31</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Compiling...</string>
+            </property>
+        </widget>
+        <widget class="QProgressBar">
+            <property name="name">
+                <cstring>DownloadProgressBar</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>140</x>
+                    <y>280</y>
+                    <width>280</width>
+                    <height>31</height>
+                </rect>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>DownloadTextLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>140</x>
+                    <y>230</y>
+                    <width>161</width>
+                    <height>31</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Downloading...</string>
+            </property>
+        </widget>
+        <widget class="QProgressBar">
+            <property name="name">
+                <cstring>CompileProgressBar</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>140</x>
+                    <y>120</y>
+                    <width>280</width>
+                    <height>31</height>
+                </rect>
+            </property>
+        </widget>
+    </widget>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

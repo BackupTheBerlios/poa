@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.82 2004/01/30 11:46:58 papier Exp $
+# $Id: poa.pro,v 1.83 2004/02/01 22:32:27 squig Exp $
 #
 ###############################################################################
 
@@ -93,6 +93,7 @@ HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += removeable.h
 HEADERS += router.h
+HEADERS += runtimemanager.h
 HEADERS += scheduledialog.h
 HEADERS += serializable.h
 HEADERS += settings.h

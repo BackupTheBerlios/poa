@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.7 2003/08/20 14:06:02 squig Exp $
+ * $Id: mainwindow.cpp,v 1.8 2003/08/20 14:46:19 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 
 #include <qaction.h>
 #include <qapplication.h>
+#include <qcombobox.h>
 #include <qimage.h>
 #include <qlayout.h>
 #include <qmenubar.h>
@@ -53,9 +54,7 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     : QMainWindow( parent, name, fl )
 {
 
-    // initialize status bar implicitly
-    (void)statusBar();
-
+    // load toolbar icons/items
     QPixmap image_compile(ICON_PATH + "compile.png");
     QPixmap image_configure(ICON_PATH + "configure.png");
     QPixmap image_contents(ICON_PATH + "contents.png");
@@ -69,15 +68,22 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     QPixmap image_filesave(ICON_PATH + "filesave.png");
     QPixmap image_help(ICON_PATH + "help.png");
     QPixmap image_line(ICON_PATH + "line.xpm");
-    QPixmap image_viewgrow(ICON_PATH + "viewgrow.png");
-    QPixmap image_viewnormal(ICON_PATH + "viewnormal.png");
-    QPixmap image_viewshrink(ICON_PATH + "viewshrink.png");
+    QPixmap image_zoomin(ICON_PATH + "zoomin.png");
+    QPixmap image_zoomnormal(ICON_PATH + "zoomnormal.png");
+    QPixmap image_zoomout(ICON_PATH + "zoomout.png");
+
+    QComboBox *zoomComboBox;
     
+    // initialize main window
     if (!name) {
         setName("MainWindow");
     }
     resize(520, 480); 
     setCaption(trUtf8("POA"));
+    
+    // initialize status bar implicitly
+    (void)statusBar();
+
 
     /////////////////////////////////////////////////////////////////
     // actions
@@ -124,64 +130,101 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
                     "&Module configuration", 0, this,
                     "openModuleConfDialogAction");
 
+    drawLineAction =
+        new QAction("Draw line", image_line, "&Draw line",
+                    QKeySequence("Ctrl+L"), this, "drawLineAction");
+
+    zoomInAction =
+        new QAction("Zoom in", image_zoomin, "Zoom &in",
+                    QKeySequence("Ctrl++"), this, "zoomInAction");
+
+    zoomOutAction =
+        new QAction("Zoom out", image_zoomout, "Zoom &out",
+                    QKeySequence("Ctrl+-"), this, "zoomOutAction");
+
+    zoomNormalAction =
+        new QAction("Zoom normal", image_zoomnormal, "Zoom &normal",
+                    QKeySequence("Ctrl+="), this, "zoomNormalAction");
+
 
     /////////////////////////////////////////////////////////////////
     // toolbars
-    commonToolBar = new QToolBar( "", this, DockTop ); 
+    //
 
-    commonToolBar->setLabel( trUtf8( "common toolbar" ) );
-    fileNewAction->addTo( commonToolBar );
-    fileOpenAction->addTo( commonToolBar );
-    fileSaveAction->addTo( commonToolBar );
+    // common
+    commonToolBar = new QToolBar(tr("common toolbar"), this, DockTop); 
+    fileNewAction->addTo(commonToolBar);
+    fileOpenAction->addTo(commonToolBar);
+    fileSaveAction->addTo(commonToolBar);
     commonToolBar->addSeparator();
-    editCutAction->addTo( commonToolBar );
-    editCopyAction->addTo( commonToolBar );
-    editPasteAction->addTo( commonToolBar );
-    utilToolBar = new QToolBar( "", this, DockTop ); 
+    editCutAction->addTo(commonToolBar);
+    editCopyAction->addTo(commonToolBar);
+    editPasteAction->addTo(commonToolBar);
 
-    utilToolBar->setLabel( trUtf8( "utility toolbar" ) );
+    // utility
+    utilToolBar = new QToolBar(tr("utility toolbar"), this, DockTop); 
     openModuleConfDialogAction->addTo(utilToolBar);
     utilToolBar->addSeparator();
 
-        
-    drawToolBar = new QToolBar( "", this, DockTop ); 
+    // draw
+    drawToolBar = new QToolBar(tr("draw toolbar"), this, DockTop); 
+    drawLineAction->addTo(drawToolBar);
+    drawToolBar->addSeparator();
+    //TODO: QStrList for combo values
+    zoomComboBox = new QComboBox(FALSE, drawToolBar);
+    zoomComboBox->insertItem("10 %", 0);
+    zoomComboBox->insertItem("25 %", 1);
+    zoomComboBox->insertItem("50 %", 2);
+    zoomComboBox->insertItem("75 %", 3);
+    zoomComboBox->insertItem("100 %", 4);
+    zoomComboBox->insertItem("250 %", 5);
+    zoomComboBox->insertItem("500 %", 6);
+    zoomComboBox->insertItem("1000 %", 7);
+    zoomComboBox->setCurrentItem(4);
+    zoomInAction->addTo(drawToolBar);
+    zoomNormalAction->addTo(drawToolBar);
+    zoomOutAction->addTo(drawToolBar);
 
-    drawToolBar->setLabel( trUtf8( "draw toolbar" ) );
-
-
+    /////////////////////////////////////////////////////////////////
     // menubar
-    menubar = new QMenuBar( this, "menubar" );
-
-    fileMenu = new QPopupMenu( this ); 
-    fileNewAction->addTo( fileMenu );
-    fileOpenAction->addTo( fileMenu );
-    fileSaveAction->addTo( fileMenu );
-    fileSaveAsAction->addTo( fileMenu );
+    menubar = new QMenuBar(this, "menubar");
+    fileMenu = new QPopupMenu(this); 
+    fileNewAction->addTo(fileMenu);
+    fileOpenAction->addTo(fileMenu);
+    fileSaveAction->addTo(fileMenu);
+    fileSaveAsAction->addTo(fileMenu);
     fileMenu->insertSeparator();
-    fileExitAction->addTo( fileMenu );
-    menubar->insertItem( trUtf8( "&File" ), fileMenu );
+    fileExitAction->addTo(fileMenu );
+    menubar->insertItem(trUtf8("&File"), fileMenu);
 
-    editMenu = new QPopupMenu( this ); 
-    editCutAction->addTo( editMenu );
-    editCopyAction->addTo( editMenu );
-    editPasteAction->addTo( editMenu );
+    // edit
+    editMenu = new QPopupMenu(this); 
+    editCutAction->addTo(editMenu);
+    editCopyAction->addTo(editMenu);
+    editPasteAction->addTo(editMenu);
     editMenu->insertSeparator();
     menubar->insertItem(trUtf8("&Edit"), editMenu);
 
-    toolsMenu = new QPopupMenu( this ); 
+    // tools
+    toolsMenu = new QPopupMenu(this); 
     menubar->insertItem(trUtf8("&Tools"), toolsMenu);
     openModuleConfDialogAction->addTo(toolsMenu);
 
-    PopupMenu_3 = new QPopupMenu( this ); 
-    menubar->insertItem( trUtf8( "&Draw" ), PopupMenu_3 );
+    // draw
+    drawMenu = new QPopupMenu(this); 
+    menubar->insertItem(trUtf8("&Draw"), drawMenu);
+    drawLineAction->addTo(drawMenu);
+    drawMenu->insertSeparator();
+    zoomInAction->addTo(drawMenu);
+    zoomNormalAction->addTo(drawMenu);
+    zoomOutAction->addTo(drawMenu);
 
-    helpMenu = new QPopupMenu( this ); 
-    helpContentsAction->addTo( helpMenu );
+    // help
+    helpMenu = new QPopupMenu(this); 
+    helpContentsAction->addTo(helpMenu);
     helpMenu->insertSeparator();
-    helpAboutAction->addTo( helpMenu );
-    menubar->insertItem( trUtf8( "&Help" ), helpMenu );
-
-
+    helpAboutAction->addTo(helpMenu);
+    menubar->insertItem(trUtf8("&Help"), helpMenu );
 
     // signals and slots connections
     connect( fileNewAction, SIGNAL( activated() ), this, SLOT( newLayout() ) );

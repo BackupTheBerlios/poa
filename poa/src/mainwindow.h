@@ -36,7 +36,7 @@ public:
     QPopupMenu *fileMenu;
     QPopupMenu *editMenu;
     QPopupMenu *toolsMenu;
-    QPopupMenu *PopupMenu_3;
+    QPopupMenu *drawMenu;
     QPopupMenu *helpMenu;
     QToolBar *commonToolBar;
     QToolBar *utilToolBar;
@@ -52,6 +52,10 @@ public:
     QAction* helpContentsAction;
     QAction* helpAboutAction;
 
+    QAction *zoomInAction;
+    QAction *zoomOutAction;
+    QAction *zoomNormalAction;
+    QAction *drawLineAction;
     QAction* openModuleConfDialogAction;
 
 protected:

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.14 2003/09/26 22:00:38 garbeam Exp $
+ * $Id: connectorviewlist.cpp,v 1.15 2003/09/30 16:12:45 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -44,8 +44,8 @@
 
 // std added because of gcc 3.2 issues
 typedef std::priority_queue<ReachedPoint,
-               std::vector<ReachedPoint>,
-		       CompareReachedPoints> ReachedQueue;
+                            std::vector<ReachedPoint>,
+                            CompareReachedPoints> ReachedQueue;
 
 
 QString image(QPoint p)
@@ -340,10 +340,10 @@ bool isRightAngle(LineDirection first, LineDirection second)
 bool isTurn(LineDirection first, LineDirection second)
 {
   Q_ASSERT(first != UNKNOWN && second != UNKNOWN);
-  return first == LEFT && second == LEFT
-    || first == RIGHT && second == RIGHT
-    || first == UP && second == UP
-    || first == DOWN && second == DOWN;
+  return first == LEFT && second == RIGHT
+    || first == RIGHT && second == LEFT
+    || first == UP && second == DOWN
+    || first == DOWN && second == UP;
 }
 
 LineDirection turnLeft(LineDirection dir)
@@ -368,6 +368,20 @@ LineDirection turnRight(LineDirection dir)
     return -turnLeft(dir);
 }
 
+QString image(LineDirection dir)
+{
+    switch(dir) {
+    case LEFT:
+	return QString("left");
+    case RIGHT:
+	return QString("right");
+    case UP:
+	return QString("up");
+    case DOWN:
+	return QString("down");
+    }
+}
+
 QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
                                                       LineDirection fromDir,
                                                       QPoint to,
@@ -379,7 +393,7 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
     int y;
     Grid grid(from, to, 10);
     grid.getGridDistance(from, to, x, y);
-    Q_ASSERT(grid.move(from, x, y) == to);
+    //Q_ASSERT(grid.move(from, x, y) == to);
     //qDebug("from == " + image(from));
     //qDebug("to   == " + image(to));
     //qDebug("closestGridPoint(from) == " +
@@ -439,11 +453,31 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
         }
     }
     else if (isRightAngle(fromDir, toDir)) {
-        if (fromDist >= 1) {
+	if (fromDist >= 1 && toDir == fromAlternateDir) {
             // one bending
             next = grid.move(from, fromDir, fromDist);
             list->append(next);
+	}
+	else if (fromDist >= 2 && isTurn(toDir, fromAlternateDir)) {
+	    // bend 3 times
+	    next = grid.move(from, fromDir, fromDist / 2);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir,
+			     QABS(fromAlternateDist) + 1);
+	    list->append(next);
+	    next = grid.move(next, fromDir, (fromDist + 1) / 2);
+	    list->append(next);
         }
+	else if (fromDist == 1 && isTurn(toDir, fromAlternateDir)) {
+	    // spiral
+	    next = grid.move(from, fromDir, fromDist + 1);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, 
+			     QABS(fromAlternateDist) + 1);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, 1);
+	    list->append(next);
+	}
         else if (fromAlternateDist >= 2 && toDir == fromAlternateDir) {
                   // && fromDist <= 0
             // U-turn then one bending
@@ -483,16 +517,27 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
         }
     }
     else if (isTurn(fromDir, toDir)) {
-        if (fromAlternateDist == 0) {
+        if (fromAlternateDist == 0 && fromDist >= 0) {
             next = grid.move(from, fromDir, 1);
             list->append(next);
             next = grid.move(next, turnLeft(fromDir), 1);
             list->append(next);
-            next = grid.move(next, fromDir, QABS(fromDist));
+            next = grid.move(next, fromDir, fromDist);
             list->append(next);
             next = grid.move(next, turnRight(fromDir), 1);
             list->append(next);
         }
+	else if (fromAlternateDist == 0) {
+		 // && fromDist < 0
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, turnLeft(fromDir), 1);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, (QABS(fromDist) + 1) / 2);
+	    list->append(next);
+	    next = grid.move(next, turnRight(fromDir), 1);
+	    list->append(next);
+	}
         else {
             // U-turn
             if (fromDist >= 0) {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.cpp,v 1.3 2003/09/18 14:21:04 keulsn Exp $
+ * $Id: grid.cpp,v 1.4 2003/09/30 16:12:45 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -95,8 +95,8 @@ QPoint Grid::closestGridPoint(QPoint point)
     // offset + n * gridSize - point = min
     int x = (int) rint(((double) point.x() - offsetX_) / gridSizeX_);
     int y = (int) rint(((double) point.y() - offsetY_) / gridSizeY_);
-    return QPoint((int) (offsetX_ + ((double) x) * gridSizeX_),
-		  (int) (offsetY_ + ((double) y) * gridSizeY_));
+    return QPoint((int) rint(offsetX_ + ((double) x) * gridSizeX_),
+		  (int) rint(offsetY_ + ((double) y) * gridSizeY_));
 }
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.2 2004/01/09 16:52:13 vanto Exp $
+ * $Id: scheduledialog.h,v 1.3 2004/01/09 17:55:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -146,13 +146,18 @@ private slots:
 class SpinBoxItem : public QTableItem
 {
 public:
-    SpinBoxItem(QTable *t, EditType et, const QString &text);
+    enum BTField {RUNTIME, CLOCK, OFFSET};
+    SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field);
     QWidget *createEditor() const;
     void setContentFromEditor( QWidget *w );
 
 private:
-    QSpinBox *spinbox;
+    QSpinBox *spinbox_;
+    BlockTree *blocktree_;
+    BTField field_;
 
+    void setValue(int value);
+    int value() const;
 };
 
 #endif // POA_SCHEDULEDIALOG_H

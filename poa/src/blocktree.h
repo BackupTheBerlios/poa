@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.h,v 1.1 2004/01/05 15:48:49 kilgus Exp $
+ * $Id: blocktree.h,v 1.2 2004/01/09 17:55:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,81 +29,91 @@
 
 class BlockModel;
 
-class BlockTree 
+class BlockTree
 {
 public:
-	BlockTree(BlockModel* bm);
-	~BlockTree();
+    BlockTree(BlockModel* bm);
+    ~BlockTree();
 
-	/**
-	 * Add new branch to tree. Tree object has already been created
-	 */
-	void addBranch(BlockTree* bt);
+    /**
+     * Add new branch to tree. Tree object has already been created
+     */
+    void addBranch(BlockTree* bt);
 
-	/**
-	 * Add new branch to tree. Create tree object first
-	 */
-	BlockTree* addBranch(BlockModel* bm);
+    /**
+     * Add new branch to tree. Create tree object first
+     */
+    BlockTree* addBranch(BlockModel* bm);
 
-	/**
-	 * Get corresponding blockmodel
-	 */
-	BlockModel* getBlock();
+    /**
+     * Get corresponding blockmodel
+     */
+    BlockModel* getBlock();
 
-	/**
-	 * Get list of all branches for this root
-	 */
-	QPtrList<BlockTree>* getBranches();
+    /**
+     * Get list of all branches for this root
+     */
+    QPtrList<BlockTree>* getBranches();
 
-	/**
-	 * Check whether previous branches in tree already contain this block
-	 */
-	bool contains(BlockModel* bm);
+    /**
+     * Check whether previous branches in tree already contain this block
+     */
+    bool contains(BlockModel* bm);
 
-	/**
-	 * Count all branches from this root on
-	 */
-	int count();
+    /**
+     * Count all branches from this root on
+     */
+    int count();
 
-	/**
-	 * Get runtime of block
-	 */
-	int getRuntime();
+    /**
+     * Get runtime of block
+     */
+    int getRuntime();
 
-	/**
-	 * Get clock of block
-	 */
-	int getClock();
+    /*
+     * Set runtime for this block
+     */
+    void setRuntime(int runtime);
 
-	/**
-	 * Get offset of block
-	 */
-	int getOffset();
+    /**
+     * Get clock of block
+     */
+    int getClock();
 
-	/**
-	 * Set offset for this block
-	 */
-	void setOffset(int ofs);
+    /**
+     * Set clock for this block
+     */
+    void setClock(int clock);
 
-	/**
-	 * Set whether this branch is really just a back reference
-	 */
-	void setBackReference(bool b);
-	
-	/**
-	 * Get whether this is just a back reference
-	 */
-	bool getBackReference();
+    /**
+     * Get offset of block
+     */
+    int getOffset();
+
+    /**
+     * Set offset for this block
+     */
+    void setOffset(int ofs);
+
+    /**
+     * Set whether this branch is really just a back reference
+     */
+    void setBackReference(bool b);
+
+    /**
+     * Get whether this is just a back reference
+     */
+    bool getBackReference();
 
 private:
-	BlockModel *block_;
-	BlockTree *parent_;
-    QPtrList<BlockTree> branches_;	
+    BlockModel *block_;
+    BlockTree *parent_;
+    QPtrList<BlockTree> branches_;
 
-	int runtime_;
-	int clock_;
-	int offset_;
-	bool backReference_;
+    int runtime_;
+    int clock_;
+    int offset_;
+    bool backReference_;
 };
 
 #endif // POA_BLOCKTREE_H

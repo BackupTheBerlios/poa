@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.2 2004/01/09 16:52:13 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.3 2004/01/09 17:55:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -144,16 +144,19 @@ void ScheduleDialog::fillTimingTable(BlockTree* bt)
         bt->getBlock()->name());
     timingTable->setItem(i, 0, i1);
 
-    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-        QString::number(bt->getRuntime()));
+    //    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+    //  QString::number(bt->getRuntime()));
+    QTableItem *i2 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::RUNTIME);
     timingTable->setItem(i, 1, i2);
 
-    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-        QString::number(bt->getClock()));
+    //    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+    //        QString::number(bt->getClock()));
+    QTableItem *i3 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::CLOCK);
     timingTable->setItem(i, 2, i3);
 
-    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
-        QString::number(bt->getOffset()));
+    //    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping,
+    //        QString::number(bt->getOffset()));
+    QTableItem *i4 = new SpinBoxItem(timingTable, QTableItem::OnTyping, bt, SpinBoxItem::OFFSET);
     timingTable->setItem(i, 3, i4);
 
     for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
@@ -346,9 +349,10 @@ void ScheduleDialog::zoomChanged(int zoom)
 }
 
 
-SpinBoxItem::SpinBoxItem(QTable *t, EditType et, const QString &text )
-    : QTableItem(t, et, "0"), spinbox(0)
+SpinBoxItem::SpinBoxItem(QTable *t, EditType et, BlockTree *bt, BTField field )
+    : QTableItem(t, et, "0"), spinbox_(0), blocktree_(bt), field_(field)
 {
+    setText(QString::number(value()));
     // we do not want this item to be replaced
     setReplaceable(false);
 }
@@ -356,18 +360,38 @@ SpinBoxItem::SpinBoxItem(QTable *t, EditType et, const QString &text )
 QWidget *SpinBoxItem::createEditor() const
 {
     // create a spinbox editor
-    ((SpinBoxItem*)this)->spinbox = new QSpinBox(table()->viewport());
-    QObject::connect(spinbox, SIGNAL(valueChanged(int)), table(), SLOT(doValueChanged()));
-    spinbox->setValue(text().toUInt());
-    return spinbox;
+    ((SpinBoxItem*)this)->spinbox_ = new QSpinBox(table()->viewport());
+    QObject::connect(spinbox_, SIGNAL(valueChanged(int)), table(), SLOT(doValueChanged()));
+    spinbox_->setValue(value());
+    spinbox_->setRange(0, INT_MAX);
+    return spinbox_;
 }
 
 void SpinBoxItem::setContentFromEditor( QWidget *w )
 {
     if ( w->inherits( "QSpinBox" )) {
         setText(QString::number(((QSpinBox*)w)->value()));
+        setValue(((QSpinBox*)w)->value());
     } else {
         QTableItem::setContentFromEditor(w);
     }
 }
 
+int SpinBoxItem::value() const
+{
+    switch (field_) {
+    case RUNTIME: return blocktree_->getRuntime();
+    case CLOCK: return blocktree_->getClock();
+    case OFFSET: return blocktree_->getOffset();
+    default: return 0;
+    }
+}
+
+void SpinBoxItem::setValue(int value)
+{
+    switch (field_) {
+    case RUNTIME: blocktree_->setRuntime(value); break;
+    case CLOCK: blocktree_->setClock(value); break;
+    case OFFSET: blocktree_->setOffset(value); break;
+    }
+}

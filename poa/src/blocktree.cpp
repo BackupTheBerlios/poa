@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blocktree.cpp,v 1.2 2004/01/09 14:05:29 squig Exp $
+ * $Id: blocktree.cpp,v 1.3 2004/01/09 17:55:33 vanto Exp $
  *
  *****************************************************************************/
 
@@ -97,6 +97,14 @@ int BlockTree::getClock() {
 
 int BlockTree::getOffset() {
     return offset_;
+}
+
+void BlockTree::setRuntime(int runtime) {
+    runtime_ = runtime;
+}
+
+void BlockTree::setClock(int clock) {
+    clock_ = clock;
 }
 
 void BlockTree::setOffset(int ofs) {

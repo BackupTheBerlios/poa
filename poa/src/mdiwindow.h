@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.h,v 1.18 2003/09/08 13:01:45 garbeam Exp $
+ * $Id: mdiwindow.h,v 1.19 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -70,6 +70,11 @@ public:
 
 public slots:
     void setZoomLevel(double zoomLevel);
+
+    /*
+     * Modified the title caption if project has been modified.
+     */
+    void setModified(bool modified);
 
 protected:
     /**

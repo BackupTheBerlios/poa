@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.34 2003/12/03 17:33:42 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.35 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -159,7 +159,9 @@ void BlockModel::addPin(PinModel *pin)
 
     if (pinById_.contains(pin->id())) {
         // find next free id (highest in Map +1)
-        currentPinId_ = pinById_.keys().last()+1;
+        //currentPinId_ = pinById_.keys().last()+1;
+        while (pinById_.contains(++currentPinId_));
+        //qDebug("id: "+QString::number(pin->id())+" -> "+QString::number(currentPinId_)+" / "+QString::number(pinById_.keys().last()+1));
         pin->setId(currentPinId_);
     }
     pinById_[pin->id()] = pin;

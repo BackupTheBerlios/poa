@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.69 2003/12/03 18:22:47 squig Exp $
+ * $Id: mainwindow.cpp,v 1.70 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -488,14 +488,42 @@ void MainWindow::fileNew()
     //projDir.cdUp();
 
     // if project is new, create empty project and save it
-    if (!QFileInfo(projDir, "project.xml").exists()) {
-        Project *prj = new Project(projDir.path());
-        prj->newCanvas("1");
-        prj->save();
-        delete prj;
-    }
+    if (QFileInfo(projDir, "project.xml").exists()) {
+        // project already exists
+        QMessageBox mb( "POA",
+                        "Creating a new project at this location will overwrite an existing project.\n"
+                        "Do you really want to continue?",
+                        QMessageBox::Information,
+                        QMessageBox::Yes | QMessageBox::Default,
+                        QMessageBox::No,
+                        QMessageBox::Cancel | QMessageBox::Escape );
+        mb.setButtonText( QMessageBox::Yes, "Yes" );
+        mb.setButtonText( QMessageBox::No, "No, load existing project" );
 
+        switch( mb.exec() ) {
+        case QMessageBox::Yes:
+            createNewProject(projDir.path());
+            break;
+        case QMessageBox::No:
+            break;
+        case QMessageBox::Cancel:
+            return;
+            break;
+        }
+    } else {
+        // open new project
+        createNewProject(projDir.path());
+    }
     openProject(projDir.path());
+}
+
+void MainWindow::createNewProject(QString path)
+{
+    // create new project
+    Project *prj = new Project(path);
+    prj->newCanvas("1");
+    prj->save();
+    delete prj;
 }
 
 void MainWindow::fileOpen()
@@ -529,6 +557,8 @@ void MainWindow::fileSave()
             QMessageBox::warning
                 (this, tr("File error"),
                  tr("Cannot save project %1").arg(project_->name()));
+        } else {
+            project_->setModified(false);
         }
     }
 }
@@ -657,12 +687,16 @@ void MainWindow::openBlockConf()
             if (INSTANCEOF(model, BlockModel)) {
                 BlockConfDialog *dialog =
                     new BlockConfDialog((BlockModel *)model);
-                dialog->exec();
+                if (dialog->exec() == QDialog::Accepted) {
+                    project_->setModified(true);
+                }
                 delete dialog;
             }
             else if (INSTANCEOF(model, MuxModel)) {
                 MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
-                dialog->exec();
+                if (dialog->exec() == QDialog::Accepted) {
+                    project_->setModified(true);
+                }
                 delete dialog;
             }
         }
@@ -691,6 +725,8 @@ void MainWindow::openProject(QString path)
         // connect to signals
         connect(view, SIGNAL(selectionChanged(QCanvasItem *)), this,
                 SLOT(selectionChanged(QCanvasItem *)));
+
+        connect(project_, SIGNAL(modified(bool)), w, SLOT(setModified(bool)));
     }
     else {
         QMessageBox::warning

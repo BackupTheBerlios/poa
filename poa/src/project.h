@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.24 2003/11/26 16:27:10 squig Exp $
+ * $Id: project.h,v 1.25 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -105,6 +105,18 @@ public:
     QPtrList<AbstractModel> *Project::blocks();
 
     /**
+     * Sets the changed-status of this project.
+     * Set it to false on save, to true on changes
+     */
+    void setModified(bool);
+
+    /**
+     * Returns the changed-status of the project.
+     * Returns true, if the project has been changed since the last save
+     */
+    bool isModified();
+
+    /**
      * Serializes this project to xml
      */
     QDomDocument serialize();
@@ -119,6 +131,9 @@ public:
      */
     bool open();
 
+signals:
+    void modified(bool);
+
 private:
     /**
      * Deserializes the given xml document to this project
@@ -131,12 +146,14 @@ private:
     QPtrList<GridCanvas> canvasList_;
     /** project name */
     QString name_;
-    /** current model id - provides project-wide unique ids */
+    /** current model id - provides project-wide unique ids. */
     uint currentBlockId_;
     /** The filename for serialization. */
     QString filename_;
-    /** The project path (without project file) for serialization */
+    /** The project path (without project file) for serialization. */
     QString path_;
+    /** is project changed since last save */
+    bool modified_;
 };
 
 #endif // PROJECT_H

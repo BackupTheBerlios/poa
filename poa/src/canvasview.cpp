@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.46 2003/11/26 16:27:10 squig Exp $
+ * $Id: canvasview.cpp,v 1.47 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -286,6 +286,7 @@ void CanvasView::setAction(CanvasViewAction *action)
     }
     action_ = action;
 
+    project_->setModified(true);
     // FIX: this call should go somewhere else
     canvas()->update();
 }

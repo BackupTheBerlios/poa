@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.33 2003/12/03 17:33:42 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.34 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -51,7 +51,7 @@ PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
     position_ = 0;
     connected_ = 0;
     view_ = 0;
-// TODO position stuff
+
     if (!pinElem.isNull()) {
         deserialize(pinElem);
     }
@@ -182,6 +182,7 @@ QDomElement PinModel::serialize(QDomDocument *document)
     root.setAttribute("name", name());
     root.setAttribute("address", (unsigned int)address_);
     root.setAttribute("bits", (unsigned int)bits_);
+    root.setAttribute("position", (unsigned int)position_);
     switch (type()) {
     case PinModel::INPUT:
         root.setAttribute("type", "input");
@@ -202,6 +203,7 @@ void PinModel::deserialize(QDomElement element)
     id_ = element.attribute("id","0").toUInt();
     address_ = element.attribute("address","0").toUInt();
     bits_ = element.attribute("bits", "0").toUInt();
+    position_ = element.attribute("position","0").toUInt();
     if (element.attribute("type", "") == "input") {
         setType(PinModel::INPUT);
     }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.19 2003/12/03 18:22:47 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.20 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 
@@ -28,6 +28,7 @@
 #include "gridcanvas.h"
 #include "poa.h"
 #include "project.h"
+#include "mainwindow.h"
 #include "util.h"
 
 #include <qvariant.h>
@@ -35,6 +36,7 @@
 #include <qlayout.h>
 #include <qaction.h>
 #include <qimage.h>
+#include <qmessagebox.h>
 #include <qpixmap.h>
 #include <qpoint.h>
 #include <qsize.h>
@@ -65,7 +67,28 @@ CanvasView *MdiWindow::view() const
 
 void MdiWindow::closeEvent( QCloseEvent *e )
 {
-    e->accept();
+    Project *project = MainWindow::instance()->activeView()->project();
+    if (project != 0 && project->isModified()) {
+        switch( QMessageBox::information( this, "POA",
+                                          "The document contains unsaved changes\n"
+                                          "Do you want to save the changes before exiting?",
+                                          "&Save", "&Discard", "Cancel",
+                                          0,      // Enter == button 0
+                                          2 ) ) { // Escape == button 2
+        case 0: // Save clicked or Alt+S pressed or Enter pressed.
+            MainWindow::instance()->fileSave();
+            e->accept();
+            break;
+        case 1: // Discard clicked or Alt+D pressed
+            e->accept();
+            break;
+        case 2: // Cancel clicked or Alt+C pressed or Escape pressed
+            e->ignore();
+            break;
+        }
+    } else {
+        e->accept();
+    }
 }
 
 /**
@@ -112,3 +135,7 @@ double MdiWindow::zoomLevel()
     return zoomLevel_;
 }
 
+void MdiWindow::setModified(bool modified)
+{
+    setCaption(view_->project()->name()+" - "+view_->canvas()->name() + QString((modified)?"*":""));
+}

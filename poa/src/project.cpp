@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.31 2003/11/24 20:11:59 squig Exp $
+ * $Id: project.cpp,v 1.32 2003/12/03 18:26:12 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -42,6 +42,7 @@ Project::Project(QString path)
 {
     currentBlockId_ = 0;
 
+    modified_ = false;
     QDir dir(path);
     name_ = dir.path();
     path_ = dir.canonicalPath();
@@ -159,7 +160,18 @@ const QPtrList<GridCanvas> *Project::canvasList() const {
 
 QPtrList<AbstractModel> *Project::blocks()
 {
-  return &blocks_;
+    return &blocks_;
+}
+
+void Project::setModified(bool mod)
+{
+    modified_ = mod;
+    emit modified(mod);
+}
+
+bool Project::isModified()
+{
+    return modified_;
 }
 
 QDomDocument Project::serialize()

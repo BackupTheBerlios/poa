@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.107 2004/02/01 17:29:48 squig Exp $
+ * $Id: mainwindow.cpp,v 1.108 2004/02/02 16:57:30 papier Exp $
  *
  *****************************************************************************/
 
@@ -161,79 +161,81 @@ void MainWindow::initializeActions()
          tr("&Open..."), QKeySequence("Ctrl+O"), this,
          "fileOpenAction");
     fileSaveAction =
-        new QAction("Save", image_filesave, "&Save",
+        new QAction(tr("Save"), image_filesave, tr("&Save"),
                     QKeySequence("Ctrl+S"), this, "fileSaveAction");
     fileSaveAsAction =
-        new QAction("Save As...", "Save &As...", 0, this, "fileSaveAsAction");
+        new QAction(tr("Save As..."), tr("Save &As..."), 0, this, 
+		    "fileSaveAsAction");
     filePrintAction = new QAction
         (tr("Print"), QPixmap(Util::findIcon("fileprint.png")),
          tr("&Print"), QKeySequence("Ctrl+N"), this, "filePrintAction");
     fileExitAction =
-        new QAction("Exit", "E&xit", 0, this, "fileExitAction");
+        new QAction(tr("Exit"), tr("E&xit"), 0, this, "fileExitAction");
     editCutAction =
-        new QAction("Cut", image_editcut, "C&ut",
+        new QAction(tr("Cut"), image_editcut, tr("C&ut"),
                     QKeySequence("Ctrl+X"), this, "editCutAction");
     editCopyAction =
-        new QAction("Copy", image_editcopy, "&Copy",
+        new QAction(tr("Copy"), image_editcopy, tr("&Copy"),
                     QKeySequence("Ctrl+C"), this, "editCopyAction");
     editPasteAction =
-        new QAction("Paste", image_editpaste, "&Paste",
+        new QAction(tr("Paste"), image_editpaste, tr("&Paste"),
                     QKeySequence("Ctrl+V"), this, "editPasteAction" );
     editRemoveAction =
-        new QAction("Remove", image_editdelete, "&Remove",
+        new QAction(tr("Remove"), image_editdelete, tr("&Remove"),
                     QKeySequence("Del"), this, "removeAction" );
 
     editModeActionGroup_ = new QActionGroup(this, "editMode", true);
     editModeAnnotateAction_
-        = new QAction("Annotate", QPixmap(Util::findIcon("editclear.png")),
-                      "&Annotate", 0, editModeActionGroup_, "editModeAnnotate",
-                      true);
+        = new QAction(tr("Annotate"), QPixmap(Util::findIcon("editclear.png")),
+                      tr("&Annotate"), 0, editModeActionGroup_, 
+		      "editModeAnnotate", true);
     editModeDefaultAction_
-        = new QAction("Default", QPixmap(Util::findIcon("editdefault.png")),
-                      "&Default",0, editModeActionGroup_, "editModeDefault",
-                      true);
+        = new QAction(tr("Default"), 
+		      QPixmap(Util::findIcon("editdefault.png")),
+                      tr("&Default"),0, editModeActionGroup_, 
+		      "editModeDefault", true);
     editModeDefaultAction_->setOn(true);
     helpContentsAction =
-        new QAction("Contents", image_contents, "&Contents...",
+        new QAction(tr("Contents"), image_contents, tr("&Contents..."),
                     QKeySequence("F1"), this, "helpContentsAction");
     helpAboutAction =
-        new QAction("About", image_help, "&About...", 0,
+        new QAction(tr("About"), image_help, tr("&About..."), 0,
                     this, "helpAboutAction" );
     openBlockConfAction =
-        new QAction("Configuration", image_configure,
-                    "&Configuration", 0, this,
+        new QAction(tr("Configuration"), image_configure,
+                    tr("&Configuration"), 0, this,
                     "openBlockConfAction");
     zoomInAction =
-        new QAction("Zoom in", image_zoomin, "Zoom &in",
+        new QAction(tr("Zoom in"), image_zoomin, tr("Zoom &in"),
                     QKeySequence("Ctrl++"), this, "zoomInAction");
     zoomOutAction =
-        new QAction("Zoom out", image_zoomout, "Zoom &out",
+        new QAction(tr("Zoom out"), image_zoomout, tr("Zoom &out"),
                     QKeySequence("Ctrl+-"), this, "zoomOutAction");
     zoomNormalAction =
-        new QAction("Zoom normal", image_zoomnormal, "Zoom &normal",
+        new QAction(tr("Zoom normal"), image_zoomnormal, tr("Zoom &normal"),
                     QKeySequence("Ctrl+="), this, "zoomNormalAction");
     invokeCompilerAction =
-        new QAction("Compile", image_compile, "&Compile",
+        new QAction(tr("Compile"), image_compile, tr("&Compile"),
                     QKeySequence("F8"), this, "invokeCompilerAction");
     invokeDownloadAction =
-        new QAction("Download", image_download, "&Download",
+        new QAction(tr("Download"), image_download, tr("&Download"),
                     QKeySequence("F7"), this, "invokeDownloadAction");
     invokeSchedulingAction =
-        new QAction("Scheduling", image_scheduling, "&Scheduling",
+        new QAction(tr("Scheduling"), image_scheduling, tr("&Scheduling"),
             QKeySequence("F6"), this, "invokeSchedulingAction");
     invokeDeployAction =
-        new QAction("Deploy Project", image_deploy, "Deploy &Project",
+        new QAction(tr("Deploy Project"), image_deploy, tr("Deploy &Project"),
             QKeySequence("F5"), this, "invokeDeployAction");
     openSettingsAction =
-        new QAction("Configure POA", "Configure &POA...", 0,
+        new QAction(tr("Configure POA"), tr("Configure &POA..."), 0,
                     this, "openSettingsAction");
     tileHorizontalAction =
-        new QAction("Tile Horizontal", "Tile &Horizontal", 0,
+        new QAction(tr("Tile Horizontal"), tr("Tile &Horizontal"), 0,
                     this, "tileHorizontalAction");
     tileAction =
-        new QAction("Tile", "&Tile", 0, this, "tileAction");
+        new QAction(tr("Tile"), tr("&Tile"), 0, this, "tileAction");
     cascadeAction =
-        new QAction("Cascade", "&Cascade", 0, this, "cascadeAction");
+        new QAction(tr("Cascade"), tr("&Cascade"), 0, this, "cascadeAction");
     settingsShowGridAction_ =
         new QAction(tr("Show Grid"), tr("&Show Grid"),
                     QKeySequence("Ctrl+G"), this, "editSettingsShowGrid",
@@ -243,7 +245,8 @@ void MainWindow::initializeActions()
         (tr("Smart Router"), QPixmap(Util::findIcon("smartroute.png")),
          tr("&Smart Router"), 0, this, "smartRouteAction");
     saveToLibraryAction_ =
-        new QAction("Save To Library", image_filesave, "&Save To Library",
+        new QAction(tr("Save To Library"), image_filesave, 
+		    tr("&Save To Library"),
                     QKeySequence("Ctrl+L"), this, "saveToLibraryAction");
 }
 
@@ -302,7 +305,7 @@ void MainWindow::initializeMenu()
     QPopupMenu *helpMenu;
 
     fileMenu = new QPopupMenu(this);
-    menuBar()->insertItem(trUtf8("&Project"), fileMenu);
+    menuBar()->insertItem(tr("&Project"), fileMenu);
     fileNewAction->addTo(fileMenu);
     fileOpenAction->addTo(fileMenu);
     fileMenu->insertSeparator();
@@ -319,14 +322,14 @@ void MainWindow::initializeMenu()
 
     // edit
     editMenu = new QPopupMenu(this);
-    menuBar()->insertItem(trUtf8("&Edit"), editMenu);
+    menuBar()->insertItem(tr("&Edit"), editMenu);
     editCutAction->addTo(editMenu);
     editCopyAction->addTo(editMenu);
     editPasteAction->addTo(editMenu);
 
     // view
     viewMenu = new QPopupMenu(this);
-    menuBar()->insertItem(trUtf8("&View"), viewMenu);
+    menuBar()->insertItem(tr("&View"), viewMenu);
     zoomInAction->addTo(viewMenu);
     zoomNormalAction->addTo(viewMenu);
     zoomOutAction->addTo(viewMenu);
@@ -360,7 +363,7 @@ void MainWindow::initializeMenu()
 
     // help
     helpMenu = new QPopupMenu(this);
-    menuBar()->insertItem(trUtf8("&Help"), helpMenu );
+    menuBar()->insertItem(tr("&Help"), helpMenu );
     helpContentsAction->addTo(helpMenu);
     helpMenu->insertSeparator();
     helpAboutAction->addTo(helpMenu);
@@ -531,12 +534,12 @@ QAction *MainWindow::removeAction()
 
 void MainWindow::fileNew()
 {
-    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+    QFileDialog* fd = new QFileDialog( this, tr("file dialog"), TRUE );
     //fd->setMode( QFileDialog::AnyFile );
     fd->setMode(QFileDialog::Directory);
-    fd->setFilter("POA project (project.xml)");
+    fd->setFilter(tr("POA project (project.xml)"));
     fd->setSelection("project.xml");
-    fd->setCaption("Select/Create project directory");
+    fd->setCaption(tr("Select/Create project directory"));
 
     QString fileName;
     if ( fd->exec() == QDialog::Accepted ) {
@@ -555,14 +558,14 @@ void MainWindow::fileNew()
     if (QFileInfo(projDir, "project.xml").exists()) {
         // project already exists
         QMessageBox mb( "POA",
-                        "Creating a new project at this location will overwrite an existing project.\n"
-                        "Do you really want to continue?",
+                        tr("Creating a new project at this location will overwrite an existing project.\n"
+                        "Do you really want to continue?"),
                         QMessageBox::Information,
                         QMessageBox::Yes | QMessageBox::Default,
                         QMessageBox::No,
                         QMessageBox::Cancel | QMessageBox::Escape );
-        mb.setButtonText( QMessageBox::Yes, "Yes" );
-        mb.setButtonText( QMessageBox::No, "No, load existing project" );
+        mb.setButtonText( QMessageBox::Yes, tr("&Yes") );
+        mb.setButtonText( QMessageBox::No, tr("&No, load existing project") );
 
         switch( mb.exec() ) {
         case QMessageBox::Yes:
@@ -680,11 +683,11 @@ void MainWindow::editRemove()
 
 void MainWindow::fileOpen()
 {
-    QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+    QFileDialog* fd = new QFileDialog( this, tr("file dialog"), TRUE );
     fd->setMode( QFileDialog::ExistingFile );
-    fd->setFilter("POA project (project.xml)");
+    fd->setFilter(tr("POA project (project.xml)"));
     fd->setSelection("project.xml");
-    fd->setCaption("Select/Create project directory");
+    fd->setCaption(tr("Select/Create project directory"));
 
     QString fileName;
     if ( fd->exec() == QDialog::Accepted ) {
@@ -727,11 +730,11 @@ void MainWindow::fileSaveAs()
 {
     MdiWindow *window = activeWindow();
     if (window != 0) {
-        QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
+        QFileDialog* fd = new QFileDialog( this, tr("file dialog"), TRUE );
         fd->setMode(QFileDialog::Directory);
-        fd->setFilter("POA project (project.xml)");
+        fd->setFilter(tr("POA project (project.xml)"));
         fd->setSelection("project.xml");
-        fd->setCaption("Save As - Select/Create project directory");
+        fd->setCaption(tr("Save As - Select/Create project directory"));
 
         QString fileName;
         if ( fd->exec() == QDialog::Accepted ) {
@@ -982,7 +985,7 @@ void MainWindow::saveToLibrary()
                 ? QMAX(0, typeNames.findIndex(selectedModel()->type()))
                 : 0;
             QString type = QInputDialog::getItem
-                ("POA", "Select a type", typeNames, index, true, &ok, this);
+                ("POA", tr("Select a type"), typeNames, index, true, &ok, this);
             if (!ok) {
                 return;
             }

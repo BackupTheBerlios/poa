@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.12 2004/02/01 17:29:48 squig Exp $
+ * $Id: settingsdialog.h,v 1.13 2004/02/02 16:57:30 papier Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGSDIALOG_H
@@ -52,6 +52,7 @@ public:
     QLineEdit* editorLineEdit_;
     QSpinBox* gridSizeSpinBox_;
     QComboBox* serialPortComboBox_;
+    QComboBox* languageComboBox_;
 
 public slots:
     void applySettings();

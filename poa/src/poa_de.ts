@@ -149,6 +149,30 @@
         <source>Compile and Download Project</source>
         <translation>Projekt kompilieren und auf CPLD laden</translation>
     </message>
+    <message>
+        <source>POA Error</source>
+        <translation>POA Fehler</translation>
+    </message>
+    <message>
+        <source>The serial port setting is invalid.</source>
+        <translation>The Einstellungen des seriellen Anschlusses sind ungültig.</translation>
+    </message>
+    <message>
+        <source>Run command sent.</source>
+        <translation>Der &quot;Ausführen&quot; Befehl wurde gesendet.</translation>
+    </message>
+    <message>
+        <source>Downloading file to CPU...</source>
+        <translation>Die Datei wird auf die CPU geladen...</translation>
+    </message>
+    <message>
+        <source>Abort</source>
+        <translation>Abbruch</translation>
+    </message>
+    <message>
+        <source>Download was successful.</source>
+        <translation>Der Download war erfolgreich.</translation>
+    </message>
 </context>
 <context>
     <name>DisconnectedPinReport</name>
@@ -161,11 +185,11 @@
     <name>DownloadManager</name>
     <message>
         <source>Could not read srec file %1.</source>
-        <translation>Die srec-Datei %1 konnte nicht gelesen werden.</translation>
+        <translation type="obsolete">Die srec-Datei %1 konnte nicht gelesen werden.</translation>
     </message>
     <message>
         <source>Could not open srec file %1.</source>
-        <translation>Die srec-Datei %1 konnte nicht geöffnet werden.</translation>
+        <translation type="obsolete">Die srec-Datei %1 konnte nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Could not open serial port</source>
@@ -173,15 +197,19 @@
     </message>
     <message>
         <source>Could not open serial port.</source>
-        <translation>Der serielle Anschluss konnte nicht geöffnet werden.</translation>
+        <translation type="obsolete">Der serielle Anschluss konnte nicht geöffnet werden.</translation>
     </message>
     <message>
         <source>Downloading srec file to cpld...</source>
-        <translation>Die srec-Datei wird auf den CPLD geladen...</translation>
+        <translation type="obsolete">Die srec-Datei wird auf den CPLD geladen...</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation>Abbruch</translation>
+        <translation type="obsolete">Abbruch</translation>
+    </message>
+    <message>
+        <source>Could not open file %1.</source>
+        <translation>Die Datei %1 konnte nicht geöffnet werden.</translation>
     </message>
 </context>
 <context>
@@ -247,11 +275,11 @@
     </message>
     <message>
         <source>&amp;Show Grid</source>
-        <translation>&amp;Rasten anzeigen</translation>
+        <translation>&amp;Raster anzeigen</translation>
     </message>
     <message>
         <source>Ctrl+G</source>
-        <translation></translation>
+        <translation type="obsolete"></translation>
     </message>
     <message>
         <source>Smart Router</source>
@@ -283,7 +311,7 @@
     </message>
     <message>
         <source>&amp;Recent</source>
-        <translation>&amp;Neuste</translation>
+        <translation>Ne&amp;uste</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -337,6 +365,228 @@ Do you want to overwrite it?</source>
     <message>
         <source>File error</source>
         <translation>Dateifehler</translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <source>&amp;Save</source>
+        <translation>&amp;Speichern</translation>
+    </message>
+    <message>
+        <source>Save As...</source>
+        <translation>Speichern unter...</translation>
+    </message>
+    <message>
+        <source>Save &amp;As...</source>
+        <translation>Speichern &amp;unter...</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>Beenden</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>Be&amp;enden</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation>Ausschneiden</translation>
+    </message>
+    <message>
+        <source>C&amp;ut</source>
+        <translation>Ausschnei&amp;den</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieren</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>Einfügen</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>E&amp;infügen</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>&amp;Remove</source>
+        <translation>Entfe&amp;rnen</translation>
+    </message>
+    <message>
+        <source>Annotate</source>
+        <translation>Kommentar</translation>
+    </message>
+    <message>
+        <source>&amp;Annotate</source>
+        <translation>&amp;Kommentar</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>Standard</translation>
+    </message>
+    <message>
+        <source>&amp;Default</source>
+        <translation>&amp;Standard</translation>
+    </message>
+    <message>
+        <source>Contents</source>
+        <translation>Inhalt</translation>
+    </message>
+    <message>
+        <source>&amp;Contents...</source>
+        <translation>&amp;Inhalt...</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>Über</translation>
+    </message>
+    <message>
+        <source>&amp;About...</source>
+        <translation>&amp;Über...</translation>
+    </message>
+    <message>
+        <source>Configuration</source>
+        <translation>Konfiguration</translation>
+    </message>
+    <message>
+        <source>&amp;Configuration</source>
+        <translation>&amp;Konfiguration</translation>
+    </message>
+    <message>
+        <source>Zoom in</source>
+        <translation>Vergrößern</translation>
+    </message>
+    <message>
+        <source>Zoom &amp;in</source>
+        <translation>Ver&amp;größern</translation>
+    </message>
+    <message>
+        <source>Zoom out</source>
+        <translation>Verkleinern</translation>
+    </message>
+    <message>
+        <source>Zoom &amp;out</source>
+        <translation>Ver&amp;kleinern</translation>
+    </message>
+    <message>
+        <source>Zoom normal</source>
+        <translation>Normalansicht</translation>
+    </message>
+    <message>
+        <source>Zoom &amp;normal</source>
+        <translation>&amp;Normalansicht</translation>
+    </message>
+    <message>
+        <source>Compile</source>
+        <translation>Kompiliern</translation>
+    </message>
+    <message>
+        <source>&amp;Compile</source>
+        <translation>&amp;Kompilieren</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Download</translation>
+    </message>
+    <message>
+        <source>&amp;Download</source>
+        <translation>&amp;Download</translation>
+    </message>
+    <message>
+        <source>Scheduling</source>
+        <translation>Ablaufplanung</translation>
+    </message>
+    <message>
+        <source>&amp;Scheduling</source>
+        <translation>&amp;Ablaufplanung</translation>
+    </message>
+    <message>
+        <source>Deploy Project</source>
+        <translation>Projekt umsetzen</translation>
+    </message>
+    <message>
+        <source>Deploy &amp;Project</source>
+        <translation>&amp;Projekt umsetzen</translation>
+    </message>
+    <message>
+        <source>Configure POA</source>
+        <translation>POA konfigurieren</translation>
+    </message>
+    <message>
+        <source>Configure &amp;POA...</source>
+        <translation>&amp;POA konfigurieren...</translation>
+    </message>
+    <message>
+        <source>Tile Horizontal</source>
+        <translation>Nebeneinander</translation>
+    </message>
+    <message>
+        <source>Tile &amp;Horizontal</source>
+        <translation>&amp;Nebeneinander</translation>
+    </message>
+    <message>
+        <source>Tile</source>
+        <translation>Fenster</translation>
+    </message>
+    <message>
+        <source>&amp;Tile</source>
+        <translation>&amp;Fenster</translation>
+    </message>
+    <message>
+        <source>Cascade</source>
+        <translation>Überlappend</translation>
+    </message>
+    <message>
+        <source>&amp;Cascade</source>
+        <translation>Üb&amp;erlappend</translation>
+    </message>
+    <message>
+        <source>Save To Library</source>
+        <translation>In Bibliothek speichern</translation>
+    </message>
+    <message>
+        <source>&amp;Save To Library</source>
+        <translation>In Bibliothek &amp;speichern</translation>
+    </message>
+    <message>
+        <source>file dialog</source>
+        <translation>Datei Dialog</translation>
+    </message>
+    <message>
+        <source>POA project (project.xml)</source>
+        <translation>POA Projekt (project.xml)</translation>
+    </message>
+    <message>
+        <source>Select/Create project directory</source>
+        <translation>Projektverzeichnis wählen/erstellen</translation>
+    </message>
+    <message>
+        <source>Creating a new project at this location will overwrite an existing project.
+Do you really want to continue?</source>
+        <translation>Beim Erstellen eines Projekts in diesem Verzeichnis wird ein vorhandenes Projekt überschrieben.
+Soll fortgefahren werden?</translation>
+    </message>
+    <message>
+        <source>&amp;No, load existing project</source>
+        <translation>&amp;Nein, vorhandenen Projekt öffnen</translation>
+    </message>
+    <message>
+        <source>Save As - Select/Create project directory</source>
+        <translation>Speichern unter - Projektverzeichnis wählen/erstellen</translation>
+    </message>
+    <message>
+        <source>Select a type</source>
+        <translation>Typ wählen</translation>
     </message>
 </context>
 <context>
@@ -480,6 +730,33 @@ Do you want to overwrite it?</source>
     </message>
 </context>
 <context>
+    <name>SRecord</name>
+    <message>
+        <source>Record is too short</source>
+        <translation>Der REcord ist zu kurz</translation>
+    </message>
+    <message>
+        <source>Invalid type</source>
+        <translation>Ungültiger Typ</translation>
+    </message>
+    <message>
+        <source>Invalid count</source>
+        <translation>Ungültige Länge</translation>
+    </message>
+    <message>
+        <source>Invalid address</source>
+        <translation>Ungültige Adresse</translation>
+    </message>
+    <message>
+        <source>Invalid data</source>
+        <translation>Ungültige Daten</translation>
+    </message>
+    <message>
+        <source>Invalid checksum</source>
+        <translation>Ungültige Prüfsumme</translation>
+    </message>
+</context>
+<context>
     <name>ScheduleDialog</name>
     <message>
         <source>Scheduling</source>
@@ -491,11 +768,11 @@ Do you want to overwrite it?</source>
     </message>
     <message>
         <source>Laufzeit</source>
-        <translation>Laufzeit</translation>
+        <translation type="obsolete">Laufzeit</translation>
     </message>
     <message>
         <source>Takt</source>
-        <translation>Takt</translation>
+        <translation type="obsolete">Takt</translation>
     </message>
     <message>
         <source>Offset</source>
@@ -520,6 +797,14 @@ Do you want to overwrite it?</source>
     <message>
         <source>&amp;Cancel</source>
         <translation>&amp;Abbruch</translation>
+    </message>
+    <message>
+        <source>Runtime</source>
+        <translation>Laufzeit</translation>
+    </message>
+    <message>
+        <source>Clock</source>
+        <translation>Takt</translation>
     </message>
 </context>
 <context>
@@ -579,6 +864,34 @@ Do you want to overwrite it?</source>
     <message>
         <source>Select External Download Tool</source>
         <translation>Externes Download-Tool auswählen</translation>
+    </message>
+    <message>
+        <source>Apply</source>
+        <translation>Übernehmen</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Hilfe</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation>Sprache</translation>
+    </message>
+    <message>
+        <source>POA Language Settings</source>
+        <translation>POA Spracheinstellungen</translation>
+    </message>
+    <message>
+        <source>The new language settings will take effect after restart of poa.</source>
+        <translation>Die neuen Spracheinstellungen werden nach dem Neustart von POA übernommen.</translation>
     </message>
 </context>
 </TS>

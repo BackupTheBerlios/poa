@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.21 2003/12/08 00:54:35 squig Exp $
+ * $Id: main.cpp,v 1.22 2004/02/02 16:57:30 papier Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #define VERSION "POA-current"
 
 #include "mainwindow.h"
+#include "settings.h"
 #include "util.h"
 
 #include <qapplication.h>
@@ -40,6 +41,14 @@ int main (int argc, char *argv[])
 {
     QApplication app(argc, argv);
     Util::setExecutablePath(QFileInfo(qApp->argv()[0]).dirPath(true));
+
+    Settings* s = Settings::instance();
+
+    QTranslator translator (0);    
+    if (s->get("Language") == "deutsch"){
+      translator.load("poa_de.qm", ".");
+    }
+    app.installTranslator(&translator);
 
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);

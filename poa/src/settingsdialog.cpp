@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.15 2004/02/01 17:29:48 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.16 2004/02/02 16:57:30 papier Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -32,6 +32,7 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qlayout.h>
+#include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
@@ -47,10 +48,10 @@ SettingsDialog::SettingsDialog(int tabIndex, QWidget* parent,
     : QTabDialog(parent, name, modal, fl)
 {
     setCaption(tr("Settings"));
-    setApplyButton();
-    setCancelButton();
-    setOkButton();
-    setHelpButton();
+    setApplyButton(tr("Apply"));
+    setCancelButton(tr("Cancel"));
+    setOkButton(tr("OK"));
+    setHelpButton(tr("Help"));
 
     this->addTab(createGeneralTab(), tr("General"));
     this->addTab(createPathTab(), tr("Paths"));
@@ -87,6 +88,12 @@ QWidget *SettingsDialog::createGeneralTab()
     grid->addWidget(new QLabel(tr("Grid Size"), tab), 0, 0);
     gridSizeSpinBox_ = new QSpinBox(1, 100, 1, tab);
     grid->addWidget(gridSizeSpinBox_, 0, 1);
+
+    grid->addWidget(new QLabel(tr("Language"), tab), 1, 0);
+    languageComboBox_ = new QComboBox(tab);
+    languageComboBox_->insertItem("english");
+    languageComboBox_->insertItem("deutsch");
+    grid->addWidget(languageComboBox_, 1, 1);
 
     return tab;
 }
@@ -173,6 +180,7 @@ void SettingsDialog::setup()
 
     // general tab
     gridSizeSpinBox_->setValue(s->gridSize());
+    languageComboBox_->setCurrentText(s->get("Language"));
 
     // path tab
     editorLineEdit_->setText(s->get("Editor"));
@@ -193,6 +201,13 @@ void SettingsDialog::applySettings()
 
     // general tab
     s->setGridSize(gridSizeSpinBox_->value());
+
+    if (s->get("Language") != languageComboBox_->currentText()) {
+      	s->set("Language", languageComboBox_->currentText());
+	QMessageBox::information(this, 
+				 tr("POA Language Settings"),
+				 tr("The new language settings will take effect after restart of poa."));
+    }
 
     // path tab
     s->set("Editor", editorLineEdit_->text());

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.22 2004/01/28 16:35:51 squig Exp $
+ * $Id: settings.cpp,v 1.23 2004/02/02 16:57:30 papier Exp $
  *
  *****************************************************************************/
 
@@ -265,3 +265,7 @@ QString Settings::serialPort()
   return get("Serial Port");
 }
 
+QString Settings::language()
+{
+  return get("Language", "english");
+}

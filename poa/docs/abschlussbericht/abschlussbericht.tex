@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.25 2004/06/14 18:50:47 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.26 2004/06/14 21:53:51 vanto Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.25 $
-\RCSdef $Date: 2004/06/14 18:50:47 $
+\RCSdef $Revision: 1.26 $
+\RCSdef $Date: 2004/06/14 21:53:51 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -1506,13 +1506,23 @@ An der darauf folgenden Implementierungsphase war ich fast über die
 gesamte Laufzeit beteiligt. Zu Beginn erstellte bzw. erweiterte ich
 das Datenmodell und das Projektmanagement und war für die Persistenz
 der Daten zuständig. Dazu verwendete ich das von Qt zur Verfügung
-gestellte XML DOM-Framework. 
+gestellte XML DOM-Framework. Die Persistierung der Daten habe ich so
+angelegt, dass jedes Objekt sich selbst in eine XML-Struktur schreiben
+kann und umgekehrt aus einer XML-Struktur seinen Zustand wieder
+herstellen kann.
 
 Weiterhin übernahm ich den von Marcel begonnenen Scheduling-Dialog und
 führte ihn zum jetzigen Stand. Dazu implementierte ich die
-Darstellung der Blöcke sowie die Zoomfunktion auf der Zeitachse.
+Darstellung der Blöcke deren Länge der Taktrate und deren Position auf
+der X-Achse das Zeit-Offset darstellt. Wenn es eine Verbindung, also
+eine Signalabhängigkeit zwischen zwei Blöcken gibt, so wird eine
+gerichtete Kante zwischen den beiden Blöcken gezeichnet. Damit die
+Grafik besser zu erkennen ist, habe ich eine Zoomfunktion
+implementiert. Zusätzlich wird dem Benutzer eine Art Lineal angezeigt,
+die ihm die aktuelle Position auf der Zeitachse zeigt.
 
-Neben vielen kleineren Verfeinerungen die ich an der GUI vornahm startete
+Neben vielen kleineren Verfeinerungen die ich an der GUI vornahm
+(Farbpalette, Einfärben der Blöcke nach Taktraten, 3D-Effekte) startete
 ich das Unterprojekt GCover. GCover verarbeitet die Ausgabe des GNU
 Compilertools gcov und erstellt daraus eine HTML-Suite die die
 Anweisungsüberdeckung bei der Ausführung von Testfällen
@@ -1527,7 +1537,10 @@ und definierten daraus einige Refactoring-Maßnahmen. Das hat sich in
 einigen Punkten ausbezahlt. So konnten wir einige Verstöße gegen das
 Model-View-Controller-Konzept finden und beheben. Ausserdem sind uns
 bei einige Redundanzen im Datenmodell aufgefallen, die wir dann
-entfernen konnten.
+entfernen konnten. Für dieses Treffen erstellte ich ein UML-Diagramm
+welches die POA-Architektur veranschaulicht. Die aktuelle Version
+dieses Diagramms wird zum Projektende als DIN A1 Plakat mit
+ausgeliefert.
 
 Zum Abschluß der Implementierungsphase nahm ich an Code-Reviews von
 ausgewählten Komponenten teil. Auch hier konnten wir einige
@@ -1538,6 +1551,7 @@ ebenfalls von mir konfiguriert und informiert den Besucher über die
 aktuelle Projektentwicklung. So sind dort Metriken, CVS Statistiken,
 API sowie die projektbegleitende Dokumentation zu finden. Die Homepage
 wird dazu mit Maven generiert.
+
 
 
 \subsection{Team}

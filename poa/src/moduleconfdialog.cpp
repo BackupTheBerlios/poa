@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: moduleconfdialog.cpp,v 1.4 2003/09/01 19:51:10 garbeam Exp $
+ * $Id: moduleconfdialog.cpp,v 1.5 2003/09/01 19:53:05 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -57,9 +57,9 @@ ModuleConfDialog::ModuleConfDialog( QWidget* parent,  const char* name, bool mod
 
     QBoxLayout *topLayout = new QHBoxLayout(this, 5);
     QWidget *leftWidget = new QWidget(this);
-    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
+//    QBoxLayout *leftLayout = new QVBoxLayout(leftWidget, 5);
     QWidget *rightWidget = new QWidget(this);
-    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
+//    QBoxLayout *rightLayout = new QVBoxLayout(rightWidget, 5);
 
     topLayout->addWidget(leftWidget);
     topLayout->addWidget(rightWidget);

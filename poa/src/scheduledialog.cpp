@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.39 2004/01/20 15:23:45 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.40 2004/01/20 19:15:39 vanto Exp $
  *
  *****************************************************************************/
 
@@ -217,12 +217,10 @@ void ScheduleDialog::initGraphWidget()
             labelCanvasView, SLOT(setContentsPos(int, int)));
 
     // determine canvas size
-    int cnt = blocks_.count();
+    int height =  RULER_HEIGHT + blocks_.count() * (BOX_HEIGHT + BOX_YSPACING);
 
-    canvas->resize(CANVAS_WIDTH,
-                   RULER_HEIGHT + cnt * (BOX_HEIGHT + BOX_YSPACING));
-    labelCanvas->resize(50, RULER_HEIGHT + cnt * (BOX_HEIGHT + BOX_YSPACING));
-
+    canvas->resize(CANVAS_WIDTH, height);
+    labelCanvas->resize(50, height);
     initCanvas();
 }
 
@@ -322,6 +320,7 @@ void ScheduleDialog::drawTimings(BlockNode* node)
 
         labelCanvas->resize(text->boundingRect().width()
                             + (2 * WIDGET_SPACING), labelCanvas->height());
+        labelCanvasView->setFixedWidth(labelCanvas->width() + 4);
     }
 
     // check if block is configured correctly

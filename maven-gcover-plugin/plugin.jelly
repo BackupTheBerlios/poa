@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project 
+    xmlns:j="jelly:core"
+    xmlns:maven="jelly:maven"
+    xmlns:doc="doc"
+    xmlns:m="maven">
+
+    <!--==================================================================
+                         Generate Test coverage data
+        ================================================================== -->
+
+    <goal name="maven-gcover-plugin:register">
+        <doc:registerReport 
+             name="GCover Report" 
+             pluginName="maven-gcover-plugin"
+             link="gcover/index"
+             description="Show some statistics about the CVS repository"/>
+    </goal>
+
+    <goal name="maven-gcover-plugin:deregister">
+	    <doc:deregisterReport name="GCover Report"/>
+    </goal>
+
+    <goal name="maven-gcover-plugin:report">
+        <attainGoal name="gcover"/>
+    </goal>
+
+    <goal name="gcover"
+        description="Generate Test Coverage Data">
+
+        <echo>Compiling coverage data</echo>
+
+        <echo>run gcover...</echo>
+        <property name="maven.docs.dest" value="${pom.getPluginContext('maven-xdoc-plugin').getVariable('maven.docs.dest')}"/>
+        <property name="maven.gen.docs" value="${pom.getPluginContext('maven-xdoc-plugin').getVariable('maven.gen.docs')}"/>
+
+        <mkdir dir="${maven.docs.dest}/gcover"/>
+        <mkdir dir="${maven.gen.docs}/gcover"/>
+
+        <java classname="gcover.GCover" fork="true">
+            <arg line="-output-dir ${maven.gen.docs}/gcover"/> 
+        </java>
+
+		<!-- Copy images  -->
+		<!-- 
+		<copy todir="${maven.docs.dest}/gcover" overwrite="yes" filtering="no">
+            <fileset dir="${maven.gen.docs}/gcover">
+                <include name="**/*.png"/>
+            </fileset>
+        </copy>
+		-->
+    </goal>
+</project>

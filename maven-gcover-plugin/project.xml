@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+<!--  <extend>${basedir}/../project.xml</extend> -->
+<pomVersion>3</pomVersion>
+  <id>maven-gcover-plugin</id>
+  <name>Maven GCover Plug-in</name>
+  <currentVersion>1.0</currentVersion>
+  <description/>
+  <shortDescription>Provides Test Coverage Information</shortDescription>
+  <!-- <logo>/images/gcover.png</logo> -->
+  <url>http://poa.berlios.de/maven-gcover-plugin/</url>
+  <siteAddress>shell.berlios.de</siteAddress>
+  <siteDirectory>/home/groups/poa/htdocs/maven-gcover-plugin/</siteDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@cvs.berlios.de:/cvsroot/poa:maven-gcover-plugin</connection>
+    <url>http://cvs.berlios.de/cgi-bin/viewcvs.cgi/poa/maven-gcover-plugin</url>
+  </repository>
+  <issueTrackingUrl>
+    http://developer.berlios.de/tracker/?group_id=819
+  </issueTrackingUrl>
+  
+  <developers>
+    <developer>
+      <name>Tammo van Lessen</name>
+      <id>vanto</id>
+      <roles>
+      <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Steffen Pingel</name>
+      <id>squig</id>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <dependencies>
+    <dependency>
+      <id>gcover</id>
+      <version>1.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/plugin-resources</directory>
+        <targetPath>plugin-resources</targetPath>
+      </resource>
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>plugin.jelly</include>
+          <include>plugin.properties</include>
+          <include>project.properties</include>
+          <include>project.xml</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
+  <reports>
+    <report>maven-changes-plugin</report>
+  </reports>
+
+</project>

@@ -1,0 +1,7 @@
+dist
+doc
+cvs.log
+target
+maven.log
+velocity.log
+build.properties

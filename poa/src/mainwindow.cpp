@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.67 2003/11/26 16:27:10 squig Exp $
+ * $Id: mainwindow.cpp,v 1.68 2003/11/26 17:27:15 squig Exp $
  *
  *****************************************************************************/
 
@@ -770,6 +770,7 @@ void MainWindow::windowActivated(QWidget* w)
         editCopyAction->setEnabled(false);
         editPasteAction->setEnabled(false);
         editRemoveAction->setEnabled(false);
+        openBlockConfAction->setEnabled(false);
         zoomComboBox->setEnabled(false);
     }
 }
@@ -778,8 +779,8 @@ void MainWindow::selectionChanged(QCanvasItem *item)
 {
     editCutAction->setEnabled(INSTANCEOF(item, Copyable));
     editCopyAction->setEnabled(INSTANCEOF(item, Copyable));
-    openBlockConfAction->setEnabled(INSTANCEOF(item, BlockModel));
-    invokeCompilerAction->setEnabled(INSTANCEOF(item, CpuModel));
+    openBlockConfAction->setEnabled(INSTANCEOF(item, BlockView));
+    invokeCompilerAction->setEnabled(INSTANCEOF(item, BlockView));
     editRemoveAction->setEnabled(INSTANCEOF(item, Removeable));
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.47 2003/12/03 18:26:12 vanto Exp $
+ * $Id: canvasview.cpp,v 1.48 2003/12/10 16:12:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -241,15 +241,15 @@ void CanvasView::dropEvent(QDropEvent *e)
                 project()->addBlock(*it);
                 gridCanvas()->addView(*it, pos.x(), pos.y());
 
-                if (INSTANCEOF(*it, BlockModel)) {
-                    BlockConfDialog *dialog =
-                        new BlockConfDialog((BlockModel *)(*it));
+                if (INSTANCEOF(*it, MuxModel)) {
+                    MuxConfDialog *dialog =
+                        new MuxConfDialog((MuxModel *)(*it));
                     dialog->exec();
                     delete dialog;
                 }
-                else if (INSTANCEOF(*it, MuxModel)) {
-                    MuxConfDialog *dialog =
-                        new MuxConfDialog((MuxModel *)(*it));
+                else if (INSTANCEOF(*it, BlockModel)) {
+                    BlockConfDialog *dialog =
+                        new BlockConfDialog((BlockModel *)(*it));
                     dialog->exec();
                     delete dialog;
                 }

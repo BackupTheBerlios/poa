@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.71 2003/12/03 18:38:52 vanto Exp $
+ * $Id: mainwindow.cpp,v 1.72 2003/12/10 16:12:15 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -682,16 +682,16 @@ void MainWindow::openBlockConf()
 
         if (INSTANCEOF(topItem, BlockView)) {
             AbstractModel *model = ((BlockView *)topItem)->model();
-            if (INSTANCEOF(model, BlockModel)) {
-                BlockConfDialog *dialog =
-                    new BlockConfDialog((BlockModel *)model);
+            if (INSTANCEOF(model, MuxModel)) {
+                MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
                 if (dialog->exec() == QDialog::Accepted) {
                     project_->setModified(true);
                 }
                 delete dialog;
             }
-            else if (INSTANCEOF(model, MuxModel)) {
-                MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
+            else if (INSTANCEOF(model, BlockModel)) {
+                BlockConfDialog *dialog =
+                    new BlockConfDialog((BlockModel *)model);
                 if (dialog->exec() == QDialog::Accepted) {
                     project_->setModified(true);
                 }

@@ -65,7 +65,7 @@ gcover:
 	cd ../src; find -name "*.cpp" -exec gcov {} \;
 	for i in ../src/*.gcov; do test -e `echo $$i | sed -e s/\.gcov$$//` || rm $$i; done
 	rm -f ../src/moc_*.gcov
-	java -jar ../gcover/target/gcover-1.0-uber.jar ../src ../target/docs/gcover
+	java -jar ../gcover/target/gcover-0.2-uber.jar ../src ../target/docs/gcover
 
 poa:
 	make -C ../src	

@@ -1,4 +1,5 @@
 main
+mainqt
 Makefile.depend
 *.bb
 *.bbg

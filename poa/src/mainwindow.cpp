@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.108 2004/02/02 16:57:30 papier Exp $
+ * $Id: mainwindow.cpp,v 1.109 2004/02/05 02:18:32 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -168,7 +168,7 @@ void MainWindow::initializeActions()
 		    "fileSaveAsAction");
     filePrintAction = new QAction
         (tr("Print"), QPixmap(Util::findIcon("fileprint.png")),
-         tr("&Print"), QKeySequence("Ctrl+N"), this, "filePrintAction");
+         tr("&Print"), QKeySequence("Ctrl+P"), this, "filePrintAction");
     fileExitAction =
         new QAction(tr("Exit"), tr("E&xit"), 0, this, "fileExitAction");
     editCutAction =

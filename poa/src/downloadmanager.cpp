@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.cpp,v 1.11 2004/02/01 20:28:57 squig Exp $
+ * $Id: downloadmanager.cpp,v 1.12 2004/02/01 21:37:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -52,7 +52,7 @@ DownloadManager::DownloadManager(const QString &filename)
 
 DownloadManager::~DownloadManager()
 {
-
+    // the auto delete flag will take care of the SRecord objects
 }
 
 void DownloadManager::initializeAndOpen(QextSerialPort &port)
@@ -120,7 +120,7 @@ bool DownloadManager::run(const char* portname)
     return true;
 }
 
-bool DownloadManager::download(const char* portname)
+bool DownloadManager::download(const char* portname, QProgressDialog *monitor)
 {
     QextSerialPort port(portname);
     initializeAndOpen(port);
@@ -138,23 +138,27 @@ bool DownloadManager::download(const char* portname)
     // send command: 0x01 = LOAD
     sendChar(port, 0x01);
 
+    int total = 0;
+    if (monitor != 0) {
+        monitor->setTotalSteps(0);
+    }
+
     // send data
-    QProgressDialog progress(tr("Downloading file to CPU..."),
-                             tr("Abort"), filesize(), 0, "progress",
-                             TRUE);
-    QPtrListIterator<SRecord> it(records_);
     SRecord *record;
-    while ((record = it.current()) != 0) {
+    for (QPtrListIterator<SRecord> it(records_); *it != 0; ++it) {
+        record = *it;
         const unsigned char *data = record->data();
         int length = record->dataSize();
         for (int i = 0; i < length; i++) {
             port.putch(data[i]);
             port.flush();
 
-            progress.setProgress(progress.progress() + 1);
+            if (monitor != 0) {
+                monitor->setProgress(++total);
+            }
             qApp->processEvents(4);
 
-            if (progress.wasCancelled()) {
+            if (monitor != 0 && monitor->wasCancelled()) {
                 port.close();
                 return false;
             }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: srecord.cpp,v 1.4 2004/02/01 20:28:57 squig Exp $
+ * $Id: srecord.cpp,v 1.5 2004/02/01 21:37:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -49,12 +49,18 @@ SRecord::SRecord(const char *line, const unsigned int length)
         throw PoaException(tr("Invalid address"));
     }
 
-    data_ = new unsigned char[count_ - 3];
-    for (unsigned int i = 0; i < count_ - 3; i++) {
-        data_[i] = QString::fromLatin1(&line[8 + i * 2], 2).toUInt(&ok, 16);
-        if (!ok) {
-            throw PoaException(tr("Invalid data"));
+    if (count_ > 3) {
+        data_ = new unsigned char[count_ - 3];
+        for (unsigned int i = 0; i < count_ - 3; i++) {
+            data_[i]
+                = QString::fromLatin1(&line[8 + i * 2], 2).toUInt(&ok, 16);
+            if (!ok) {
+                throw PoaException(tr("Invalid data"));
+            }
         }
+    }
+    else {
+        data_ = 0;
     }
 
     checksum_
@@ -66,7 +72,9 @@ SRecord::SRecord(const char *line, const unsigned int length)
 
 SRecord::~SRecord()
 {
-    delete data_;
+    if (data_ != 0) {
+        delete data_;
+    }
 }
 
 unsigned int SRecord::address() const

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.18 2004/02/01 17:29:48 squig Exp $
+ * $Id: deployprojectwizard.cpp,v 1.19 2004/02/01 21:37:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -41,7 +41,7 @@
 #include <qheader.h>
 #include <qlabel.h>
 #include <qlistview.h>
-#include <qprogressbar.h>
+#include <qprogressdialog.h>
 #include <qtextedit.h>
 #include <qmessagebox.h>
 #include <qwidget.h>
@@ -230,8 +230,11 @@ void DeployProjectWizard::downloadSelectedCpu()
         if (!port.isEmpty()) {
             CodeManager cm(project_, currentCpu_);
             try {
+                QProgressDialog progress
+                    (tr("Downloading file to CPU..."), tr("Abort"),
+                     0, this, "progress", true);
                 DownloadManager dm(cm.sourceFilePath("srec"));
-                if (dm.download(port.latin1())) {
+                if (dm.download(port.latin1(),  &progress)) {
                     QMessageBox::information(this, tr("POA Error"),
                                              tr("Download was successful."));
                 }

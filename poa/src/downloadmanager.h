@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: downloadmanager.h,v 1.8 2004/02/01 20:28:57 squig Exp $
+ * $Id: downloadmanager.h,v 1.9 2004/02/01 21:37:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -31,6 +31,7 @@ class SRecord;
 #include <qdir.h>
 #include <qfile.h>
 #include <qstring.h>
+class QProgressDialog;
 
 /**
  * This class can download compiled cpu source code to the CPLD. The
@@ -53,7 +54,7 @@ public:
      * @return true, if download was successful; false, if the
      * download was cancelled
      */
-    bool download(const char* portName);
+    bool download(const char* portName, QProgressDialog *monitor = 0);
 
     unsigned long filesize() const;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.73 2004/02/16 16:24:01 squig Exp $
+ * $Id: blockview.cpp,v 1.74 2004/02/20 18:17:10 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -327,16 +327,7 @@ void BlockView::drawShape(QPainter &p)
     unsigned slotCount = QMAX(leftPins_.size(), rightPins_.size());
 
     if (slotCount > 0) {
-        unsigned pinHeight = (height() - BlockView::DEFAULT_TOP_SPACING
-                              - BlockView::DEFAULT_FONT_HEIGHT
-                              - BlockView::DEFAULT_HEADER_SPACING
-                              - BlockView::DEFAULT_HEADER_SPACING
-                              - BlockView::DEFAULT_HEADER_SPACING
-                              - BlockView::DEFAULT_BOTTOM_SPACING
-                              - ((bottomPins_.size() > 0)
-                                 ? DEFAULT_FONT_HEIGHT
-                                 : 0))
-            / slotCount;
+        unsigned pinHeight = BlockView::DEFAULT_FONT_HEIGHT;
 
         int maxWidth = width();
         if (leftPins_.size() > 0 && rightPins_.size() > 0) {
@@ -421,8 +412,6 @@ void BlockView::arrangeVerticalPins()
     unsigned slotCount = QMAX(leftSize, rightSize);
 
     if (slotCount > 0 && bottom > top) {
-// this method does not produce a constant value for all different blocks
-//        unsigned height = (bottom - top + 1) / slotCount;
         unsigned height = BlockView::DEFAULT_FONT_HEIGHT;
         top += BlockView::DEFAULT_FONT_HEIGHT / 2;
 

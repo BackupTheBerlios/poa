@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.18 2004/06/07 22:20:37 vanto Exp $
+%% $Id: abschlussbericht.tex,v 1.19 2004/06/08 04:41:53 kilgus Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.18 $
-\RCSdef $Date: 2004/06/07 22:20:37 $
+\RCSdef $Revision: 1.19 $
+\RCSdef $Date: 2004/06/08 04:41:53 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -97,7 +97,7 @@ Kernanforderung des POA Projekts.
 
 \section{Anforderungen}
 
-Aus dem im vorherigen Abschnitt skizierten Projekthintergrund ergaben
+Aus dem im vorherigen Abschnitt skizzierten Projekthintergrund ergaben
 sich folgende Anforderungen im Detail, deren Umsetzung in einem
 Angebotsdokument verbindlich mit dem Auftraggeber vereinbart wurden:
 
@@ -105,9 +105,9 @@ Angebotsdokument verbindlich mit dem Auftraggeber vereinbart wurden:
 \item Darstellung und Manipulation rasterisierter CPLD Layouts
 \item Verwaltung und Bearbeitung einer CPLD-Blockbibliothek zur CPLD-Layout
       Manipulation
-\item Rahmencodegenerierung f"ur eingebette CPU-Bl"ocke in einem CPLD-Layout
+\item Rahmencodegenerierung f"ur eingebettete CPU-Bl"ocke in einem CPLD-Layout
 \item Plausibilit"atspr"ufung und Optimierung eines entworfenen CPLD-Layouts
-\item Compilieren und Herunterladen von Quellcode f"ur die CPU-Bl"ocke
+\item Compilieren und herunterladen von Quellcode f"ur die CPU-Bl"ocke
 \item Speichern und "Offnen von CPLD-Layouts und zugeh"origem Quellcode
 \item Konfiguration der Programmeigenschaften
 \item Zusammenarbeit mit externen Programmen
@@ -124,7 +124,7 @@ umgesetzt:
 \item Automatische Laufzeitoptimierung von Signalen (Scheduling)
 \item Öffnen mehrerer Projekte zur gleichen Zeit mit
   Datenaustauschmöglichkeiten über die Zwischenablage
-\item Anzeige der Taktfrequzenzen mittels Einfärbung der Blöcke
+\item Anzeige der Taktfrequenzen mittels Einfärbung der Blöcke
 \item Lokalisierung in Deutsch und Englisch
 \item Lauffähigkeit unter Microsoft Windows und Linux
 \end{itemize}
@@ -178,8 +178,8 @@ Signal in kürzest möglicher Zeit das Netzwerk durchläuft.
 \end{figure}
 
 Nach der Optimierung der Signallaufzeiten kann das Projekt auf
-Konsistenz geprüftwerden. In einem Dialog wird in einer Baumansicht
-eine Liste mit möglichen Problem, wie beispielsweise nicht verbundene
+Konsistenz geprüft werden. In einem Dialog wird in einer Baumansicht
+eine Liste mit möglichen Problemen, wie beispielsweise nicht verbundene
 Blöcke, mit einer detailierten Beschreibung angezeigt. Je nach Art des
 Problems kann über eine Schaltfläche ein Lösungsvorschlag angewendet 
 werden.
@@ -197,7 +197,7 @@ dem Handbuch entnommen werden.
 \label{design}
 
 Die Architektur von POA lässt sich in stark zusammenhängende Module
-aufteilen, die eine gerine Kopplung aufweisen. 
+aufteilen, die eine geringe Kopplung aufweisen. 
 
 \begin{figure}[h!]
   \centering
@@ -207,14 +207,14 @@ aufteilen, die eine gerine Kopplung aufweisen.
 
 FIX: Kurze Beschreibung der Architektur
 
-Der POA Entwurf wurde nach folgenden Kritieren optimiert:
+Der POA Entwurf wurde nach folgenden Kriterien optimiert:
 
 \begin{itemize}
 \item Einfache Erweiterbarkeit
 \item Hohe Änderbarkeit
 \end{itemize}
 
-Erreicht wurden diese Eigenschafen in erster Linie durch ein einfaches
+Erreicht wurden diese Eigenschaften in erster Linie durch ein einfaches
 Design. Es wurden nur die notwendigen Klassen implementiert, keine
 Technologie auf Vorrat angelegt. Soweit möglich wurden Entwurfsmuster
 verwendet, um das einfache Verständnis des Quellcodes zu erhöhen. Es
@@ -235,7 +235,7 @@ entstanden.
 In einem knapp 20-seitigen Angebot wurden die Anforderungen und ein
 Projektablaufplan mit dem Auftraggeber vereinbart. Das Angebot
 beinhaltete desweiteren eine Risikioanalyse und eine Beschreibung des
-Prozessmodells und der geplanten Projekorganisation. In einem
+Prozessmodells und der geplanten Projektorganisation. In einem
 angehängten Begriffslexikon wurden Begriffe der Problemdomäne
 definiert, die zur Kommunikation mit dem Auftraggeber und innerhalb
 des Teams verwendet wurden.
@@ -247,7 +247,7 @@ Klassendeklarationen ohne Programmlogik enthielten. Zum Ende des
 Projekts wurde die Architektur der letzten ausgelieferten Version in
 einem Form eines Dokuments beschrieben. Dieses Dokument enthält eine
 detailierte Beschreibung der POA Architektur. Es soll bei einer
-möglichen Weiterentwicklung der Software als Orientierungsshilfe
+möglichen Weiterentwicklung der Software als Orientierungshilfe
 dienen. Das Entwurfsdokument wird durch ein A0 Poster, das die
 gesammte Klassenstruktur als UML Diagramm zeigt, ergänzt.
 
@@ -265,7 +265,7 @@ in die Bedienung von POA ermöglicht.
 Einige Dokumente wurden nur innerhalb des Teams verwendet und nicht an
 den Auftraggeber ausgeliefert. Zu nennen sind hier eine Spezifikation,
 die in Form von Benutzungsfällen den Funktionsumfang der ersten
-Version beschreibt, Kodierungsrichtlinen im Rahmen des
+Version beschreibt, Kodierungsrichtlinien im Rahmen des
 Konfigurationsmanagements und der Testbericht des Systemtests.
 
 \section{Weitere Ergenisse}
@@ -281,7 +281,7 @@ Konfigurationsmanagements und der Testbericht des Systemtests.
 
 Im Rahmen des POA Projekts entstand als Nebenprodukt eine Software zur
 Auswertung der, von dem Werkzeug gcov, ermittelten Testüberdeckung.
-Gcov ist Teil der GNU gcc Kompilersuite, die zur Übersetzung von POA
+Gcov ist Teil der GNU gcc Compilersuite, die zur Übersetzung von POA
 verwendet wurde. Gcov annotiert im wesentlichen die einzelnen
 Quellcodezeilen mit einer Zahl, die angibt wie oft die jeweilige Zeile
 ausgeführt wurde. Zusätzlich wird auf der Konsole für jede Quellcode
@@ -308,7 +308,7 @@ an. Nicht überdeckte Zeilen werden rot unterlegt.
 
 Gcover wurde im POA Projekt eingesetzt, um die Vollständigkeit des mit
 CppUnit durchgeführten Regressionstests zu überprüfen. Es diente den
-Entwicklern als Hilfsmittel, um nicht ausgeführte Zeilen zu finden und
+Entwicklern als Hilfsmittel um nicht ausgeführte Zeilen zu finden und
 die Tests entsprechend anzupassen.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -317,7 +317,7 @@ die Tests entsprechend anzupassen.
 \section{Projektrahmen}
 
 Der Auftrag zur Entwicklung von POA wurde von Dipl.-Ing. Christian
-Kramer vergeben. Er war als Kunde für die Formulierug der
+Kramer vergeben. Er war als Kunde für die Formulierung der
 Anforderungen und Abnahme der Ergebnisse zuständig. Christian Kramer
 war auch bei fachlichen Fragen immer für das Team erreichbar und 
 stets bereit auch kurzfristige Terminvereinbarungen einzugehen. Als
@@ -336,7 +336,7 @@ Tammo van Lessen.
 Auf die Vergabe von formalen Rollen wurden mangels Notwendigkeit
 weitgehend verzichtet. Die Zuteilung der Aufgaben erfolgte
 gemeinschaftlich soweit möglich auf Basis freiwilliger Übernahme
-während gemeinsamer Teamtreffen. Wenn eine Aufgabe von keinem der
+während gemeinsamer Team Treffen. Wenn eine Aufgabe von keinem der
 Entwickler übernommen wurde, wurde diese vom Projektleiter zugeteilt.
 
 Lediglich ein Verzicht auf die explizite Zuweisung der
@@ -344,9 +344,9 @@ Qualitätssicherung ist als Mangel anzusehen. Leider wollte keiner der
 Entwickler diese Rolle übernehmen. Ausgeglichen wurde das durch das
 kooperative Vorgehensmodell. Die Dokumente wurden in der Regel von
 mindesten zwei Entwicklern gemeinsam verfasst und grundsätzlich
-anschliessend von dem gesammten Team in einem Review geprüft. Die
+anschliessend von dem gesamten Team in einem Review geprüft. Die
 Qualität des Quellcodes wurde in Form von Peer-Reviews laufend
-geprüft. Die einzelnen Quellcode Dateien konnten vom jedem Entwickler
+geprüft. Die einzelnen Quellcode Dateien konnten von jedem Entwickler
 eingesehen und geändert werden (siehe auch \ref{developer by file}).
 
 \subsubsection{Projektleiter}
@@ -357,14 +357,14 @@ Reviews hat der Projektleiter teilweise die Aufgaben der
 Qualitätssicherung übernommen. Die Rolle des Projektleiters wurde von
 Steffen Pingel übernommen.
 
-\subsubsection{Konfiguationsmanager}
+\subsubsection{Konfigurationsmanager}
 
-Der Konfiguationsmanager war für die Verwaltung des zentralen
-Repositories in dem sowohl die Dokumente als auch der Quellcode
-gespeichert wurde zuständig. Desweiteren wurden vom
-Konfiguationsmanager Richtlinien zur Formatierung des Quellcodes und
+Der Konfigurationsmanager war für die Verwaltung des zentralen
+Repositories, in dem sowohl die Dokumente als auch der Quellcode
+gespeichert wurde, zuständig. Desweiteren wurden vom
+Konfigurationsmanager Richtlinien zur Formatierung des Quellcodes und
 zur Benutzung des Repositories erstellt. Die Rolle des
-Konfiguationsmanagers wurde von Anselm Garbe übernommen.
+Konfigurationsmanagers wurde von Anselm Garbe übernommen.
 
 \subsubsection{Entwickler}
 
@@ -404,30 +404,30 @@ weiter entwickelte Produkt ausgeliefert und vom Kunden einem
 Akzeptanztest unterzogen.
 
 Das Prozessmodell wurde gewählt um dem Forschungscharakter des
-Projekts gerecht zu werden. Zu Begin des Projekts war unklar wie stark
+Projekts gerecht zu werden. Zu Beginn des Projekts war unklar wie stark
 sich die Anforderungen während des Projekts ändern würden. Deswegen
 wurde zu Anfang jeder Iteration eine erneute Anforderungsanalyse mit
-dem Auftraggeber durchgeführt und eine Rückmeldung über das Ergebniss
+dem Auftraggeber durchgeführt und eine Rückmeldung über das Ergebnis
 der vorherigen Iteration eingeholt.
 
-Im Nachhinein lässt sich feststellen, das die Anfoderungen im Laufe
+Im Nachhinein lässt sich feststellen, dass die Anforderungen im Laufe
 des Projekts nur geringfügig von den zu Anfang des Projekts
-ermittelten abgwichen sind. Dennoch erwieß sich der zusätzliche
+ermittelten abgewichen sind. Dennoch erwies sich der zusätzliche
 Aufwand mehrerer Iterationen im Vergleich zu einer einzigen, wie es
 das klassische Phasenmodell vorsieht, als sinnvoll. Es war dem
 Auftraggeber möglich eine priorisierte Liste der Anforderungen zu
-formulieren, so daß die wichtigsten Anforderungen zuerst umgesetzt
+formulieren, so dass die wichtigsten Anforderungen zuerst umgesetzt
 werden konnten. Da am Ende jeder Iteration eine lauffähige Version
-ausgeliefert wurde, hätte im Falle eines Scheiterns des Projekts ein
-Ergebniss mit dem zu dem jeweiligen Zeitpunkt maximalen
+ausgeliefert wurde hätte im Falle eines Scheiterns des Projekts ein
+Ergebnis mit dem zum jeweiligen Zeitpunkt maximalen
 Funktionsumfang zur Verfügung gestanden.
 
 Erfreulicherweise ist keines der im Angebot aufgeführten Risiken, die
-zu einem Projektabbruch hätten führen können eingetreten. 
+zu einem Projektabbruch führen konnten, eingetreten. 
 
 \section{Projektplan}
 
-Der ursprünglich im Angebot vorgesehe Zeitplan diente als grobe
+Der ursprünglich im Angebot vorgesehene Zeitplan diente als grobe
 Orientierung für den Projektverlauf. Die Planung und Ausführung war im
 wesentlichen von einer Hausmesse Mitte Oktober am ISW und dem Ablauf
 der Semesters geprägt.
@@ -457,28 +457,28 @@ der Semesters geprägt.
 \end{figure}
 
 Die ursprünglich geplanten fünf Sprints wurden auf drei reduziert und
-werden im folgenden als Iterationen bezeichnet. Zum Einen stellte sich
-während des Projekts heraus, das die Anforderungen abgesehen von
+werden im folgenden als Iterationen bezeichnet. Zum einen stellte sich
+während des Projekts heraus, dass die Anforderungen abgesehen von
 kleinen zusätzlichen funktionalen Anforderungen weitgehend stabil
-waren. Zum Anderen war der zeitliche Aufwand, bedingt durch
+waren. Zum anderen war der zeitliche Aufwand, bedingt durch
 organisatorische Tätigkeiten wie eine Produktpräsentation am Ende
-jeder Iteration höher als erwartet.
+jeder Iteration, höher als erwartet.
 
-Die vereinbarten Meilensteine wurde eingehalten bzw. im mit dem
+Die vereinbarten Meilensteine wurde eingehalten bzw. mit
 Einverständnis des Kunden geringfügig verschoben. Durch eine
 kontinuierliche Fortschrittskontrolle und Planungsanpassung wurde vom
 Team dazu beigetragen die Wahrscheinlichkeit einer Verzögerung
 frühzeitig erkennbar zu machen. Auf Grund der Reduzierung der
 Iterationen wurde der Meilenstein M3 gestrichen.
 
-Als schwierig erwiess sich die Koordination der individuellen
+Als schwierig erwies sich die Koordination der individuellen
 Wochenpläne. Bedingt durch unterschiedlich gewählte Vorlesungen,
 andere Studienprojekte, Urlaubsplanung, Krankheit und
-Nebenbeschäftigungen war es kaum möglich gemeinsame Termin zu finden.
+Nebenbeschäftigungen war es kaum möglich gemeinsame Termine zu finden.
 Dennoch wurde sowohl während Entwicklung des Prototypen in der
 vorlesungsfreien Zeit und während der Iterationen in der
 Vorlesungszeit Kernarbeitszeiten eingeführt, die die Kommunikation
-stark erleichtert haben und motivierend auf die Entwickler gewirkt
+stark erleichtert und motivierend auf die Entwickler gewirkt
 haben.
 
 Die Kernarbeitszeiten wurden während des Projekts durch Treffen des
@@ -525,29 +525,29 @@ auch \ref{angebot}).
 
 \subsection{Spezifikation und Entwurf}
 
-In diese Phase wurde eine Spezifikation erstellt, die Benutzungsfälle
+In dieser Phase wurde eine Spezifikation erstellt, die Benutzungsfälle
 beinhaltete und als internes Dokument zur Erstellung der
 Benutzungsoberfläche verwendet wurde. In einem Grobentwurf wurde die
 Architektur von POA festgelegt (siehe auch \ref{design}) und in einem
-partitiellen Feinentwurf die Schnittstellen des Datenmodells in Form
-von Headerdateien entwickelt.
+partiellen Feinentwurf die Schnittstellen des Datenmodells in Form
+von Header-Dateien entwickelt.
 
 \subsection{Prototyp (Erste Iteration)}
 
-Der Prototyp wurde für eine Hausmesse am ISW entwickelt. und für die
+Der Prototyp wurde für eine Hausmesse am ISW entwickelt und für die
 Präsentation des Offenen Antriebs verwendet. Der Fokus lag auf der
 Entwicklung der graphischen Benutzungsoberfläche, die teilweise noch
 funktionslose Dialoge beinhaltete. Die Oberfläche unterstützte bereits
 das Anlegen und Speichern von Projekten. Die erstellen Blöcke konnten
 auch mit automatisch gerouteten Linien verbunden und konfiguriert
-werden, so daß die Kernfunktionalität von POA anhand von
-Beispielprojekten auf der Messer erläutert werden konnte.
+werden, so dass die Kernfunktionalität von POA anhand von
+Beispielprojekten auf der Messe erläutert werden konnte.
 
 Die pünktliche Auslieferung des Prototypen und die damit verbundene
 Erreichung des zweiten Meilensteins war ein erster Test, ob die
 Umsetzung der Anforderungen mit den Vorstellung des Kunden
 übereinstimmte. Da sich die Rückmeldungen des Kunden als sehr positiv
-erwiesen, wurde die Entscheidung getroffen den Prototyp nicht zu
+erwiesen wurde die Entscheidung getroffen den Prototyp nicht zu
 verwerfen, sondern als Basis weiter zu verwenden. Somit kann die
 Entwicklung des Prototypen als erste Iteration bezeichnet werden.
 
@@ -559,8 +559,8 @@ ausgeliefert.
 Zu Beginn der zweiten Iteration wurde eine Refaktorisierung des
 Quellcodes vorgenommen, um die während der Entwicklung des Prototypen
 entdeckten Schwachstellen des Entwurfs zu beseitigen. Desweiteren
-wurden Merkmale, wie die manuelle Laufzeitoptimierung, die im
-Prototypen nur als funktionslose Dialoge zur Verfügung standen
+wurden Merkmale wie die manuelle Laufzeitoptimierung, die im
+Prototypen nur als funktionslose Dialoge zur Verfügung standen,
 implementiert. Der automatische Routing Algorithmus wurde durch einen
 zweiten Algorithmus ergänzt, der Überdeckungen mit anderen
 Verbindungen und Blöcken berücksichtigt, aber einen höheren Aufwand
@@ -574,10 +574,10 @@ begründet sind, mussten kleinere plattformspezifische Eigenheiten der
 Qt Bibliothek umschifft werden.
 
 Die Portierung, die oben beschriebene Refaktorisierung und die
-zweiwöchigen Weihnachtsferiern haben zu der Ausdehnung der Iteration
+zweiwöchigen Weihnachtsferien haben zu der Ausdehnung der Iteration
 bis in den Januar geführt. 
 
-Am 13.01.2004 wurde POA 0.2.0 im Rahmen einer Präsentation bei dem
+Am 13.01.2004 wurde POA 0.2.0 im Rahmen einer Präsentation beim
 Auftraggeber ausgeliefert. Am 16.01.2004 wurde eine für Windows
 korrigierte Version 0.2.1 nachgeliefert.
 
@@ -586,7 +586,7 @@ korrigierte Version 0.2.1 nachgeliefert.
 In der dritten Iteration wurden die bis dahin noch nicht
 umgesetzten Anforderungen implementiert. Einige nicht geforderte,
 aber auf Grund des erweiterbaren Entwurfs und der Mächtigkeit der
-verwendeten Qt Bibliothek, sehr einfach zu implementierende Merkmale
+verwendeten Qt Bibliothek sehr einfach zu implementierende Merkmale,
 wurden außerdem eingebaut. Darunter eine Druckfunktion, die Netzwerke
 aus Blöcken und CPUs ausgeben kann und die Möglichkeit mehrere
 Projekte parallel zu öffnen. Desweiteren wurden frei positionierbare
@@ -606,20 +606,20 @@ Signallaufzeiten implementiert.
 Die anschliessende Zeit wurde für ausgiebige Reviews des Quellcodes
 verwendet. Abgesehen von einfach manuell testbaren Klassen der
 Benutzeroberfläche wurde in fünf Review Sitzungen der größte Teil des
-Quellcodes geprüft. Im Ergebniss wurden einige Hauptfehler und mehrere
+Quellcodes geprüft. Im Ergebnis wurden einige Hauptfehler und mehrere
 Nebenfehler gefunden. Am positivsten haben sich die Reviews auf die
 Dokumentation des Quellcodes und die Motivation diesen zu
 dokumentieren ausgewirkt. Auf Grund der Erfahrungen der ersten Review
 Runde wurde der Quellcode von den entsprechenden Entwicklern vor der
 zweiten Runde bereits im Vorfeld der Reviews überarbeitet.
 
-Im Nachhinein kann festgestellt werden, daß es sicherlich positive
+Im Nachhinein kann festgestellt werden, dass es sicherlich positive
 Auswirkungen auf die Qualität gehabt hätte Quellcode Reviews bereits
 zu einem früheren Zeitpunkt und regelmässig durchzuführen.
 
 Im Anschluss an die Reviews wurde ein umfangreicher Systemtest
-durchgeführt, um die graphische Benutzeroberfläche zu prüfen. Auf
-Grund des erstellten Testprotokolls konnten mehrere Fehler in der
+durchgeführt, um die graphische Benutzeroberfläche zu prüfen. Aufgrund
+des erstellten Testprotokolls konnten mehrere Fehler in der
 Software behoben werden.
 
 Am 25.3.2004 wurde POA 1.0.0 im Rahmen einer Präsentation an den
@@ -654,7 +654,7 @@ Der Abschlussbericht ist das vorliegende Dokument. Die
 Abschlusspräsentation ist für den 17.6.2004 am ISW geplant. Zusammen
 mit einem ausgedruckten Exemplar des Abschlussberichts wird ein Poster
 mit einer UML Darstellung der POA Architektur und eine CD, die
-sämtliche Projektergebnisse beinhaltet ausgeliefert werden.
+sämtliche Projektergebnisse beinhaltet, ausgeliefert werden.
 
 \section{Zeitverteilung}
 
@@ -673,7 +673,7 @@ Bei den Tätigkeiten überwiegt der Anteil der Implementierung.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=15cm]{phasenverteilung}
-  \caption{Zeitliche Aufwandsverteiung auf die Aktivitäten}
+  \caption{Zeitliche Aufwandsverteilung auf die Aktivitäten}
 \end{figure}
 
 \section{Werkzeuge}
@@ -681,7 +681,7 @@ Bei den Tätigkeiten überwiegt der Anteil der Implementierung.
 Für die Entwicklung wurden zahlreiche Werkzeuge eingesetzt. Die Wahl
 war den Entwicklern freigestellt sofern die vereinbarten Richtlinien
 eingehalten wurden. Bei der Wahl von Dokumentenformaten wurde darauf
-geachtet, dass für alle eingesetzten Platformen freie Werkzeuge zur
+geachtet dass für alle eingesetzten Plattformen freie Werkzeuge zur
 Bearbeitung verfügbar waren.
 
 \subsubsection{Bibliotheken}
@@ -719,7 +719,7 @@ Informationsaustausch.
 
 Ergäzend zu Berlios wurde auf ein ähnliche Platform mit dem Namen
 DuckForge an der Fakultät für Informatik und Elektrotechnik zur
-Erfassung der Arbeitszeit zurück gegriffen. Leider zeichnet sich
+Erfassung der Arbeitszeit zurückgegriffen. Leider zeichnet sich
 die Zeiterfassung von DuckForge nicht durch intuitive Bedienung und
 hohe Geschwindigkeit aus. 
 
@@ -734,11 +734,11 @@ hohe Geschwindigkeit aus.
 
 Die Tracker Funktionalität von Berlios wurde nicht benutzt.
 Stattdessen wurde Jira von Atlassian eingesetzt, die freundlicherweise
-eine kostenlose Lizens für das POA Projekt zur Verfügung stellten.
+eine kostenlose Lizenz für das POA Projekt zur Verfügung stellten.
 Jira ist ein webbasiertes Trackersystem, das auf einem von Tammo van
 Lessen zur Verfügung gestellten Server betrieben wurde. Jira
 ermöglicht eine detailierte Erfassung von Aufgaben und Fehlerberichten
-inklusive einer Zeitabschätzung und Fortschrittserfassung. Letzters
+inklusive einer Zeitabschätzung und Fortschrittserfassung. Letzteres
 war sehr hilfreich bei der Planung und Kontrolle der Iterationen. Jira
 bietet einfache Bedienbarkeit und übersichtliche
 Analysefunktionen. 
@@ -746,9 +746,9 @@ Analysefunktionen.
 Die geprüften Open-Source Alternativen wie Bugzilla sind weniger
 intuitiv zu Bedienen und in Bezug auf die Analysen nicht ausreichend
 mächtig zur Erfassung von Aufgaben. Jira kann zur Erfassung von
-Fehlerberichten und Aufgaben empfohlen werden, allerdings gilt der
+Fehlerberichten und Aufgaben empfohlen werden, allerdings gilt es, den
 nicht triviale Administrationsaufwand, der Kenntnisse im J2EE Bereich
-vorraussetzt nicht zu unterschätzen. Durch einen Fehler bei der
+voraussetzt, nicht zu unterschätzen. Durch einen Fehler bei der
 Installation war es zu einem fortgeschrittenen Zeitpunkt des POA
 Projekts leider notwendig die Jira erneut zu installieren und die
 Datenbank mit erfassten Berichten zu löschen.
@@ -776,11 +776,11 @@ Auftraggeber ausgeliefert.
 An dem Diagramm lassen sich sehr gut die Iterationen ablesen. Die
 erste Iteration erstreckt sich vom Anfang des Diagramms bis zur ersten
 gestrichelten Linie. Der Sprung am Anfang ist durch die Übernahme der
-während des Entwurfs enstandenen Headerdateien zu erklären. Die
+während des Entwurfs enstandenen Header-Dateien zu erklären. Die
 Leerlaufphase im Oktober ist durch die Hausmesse und den Anfang des
 Semesters bedingt. Nach der Überprüfung des Quellcodes ist die
 Refaktorisierung deutlich erkennbar. Ende November wurde zeitweise
-mehr Quellcode entfernt als eingefügt. Im folgenden ist die zunahme
+mehr Quellcode entfernt als eingefügt. Im folgenden ist die Zunahme
 der Quellcodezeilen nach der Weihnachtspause wieder linear bis zur
 Fertigstellung von POA.
 
@@ -790,7 +790,7 @@ Fertigstellung von POA.
   \caption{Verteilung der Quellcode Zeilenanzahl auf die Module}
 \end{figure}
 
-Dieses Diagramm zeigt den Anteil den hohen Anteil der graphischen
+Dieses Diagramm zeigt den hohen Anteil der graphischen
 Benutzeroberfläche (GUI, View). Wobei auch anderen Modulen wie
 Scheduling und Download Benutzerschnittstellen enthalten sind.
 
@@ -818,8 +818,8 @@ Scheduling und Download Benutzerschnittstellen enthalten sind.
 
 Diese Tabelle zeigt zu einer Liste von Quellcode Dateien, die Anzahl
 von Entwicklern die jeweils gemeinsam an einer Datei gearbeitet
-haben. Es sind nur die Top zehn Dateien angegeben, aber weniger als
-zwei Bearbeiter würde auf keine der Dateien zutreffen.
+haben. Es sind nur die Top zehn Dateien angegeben, aber jede Datei wurde
+von mindestens zwei Teammitgliedern bearbeitet.
 
 \begin{figure}[h!]
   \centering
@@ -834,8 +834,8 @@ die auch bei anderen Studienprojekten zu beobachten
 ist. Offensichtlich ist das eine übliche Zeit das Arbeitsergebnis z.B.
 zum Ende der Kernarbeitszeit in das Repository zu
 comitten. Bemerkenswert sind die Aktivitäten nach 22 Uhr, die bis in
-die Morgenstunden reichen. Vollkommen atypisch die Commits um zwischen
-7 und 8 Uhr. Es könnte vermutet werden, dass hier ein Frühaufsteher am
+die Morgenstunden reichen. Vollkommen atypisch die Commits zwischen
+7 und 8 Uhr. Es könnte vermutet werden dass hier ein Frühaufsteher am
 Werk war. Die näherere Betrachtung des POA Teams läßt diese Vermutung
 allerdings sehr unwahrscheinlich erscheinen. Es gibt eine ausgeprägte
 Bandbreite von bevorzugten Arbeitszeiten wobei die Nachtarbeiter
@@ -863,7 +863,7 @@ Der Versuch Teammeetings vormittags 14.00 Uhr
 
 \subsection{Tätigkeiten}
 Seit Projektbeginn war ich neben den allgemeinen
-Entwicklunstätigkeiten für das Configuration Management verantwortlich,
+Entwicklungstätigkeiten für das Configuration Management verantwortlich,
 welches die Aufstellung von Richtlinien zur Toolunterstützung, u.a. zu
 CVS, ssh und TeX beinhaltete, sowie die Pflege und Wartung des
 Projekt-Repositories und der Mailinglisten. Die Pflege des
@@ -882,7 +882,7 @@ grundlegend das MVC Design Pattern propagierte, dass integraler
 Bestandteil von POA während der gesamten Entwicklung blieb.
 
 Aufgrund meiner C++ Kenntnisse aus der Zeit vor meinem Studium, die auch
-verschiede windows-basierte GUI Anwendungen zur Folge hatten sowie aufgrund
+verschiedene windows-basierte GUI Anwendungen zur Folge hatten sowie aufgrund
 meiner C Kenntnisse aus einem OpenSource Projekt wählte ich als
 Seminarthema das ``Qt Toolkit'' welches eine portable OpenSource
 Plattform (für nicht-kommerzielle Projekte) bietet, die unter Windows,
@@ -928,13 +928,13 @@ an dem die POA Applikation im CVS nicht compilierfähig gewesen wäre.
 Ich empfand die durchweg kollegiale und lockere Entwicklerführung durch
 den Projektleiter Steffen Pingel als angenehm und motivierend.
 Alle Entwickler konnten aufgrund der nur kurzen Kernarbeitszeit ihre
-Aufgaben weitestgehnd autonom lösen. Neben der eigentlichen
+Aufgaben weitestgehend autonom lösen. Neben der eigentlichen
 Entwicklertätigkeit trafen sich die Entwickler auch spontan zu privaten
 Arrangements.
 
 Aus ökonomischer Sicht stellt sich mir durch Vergleiche mit
 kommerziellen Projekten durch meine werkstudentische Tätigkeit sowie
-meines viermonatigen Industrtiepraktikums bei der
+meines viermonatigen Industriepraktikums bei der
 Firma Danet IS GmbH in Stuttgart die POA Entwicklung als voller Erfolg
 dar, da der Zeitrahmen nicht überzogen wurde und somit sich die Kosten im
 Rahmen des für Studienprojekte vorgesehenen Zeitaufwands beliefen.
@@ -950,7 +950,7 @@ Startvoraussetzungen hatten: Etwa die H"alfte des Team war Mitten im
 Studienprojekt A, also in der heißen Codierungsphase. Die andere
 H"alfte hat mit dem Studienprojekt B zuerst begonnen und bisher noch 
 keine Erfahrungen mit Projekten dieser Gr"oße. Auch das technische
-Wissen war unterschiedlich: Ein Teil des Teams beherschte C++ schon 
+Wissen war unterschiedlich: Ein Teil des Teams beherrschte C++ schon 
 perfekt, f"ur die anderen war dies noch Neuland. \newline
 
 Da ich mit POA mein erstes Studienprojekt bestritt und bisher noch
@@ -960,7 +960,7 @@ des Projekts einen großen Wissensgewinn, durch den Know-How-Transfer
 zwischen des Team-Mitgliedern. \newline
 
 Die Entscheidung f"ur POA war aus meiner Sicht die richtige, denn wir 
-bildeten ein schlagkr"afiges Team und auch der Kontakt mit Christian
+bildeten ein schlagkr"aftiges Team und auch der Kontakt mit Christian
 Kramer war kollegial, immer schnell hergestellt und
 unproblematisch. Der hervorragende Projektverlauf spiegelt sich auch
 darin wieder, dass wir nie auf die Hilfe unseres Betreuers angewiesen
@@ -984,13 +984,13 @@ Der zweite Teil der Seminararbeit besch"aftigte sich somit mit den
 M"oglichkeiten des manuellen Routings und welche Techniken zum
 Beispiel in CAD-Anwendungen verwendet werden um den Benutzer dabei zu 
 unterst"utzen. Die Arbeit schließt dann mit der Vorstellung eines
-Konzepts zur konsistenen Speicherung des Layouts. \newline
+Konzepts zur konsistenten Speicherung des Layouts. \newline
 
 POA sieht in Version 1.0 "ubrigens auch ein automatisches Routing
 vor. Die Idee, die hier dahinter steckt  ist, das ein
 "uberkreuzungsfrei gezeichneter, sprich planarer Graph leichter 
 verst"andlich ist, als einer indem sich die Leitungen "uberkreuzen und
-darauf, dass die Positionen der Funktioinsbl"ocke beim Routing als vom 
+darauf, dass die Positionen der Funktionsbl"ocke beim Routing als vom 
 Benutzer fest vorgegeben  angenommen werden.\newline
 
 \subsection{Aufgaben}
@@ -1011,13 +1011,13 @@ unter Linux lief. Ziel war es den Download in POA so zu
 implementieren, dass er sowohl unter Linux als auch unter Windows die 
 serielle Schnittstelle  zum herunterladen des ausf"uhrbaren Programms 
 verwenden konnte. Dazu forschte ich nach eine frei erh"altlichen
-Bibliothek f"ur QT, die plattformabunabh"angigen zugriff auf die
+Bibliothek f"ur QT, die plattformabunabh"angigen Zugriff auf die
 serielle Schnittstelle erm"oglicht und wurde in QExtSerialPort
 f"undig. Mit Hilfe dieser Bilbliothek konnte der Download in POA 
 platformunabh"angig realisiert werden.\newline
 
 Anschließend implementierte ich die Funktion, die in POA verwendete
-Sprache zu "andern. Dazu  passte den vorhandenen Code, soweit noch
+Sprache zu "andern. Dazu passte den vorhandenen Code, soweit noch
 nicht geschehen, f"ur die Verwendbarkeit mit mehreren Sprachen an und 
 "ubersetzte alle Texte vom englischen ins deutsche.\newline
 
@@ -1041,7 +1041,7 @@ einbringen. Dort bin ich der einzige, der schon Softwareprojekt-
 Erfahrungen hat und kann dementsprechend oft den entscheidenen Tipp
 f"ur oder gegen ein bestimmtes Vorgehen oder zu verwendetes Werkzeug
 geben. Insofern kann ich schon jetzt vom meinem erlangten Wissen
-porfitieren, ein wirklich positives Fazit ziehen und mich bei allen 
+profitieren, ein wirklich positives Fazit ziehen und mich bei allen 
 Team-Mitgliedern f"ur die gute Zusammenarbeit bedanken.
 
 
@@ -1085,7 +1085,7 @@ geblieben.
 \subsubsection{Implementierung}
 
 Zu Beginn der Implementierung nahm ich vielfältige Funktionen
-war. Diese schlossen diskussionen über die Programmiersprache C++ ein
+war. Diese schlossen Diskussionen über die Programmiersprache C++ ein
 sowie die konkrete Gestaltung des Codes, um Konformität zu dem Entwurf
 sicher zu stellen. Die Sprache C++ wird im Grundstudium der
 Softwaretechnik nicht gelehrt und war deshalb für einige
@@ -1094,7 +1094,7 @@ schon einige Jahre damit gearbeitet, musste mein Wissen aber zu Beginn
 des Projekts etwas auffrischen.
 
 Im weiteren Verlauf des Projekts wendete ich mich zunehmend den
-algorithmisch aufwändigeren Problemen des Projekts zu. Ich entwarf und
+algorithmisch aufwendigeren Problemen des Projekts zu. Ich entwarf und
 implementierte zwei verschiedene Verfahren zur automatischen
 Layoutberechnung und den Algorithmus zur automatischen Berechnung des
 Scheduling.
@@ -1108,22 +1108,22 @@ verbundenen Konnektoren entsprechend anzupassen.
 Das zweite Verfahren basiert auf dem bekannten Algorithmus von
 Dijkstra. Dieses Verfahren wird angewendet, um einen einzelnen
 Konnektor in ein bestehendes Netzwerk zu integrieren. Dabei wird der
-neue Konnektor mit einer minimalen Anzahl an Kreuzugen mit anderen
+neue Konnektor mit einer minimalen Anzahl an Kreuzungen mit anderen
 Objekten und einer minimalen Anzahl an Knickpunkten gezeichnet.
 
 Zur Berechnung eines optimalen Scheduling für POA konnte ich in der
 Literatur kein geeignetes Verfahren finden. Für meinen Seminarvortrag
 hatte ich eine Lösung entworfen, die sich einem evolutionären
 Verfahren bedient. Mit dem Fortschritt des Projekts hatte ich aber
-einen besseren Einblick in potenzielle Anwendungen von POA gewonnen und
-konnte eine weniger rechenaufwändige Lösung finden, die für die
+einen besseren Einblick in potentielle Anwendungen von POA gewonnen und
+konnte eine weniger rechenaufwendige Lösung finden, die für die
 meisten Netzwerke trotzdem optimale Ergebnisse berechnet.
 
 Der Benutzer kann eine Liste von priorisierten Wegen durch das
 Netzwerk vorgeben, die in der angegebenen Reihenfolge optimiert
 werden. Der erste Weg wird garantiert eine minimale Signallaufzeit
 erhalten. Für die weiteren Wege der Liste kann das Ergebnis durch die
-bereits berechneten Eigenschaften der voherigen Wege verschlechtert
+bereits berechneten Eigenschaften der vorherigen Wege verschlechtert
 werden. In den getesteten Beispielen konnte stets ein optimales
 Scheduling gefunden werden. Die konkrete Implementierung des
 Verfahrens lässt auch zu dass Parameter einzelner Blöcke manuell
@@ -1176,7 +1176,7 @@ Standardalgorithmen zurückführen ließen.
 Schließlich fand ich es interessant, ein iteratives Prozessmodell zu
 erleben. Obwohl ich dieses Vorgehen nach wie vor nicht für optimal
 halte, fand ich es sehr lehrreich mich mit Vor- und Nachteilen dieses
-Vorgehens in der praktischen Anwendung auseinader zu setzen.
+Vorgehens in der praktischen Anwendung auseinander zu setzen.
 
 
 
@@ -1189,7 +1189,7 @@ Verfahren evaluiert, vom einfachen Profiling bis zum Schreiben eines
 kompletten CPU Simulators. Letztendlich sind die Rahmenbedingungen
 einer Ausführung im CPLD aber so vielen Faktoren unterworfen dass dies
 nicht mit vertretbarem Aufwand und vor allem nicht in der benötigten
-Präzision möglich war.  Die einzig verbleibende Option einer
+Präzision möglich war. Die einzig verbleibende Option einer
 hardwaregestützten Instrumentierung des Codes inklusive Ausführung auf
 einem realen CPLD konnte im Rahmen des Projekts leider nicht weiter
 verfolgt werden.
@@ -1197,10 +1197,10 @@ verfolgt werden.
 Der Kunde verlangte von uns primär eine Windows Applikation, mit der
 Option später auf Linux wechseln zu können. Zu diesem Zweck wurde die
 Qt Bibliothek von Trolltech als Basis für POA bestimmt. POA an sich
-wurde größtenteils unter Linux entwickelt, als einzigem mit Erfahrung
-in der der Windows Programmierung im Team oblag es mir die
+wurde größtenteils unter Linux entwickelt, als einzigem mit substantieller
+Erfahrung in der der Windows Programmierung im Team oblag es mir die
 ``Redmond''\footnote{Für die nicht Eingeweihten: Firmensitz der
-  Microsoft Corporation} Kompatibiltät des Codes sicherzustellen.
+  Microsoft Corporation} Kompatibilität des Codes sicherzustellen.
 Zuerst wurde dies erreicht mit der Hilfe des MinGW Compilers, einem
 GCC Port für Windows. Da aber nur Microsoft Visual C++ offiziell von
 Trolltech für Windows unterstützt wird und dieser Compiler auch noch
@@ -1228,10 +1228,24 @@ Versuchen habe ich dafür eine im Detail trickreich zu entwickelnde
 aber erstaunlich einfach zu bedienende Möglichkeit gefunden, die sich
 nahtlos in das vorhandene Konzept eingegliedert hat.
 
-Dafüber hinaus habe ich meine langjährige Erfahrung in der Entwicklung
+Darüber hinaus habe ich meine langjährige Erfahrung in der Entwicklung
 und nicht zuletzt auch Fehlerbereinigung von Software eingebracht um
 im gesamten Projekt kleinere beobachtete Bugs aufzuspüren und gleich
 zu beseitigen (``I've got a debugger and I'm not afraid to use it!'').
+Auch war ich in fast allen Reviews als Gutachter tätig.
+
+Da zu keinem Zeitpunkt des Projektes die Zielhardware existiert hat
+mußte die Komplette Entwicklung der Software ``im trockenen'' 
+stattfinden. Erst ganz gegen Ende des Projektes hatten wir zumindest 
+Zugriff auf ein Altera Excalibur CPLD Entwicklerboard mit einem Apex 
+EP20K200 Baustein, wobei mir die Aufgabe zugefallen ist unser Projekt 
+und dieses Board zu verheiraten. 
+Zu diesem Zweck habe ich mich noch mit CPLDs im Allgemeinem sowie mit 
+dem Entwicklerboard und der CPLD Entwicklungsumgebung Quartus II 
+im Speziellem vertraut gemacht und verschiedene NIOS Prozessordesigns 
+implementiert und getestet. Dabei zeichnete ich mich für verschiedene
+kleinere POA Änderungen verantwortlich, deren Notwendigkeit sich erst 
+in der Praxis ergab.
 
 Last and probably least war ich partiell an der Einführung von
 CPPUnit, der Erstellung des Handbuchs sowie des Abschlussberichts
@@ -1306,15 +1320,15 @@ als erwartet.
 Die größte einzelne Komponente die ich entwickelt habe, ist die
 Konsistenzprüfung eines Projekts. Dazu war es notwendig mittels
 einfachem rekursivem Abstieg die Verbindungen zwischen den Blöcken zu
-prüfen und einen Ergebnissbericht zu erzeugen. Desweiteren habe ich
+prüfen und einen Ergebnisbericht zu erzeugen. Desweiteren habe ich
 die Settings Klasse implementiert, die globale Einstellungen der
 Anwendung verwaltet. Die von mir erstellte Bibliothek zur Speicherung
 von vorgefertigten Blöcken macht starken Gebrauch der bereits für die
-Projektverwaltung implementierten Serialisierung, so daß ich hier im
+Projektverwaltung implementierten Serialisierung, so dass ich hier im
 wesentlichen die graphische Schnittstelle erstellt habe. 
 
 Maßgeblich habe ich mich um die Umsetzung des Tests bemüht. Das
-Interesse der Entwickler an Tests war erwatungsgemäß nicht besonders
+Interesse der Entwickler an Tests war erwartungsgemäß nicht besonders
 hoch. Angesichts des hohen Anteils an schwierig automatisiert
 testbaren GUI Quellcodes verständlich. Der Test bestand aus einer
 Suite von automatisierten Regression-Tests, die vorwiegend von mir
@@ -1337,26 +1351,26 @@ Kernaufgaben innerhalb des POA Projekts zu vernachlässigen.
 Besonderen Wert habe ich auf die Anwendung, der im
 Softwaretechnik-Studium erworbenen Kenntnisse gelegt. Auch auf Grund
 von Erfahrungen aus vorherigen einem Studienprojekt war es mir wichtig
-den Focus nicht ausschließlich auf den Umfang des Produkts zu legen,
+den Fokus nicht ausschließlich auf den Umfang des Produkts zu legen,
 sondern vor allem auch die Qualität und das Vorgehensmodell zu
 beachten.
 
 Mir ist deutlich geworden wie wichtig es ist sich als
 Softwareentwickler in die Problemdomäne des Kunden einzuarbeiten. Ohne
-Verständniss für die mit POA zu programmierende Hardware, wäre es
+Verständnis für die mit POA zu programmierende Hardware, wäre es
 nicht möglich gewesen ein sinnvolles Bedienkonzept zu entwickeln. Es
-hat auch die Kommunikation mit dem Kunden erleichert, daß ich, wie die
+hat auch die Kommunikation mit dem Kunden erleichtert, dass ich, wie die
 anderen Teammitglieder, bereits Vorlesungen der Automatisierungstechnik
 besucht hatte und mit dem Umfeld der Werkzeugmaschinen vertraut war.
 
 Auf Seite der Softwaretechnik habe ich viel über den Aufwand und die
 Schwierigkeiten der Organisation von Softwareprojekten gelernt. Es war
 eine größere Herausforderung als erwartetet sieben Entwickler so zu
-koordinieren, daß eine produktive Teamdynamik entsteht, alle
+koordinieren, dass eine produktive Teamdynamik entsteht, alle
 Entwickler ausreichend gefordert und ausgelastet sind. Über 1000
-E-Mails, die im zusammenhang mit dem POA Projekt verschickt wurden
+E-Mails, die im Zusammenhang mit dem POA Projekt verschickt wurden
 bestätigen meinen positiven Eindruck der lebhaften, kommunikativen
-Athmosphäre des Projekts, die sich auch in sozialen Aktivitäten
+Atmosphäre des Projekts, die sich auch in sozialen Aktivitäten
 außerhalb der Universität äußert.
 
 Abschliessend beurteile ich das Projekt als Erfolg. Alle Team
@@ -1364,7 +1378,7 @@ Mitglieder haben sich bemüht das im Studium erworbene Wissen praktisch
 umzusetzen. Im Verlaufe des Projekts hat tolle Teamdynamik entwickelt.
 Das gewählte Vorgehensmodell erscheint mir den besonderen
 Anforderungen eines Studienprojekts gerecht zu werden. Die
-Kommuikation mit unserem Kunden Christian Kramer war sehr kooperativ.
+Kommunikation mit unserem Kunden Christian Kramer war sehr kooperativ.
 Das entstandene Produkt erfüllt die Anforderungen des Kunden und ist
 qualitativ gut.
 
@@ -1406,12 +1420,12 @@ das Datenmodell und das Projektmanagement und war für die Persistenz
 der Daten zuständig. Dazu verwendete ich das von Qt zur Verfügung
 gestellte XML DOM-Framework. 
 
-Weiterhin übernahm ich den von Marcel begonnenen Scheduling-Dialog
-führte ihn zu dem jetzigen Stand. Dazu implementierte ich die
+Weiterhin übernahm ich den von Marcel begonnenen Scheduling-Dialog und
+führte ihn zum jetzigen Stand. Dazu implementierte ich die
 Darstellung der Blöcke sowie die Zoomfunktion auf der Zeitachse.
 
-Neben vielen kleineren Verfeinerungen die an der GUI vornahm startete
-ich das Unterprojekt GCover. GCover verabeitet die Ausgabe des GNU
+Neben vielen kleineren Verfeinerungen die ich an der GUI vornahm startete
+ich das Unterprojekt GCover. GCover verarbeitet die Ausgabe des GNU
 Compilertools gcov und erstellt daraus eine HTML-Suite die die
 Anweisungsüberdeckung bei der Ausführung von Testfällen
 visualisiert. Die Messung dieser Überdeckung selbst übernimmt
@@ -1446,18 +1460,18 @@ sich aber schnell herausgestellt, das sich ein sehr kompetentes Team
 gefunden hat. Besonders positiv ist mir die unkomplizierte
 Kommunikation im Team aufgefallen. Das Arbeitsklima bei den
 Kernarbeitszeittreffen waren immer sehr gut. So konnten wir uns
-jederzeit sehr gut absprechen. So gab es kaum vor, dass Schnittstellen
+jederzeit sehr gut absprechen. So kam es kaum vor, dass Schnittstellen
 falsch bedient wurden etc.
 
 \subsection{Persönlicher Lernerfolg}
 Für mich persönlich war das Projekt eine neue Herausforderung, war es
 doch für mich das erste Studienprojekt und damit auch das erste
-Projekt dieser Größe. Hinzu kam, dass mit sowohl die
+Projekt dieser Größe. Hinzu kam, dass mir sowohl die
 Programmiersprache C++ sowie das Toolkit Qt bis dato unbekannt waren
 und ich mich selbst nicht besonders gut einschätzen konnte.
 Was ich jedoch schnell gelernt habe: Wenn man die Konzepte des
-objektorientieren Programmierens verstanden hat, ist es eher zweit
-rangig in welcher Sprache man implementiert. Die Besonderheiten von
+objektorientieren Programmierens verstanden hat, ist es eher zweitrangig 
+in welcher Sprache man implementiert. Die Besonderheiten von
 C++ konnte ich relativ schnell lernen, nicht zuletzt Dank der guten
 Teamdynamik. Auch in die Qt-Bibliothek konnte ich mich schnell
 eingewöhnen. Lerneffekt hier war, dass nicht alles was als toll
@@ -1465,7 +1479,7 @@ angepriesen wird auch uneingeschränkt toll ist. So sind beispielsweise
 bei Qt die APIs nicht immer konsistent, ausserdem sind die
 GUI-Komponenten teilweise nicht bis zum Ende durchdacht. Die
 Qt-Spezialität \emph{Signal \& Slots}, die eine Einbettung des
-Observer-Patterns in die Programmiersprache ermöglicht ist sehr
+Observer-Patterns in die Programmiersprache ist, ermöglicht sehr
 einfache autonome Objekt-Benachrichtigungen, allerdings kann man
 schnell den Überblick verlieren.
 
@@ -1482,9 +1496,9 @@ Somit sehe ich das Projekt aus meiner Sicht als Erfolg.
 
 \chapter{Erklärung gemäß Prüfungsordnung}
 
-Ich erkläre hiermit, daß ich im Rahmen meiner Mitarbeit am
+Ich erkläre hiermit, dass ich im Rahmen meiner Mitarbeit am
 Studienprojekt B ``Programmierumgebung Offener Antrieb'' außer von den
-Betreuern vorgesehenen bzw. genehmigten Hilfsmitteln keine unzuläßige
+Betreuern vorgesehenen bzw. genehmigten Hilfsmitteln keine unzulässige
 Hilfe in Anspruch genommen habe.
 
 \vspace{2cm}

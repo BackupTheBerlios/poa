@@ -20,12 +20,11 @@
     </menu>
 
     <menu name="Documentation">
-      <item name="Project Plan (german)" href="ftp://ftp.berlios.de/pub/poa/docs/angebot/angebot.pdf"/>
-      <item name="Other documents" href="ftp://ftp.berlios.de/pub/poa/docs/"/>
-      <item name="Wiki (german)" href="http://openfacts.berlios.de/index.phtml?title=Prog._umg._Offener_Antrieb"/>
+      <item name="Projektplan" href="ftp://ftp.berlios.de/pub/poa/docs/Angebot.pdf"/>
+      <item name="Abschlussbericht" href="ftp://ftp.berlios.de/pub/poa/docs/Abschlussbericht.pdf"/>
       <item name="Seminars" href="/seminars.html"/>
-      <item name="POA API" href="/api/html/index.html"/>
-      <item name="UML Poster" href="ftp://ftp.berlios.de/pub/poa/poster/umlposter-a1.pdf"/>
+      <item name="Handbuch" href="ftp://ftp.berlios.de/pub/poa/docs/Handbuch.pdf"/>    
+      <item name="Other Documents" href="ftp://ftp.berlios.de/pub/poa/docs/"/>
     </menu>
 
     <menu name="Sub Projects">
@@ -33,6 +32,9 @@
     </menu>
     
     <menu name="Development">
+      <item name="Architektur" href="ftp://ftp.berlios.de/pub/poa/docs/Entwurf.pdf"/>
+      <item name="UML Poster" href="ftp://ftp.berlios.de/pub/poa/poster/umlposter-a1.pdf"/>
+      <item name="POA API" href="/api/html/index.html"/>
       <item name="Programming Style Guidelines" href="/styleguide.html"/>
       <!-- <item name="Issue Tracker" href="http://developer.berlios.de/pm/?group_id=819"/> -->
       <item name="Issue Tracker" href="http://test.klintox.net:8080/jira/secure/Dashboard.jspa"/>

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+	<title>Übersicht</title>
+  </properties>
+  <body>
+    <section name="Hintergrund des Projekts">
+      <p>Es werden viele Neuentwicklungen im Bereich der
+      Werkzeugmaschinen gemacht. Diese Entwicklungen beinhalten neue
+      Kinematiken, wie z.B. die Parallelkinematiken und Sensoren
+      (z.B. den Ferraris Relativbeschleunigungssensor). Dadurch
+      entstehen neue Anforderungen an die
+      Antriebsregelung. Zusätzliche Sensor-Signale müssen in den
+      Reglerstrukturen berücksichtigt werden - oder es werden sogar
+      völlig neue Reglerstrukturen benötigt.</p>
+
+      <p>Die momentan auf dem Markt erhältlichen Reglersysteme
+      erlauben meist weder die Berücksichtigung neuartiger Sensoren,
+      noch bieten sie die Möglichkeit, eigene anwenderspezifische
+      Reglerstrukturen zu implementieren.</p>
+
+      <p>Daher wird am <a href="http://www.isw.uni-stuttgart.de"
+      target="_top">ISW</a> eine Plattform für die Antriebsregelung
+      entwickelt, auf der es dem Anwender in jeder Hinsicht offen
+      steht, eigene Funktionalitäten zu integrieren. Diese Plattform
+      wird am ISW an der Universität Stuttgart kurz als ``Offener
+      Antrieb'' bezeichnet.</p>
+
+      <p>Die hardwaretechnische Realisierung erfolgt in Form einer
+      Einsteckplatine.  Zentrales Element des Offenen Antriebes ist
+      eine freiprogrammierbarer Logik-Baustein (PLD). Der Anwender hat
+      die Möglichkeit, die Funktion des Bausteins seinen Bedürfnissen
+      anzupassen.</p>
+
+      <p>Um die Offenheit für jeden Anwender nutzbar zu machen, wird
+      für das PLD eine Architektur festgelegt, die es ermöglicht,
+      einzelne Funktionalitäten in Form von Blöcken zu
+      implementieren. Diese Blöcke können aus festprogrammierten
+      Schaltungen (Cores) oder freiprogrammierbaren CPUs bestehen. Die
+      Signale können über ein freiprogrammierbares Netzwerk verbunden
+      werden.</p>
+
+      <p>Diese komplexe Netzwerke auf einer von der Hardware
+      abstrahierten Ebene für den Anwender einfach programmierbar zu
+      machen ist die Kernanforderung des POA-Projekts.</p>
+    </section>
+
+    <section name="Merkmale von POA">
+      <p>Aus dem im vorherigen Abschnitt skizzierten
+      Projekthintergrund ergaben sich folgende Anforderungen, die in
+      POA umgesetzt wurden:</p>
+      
+      <ul>
+        <li>Darstellung und Manipulation von Netzwerken aus Blöcken</li>
+        <li>Automatisches Routing von Verbindungen zwischen Blöcken</li>
+        <li>Vergrößern und verkleinern der Netzwerkansicht</li>
+        <li>Plausibilitätsprüfung von Netzwerken</li>
+        <li>Drucken von Netzwerken</li>
+        <li>Rahmencodegenerierung für eingebettete CPU-Blöcke</li>
+        <li>Anzeige der Taktfrequenzen mittels Einfärbung der Blöcke</li>
+        <li>Automatische minimierung von Signallaufzeiten (Scheduling)</li>
+        <li>Verwaltung und Bearbeitung einer Blockbibliothek</li>
+        <li>Kompilieren und Herunterladen von Quellcode für CPU-Blöcke</li>
+        <li>Öffnen mehrerer Projekte zur gleichen Zeit mit
+        Datenaustauschmöglichkeiten über die Zwischenablage</li>
+        <li>Konfiguration der Programmeigenschaften</li>
+        <li>Zusammenarbeit mit externen Programmen</li>
+        <li>Lokalisierung in Deutsch und Englisch</li>
+        <li>Lauffähigkeit unter Microsoft Windows und Linux</li>
+      </ul>
+    </section>
+
+    <section name="Technische Umsetzung">
+    </section>
+
+  </body>
+</document>
+  

@@ -1,47 +1,44 @@
 <?xml version="1.0"?>
 
-  <document>
+<document>
+  <properties>
+	<title>Overview</title>
+  </properties>
+  <body>
+    <section name="Overview">
+      <p>The project goal is to develop a graphical user interface for
+      programming a PLD (Programable Logics Device). The
+      software is written in C++ and based on QT.  It is available for
+      Linux and Windows.</p>
 
-	<properties>
-	  <title>Overview</title>
-	</properties>
+      <p>The development team is 7 persons, all students of the
+      University of Stuttgart, Germany. The project is part of our
+      studies in Software Engineering. The output of the project is
+      going to be used in conjunction with a hardware system called
+      Offener Antrieb also developed at the University.</p>
 
-	<body>
+      <p>The project ran from Mai 2003 to Mai 2004. All documentation
+      and software products that were created in the course of the
+      project are available from this page.</p>
+    </section>
 
-	  <section name="Overview">
+    <section name="Ueberblick">
+      <p>Entwicklung einer Programmierumgebung fuer einen
+      PLD-basierten Offenen Antrieb. <a href="index.de.html">Weiter zu
+      einer Beschreibung des Projekts</a>. Eine Installationshilfe und
+      Beschreibung der Benutzeroberfläche befinden sich im <a
+      href="ftp://ftp.berlios.de/pub/poa/docs/Handbuch.pdf">Handbuch</a>.</p>
+    </section>
 
-        <p>
-          The project goal is to develop a graphical user interface
-          for programming a CPLD (Complex Programable Logics
-          Device). The software is written in C++ and based on QT.  It
-          will be available for Linux and Windows.
-        </p>
+    <section name="Team">
+	  <center><p><img src="images/team.jpg"/><br/> Team Stuttgart:
+	  Necati Aydin, Marcel Kilgus, Tammo van Lessen, Anselm Garbe,
+	  Stefan Hauser, Steffen Pingel</p></center>
 
-        <p>
-          The development team is 7 persons, all students of the
-          University of Stuttgart, Germany. The project is part of our
-          studies in Software Engineering. The output of the project
-          is going to be used in conjunction with a hardware system
-          called Offener Antrieb also developed at the University.
-        </p>
-
-	  </section>
-
-	  <section name="Ueberblick">
-
-		<p>
-          Entwicklung einer Programmierumgebung fuer einen CPLD-basierten Offenen Antrieb
-		</p>
-
-      </section>
-
-	  <section name="Team">
-	    <p><img src="images/team.jpg"/><br/>
-		Necati Aydin, Marcel Kilgus, Tammo van Lessen, Anselm Garbe,
-		Stefan Hauser, Steffen Pingel, (Steffen Keul)
-		</p>
-	  </section>
-	  
-	</body>
-  </document>
+      <center><p><img src="images/team_portland.jpg"/><br/>Team
+      Portland: Steffen Keul
+      </p></center>
+    </section>
+  </body>
+</document>
   

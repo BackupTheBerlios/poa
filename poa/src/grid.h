@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.h,v 1.2 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: grid.h,v 1.3 2003/09/18 14:21:04 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -53,8 +53,14 @@ public:
      */
     Grid(QPoint first, QPoint second, int gridMagnitude);
 
+    /**
+     * Default destructor
+     */
     virtual ~Grid();
 
+    /**
+     * Returns a grid point with minimal distance to <code>point</code>
+     */
     QPoint closestGridPoint(QPoint point);
 
     /**

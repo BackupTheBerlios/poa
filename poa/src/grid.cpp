@@ -18,10 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: grid.cpp,v 1.2 2003/09/18 01:51:17 keulsn Exp $
+ * $Id: grid.cpp,v 1.3 2003/09/18 14:21:04 keulsn Exp $
  *
  *****************************************************************************/
 
+
+#include <math.h>
 
 #include "grid.h"
 
@@ -37,17 +39,49 @@ Grid::Grid(QPoint start, int gridSize)
 
 Grid::Grid(QPoint first, QPoint second, int gridMagnitude)
 {
-    Q_ASSERT(second.x() != first.x() && second.y() != first.y());
+    double delta;
+    int n;
+
+    if (first == second) {
+	Q_ASSERT(false);
+	gridSizeX_ = 0.0;
+	gridSizeY_ = 0.0;
+    }
+
+    bool ownX = second.x() != first.x();
     offsetX_ = (double) first.x();
+    bool ownY = second.y() != first.y();
     offsetY_ = (double) first.y();
 
-    double delta = (double) (second.x() - first.x());
-    int n = (int) (0.5 + delta / ((double) gridMagnitude));
-    gridSizeX_ = delta / ((double) n);
-
-    delta = (double) (second.y() - first.y());
-    n = (int) (0.5 + delta / ((double) gridMagnitude));
-    gridSizeY_ = delta / ((double) n);
+    if (ownX) {
+	delta = (double) (second.x() - first.x());
+	n = (int) rint(delta / ((double) gridMagnitude));
+	if (n != 0) {
+	    gridSizeX_ = delta / ((double) n);
+	}
+	else {
+	    ownX = false;
+	}
+    }
+    if (ownY) {
+	delta = (double) (second.y() - first.y());
+	n = (int) rint(delta / ((double) gridMagnitude));
+	if (n != 0) {
+	    gridSizeY_ = delta / ((double) n);
+	}
+	else {
+	    ownY = false;
+	}
+    }
+    if (!ownX && !ownY) {
+	gridSizeX_ = gridSizeY_ = (double) gridMagnitude;
+    }
+    else if (!ownX) {
+	gridSizeX_ = gridSizeY_;
+    }
+    else if (!ownY) {
+	gridSizeY_ = gridSizeX_;
+    }
 }
 
 
@@ -59,10 +93,10 @@ Grid::~Grid()
 QPoint Grid::closestGridPoint(QPoint point)
 {
     // offset + n * gridSize - point = min
-    int x = (int) (0.5 + ((double) point.x() - offsetX_) / gridSizeX_);
-    int y = (int) (0.5 + ((double) point.y() - offsetY_) / gridSizeY_);
-    return QPoint((int) (0.5 + offsetX_ + ((double) x) * gridSizeX_),
-		  (int) (0.5 + offsetY_ + ((double) y) * gridSizeY_));
+    int x = (int) rint(((double) point.x() - offsetX_) / gridSizeX_);
+    int y = (int) rint(((double) point.y() - offsetY_) / gridSizeY_);
+    return QPoint((int) (offsetX_ + ((double) x) * gridSizeX_),
+		  (int) (offsetY_ + ((double) y) * gridSizeY_));
 }
 
 
@@ -97,6 +131,6 @@ void Grid::getGridDistance(QPoint start, QPoint end, int &x, int &y)
 {
     double dx = (double) end.x() - start.x();
     double dy = (double) end.y() - start.y();
-    x = (int) (0.5 + dx / gridSizeX_);
-    y = (int) (0.5 + dy / gridSizeY_);
+    x = (int) rint(dx / gridSizeX_);
+    y = (int) rint(dy / gridSizeY_);
 }

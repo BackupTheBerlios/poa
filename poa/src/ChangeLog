@@ -1,0 +1,4 @@
+2003-08-21  Stefan Alexander Hauser  <hausersn@gspc70.informatik.uni-stuttgart.de>
+
+	* settingsdialog.cpp (createPathTab): Completed the dialog.
+

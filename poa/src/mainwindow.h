@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.8 2003/08/21 10:46:08 garbeam Exp $
+ * $Id: mainwindow.h,v 1.9 2003/08/21 13:28:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -80,6 +80,8 @@ public:
 
     QAction *openSettingsAction;
     QAction *tileHorizontalAction;
+    QAction *cascadeAction;
+    QAction *tileAction;
 
 protected:
     void closeEvent(QCloseEvent *);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.14 2003/08/21 13:18:30 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.15 2003/08/21 13:28:11 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -176,6 +176,12 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
         new QAction("Tile horizontal", "Tile &horizontal", 0,
                     this, "tileHorizontalAction");
 
+    tileAction =
+        new QAction("Tile", "&Tile", 0, this, "tileAction");
+
+    cascadeAction =
+        new QAction("Cascade", "&Cascade", 0, this, "cascadeAction");
+
     /////////////////////////////////////////////////////////////////
     // toolbars
     //
@@ -261,7 +267,9 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
     // window
     windowMenu = new QPopupMenu(this);
     menubar->insertItem(tr("&Window"), windowMenu);
+    tileAction->addTo(windowMenu);
     tileHorizontalAction->addTo(windowMenu);
+    cascadeAction->addTo(windowMenu);
 
     // help
     helpMenu = new QPopupMenu(this); 
@@ -290,6 +298,9 @@ MainWindow::MainWindow( QWidget* parent,  const char* name, WFlags fl )
             this, SLOT(openSettings()));
     connect(tileHorizontalAction, SIGNAL(activated()),
             this, SLOT(tileHorizontal()));
+    connect(tileAction, SIGNAL(activated()), ws, SLOT(tile()));
+    connect(cascadeAction, SIGNAL(activated()), ws, SLOT(cascade()));
+
 }
 
 /**

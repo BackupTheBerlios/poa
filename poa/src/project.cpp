@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.20 2003/09/17 16:16:40 vanto Exp $
+ * $Id: project.cpp,v 1.21 2003/09/18 13:15:22 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -43,15 +43,19 @@ Project::Project(QString path)
     QDir dir(path);
     name_ = dir.path();
     path_ = path;
-
-
-    /*    if (document != 0) {
-        deserialize(document);
-        }*/
 }
 
 Project::~Project()
 {
+    AbstractModel *model;
+    for ( model = blocks_.first(); model; model = blocks_.next() ) {
+        delete model;
+    }
+
+    GridCanvas *canvas;
+    for (canvas = canvasList_.first(); canvas; canvas = canvasList_.next()) {
+        delete canvas;
+    }
 }
 
 bool Project::open()

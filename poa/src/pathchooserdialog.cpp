@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pathchooserdialog.cpp,v 1.8 2004/03/05 14:48:24 keulsn Exp $
+ * $Id: pathchooserdialog.cpp,v 1.9 2004/05/11 02:04:57 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,9 @@
 #include "blockmodel.h"
 #include "blockgraph.h"
 
-#include <qhbuttongroup.h>
+#include <qframe.h>
 #include <qgroupbox.h>
+#include <qhbuttongroup.h>
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
@@ -87,6 +88,8 @@ PathChooserDialog::PathChooserDialog(BlockGraph *graph)
     topPane->addWidget(pathChooser_);
 
     QHButtonGroup *mainButtons = new QHButtonGroup(this);
+    mainButtons->setFrameShape(QFrame::NoFrame);
+    mainButtons->addSpace(0);
     //    QBoxLayout *buttonPane = new QHBoxLayout(topPane);
     QPushButton *okButton = new QPushButton(tr("&OK"), mainButtons);
     okButton->setDefault(true);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.65 2004/02/09 20:34:07 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.66 2004/02/10 10:19:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -363,6 +363,20 @@ void BlockConfDialog::compile()
 {
     CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
     if (cpuModel != 0 && saveSource(cpuModel)) {
+        if (blockConfWidget_->isModified()) {
+            QMessageBox mb
+                    ("POA",
+                     tr("You've modified the block configuration without"
+                        " applying the changes.\n"
+                     "Apply changes?"),
+                     QMessageBox::Information,
+                     QMessageBox::Yes | QMessageBox::Default,
+                     QMessageBox::No,
+                     QMessageBox::Cancel | QMessageBox::Escape);
+                if(mb.exec() == QMessageBox::Yes) {
+                    apply();
+                }
+        }
         substituteCode();
         CodeManager codeManager(project_, cpuModel);
         codeManager.compile();
@@ -374,6 +388,20 @@ void BlockConfDialog::edit()
     CpuModel *cpuModel = dynamic_cast<CpuModel *>(model_);
     if (cpuModel != 0 && saveSource(cpuModel)) {
         CodeManager codeManager(project_, cpuModel);
+        if (blockConfWidget_->isModified()) {
+            QMessageBox mb
+                    ("POA",
+                     tr("You've modified the block configuration without"
+                        " applying the changes.\n"
+                     "Apply changes?"),
+                     QMessageBox::Information,
+                     QMessageBox::Yes | QMessageBox::Default,
+                     QMessageBox::No,
+                     QMessageBox::Cancel | QMessageBox::Escape);
+                if(mb.exec() == QMessageBox::Yes) {
+                    apply();
+                }
+        }
         substituteCode();
         if (!codeManager.edit()) {
             QMessageBox::critical

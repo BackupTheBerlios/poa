@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.h,v 1.9 2004/02/10 09:55:12 garbeam Exp $
+ * $Id: blockconfwidget.h,v 1.10 2004/02/10 10:19:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -71,6 +71,9 @@ public:
     /** Returns <code>true</code> if the specified item exists. */
     bool contains(PinListViewItem *item);
 
+    /** Returns <code>true</code> if there're any unsaved changes. */
+    bool isModified();
+
 private:
     QListView *ioListView_;
 
@@ -84,6 +87,7 @@ private:
     QPushButton *newIoPushButton_;
     QPushButton *removeIoPushButton_;
     bool newPinSortOrder_;
+    bool isModified_;
 
     PinListViewItem *currentRenameItem;
 

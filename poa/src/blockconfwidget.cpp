@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfwidget.cpp,v 1.17 2004/02/10 09:55:12 garbeam Exp $
+ * $Id: blockconfwidget.cpp,v 1.18 2004/02/10 10:19:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -186,6 +186,7 @@ void BlockConfWidget::sync()
     }
 
     resort();
+    isModified_ = false;
 }
 
 void BlockConfWidget::cancelRename()
@@ -201,6 +202,10 @@ void BlockConfWidget::cancelRename()
 //              currentItem->cancelRename();
 //          }
 //      }
+}
+
+bool BlockConfWidget::isModified() {
+    return isModified_;
 }
 
 bool BlockConfWidget::contains(PinListViewItem *item) {
@@ -240,6 +245,7 @@ void BlockConfWidget::commit() {
             }
         }
     }
+    isModified_ = false;
 }
 
 void BlockConfWidget::updatePositions(PinModel::PinType type)
@@ -256,6 +262,7 @@ void BlockConfWidget::updatePositions(PinModel::PinType type)
     }
 
     resort();
+    isModified_ = true;
 }
 
 void BlockConfWidget::mouseButtonClicked(int button,
@@ -266,6 +273,7 @@ void BlockConfWidget::mouseButtonClicked(int button,
     if (button == Qt::LeftButton && item != 0) {
         item->startRename(c);
         currentRenameItem = (PinListViewItem*)item;
+        isModified_ = true;
     }
 }
 
@@ -283,6 +291,7 @@ void BlockConfWidget::newIo()
         cancelRename();
         item->startRename(1);
         currentRenameItem = item;
+        isModified_ = true;
     }
 }
 
@@ -327,6 +336,7 @@ void BlockConfWidget::removeIo()
         item->parent()->takeItem(item);
         updatePositions(item->type());
         delete item;
+        isModified_ = true;
     }
 }
 
@@ -353,6 +363,7 @@ void BlockConfWidget::moveRowUp()
             itemAbove->moveItem(item);
             updatePositions(item->type());
         }
+        isModified_ = true;
     }
 }
 
@@ -366,6 +377,7 @@ void BlockConfWidget::moveRowDown()
             item->moveItem(itemBelow);
             updatePositions(item->type());
         }
+        isModified_ = true;
     }
 }
 

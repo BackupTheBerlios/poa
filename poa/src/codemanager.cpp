@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: codemanager.cpp,v 1.20 2004/02/09 20:34:07 garbeam Exp $
+ * $Id: codemanager.cpp,v 1.21 2004/02/10 10:19:06 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -179,14 +179,14 @@ bool CodeManager::templateIsSubstitutable() {
     Q_ASSERT(!model_->source().isNull());
     QString source = sourceCode();
     // only one block is allowed!
-    return (source.find("/*!POA") != -1) &&
-           (source.find("AOP!*/") != -1);
+    return (source.find("/*!POA!*/") != -1) &&
+           (source.find("/*!AOP!*/") != -1);
 }
 
 void CodeManager::prependSubstitutionMarkers() {
     Q_ASSERT(!model_->source().isNull());
     QString source = sourceCode();
-    source.prepend("\n/*!POA\n\nAOP!*/\n");
+    source.prepend("\n/*!POA!*/\n\n/*!AOP!*/\n");
     model_->setSource(source);
     saveSource();
 }
@@ -194,7 +194,7 @@ void CodeManager::prependSubstitutionMarkers() {
 void CodeManager::substitute() {
     Q_ASSERT(templateIsSubstitutable());
 
-    QString substTxt("/*!POA\n");
+    QString substTxt("/*!POA!*/\n");
 
     QValueList<PinModel*> pins = model_->pins();
     for (QValueListIterator<PinModel *> it = pins.begin();
@@ -209,8 +209,8 @@ void CodeManager::substitute() {
     QString source = sourceCode();
     // Note: fucking QRegExp don't works over newlines, so
     // we've to double-match... - so QRegExp is useless indeed :((
-    int firstIndex = source.find("/*!POA");
-    int lastIndex = source.find("AOP!*/");
+    int firstIndex = source.find("/*!POA!*/");
+    int lastIndex = source.find("/*!AOP!*/");
 
     Q_ASSERT(firstIndex < lastIndex);
     source.replace(firstIndex, lastIndex - firstIndex, substTxt);

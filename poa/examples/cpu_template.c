@@ -3,13 +3,13 @@
  *
  * Compile: nb -b 0x4000 bof.c
  *
- * $Id: cpu_template.c,v 1.2 2004/02/09 19:18:21 garbeam Exp $
+ * $Id: cpu_template.c,v 1.3 2004/02/10 10:19:06 garbeam Exp $
  */
 
 // Hardware-Adressen - folgenden POA Kommentarblock NICHT entfernen!
-/*!POA
+/*!POA!*/
 
-AOP!*/
+/*!AOP!*/
 
 int main(void)
 {

@@ -86,6 +86,18 @@ Overwrite existing file?</source>
         <translation>Dieser Block enthält nicht gespeicherten Quelltext, auf der Festplatte befindet sich jedoch schon eine Datei. 
 Soll die existierende Datei überschrieben werden?</translation>
     </message>
+    <message>
+        <source>The block source code contains no substitution marks.
+Prepend such marks?</source>
+        <translation>Der Bockquelltext enthält keine Substitutionsmarkierungen.
+Sollen die Markierungen vorgetäuscht werden?</translation>
+    </message>
+    <message>
+        <source>You&apos;ve modified the block configuration without applying the changes.
+Apply changes?</source>
+        <translation>Die Blockkonfiguration wurde geändert, jedoch nicht gespeichert.
+Sollen die Änderungen gespeichert werden?</translation>
+    </message>
 </context>
 <context>
     <name>BlockConfWidget</name>
@@ -844,6 +856,45 @@ Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     </message>
 </context>
 <context>
+    <name>PathChooserDialog</name>
+    <message>
+        <source>Path Chooser</source>
+        <translation>Pfadwahl</translation>
+    </message>
+    <message>
+        <source>&amp;Source Block</source>
+        <translation>&amp;Quellblock</translation>
+    </message>
+    <message>
+        <source>&amp;Output Pin</source>
+        <translation>&amp;Ausgangspin</translation>
+    </message>
+    <message>
+        <source>&amp;Input Pin</source>
+        <translation>&amp;Eingangspin</translation>
+    </message>
+    <message>
+        <source>&amp;Target Block</source>
+        <translation>&amp;Zielblock</translation>
+    </message>
+    <message>
+        <source>&amp;Available Paths</source>
+        <translation>&amp;Vorhandene Pfade</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation>&amp;OK</translation>
+    </message>
+    <message>
+        <source>&amp;Cancel</source>
+        <translation>&amp;Abbrechen</translation>
+    </message>
+    <message>
+        <source>&lt;none&gt;</source>
+        <translation>&lt;keine&gt;</translation>
+    </message>
+</context>
+<context>
     <name>PinModel</name>
     <message>
         <source>Unkown type</source>
@@ -994,7 +1045,7 @@ Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation>&amp;Hilfe</translation>
+        <translation type="obsolete">&amp;Hilfe</translation>
     </message>
     <message>
         <source>&amp;Apply</source>
@@ -1011,6 +1062,10 @@ Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     <message>
         <source>Clock</source>
         <translation>Takt</translation>
+    </message>
+    <message>
+        <source>A&amp;uto</source>
+        <translation>A&amp;uto</translation>
     </message>
 </context>
 <context>

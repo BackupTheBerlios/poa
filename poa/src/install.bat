@@ -2,7 +2,7 @@
 REM Diese Batchdatei installiert POA standardmaessig nach C:\POA
 REM Falls ein anderes Verzeichnis gewünscht ist, dann als erstes
 REM Argument das jeweilige Verzeichnis angeben.
-set PREFIX=C:\
+set PREFIX=C:
 if /I "%1" == "" goto proceed
 set PREFIX=%1
 :proceed
@@ -19,4 +19,4 @@ xcopy icons\* %PREFIX%\POA\icons\
 echo "Installiere Templates"
 xcopy templates\* %PREFIX%\POA\templates\
 echo "Installation beendet."
-echo "Have fun! Ihr WMI Team."
+echo "Have fun! Ihr POA Team."

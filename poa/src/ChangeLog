@@ -1,5 +1,7 @@
 2003-09-18  Tammo van Lessen  <vanto@users.sourceforge.net>
 
+	* main.cpp (main): Load project via commandline arg
+
 	* pinmodel.cpp (isConnectable): Added isConnectable for pins
 
 2003-09-18  Steffen Pingel  <squig@users.sourceforge.net>

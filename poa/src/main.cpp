@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: main.cpp,v 1.18 2003/09/07 19:07:46 squig Exp $
+ * $Id: main.cpp,v 1.19 2003/09/18 15:12:08 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,6 +29,7 @@
 
 #include <qapplication.h>
 #include <qdom.h>
+#include <qfileinfo.h>
 
 /**
  * This is the main entry point of the POA app.
@@ -40,7 +41,16 @@ int main (int argc, char *argv[])
     MainWindow *mainWindow = new MainWindow();
     app.setMainWidget(mainWindow);
     mainWindow->setCaption(VERSION);
+
     mainWindow->show();
+
+    // load project
+    if (app.argc() == 2) {
+        QFileInfo fi(app.argv()[1]);
+        if (fi.isDir()) {
+            mainWindow->openProject(fi.dirPath());
+        }
+    }
 
     return app.exec();
 }

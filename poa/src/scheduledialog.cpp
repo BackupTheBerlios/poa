@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.27 2004/01/13 14:03:02 vanto Exp $
+ * $Id: scheduledialog.cpp,v 1.28 2004/01/13 14:46:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -334,32 +334,31 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
                             + (2 * WIDGET_SPACING), labelCanvas->height());
     }
 
+    // check if block is configured correctly
+    if (bt->getClock() <= 0) {
+        // draw info and skip
+        QCanvasRectangle *box = new QCanvasRectangle(canvas);
+        box->setSize(canvas->width(),
+                     BOX_HEIGHT + BOX_YSPACING);
+        box->setBrush(white);
+        box->setPen(lightGray);
+        box->move(0, RULER_HEIGHT - BOX_YSPACING
+                  / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
+        box->setZ(2);
+        box->show();
+
+        QCanvasText *text = new QCanvasText(tr("Missing clock value."), canvas);
+        text->move(WIDGET_SPACING, y);
+        text->setColor(black);
+        text->setZ(3);
+        text->show();
+        return;
+    }
+
     // draw blocks
     int t = bt->getOffset();
     double X = t * PIX_PER_NS;
     while (X < canvas->width()) {
-
-        // is block configured?
-        if (bt->getClock() <= 0) {
-            // no, draw info and skip
-              QCanvasRectangle *box = new QCanvasRectangle(canvas);
-              box->setSize(canvas->width(),
-                           BOX_HEIGHT + BOX_YSPACING);
-              box->setBrush(white);
-              box->setPen(lightGray);
-              box->move(0, RULER_HEIGHT - BOX_YSPACING
-                        / 2 + line * (BOX_YSPACING + BOX_HEIGHT));
-              box->setZ(0);
-              box->show();
-
-            QCanvasText *text = new QCanvasText(tr("Missing clock value."), canvas);
-            text->move(WIDGET_SPACING, y);
-            text->setColor(black);
-            text->setZ(1);
-            text->show();
-            return;
-        }
-
         // draw block
         QRect thisBlock = calcBlockPosition(bt, t);
         QCanvasRectangle* box = new QCanvasRectangle(thisBlock, canvas);

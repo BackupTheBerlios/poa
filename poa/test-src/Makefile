@@ -1,6 +1,6 @@
 CFLAGS   = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
 CXXFLAGS = -pipe -Wall -W -g -D_REENTRANT -D_TTY_POSIX_ -DQT_THREAD_SUPPORT
-CPPUNIT_PATH = $(shell hostname | grep gspc >/dev/null && echo ../cppunit/lib/gspc54 || ../cppunit/lib)
+CPPUNIT_PATH = $(shell hostname | grep gspc >/dev/null && echo ../cppunit/lib/gspc54 || echo ../cppunit/lib)
 CPPUNIT_LDFLAGS = $(shell cppunit-config --libs || echo -L$(CPPUNIT_PATH) -lcppunit)
 LDFLAGS  = $(CPPUNIT_LDFLAGS) -L$(QTDIR)/lib  -L/usr/X11R6/lib -lqt-mt -lpthread -lXext -lX11 -lm
 CPPUNIT_INCLUDES = $(shell cppunit-config --cflags || echo -I../cppunit/include)
@@ -41,7 +41,7 @@ mainqt: poa $(CPPUNIT_PATH)/libcppunit.so $(CPPUNIT_PATH)/libqttestrunner.so $(T
 	$(CXX) -o mainqt $(LDFLAGS) -lqttestrunner $(OBJECTS) mainqt.o
 
 check: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 all
-	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./main
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(shell cppunit-config --prefix)/lib:$(CPPUNIT_PATH) ./main
 
 checkqt: $(CPPUNIT_PATH)/libcppunit-1.9.so.11 $(CPPUNIT_PATH)/libqttestrunner.so.1 all
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$(CPPUNIT_PATH) ./mainqt

@@ -37,9 +37,9 @@ public:
 
     void testAutoSetter()
     {
-        CPPUNIT_ASSERT(cpu->autoExecTime() == true);
-        cpu->setAutoExecTime(false);
-        CPPUNIT_ASSERT(cpu->autoExecTime() == false);
+        CPPUNIT_ASSERT(cpu->autoRuntime() == true);
+        cpu->setAutoRuntime(false);
+        CPPUNIT_ASSERT(cpu->autoRuntime() == false);
 
         CPPUNIT_ASSERT(cpu->autoOffset() == true);
         cpu->setAutoOffset(false);
@@ -65,7 +65,7 @@ public:
     void testSerialize()
     {
         cpu->setCpuId(1);
-        cpu->setAutoExecTime(false);
+        cpu->setAutoRuntime(false);
         cpu->setAutoOffset(false);
 
         cpu->setSaveSource(false);
@@ -75,7 +75,7 @@ public:
 
         CpuModel cpu2(element);
         CPPUNIT_ASSERT(cpu2.cpuId() == 1);
-        CPPUNIT_ASSERT(cpu2.autoExecTime() == false);
+        CPPUNIT_ASSERT(cpu2.autoRuntime() == false);
         CPPUNIT_ASSERT(cpu2.autoOffset() == false);
     }
 

@@ -13,7 +13,7 @@ class BlockModelTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testClock);
     CPPUNIT_TEST(testDeletePin);
     CPPUNIT_TEST(testDescription);
-    CPPUNIT_TEST(testExecTime);
+    CPPUNIT_TEST(testRuntime);
     CPPUNIT_TEST(testFindPinById);
     CPPUNIT_TEST(testId);
     CPPUNIT_TEST(testName);
@@ -83,12 +83,12 @@ public:
         CPPUNIT_ASSERT(block->description() == "MyDescription");
     }
 
-    void testExecTime()
+    void testRuntime()
     {
-        CPPUNIT_ASSERT(block->execTime() == 0);
+        CPPUNIT_ASSERT(block->runtime() == 0);
 
-        block->setExecTime(100);
-        CPPUNIT_ASSERT(block->execTime() == 100);
+        block->setRuntime(100);
+        CPPUNIT_ASSERT(block->runtime() == 100);
     }
 
     void testFindPinById()
@@ -147,7 +147,7 @@ public:
     {
         block->setClock(1);
         block->setOffset(2);
-        block->setExecTime(3);
+        block->setRuntime(3);
         block->setHasEpisodicPins(false);
         block->setHasOutputPins(false);
         block->setName("MyName");
@@ -162,7 +162,7 @@ public:
         BlockModel block2(element);
         CPPUNIT_ASSERT(block2.clock() == 1);
         CPPUNIT_ASSERT(block2.offset() == 2);
-        CPPUNIT_ASSERT(block2.execTime() == 3);
+        CPPUNIT_ASSERT(block2.runtime() == 3);
         CPPUNIT_ASSERT(block2.name() == "MyName");
         CPPUNIT_ASSERT(block2.description() == "MyDescription");
         CPPUNIT_ASSERT(block2.type() == "MyType");
@@ -189,7 +189,7 @@ public:
     {
         block->setClock(111);
         block->setOffset(222);
-        block->setExecTime(333);
+        block->setRuntime(333);
 
         QString tip = block->tip();
         CPPUNIT_ASSERT(tip.contains("111"));

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poa.cpp,v 1.3 2004/01/09 16:09:08 keulsn Exp $
+ * $Id: poa.cpp,v 1.4 2004/01/18 23:31:02 squig Exp $
  *
  *****************************************************************************/
 
@@ -151,13 +151,14 @@ QString image(LineDirection dir)
 {
     switch(dir) {
     case LEFT:
-	return QString("left");
+        return QString("left");
     case RIGHT:
-	return QString("right");
+        return QString("right");
     case UP:
-	return QString("up");
+        return QString("up");
     case DOWN:
-	return QString("down");
+        return QString("down");
+    default:
+        return 0;
     }
-    return 0;
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.32 2004/01/17 17:35:39 squig Exp $
+ * $Id: cpumodel.cpp,v 1.33 2004/01/18 23:31:02 squig Exp $
  *
  *****************************************************************************/
 
@@ -35,7 +35,7 @@
 CpuModel::CpuModel(QString type, QString description)
     : BlockModel(type, description)
 {
-    autoRuntime_ = 0;
+    autoRuntime_ = true;
     cpuId_ = -1;
 
     saveSource_ = true;

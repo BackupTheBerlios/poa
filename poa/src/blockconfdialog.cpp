@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.37 2003/12/03 17:33:42 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.38 2003/12/10 13:53:58 vanto Exp $
  *
  *****************************************************************************/
 
@@ -203,7 +203,7 @@ void BlockConfDialog::initBlockWidget()
     blockLayout->addWidget(blockDescrLineEdit, 2, 1);
     blockLayout->addWidget(new QLabel(tr("clock"), blockGroupBox), 3, 0);
     blockLayout->addWidget(blockClockSpinBox, 3, 1);
-    blockLayout->addWidget(new QLabel(tr("ms"), blockGroupBox), 3, 2);
+    blockLayout->addWidget(new QLabel(tr("ns"), blockGroupBox), 3, 2);
 
     rightLayout->addWidget(blockGroupBox);
 }
@@ -237,7 +237,7 @@ void BlockConfDialog::initOffsetWidget()
     offsetLayout->addWidget(offsetAutoCalcRadioButton, 0, 0);
     offsetLayout->addWidget(offsetRadioButton, 1, 0);
     offsetLayout->addWidget(offsetSpinBox, 1, 1);
-    offsetLayout->addWidget(new QLabel(tr("ms"), offsetButtonGroup), 1, 2);
+    offsetLayout->addWidget(new QLabel(tr("ns"), offsetButtonGroup), 1, 2);
 
     rightLayout->addWidget(offsetButtonGroup);
 }
@@ -270,7 +270,7 @@ void BlockConfDialog::initRuntimeWidget()
         runtimeLayout->addWidget(runtimeAutoCalcRadioButton, 0, 0);
         runtimeLayout->addWidget(runtimeRadioButton, 1, 0);
         runtimeLayout->addWidget(runtimeSpinBox, 1, 1);
-        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeButtonGroup), 1, 2);
+        runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeButtonGroup), 1, 2);
         rightLayout->addWidget(runtimeButtonGroup);
     }
     else {
@@ -288,7 +288,7 @@ void BlockConfDialog::initRuntimeWidget()
         QBoxLayout *runtimeLayout = new QHBoxLayout(runtimeGroupBox, 15);
         runtimeLayout->addWidget(new QLabel(tr("runtime"), runtimeGroupBox));
         runtimeLayout->addWidget(runtimeSpinBox);
-        runtimeLayout->addWidget(new QLabel(tr("ms"), runtimeGroupBox));
+        runtimeLayout->addWidget(new QLabel(tr("ns"), runtimeGroupBox));
         rightLayout->addWidget(runtimeGroupBox);
     }
 }

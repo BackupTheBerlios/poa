@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.33 2004/01/21 13:57:18 vanto Exp $
+ * $Id: librarywindow.cpp,v 1.34 2004/01/21 16:07:51 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -36,6 +36,7 @@
 #include <qdragobject.h>
 #include <qfileinfo.h>
 #include <qframe.h>
+#include <qinputdialog.h>
 #include <qlayout.h>
 #include <qpalette.h>
 #include <qpopupmenu.h>
@@ -61,6 +62,7 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
 
     modelListView_ = new LibraryListView(splitter_);
     modelListView_->addColumn(tr("Module"));
+    modelListView_->setDefaultRenameAction(QListView::Accept);
 
     descriptionTextBrowser_ = new QTextBrowser(splitter_);
     QPalette palette = QApplication::palette();
@@ -69,6 +71,10 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
             (palette.brush(QPalette::Normal, QColorGroup::Background));
 
     popupMenu_ = new QPopupMenu();
+    popupMenu_->insertItem(tr("Rename"), this, SLOT(renameSelected()));
+    popupMenu_->insertItem(tr("Change Type"),
+                           this, SLOT(changeTypeOfSelected()));
+    popupMenu_->insertSeparator();
     popupMenu_->insertItem(QPixmap(Util::findIcon("editdelete.png")),
                            tr("Remove"), this, SLOT(removeSelected()));
 
@@ -145,11 +151,29 @@ void LibraryWindow::addDefaultItems()
     add(muxModel);
 }
 
-QListViewItem *LibraryWindow::getTypeItem(QString type)
+void LibraryWindow::changeTypeOfSelected()
+{
+    LibraryListViewItem *item
+        = dynamic_cast<LibraryListViewItem*>(modelListView_->selectedItem());
+    if (item != 0) {
+        QStringList typeNames = types();
+        bool ok;
+        QString type = QInputDialog::getItem
+            ("POA", "Select a type", typeNames,
+             typeNames.findIndex(item->data().type()), true, &ok, this);
+        if (ok) {
+            item->data().setType(type);
+            item->parent()->takeItem(item);
+            getTypeItem(type)->insertItem(item);
+        }
+    }
+}
+
+QListViewItem *LibraryWindow::getTypeItem(const QString &type)
 {
     QListViewItem *item = typeItemByType.find(type);
     if (item == 0) {
-        item = new QListViewItem(modelListView_, type);
+        item = new TypeListViewItem(this, modelListView_, type);
         item->setOpen(true);
         typeItemByType.insert(type, item);
     }
@@ -172,6 +196,23 @@ void LibraryWindow::initialize()
     modified_ = false;
 }
 
+void LibraryWindow::renameTypeItem(QListViewItem *parent, const QString &oldName,
+                                   const QString &newName)
+{
+    typeItemByType.remove(oldName);
+    parent->setText(0, newName);
+    typeItemByType.insert(newName, parent);
+
+    QListViewItem *item = parent->firstChild();
+    while (item != 0) {
+        LibraryListViewItem *libraryItem
+            = dynamic_cast<LibraryListViewItem*>(item);
+        if (libraryItem != 0) {
+            libraryItem->data().setType(newName);
+        }
+        item = item->nextSibling();
+    }
+}
 
 void LibraryWindow::open(QFile *file)
 {
@@ -207,6 +248,14 @@ void LibraryWindow::removeSelected()
     }
 }
 
+void LibraryWindow::renameSelected()
+{
+    QListViewItem *item = modelListView_->selectedItem();
+    if (item != 0) {
+        item->startRename(0);
+    }
+}
+
 void LibraryWindow::showPopup(QListViewItem *, const QPoint &pos, int)
 {
     popupMenu_->exec(pos);
@@ -227,6 +276,17 @@ void LibraryWindow::setDescription(QListViewItem* item)
 void LibraryWindow::setOrientation(Qt::Orientation orientation)
 {
     splitter_->setOrientation(orientation);
+}
+
+QStringList LibraryWindow::types()
+{
+    QStringList types;
+    QListViewItem *item = modelListView_->firstChild();
+    while (item != 0) {
+        types.append(item->text(0));
+        item = item->nextSibling();
+    }
+    return types;
 }
 
 LibraryListView::LibraryListView(QWidget *parent, const char *name,
@@ -256,7 +316,8 @@ LibraryListViewItem::LibraryListViewItem(QListViewItem *parent,
     setText(0, item->name());
     setText(1, item->description());
 
-    setDragEnabled(TRUE);
+    setDragEnabled(true);
+    setRenameEnabled(0, true);
 }
 
 LibraryListViewItem::~LibraryListViewItem()
@@ -267,4 +328,30 @@ LibraryListViewItem::~LibraryListViewItem()
 AbstractModel &LibraryListViewItem::data() const
 {
     return *item_;
+}
+
+void LibraryListViewItem::okRename(int col)
+{
+    QListViewItem::okRename(col);
+
+    if (col == 0) {
+        data().setName(text(col));
+    }
+}
+
+TypeListViewItem::TypeListViewItem(LibraryWindow *library, QListView *parent,
+                                   QString text)
+    : QListViewItem(parent, text), library_(library)
+{
+    setRenameEnabled(0, true);
+}
+
+void TypeListViewItem::okRename(int col)
+{
+    if (col == 0) {
+        QString oldName = text(0);
+        QListViewItem::okRename(col);
+
+        library_->renameTypeItem(this, oldName, text(0));
+    }
 }

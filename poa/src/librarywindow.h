@@ -18,18 +18,20 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.10 2004/01/21 13:26:39 squig Exp $
+ * $Id: librarywindow.h,v 1.11 2004/01/21 16:07:51 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
 #define LIBRARYWINDOW_H
+
+class AbstractModel;
+class LibraryWindow;
 
 #include <qvariant.h>
 #include <qdict.h>
 #include <qfile.h>
 #include <qdockwindow.h>
 #include <qlistview.h>
-class AbstractModel;
 class QListView;
 class QListViewItem;
 class QPopupMenu;
@@ -57,9 +59,9 @@ public:
 };
 
 /**
- * Provides the library module viewitems
+ * Provides a QListViewItem that stores an AbstractModel object.
  */
-class LibraryListViewItem : QListViewItem
+class LibraryListViewItem : public QListViewItem
 {
 public:
 
@@ -69,7 +71,7 @@ public:
     LibraryListViewItem(QListViewItem *parent, AbstractModel *item);
 
     /**
-     * Default destructor
+     * Deletes item_.
      */
     ~LibraryListViewItem();
 
@@ -78,8 +80,34 @@ public:
      */
     AbstractModel &data() const;
 
+    /**
+     * Changes the name of item_.
+     */
+    virtual void okRename(int col);
+
 private:
     AbstractModel *item_;
+};
+
+/**
+ * Provides a QListViewItem that acts as a root item for
+ * LibraryListViewItem objects.
+ */
+class TypeListViewItem : public QListViewItem
+{
+public:
+
+    TypeListViewItem(LibraryWindow *library, QListView *parent, QString text);
+
+    /**
+     * Changes the type of all child items.
+     */
+    virtual void okRename(int col);
+
+private:
+
+    LibraryWindow *library_;
+
 };
 
 /**
@@ -122,6 +150,11 @@ public:
      */
     void save(QFile *file);
 
+    /**
+     * Returns a list of item types that are currently in the library.
+     */
+    QStringList types();
+
 private :
 
     QListView* modelListView_;
@@ -137,19 +170,41 @@ private :
      */
     void addDefaultItems();
 
-    QListViewItem *getTypeItem(QString type);
+    /**
+     * Returns the root item for type. If no item does exist for type,
+     * a new item is created.
+     */
+    QListViewItem *getTypeItem(const QString &type);
 
     /**
      * Adds the modules to the tree.
      */
     void initialize();
 
+    /**
+     * Renames item and changes the type of all child nodes to newName.
+     */
+    void renameTypeItem(QListViewItem *item, const QString &oldName,
+                        const QString &newName);
+
 private slots:
+
+    /**
+     * Popups up an input dialog that allows the user to change the
+     * type of the currently selected item.
+     */
+    void changeTypeOfSelected();
 
     /**
      * Removes currently selected item from library.
      */
     void removeSelected();
+
+    /**
+     * Popups up an input dialog that allows the user to rename
+     * the currently selected item.
+     */
+    void renameSelected();
 
     /**
      * Sets the description
@@ -165,6 +220,8 @@ private slots:
      * Shows the popup menu at pos.
      */
     void showPopup(QListViewItem *item, const QPoint &pos, int col);
+
+    friend class TypeListViewItem;
 
 };
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.89 2004/01/21 13:26:39 squig Exp $
+ * $Id: mainwindow.cpp,v 1.90 2004/01/21 16:07:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -937,11 +937,12 @@ void MainWindow::saveToLibrary()
             doc.appendChild(root);
 
             bool ok;
-            QString type = (selectedModel() != 0)
-                ? selectedModel()->type()
-                : tr("Other");
-            type = QInputDialog::getText("POA", "Enter library type:",
-                                         QLineEdit::Normal, type, &ok, this);
+            QStringList typeNames = libraryWindow_->types();
+            int index = (selectedModel() != 0)
+                ? QMAX(0, typeNames.findIndex(selectedModel()->type()))
+                : 0;
+            QString type = QInputDialog::getItem
+                ("POA", "Select a type", typeNames, index, true, &ok, this);
             if (!ok) {
                 return;
             }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poaexception.cpp,v 1.2 2004/01/17 12:03:04 squig Exp $
+ * $Id: poaexception.cpp,v 1.3 2004/01/21 16:07:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,11 @@
 
 PoaException::PoaException(const QString& msg)
     : msg_(msg)
+{
+}
+
+PoaException::PoaException(const PoaException& e)
+    : msg_(e.message())
 {
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.56 2004/01/20 19:25:29 squig Exp $
+ * $Id: blockconfdialog.cpp,v 1.57 2004/01/21 16:07:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -384,7 +384,7 @@ void BlockConfDialog::updateModel()
     }
 
     // updated pins
-    for (QPtrListIterator<PinModel> uit(updatedPins_); uit != 0; ++uit) {
+    for (QPtrListIterator<PinModel> uit(updatedPins_); *uit != 0; ++uit) {
         PinModel *pin = *uit;
         PinModel *origPin = model_->findPinById(pin->id());
         origPin->setName(pin->name());

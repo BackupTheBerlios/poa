@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.24 2003/12/18 01:52:02 kilgus Exp $
+ * $Id: pinview.h,v 1.25 2003/12/20 16:12:14 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -133,11 +133,16 @@ public:
      */
     QString tip();
 
-
     /**
      * Returns the parent BlockView.
      */
     BlockView *parent();
+
+	/**
+	 * Return own type information
+	 */
+    virtual int rtti() const;
+    static const int RTTI;
 
 private:
     /**

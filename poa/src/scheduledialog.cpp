@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.25 2004/01/12 19:13:57 squig Exp $
+ * $Id: scheduledialog.cpp,v 1.26 2004/01/12 21:59:48 squig Exp $
  *
  *****************************************************************************/
 
@@ -371,14 +371,14 @@ void ScheduleDialog::drawTimings(BlockTree* bt)
         for (QPtrListIterator<BlockTree> it(*bt->getBranches()); it != 0; ++it) {
             BlockTree *target = *it;
 
-            // skip if child has no clock
-            if (target->getClock() <= 0) {
-                continue;
-            }
-
             // block lookup
             if (target->getBackReference()) {
                 target = blocksToTree_[target->getBlock()];
+            }
+
+            // skip if child has no clock
+            if (target->getClock() <= 0) {
+                continue;
             }
 
             // find next start time for the target block

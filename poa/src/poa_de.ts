@@ -156,11 +156,11 @@ Soll die existierende Datei überschrieben werden?</translation>
     <name>BlockModel</name>
     <message>
         <source>&lt;u&gt;%2&lt;/u&gt; (%3)&lt;br&gt;&lt;i&gt;%4&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Clock:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;u&gt;%2&lt;/u&gt; (%3)&lt;br&gt;&lt;i&gt;%4&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Takt:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Execution time:&lt;/b&gt; %1</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Ausführungszeit:&lt;/b&gt; %1</translation>
     </message>
 </context>
 <context>
@@ -182,18 +182,18 @@ Soll die existierende Datei überschrieben werden?</translation>
     <name>ConnectorViewList</name>
     <message>
         <source>&lt;b&gt;Connector&lt;/b&gt;&lt;br&gt;&lt;hr&gt;&lt;b&gt;Source:&lt;/b&gt; &lt;u&gt;%1&lt;/u&gt;::%2&lt;br&gt;&lt;b&gt;Target:&lt;/b&gt; &lt;u&gt;%3&lt;/u&gt;::%4&lt;br&gt;&lt;b&gt;Width:&lt;/b&gt; %5</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Anschluss&lt;/b&gt;&lt;br&gt;&lt;hr&gt;&lt;b&gt;Quelle:&lt;/b&gt; &lt;u&gt;%1&lt;/u&gt;::%2&lt;br&gt;&lt;b&gt;Ziel:&lt;/b&gt; &lt;u&gt;%3&lt;/u&gt;::%4&lt;br&gt;&lt;b&gt;Bandbreite:&lt;/b&gt; %5</translation>
     </message>
     <message>
         <source>Source and target have different widths!</source>
-        <translation type="unfinished"></translation>
+        <translation>Quelle und Ziel haben unterschiedliche Bandbreiten!</translation>
     </message>
 </context>
 <context>
     <name>CpuModel</name>
     <message>
         <source>&lt;u&gt;%1&lt;/u&gt; (%2)&lt;br&gt;&lt;i&gt;%3&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Id on CPLD:&lt;/b&gt; %4&lt;br&gt;&lt;b&gt;Clock:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;&lt;b&gt;Execution time:&lt;/b&gt; %7</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;u&gt;%1&lt;/u&gt; (%2)&lt;br&gt;&lt;i&gt;%3&lt;/i&gt;&lt;hr&gt;&lt;b&gt;Id auf dem CPLD:&lt;/b&gt; %4&lt;br&gt;&lt;b&gt;Takt:&lt;/b&gt; %5&lt;br&gt;&lt;b&gt;Offset:&lt;/b&gt; %6&lt;br&gt;&lt;b&gt;Ausführungszeit:&lt;/b&gt; %7</translation>
     </message>
 </context>
 <context>
@@ -251,38 +251,38 @@ Soll die existierende Datei überschrieben werden?</translation>
     <name>DifferentClockReport</name>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <source>%1 has a different clock than %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 hhat einen anderen Takt als %2</translation>
     </message>
     <message>
         <source>Connected blocks should have the same clock.</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbundene Blöcke sollten den gleichen Takt haben.</translation>
     </message>
     <message>
         <source>Set %1 clock to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze %1 Takt auf %2</translation>
     </message>
 </context>
 <context>
     <name>DifferentWidthReport</name>
     <message>
         <source>Critical</source>
-        <translation type="unfinished"></translation>
+        <translation>Kritisch</translation>
     </message>
     <message>
         <source>%1 has a different width than %2</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 hat eine andere Bandbreite als %2</translation>
     </message>
     <message>
         <source>Connected blocks need to have the same number of bits. You can use a Mux in order to connect blocks with different widhts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Verrbundene Blöcke müssen die gleiche Bandbreite haben. Man kann Multipexer / Demultplexer verwenden um Blöcke unterschiedlicher Bandbreite zu verbinden.</translation>
     </message>
     <message>
         <source>Set %1 bits to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze %1 Bits auf %2</translation>
     </message>
 </context>
 <context>
@@ -293,15 +293,15 @@ Soll die existierende Datei überschrieben werden?</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <source>%1 is not connected</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ist nicht verbunden</translation>
     </message>
     <message>
         <source>Disconnected pins are considered bad style.</source>
-        <translation type="unfinished"></translation>
+        <translation>Unverbundene Pins sind schlechter Stil.</translation>
     </message>
 </context>
 <context>
@@ -355,31 +355,31 @@ Soll die existierende Datei überschrieben werden?</translation>
     </message>
     <message>
         <source>Default CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard CPU</translation>
     </message>
     <message>
         <source>Default core</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard Core</translation>
     </message>
     <message>
         <source>Default input block</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard Eingangsblock</translation>
     </message>
     <message>
         <source>Default output block</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard Ausgangsblock</translation>
     </message>
     <message>
         <source>Multiplexer / Demultiplexer</source>
-        <translation type="unfinished"></translation>
+        <translation>Multiplexer / Demultiplexer</translation>
     </message>
     <message>
         <source>Select a type</source>
-        <translation type="unfinished">Typ wählen</translation>
+        <translation>Typ wählen</translation>
     </message>
     <message>
         <source>Could not save library to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Bilbliothek %1 konnte nicht gespeichert werden</translation>
     </message>
 </context>
 <context>
@@ -741,19 +741,20 @@ Soll fortgefahren werden?</translation>
     <message>
         <source>The document contains unsaved changes
 Do you want to save the changes before exiting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Dokument enthält ungespeicherte Änderungen
+Sollen die Änderungen vor verlassen gespeichert werden?</translation>
     </message>
     <message>
         <source>&amp;Save</source>
-        <translation type="unfinished">&amp;Speichern</translation>
+        <translation>&amp;Speichern</translation>
     </message>
     <message>
         <source>&amp;Discard</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Verwerfen</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -846,38 +847,38 @@ Do you want to save the changes before exiting?</source>
     <name>PinModel</name>
     <message>
         <source>Unkown type</source>
-        <translation type="unfinished"></translation>
+        <translation>Unbekannter Typ</translation>
     </message>
     <message>
         <source>Input pin</source>
-        <translation type="unfinished"></translation>
+        <translation>Engangspin</translation>
     </message>
     <message>
         <source>Output pin</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausgangspin</translation>
     </message>
     <message>
         <source>Episodic pin</source>
-        <translation type="unfinished"></translation>
+        <translation>Interruptpin</translation>
     </message>
     <message>
         <source>&lt;b&gt;Pin %1&lt;/b&gt;&lt;br&gt;&lt;u&gt;%2&lt;/u&gt; (%3)&lt;hr&gt;&lt;b&gt;Address:&lt;/b&gt; 0x%4&lt;br&gt;&lt;b&gt;Width:&lt;/b&gt;%5 bits</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;Pin %1&lt;/b&gt;&lt;br&gt;&lt;u&gt;%2&lt;/u&gt; (%3)&lt;hr&gt;&lt;b&gt;Adresse:&lt;/b&gt; 0x%4&lt;br&gt;&lt;b&gt;Bandbreite:&lt;/b&gt;%5 bit</translation>
     </message>
 </context>
 <context>
     <name>ProblemReportItem</name>
     <message>
         <source>Fixed</source>
-        <translation type="unfinished"></translation>
+        <translation>Korrigiert</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnung</translation>
     </message>
     <message>
         <source>Critical</source>
-        <translation type="unfinished"></translation>
+        <translation>Kritisch</translation>
     </message>
 </context>
 <context>
@@ -1103,18 +1104,18 @@ Do you want to save the changes before exiting?</source>
     <name>codemanager</name>
     <message>
         <source>Could not create directory: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Verzeichnis %1 konnte nicht erstellt werden</translation>
     </message>
     <message>
         <source>Could not copy code template: %1 does not exist.</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Quelltextvorlage konnte nicht kopiert werden. %1 ist nicht vorhanden.</translation>
     </message>
 </context>
 <context>
     <name>colormanager</name>
     <message>
         <source>Clocks</source>
-        <translation type="unfinished"></translation>
+        <translation>Taktzeiten</translation>
     </message>
 </context>
 <context>
@@ -1122,15 +1123,16 @@ Do you want to save the changes before exiting?</source>
     <message>
         <source>The pins have different widths
 Do you want to change the width?</source>
-        <translation type="unfinished"></translation>
+        <translation>Die Pins haben unterschiedliche Bandbreiten
+Soll die Bandbreite geändert werden?</translation>
     </message>
     <message>
         <source>Set %1 bits to %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Setze %1 Bits auf %2</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Abbrechen</translation>
+        <translation>Abbrechen</translation>
     </message>
 </context>
 <context>
@@ -1138,55 +1140,57 @@ Do you want to change the width?</source>
     <message>
         <source>
 Queue&apos;s head is not heap&apos;s root item</source>
-        <translation type="unfinished"></translation>
+        <translation>Der Warteschlangenkopf entspricht nicht dem Haldenwurzelelement
+</translation>
     </message>
     <message>
         <source>
 Heap condition is violated </source>
-        <translation type="unfinished"></translation>
+        <translation>
+Die Haldenbedingung ist verletzt</translation>
     </message>
     <message>
         <source> times.</source>
-        <translation type="unfinished"></translation>
+        <translation>mal.</translation>
     </message>
     <message>
         <source> item(s) have</source>
-        <translation type="unfinished"></translation>
+        <translation>Artikel haben</translation>
     </message>
     <message>
         <source> incorrect parent set.</source>
-        <translation type="unfinished"></translation>
+        <translation>falsche Eltern.</translation>
     </message>
     <message>
         <source> incorrect size.</source>
-        <translation type="unfinished"></translation>
+        <translation>falsche Größe.</translation>
     </message>
     <message>
         <source>Queue&apos;s size = </source>
-        <translation type="unfinished"></translation>
+        <translation>Warteschlangengröße =</translation>
     </message>
 </context>
 <context>
     <name>problemmanager</name>
     <message>
         <source>Problem Reports</source>
-        <translation type="unfinished"></translation>
+        <translation>Problemberichte</translation>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindungen</translation>
     </message>
     <message>
         <source>Blocks</source>
-        <translation type="unfinished"></translation>
+        <translation>Blöcke</translation>
     </message>
     <message>
         <source>%1 Reports</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Berichte</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 </TS>

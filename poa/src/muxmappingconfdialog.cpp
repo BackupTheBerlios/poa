@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmappingconfdialog.cpp,v 1.1 2004/01/28 02:20:40 garbeam Exp $
+ * $Id: muxmappingconfdialog.cpp,v 1.2 2004/01/28 07:08:47 squig Exp $
  *
  *****************************************************************************/
 
@@ -39,9 +39,9 @@
 MuxMappingConfDialog::MuxMappingConfDialog(
         QListViewItemIterator iter,
         MuxMappingListViewItem *item,
-        QWidget* parent = 0,
-        const char* name = 0,
-        bool modal = FALSE, WFlags fl = 0)
+        QWidget* parent,
+        const char* name,
+        bool modal, WFlags fl)
 {
     itemIter_ = iter;
     muxMappingItem_ = item;

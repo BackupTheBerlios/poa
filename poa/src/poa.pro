@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.57 2003/11/26 16:02:58 vanto Exp $
+# $Id: poa.pro,v 1.58 2003/12/03 14:43:54 keulsn Exp $
 #
 ###############################################################################
 
@@ -50,9 +50,12 @@ HEADERS += canvasview.h
 HEADERS += canvasviewaction.h
 HEADERS += codemanager.h
 HEADERS += connectaction.h
+HEADERS += connectorrouter.h
 HEADERS += connectorviewlist.h
 HEADERS += connectorviewsegment.h
 HEADERS += cpumodel.h
+#HEADERS += dijkstrarouter.h
+HEADERS += directrouter.h
 HEADERS += deployprojectwizard.h
 HEADERS += grid.h
 HEADERS += gridcanvas.h
@@ -71,6 +74,7 @@ HEADERS += poa.h
 HEADERS += processdialog.h
 HEADERS += project.h
 HEADERS += reachedpoint.h
+HEADERS += router.h
 HEADERS += serializable.h
 HEADERS += settings.h
 HEADERS += settingsdialog.h
@@ -86,9 +90,12 @@ SOURCES += canvasview.cpp
 SOURCES += canvasviewaction.cpp
 SOURCES += codemanager.cpp
 SOURCES += connectaction.cpp
+SOURCES += connectorrouter.cpp
 SOURCES += connectorviewlist.cpp
 SOURCES += connectorviewsegment.cpp
 SOURCES += cpumodel.cpp
+#SOURCES += dijkstrarouter.cpp
+SOURCES += directrouter.cpp
 SOURCES += deployprojectwizard.cpp
 SOURCES += grid.cpp
 SOURCES += gridcanvas.cpp
@@ -103,6 +110,7 @@ SOURCES += muxmodel.cpp
 SOURCES += muxview.cpp
 SOURCES += pinmodel.cpp
 SOURCES += pinview.cpp
+SOURCES += poa.cpp
 SOURCES += processdialog.cpp
 SOURCES += project.cpp
 SOURCES += reachedpoint.cpp

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.12 2003/11/24 20:11:59 squig Exp $
+ * $Id: connectorviewlist.h,v 1.13 2003/12/03 14:43:54 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -39,7 +39,7 @@ class PinView;
 
 /**
  * Definition of a doubly linked connector view list which is used to manage
- * all parts (ConnectorViews) of a connection between two pins.
+ * all parts (ConnectorViewSegments) of a connection between two pins.
  *
  * Each item in the list represents either a horizontal or a vertical line.
  *
@@ -54,9 +54,8 @@ class ConnectorViewList : public QObject//, public Serializable
 public:
 
     /**
-     * Creates a connector view list on the given <code>canvas</code> and
-     * draws a routed line from <code>source</code> pin to <code>target</code>
-     * pin for the given <code>model</code>.
+     * Creates a connector view list on the given <code>canvas</code> with
+     * empty segment list.
      */
     ConnectorViewList(PinView *source,
                       PinView *target,
@@ -109,13 +108,11 @@ public:
     virtual void setVisible(bool visible);
 
     /**
-     * Serializes this instance to a xml subtree.
+     * Serializes this instance to an xml subtree.
      * @param document the main QDomDocument instance. Needed to create
      *        elements
      */
     virtual QDomElement serialize(QDomDocument *);
-
-protected:
 
     /**
      * Changes <code>this</code> to contain the segments connecting
@@ -123,33 +120,13 @@ protected:
      */
     void applyPointList(const QValueList<QPoint> &list);
 
+protected:
+
     /**
      * Deserializes an xml subtree to recreate the point list.
      * <code>source</code> and <code>target</code> are ignored
      */
     virtual void deserialize(QDomElement *element);
-
-
-    /**
-     * Routes a point list.
-     */
-    static QValueList<QPoint> *routeConnector(QPoint from,
-                                              LineDirection fromDir,
-                                              QPoint to,
-                                              LineDirection toDir);
-
-    /**
-     * Routes a point list. Tries to minimize (1) collisions, (2) inflection
-     * points.
-     */
-    QValueList<QPoint> *routeOptimizing(QPoint from,
-                                        LineDirection fromDir,
-                                        QPoint to,
-                                        LineDirection toDir);
-
-    unsigned weight(const QValueList<QPoint> &points);
-
-    unsigned lineWeight(QPoint from, QPoint to);
 
 private:
 
@@ -160,26 +137,14 @@ private:
     /** the current canvas */
     QCanvas *canvas_;
     /** List of all segments of this connector view */
-    // FIX: this list should contain ConnectorViewSegment objects only
-    QCanvasItemList segments_;
+    QPtrList<ConnectorViewSegment> segments_;
 
 public slots:
-
-    /**
-     * Deletes (and frees) all segments.
-     */
-    void deleteAllConnectorViews();
 
     /**
      * To be called when one of the pin is destroyed
      */
     void deleteView();
-
-private slots:
-    /**
-     * Will be connected to the incident pin views' signal 'moved'.
-     */
-    void pinMoved(PinView*);
 
 signals:
     void select(bool);

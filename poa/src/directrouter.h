@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: directrouter.h,v 1.1 2003/12/03 11:13:02 keulsn Exp $
+ * $Id: directrouter.h,v 1.2 2003/12/03 14:43:54 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -36,17 +36,17 @@ class ConnectorViewList;
 class DirectRouter : public ConnectorRouter
 {
 
-protected:
-
     /**
      * Routes a <code>ConnectorViewList</code>.
      */
     virtual void route(ConnectorViewList *view);
 
-    void routeOne(QPoint from,
-		  LineDirection fromDir,
-		  QPoint to,
-		  LineDirection toDir);
+protected:
+
+    QValueList<QPoint> *routeOne(QPoint from,
+				 LineDirection fromDir,
+				 QPoint to,
+				 LineDirection toDir);
 
 };
 

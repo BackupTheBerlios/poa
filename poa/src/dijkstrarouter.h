@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: dijkstrarouter.h,v 1.1 2003/12/03 11:13:02 keulsn Exp $
+ * $Id: dijkstrarouter.h,v 1.2 2003/12/03 14:43:54 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,6 @@
 
 class DijkstraRouter : public ConnectorRouter
 {
-protected:
     
     /**
      * Routes all {@link ConnectorViewList}s in <code>items</code> in their

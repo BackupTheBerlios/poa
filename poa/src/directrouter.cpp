@@ -18,16 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: directrouter.cpp,v 1.1 2003/12/03 11:13:13 keulsn Exp $
+ * $Id: directrouter.cpp,v 1.2 2003/12/03 14:43:54 keulsn Exp $
  *
  *****************************************************************************/
 
 
-#include <qvaluelist>
+#include <qvaluelist.h>
 
 #include "connectorviewlist.h"
 #include "directrouter.h"
 #include "pinview.h"
+#include "grid.h"
 
 
 void DirectRouter::route(ConnectorViewList *view)
@@ -38,11 +39,11 @@ void DirectRouter::route(ConnectorViewList *view)
     QPoint targetPoint = target->connectorPoint();
     LineDirection sourceDir = source->connectorSourceDir();
     LineDirection targetDir = target->connectorTargetDir();
-    QValueList<QPoint>*points = routeConnector(sourcePoint,
-					       sourceDir,
-					       targetPoint,
-					       targetDir);
-    view->applyPointList(points);
+    QValueList<QPoint> *points = routeOne(sourcePoint,
+					  sourceDir,
+					  targetPoint,
+					  targetDir);
+    view->applyPointList(*points);
     delete points;
 }
 

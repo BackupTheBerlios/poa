@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.h,v 1.6 2004/01/11 10:44:15 squig Exp $
+ * $Id: priorityqueue.h,v 1.7 2004/01/26 16:44:28 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -107,6 +107,18 @@ public:
 
     QString checkIntegrity();
 
+    QString diagnostics();
+
+protected:
+
+    /**
+     *
+     */
+    void separateSmallerLarger(PriorityItem *left,
+			       PriorityItem *right,
+			       PriorityItem **smaller,
+			       PriorityItem **larger);
+
 private:
     /**
      * Pointer to an item in the heap of <code>PriorityItem</code>-objects
@@ -160,7 +172,7 @@ public:
      * </code>second->higherPriority(first)</code>.
      */
     static PriorityItem *maxPriority(PriorityItem *first,
-                     PriorityItem *second);
+                                     PriorityItem *second);
 
 protected:
 

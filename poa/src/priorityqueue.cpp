@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: priorityqueue.cpp,v 1.8 2004/01/13 16:10:46 keulsn Exp $
+ * $Id: priorityqueue.cpp,v 1.9 2004/01/26 16:44:28 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -40,149 +40,140 @@ PriorityQueue::~PriorityQueue()
     clear();
 }
 
+/*
+QString PriorityQueue::diagnostics()
+{
+    findHead();
+    QString s = "Size = " + QString::number(size());
+    PriorityItem *current;
+    unsigned difference = 0;
+    PriorityItem *worst = 0;
+    current = heap_;
+    while (current->left() != 0) current = current->left();
+    while (current != 0) {
+	PriorityItem *left = current->left();
+	PriorityItem *right = current->right();
+	PriorityItem *parent = current->parent();
+	unsigned leftSize = left != 0 ? left->size() : 0;
+	unsigned rightSize = right != 0 ? right->size() : 0;
+	unsigned currentDifference;
+	if (leftSize <= rightSize) {
+	    currentDifference = rightSize - leftSize;
+	}
+	else {
+	    currentDifference = leftSize - rightSize;
+	}
+	if (currentDifference > difference) {
+	    worst = current;
+	    difference = currentDifference;
+	}
+	if (parent != 0 && parent->left() == current && right != 0) {
+	    current = right;
+	    while (current->left() != 0) current = current->left();
+	} 
+	else {
+	    current = parent;
+	}
+    }
+    s += ", greatest difference " + QString::number(difference);
+    return s;
+}*/
+
+void PriorityQueue::separateSmallerLarger(PriorityItem *left,
+					  PriorityItem *right,
+					  PriorityItem **smaller,
+					  PriorityItem **larger)
+{
+    if (left == 0) {
+	*smaller = 0;
+	*larger = right;
+    }
+    else if (right == 0) {
+	*smaller = 0;
+	*larger = left;
+    }
+    else if (right->size() < left->size()) {
+	*smaller = right;
+	*larger = left;
+    }
+    else {
+	*smaller = left;
+	*larger = right;
+    }
+}
+
 void PriorityQueue::insert(PriorityItem *item)
 {
     Q_ASSERT(item != 0 && !item->isInQueue());
-    Q_ASSERT(item->left() == 0 && item->right() == 0);
+    Q_ASSERT(item->left() == 0 && item->right() == 0 && item->parent_ == 0);
     findHead();
 
-    PriorityItem *oldParent = 0;
     PriorityItem *oldLeft;
     PriorityItem *oldRight;
-    PriorityItem *larger;
-    PriorityItem *smaller;
-    bool mustInsert = false;
+    PriorityItem *oldParent = 0;
+    PriorityItem *smaller = heap_;
+    PriorityItem *larger = 0;
 
-    if (heap_ == 0) {
-    item->parent_ = 0;
-    heap_ = item;
+    // sink into smaller subtree until item has higher priority than smaller
+    // subtree's root
+    while (smaller != 0 && smaller->higherPriority(item)) {
+	oldParent = smaller;
+	oldLeft = smaller->left();
+	oldRight = smaller->right();
+	separateSmallerLarger(oldLeft, oldRight, &smaller, &larger);
     }
-    else if (!heap_->higherPriority(item)) {
-    // insert directly before head
-    oldLeft = heap_->left();
-    oldRight = heap_->right();
-    PriorityItem *newChild = heap_;
-
-    heap_ = item;
-    heap_->parent_ = 0;
-
-    // swap former head and item
-    item = newChild;
-
-    if (oldLeft == 0) {
-        heap_->setRight(oldRight);
-        heap_->setLeft(newChild);
-        newChild->setLeft(0);
-        newChild->setRight(0);
-    }
-    else if (oldRight == 0) {
-        heap_->setLeft(oldLeft);
-        heap_->setRight(newChild);
-        newChild->setLeft(0);
-        newChild->setRight(0);
+    
+    if (smaller == 0) {
+	if (oldParent == 0) {
+	    // heap was empty before, set new root
+	    // omit assignment "heap_ == item", since this is done after
+	    // updateSizeUpward()
+	}
+	else {
+	    // oldParent != 0
+	    // item becomes leaf
+	    if (oldLeft == 0) {
+		oldParent->setLeft(item);
+	    }
+	    else {
+		Q_ASSERT(oldRight == 0);
+		oldParent->setRight(item);
+	    }
+	}
     }
     else {
-        if (oldRight->size() > oldLeft->size()) {
-        larger = oldRight;
-        smaller = oldLeft;
-        }
-        else {
-        larger = oldLeft;
-        smaller = oldRight;
-        }
-        oldParent = heap_;
-        mustInsert = true;
+	// insert under oldParent, above smaller, as larger's sibling
+	// NOTE that oldParent may be 0 --> item becomes new root
+	if (oldParent == 0) {
+	    // must install item as root and insert smaller under it
+	    oldParent = item;
+	    oldLeft = smaller->left();
+	    oldRight = smaller->right();
+	    item = smaller;
+	    separateSmallerLarger(oldLeft, oldRight, &smaller, &larger);
+	}
+	
+	while (true) {
+	    oldParent->setLeft(item);
+	    oldParent->setRight(larger);
+	    if (smaller == 0) {
+		item->setLeft(0);
+		item->setRight(0);
+		break;
+	    }
+	    Q_ASSERT(smaller != 0);
+	    oldParent = item;
+	    item = smaller;
+	    oldLeft = smaller->left();
+	    oldRight = smaller->right();
+	    separateSmallerLarger(oldLeft, oldRight, &smaller, &larger);
+	}
     }
-    }
-    else {
-    // sink into heap until both children (oldLeft and oldRight) have
-    // equal or less priority than item or until there are less than
-    // two children
-    oldParent = heap_;
-    while (true) {
-        oldLeft = oldParent->left();
-        oldRight = oldParent->right();
-
-        if (oldLeft == 0) {
-        oldParent->setLeft(item);
-        break;
-        }
-        else if (oldRight == 0) {
-        oldParent->setRight(item);
-        break;
-        }
-        else {
-        if (oldRight->size() < oldLeft->size()) {
-            smaller = oldRight;
-            larger = oldLeft;
-        }
-        else {
-            smaller = oldLeft;
-            larger = oldRight;
-        }
-        if (smaller->higherPriority(item)) {
-            oldParent = smaller;
-        }
-        else if (larger->higherPriority(item)) {
-            oldParent = larger;
-        }
-        else {
-            item->setLeft(oldLeft);
-            item->setRight(oldRight);
-            mustInsert = true;
-            break;
-        }
-        }
-    }
-    }
-
-    if (mustInsert) {
-    // avoid empty subtrees, only executed if there was no empty subtree
-    // into which the item could be inserted.
-    oldParent->setRight(item);
-
-    while (true) {
-        oldParent->setLeft(larger);
-        if (larger == oldLeft) {
-        item->setLeft(0);
-        }
-        else {
-        Q_ASSERT(larger == oldRight);
-        item->setLeft(0);
-        item->setRight(smaller);
-        }
-        oldParent = item;
-        item = smaller;
-        oldLeft = item->left();
-        oldRight = item->right();
-        if (oldRight == 0) {
-        // item's right subtree is empty --> move left up and break
-        item->setLeft(0);
-        oldParent->setLeft(oldLeft);
-        break;
-        }
-        else if (oldLeft == 0) {
-        // item's left subtree is empty --> move right up and break
-        item->setRight(0);
-        oldParent->setLeft(oldRight);
-        break;
-        }
-        else {
-        if (oldRight->size() > oldLeft->size()) {
-            larger = oldRight;
-            smaller = oldLeft;
-        }
-        else {
-            larger = oldLeft;
-            smaller = oldRight;
-        }
-        }
-    }
-    }
-
-    PriorityItem *newHead = item->updateSizeUpward();
-    Q_ASSERT(newHead == heap_);
+    // must update size, item is assured to be a leaf
+    Q_ASSERT(item->left() == 0 && item->right() == 0);
+    heap_ = item->updateSizeUpward();
 }
+
 
 void PriorityQueue::remove(PriorityItem *item)
 {
@@ -448,49 +439,49 @@ void PriorityItem::updateDownward()
 {
     PriorityItem *greater;
     do {
-    PriorityItem *oldLeft = this->left();
-    PriorityItem *oldRight = this->right();
+	PriorityItem *oldLeft = this->left();
+	PriorityItem *oldRight = this->right();
 
-    // find greater child, if any
-    greater = PriorityItem::maxPriority(oldLeft, oldRight);
+	// find greater child, if any
+	greater = PriorityItem::maxPriority(oldLeft, oldRight);
 
-    if (greater != 0 && !greater->higherPriority(this)) {
-        // do not update, if there exists no child or if this has
-        // equal or even higher priority
-        greater = 0;
-    }
-    if (greater != 0) {
-        // must move down
-        PriorityItem *oldParent = this->parent();
-        PriorityItem *oldGrandLeft = greater->left();
-        PriorityItem *oldGrandRight = greater->right();
-        // raise greater child under this's parent
-        if (oldParent == 0) {
-        greater->parent_ = 0;
-        }
-        else if (oldParent->left() == this) {
-        oldParent->setLeft(greater);
-        }
-        else {
-        Q_ASSERT(oldParent->right() == this);
-        oldParent->setRight(greater);
-        }
-        // move this under raised greater child
-        if (greater == oldLeft) {
-        greater->setLeft(this);
-        greater->setRight(oldRight);
-        }
-        else {
-        Q_ASSERT(greater == oldRight);
-        greater->setLeft(oldLeft);
-        greater->setRight(this);
-        }
-        this->setLeft(oldGrandLeft);
-        this->setRight(oldGrandRight);
-        // adjust sizes
-        this->updateSize();
-        greater->updateSize();
-    }
+	if (greater != 0 && !greater->higherPriority(this)) {
+	    // do not update, if there exists no child or if this has
+	    // equal or even higher priority
+	    greater = 0;
+	}
+	if (greater != 0) {
+	    // must move down
+	    PriorityItem *oldParent = this->parent();
+	    PriorityItem *oldGrandLeft = greater->left();
+	    PriorityItem *oldGrandRight = greater->right();
+	    // raise greater child under this's parent
+	    if (oldParent == 0) {
+		greater->parent_ = 0;
+	    }
+	    else if (oldParent->left() == this) {
+		oldParent->setLeft(greater);
+	    }
+	    else {
+		Q_ASSERT(oldParent->right() == this);
+		oldParent->setRight(greater);
+	    }
+	    // move this under raised greater child
+	    if (greater == oldLeft) {
+		greater->setLeft(this);
+		greater->setRight(oldRight);
+	    }
+	    else {
+		Q_ASSERT(greater == oldRight);
+		greater->setLeft(oldLeft);
+		greater->setRight(this);
+	    }
+	    this->setLeft(oldGrandLeft);
+	    this->setRight(oldGrandRight);
+	    // adjust sizes
+	    this->updateSize();
+	    greater->updateSize();
+	}
     } while (greater != 0);
 }
 

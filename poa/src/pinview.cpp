@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.20 2003/09/19 20:21:04 garbeam Exp $
+ * $Id: pinview.cpp,v 1.21 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -33,6 +33,7 @@
 
 #include <qevent.h>
 
+
 PinView::PinView(PinModel *model, BlockView *block,
         PinView::DockPosition dockPosition)
 : QCanvasRectangle(block->canvas())
@@ -46,11 +47,11 @@ PinView::PinView(PinModel *model, BlockView *block,
     switch (dockPosition) {
     case PinView::PIN_LEFT:
     case PinView::PIN_RIGHT:
-        setSize(10, 2);
+        setSize(10, 3);
         break;
     case PinView::PIN_TOP:
     case PinView::PIN_BOTTOM:
-        setSize(2, 10);
+        setSize(3, 10);
         break;
     }
 }
@@ -92,16 +93,16 @@ QPoint PinView::connectorPoint()
     QRect r = rect();
     switch (dockPosition_) {
     case PIN_TOP:
-        return QPoint(r.center().x(), r.top() - 1);
+        return QPoint(r.center().x(), r.top());
         break;
     case PIN_LEFT:
-        return QPoint(r.left() - 1, r.center().y());
+        return QPoint(r.left(), r.center().y());
         break;
     case PIN_BOTTOM:
-        return QPoint(r.center().x(), r.y() + 1);
+        return QPoint(r.center().x(), r.bottom());
         break;
     case PIN_RIGHT:
-        return QPoint(r.right() + 1, r.center().y());
+        return QPoint(r.right(), r.center().y());
         break;
     default:
         Q_ASSERT(false);
@@ -109,7 +110,12 @@ QPoint PinView::connectorPoint()
     }
 }
 
-LineDirection PinView::connectorDirection()
+LineDirection PinView::connectorSourceDir()
+{
+    return reverse(connectorTargetDir());
+}
+
+LineDirection PinView::connectorTargetDir()
 {
     LineDirection dir;
     switch (dockPosition_) {
@@ -129,13 +135,7 @@ LineDirection PinView::connectorDirection()
         Q_ASSERT(false);
         break;
     }
-    if (model_->type() == PinModel::OUTPUT) {
-        // FIX: need special treatment for episodic pins
-        return reverse(dir);
-    }
-    else {
-        return dir;
-    }
+    return dir;
 }
 
 PinModel *PinView::pinModel()

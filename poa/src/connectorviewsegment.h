@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewsegment.h,v 1.2 2003/09/21 21:05:51 vanto Exp $
+ * $Id: connectorviewsegment.h,v 1.3 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -42,9 +42,9 @@ class ConnectorViewList;
  * Each segment represents either a horizontal or a vertical line.
  * An entire list connects the source pin to the target pin.
  */
-class ConnectorViewSegment: public QObject,
-                public QCanvasLine,
-                public Tooltipable
+class ConnectorViewSegment: public AbstractView,
+			    public QCanvasLine,
+			    public Tooltipable
 {
     Q_OBJECT
 
@@ -55,9 +55,9 @@ public:
      * point.
      */
     ConnectorViewSegment(QPoint from,
-             QPoint to,
-             QCanvas *canvas,
-             ConnectorViewList *viewList);
+                         QPoint to,
+                         QCanvas *canvas,
+                         ConnectorViewList *viewList);
 
     /**
      * Default destructor.

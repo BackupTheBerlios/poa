@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.18 2003/09/21 21:05:51 vanto Exp $
+ * $Id: pinview.h,v 1.19 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -72,9 +72,16 @@ public:
     QPoint connectorPoint();
 
     /**
-     * Returns the direction that the docking line of a connector must have
+     * Returns the direction that the docking line of a connector must have,
+     * if <code>this</code> is the source of the connector view.
      */
-    LineDirection connectorDirection();
+    LineDirection connectorSourceDir();
+
+    /**
+     * Returns the direction that the docking line of a connector must have,
+     * if <code>this</code> is the target of the connector view.
+     */
+    LineDirection connectorTargetDir();
 
     /**
      * Returns the side on that <code>this</code> docks onto a blockview

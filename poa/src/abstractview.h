@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractview.h,v 1.12 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: abstractview.h,v 1.13 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -61,12 +61,12 @@ public:
      * Returns <code>true</code> if <code>this</code> can be dragged using
      * the method {@link #drag}, <code>false</code> else.
      */
-    virtual bool isDraggable() { return false; };
+    virtual bool isDraggable() { return false; }
 
     /**
-     * Returns the model.
+     * Returns the model or 0 if there is none.
      */
-    virtual AbstractModel *model() = 0;
+    virtual AbstractModel *model() { return 0; }
 
 };
 #endif

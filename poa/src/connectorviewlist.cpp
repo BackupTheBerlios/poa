@@ -18,20 +18,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.cpp,v 1.8 2003/09/22 12:36:43 vanto Exp $
+ * $Id: connectorviewlist.cpp,v 1.9 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
 
 #include "connectorviewlist.h"
 
-#include <qcanvas.h>
-
 #include "blockmodel.h"
 #include "connectorviewsegment.h"
 #include "grid.h"
 #include "gridcanvas.h"
 #include "pinmodel.h"
+
+#include <qcanvas.h>
+
 
 ConnectorViewList::ConnectorViewList(PinView *source,
                                      PinView *target,
@@ -48,10 +49,11 @@ ConnectorViewList::ConnectorViewList(PinView *source,
             this, SLOT(deleteView()));
 
     if (element == 0) {
-        QValueList<QPoint> *points = routeConnector(source->connectorPoint(),
-                                                source->connectorDirection(),
-                                                target->connectorPoint(),
-                                                target->connectorDirection());
+        QValueList<QPoint> *points =
+	    routeConnector(source->connectorPoint(),
+			   source->connectorSourceDir(),
+			   target->connectorPoint(),
+			   target->connectorTargetDir());
         applyPointList(*points, canvas);
         delete points;
     }
@@ -422,7 +424,8 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
             next = grid.move(from, fromDir, fromDist);
             list->append(next);
         }
-        else if (fromAlternateDist >= 2) { // && fromDist <= 0
+        else if (fromAlternateDist >= 2 && toDir == fromAlternateDir) {
+	          // && fromDist <= 0
             // U-turn then one bending
             next = grid.move(from, fromDir, 1);
             list->append(next);
@@ -431,6 +434,17 @@ QValueList<QPoint> *ConnectorViewList::routeConnector(QPoint from,
             next = grid.move(next, -fromDir, QABS(fromDist) + 1);
             list->append(next);
         }
+	else if (fromAlternateDist >= 2) {
+                 // && isTurn (toDir, fromAlternateDir)
+	         // && fromDist <=0
+	    // large enough U-turn then one bending
+	    next = grid.move(from, fromDir, 1);
+	    list->append(next);
+	    next = grid.move(next, fromAlternateDir, fromAlternateDist + 1);
+	    list->append(next);
+	    next = grid.move(next, -fromDir, abs(fromDist) + 1);
+	    list->append(next);
+	}
         else { // 0 <= fromAlternateDist <= 1 && fromDist <= 0
             // spiral
             LineDirection dir;

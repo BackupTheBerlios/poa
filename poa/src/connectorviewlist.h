@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectorviewlist.h,v 1.7 2003/09/22 12:36:43 vanto Exp $
+ * $Id: connectorviewlist.h,v 1.8 2003/09/23 12:07:43 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -58,7 +58,10 @@ public:
      * draws a routed line from <code>source</code> pin to <code>target</code>
      * pin for the given <code>model</code>.
      */
-    ConnectorViewList(PinView *source, PinView *target, GridCanvas *canvas, QDomElement *element = 0);
+    ConnectorViewList(PinView *source,
+		      PinView *target,
+		      GridCanvas *canvas,
+		      QDomElement *element = 0);
 
     /**
      * Creates a connector view list on the given <code>canvas</code> and
@@ -111,7 +114,8 @@ public:
 
     /**
      * Serializes this instance to a xml subtree.
-     * @param document the main QDomDocument instance. Needed to create elements
+     * @param document the main QDomDocument instance. Needed to create
+     *        elements
      */
     virtual QDomElement serialize(QDomDocument *);
 

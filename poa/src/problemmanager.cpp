@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.7 2004/02/13 15:39:26 vanto Exp $
+ * $Id: problemmanager.cpp,v 1.8 2004/02/13 16:23:00 vanto Exp $
  *
  *****************************************************************************/
 
@@ -216,6 +216,25 @@ void DifferentClockReport::adjustTarget()
     setFixed(true);
 }
 
+SameCpuIdReport::SameCpuIdReport(QListViewItem *parent,
+                                 CpuModel *thisCpu,
+                                 CpuModel *conflictCpu)
+    : ProblemReportItem(parent, tr("Critical"))
+{
+    setShortDescription(QString(tr("%1 does not have an unique CPU-ID"))
+                        .arg(thisCpu->name()));
+    setLongDescription(tr("All CPUs should have an unique ID.\n"
+                          "%1 has the same ID (=%2) as %3")
+                       .arg(thisCpu->name()).arg(thisCpu->cpuId())
+                       .arg(conflictCpu->name()));
+
+}
+
+void SameCpuIdReport::addWidgets(QWidget *)
+{
+    // nothing to add.
+}
+
 //--- ProblemManager ---
 
 ProblemManager::ProblemManager(Project *project, QListView *listView)
@@ -238,6 +257,9 @@ ProblemManager::~ProblemManager()
 
 void ProblemManager::report()
 {
+    // remembers cpuids, which have been already used.
+    QMap<int, CpuModel*> cpuIds;
+
     // iterate through all blocks
     for (QPtrListIterator<AbstractModel> it0(*project_->blocks()); it0 != 0;
          ++it0) {
@@ -246,6 +268,17 @@ void ProblemManager::report()
         if (block != 0) {
             checkBlock(block);
         }
+
+        CpuModel *cpu = dynamic_cast<CpuModel*>(*it0);
+        if (cpu != 0) {
+            if (cpuIds.contains(cpu->cpuId())) {
+                new SameCpuIdReport(blockRoot_, cpu, cpuIds[cpu->cpuId()]);
+            }
+            else {
+                cpuIds.insert(cpu->cpuId(), cpu);
+            }
+        }
+
     }
 
     // iterate through reachable blocks

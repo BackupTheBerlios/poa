@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.h,v 1.4 2004/02/13 15:57:57 squig Exp $
+ * $Id: problemmanager.h,v 1.5 2004/02/13 16:23:00 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include <qvaluelist.h>
 class QWidget;
 
+#include "cpumodel.h"
 #include "pinmodel.h"
 #include "project.h"
 
@@ -201,6 +202,20 @@ private:
 
      BlockModel *source_;
      BlockModel *target_;
+
+};
+
+class SameCpuIdReport : public ProblemReportItem
+{
+    Q_OBJECT
+
+public:
+
+    SameCpuIdReport(QListViewItem *parent,
+                    CpuModel *thisCpu,
+                    CpuModel *conflictCpu);
+
+    virtual void addWidgets(QWidget *widget);
 
 };
 

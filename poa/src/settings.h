@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.h,v 1.18 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: settings.h,v 1.19 2004/01/12 17:06:24 squig Exp $
  *
  *****************************************************************************/
 #ifndef SETTINGS_H
@@ -40,8 +40,6 @@ class Settings : public QObject
     Q_OBJECT
 
 public:
-    static const char* PREFIX;
-
     static Settings *instance();
 
     QString get(const QString &key, QString defaultValue = QString::null);
@@ -50,6 +48,7 @@ public:
     int getNum(const QString &key, int defaultValue = 0);
     QStringList getStrings(const QString &key, bool *ok = 0);
 
+    bool set(const QString &key, const char *value);
     bool set(const QString &key, const QString &value);
     bool set(const QString &key, bool value);
     bool set(const QString &key, int value);
@@ -83,12 +82,22 @@ signals:
     void showGridChanged(bool showGrid);
 
 protected:
-    Settings();
+    Settings(QString prefix);
     Settings(const Settings &);
     ~Settings();
 
 private :
     static Settings* instance_;
+
+    /**
+     * A common prefix used for all setting keys.
+     */
+    QString prefix;
+
+    /**
+     * Methods of {@link SettingsTest} need access the protected constructor.
+     */
+    friend class SettingsTest;
 };
 
 #endif // SETTINGS_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: util.h,v 1.6 2003/12/08 00:54:35 squig Exp $
+ * $Id: util.h,v 1.7 2004/01/12 17:06:24 squig Exp $
  *
  *****************************************************************************/
 
@@ -90,7 +90,7 @@ class Util
     /**
      * Shortens text to fit it in maxWidth pixels. If text does not
      * fit characters are chopped from the end and three dots "..."
-     * are appended.
+     * are appended (at least the first character is always returned).
      *
      * @return the shortened text
      */

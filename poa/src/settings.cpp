@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.14 2003/10/01 15:55:17 squig Exp $
+ * $Id: settings.cpp,v 1.15 2004/01/12 17:06:24 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -26,17 +26,13 @@
 #include "poa.h"
 
 /**
- * A common prefix used for all setting keys.
- */
-const char *Settings::PREFIX = "/POA/POA/";
-
-/**
  * The singleton instance.
  */
 Settings* Settings::instance_ = 0;
 
-Settings::Settings()
+Settings::Settings(QString prefix = "/POA/POA/")
 {
+    this->prefix = prefix;
 }
 
 Settings::~Settings()
@@ -55,43 +51,46 @@ Settings *Settings::instance()
 QString Settings::get(const QString &key, QString defaultValue)
 {
     QSettings settings;
-    return settings.readEntry(PREFIX + key, defaultValue);
+    return settings.readEntry(prefix + key, defaultValue);
 }
 
 bool Settings::getBool(const QString &key, bool defaultValue)
 {
     QSettings settings;
-    return settings.readBoolEntry(PREFIX + key, defaultValue);
+    return settings.readBoolEntry(prefix + key, defaultValue);
 }
 
 
 QFont Settings::getFont(const QString &key, QFont defaultValue)
 {
     QFont font;
-    font.fromString(get(PREFIX + key, defaultValue.toString()));
+    font.fromString(get(prefix + key, defaultValue.toString()));
     return font;
 }
 
 int Settings::getNum(const QString &key, int defaultValue)
 {
     QSettings settings;
-    return settings.readNumEntry(PREFIX + key, defaultValue);
+    return settings.readNumEntry(prefix + key, defaultValue);
 }
 
 QStringList Settings::getStrings(const QString &key, bool *ok)
 {
     QSettings settings;
-    return settings.readListEntry(PREFIX + key, ok);
+    return settings.readListEntry(prefix + key, ok);
 }
 
-
+bool Settings::set(const QString &key, const char *value)
+{
+    return set(key, QString(value));
+}
 
 bool Settings::set(const QString &key, const QString &value)
 {
     QString oldValue = get(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(PREFIX + key, value);
+        settings.writeEntry(prefix + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -103,7 +102,7 @@ bool Settings::set(const QString &key, bool value)
     bool oldValue = getBool(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(PREFIX + key, value);
+        settings.writeEntry(prefix + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -115,7 +114,7 @@ bool Settings::set(const QString &key, int value)
     int oldValue = getNum(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(PREFIX + key, value);
+        settings.writeEntry(prefix + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -127,7 +126,7 @@ bool Settings::set(const QString &key, const QStringList &value)
     QStringList oldValue = getStrings(key);
     if (oldValue != value) {
         QSettings settings;
-        settings.writeEntry(PREFIX + key, value);
+        settings.writeEntry(prefix + key, value);
         emit settingChanged(key);
         return TRUE;
     }
@@ -138,10 +137,10 @@ bool Settings::set(const QString &key, const QStringList &value)
 //                            const QString &value)
 //  {
 //      bool success;
-//      settings->readEntry(PREFIX + key, QString::null, &success);
+//      settings->readEntry(prefix + key, QString::null, &success);
 //      if (!success) {
 //          // key does not exists
-//          settings->writeEntry(PREFIX + key, value);
+//          settings->writeEntry(prefix + key, value);
 //      }
 //  }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.64 2004/01/24 16:50:53 squig Exp $
+ * $Id: blockview.cpp,v 1.65 2004/01/25 14:41:17 vanto Exp $
  *
  *****************************************************************************/
 
@@ -302,7 +302,26 @@ void BlockView::updateProperties()
 
 void BlockView::drawShape(QPainter &p)
 {
-    QCanvasRectangle::drawShape(p);
+    //    QCanvasRectangle::drawShape(p);
+    // draws the rectangle
+    QPen oldPen = p.pen();
+    p.setPen(QPen(QColor(118, 118, 118), 1));
+    p.drawRect(x(), y(), width(), height());
+
+    // draws decorations
+    p.setPen(QPen(QColor(192, 192, 192), 1));
+    p.drawPoint(x(), y());
+    p.drawPoint(x(), y() + height() - 1);
+    p.drawPoint(x() + width() - 1, y());
+    p.drawPoint(x() + width() - 1, y() + height() - 1);
+
+    p.setPen(QPen(brush().color().light(50), 1));
+    p.drawLine(x() + 1, y() + height() - 2,
+               x() + width() - 2, y() + height() - 2);
+    p.drawLine(x() + width() - 2, y() + height() - 1,
+               x() + width() - 2, y() + 1);
+
+    p.setPen(oldPen);
 
     // draw header
     int left = (int) x();

@@ -16,8 +16,10 @@ CvSize size;
 
 int main( int argc, char** argv )
 {
-    char* filename1 = "current.jpg";
-    char* filename2 = "current2.jpg";
+    if (argc<2) return 17;
+
+    char* filename1 = argv[1];
+    char* filename2 = argv[2];
     
     if( (image[0] = cvLoadImage( filename1, 1)) == 0 )
         return -1;

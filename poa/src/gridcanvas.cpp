@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.27 2003/12/16 12:23:48 keulsn Exp $
+ * $Id: gridcanvas.cpp,v 1.28 2003/12/16 12:25:13 keulsn Exp $
  *
  *****************************************************************************/
 
@@ -38,7 +38,7 @@
 GridCanvas::GridCanvas(QString name)
 {
     currentZ_ = 0;
-    router_ = new DijkstraRouter();
+    router_ = new DirectRouter();
 
     setName(name);
     setDoubleBuffering(TRUE);

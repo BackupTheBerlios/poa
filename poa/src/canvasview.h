@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.3 2003/08/22 12:53:38 squig Exp $
+ * $Id: canvasview.h,v 1.4 2003/08/22 13:21:24 garbeam Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
@@ -26,6 +26,7 @@
 
 #include <qvariant.h>
 #include <qcanvas.h>
+
 class QDragEnterEvent;
 class QDropEvent;
 
@@ -48,13 +49,13 @@ public:
 
     void contentsMousePressEvent(QMouseEvent *e);
     void contentsMouseMoveEvent(QMouseEvent *e);
+    void drawGrid();
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
 
 private:
     QCanvasItem* movingItem;
     QPoint movingStartPoint;
-    QPainter *gridPainter_;
 
 };
 

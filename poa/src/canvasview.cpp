@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.3 2003/08/22 12:53:38 squig Exp $
+ * $Id: canvasview.cpp,v 1.4 2003/08/22 13:21:24 garbeam Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
@@ -29,6 +29,9 @@
 #include <qdom.h>
 #include <qpoint.h>
 #include <qwmatrix.h>
+#include <qpainter.h>
+
+#define GRID_SPACING 20
 
 /*****************************************************************************
  * Constructs the view.
@@ -72,6 +75,35 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
     }
 }
 
+void CanvasView::drawGrid()
+{
+    // redraw grid
+//    QSize viewSize = size();
+//    QPixmap grid(viewSize);
+//    grid.fill(white);
+//
+//    QPen pen(gray, 1);
+//    QPainter p(&grid);
+//    p.setPen(pen);
+//    for (int x = 0; x <= viewSize.width(); x++) {
+//        for (int y = 0; y <= viewSize.height(); y++) {
+//
+//            p.drawLine(x + (GRID_SPACING / 2) /* x1 */,
+//                       y + ((GRID_SPACING / 2) - 2) /* y1 */,
+//                       x + (GRID_SPACING / 2) /* x2 */,
+//                       y + ((GRID_SPACING / 2) + 3) /* y2 */);
+//            p.drawLine(x + ((GRID_SPACING / 2) - 2) /* x1 */,
+//                       y + (GRID_SPACING / 2) /* y1 */,
+//                       x + ((GRID_SPACING / 2) + 3) /* x2 */,
+//                       y + (GRID_SPACING / 2) /* y2 */);
+//        }
+//    }
+//    p.end();
+//
+//    drawContents(&p, 0, 0, viewSize.width(), viewSize.height());
+//
+}
+
 void CanvasView::dragEnterEvent(QDragEnterEvent *e)
 {
     e->accept(e->provides("text/xml"));
@@ -94,14 +126,4 @@ void CanvasView::dropEvent(QDropEvent *e)
             canvas()->update();
         }
     }
-}
-
-void CanvasView::setGridPainter(QPainter *painter)
-{
-    gridPainter_ = painter;
-}
-
-QPainter* CanvasView::gridPainter()
-{
-    return gridPainter_;
 }

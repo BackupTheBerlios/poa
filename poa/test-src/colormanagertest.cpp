@@ -41,6 +41,9 @@ public:
         block2.setClock(200);
         QColor c2 = colorManager->color(&block2);
 
+        BlockModel block3("Type", "Description");
+        QColor c3 = colorManager->color(&block3);
+
         QDomDocument document;
         QDomElement element = colorManager->serialize(&document);
 
@@ -49,6 +52,7 @@ public:
 
         CPPUNIT_ASSERT(c1 == colorManager2.color(&block));
         CPPUNIT_ASSERT(c2 == colorManager2.color(&block2));
+        CPPUNIT_ASSERT(c3 == colorManager2.color(&block3));
     }
 
 };

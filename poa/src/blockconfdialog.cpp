@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.20 2003/09/16 12:17:51 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.21 2003/09/16 16:03:31 squig Exp $
  *
  *****************************************************************************/
 
@@ -254,7 +254,7 @@ void BlockConfDialog::initRuntimeWidget()
         connect(runtimeAutoCalcRadioButton, SIGNAL(clicked()),
                 this, SLOT(toggleManualRuntime()));
 
-        runtimeRadioButton = 
+        runtimeRadioButton =
             new QRadioButton(runtimeButtonGroup, "runtimeRadioButton");
         runtimeRadioButton->setText(tr("runtime"));
         connect(runtimeRadioButton, SIGNAL(clicked()),
@@ -266,7 +266,7 @@ void BlockConfDialog::initRuntimeWidget()
         rightLayout->addWidget(runtimeButtonGroup);
     }
     else {
-        // runtime widget for non cpu blocks (redundancy because of 
+        // runtime widget for non cpu blocks (redundancy because of
         // aestetic reasons)
         QGroupBox *runtimeGroupBox =
             new QGroupBox(rightWidget, "runtimeGroupBox");
@@ -499,10 +499,10 @@ void BlockConfDialog::updateModel() {
                     target->setBits(source->bits());
                     target->setType(source->type());
                     // use original pin
-                    model_->addPin(target);
+                    model_->addPin(target, 0, false);
                 }
                 else {
-                    model_->addPin(source->clone());
+                    model_->addPin(source->clone(), 0, true);
                 }
             }
         }

@@ -1,3 +1,7 @@
+2003-09-16  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* mainwindow.cpp (zoomStepwise): Check bounds, removed 1000%.
+
 2003-09-15  Anselm Garbe  <garbeam@users.berlios.de>
 
 	* connectormodel.h: removed

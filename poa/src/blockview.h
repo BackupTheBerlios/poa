@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.h,v 1.26 2003/09/16 09:54:39 garbeam Exp $
+ * $Id: blockview.h,v 1.27 2003/09/16 16:03:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,11 +28,13 @@
 #include <qapplication.h>
 #include <qcanvas.h>
 #include <qfontmetrics.h>
-#include <qvaluevector.h>
+#include <qvaluelist.h>
 #include <qdom.h>
 
 #include "abstractview.h"
 class BlockModel;
+class PinModel;
+class PinVector;
 class PinView;
 
 /**
@@ -127,9 +129,20 @@ public:
      */
     void deserialize(QDomElement element);
 
+public slots:
+    void addPin(PinModel *);
+    void addPins(const PinVector &);
+    void deletePinView(PinView *);
+    void updateView();
+
 protected:
 
     virtual void drawShape (QPainter &p);
+
+    /**
+     * Recalculates height and rearranges all pins.
+     */
+    virtual void arrangePins();
 
     /**
      * Alignes all pins that dock onto <code>this</code> either on the left
@@ -160,6 +173,10 @@ protected:
     static const int DEFAULT_RIGHT_BORDER = 5;
 
 private:
+    /**
+     * Returns the vector that should contain pin.
+     */
+    QValueList<PinView*> *pinList(PinView *pin);
 
     /**
      * Sets the pen and brush according to the active and selection state.
@@ -168,15 +185,11 @@ private:
 
     BlockModel *model_;
 
-    QValueVector<PinView*> leftPins_;
-    QValueVector<PinView*> rightPins_;
-    QValueVector<PinView*> bottomPins_;
+    QValueList<PinView *> leftPins_;
+    QValueList<PinView *> rightPins_;
+    QValueList<PinView *> bottomPins_;
 
     static const int RTTI = 1000;
-
-public slots:
-    void deletePinView(PinView *);
-    void updateView();
 };
 
 #endif // POA_BLOCKVIEW_H

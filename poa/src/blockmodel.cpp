@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.22 2003/09/16 12:17:51 garbeam Exp $
+ * $Id: blockmodel.cpp,v 1.23 2003/09/16 16:03:31 squig Exp $
  *
  *****************************************************************************/
 
@@ -99,45 +99,46 @@ void BlockModel::setName(QString name)
     name_ = name;
 }
 
-void BlockModel::addPin(PinModel *pin, PinModel *successor) {
+void BlockModel::addPin(PinModel *pin, PinModel *successor, bool emitSignal)
+{
 
-    if (pin != 0) {
-        if (pin->id() == 0) {
-            pin->setId(++currentPinId_);
-        } else if (pin->id() > currentPinId_) {
-            currentPinId_ = pin->id();
-        }
-        switch (pin->type()) {
-            case PinModel::INPUT:
-                inputPins_->addBefore(pin, successor);
-                break;
-            case PinModel::OUTPUT:
-                outputPins_->addBefore(pin, successor);
-                break;
-            case PinModel::EPISODIC:
-                episodicPins_->addBefore(pin, successor);
-                break;
-        }
+    if (pin->id() == 0) {
+        pin->setId(++currentPinId_);
     }
-    // FIX: update views
+    else if (pin->id() > currentPinId_) {
+        currentPinId_ = pin->id();
+    }
+
+    switch (pin->type()) {
+    case PinModel::INPUT:
+        inputPins_->addBefore(pin, successor);
+        break;
+    case PinModel::OUTPUT:
+        outputPins_->addBefore(pin, successor);
+        break;
+    case PinModel::EPISODIC:
+        episodicPins_->addBefore(pin, successor);
+        break;
+    }
+
+    if (emitSignal) {
+        emit pinAdded(pin);
+    }
 }
 
-void BlockModel::removePin(PinModel *pin) {
-
-    if (pin != 0) {
-        switch (pin->type()) {
-            case PinModel::INPUT:
-                inputPins_->remove(pin);
-                break;
-            case PinModel::OUTPUT:
-                outputPins_->remove(pin);
-                break;
-            case PinModel::EPISODIC:
-                episodicPins_->remove(pin);
-                break;
-        }
+void BlockModel::removePin(PinModel *pin)
+{
+    switch (pin->type()) {
+    case PinModel::INPUT:
+        inputPins_->remove(pin);
+        break;
+    case PinModel::OUTPUT:
+        outputPins_->remove(pin);
+        break;
+    case PinModel::EPISODIC:
+        episodicPins_->remove(pin);
+        break;
     }
-    // FIX: update views
 }
 
 

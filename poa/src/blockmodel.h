@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.22 2003/09/16 12:17:51 garbeam Exp $
+ * $Id: blockmodel.h,v 1.23 2003/09/16 16:03:31 squig Exp $
  *
  *****************************************************************************/
 
@@ -123,7 +123,8 @@ public:
     /**
      * Adds an pin to this block model.
      */
-    void addPin(PinModel *pin, PinModel *successor = 0);
+    void addPin(PinModel *pin, PinModel *successor = 0,
+                bool emitSignal = false);
 
     /**
      * Removes an input pin from this block model.
@@ -161,6 +162,17 @@ protected:
     unsigned int execTime_;
     unsigned int clock_;
     QString name_;
+
+signals:
+    /**
+     * Emitted when a pin is added.
+     */
+    void pinAdded(PinModel *pin);
+
+    /**
+     * Emitted when updatePerformed() was called.
+     */
+    virtual void updated();
 
 };
 

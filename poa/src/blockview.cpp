@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.30 2003/09/16 09:54:39 garbeam Exp $
+ * $Id: blockview.cpp,v 1.31 2003/09/16 16:03:31 squig Exp $
  *
  *****************************************************************************/
 
@@ -59,46 +59,16 @@ BlockView::BlockView(BlockModel *model, QCanvas *canvas)
     setBrush(white);
     setPen(QPen(Settings::instance()->defaultColor(), 2));
 
-    unsigned height = BlockView::DEFAULT_TOP_SPACING +
-        BlockView::DEFAULT_HEADER_SPACING +
-        BlockView::DEFAULT_HEADER_SPACING;
+    connect(model_, SIGNAL(pinAdded(PinModel *)),
+            this, SLOT(addPin(PinModel *)));
+    connect(model_, SIGNAL(updated()), this, SLOT(updateView()));
 
-    if (model != 0) {
-        connect(model_, SIGNAL(updated()), this, SLOT(updateView()));
-        // name
-        height += BlockView::DEFAULT_FONT_HEIGHT;
+    // create pin views
+    addPins(*model->inputPins());
+    addPins(*model->outputPins());
+    addPins(*model->episodicPins());
 
-        // pins
-        unsigned numberOfPins = QMAX(model->inputPins()->size(),
-                                     model->outputPins()->size());
-        numberOfPins += model->episodicPins()->size();
-        height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
-
-        // create pin models
-        PinVector &leftPinModels = *(model->inputPins());
-        PinVector &rightPinModels = *(model->outputPins());
-        PinVector &bottomPinModels = *(model->episodicPins());
-        for (unsigned i = 0; i < leftPinModels.size(); ++i) {
-            PinView *pinView = leftPinModels[i]->
-                createView(this, PinView::PIN_LEFT);
-            leftPins_.insert(leftPins_.end(), pinView);
-        }
-        for (unsigned i = 0; i < rightPinModels.size(); ++i) {
-            PinView *pinView = rightPinModels[i]->
-                createView(this, PinView::PIN_RIGHT);
-            rightPins_.insert(rightPins_.end(), pinView);
-        }
-        for (unsigned i = 0; i < bottomPinModels.size(); ++i) {
-            PinView *pinView = bottomPinModels[i]->
-                createView(this, PinView::PIN_BOTTOM);
-            bottomPins_.insert(bottomPins_.end(), pinView);
-        }
-    }
-
-    height += BlockView::DEFAULT_BOTTOM_SPACING;
-    setSize(BlockView::DEFAULT_WIDTH, height);
-    arrangeVerticalPins();
-    // FIX: arrangeHorizontalPins
+    arrangePins();
 }
 
 
@@ -120,26 +90,70 @@ QSize BlockView::dragBy(double dx, double dy)
     return QSize((int) dx, (int) dy);
 }
 
+void BlockView::addPin(PinModel *pin)
+{
+    PinView *pinView;
+    switch (pin->type()) {
+    case PinModel::INPUT:
+        pinView = pin->createView(this, PinView::PIN_LEFT);
+        break;
+    case PinModel::OUTPUT:
+        pinView = pin->createView(this, PinView::PIN_RIGHT);
+        break;
+    case PinModel::EPISODIC:
+        pinView = pin->createView(this, PinView::PIN_BOTTOM);
+        break;
+    }
+    pinList(pinView)->append(pinView);
+}
+
+void BlockView::addPins(const PinVector &pins)
+{
+    for (unsigned i = 0; i < pins.size(); ++i) {
+        addPin(pins[i]);
+    }
+}
 
 void BlockView::addPinViewsTo(QCanvasItemList &list)
 {
-    for (QValueVector<PinView*>::iterator current = leftPins_.begin();
+    for (QValueList<PinView*>::iterator current = leftPins_.begin();
          current != leftPins_.end(); ++current) {
 
         list.prepend(*current);
     }
-    for (QValueVector<PinView*>::iterator current = rightPins_.begin();
+    for (QValueList<PinView*>::iterator current = rightPins_.begin();
          current != rightPins_.end(); ++current) {
 
         list.prepend(*current);
     }
-    for (QValueVector<PinView*>::iterator current = bottomPins_.begin();
+    for (QValueList<PinView*>::iterator current = bottomPins_.begin();
          current != bottomPins_.end(); ++current) {
 
         list.prepend(*current);
     }
 }
 
+void BlockView::arrangePins()
+{
+    unsigned height
+        = BlockView::DEFAULT_TOP_SPACING
+        + BlockView::DEFAULT_HEADER_SPACING
+        + BlockView::DEFAULT_HEADER_SPACING;
+
+    // name
+    height += BlockView::DEFAULT_FONT_HEIGHT;
+
+    // pins
+    unsigned numberOfPins = QMAX(leftPins_.size(),
+                                 rightPins_.size());
+    height += numberOfPins * BlockView::DEFAULT_FONT_HEIGHT;
+
+    height += BlockView::DEFAULT_BOTTOM_SPACING;
+    setSize(BlockView::DEFAULT_WIDTH, height);
+
+    arrangeVerticalPins();
+    // FIX: arrangeHorizontalPins
+}
 
 AbstractModel *BlockView::model()
 {
@@ -149,9 +163,9 @@ AbstractModel *BlockView::model()
 void BlockView::moveBy(double dx, double dy)
 {
     QCanvasRectangle::moveBy(dx, dy);
-    arrangeVerticalPins();
+    arrangePins();
 
-    /*    QValueVector<PinView*>::iterator current = leftPins_.begin();
+    /*    QValueList<PinView*>::iterator current = leftPins_.begin();
           while (current != leftPins_.end()) {
           (*current)->moveBy(dx, dy);
           ++current;
@@ -166,6 +180,20 @@ void BlockView::moveBy(double dx, double dy)
           (*current)->moveBy(dx, dy);
           ++current;
           }*/
+}
+
+QValueList<PinView*> *BlockView::pinList(PinView *pin)
+{
+    switch (pin->pinModel()->type()) {
+    case PinModel::INPUT:
+        return &leftPins_;
+    case PinModel::OUTPUT:
+        return &rightPins_;
+    case PinModel::EPISODIC:
+        return &bottomPins_;
+    default:
+        return 0;
+    }
 }
 
 int BlockView::rtti() const
@@ -217,11 +245,7 @@ void BlockView::drawShape(QPainter &p)
                      - BlockView::DEFAULT_RIGHT_BORDER,
                      BlockView::DEFAULT_FONT_HEIGHT);
 
-    PinVector *leftPinModels = model_->inputPins();
-    unsigned leftSize = leftPinModels->size();
-    PinVector *rightPinModels = model_->outputPins();
-    unsigned rightSize = rightPinModels->size();
-    unsigned slotCount = QMAX(leftSize, rightSize);
+    unsigned slotCount = QMAX(leftPins_.size(), rightPins_.size());
 
     if (slotCount > 0) {
         unsigned pinHeight = (height() - BlockView::DEFAULT_TOP_SPACING
@@ -233,16 +257,16 @@ void BlockView::drawShape(QPainter &p)
 
         for (unsigned i = 0; i < slotCount; ++i) {
 
-            if (i < leftSize) {
+            if (i < leftPins_.size()) {
                 p.drawText(textArea,
                            Qt::AlignLeft,
-                           leftPinModels->at(i)->name());
+                           leftPins_[i]->pinModel()->name());
             }
 
-            if (i < rightSize) {
+            if (i < rightPins_.size()) {
                 p.drawText(textArea,
                            Qt::AlignRight,
-                           rightPinModels->at(i)->name());
+                           rightPins_[i]->pinModel()->name());
             }
             textArea.moveBy(0, pinHeight);
         }
@@ -303,46 +327,12 @@ void BlockView::deserialize(QDomElement element)
 
 void BlockView::updateView()
 {
-    arrangeVerticalPins();
+    arrangePins();
+    update();
+    canvas()->update();
 }
 
-void BlockView::deletePinView(PinView *view)
+void BlockView::deletePinView(PinView *pin)
 {
-    if (view != 0)
-    {
-        PinModel::PinType type = view->pinModel()->type();
-
-        switch (type)
-        {
-            case PinModel::INPUT:
-                for (unsigned i = 0; i < leftPins_.size(); i++) {
-                    if (view == leftPins_[i])
-                    {
-                        leftPins_.erase(leftPins_.begin() + i);
-                        break;
-                    }
-                }
-                break;
-            case PinModel::OUTPUT:
-                for (unsigned i = 0; i < rightPins_.size(); i++) {
-                    if (view == rightPins_[i])
-                    {
-                        rightPins_.erase(rightPins_.begin() + i);
-                        break;
-                    }
-                }
-                break;
-            case PinModel::EPISODIC:
-                for (unsigned i = 0; i < bottomPins_.size(); i++) {
-                    if (view == bottomPins_[i])
-                    {
-                        bottomPins_.erase(bottomPins_.begin() + i);
-                        break;
-                    }
-                }
-                break;
-        }
-
-    }
-
+    pinList(pin)->remove(pin);
 }

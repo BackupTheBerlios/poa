@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.43 2003/09/11 16:30:24 squig Exp $
+ * $Id: mainwindow.cpp,v 1.44 2003/09/16 16:03:32 squig Exp $
  *
  *****************************************************************************/
 
@@ -222,7 +222,6 @@ void MainWindow::initializeToolbars()
     zoomComboBox->insertItem("100 %", DEFAULT_ZOOM_LEVEL);
     zoomComboBox->insertItem("250 %", 5);
     zoomComboBox->insertItem("500 %", 6);
-    zoomComboBox->insertItem("1000 %", 7);
     zoomComboBox->setCurrentItem(DEFAULT_ZOOM_LEVEL);
     zoomInAction->addTo(viewToolBar);
     zoomNormalAction->addTo(viewToolBar);
@@ -730,8 +729,17 @@ void MainWindow::zoomOut()
  */
 void MainWindow::zoomStepwise(int step)
 {
-    zoomComboBox->setCurrentItem(
-        step != 0 ? zoomComboBox->currentItem() + step : DEFAULT_ZOOM_LEVEL);
+    if (step == 0) {
+        zoomComboBox->setCurrentItem(DEFAULT_ZOOM_LEVEL);
+    }
+    else {
+        int i = zoomComboBox->currentItem() + step;
+        if (i < 0 || i >= zoomComboBox->count()) {
+            // index out of bounds
+            return;
+        }
+        zoomComboBox->setCurrentItem(i);
+    }
     zoomTo(zoomComboBox->currentText());
 }
 

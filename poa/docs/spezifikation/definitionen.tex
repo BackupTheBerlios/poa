@@ -1,0 +1,67 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Spezifikation
+%% $Id: definitionen.tex,v 1.1 2003/07/01 10:08:29 vanto Exp $
+%% Achtung: Diese Datei wird in die Spec inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\begriff}[2]
+{\item \bfseries{#1} \textnormal{#2}}
+
+\section {Definitionen}
+\begin{itemize}
+
+\begriff{Ausgang}{Eine Speicheradresse auf die schreibend zugegriffen
+  wird.}
+
+\begriff{Block}{siehe Funktionsblock}
+
+\begriff{Bus}{Mehrere Signalleitungen können zu einem Bus zusammen
+  gefasst werden.}
+
+\begriff{CPLD-Layout}{Anordnung von Funktionsblöcken und Signalleitungen.}
+
+\begriff{CPLD}{Complex Programmable Logic Device}
+
+\begriff{CPU}{Ein CPU-Block (auf Basis von NIOS).}
+
+\begriff{Core}{Eine festgelegte Logik mit bekannter Laufzeit.}
+
+\begriff{Download}{Herunterladen eines vollständig compilierten CPLD-Layouts
+auf das CPLD.}
+
+\begriff{Eingang}{Eine Speicheradresse auf die lesend zugegriffen wird.}
+
+\begriff{Episodisches Signal}{Ein Eingang oder Ausgang.}
+
+\begriff{Funktionsblock}{Virtuelles Abbild eines Cores, einer CPU oder
+eines Ein- bzw. Ausgabeblocks.}
+
+\begriff{ISWOS}{Minimal-Betriebssystem, dass nach der Initialisierung
+  des CPLDs auf den CPUs ausgeführt wird.}
+
+\begriff{Laufzeitermittlung}{Abschätzung der maximalen Laufzeit eines
+  Programms in Milli-Sekunden.}
+
+\begriff{Offset}{Anzahl Takte bevor ein Funktionsblock zum ersten Mal
+  angestossen wird.}
+
+\begriff{Optimierung}{Verkürzung der Gesamtlaufzeit eines CPLD-Zyklus.}
+
+\begriff{Periode}{Anzahl Takte nach denen ein Funktionsblock erneut
+  gestartet wird}
+
+\begriff{Plausibilitätsprüfung}{Prüfung des CPLD-Layouts auf
+  unverküpfte und falsch verknüpfte E/As.}
+
+\begriff{Scheduler}{Hardware, die Funktionsblöcke periodisch startet}
+
+\begriff{Signalleitung}{Eine Verbindung zwischen zwei
+  Funktionsblöcken. Eine Signalleitung hat immer 32-bit.}
+
+\begriff{Takt}{Kleinste Zeiteinheit des Schedulers}
+
+\begriff{Verbindung}{Eine Kopplung von einem Ausgang zu ein oder
+  mehreren Eingängen.}
+
+\end{itemize}
+

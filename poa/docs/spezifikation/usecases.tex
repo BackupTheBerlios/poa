@@ -1,0 +1,217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Spezifikation
+%% $Id: usecases.tex,v 1.1 2003/07/01 10:08:29 vanto Exp $
+%% Achtung: Diese Datei wird in die Spec inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\usecase}[5]{
+\nopagebreak
+\textbf{Vorbedingung}\\
+#1 \\
+\textbf{Beschreibung}\\
+#2 \\
+\textbf{Nachbedingung Erfolg}\\
+#3 \\
+\textbf{Nachbedingung Fehlschlag}\\
+#4 \\
+\textbf{Interaktionen}\\
+#5\\
+}
+
+\chapter {Produktfunktionen}
+\section {Akteure}
+POA unterscheidet keine Akteure, somit gibt es nur den POA-Benutzer
+\subsection {AKT Benutzer}
+Der POA-Benutzer ist in der Regel ein C-Programmierer.
+\section {Use-Cases}
+Die folgenden Geschäftsprozesse beschreiben die Funktionalität des Prototyps
+
+\subsection {UC Neues Projekt anlegen}
+\usecase 	{Programm ist gestartet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{New Project...}. Es öffnet sich ein
+		Dialog, in dem der Benutzer den Namen des neuen Projektes angibt und das Wurzelverzeichnis auswählt.}
+		{Es wird unterhalb des Wurzelverzeichnisses ein neues Projekt angelegt. Dazu wird die unter 5.2 
+		angegebene Verzeichnisstruktur erzeugt. Das neue Projekt wird geöffnet.}
+		{Es ist kein Projekt geöffnet.}
+		{AKT Benutzer}
+					
+\subsection {UC Projekt öffnen}
+\usecase 	{Programm ist gestartet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{Open Project...}. Es öffnet sich ein 
+		Öffnen-Dialog, in dem der Benutzer die project.xml-Datei in dem gewünschten Projektverzeichnis 
+		auswählt und bestätigt.}
+		{Das Projekt wird geöffnet. Es wird ein neues MDI-Hauptfenster angezeigt in dem sich Funktionsblöcke
+		und deren Verbindungen angezeigt werden.}
+		{Es ist kein Projekt geöffnet.}
+		{AKT Benutzer}
+					
+\subsection {UC Projekt speichern}
+\usecase 	{Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{Save} aus.}
+		{Änderungen am Projekt werden gespeichert.}
+		{Nicht definiert}
+		{AKT Benutzer}
+					
+\subsection {UC Projekt kompilieren}
+\usecase 	{Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{Compile Project} aus.
+		Das Projekt wird gespeichert. Danach wird die Sourcecodedatei von jeder CPU kompiliert.}
+		{Das kompilierte Projekt-C-Code wird im Projektverzeichnis abgelegt.}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsection {UC Projekt auf den CPLD downloaden}
+\usecase 	{Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{Download to CPLD-Board} aus.
+		Das Projekt wird gespeichert und kompiliert.
+		Das Downloadtool wird gestartet und beginnt den Download. Die Ausgabe des Compilers und des 
+		Downloadtools wird einem Fenster angezeigt}
+		{Das Projekt-C-Code wird auf den CPLD geschrieben.}
+		{Nicht definiert.}
+		{AKT Benutzer}
+
+\subsection {UC Programmeinstellungen setzen}
+\usecase 	{UC Programm ist gestartet}
+		{Der Benutzer wählt im Menü \emph{File} den Eintrag \emph{Preferences}. Es öffnet sich ein 
+		Dialog in dem der Benutzer die Programmeinstellungen vornehmen kann. 
+		Dazu gehört:
+		\begin{itemize}
+		  \item Pfad und Dateiname des externen Editors
+		  \item Pfad und Dateiname des externen Compilers
+		  \item Pfad des Verzeichnisses, das die C-Code-Vorlagen enthält
+		  \item Pfad und Dateiname des Downloadtools
+		\end{itemize}
+		Der Dialog kann mit \emph{OK} oder \emph{Cancel} geschlossen werden.}
+		{Geänderte Programmeinstellungen werden gepeichert}
+		{Geänderte Programmeinstellungen werden nicht gepeichert}
+		{AKT Benutzer}
+
+\subsection {UC Funktionsblock in das Projekt einfügen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer wählt einen Funktionsblock aus der Bibliothek und zieht ihn per Drag\&Drop auf einen 
+		freien Platz in das Projektfenster. Ist er dort abgelegt, öffnet sich der \emph{Preferences}-Dialog
+		für den neuen Block.}
+		{Funktionsblock wird ein das Projekt eingefügt. Ist der Funktionsblock eine CPU, so wird 
+		automatisch der Rahmencode generiert.}
+		{Nicht definiert.}
+		{AKT Benutzer}
+					
+\subsection {UC Funktionsblock aus dem Projekt entfernen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer wählt markiert mit der Maus einen Funktionsblock und drückt die \emph{Entf}-Taste oder
+		wählt \emph{Remove} im Kontextmenü aus. Ist der Funktionsblock bereits mit anderen Funktionsblöcken
+		verbunden, muss der Benutzer den Löschvorgang explizit bestätigen. Dann werden zusätzlich alle 
+		Verbindungen mit diesem Block gelöscht.}
+		{Funktionsblock wird entfernt.}
+		{Funktionsblock bleibt im Projekt enthalten.}
+		{AKT Benutzer}
+
+\subsection {UC Eigenschaften eines Funktionsblock setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Akteur öffnet den \emph{Preferences}-Dialog über das Context-Menü des 
+		Funktionsblocks oder mittels Doppelklick. Hier kann er die folgenden Einstellungen machen und 
+		beendet den Dialog mittels \emph{OK} oder \emph{Cancel} (Fehlschlag). Beim Schließen über \emph{OK} 
+		werden die Eingabefelder validiert, existieren noch temporäre Einträge im IO-Baum, so müssen diese
+		zuerst entfernt oder berichtigt werden.}
+		{Die Einstellungen werden übernommen. Ist dieser Funktionsblock eine CPU, so werden die Konstanten,
+		die die I/O-Adressen enthalten automatisch angepasst bzw. ergänzt.}
+		{Die Einstellungen werden verworfen}
+		{AKT Benutzer}
+
+\subsubsection {UC Name des Funktionsblocks setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		eines Funktionsblocks ist sichtbar}
+		{In dem Feld \emph{Name} weist der Benutzer dem Funktionsblock einen eindeutigen Bezeichner zu. 
+		Im Projektkontext gilt dieser Bezeichner als Prefix für die I/O-Variablen des Funktionsblocks.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC Adresse der CPU setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{In dem Feld \emph{Address} gibt der Benutzer die Basisadresse der CPU an.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC Takt-Offset der CPU setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{In dem Feld \emph{Offset} gibt der Benutzer den Takt-Offset (in Takten des Systemtakts?) an, 
+		um die die Ausführung des Programmcodes verschoben wird.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC Takt der CPU setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{In dem Feld \emph{Clock} gibt der Benutzer den Takt (in Takten des Systemtakts?, in MS?) an, 
+		in welchem die CPU ihren Programmcode ausführen soll.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+		
+\subsubsection {UC Laufzeit der CPU setzen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{In dem Feld \emph{Runtime} gibt der Benutzer die Laufzeit des Programmcodes (in Takten des CPU-Takt) an. 
+		Es wird automatisch ein Wert vorgeschlagen, den das Programm über eine Schnittstelle bezieht.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC Ein-/Ausgang hinzufügen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{Der Benutzer wählt eines der Wurzelelemente im IO-Baum aus (\emph{Input},\emph{Output}) und 
+		klick auf den \emph{Add}-Button. Es wird ein Eintrag unter dieser Kategorie hinzugefügt. Dieser
+		ist vorerst temporär, solange er noch keinen CPU-internen uniquen Bezeichner und eine Speicher-Addresse??
+		erhalten hat. Im Projektkontext wird 
+		dem Bezeichner der Name des Funktionsblocks als Prefix gesetzt und mit einem "'\_"' verbunden.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC Ein-/Ausgang entfernen}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{Der Benutzer wählt ein I/O-Element im IO-Baum aus und 
+		klick auf den \emph{Remove}-Button. Das Element wird entfernt, sofern keine andere CPU von diesem
+		Ein-/Ausgang gebrauch macht.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsubsection {UC I/O-Adresse eines Ein-/Ausgangs ändern??}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet und der \emph{Preferences}-Dialog 
+		einer CPU ist sichtbar}
+		{Der Benutzer wählt ein I/O-Element im IO-Baum aus und startet mittel Doppelklick in der 
+		\emph{Address}-Spalte den Editor. Dort gibt er nun die I/O-Adresse...}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+
+\subsection {UC Funktionsblock in dem Projekt verbinden}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet}
+		{Der Benutzer öffnet das Kontextmenu von einem Ein-/Ausgang eines Funktionsblocks und wählt den Eintrag
+		\emph {Connect}. Von nun an folgt eine rechtwinklige Line dem Mauszeiger bis der Benutzer den 
+		Ein-/Ausgang eines anderen Funktionsblocks anklickt. Der Vorgang kann durch drücken der \emph{ESC}-Taste
+		abgebrochen werden. Klickt der Benutzer mit der linken Maustaste auf eine freie Stelle im Projektfenster,
+		so wird ein Zwischenpunkt eingefügt, von dem aus rechtwinklig die Linie fortgesetzt wird. Mit einen 
+		Rechtsklick wird der jeweils letzte Zwischenpunkt entfernt. Das Einfügen und Entfernen von Zwischenknoten
+		ist nach dem Erreichen/Verbinden des Zielfunktionsblocks nicht mehr möglich.}
+		{Die Verbindung wird hergestellt.}
+		{Es wird keine Verbindung hergestellt.}
+		{AKT Benutzer}
+
+\subsection {UC Sourcecode einer CPU bearbeiten}
+\usecase 	{UC Programm ist gestartet, es ist ein Projekt geöffnet, eine CPU ist selektiert}
+		{Der Benutzer wählt im Kontextmenü der markierten CPU den Eintrag \emph{Edit Source...}. Darauf 
+		hin wird der externe Editor gestartet.}
+		{Nicht definiert}
+		{Nicht definiert}
+		{AKT Benutzer}
+

@@ -1,0 +1,66 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Spezifikation
+%% $Id: produktdaten.tex,v 1.1 2003/07/01 10:08:29 vanto Exp $
+%% Achtung: Diese Datei wird in die Spec inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter {Produktdaten}
+\section {Projektdatei}
+\lstset{language=XML}
+\begin{lstlisting}{}
+<project>
+  <meta>
+    <name/>
+    <description/>
+    <author/>
+    <created/>
+    <changed/>
+  </meta>
+
+  <cores>
+    <core name="SuperCore" icon="icon" runtime="12ms">
+      <input id="pin01" name="Pin 1" address="0x810" width="1"/> 
+      <!-- ??? sind die addressen statisch in der bib, oder dynamisch abhaengig von der instanz? -->
+      <input id="pin02to34" name="Pin 2 bis 34" address="0x812" width="32"/>
+      <output id="pin03" name="Pin 3" address="0x814" width="2"/>
+    </core>
+  </cores>
+  <cpus>
+    <cpu name="SuperCPU" icon = "icon">
+  </cpus>
+
+  <instances>
+    <core ref = "SuperCore" id = "myscore" address="0x100"/>
+    <core ref = "SuperCore" id = "mysecondscore" address="0x200"/>
+    <cpu ref = "SuperCPU" id = "bootCpu" runtime="120clks clock="6Mhz" address="0x300">
+      <input id="pin01" name="Pin 1" address="0x310" width="1"/>
+    </cpu>
+  </instances>
+</project>
+\end{lstlisting}
+
+\section{Verzeichnissstuktur}
+
+Für jedes Projekt wird ein Verzeichniss mit einer festgelegten
+Struktur erzeugt.
+
+\begin{itemize}
+\item CPU\_NR\_sdk
+  \begin{itemize}
+  \item lib\\
+    ?
+  \item src \\
+    Source Code
+  \item inc \\
+    NIOS Header Dateien
+  \end{itemize}
+\item poa
+  \begin{itemize}
+  \item project.xml
+  \end{itemize}
+\end{itemize}
+
+Innerhalb des Projektverzeichnisses wird zum Kompilieren ``nb'' 
+gestartet. 
+

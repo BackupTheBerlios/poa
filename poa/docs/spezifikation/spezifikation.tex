@@ -1,23 +1,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: spezifikation.tex,v 1.1 2003/06/12 21:23:24 squig Exp $
-%% Achtung: Diese Datei wird ins Angebot inkludiert!
+%% $Id: spezifikation.tex,v 1.2 2003/07/01 10:08:29 vanto Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 
-\newcommand\version{$Revision: 1.1 $\xspace}
+\RCSdef $Revision: 1.2 $
+\RCSdef $Date: 2003/07/01 10:08:29 $
 
-\title {\huge \product\\[0.5cm]\large Spezifikation\\[0.5cm] \version
-  \\[1cm] \Large \company}
+\newcommand\version{Version 1.0 \xspace}
 
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Deckblatt
 
-\maketitle
+\begin{titlepage}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+{\Huge
+\raggedright
+\textbf{POA} \\
+\huge Programmierumgebung offener Antrieb
+\rule{\textwidth}{0.75pt}
+\par
+}
+\begin{flushleft}
+\normalsize
+\version
+\end{flushleft}
+\vfill
+
+{\parindent=0cm
+\Huge Spezifikation
+}
+
+
+\setcounter{footnote}{0}
+\end{titlepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Versionsgeschichte
@@ -37,36 +57,49 @@
 
 \tableofcontents
 
-\chapter{Funktionale Anforderungen}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Einleitung
 
-\section{Laufzeitermittlung}
+\chapter {Einleitung}
+\section {Zielsetzung}
+In diesem Dokument sind die Anforderungen an den Prototypen im Rahmen des Projekts POA (Programmierumgebung Offener Antrieb) 
+detailiert spezifiziert. Die Entwicklung des Prototypen gilt als erfolgreich abgeschlossen, wenn das Produkt allen hier aufef"uhrten Aspekten
+gerecht wird.
+\include {produktziele}
+\include {definitionen}
 
-Für die Laufzeitermittlung wird eine Schnittstelle vorgesehen.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Produkteinsatz
+%\include {produkteinsatz}
 
-\chapter{Projekte}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Produktuebersicht
+\chapter {Produkt"ubersicht}
+Hier usecase diagramm?
 
-\section{Verzeichnissstuktur}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Usecases
+\include {usecases}
 
-Für jedes Projekt wird ein Verzeichniss mit einer festgelegten
-Struktur erzeugt.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Usecases
+\include {produktdaten}
 
-\begin{itemize}
-\item CPU\_NR\_sdk
-  \begin{itemize}
-  \item lib\\
-    ?
-  \item src \\
-    Source Code
-  \item inc \\
-    NIOS Header Dateien
-  \end{itemize}
-\item poa
-  \begin{itemize}
-  \item project.xml
-  \end{itemize}
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% QS
+\chapter {Qualit"atsanforderungen}
 
-Innerhalb des Projektverzeichnisses wird zum Kompilieren ``nb'' 
-gestartet. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GUI
+\include {gui}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Non functional requirements
+\include {nfr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Entwicklungsumgebung
+\chapter {Anforderungen an die Entwicklungsumgebung}
+Die Implementierung erfolgt in GNU C++ auf der Basis von Trolltech Qt 3.1.1. Zielplattform wird Redhat GNU/Linux 8.2 sein.
 
 \end{document}

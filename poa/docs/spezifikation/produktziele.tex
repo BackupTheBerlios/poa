@@ -1,0 +1,107 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
+%% Spezifikation
+%% $Id: produktziele.tex,v 1.1 2003/07/01 10:08:29 vanto Exp $
+%% Achtung: Diese Datei wird in die Spec inkludiert!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section {Produktziele}
+\subsection{Hintergrund}
+Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen gemacht.
+Viele dieser Entwicklungen beinhalten neue Kinematiken, wie z.B. die
+Parallelkinematiken und Sensoren (z.B. den Ferraris 
+Relativbeschleunigungssensor).\par
+Dadurch entstehen neue Anforderungen an die Antriebsregelung. Zusätzliche
+Sensor-Signale müssen in den Reglerstrukturen berücksichtigt werden -- oder
+es werden sogar völlig neue Reglerstrukturen benötigt.\par
+Die momentan auf dem Markt erhältlichen Reglersysteme erlauben meist
+weder die Berücksichtigung neuartiger Sensoren, noch bieten sie die
+Möglichkeit, eigene anwenderspezifische Reglerstrukturen zu implementieren.\par
+Daher wird am ISW eine Plattform für die Antriebsregelung entwickelt,
+auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalitäten
+zu integrieren. Diese Plattform wird am ISW kurz als ``Offener Antrieb''
+bezeichnet.  \par
+Die hardwaretechnische Realisierung erfolgt in Form einer PC-Einsteckplatine.
+Zentrales Element des Offenen Antriebes ist der Altera ``APEX'' Baustein. Es
+handelt sich dabei um ein CPLD\footnote{Complex Programmable Logic Device},
+das sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
+Funktion des Bausteins seinen Bedürfnissen anzupassen.\par
+Um die Offenheit für jeden Anwender nutzbar zu machen, wird für das CPLD eine
+Architektur festgelegt, die es ermöglicht, einzelne Funktionalitäten in Form
+von Modulen zu implementieren. Diese Module können aus festprogrammierten
+Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Modul kann
+auf die Signale aller anderen Module zugreifen und stellt seine eigenen
+Ausgangssignale allen anderen Modulen zur Verfügung.\par
+Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
+von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
+Netzwerk konfiguriert werden kann.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Funktionale Anforderungen
+\subsection{Funktionen}
+
+Die ``Programmierumgebung Offener Antrieb'' soll eine 
+grafische Oberfläche mit folgenden wesentlichen Funktionalitäten bieten:
+\begin{itemize}
+\item Darstellung und Manipulation rasterisierter CPLD Layouts
+\item Verwaltung und Editierung einer CPLD-Modulbibliothek zur CPLD-Layout
+      Manipulation
+\item Rahmencodegenerierung für eingebette CPU-Module in einem CPLD-Layout
+\item Plausibilitätsprüfung und Optimierung eines entworfenen CPLD-Layouts
+\item Compilieren und Herunterladen von Quellcode für die CPU-Module
+\item Speichern und Öffnen von CPLD-Layouts und zugehörigem Quellcode
+\item Konfiguration der Programmeigenschaften
+\item Zusammenarbeit mit externen Programmen
+\end{itemize}
+Auf die Einzelheiten der wesentlichen Funktionalitäten und der Abgrenzung der
+aufgeworfenen Begriffe wird in den folgenden Abschnitten eingegangen.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CPLD Layouts
+\subsubsection{CPLD Layouts}
+Ein CPLD Layout ist ein virtuelles Abbild der realen Konfiguration
+(Vernetzung der CPLD-Funktionsblöcke) eines CPLD Hardware-Bausteins.
+Dabei besteht die virtuelle Abbildung aus Funktionsblöcken (CPUs, Cores,
+E/A-Blöcke) und Signalleitungen.\par
+Im zu entwickelnden System soll ein CPLD Layout rasterisiert dargestellt
+werden und durch Maus- und Tastatureingaben manipulierbar sein. Dabei
+werden Funktionsblöcke mit der Maus in ein Raster eingebettet und durch
+einzelne Linien, die die Signalleitungen symbolisieren, verbunden.
+Die Funktionsblöcke selbst sollen konfigurierbar und editierbar sein.\par
+CPLD-Layouts sollen XML-basiert speicher- und ladbar sein. Sie werden
+zusammen mit dem zugehörigen Source- und evtl. vorhandenen Object-Code
+in einer geeigneten Verzeichnisstruktur abgelegt.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CPLD-Modulbibliothek
+\subsubsection{CPLD-Modulbibliothek}
+Die Modulbibliothek ist eine CPLD-Layout übergreifende Sammlung von
+Funktionsblöcken (CPU, Cores, E/A-Blöcke), die in CPLD-Layouts
+einbettbar sein sollen. Die Funktionsblöcke sollen in einer
+XML-Struktur verwaltet werden. Die Modulbibliothek soll bei jedem
+Systemaufruf automatisch geladen werden.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Funktionsblock
+\subsubsection{Funktionsblock}
+Ein Funktionsblock ist ein virtuelles Abbild eines CPU-, Core- oder
+E/A-Bausteins auf einem CPLD. Dabei sollen an allen Funktionsblöcken
+die Ein- und Ausgänge mit Signalleitungen verbunden werden können.
+\par
+Speziell bei CPU-Blöcken soll überdies die Anzahl der Ein- und
+Ausgänge, die Benennung der E/As, das Einstellen eines Zeitoffsets,
+das Setzen einer logischen Taktrate konfigurierbar sein und der auf
+dem jeweiligen CPU-Block auszuführende Sourcecode editierbar sein.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Rahmencodegenerierung
+\subsubsection{Rahmencodegenerierung}
+Zur Editierung von C-Quellcode für CPU-Blöcke soll ein vom Auftraggeber
+vordefiniertes C-Template kontextabhängig für die existierende
+Konfiguration eines CPU-Blocks verwendet werden, um Rahmencode zu generieren.
+Dabei soll die Benennung der Signal-Ein- und Signal-Ausgänge im C-Sourcecode
+eines einzelnen CPU-Blocks angepaßt werden. Hierzu soll ein
+Textersetzungsalgorithmus auf der Basis von Templates verwendet werden.
+
+

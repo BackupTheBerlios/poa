@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.9 2004/01/20 19:13:07 squig Exp $
+ * $Id: librarywindow.h,v 1.10 2004/01/21 13:26:39 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -32,6 +32,7 @@
 class AbstractModel;
 class QListView;
 class QListViewItem;
+class QPopupMenu;
 class QSplitter;
 class QTextBrowser;
 
@@ -128,6 +129,7 @@ private :
     QSplitter* splitter_;
     QDict<QListViewItem> typeItemByType;
     bool modified_;
+    QPopupMenu *popupMenu_;
 
     /**
      * Adds a few default items to the library. Invoked when the
@@ -145,6 +147,11 @@ private :
 private slots:
 
     /**
+     * Removes currently selected item from library.
+     */
+    void removeSelected();
+
+    /**
      * Sets the description
      */
     void setDescription(QListViewItem* item);
@@ -153,6 +160,11 @@ private slots:
      * Sets the orientation of the splitter to the reverse value of orientation.
      */
     void setOrientation(Qt::Orientation orientation);
+
+    /**
+     * Shows the popup menu at pos.
+     */
+    void showPopup(QListViewItem *item, const QPoint &pos, int col);
 
 };
 

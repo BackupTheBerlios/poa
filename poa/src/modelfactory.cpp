@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.18 2003/11/26 16:02:58 vanto Exp $
+ * $Id: modelfactory.cpp,v 1.19 2004/01/21 13:26:39 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -74,5 +74,4 @@ void ModelFactory::clearProperties(AbstractModel* model)
 {
     model->setDescription(QString::null);
     model->setId(0);
-    model->setName(model->type());
 }

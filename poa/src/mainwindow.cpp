@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.88 2004/01/20 19:13:07 squig Exp $
+ * $Id: mainwindow.cpp,v 1.89 2004/01/21 13:26:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -62,6 +62,7 @@
 #include <qfile.h>
 #include <qfiledialog.h>
 #include <qimage.h>
+#include <qinputdialog.h>
 #include <qlayout.h>
 #include <qmenubar.h>
 #include <qmessagebox.h>
@@ -792,29 +793,22 @@ MainWindow *MainWindow::instance()
 void MainWindow::openBlockConf()
 {
 
-    CanvasView *view = activeView();
-    if (view != 0) {
-        QCanvasItemList l = view->selectedItems();
-        QCanvasItem *topItem = l.isEmpty() ? 0 : l.first();
-
-        if (topItem->rtti() == BlockView::RTTI) {
-            AbstractModel *model = ((BlockView *)topItem)->model();
-            if (INSTANCEOF(model, MuxModel)) {
-                MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
-                dialog->show();
-                if (dialog->exec() == QDialog::Accepted) {
-                    project_->setModified(true);
-                }
-                delete dialog;
+    AbstractModel *model = selectedModel();
+    if (model != 0) {
+        if (INSTANCEOF(model, MuxModel)) {
+            MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
+            dialog->show();
+            if (dialog->exec() == QDialog::Accepted) {
+                project_->setModified(true);
             }
-            else if (INSTANCEOF(model, BlockModel)) {
-                BlockConfDialog *dialog =
-                    new BlockConfDialog((BlockModel *)model);
-                if (dialog->exec() == QDialog::Accepted) {
+            delete dialog;
+        }
+        else if (INSTANCEOF(model, BlockModel)) {
+            BlockConfDialog *dialog = new BlockConfDialog((BlockModel *)model);
+            if (dialog->exec() == QDialog::Accepted) {
                     project_->setModified(true);
-                }
-                delete dialog;
             }
+            delete dialog;
         }
     }
 }
@@ -934,7 +928,63 @@ QAction *MainWindow::saveToLibraryAction()
 
 void MainWindow::saveToLibrary()
 {
-    qWarning("Not implemented yet");
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        if (!items.isEmpty()) {
+            QDomDocument doc;
+            QDomElement root = doc.createElement("model");
+            doc.appendChild(root);
+
+            bool ok;
+            QString type = (selectedModel() != 0)
+                ? selectedModel()->type()
+                : tr("Other");
+            type = QInputDialog::getText("POA", "Enter library type:",
+                                         QLineEdit::Normal, type, &ok, this);
+            if (!ok) {
+                return;
+            }
+
+            // serialize
+            for (QCanvasItemList::iterator current = items.begin();
+                 current != items.end(); ++current) {
+                Copyable *item = dynamic_cast<Copyable *>(*current);
+                if (item != 0) {
+                    Q_ASSERT(item->model() != 0);
+                    root.appendChild(item->model()->serialize(&doc));
+                }
+            }
+
+            // deserialize
+            QValueList<AbstractModel *> l = ModelFactory::generate(doc);
+            for (QValueList<AbstractModel *>::Iterator it = l.begin();
+                 it != l.end(); ++it) {
+
+                (*it)->setType(type);
+                libraryWindow_->add(*it);
+            }
+        }
+    }
+}
+
+AbstractModel *MainWindow::selectedModel()
+{
+    CanvasView *view = activeView();
+    if (view != 0) {
+        QCanvasItemList items = view->selectedItems();
+        if (!items.isEmpty()) {
+            for (QCanvasItemList::iterator current = items.begin();
+                 current != items.end(); ++current) {
+
+                Copyable *item = dynamic_cast<Copyable *>(*current);
+                if (item != 0) {
+                    return item->model();
+                }
+            }
+        }
+    }
+    return 0;
 }
 
 QAction *MainWindow::showGridAction()

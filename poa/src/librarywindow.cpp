@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.31 2004/01/20 19:13:07 squig Exp $
+ * $Id: librarywindow.cpp,v 1.32 2004/01/21 13:26:39 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -38,6 +38,7 @@
 #include <qframe.h>
 #include <qlayout.h>
 #include <qpalette.h>
+#include <qpopupmenu.h>
 #include <qsplitter.h>
 #include <qtextbrowser.h>
 #include <qvariant.h>
@@ -67,12 +68,20 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
     descriptionTextBrowser_->setPaper
             (palette.brush(QPalette::Normal, QColorGroup::Background));
 
-    initialize();
+    popupMenu_ = new QPopupMenu();
+    popupMenu_->insertItem(QPixmap(Util::findIcon("editdelete.png")),
+                           tr("Remove"), this, SLOT(removeSelected()));
 
     connect(modelListView_, SIGNAL(selectionChanged(QListViewItem *)),
             this, SLOT(setDescription(QListViewItem *)));
     connect(this, SIGNAL(orientationChanged(Orientation)),
             this, SLOT(setOrientation(Orientation)));
+    connect(modelListView_,
+            SIGNAL(contextMenuRequested(QListViewItem *, const QPoint &, int)),
+            this, SLOT(showPopup(QListViewItem *, const QPoint &, int)));
+
+    // load items
+    initialize();
 }
 
 LibraryWindow::~LibraryWindow()
@@ -189,6 +198,19 @@ void LibraryWindow::open(QFile *file)
     }
 }
 
+void LibraryWindow::removeSelected()
+{
+    QListViewItem *item = modelListView_->selectedItem();
+    if (item != 0) {
+        delete item;
+    }
+}
+
+void LibraryWindow::showPopup(QListViewItem *, const QPoint &pos, int)
+{
+    popupMenu_->exec(pos);
+}
+
 void LibraryWindow::save(QFile *file)
 {
     if (file->open(IO_WriteOnly)) {
@@ -230,7 +252,7 @@ LibraryListViewItem::LibraryListViewItem(QListViewItem *parent,
                                          AbstractModel *item)
     : QListViewItem(parent), item_(item)
 {
-    setText(0, item->type());
+    setText(0, item->name());
     setText(1, item->description());
 
     setDragEnabled(TRUE);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.32 2004/01/19 11:23:07 squig Exp $
+ * $Id: mainwindow.h,v 1.33 2004/01/21 13:26:39 squig Exp $
  *
  *****************************************************************************/
 
@@ -111,6 +111,12 @@ public:
      * Returns the save to library action.
      */
     QAction *saveToLibraryAction();
+
+    /**
+     * Returns the currently selected model.
+     * @return 0, if no window is active or no model is selected
+     */
+    AbstractModel *selectedModel();
 
     /**
      * Returns the show grid action.

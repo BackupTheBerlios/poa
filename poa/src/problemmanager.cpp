@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: problemmanager.cpp,v 1.6 2004/02/05 14:00:23 papier Exp $
+ * $Id: problemmanager.cpp,v 1.7 2004/02/13 15:39:26 vanto Exp $
  *
  *****************************************************************************/
 
@@ -26,6 +26,7 @@
 #include "blockmodel.h"
 #include "pinmodel.h"
 #include "problemmanager.h"
+#include "util.h"
 
 #include <qapplication.h>
 #include <qmessagebox.h>
@@ -82,13 +83,13 @@ void ProblemReportItem::setStatus(const QString status)
     setText(1, status);
 
     if (status == tr("Warning")) {
-        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Warning));
+        setPixmap(0, QPixmap(Util::findIcon("warning.gif")));
     }
     else if (status == tr("Critical")) {
-        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Critical));
+        setPixmap(0, QPixmap(Util::findIcon("critical.gif")));
     }
     else {
-        setPixmap(0, QMessageBox::standardIcon(QMessageBox::Information));
+        setPixmap(0, QPixmap(Util::findIcon("success.gif")));
     }
 }
 
@@ -220,15 +221,15 @@ void DifferentClockReport::adjustTarget()
 ProblemManager::ProblemManager(Project *project, QListView *listView)
     : project_(project)
 {
-    QListViewItem *root = new QListViewItem(listView, 
-					    qApp->translate("problemmanager",
-							    "Problem Reports"));
+    QListViewItem *root = new QListViewItem(listView,
+                        qApp->translate("problemmanager",
+                                "Problem Reports"));
     root->setOpen(true);
 
     connectionRoot_ = new QListViewItem(root, qApp->translate("problemmanager",
-							      "Connections"));
+                                  "Connections"));
     blockRoot_ = new QListViewItem(root, qApp->translate("problemmanager",
-							 "Blocks"));
+                             "Blocks"));
 }
 
 ProblemManager::~ProblemManager()
@@ -303,6 +304,6 @@ void ProblemManager::updateRoot(QListViewItem *item)
     item->setText(1,
                   (item->childCount() > 0)
                   ? QString(qApp->translate("problemmanager",
-					    "%1 Reports")).arg(item->childCount())
+                        "%1 Reports")).arg(item->childCount())
                   : QString(qApp->translate("problemmanager","OK")));
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.61 2004/02/18 03:41:31 keulsn Exp $
+ * $Id: scheduledialog.cpp,v 1.62 2004/03/01 12:07:36 kilgus Exp $
  *
  *****************************************************************************/
 
@@ -534,7 +534,7 @@ void ScheduleDialog::print()
 
     // first draw timing table
     int y = 0;
-    Q_ASSERT(timingTable->numCols() == 6);
+    Q_ASSERT(timingTable->numCols() == 4);
     int xOfs[6] = {0,       // x offsets of the columns
                    printCanvasWidth * 1/20,
                    printCanvasWidth * 4/10, 
@@ -548,8 +548,8 @@ void ScheduleDialog::print()
     line->show();        
 
     // print header and vertical lines
-    for (int i = 0; i < 6; i++) {
-        if (i > 0) {
+    for (int i = 0; i <= 5; i++) {
+        if ((i > 0) && (i < 5)) {
             QCanvasText* text = new QCanvasText(
                 timingTable->horizontalHeader()->label(i - 1), printCanvas);
             text->move(xOfs[i] + PRINT_SPACING, y + PRINT_SPACING);
@@ -574,7 +574,7 @@ void ScheduleDialog::print()
         text->show();
 
         // other contents
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i <= 4; i++) {
             text = new QCanvasText(timingTable->text(row, i - 1), printCanvas);
             text->move(xOfs[i] + PRINT_SPACING, y + PRINT_SPACING);
             text->show();

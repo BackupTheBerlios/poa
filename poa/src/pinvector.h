@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinvector.h,v 1.8 2003/09/12 08:58:42 garbeam Exp $
+ * $Id: pinvector.h,v 1.9 2003/09/14 11:45:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -55,10 +55,17 @@ public:
     PinModel *findById(const unsigned id);
 
     /**
-     * Removes and deletes(!) all pins from this vector.
+     * Removes all pins from this vector.
+     * @param free if <code>true</code> all pins will be
+     * also deallocated.
      */
-    void removeAllPins();
+    void removeAllPins(bool free);
 
+    /**
+     * Returns <code>true</code> if pin already exists
+     * in this vector, <code>false</code> otherwise.
+     */
+    bool PinVector::contains(PinModel *pin);
 
 };
 

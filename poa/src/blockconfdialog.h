@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.h,v 1.7 2003/09/13 18:15:35 garbeam Exp $
+ * $Id: blockconfdialog.h,v 1.8 2003/09/14 11:45:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -27,6 +27,7 @@
 
 #include "blockmodel.h"
 #include "pinmodel.h"
+#include "pinvector.h"
 
 #include <qlistview.h>
 #include <qvariant.h>
@@ -155,6 +156,7 @@ private:
     PinListViewItem *episodicRoot_;
 
     BlockModel *model_;
+    PinVector *deletedPins_;
 
     /**
      * Initializes layout.

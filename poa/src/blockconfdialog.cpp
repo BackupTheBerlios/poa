@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockconfdialog.cpp,v 1.12 2003/09/13 18:15:35 garbeam Exp $
+ * $Id: blockconfdialog.cpp,v 1.13 2003/09/14 11:45:24 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -119,6 +119,7 @@ BlockConfDialog::BlockConfDialog(BlockModel *model, QWidget* parent,
     setCaption(tr("Block configuration"));
 
     model_ = model;
+    deletedPins_ = new PinVector();
 
     initLayout();
 
@@ -159,6 +160,8 @@ void BlockConfDialog::initLayout()
         initCompileEditButtonWidget();
     }
 
+    rightLayout->addItem(new QSpacerItem(1, 1, QSizePolicy::Maximum,
+                                          QSizePolicy::Minimum));
     topLayout->addWidget(leftWidget);
     topLayout->addWidget(rightWidget);
 
@@ -174,10 +177,7 @@ void BlockConfDialog::initBlockWidget()
 
     // block widget
     QGroupBox *blockGroupBox = new QGroupBox(rightWidget, "blockGroupBox");
-    blockGroupBox->setTitle(tr("block"));
-    blockGroupBox->setMaximumHeight(150);
-    blockGroupBox->setMinimumHeight(150);
-    blockGroupBox->setMinimumWidth(280);
+    blockGroupBox->setTitle(tr(model_->type()));
 
     QGridLayout *blockLayout =
         new QGridLayout(blockGroupBox, 3, 3, WIDGET_SPACING);
@@ -204,9 +204,6 @@ void BlockConfDialog::initOffsetWidget()
     QButtonGroup *offsetButtonGroup =
         new QButtonGroup(rightWidget, "offsetButtonGroup" );
     offsetButtonGroup->setTitle(tr("offset"));
-    offsetButtonGroup->setMaximumHeight(100);
-    offsetButtonGroup->setMinimumHeight(100);
-    offsetButtonGroup->setMinimumWidth(280);
 
     QGridLayout *offsetLayout = new QGridLayout(offsetButtonGroup, 2, 3,
                                                 WIDGET_SPACING);
@@ -242,9 +239,6 @@ void BlockConfDialog::initRuntimeWidget()
         QButtonGroup *runtimeButtonGroup =
             new QButtonGroup(rightWidget, "runtimeButtonGroup");
         runtimeButtonGroup->setTitle(tr("runtime"));
-        runtimeButtonGroup->setMinimumWidth(280);
-        runtimeButtonGroup->setMaximumHeight(100);
-        runtimeButtonGroup->setMinimumHeight(100);
 
         runtimeSpinBox = new QSpinBox(runtimeButtonGroup, "runtimeSpinBox");
 
@@ -274,9 +268,6 @@ void BlockConfDialog::initRuntimeWidget()
         QGroupBox *runtimeGroupBox =
             new QGroupBox(rightWidget, "runtimeGroupBox");
         runtimeGroupBox->setTitle(tr("runtime"));
-        runtimeGroupBox->setMinimumWidth(280);
-        runtimeGroupBox->setMaximumHeight(60);
-        runtimeGroupBox->setMinimumHeight(60);
 
         runtimeSpinBox = new QSpinBox(runtimeGroupBox, "runtimeSpinBox");
 
@@ -373,7 +364,8 @@ void BlockConfDialog::initListView()
         || INSTANCEOF(model_, OutputModel))
     {
         // outputs root
-        outputRoot_ = new PinListViewItem(ioListView, inputRoot_, PinModel::OUTPUT);
+        outputRoot_ = new PinListViewItem(ioListView, inputRoot_,
+                                          PinModel::OUTPUT);
         outputRoot_->setText(0, tr("outputs"));
     }
 
@@ -409,7 +401,8 @@ void BlockConfDialog::initListView()
 
     // I/O manipulation buttons
     QWidget *ioButtonsWidget = new QWidget(leftWidget);
-    QBoxLayout *ioButtonsLayout = new QHBoxLayout(ioButtonsWidget, WIDGET_SPACING);
+    QBoxLayout *ioButtonsLayout =
+        new QHBoxLayout(ioButtonsWidget, WIDGET_SPACING);
 
     newIoPushButton = new QPushButton(ioButtonsWidget, "newIoPushButton");
     newIoPushButton->setText(tr("&New"));
@@ -464,15 +457,32 @@ void BlockConfDialog::updateModel() {
         model_->setDescription(blockDescrLineEdit->text());
         model_->setExecTime(runtimeSpinBox->value());
 
-        model_->inputPins()->removeAllPins();
-        model_->outputPins()->removeAllPins();
-        model_->episodicPins()->removeAllPins();
+        // clear and free deleted pins
+        deletedPins_->removeAllPins(true);
+
+        // clear models
+        model_->inputPins()->removeAllPins(false);
+        model_->outputPins()->removeAllPins(false);
+        model_->episodicPins()->removeAllPins(false);
 
         QListViewItemIterator it(ioListView);
         for ( ; it.current(); ++it) {
             PinListViewItem *item = (PinListViewItem *)it.current();
             if (!item->isRoot()) {
-                model_->addPin(item->data()->clone());
+                PinModel *source = item->data();
+                PinModel *target = item->origData();
+                if (target != 0) {
+                    target->setId(source->id());
+                    target->setName(source->name());
+                    target->setAddress(source->address());
+                    target->setBits(source->bits());
+                    target->setType(source->type());
+                    // use original pin
+                    model_->addPin(target);
+                }
+                else {
+                    model_->addPin(source->clone());
+                }
             }
         }
     }
@@ -524,6 +534,11 @@ void BlockConfDialog::removeIo()
             root = (PinListViewItem *)root->parent();
         }
         root->takeItem(item);
+        if (item->origData() != 0) {
+            // Save deleted pins, to clean up views
+            // if the changes will be applied.
+            deletedPins_->append(item->origData());
+        }
         delete item;
     }
 }

@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Anforderungen
-%% $Id: anforderungen.tex,v 1.8 2003/06/12 21:23:24 squig Exp $
+%% $Id: anforderungen.tex,v 1.9 2003/06/14 16:45:40 garbeam Exp $
 %% Achtung: Diese Datei wird ins Angebot inkludiert!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -29,11 +29,11 @@ auf der es dem Anwender in jeder Hinsicht offen steht, eigene Funktionalitäten
 zu integrieren. Diese Plattform wird am ISW kurz als ``Offener Antrieb''
 bezeichnet.  \par
 Die hardwaretechnische Realisierung erfolgt in Form einer PC-Einsteckplatine.
-Zentrales Element des Offenen Antriebes ist der Altera ``APEX''Baustein. Es
-handelt sich dabei um einen CPLD\footnote{Complex Programmable Logic Device},
-der sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
+Zentrales Element des Offenen Antriebes ist der Altera ``APEX'' Baustein. Es
+handelt sich dabei um ein CPLD\footnote{Complex Programmable Logic Device},
+das sich frei programmieren lässt. Der Anwender hat die Möglichkeit, die
 Funktion des Bausteins seinen Bedürfnissen anzupassen.\par
-Um die Offenheit für jeden Anwender nutzbar zu machen, wird für den CPLD eine
+Um die Offenheit für jeden Anwender nutzbar zu machen, wird für das CPLD eine
 Architektur festgelegt, die es ermöglicht, einzelne Funktionalitäten in Form
 von Modulen zu implementieren. Diese Module können aus festprogrammierten
 Schaltungen (Cores) und freiprogrammierbaren CPUs bestehen. Jedes Modul kann
@@ -41,18 +41,14 @@ auf die Signale aller anderen Module zugreifen und stellt seine eigenen
 Ausgangssignale allen anderen Modulen zur Verfügung.\par
 Inhalt dieses Angebotes ist es, eine Programmierumgebung für das Netzwerk
 von CPUs und Cores zu schaffen, in dem ein bereits auf dem CPLD vorhandenes
-Netzwerk konfiguriert werden kann.\par
-Die detaillierten Anforderungen der hiermit angebotenen ``Programmierumgebung
-Offener Antrieb'' erschliessen sich nur aus dem Zusammenhang des im Folgenden
-dargelegten Kataloges der Funktionalen Anforderungen. 
-
+Netzwerk konfiguriert werden kann.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 
 Die ``Programmierumgebung Offener Antrieb'' soll eine englisch-sprachige,
-grafische Oberfläche mit folgenden wesentliche Funktionalitäten bieten:
+grafische Oberfläche mit folgenden wesentlichen Funktionalitäten bieten:
 \begin{itemize}
 \item Darstellung und Manipulation rasterisierter CPLD Layouts
 \item Verwaltung und Editierung einer CPLD-Modulbibliothek zur CPLD-Layout
@@ -153,7 +149,7 @@ Einzelne Funktionsblöcke eines plausiblen CPLD-Layouts und gesamte plausible
 CPLD-Layouts sollen durch einen externen Compiler compiliert werden können,
 der vom Kunden zu liefern ist.\par
 Weiterhin soll ein plausibles und vollständig compiliertes CPLD-Layout auf
-den CPLD heruntergeladen werden können. Um diese Anforderung umsetzen zu 
+das CPLD heruntergeladen werden können. Um diese Anforderung umsetzen zu 
 können, hat der Kunde die Schnittstelle sowie ein Beispielprogramm zu liefern.
 
 
@@ -168,14 +164,14 @@ Programme eingesetzt werden.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Konfiguration
 \subsection{Konfiguration}
-Es soll der externe Editor, der externe Compiler der Pfad zum C-Souce
+Es soll der externe Editor, der externe Compiler, der Pfad zum C-Source
 Template und das externe Download-Tool konfigurierbar sein.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Funktionale Anforderungen
 \section{Nicht funktionale Anforderungen}
 Die Implementierung der Software erfolgt in C++ auf der Basis von
-Trolltech QT 3.1.1. Als Zielplatform wird Redhat GNU/Linux 8.2
+Trolltech Qt 3.1.1. Als Zielplatform wird Redhat GNU/Linux 8.2
 festgelegt.
 
 \subsection{Hardware}

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.h,v 1.24 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: gridcanvas.h,v 1.25 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -66,6 +66,12 @@ public:
      * router to route <code>viewList</code>
      */
     void addConnectorView(ConnectorViewList *viewList);
+
+    /**
+     * Expands the canvas to include item in case item lies outside
+     * the canvas.
+     */
+    void ensureVisibility(QCanvasItem *item);
 
     /**
      * To be called whenever a set of <code>ConnectorViewList</code>s has

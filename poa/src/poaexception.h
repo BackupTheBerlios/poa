@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: poaexception.h,v 1.4 2004/01/21 16:07:51 squig Exp $
+ * $Id: poaexception.h,v 1.5 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,7 @@
 class PoaException
 {
  public:
-    PoaException(const QString& msg = "");
-    PoaException(const PoaException& e);
+    PoaException(const QString msg = QString::null);
 
     QString message() const;
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.95 2004/01/21 22:28:46 squig Exp $
+ * $Id: mainwindow.cpp,v 1.96 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -264,13 +264,13 @@ void MainWindow::initializeToolbars()
     // view
     viewToolBar = new QToolBar(tr("view toolbar"), this, DockTop);
     zoomComboBox = new QComboBox(false, viewToolBar);
-    zoomComboBox->insertItem("10 %", 0);
-    zoomComboBox->insertItem("25 %", 1);
-    zoomComboBox->insertItem("50 %", 2);
-    zoomComboBox->insertItem("75 %", 3);
-    zoomComboBox->insertItem("100 %", DEFAULT_ZOOM_LEVEL);
-    zoomComboBox->insertItem("250 %", 5);
-    zoomComboBox->insertItem("500 %", 6);
+    zoomComboBox->insertItem("10%", 0);
+    zoomComboBox->insertItem("25%", 1);
+    zoomComboBox->insertItem("50%", 2);
+    zoomComboBox->insertItem("75%", 3);
+    zoomComboBox->insertItem("100%", DEFAULT_ZOOM_LEVEL);
+    zoomComboBox->insertItem("250%", 5);
+    zoomComboBox->insertItem("500%", 6);
     zoomComboBox->setCurrentItem(DEFAULT_ZOOM_LEVEL);
     zoomInAction->addTo(viewToolBar);
     zoomNormalAction->addTo(viewToolBar);
@@ -648,7 +648,7 @@ void MainWindow::editRemove()
 
                 Removeable *item = dynamic_cast<Removeable *>(*current);
                 if (item != 0) {
-                    item->remove(project_);
+                    item->remove(view->project());
                 }
             }
         }
@@ -733,20 +733,21 @@ void MainWindow::filePrint()
 
 void MainWindow::fileSave()
 {
-    if (project_) {
+    CanvasView *view = activeView();
+    if (view != 0) {
         try {
-            project_->save();
-        } catch (const PoaException e) {
-            QMessageBox::warning(this,
-                                 tr("File error"),
-                                 e.message());
+            view->project()->save();
+        }
+        catch (const PoaException e) {
+            QMessageBox::warning(this, tr("File error"), e.message());
         }
     }
 }
 
 void MainWindow::fileSaveAs()
 {
-    if (project_) {
+    CanvasView *view = activeView();
+    if (view != 0) {
         QFileDialog* fd = new QFileDialog( this, "file dialog", TRUE );
         fd->setMode(QFileDialog::Directory);
         fd->setFilter("POA project (project.xml)");
@@ -793,7 +794,7 @@ void MainWindow::fileSaveAs()
             }
             }*/
         try {
-            project_->saveAs(projDir.path());
+            view->project()->saveAs(projDir.path());
         }
         catch (const PoaException e) {
             QMessageBox::warning(this,
@@ -836,38 +837,41 @@ MainWindow *MainWindow::instance()
 
 void MainWindow::openBlockConf()
 {
-
-    AbstractModel *model = selectedModel();
-    if (model != 0) {
-        if (INSTANCEOF(model, MuxModel)) {
-            MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
-            dialog->show();
-            if (dialog->exec() == QDialog::Accepted) {
-                project_->setModified(true);
+    CanvasView *view = activeView();
+    if (view != 0) {
+        AbstractModel *model = selectedModel();
+        if (model != 0) {
+            if (INSTANCEOF(model, MuxModel)) {
+                MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
+                dialog->show();
+                if (dialog->exec() == QDialog::Accepted) {
+                    view->project()->setModified(true);
+                }
+                delete dialog;
             }
-            delete dialog;
-        }
-        else if (INSTANCEOF(model, BlockModel)) {
-            BlockConfDialog *dialog = new BlockConfDialog((BlockModel *)model);
-            if (dialog->exec() == QDialog::Accepted) {
-                    project_->setModified(true);
+            else if (INSTANCEOF(model, BlockModel)) {
+                BlockConfDialog *dialog
+                    = new BlockConfDialog((BlockModel *)model);
+                if (dialog->exec() == QDialog::Accepted) {
+                    view->project()->setModified(true);
+                }
+                delete dialog;
             }
-            delete dialog;
         }
     }
 }
 
 void MainWindow::openProject(QString path)
 {
-    if (!closeAll()) {
-        return;
-    }
+//      if (!closeAll()) {
+//          return;
+//      }
 
-    if (project_ != 0) {
-        delete project_;
-    }
+//      if (project_ != 0) {
+//          delete project_;
+//      }
 
-    project_ = new Project(path);
+    Project *project_ = new Project(path);
 
     try {
         project_->open();
@@ -908,9 +912,13 @@ void MainWindow::openRecentProject(int i)
 
 void MainWindow::openScheduling()
 {
-    ScheduleDialog *dialog = new ScheduleDialog(project_, this);
-    dialog->exec();
-    delete dialog;
+    CanvasView *view = activeView();
+    if (view != 0) {
+        ScheduleDialog *dialog
+            = new ScheduleDialog(activeView()->project(), this);
+        dialog->exec();
+        delete dialog;
+    }
 }
 
 
@@ -943,8 +951,8 @@ void MainWindow::routeSelected(ConnectorRouter *router)
         QCanvasItemList items = view->selectedItems();
 
         router->route(items);
-        project_->setModified(true);
-        activeView()->canvas()->update();
+        view->project()->setModified(true);
+        view->canvas()->update();
     }
     delete router;
 }
@@ -1047,17 +1055,16 @@ QAction *MainWindow::smartRouteAction()
     return smartRouteAction_;
 }
 
-void MainWindow::windowActivated(QWidget* w)
+void MainWindow::windowActivated(QWidget *window)
 {
-    if (w != 0) {
-        MdiWindow *m = (MdiWindow *)ws->activeWindow();
-
+    MdiWindow *m = dynamic_cast<MdiWindow *>(window);
+    if (m != 0) {
         checkClipboardContent();
         invokeDeployAction->setEnabled(true);
         fileSaveAction->setEnabled(m->view()->project()->isModified());
         invokeSchedulingAction->setEnabled(true);
         zoomComboBox->setEnabled(true);
-        zoomComboBox->setEditText
+        zoomComboBox->setCurrentText
             (QString::number(m->zoomLevel() * 100.0) + "%");
         invokeSchedulingAction->setEnabled(true);
         fileSaveAsAction->setEnabled(true);
@@ -1134,7 +1141,7 @@ void MainWindow::zoomTo(const QString& level)
     double zoom = level_.toInt(&success);
     if (success) {
         zoom /= 100.0;
-        MdiWindow *m = (MdiWindow *)ws->activeWindow();
+        MdiWindow *m = dynamic_cast<MdiWindow *>(ws->activeWindow());
         if (m != 0) {
             m->setZoomLevel(zoom);
             m->resizeCanvas();

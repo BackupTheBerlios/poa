@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.28 2003/12/16 12:25:13 keulsn Exp $
+ * $Id: gridcanvas.cpp,v 1.29 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -79,6 +79,7 @@ void GridCanvas::addView(AbstractModel *item, int x, int y)
         }
         (*it)->setZ(z);
         (*it)->show();
+        ensureVisibility(*it);
     }
     connect(item, SIGNAL(updated()), this, SLOT(updateAll()));
     update();
@@ -129,6 +130,16 @@ void GridCanvas::drawBackground(QPainter &painter, const QRect &clip)
         for (int y = minY; y <= maxY; y += gridSize) {
             painter.drawLine(clip.left() - 1, y, clip.right() + 1, y);
         }
+    }
+}
+
+void GridCanvas::ensureVisibility(QCanvasItem *item)
+{
+    QRect rect = item->boundingRect();
+    QSize newSize = size().expandedTo(QSize((int)(item->x() + rect.width()),
+                                            (int)(item->y() + rect.height())));
+    if (newSize.width() > width() || newSize.height() > height()) {
+        resize(newSize.width(), newSize.height());
     }
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mdiwindow.cpp,v 1.22 2004/01/12 14:35:51 squig Exp $
+ * $Id: mdiwindow.cpp,v 1.23 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,7 +60,7 @@ MdiWindow::MdiWindow(CanvasView *view, QWidget* parent,
 
 MdiWindow::~MdiWindow()
 {
-    // no need to delete child widgets, Qt does it all for us
+    delete view_->project();
 }
 
 CanvasView *MdiWindow::view() const
@@ -68,10 +68,9 @@ CanvasView *MdiWindow::view() const
     return view_;
 }
 
-void MdiWindow::closeEvent( QCloseEvent *e )
+void MdiWindow::closeEvent(QCloseEvent *e)
 {
-    Project *project = MainWindow::instance()->activeView()->project();
-    if (project != 0 && project->isModified()) {
+    if (view()->project()->isModified()) {
         int ans = QMessageBox::information
             (this, "POA", "The document contains unsaved changes\n"
              "Do you want to save the changes before exiting?",
@@ -90,7 +89,8 @@ void MdiWindow::closeEvent( QCloseEvent *e )
             e->ignore();
             break;
         }
-    } else {
+    }
+    else {
         e->accept();
     }
 }

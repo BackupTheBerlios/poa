@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.34 2004/01/21 22:28:46 squig Exp $
+ * $Id: mainwindow.h,v 1.35 2004/01/21 23:38:21 squig Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,6 @@
 #include "mdiwindow.h"
 class CanvasView;
 class ConnectorRouter;
-class Project;
 
 #include <qvariant.h>
 #include <qmainwindow.h>
@@ -168,11 +167,14 @@ private:
     void initializeToolbars();
     void routeSelected(ConnectorRouter *router);
     void zoomStepwise(int step);
-    /** Creates a new project, stores it to the given location and deletes it reference. */
+
+    /**
+     * Creates a new project, stores it to the given location and
+     * deletes it.
+     */
     void createNewProject(QString path);
 
     QWorkspace* ws;
-    Project *project_;
     static const uint DEFAULT_ZOOM_LEVEL;
 
     LibraryWindow *libraryWindow_;

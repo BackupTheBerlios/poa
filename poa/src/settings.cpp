@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settings.cpp,v 1.13 2003/09/17 15:38:52 garbeam Exp $
+ * $Id: settings.cpp,v 1.14 2003/10/01 15:55:17 squig Exp $
  *
  *****************************************************************************/
 #include "settings.h"
@@ -214,17 +214,12 @@ void Settings::setShowGrid(bool showGrid)
 
 QString Settings::templatePath()
 {
-    return get("Template Path");
-}
-
-QString Settings::terminalCmd()
-{
-    return get("Terminal");
+    return get("Template Path", "templates/cpu_template.cpp");
 }
 
 QString Settings::compilerCmd()
 {
-    return get("Compiler");
+    return get("Compiler", "gcc -v");
 }
 
 QString Settings::editorCmd()

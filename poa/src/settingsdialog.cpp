@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.9 2003/09/19 11:47:37 garbeam Exp $
+ * $Id: settingsdialog.cpp,v 1.10 2003/10/01 15:55:17 squig Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -130,8 +130,8 @@ void SettingsDialog::setup()
 
     // path tab
     editorLineEdit->setText(s->get("Editor"));
-    compilerLineEdit->setText(s->get("Compiler"));
-    cTemplateLineEdit->setText(s->get("Template Path"));
+    compilerLineEdit->setText(s->compilerCmd());
+    cTemplateLineEdit->setText(s->templatePath());
     downloadLineEdit->setText(s->get("Download Path"));
 }
 

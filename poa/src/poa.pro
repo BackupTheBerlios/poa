@@ -19,11 +19,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #
-# $Id: poa.pro,v 1.50 2003/10/01 15:26:45 squig Exp $
+# $Id: poa.pro,v 1.51 2003/10/01 15:55:17 squig Exp $
 #
 ###############################################################################
 
-CONFIG += debug thread
+#CONFIG += debug 
+CONFIG += release
+CONFIG += thread
 
 TEMPLATE = app
 INCLUDEPATH += .
@@ -33,7 +35,8 @@ QMAKE_TARGET_DESTDIR = poa-0.1.0
 QMAKE_DEL_DIR = rm -rf
 #QMAKE_CXXFLAGS = -DVERSION=0.1.0
 
-DISTFILES += BUGS COPYING README TODO icons/*.xpm icons/*.png
+DISTFILES += AUTHORS BUGS COPYING README TODO about.html 
+DISTFILES += templates/*.c templates/*.h icons/*.xpm icons/*.png
 
 include(poa.local)
 

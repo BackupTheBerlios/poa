@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.63 2003/10/01 15:53:35 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.64 2003/10/01 15:55:17 squig Exp $
  *
  *****************************************************************************/
 
@@ -87,8 +87,9 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
 
     // restore window settings
     Settings *s = Settings::instance();
-    move(s->getNum("MainWindow/X"), s->getNum("MainWindow/Y"));
-    resize(s->getNum("MainWindow/Width"),s->getNum("MainWindow/Height"));
+    move(s->getNum("MainWindow/X", 0), s->getNum("MainWindow/Y", 0));
+    resize(s->getNum("MainWindow/Width", 640),
+           s->getNum("MainWindow/Height", 480));
 
     // initialize status bar implicitly
     (void)statusBar();
@@ -107,8 +108,6 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     initializeActions();
     initializeToolbars();
     initializeMenu();
-
-    QMimeSourceFactory::defaultFactory()->setImage("poalogo", QImage(ICON_PATH + "poa.gif"));
 
     connectActions();
     connect(Settings::instance(), SIGNAL(recentProjectsChanged()),

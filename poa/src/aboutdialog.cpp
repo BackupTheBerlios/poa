@@ -18,13 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: aboutdialog.cpp,v 1.5 2003/09/21 21:05:51 vanto Exp $
+ * $Id: aboutdialog.cpp,v 1.6 2003/10/01 15:55:17 squig Exp $
  *
  *****************************************************************************/
 #include "aboutdialog.h"
 
+#include "poa.h"
+
 #include <qvariant.h>
 #include <qfile.h>
+#include <qimage.h>
 #include <qtextedit.h>
 
 /**
@@ -38,7 +41,11 @@ AboutDialog::AboutDialog(QWidget* parent, const char* name, bool modal,
     this->setOkButton();
     this->resize(400, 400);
 
-    addFileTab("README", tr("About"));
+    // create the mime source for the img tag in about.html
+    QMimeSourceFactory::defaultFactory()->setImage
+        ("poalogo", QImage(ICON_PATH + "poa-logo.png"));
+
+    addFileTab("about.html", tr("About"));
     addFileTab("AUTHORS", tr("Authors"));
     addFileTab("COPYING", tr("License Agreement"));
 }

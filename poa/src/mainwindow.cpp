@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.99 2004/01/22 12:07:42 squig Exp $
+ * $Id: mainwindow.cpp,v 1.100 2004/01/22 12:11:29 squig Exp $
  *
  *****************************************************************************/
 
@@ -1095,7 +1095,6 @@ void MainWindow::windowActivated(QWidget *window)
         fileSaveAsAction->setEnabled(true);
         filePrintAction->setEnabled(true);
         editModeActionGroup_->setEnabled(true);
-        editModeActionGroup_->setEnabled(false);
         CanvasView::EditMode mode = m->view()->editMode();
         editModeAnnotateAction_->setOn(mode == CanvasView::Annotate);
         editModeDefaultAction_->setOn(mode == CanvasView::Default);

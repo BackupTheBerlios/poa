@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.83 2004/01/19 11:23:07 squig Exp $
+ * $Id: mainwindow.cpp,v 1.84 2004/01/20 15:11:13 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -724,7 +724,8 @@ void MainWindow::helpContents()
 void MainWindow::helpAbout()
 {
     AboutDialog *dialog = new AboutDialog(this);
-    dialog->show();
+    dialog->exec();
+    delete dialog;
 }
 
 MainWindow *MainWindow::instance()
@@ -744,6 +745,7 @@ void MainWindow::openBlockConf()
             AbstractModel *model = ((BlockView *)topItem)->model();
             if (INSTANCEOF(model, MuxModel)) {
                 MuxConfDialog *dialog = new MuxConfDialog((MuxModel *)model);
+                dialog->show();
                 if (dialog->exec() == QDialog::Accepted) {
                     project_->setModified(true);
                 }

@@ -11,3 +11,4 @@ poa.local
 *.bbg
 *.da
 *.gcov
+*.lo

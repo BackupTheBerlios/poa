@@ -18,51 +18,51 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.h,v 1.9 2003/12/10 13:40:01 papier Exp $
+ * $Id: downloadmanager.h,v 1.1 2003/12/10 13:40:01 papier Exp $
  *
  *****************************************************************************/
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
 
-#include <qvariant.h>
-#include <qtabdialog.h>
+#ifndef POA_DOWNLOADMANAGER_H
+#define POA_DOWNLOADMANAGER_H
 
-class QLineEdit;
-class QPushButton;
-class QSpinBox;
+#include "cpumodel.h"
+
+#include <qdir.h>
+#include <qfile.h>
+#include <qstring.h>
 
 /**
- * Provides the settings dialog.
- * 
- * The settings dialog has mutliple tabs.
+ * Manages a portion of binary code.
  */
-class SettingsDialog : public QTabDialog
-{ 
+class DownloadManager : public QObject
+{
+
     Q_OBJECT
 
 public:
-    SettingsDialog(QWidget* parent = 0, const char* name = 0, 
-                   bool modal = FALSE, WFlags fl = 0 );
-    ~SettingsDialog();
 
-    QLineEdit* compilerLineEdit;
-    QLineEdit* cTemplateLineEdit;
-    QLineEdit* downloadLineEdit;
-    QLineEdit* editorLineEdit;
-    QSpinBox* gridSizeSpinBox_;
+    /**
+     * DownloadManager singleton instance.
+     */
+    static DownloadManager *instance();
+    
+    /**
+     * returns <code>true</code> if the download of the srec file was
+     * successful.
+     */
+    bool download(QString filename);
+
+protected:
+    DownloadManager();
+    ~DownloadManager();
+
+
+private:
+    static DownloadManager* instance_;
 
 public slots:
-    void applySettings();
-    void chooseExternalEditor();
-    void chooseExternalCompiler();
-    void chooseTemplatePath();
-    void chooseDownloadTool();
 
-private :
-    QWidget *createGeneralTab();
-    QWidget *createPathTab();
-    QWidget *createDownloadTab();
-    void setup(); 
+
 };
 
-#endif // SETTINGSDIALOG_H
+#endif // POA_DOWNLOADMANAGER_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: deployprojectwizard.cpp,v 1.6 2003/12/03 12:57:41 papier Exp $
+ * $Id: deployprojectwizard.cpp,v 1.7 2003/12/10 13:40:01 papier Exp $
  *
  *****************************************************************************/
 
@@ -27,7 +27,8 @@
 #include "abstractmodel.h"
 #include "blockmodel.h"
 #include "pinmodel.h"
-
+#include "codemanager.h"
+#include "cpumodel.h"
 
 #include <qvariant.h>
 #include <qgroupbox.h>
@@ -43,6 +44,8 @@
 #include <qimage.h>
 #include <qpixmap.h>
 #include <qptrlist.h>
+#include <qfileinfo.h>
+#include <qdatetime.h>
 
 /* 
  *  Constructs the DeployProjectWizard.
@@ -210,8 +213,19 @@ bool DeployProjectWizard::compileAll(QPtrList<AbstractModel> blocks){
   AbstractModel *block;
   while ( (block = it.current()) != 0) {
     ++it;
-    //  if  Bock is CPU...
-
+    //  if  block is CPU {
+    //    if block has binary file {
+    //      if binary file date < fileName(block).lastModified() {
+    //        if compile(block) != alles ok returncode compile error
+    //      }
+    //    }
+    //    else {
+    //      if block has source file {
+    //        if compile(block) != alles ok returncode compile error
+    //      }
+    //      else error cpu without source
+    //   }
+    // }
     
   }
   return true;

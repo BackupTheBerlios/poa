@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: settingsdialog.cpp,v 1.10 2003/10/01 15:55:17 squig Exp $
+ * $Id: settingsdialog.cpp,v 1.11 2003/12/10 13:40:01 papier Exp $
  *
  *****************************************************************************/
 #include "settingsdialog.h"
@@ -26,12 +26,15 @@
 #include "settings.h"
 
 #include <qvariant.h>
+#include <qbuttongroup.h>
 #include <qfiledialog.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qradiobutton.h>
 #include <qspinbox.h>
+
 
 /**
  * Constructs the dialog.
@@ -40,7 +43,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
                                WFlags fl)
     : QTabDialog(parent, name, modal, fl)
 {
-    setCaption(tr("Settingss"));
+    setCaption(tr("Settings"));
     setApplyButton();
     setCancelButton();
     setOkButton();
@@ -48,6 +51,7 @@ SettingsDialog::SettingsDialog(QWidget* parent, const char* name, bool modal,
 
     this->addTab(createGeneralTab(), tr("General"));
     this->addTab(createPathTab(), tr("Paths"));
+    this->addTab(createDownloadTab(), tr("Download"));
     setup();
 
     resize(sizeHint());//resize(400, 400);
@@ -116,6 +120,22 @@ QWidget *SettingsDialog::createPathTab()
     connect(button, SIGNAL(clicked()), this, SLOT(chooseDownloadTool()));
 
     return tab;
+}
+
+/**
+ * Returns the download tab.
+ */
+QWidget *SettingsDialog::createDownloadTab()
+{
+  QWidget *tab = new QWidget(this);
+  QGridLayout *box =new QGridLayout(tab, 1, 1, 4, -1, 0);
+  QButtonGroup *ports = new QButtonGroup(tr("Serial Port:"), tab, 0);
+  box->addWidget(ports, 0, 0, 0);
+  QGridLayout *grid = new QGridLayout(ports, 2 , 1, 4, -1, 0);
+  grid->addWidget(new QRadioButton(tr("/dev/ttyS0 (POSIX) Com1 (MS)"), ports,0 ), 0, 0);
+  grid->addWidget(new QRadioButton(tr("/dev/ttyS1 (POSIX) Com2 (MS)"), ports,0 ), 1, 0);
+
+  return tab;
 }
 
 /**

@@ -249,7 +249,7 @@ int Posix_QextSerialPort::bytesWaiting() {
             UNLOCK_MUTEX();
             return -1;
         }
-        if (n==-1 || ioctl(Posix_File->handle()), FIONREAD, &bytesQueued)==-1) {
+        if (n==-1 || ioctl(Posix_File->handle(), FIONREAD, &bytesQueued)==-1) {
             translateError(errno);
             UNLOCK_MUTEX();
             return -1;
@@ -1019,7 +1019,7 @@ void Posix_QextSerialPort::setDtr(bool set) {
     LOCK_MUTEX();
     if (portOpen) {
         int status;
-        ioctl(Posix_File->handle()), TIOCMGET, &status);
+        ioctl(Posix_File->handle(), TIOCMGET, &status);
         if (set) {
             status|=TIOCM_DTR;
         }

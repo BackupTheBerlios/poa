@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectaction.cpp,v 1.8 2003/09/21 21:05:51 vanto Exp $
+ * $Id: connectaction.cpp,v 1.9 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -49,7 +49,7 @@ ConnectAction::ConnectAction(CanvasView *view, QMouseEvent *e,
     line_.setPen(QPen(Qt::black, 1, Qt::DashLine));
     line_.show();
 
-    // mark all pins
+    // mark all pins that are connectable
     QCanvasItemList allItems = view->canvas()->allItems();
     for (QCanvasItemList::iterator it = allItems.begin();
          it != allItems.end(); ++it) {
@@ -102,7 +102,6 @@ void ConnectAction::mouseReleaseEvent(QMouseEvent *e)
         if (target != 0 && target != source_) {
             // target is a PinView indeed
             source_->pinModel()->attach(target->pinModel());
-            target->pinModel()->attach(source_->pinModel());
             // add connector views
             view()->project()->createConnectorViews(source_, target);
 

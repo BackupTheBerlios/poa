@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.h,v 1.6 2003/09/23 10:53:39 garbeam Exp $
+ * $Id: librarywindow.h,v 1.7 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 #ifndef LIBRARYWINDOW_H
@@ -91,7 +91,7 @@ class LibraryWindow : public QDockWindow
     Q_OBJECT
 
 public:
-    
+
     /**
      * Creates a library window an docks it to the given place on the given widget
      */

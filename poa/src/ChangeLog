@@ -1,3 +1,9 @@
+2003-12-17  Steffen Pingel  <squig@users.sourceforge.net>
+
+	* librarywindow.cpp (LibraryWindow): Tweaked colors.
+
+	* pinmodel.cpp (setType): Do not highlight already connected pins.
+
 2003-09-30  Tammo van Lessen  <vanto@users.sourceforge.net>
 
 	* project.cpp: connector (de)serialization changed, id bug fixed

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: librarywindow.cpp,v 1.22 2003/12/10 14:43:35 squig Exp $
+ * $Id: librarywindow.cpp,v 1.23 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 #include "librarywindow.h"
@@ -30,11 +30,13 @@
 #include "pinmodel.h"
 #include "util.h"
 
+#include <qapplication.h>
 #include <qdir.h>
 #include <qdom.h>
 #include <qdragobject.h>
 #include <qfileinfo.h>
 #include <qlayout.h>
+#include <qpalette.h>
 #include <qsplitter.h>
 #include <qtextbrowser.h>
 #include <qvariant.h>
@@ -65,8 +67,11 @@ LibraryWindow::LibraryWindow(Place p, QWidget* parent, const char* name,
     muxListViewItem = new QListViewItem(moduleListView, tr("Mux"));
     muxListViewItem->setOpen(TRUE);
 
-
     descriptionTextBrowser = new QTextBrowser(splitter);
+    QPalette palette = QApplication::palette();
+    descriptionTextBrowser->setFrameStyle(NoFrame);
+    descriptionTextBrowser->setPaper
+            (palette.brush(QPalette::Normal, QColorGroup::Background));
 
     initializeLibrary();
 

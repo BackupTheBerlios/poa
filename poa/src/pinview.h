@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.h,v 1.22 2003/12/03 16:06:20 squig Exp $
+ * $Id: pinview.h,v 1.23 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -99,6 +99,11 @@ public:
      * Returns the side on that <code>this</code> docks onto a blockview
      */
     DockPosition dockPosition();
+
+    /**
+     * Returns true if this pin is connected.
+     */
+    bool isConnected();
 
     /**
      * Returns the corresponding model of this view as a PinModel.

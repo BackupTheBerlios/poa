@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.35 2003/12/09 10:27:24 squig Exp $
+ * $Id: project.cpp,v 1.36 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -129,7 +129,8 @@ void Project::createConnectorViews(PinView *source, PinView *target)
     GridCanvas *canvas;
     for (QPtrListIterator<GridCanvas> it(canvasList_);
          (canvas = it.current()) != 0; ++it) {
-        ConnectorViewList *viewList = new ConnectorViewList(source, target, canvas);
+        ConnectorViewList *viewList
+            = new ConnectorViewList(source, target, canvas);
         canvas->addConnectorView(viewList);
     }
 }
@@ -293,10 +294,14 @@ void Project::deserialize(QDomDocument *document) {
 
             for (it = canvasItems.begin(); it != canvasItems.end(); ++it) {
                 PinView *pv = dynamic_cast<PinView*>(*it);
-                if (pv != 0 && pv->parent()->model() == sb && pv->pinModel()->id() == sid) {
+                if (pv != 0 && pv->parent()->model() == sb
+                    && pv->pinModel()->id() == sid) {
+
                     spv = pv;
                 }
-                if (pv != 0 && pv->parent()->model() == tb && pv->pinModel()->id() == tid) {
+                if (pv != 0 && pv->parent()->model() == tb
+                    && pv->pinModel()->id() == tid) {
+
                     tpv = pv;
                 }
             }

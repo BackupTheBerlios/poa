@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.35 2003/12/10 14:15:58 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.36 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -60,9 +60,6 @@ PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
 
 PinModel::~PinModel()
 {
-    if (connected_ != 0) {
-        connected_->detach();
-    }
     detach();
 
     if (view_) {
@@ -81,7 +78,12 @@ void PinModel::setParent(BlockModel *parent) {
 
 void PinModel::attach(PinModel *connectTo)
 {
-    connected_ = connectTo;
+    Q_ASSERT(connected_ == 0);
+    Q_ASSERT(connectTo->connected_ == 0);
+
+    this->connected_ = connectTo;
+    connectTo->connected_ = this;
+
     // FIX: update views
 }
 
@@ -89,6 +91,7 @@ void PinModel::attach(PinModel *connectTo)
 void PinModel::detach()
 {
     if (connected_ != 0) {
+        connected_->connected_ = 0;
         connected_ = 0;
         emit detached();
     }
@@ -101,9 +104,10 @@ PinModel *PinModel::connected()
 
 bool PinModel::isConnectable(PinModel *toPin)
 {
-    return (type() == EPISODIC
-            || toPin->type() == EPISODIC
-            || type() != toPin->type());
+    return (this->connected_ == 0 && toPin->connected_ == 0
+            && (type() == EPISODIC
+                || toPin->type() == EPISODIC
+                || type() != toPin->type()));
 }
 
 PinModel::PinType PinModel::type()

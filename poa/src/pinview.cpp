@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.26 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: pinview.cpp,v 1.27 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -150,6 +150,11 @@ LineDirection PinView::connectorTargetDir()
         return UP;
     }
     return dir;
+}
+
+bool PinView::isConnected()
+{
+    return pinModel()->connected() != 0;
 }
 
 PinModel *PinView::pinModel()

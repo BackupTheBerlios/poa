@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.49 2003/12/11 15:40:10 keulsn Exp $
+ * $Id: blockview.cpp,v 1.50 2003/12/17 13:49:51 squig Exp $
  *
  *****************************************************************************/
 
@@ -150,15 +150,15 @@ void BlockView::addPinViewsTo(QCanvasItemList &list)
 
 
 void addToList(QValueList<ConnectorViewList*> &list,
-	       QValueList<PinView*> *pins)
+           QValueList<PinView*> *pins)
 {
-    QValueList<PinView*>::const_iterator it;	    
+    QValueList<PinView*>::const_iterator it;
 
     for (it = pins->begin(); it != pins->end(); ++it) {
-	ConnectorViewList *connector = (*it)->connector();
-	if (connector != 0) {
-	    list.prepend(connector);
-	}
+    ConnectorViewList *connector = (*it)->connector();
+    if (connector != 0) {
+        list.prepend(connector);
+    }
     }
 }
 
@@ -166,12 +166,12 @@ void BlockView::arrangeConnectors()
 {
     GridCanvas *ownCanvas = dynamic_cast<GridCanvas*>(canvas());
     if (ownCanvas != 0) {
-	QValueList<ConnectorViewList*> list;
-	
-	addToList(list, &leftPins_);
-	addToList(list, &rightPins_);
-	addToList(list, &bottomPins_);
-	ownCanvas->reRoute(list);
+    QValueList<ConnectorViewList*> list;
+
+    addToList(list, &leftPins_);
+    addToList(list, &rightPins_);
+    addToList(list, &bottomPins_);
+    ownCanvas->reRoute(list);
     }
 }
 
@@ -328,10 +328,16 @@ void BlockView::drawShape(QPainter &p)
     if (model_->name() != 0) {
         int w = width() - DEFAULT_LEFT_BORDER - DEFAULT_RIGHT_BORDER;
         QString label = Util::squeeze(model_->name(), w, p.font());
+        QFont f = p.font();
+        f.setBold(true);
+        p.setFont(f);
         p.drawText(textArea, Qt::AlignHCenter, label);
+        f.setBold(false);
+        p.setFont(f);
+
     }
     currentY += textArea.height() + BlockView::DEFAULT_HEADER_SPACING;
-    p.drawLine(left, currentY, right, currentY);
+    //p.drawLine(left, currentY, right, currentY);
     currentY += BlockView::DEFAULT_HEADER_SPACING;
 
     textArea = QRect(left + BlockView::DEFAULT_LEFT_BORDER,

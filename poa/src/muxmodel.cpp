@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.6 2003/09/23 10:53:39 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.7 2003/09/23 12:15:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -104,6 +104,8 @@ MuxModel::MuxModel(QString type, QString description)
 MuxModel::MuxModel(QDomElement coreElement)
     : AbstractModel(QString::null, QString::null)
 {
+    inputPins_ = new PinVector();
+    outputPins_ = new PinVector();
     if (!coreElement.isNull()) {
         deserialize(coreElement);
     }
@@ -215,7 +217,7 @@ QDomElement MuxModel::serialize(QDomDocument *document)
 {
     QDomElement root = AbstractModel::serialize(document);
     root.setAttribute("name", name());
-    root.setAttribute("mux-type", type());
+    root.setAttribute("block-type", "mux");
 
     for (unsigned i = 0; i < inputPins_->size(); i++) {
         QDomElement pinElem = inputPins_->at(i)->serialize(document);

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.37 2003/09/21 21:05:51 vanto Exp $
+ * $Id: canvasview.cpp,v 1.38 2003/09/23 12:15:40 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -258,10 +258,12 @@ void CanvasView::dropEvent(QDropEvent *e)
                 project()->addBlock(*it);
                 gridCanvas()->addView(*it, pos.x(), pos.y());
 
-                BlockConfDialog *dialog =
-                    new BlockConfDialog((BlockModel *)(*it));
-                dialog->exec();
-                delete dialog;
+                if (INSTANCEOF(*it, BlockModel)) {
+                    BlockConfDialog *dialog =
+                        new BlockConfDialog((BlockModel *)(*it));
+                    dialog->exec();
+                    delete dialog;
+                }
             }
         }
     }

@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Abschlussbericht
-%% $Id: abschlussbericht.tex,v 1.13 2004/06/06 16:03:01 squig Exp $
+%% $Id: abschlussbericht.tex,v 1.14 2004/06/06 23:11:20 squig Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{../common/header}
 \RequirePackage{hhline}
 
-\RCSdef $Revision: 1.13 $
-\RCSdef $Date: 2004/06/06 16:03:01 $
+\RCSdef $Revision: 1.14 $
+\RCSdef $Date: 2004/06/06 23:11:20 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -58,7 +58,7 @@ ausgeführt. Im Folgenden wird ein Überblick über die erzielten
 Ergebnisse, den Projektverlauf und die persönlichen Eindrücke der
 Teilnehmer gegeben.
  
-\section{Projekthintergrund}
+\section{Hintergrund des Projekts}
 
 Es werden viele Neuentwicklungen im Bereich der Werkzeugmaschinen
 gemacht.  Viele dieser Entwicklungen beinhalten neue Kinematiken, wie
@@ -184,18 +184,34 @@ CPLD übertragen werden. Bisher ist nur der Download des kompilierten
 Quellcodes einer einzelnen CPU möglich, da hardwareseitig bisher keine
 Unterstützung für mehrere CPUs vorgesehen ist.  
 
-Vor der Übertragung wird das Projekt auf Konsistenz geprüft
+Vor der Übertragung wird das Projekt auf Konsistenz geprüft. In einem
+Dialog wird in einer Baumansicht eine Liste mit möglichen Problem, wie
+beispielsweise nicht verbundene Blöcke, mit einer Detailierten
+Beschreibung angezeigt. Je nach Art des Problems kann über eine
+Schaltfläche ein Lösungsvorschlag akzeptiert werden.
 
 Eine vollständige Beschreibung von POA befindet sich im Handbuch.
 
 \subsection{Technische Umsetzung}
+\label{design}
 
 Die Architektur von POA lässt sich in stark zusammenhängende Module
-aufteilen, die eine gerine Kopplung aufweisen. Der POA Entwurf wurde
-nach folgenden Kritieren optimiert:
+aufteilen, die eine gerine Kopplung aufweisen. 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=10cm]{design}
+  \caption{POA Architektur}
+\end{figure}
+
+Im Model und Project Modul wird das Datenmodell verwaltet. 
+
+Die Module Scheduling, Problemmanager und Download...
+
+Der POA Entwurf wurde nach folgenden Kritieren optimiert:
 
 \begin{itemize}
-\item Leichte Erweiterbarkeit
+\item Einfache Erweiterbarkeit
 \item Hohe Änderbarkeit
 \end{itemize}
 
@@ -206,14 +222,24 @@ verwendet, um das einfache Verständnis des Quellcodes zu erhöhen. Es
 wurden unter anderen das Model-View-Controller, Strategie und das
 Singletonmuster benutzt.
 
+Eine detailierte Beschreibung der Architektur befindet sich im
+Entwurfsdokument.
+
 \section{Dokumente}
 
-\subsubsection{Angebot}
-
 Neben der Programmierumgebung sind ist im Laufe des Projekts
-Dokumentation entstanden. In einem knapp 20-seitigen Angebot wurden
-die Anforderungen und ein Projektablaufplan mit dem Auftraggeber
-vereinbart. 
+Dokumentation entstanden.
+
+\subsubsection{Angebot}
+\label{angebot}
+
+In einem knapp 20-seitigen Angebot wurden die Anforderungen und ein
+Projektablaufplan mit dem Auftraggeber vereinbart. Das Angebot
+beinhaltete desweiteren eine Risikioanalyse und eine Beschreibung der
+Prozessmodells und der geplanten Projekorganisation. In einem
+angehängten Begriffslexikon wurde Begriffe der Problemdomäne
+definiert, die zur Kommunikation mit dem Auftraggeber und innerhalb
+des Teams verwendet wurden.
 
 \subsubsection{Entwurf}
 
@@ -226,6 +252,7 @@ Entwurfsdokument wird durch ein A0 Poster, das die gesammte
 Klassenstruktur als UML Diagramm zeigt, ergänzt.
 
 \subsubsection{Handbuch}
+\label{handbuch}
 
 Dem Benutzer steht ein 40-seitiges mit Bildschirmfotos illustriertes
 Handbuch zur Verfügung. Das Handbuch enthält einen Referenzteil, der
@@ -266,116 +293,130 @@ gcover in der Sprache Java entwickelt. GCover wertet die Ausgabe von
 gcov aus und stellt die Anweisungsüberdeckung in einem HTML Frameset
 ähnlich des verbreiteten JavaDoc von Sun dar.
 
-GCover generiert eine Übersichtsseite, die die Anweisungs- und
-Zweigüberdeckung aller Dateien anzeigt. Bei Auswahl einer Datei wird
-der Quellcode der Datei angezeigt. Die Zahl in der linken Spalte gibt
-die Zeilennummer und die Anzahl der Ausführungen der jeweiligen Zeile
-an. Nicht überdeckte Zeilen werden rot unterlegt.
-
 \begin{figure}[h!]
   \centering
   \includegraphics[width=15cm]{gcover-file}
   \caption{Anweisungsüberdeckung einer einzelnen Datei}
 \end{figure}
 
+GCover generiert eine Übersichtsseite, die die Anweisungs- und
+Zweigüberdeckung aller Dateien anzeigt. Bei Auswahl einer Datei wird
+der Quellcode der Datei angezeigt. Die Zahl in der linken Spalte gibt
+die Zeilennummer und die Anzahl der Ausführungen der jeweiligen Zeile
+an. Nicht überdeckte Zeilen werden rot unterlegt.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektorganisation}
 
 \section{Projektrahmen}
 
-Auftraggeber, Auftragnehmer
+Als Auftrag zur Entwicklung von POA wurde von Dipl.-Ing. Christian
+Kramer vergeben. Er war als Kunde für die Formulierug der
+Anforderungen und Abnahme der Anfoderungen zuständig. Christian Kramer
+war auch bei fachlichen Fragen immer für das Team erreichbar und war
+stets bereit auch kurzfristige Terminvereinbarungen einzugehen. Als
+Betreuer stand Dipl.-Ing. Peter Pruschek zur Verfügung.
 
 \section{Das Team}
 
-Das Team bestand aus sieben Studenten der Software-Technik, die zu
-Beginn des Projekts im sechsten Semester studierten. 
-
-\begin{itemize}
-\item Necati Aydin
-\item Anselm Garbe
-\item Stefan Hauser
-\item Steffen Keul
-\item Marcel Kilgus
-\item Steffen Pingel
-\item Tammo van Lessen
-\end{itemize}
-
+Der Auftragnehmer bestand aus einem Entwicklerteam von sieben
+Studenten der Softwaretechnik, die zu Beginn des Projekts im sechsten
+Semester studierten, namentlich Necati Aydin, Anselm Garbe, Stefan
+Hauser, Steffen Keul, Marcel Kilgus, Steffen Pingel und Tammo van
+Lessen.
 
 \subsection{Rollen}
 
-Formale Rollen wurden mangels Notwendigkeit nur wenige festgelegt. 
+Auf die vergabe von formalen Rollen wurden mangels Notwendigkeit
+weitgehend verzichtet. Die Zuteilung der Aufgaben erfolgte
+gemeinschaftlich soweit möglich auf Basis freiwilliger Übernahme
+während gemeinsamer Teamtreffen. Wenn eine Aufgabe von keinem der
+Entwickler übernommen wurde, wurde diese vom Projektleiter zugeteilt.
+
+Ein Verzicht auf eine explizite Zuweisung der Qualitätssicherung ist
+als Mangel anzusehen. Leider wollte keiner der Entwickler diese Rolle
+übernehmen. Ausgeglichen wurde das durch den kooperativen
+Entwicklungsstyl. Die Dokumente wurden in der Regel von mindesten zwei
+Entwicklern gemeinsam verfasst und grundsätzlich anschliessend von dem
+gesammten Team in einem Review geprüft. Die einzelnen Quellcode
+Dateien konnten vom jedem Entwickler eingesehen und geändert werden
+(siehe auch \ref{owners per file}), damit wurde die Qualität laufend
+in Form von Peer-Reviews gesichert. 
 
 \subsubsection{Projektleiter}
 
 Der Projektleiter war für den Kontakt mit dem Kunden und für die
-Koordination des Teams zuständig. 
-
-Die Rolle des Projektleiters wurde von Steffen Pingel übernommen.
+Koordination des Teams zuständig. Im Sinne der Organisation von
+Reviews hat der Projektleiter teilweise die Aufgaben der
+Qualitätssicherung übernommen. Die Rolle des Projektleiters wurde von
+Steffen Pingel übernommen.
 
 \subsubsection{Konfiguationsmanager}
 
 Der Konfiguationsmanager war für die Verwaltung des zentralen
 Repositories in dem sowohl die Dokumente als auch der Quellcode
-gespeichert wurde zuständig. 
-
-Desweiteren wurden vom Konfiguationsmanager Richtlinien zur
-Formatierung des Quellcodes und zur Benutzung des Repositories
-erstellt. 
-
-Die Rolle des Konfiguationsmanagers wurde von Anselm Garbe übernommen.
+gespeichert wurde zuständig. Desweiteren wurden vom
+Konfiguationsmanager Richtlinien zur Formatierung des Quellcodes und
+zur Benutzung des Repositories erstellt. Die Rolle des
+Konfiguationsmanagers wurde von Anselm Garbe übernommen.
 
 \subsubsection{Entwickler}
 
 Die Aufgabe der Entwickler war die Erstellung des Quellcodes und das
-Verfassen der Dokumente.
-
-Die Rolle der Entwickler wurde von allen Teilnehmern belegt.
+Verfassen der Dokumente. Die Rolle der Entwickler wurde von allen
+Teilnehmern belegt.
 
 \section{Entwicklungsphilosophie}
 
-- GPL
-- Transparenz
-
+Die flache und demokratische Organisationsstruktur des Projekts ist
+ein Abbild der kooperativen Entwicklungsphilosophie. Auch gegenüber
+dem Auftraggeber waren Transparenz und Kooperation die zentralen
+Anliegen des Teams. Über die Internetseite des Projekts war während
+der Implementierungsphase über den Tracker (siehe auch \ref{jira}) und
+das Quellcode Repository (siehe auch \ref{berlios}) jederzeit Einblick
+in den aktuellen Fortschritt sowohl für die Entwickler als auch für
+den Auftraggeber möglich.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Projektablauf}
 
 \section{Prozessmodell}
 
-Als Prozessmodell wurde ein iteratives Phasenmodell gewählt wobei
-nicht alle Phasen in den einzelnen Iterationen ausgeführt wurden. Die
+Als Prozessmodell wurde ein Inkrementell-Iteratives
+Prozessmodell\footnote{siehe Balzert, Helmut: Lehrbuch der
+  Software-Technik, Band 2, Spektrum, 1998} gewählt wobei nicht alle
+Phasen in den einzelnen Iterationen ausgeführt wurden. Die
 Anforderungsanalyse-, Spezifikations- und Entwurfsphase wurden nur zu
-Beginn des Projekts einmalig durchlaufen. Auch ein Gesammttest wurde
-nur zum Ende des Projekts ausgeführt. 
+Beginn des Projekts einmalig durchlaufen. Auch ein Systemtest wurde
+nur zum Ende des Projekts ausgeführt.
 
-Die einzelnen Iterationen, genannt Sprints, bestanden jeweils aus
-einer Anforderungsanalyse-, Entwurfs- und Kodierungsphase, die von
-einem kontinuierlichen Regressionstest begleitet wurde. Zu Ende jeder
-Iteration wurde das weiter entwickelte Produkt ausgeliefert und vom
-Kunden einem Akzeptanztest unterzogen. 
+Die einzelnen Iterationen, im Angebotsdokument als Sprints bezeichnet,
+bestanden jeweils aus einer Anforderungsanalyse-, Entwurfs- und
+Kodierungsphase, die von einem kontinuierlichen Regressionstest
+begleitet wurde. Zu Ende jeder Iteration wurde das weiter entwickelte
+Produkt ausgeliefert und vom Kunden einem Akzeptanztest unterzogen.
 
 Das Prozessmodell wurde gewählt um dem Forschungscharakter des
-Projekts gerecht zu werden. Zu Begin des Projekts war unklar wie
-stark sich die Anforderungen während des Projekts ändern
-würden. Deswegen wurde zu Beginn jeder Iteration
+Projekts gerecht zu werden. Zu Begin des Projekts war unklar wie stark
+sich die Anforderungen während des Projekts ändern würden. Deswegen
+wurde zu Anfang jeder Iteration eine erneute Anforderungsanalyse mit
+dem Auftraggeber durchgeführt während der auch eine Rückmeldung über
+das Ergebniss der vorherigen Iteration eingeholt wurde.
 
-...and here the tale suddenly ended. Which reminds me of this:
+Im Nachhinein lässt sich feststellen, das die Anfoderungen im Laufe
+des Projekts nur geringfügig von den zu Anfang des Projekts
+ermittelten abgwichen sind. Dennoch erwieß sich der zusätzliche
+Aufwand mehrerer Iterationen im Vergleich zu einer einzigen, wie es
+das klassische Phasenmodell vorsieht, als sinnvoll. Es war dem
+Auftraggeber möglich eine priorisierte Liste der Anforderungen zu
+formulieren, so daß die wichtigsten Anforderungen zuerst umgesetzt
+wurden. Da am Ende jeder Iteration eine lauffähige Version
+ausgeliefert wurde, hätte im Falle eines Scheiterns des Projekts ein
+Ergebniss mit dem zu dem jeweiligen Zeitpunkt maximalen
+Funktionsumfang zur Verfügung gestanden.
 
-\begin{verbatim}
-MAYNARD:  It reads, 'Here may be found the last words of Joseph
-    of Aramathea.  He who is valiant and pure of spirit may find
-    the Holy Grail in the Castle of uuggggggh'.
-
-ARTHUR:  What?
-
-MAYNARD: '... the Castle of uuggggggh'.
-
-BEDEMIR:  What is that?
-
-MAYNARD:  He must have died while carving it.
-
-[Monthy Python and the Holy Grail]
-\end{verbatim}
+Erfreulicherweise ist keines der im Angebot aufgeführten Risiken, die
+zu einem Projektabbruch hätten führen können eingetreten. 
 
 \section{Projektplan}
 
@@ -405,18 +446,22 @@ geprägt.
     \hline
        & & 1400\\
   \end{tabular}
-  \caption{Ursprünglicher Zeitplan}
+  \caption{Ursprünglicher Zeitplan aus dem Angebot}
 \end{figure}
 
-Die ursprünglich geplanten fünf Sprints wurden auf drei Reduziert. Zum
-Einen stellte sich während des Projekts heraus, das die Anforderungen
-abgesehen von kleinen zusätzlichen funktionalen Anforderungen
-weitgehend stabil waren. Zum Anderen war der zeitliche Aufwand,
-bedingt durch organisatorische Tätigkeiten wie eine
-Produktpräsentation am Ende jedes Sprints höher als erwartet. 
+Die ursprünglich geplanten fünf Sprints wurden auf drei Reduziert und
+werden im folgenden als Iterationen bezeichnet. Zum Einen stellte sich
+während des Projekts heraus, das die Anforderungen abgesehen von
+kleinen zusätzlichen funktionalen Anforderungen weitgehend stabil
+waren. Zum Anderen war der zeitliche Aufwand, bedingt durch
+organisatorische Tätigkeiten wie eine Produktpräsentation am Ende
+jeder Iteration höher als erwartet.
 
 Die vereinbarten Meilensteine wurde eingehalten bzw. im mit dem
-Einverständnis des Kunden geringfügig verschoben. 
+Einverständnis des Kunden geringfügig verschoben. Durch eine
+kontinuierliche Fortschrittskontrolle und Planungsanpassung wurde vom
+Team dazu beigetragen die Wahrscheinlichkeit einer Verzögerung
+frühzeitig erkennbar zu machen.
 
 Als Schwierig erwiess sich die Koordination der individuellen
 Wochenpläne. Bedingt durch unterschiedlich gewählte Vorlesungen,
@@ -456,30 +501,38 @@ Aufgaben verteilt.
   \caption{Projektablauf}
 \end{figure}
 
-\subsection{Anforderungsanalyse}
+Im folgenden wird eine kurze Beschreibung der einzelnen Phasen und der
+erreichten Ergebnisse angegeben. Zu den Iterationen sind jeweils nur
+die wichtigsten Änderungen an der Software angegeben. Eine detailierte
+Liste ist auf der POA Internetseite\footnote{http://poa.berlios.de/changes-report.html} zu finden.
 
-Während der Anforderungsanalyse wurde Anforderungen des Kunden
-ermittelt. Die Ergebnisse wurden in einem Angebot dokumentiert, das
-dem Kunden zur Abnahme vorgelegt wurde. Das Angebot beinhaltete
-ausserdem eine Zeitplan und eine Beschreibung des geplanten
-Projektablaufs. 
+\subsection{Analyse und Angebot}
 
-\subsection{Spezifikation}
+Während der Anforderungsanalyse wurde in mehreren Treffen die
+Anforderungen des Kunden ermittelt. Die Ergebnisse wurden in einem
+Angebot dokumentiert, das dem Kunden zur Abnahme vorgelegt wurde. Das
+Angebot beinhaltete eine Beschreibung des geplanten Projekts (siehe
+auch \ref{angebot}).
 
-Die Spezifikation beinhaltete Benutzungsfälle und wurde als internes
-Dokument zur Erstellung der Benutzungsoberfläche verwendet.
+\subsection{Spezifikation und Entwurf}
 
-\subsection{Entwurf}
-
-Im Grobentwurf wurde die Architektur festgelegt und die Schnittstellen
-des Datenmodells in Form von Headerdateien entwickelt.
+In diese Phase wurde eine Spezifikation erstellt, die Benutzungsfälle
+beinhaltete und als internes Dokument zur Erstellung der
+Benutzungsoberfläche verwendet wurde. In einem Grobentwurf wurde die
+Architektur von POA festgelegt (siehe auch \ref{design}) und in einem
+partitiellen Feinentwurf die Schnittstellen des Datenmodells in Form
+von Headerdateien entwickelt.
 
 \subsection{Prototyp (Erste Iteration)}
 
-Der Prototyp wurde für eine Hausmesse am ISW entwickelt. Der Prototyp
-wurde für die Präsentation des Offenen Antriebs verwendet. Der Focus
-lag auf der Entwicklung der graphischen Benutzungsoberfläche, die
-teilweise funktionslose Dialoge beinhaltete. 
+Der Prototyp wurde für eine Hausmesse am ISW entwickelt. und für die
+Präsentation des Offenen Antriebs verwendet. Der Fokus lag auf der
+Entwicklung der graphischen Benutzungsoberfläche, die teilweise noch
+funktionslose Dialoge beinhaltete. Die Oberfläche unterstützte bereits
+das Anlegen und Speichern von Projekten. Die erstellen Blöcke konnten
+auch mit automatisch gerouteten Linien verbunden und konfiguriert
+werden, so daß die Kernfunktionalität von POA anhand von
+Beispielprojekten auf der Messer erläutert werden konnte.
 
 Die zeitgemässe Auslieferung des Prototypen und die damit verbundene
 Erreichung des zweiten Meilensteins war auch ein erster Test, ob die
@@ -489,32 +542,109 @@ erwies, wurde die Entscheidung getroffen den Prototyp nicht zu
 verwerfen sondern als Basis weiter zu verwenden. Somit kann die
 Entwicklung des Prototypen als erste Iteration bezeichnet werden. 
 
+Am 1.10.2003 wurde POA 0.1.0 im Rahmen einer Präsentation bei dem
+Auftraggeber ausgeliefert.
+
 \subsection{Zweite Iteration}
 
-Zu Beginn des ersten Sprints wurde ein Refaktorisierung des Quellcodes
-vorgenommen, um die während der Entwicklung des Prototypen entdeckten
-Schwachstellen des Entwurfs zu beseitigen. 
+Zu Beginn der zweiten Iteration wurde eine Refaktorisierung des
+Quellcodes vorgenommen, um die während der Entwicklung des Prototypen
+entdeckten Schwachstellen des Entwurfs zu beseitigen. Desweiteren
+wurden Funktionalitäten wie die manuelle Laufzeitoptimierung, die im
+Prototypen nur als Dialoge zur Verfügung standen implementiert. Der
+automatische Routing Algorithmus wurde durch einen zweiten Algorithmus
+ergänzt, der Überdeckungen mit anderen Verbindungen und Blöcken
+berücksichtigt, aber einen höheren Aufwand hat. Zur Qualitätssicherung
+wurde ein CppUnit basierter Regressionstest eingeführt.
 
-Desweiteren wurden Funktionalitäten, die im Prototypen nur als Dialoge
-zur Verfügung standen implementiert. 
-
-Zum Ende des erstens Sprints wurde das bisher nur unter Linux
-entwickelte Produkt auf Microsoft Windows portiert. Neben einigen
-syntaktischen Korrekturen, die in Unterschieden zwischen den
-verwendeten Compilern begründet sind, mussten kleinere
-plattformspezifische Eigenheiten von QT umschifft werden.
+Zum Ende der Iteration wurde das bisher nur unter Linux entwickelte
+Produkt auf Microsoft Windows portiert. Neben einigen syntaktischen
+Korrekturen, die in Unterschieden zwischen den verwendeten Compilern
+begründet sind, mussten kleinere plattformspezifische Eigenheiten von
+QT umschifft werden.
 
 Die Portierung, die oben beschriebene Refaktorisierung und die
 zweiwöchigen Weihnachtsferiern haben zu der Ausdehnung der Iteration
 bis in den Januar geführt. 
 
+Am 13.01.2004 wurde POA 0.2.0 im Rahmen einer Präsentation bei dem
+Auftraggeber ausgeliefert. Am 16.01.2004 wurde eine für Windows
+korrigierte Version 0.2.1 nachgeliefert.
+
 \subsection{Dritte Iteration}
 
+In der dritten Iteration wurden die bis dahin noch nicht
+berücksichtigten Anforderungen implmentiert. Einige nicht geforderte,
+aber auf Grund des erweiterbaren Entwurfs und der Mächtigkeit der
+verwendeten Qt Bibliothek, sehr einfach zu implementierende Merkmale
+wurden außerdem umgesetzt. Darunter eine Druckfunktion, die Netzwerke
+aus Blöcken und CPUs ausgeben kann und die Möglichkeit mehrere
+Projekte parallel zu öffnen. Desweiteren wurden frei positionierbare
+Texte zu Projekten hinzugefügt und die Bibliothek erweitert, um vom
+Benutzer konfigurierte Blöcke abzulegen. Als visuelle
+Konstruktionshilfe wurde eine Legende eingeführt die durch farbliche
+Schattierung die Taktrate der Blöcke anzeigt.
 
+Auf Grund der grossen Anzahl an Erweiterungen und Fehlerkorrekturen
+wurde während der Iteration entschieden, am 1.2.2004 die Version 0.3.0
+auszuliefern. 
+
+Daraufhin wurde POA von der bisher verwendeten Sprache Englisch auf
+Deutsch lokalisiert und die automatische Optimierung von
+Signallaufzeiten implementiert.
+
+Die anschliessende Zeit wurde für ausgiebige Reviews des Quellcodes
+verwendet. Abgesehen von einfach manuell testbaren Klassen der
+Benutzeroberfläche wurde in fünf Review Sitzungen der größte Teil des
+Quellcodes geprüft. Im Ergeniss wurden einige Hauptfehler und mehrere
+Nebenfehler gefunden. Am positivsten haben sich die Reviews auf die
+Dokumentation des Quellcodes ausgewirkt. Auf Grund der Erfahrungen der
+ersten Review Runde wurde der Quellcode von den entsprechenden
+Entwicklern vor der zweiten Runde bereits im Vorfeld der Reviews
+überarbeitet. 
+
+Im Nachhinein kann festgestellt werden, daß es sicherlich eine
+positive Auswirkung auf die Qualität gehabt hätte Quellcode Reviews
+bereits zu einem früheren Zeitpunkt durchzuführen. 
+
+Im Anschluss an die Reviews wurde ein umfangreicher Systemtest
+durchgeführt, um die graphische Benutzeroberfläche zu prüfen. Auf
+Grund des erstellten Testprotokolls konnten mehrere Fehler in der
+Software behoben werden.
+
+Am 25.3.2004 wurde die POA 1.0.0 im Rahmen einer Präsentation
+ausgeliefert.
+
+\subsection{Handbuch}
+
+Das Handbuch wurde von einem einzelnen Entwickler parallel zur dritten
+Iteration erstellt. Das Handbuch enthält eine Referenz und ein
+Tutorial (siehe auch \ref{handbuch}). Das Handbuch wurde in einem
+Review geprüft und zusammen mit POA 1.0.0 ausgeliefert.
 
 \subsection{Auslieferung}
 
-\subsection{GCover Unterprojekt}
+Die während der Präsentation ausgelieferten Ergebnisse sind in den
+beiden vorhergehenden Abschnitten beschrieben. Die Auslieferung
+markierte mit der Erfüllung der Projektanforderungen das vorläufige
+Ende.
+
+\subsection{Nachbesserung}
+
+Im Anschluss and die Auslieferung wurde eine vier-wöchige
+Nachbesserungsphase gewährt. Es sollten lediglich Fehler behoben
+werden, aber keine neuen Anforderungen umgesetzt werden. Da keine
+Fehler gemeldet wurde, wurde POA 1.0.0 abgesehen von einer
+kosmetischen Änderung am 17.6.2004 als Version 1.0.1 endgültig
+ausgeliefert werden.
+
+\subsection{Abschlussbericht und Präsentation}
+
+Der Abschlussbericht ist das vorliegende Dokument. Die
+Abschlusspräsentation ist für den 17.6.2004 am ISW geplant. Zusammen
+mit einem ausgedruckten Exemplar des Abschlussberichts wird ein Poster
+mit einer UML Darstellung der POA Architektur und eine CD, die
+sämtliche Projektergebnisse beinhaltet ausgeliefert.
 
 \section{Zeitverteilung}
 
@@ -537,7 +667,7 @@ Bei den Tätigkeiten überwiegt der Anteil der Implementierung.
 \section{Werkzeuge}
 
 Für die Entwicklung wurden zahlreiche Werkzeuge eingesetzt. Die Wahl
-war den Entwicklern freigestellt solange die vereinbarten Richtlinien
+war den Entwicklern freigestellt sofern die vereinbarten Richtlinien
 eingehalten wurden. Bei der Wahl von Dokumentenformaten wurde darauf
 geachtet, dass für alle eingesetzten Platformen freie Werkzeuge zur
 Bearbeitung verfügbar waren.
@@ -553,25 +683,40 @@ Projektablauf. Damit konnte sowohl für den Kunden als auch für die
 Entwickler eine hohe Transparenz erreicht werden.
 
 \subsubsection{Berlios}
+\label{berlios}
 
 Verwaltet wurde das Projekt auf der Open-Source Platform Berlios, die
 vom Frauenhofer Institut betrieben wird. Berlios bietet vielfältige
 Unterstützung wie z.B. eine Internetseite, einen Downloadbereich,
-Mailinglisten und ein Repository. Zu dem Bedauern des Teams ließ die
-Verfügbarkeit von Berlios in den letzten Wochen des Projekts stark zu
-wünschen übrig und erschwerte so den Informationsaustausch.
+Mailinglisten und ein Quellcode Repository (CVS). Zum Bedauern des
+Teams ließ die Verfügbarkeit von Berlios in den letzten Wochen des
+Projekts stark zu wünschen übrig und erschwerte so den
+Informationsaustausch.
 
 \subsubsection{Jira}
+\label{jira}
 
-Die Tracker Funktionalität von Berlios wurde nicht
-benutzt. Stattdessen wurde Jira von Atlassian eingesetzt, die
-freundlicherweise eine kostenlose Lizens für das POA Projekt zur
-Verfügung stellten. Jira ermöglicht eine detailierte Erfassung von
-Aufgaben und Fehlerberichten inklusive einer Zeitabschätzung und
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=15cm]{jira}
+  \caption{Jira Road Map Ansicht}
+\end{figure}
+
+Die Tracker Funktionalität von Berlios wurde nicht benutzt.
+Stattdessen wurde Jira von Atlassian eingesetzt, die freundlicherweise
+eine kostenlose Lizens für das POA Projekt zur Verfügung stellten.
+Jira ermöglicht eine detailierte Erfassung von Aufgaben und
+Fehlerberichten inklusive einer Zeitabschätzung und
 Fortschrittserfassung. Letzters war sehr hilfreich bei der Planung und
-Kontrolle der Sprints.
+Kontrolle der Iterationen.
+
+Jira ist ein Tammo van Lessen hat
 
 \subsubsection{StatCVS-XML}
+
+Mit dem von Tammo van Lessen und Steffen Pingel entwickelten
+Analysewerkzeug StatCVS-XML wurden laufend Statistiken aus der CVS
+Aktivität generiert (siehe auch \ref{cvs analyse}). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Statistische Analyse}
@@ -579,6 +724,7 @@ Kontrolle der Sprints.
 
 
 \section{Versions Kontrolle}
+\label{cvs analyse}
 
 \begin{figure}[h!]
   \centering
@@ -1081,6 +1227,8 @@ dass die Planung zu Ende des Projekts präziser vorgenommen werden
 konnte. 
 
 FIX: Kernarbeitszeit
+     Einarbeitung in den Problemdomain
+     1000+ Mails
 
 Im Laufe des Projekts habe ich neben der Organisation zahlreiche
 produktive Tätigkeiten übernommen. Ich habe mich an der Verfassung des
@@ -1128,6 +1276,8 @@ von Erfahrungen aus vorherigen einem Studienprojekt war es mir wichtig
 den Focus nicht ausschließlich auf den Umfang des Produkts zu legen,
 sondern vor allem auch die Qualität und das Vorgehensmodell zu
 beachten.
+
+FIX: Tolle lernerfahrung
 
 Abschliessend beurteile ich das Projekt als Erfolg. Alle Team
 Mitglieder haben sich bemüht das im Studium erworbene Wissen praktisch

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: gridcanvas.cpp,v 1.12 2003/08/28 15:44:34 vanto Exp $
+ * $Id: gridcanvas.cpp,v 1.13 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,7 @@ GridCanvas::GridCanvas(QString name)
             this, SLOT(setGridSize(int)));
 }
 
-void GridCanvas::addView(AbstractModel *item, int x, int y)
+void GridCanvas::addViewAt(AbstractModel *item, int x, int y)
 {
     ++currentZ_;
     QCanvasItemList l = item->createView(this);
@@ -55,6 +55,17 @@ void GridCanvas::addView(AbstractModel *item, int x, int y)
     }
     update();
 }
+
+void GridCanvas::addView(AbstractModel *item) {
+    ++currentZ_;
+    QCanvasItemList l = item->createView(this);
+    for (QCanvasItemList::Iterator it = l.begin(); it != l.end(); ++it) {
+        (*it)->setZ(currentZ_);
+        (*it)->show();
+    }
+    update();
+}
+
 
 void GridCanvas::setGridSize(int gridSize)
 {

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.5 2003/08/27 12:28:24 vanto Exp $
+ * $Id: pinmodel.h,v 1.6 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -30,6 +30,7 @@
 #include <qdom.h>
 
 class BlockView;
+class BlockModel;
 class ConnectorModel;
 class QDomDocument;
 class QDomElement;
@@ -42,12 +43,18 @@ class PinModel
 
 public:
 
-    PinModel(const QString &name);
+    PinModel(BlockModel *parent, const QString &name);
+    PinModel(BlockModel *parent, QDomElement pinElem);
 
     virtual ~PinModel();
 
+    BlockModel *parent();
+
     void attach(ConnectorModel *connector);
     void detach();
+
+    unsigned id();
+    void setId(const unsigned id);
 
     QString name();
     void setName(QString &name);
@@ -61,14 +68,22 @@ public:
     PinView *createView(BlockView *block,
             PinView::DockPosition dockPosition);
 
-    /*************************************************************************
-     * Returns an XML representation of this instance.
+    /*
+     * Serializes this instance to a xml subtree
+     * @param document the main QDomDocument instance. Needed to create elements
      */
-    virtual QDomElement serialize(QDomDocument *document);
+    QDomElement serialize(QDomDocument *document);
+
+    /*
+     * Deserializes an xml subtree and sets this' properties
+     */
+    void deserialize(QDomElement element);
 
 private:
 
+    unsigned id_;
     QString name_;
+    BlockModel *parent_;
     unsigned address_;
     unsigned bits_;   // data type to be used in C source and width of pin
                       // one pin can be wider than one bit.

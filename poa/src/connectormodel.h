@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: connectormodel.h,v 1.2 2003/08/28 18:09:24 keulsn Exp $
+ * $Id: connectormodel.h,v 1.3 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -44,7 +44,7 @@ public:
      * @param target Target pin for this connector
      */
     ConnectorModel(PinModel *source,
-		   PinModel *target);
+           PinModel *target);
 
     /*************************************************************************
      * Default destructor
@@ -56,6 +56,36 @@ public:
      */
     virtual QCanvasItemList createView(QCanvas *canvas);
 
+    /*
+     * Returns the source of this connector
+     */
+    PinModel *source();
+
+    /*
+     * Returns the target of this connector
+     */
+    PinModel *target();
+
+    /*
+     * Returns the width of this connector
+     */
+    unsigned width();
+
+    /*
+     * Sets the width of this connector
+     */
+    void setWidth(const unsigned width);
+
+    /*
+     * Serializes this instance to a xml subtree
+     * @param document the main QDomDocument instance. Needed to create elements
+     */
+    QDomElement serialize(QDomDocument *document);
+
+    /*
+     * Deserializes an xml subtree and sets this' properties
+     */
+    //void deserialize(QDomElement element);
 
 private:
 
@@ -63,6 +93,7 @@ private:
     PinModel *source_;
     /** Target pin. must not be 0  */
     PinModel *target_;
+
     /**
      * Number of bits. Must be equal to width of <code>source_</code> and
      * of <code>target_</code>

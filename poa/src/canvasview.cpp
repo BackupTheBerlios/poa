@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.17 2003/08/28 18:04:35 vanto Exp $
+ * $Id: canvasview.cpp,v 1.18 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -28,7 +28,10 @@
 #include "abstractmodel.h"
 #include "abstractview.h"
 #include "blockview.h"
+#include "connectormodel.h"
 #include "cpumodel.h"
+#include "pinmodel.h"
+#include "pinview.h"
 #include "poa.h"
 #include "project.h"
 #include "mainwindow.h"
@@ -75,15 +78,15 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
             if (selectedItem_) {
                 if (selectedItem_ != topItem) {
                     // deselect old item
-                    selectedItem_->setSelected(FALSE);
+                    selectedItem_->setSelected(false);
                     // select new item
                     selectedItem_ = topItem;
-                    selectedItem_->setSelected(TRUE);
+                    selectedItem_->setSelected(true);
                 }
             } else {
                 // select new item
                 selectedItem_ = topItem;
-                selectedItem_->setSelected(TRUE);
+                selectedItem_->setSelected(true);
             }
             canvas()->update();
 
@@ -95,7 +98,7 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
         } else {
             // nirvana click -> deselect
             if (selectedItem_) {
-                selectedItem_->setSelected(FALSE);
+                selectedItem_->setSelected(false);
                 canvas()->update();
                 selectedItem_ = 0;
             }
@@ -103,12 +106,36 @@ void CanvasView::contentsMousePressEvent(QMouseEvent *e)
     }
     else if (e->button() == RightButton) {
         if (!l.isEmpty()) {
-            AbstractView *item = dynamic_cast<AbstractView *>(l.first());
-            // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
-            if (item != 0) {
-                QPopupMenu *menu = item->popupMenu();
-                if (menu) {
-                    menu->exec(mapToGlobal(e->pos()));
+            QCanvasItem *topItem = l.first();
+            if (INSTANCEOF(topItem, PinView)) {
+                // item is a pinview
+                if (INSTANCEOF(selectedItem_, PinView)) {
+                    // create connector
+                    PinView *source = dynamic_cast<PinView *>(selectedItem_);
+                    PinView *target = dynamic_cast<PinView *>(topItem);
+
+                    ConnectorModel *cm = new ConnectorModel(source->model(), target->model());
+                    // add connector to project
+                    project_->addConnector(cm);
+                    ((GridCanvas *)canvas())->addView(cm);
+
+                    qWarning("Connect: "+QString(source->model()->parent()->name())+":"+QString(source->model()->name())+"\n"
+                             +"to "+ QString(target->model()->parent()->name())+":"+QString(target->model()->name()));
+                    // deselect selected item
+                    selectedItem_->setSelected(false);
+                    selectedItem_ = 0;
+                    canvas()->update();
+                }
+            } else {
+                // item is not a pin view
+                AbstractView *item = dynamic_cast<AbstractView *>(l.first());
+                // item may be 0 if !INSTANCEOF(l.first(), AbstractView)
+                if (item != 0) {
+                    // item is a AbstractView -> show popup menu
+                    QPopupMenu *menu = item->popupMenu();
+                    if (menu) {
+                        menu->exec(mapToGlobal(e->pos()));
+                    }
                 }
             }
         }
@@ -150,8 +177,8 @@ void CanvasView::dropEvent(QDropEvent *e)
             QValueList<AbstractModel *> l = ModelFactory::generate(doc);
             for (QValueList<AbstractModel *>::Iterator it = l.begin();
                  it != l.end(); ++it) {
-                project_->add(*it);
-                ((GridCanvas *)canvas())->addView(*it, pos.x(), pos.y());
+                project_->addBlock(*it);
+                ((GridCanvas *)canvas())->addViewAt(*it, pos.x(), pos.y());
             }
         }
     }

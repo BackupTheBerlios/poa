@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.h,v 1.9 2003/08/29 14:34:41 vanto Exp $
+ * $Id: project.h,v 1.10 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 #ifndef PROJECT_H
@@ -26,6 +26,7 @@
 
 #include "abstractmodel.h"
 #include "blockmodel.h"
+#include "connectormodel.h"
 #include "gridcanvas.h"
 
 #include <qptrlist.h>
@@ -61,10 +62,16 @@ public:
     ~Project();
 
     /*
-     * Adds a model to the project
+     * Adds a block model to the project
      * @param item the AbstractModel
      */
-    void add(AbstractModel *item);
+    void addBlock(AbstractModel *item);
+
+    /*
+     * Adds a connector model to the project
+     * @param item the ConnectorModel
+     */
+    void addConnector(ConnectorModel *item);
 
     /*
      * Returns the <code>project</code>'s name
@@ -94,13 +101,16 @@ private:
     void deserialize(QDomDocument *document);
 
     /* List of <code>AbstractModel</code>s */
-    QPtrList<AbstractModel> items_;
+    QPtrList<AbstractModel> blocks_;
+    /* List of <code>ConnectorModel</code>s */
+    QPtrList<ConnectorModel> connectors_;
     /* List of <code>GridCanvas</code>'s */
     QPtrList<GridCanvas> canvasList_;
     /* project name */
     QString name_;
     /* current model id - provides project-wide unique ids */
-    uint currentModelId_;
+    uint currentBlockId_;
+    uint currentConnectorId_;
 };
 
 #endif // PROJECT_H

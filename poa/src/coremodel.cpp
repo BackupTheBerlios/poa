@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: coremodel.cpp,v 1.2 2003/08/29 14:34:41 vanto Exp $
+ * $Id: coremodel.cpp,v 1.3 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 #include "coremodel.h"
@@ -33,10 +33,10 @@ CoreModel::CoreModel(QString type, QString description)
     : BlockModel(type, description)
 {
     // FIX: remove
-    PinModel *firstPin = new PinModel(QString("Input1"));
+    PinModel *firstPin = new PinModel(this, QString("Input1"));
     addInputPin(firstPin);
-    addInputPin(new PinModel("another Input"), firstPin);
-    addOutputPin(new PinModel("Output"));
+    addInputPin(new PinModel(this, "another Input"), firstPin);
+    addOutputPin(new PinModel(this, "Output"));
     // FIX: end remove
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.cpp,v 1.13 2003/08/29 14:34:41 vanto Exp $
+ * $Id: cpumodel.cpp,v 1.14 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 #include "cpumodel.h"
@@ -36,10 +36,10 @@ CpuModel::CpuModel(QString type, QString description)
     autoExecTime_ = 0;
 
     // FIX: remove
-    PinModel *firstPin = new PinModel(QString("Input1"));
+    PinModel *firstPin = new PinModel(this, QString("Input1"));
     addInputPin(firstPin);
-    addInputPin(new PinModel("another Input"), firstPin);
-    addOutputPin(new PinModel("Output"));
+    addInputPin(new PinModel(this, "another Input"), firstPin);
+    addOutputPin(new PinModel(this, "Output"));
     // FIX: end remove
 }
 

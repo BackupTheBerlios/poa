@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.10 2003/08/29 14:34:41 vanto Exp $
+ * $Id: blockmodel.cpp,v 1.11 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@ BlockModel::BlockModel(QString type, QString description)
     clock_ = 0;
     offset_ = 0;
     autoOffset_ = true;
+    currentPinId_ = 0;
 }
 
 
@@ -91,6 +92,11 @@ void BlockModel::setAutoOffset(bool autoOffset)
 
 void BlockModel::addInputPin(PinModel *pin, PinModel *successor)
 {
+    if (pin->id() == 0) {
+        pin->setId(++currentPinId_);
+    } else if (pin->id() > currentPinId_) {
+        currentPinId_ = pin->id();
+    }
     inputPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -103,6 +109,11 @@ void BlockModel::removeInputPin(PinModel *pin)
 
 void BlockModel::addOutputPin(PinModel *pin, PinModel *successor)
 {
+    if (pin->id() == 0) {
+        pin->setId(++currentPinId_);
+    } else if (pin->id() > currentPinId_) {
+        currentPinId_ = pin->id();
+    }
     outputPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -115,6 +126,11 @@ void BlockModel::removeOutputPin(PinModel *pin)
 
 void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor)
 {
+    if (pin->id() == 0) {
+        pin->setId(++currentPinId_);
+    } else if (pin->id() > currentPinId_) {
+        currentPinId_ = pin->id();
+    }
     episodicPins_->addBefore(pin, successor);
     // FIX: update views
 }
@@ -178,9 +194,10 @@ void BlockModel::deserialize(QDomElement element)
     while ( !node.isNull() ) {
         if (node.isElement() && node.nodeName() == "pin" ) {
             QDomElement pin = node.toElement();
-            PinModel *pinModel = new PinModel(pin.attribute("name","unknown"));
-            pinModel->setAddress((unsigned int)pin.attribute("address","0").toUInt());
-            pinModel->setBits((unsigned int)pin.attribute("bits","0").toUInt());
+            //PinModel *pinModel = new PinModel(this, pin.attribute("name","unknown"));
+                        //pinModel->setAddress((unsigned int)pin.attribute("address","0").toUInt());
+                        //            pinModel->setBits((unsigned int)pin.attribute("bits","0").toUInt());
+            PinModel *pinModel = new PinModel(this, pin);
             if (pin.attribute("type", "") == "input") {
                 addInputPin(pinModel);
             } else if (pin.attribute("type","") == "output") {
@@ -188,7 +205,6 @@ void BlockModel::deserialize(QDomElement element)
             } else if (pin.attribute("type","") == "episodic") {
                 addEpisodicPin(pinModel);
             }
-
         }
         node = node.nextSibling();
      }

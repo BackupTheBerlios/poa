@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.11 2003/08/29 14:34:41 vanto Exp $
+ * $Id: blockmodel.h,v 1.12 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -102,7 +102,7 @@ private:
     unsigned long clock_;
     unsigned long offset_;
     bool autoOffset_;
-
+    unsigned currentPinId_;
 };
 
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: project.cpp,v 1.11 2003/08/29 14:34:41 vanto Exp $
+ * $Id: project.cpp,v 1.12 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 #include "blockview.h"
@@ -30,14 +30,15 @@
 
 Project::Project(QString name)
 {
-    currentModelId_ = 0;
+    currentBlockId_ = 0;
     name_ = name;
 }
 
 Project::Project(QString name, QDomDocument *document)
 {
     name_ = name;
-    currentModelId_ = 0;
+    currentBlockId_ = 0;
+    currentConnectorId_ = 0;
     deserialize(document);
 }
 
@@ -45,12 +46,25 @@ Project::~Project()
 {
 }
 
-void Project::add(AbstractModel *item)
+void Project::addBlock(AbstractModel *item)
 {
     if (item->id() == 0) {
-        item->setId(++currentModelId_);
+        item->setId(++currentBlockId_);
+    } else if (item->id() > currentBlockId_) {
+        currentBlockId_ = item->id();
     }
-    items_.append(item);
+
+    blocks_.append(item);
+}
+
+void Project::addConnector(ConnectorModel *item)
+{
+    if (item->id() == 0) {
+        item->setId(++currentConnectorId_);
+    } else if (item->id() > currentConnectorId_) {
+        currentConnectorId_ = item->id();
+    }
+    connectors_.append(item);
 }
 
 QString Project::name()
@@ -81,7 +95,7 @@ QDomDocument Project::serialize()
 
     // create model list
     AbstractModel *model;
-    for (model = items_.first(); model; model = items_.next()) {
+    for (model = blocks_.first(); model; model = blocks_.next()) {
         QDomElement mElem = model->serialize(&doc);
         mlist.appendChild(mElem);
     }
@@ -122,8 +136,9 @@ void Project::deserialize(QDomDocument *document) {
     QValueList<AbstractModel *> l = ModelFactory::generate(mEl);
     for (QValueList<AbstractModel *>::Iterator it = l.begin();
          it != l.end(); ++it) {
+        addBlock(*it);
+        // TODO: Tammo review!!!
         idMap[(*it)->id()] = *it;
-        add(*it);
     }
 
     // create canvases
@@ -137,7 +152,7 @@ void Project::deserialize(QDomDocument *document) {
         for (uint j = 0; j < viList.count(); j++) {
             QDomElement viEl = viList.item(j).toElement();
             if (viEl.attribute("model-id","no") != "no") {
-                 canvas->addView(idMap[viEl.attribute("model-id","0").toUInt()],
+                canvas->addViewAt(idMap[viEl.attribute("model-id","0").toUInt()],
                     viEl.attribute("x","0").toUInt(),
                     viEl.attribute("y","0").toUInt());
             }

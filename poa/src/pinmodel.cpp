@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.4 2003/08/27 12:28:24 vanto Exp $
+ * $Id: pinmodel.cpp,v 1.5 2003/08/29 17:59:38 vanto Exp $
  *
  *****************************************************************************/
 
@@ -29,21 +29,36 @@
 #include <qdom.h>
 
 #include "blockview.h"
+#include "blockmodel.h"
 #include "connectormodel.h"
 
 
-PinModel::PinModel(const QString &name)
+PinModel::PinModel(BlockModel *parent, const QString &name)
 {
     name_ = name;
+    parent_ = parent;
     connector_ = 0;
+    id_ = 0;
 }
 
+PinModel::PinModel(BlockModel *parent, QDomElement pinElem)
+{
+    parent_ = parent;
+    connector_ = 0;
+    if (!pinElem.isNull()) {
+        deserialize(pinElem);
+    }
+}
 
 PinModel::~PinModel()
 {
     detach();
 }
 
+BlockModel *PinModel::parent()
+{
+    return parent_;
+}
 
 void PinModel::attach(ConnectorModel *connector)
 {
@@ -61,6 +76,17 @@ void PinModel::detach()
 }
 
 
+unsigned PinModel::id()
+{
+    return id_;
+}
+
+
+void PinModel::setId(unsigned id)
+{
+    id_ = id;
+}
+
 QString PinModel::name()
 {
     return name_;
@@ -71,7 +97,6 @@ void PinModel::setName(QString &name)
 {
     name_ = name;
 }
-
 
 void PinModel::setAddress(unsigned int address)
 {
@@ -103,9 +128,17 @@ PinView *PinModel::createView(BlockView *block,
 QDomElement PinModel::serialize(QDomDocument *document)
 {
     QDomElement root = document->createElement("pin");
-    root.setAttribute("name", name_);
+    root.setAttribute("id", id_);
+    root.setAttribute("name", name());
     root.setAttribute("address", (unsigned int)address_);
     root.setAttribute("bits", (unsigned int)bits_);
     return root;
 }
 
+void PinModel::deserialize(QDomElement element)
+{
+    name_ =element.attribute("name","unknown");
+    id_ = element.attribute("id","0").toUInt();
+    address_ = element.attribute("address","0").toUInt();
+    bits_ = element.attribute("bits", "0").toUInt();
+}

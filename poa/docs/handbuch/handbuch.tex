@@ -1,13 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% StuPro B, "Programmierumgebung Offener Antrieb" (POA)
 %% Angebot
-%% $Id: handbuch.tex,v 1.3 2004/02/06 00:25:16 neco Exp $
+%% $Id: handbuch.tex,v 1.4 2004/02/06 01:53:13 neco Exp $
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[a4paper,titlepage,12pt,ngerman]{scrbook}
 \usepackage{.../common/header}
 
-\RCSdef $Revision: 1.3 $
-\RCSdef $Date: 2004/02/06 00:25:16 $
+\RCSdef $Revision: 1.4 $
+\RCSdef $Date: 2004/02/06 01:53:13 $
 
 \newcommand\version{Version 1.0 \xspace}
 
@@ -127,7 +127,7 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 
 \begin{center}
 
-\includegraphics[width=10cm]{Mainwindow1}
+\includegraphics[width=10cm]{Mainwindow}
 
 \caption{Mainwindow}\label{test}
 
@@ -138,23 +138,50 @@ POA ist f"ur verschiedene Betriebssysteme verf"ugbar:
 Die Menueleiste besteht aus den Menues Project, Edit, View, Tools, Settings, Windows und Help.
 
 \begin{itemize}
-\item Project:	New, Open, Save, Save as, Print, Recent, Exit.
-\item Edit: 	Cut, Copy, Paste
-\item View: 	Zoom in, Zoom normal, Zoom out 
-\item Tools: 	Configuration, Route, Scheduling, Deploy Project
-\item Settings:	Show Grid, Configure POA
-\item Windows: 	Tile, Tile Horizotal, Cascade
-\item Help: 	Contens, About
+\item {\bf Project:}	New, Open, Save, Save as, Print, Recent, Exit.
+\item {\bf Edit:}	Cut, Copy, Paste
+\item {\bf View:}	Zoom in, Zoom normal, Zoom out 
+\item {\bf Tools:} 	Configuration, Route, Scheduling, Deploy Project
+\item {\bf Settings:}	Show Grid, Configure POA
+\item {\bf Windows:} 	Tile, Tile Horizotal, Cascade
+\item {\bf Help:} 	Contens, About
 \end{itemize}
 
 Die meisten Aktionen k"onnen auch schneller mit den Befehlsbuttons in der Symbolleiste ausgef"uhrt werden.
 	
 \section{Dialogboxen}
 
-\subsection{CPU Konfiguration Dialogbox}
-\subsection{I/O Block Konfiguration Dialogbox}
-\subsection{Scheduling Dialogbox}
-\subsection{Datei Dialogbox}
+\subsubsection{POA Konfiguration Dialogbox}
+In diesem Konfigurationsdialog k"onnen alle m"oglichen Softwareeinstellungen vorgenommen werden.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=10cm]{POAConfiguration1}
+\caption{POA Configuration}\label{test}
+\end{center}
+\end{figure}
+
+\subsubsection{Modul Konfiguration Dialogbox}
+In diesem Konfigurationsdialog k"onnen die Module (CPUs, Cores, Input-Block,
+Output-Block, Mux-Block) so konfiguriert werden, dass sie mit dem vorgegebenen
+CPLD-Design "ubereinstimmen.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=10cm]{CPUConfiguration}
+\caption{Modul Configuration}\label{test}
+\end{center}
+\end{figure}
+
+\subsubsection{Scheduling Dialogbox}
+In diesem Dialog werden Laufzeit, Takt und Offset der Module visuell dargestellt. "Uber den Offset der Module kann eine Optimierung des CPLDs angestrebt werden.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=10cm]{Scheduling}
+\caption{Scheduling}\label{test}
+\end{center}
+\end{figure}
+
+\subsubsection{Wizard Dialogbox}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

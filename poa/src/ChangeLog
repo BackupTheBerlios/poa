@@ -1,5 +1,7 @@
 2004-01-17  Steffen Pingel  <squig@users.sourceforge.net>
 
+	* mainwindow.cpp (closeEvent): Remember width of library window.
+
 	* blockview.h (class BlockView): Keeps PinView objects sorted by
 	pin position.
 

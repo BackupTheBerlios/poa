@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.h,v 1.29 2004/01/12 00:27:00 squig Exp $
+ * $Id: mainwindow.h,v 1.30 2004/01/17 17:59:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -42,6 +42,7 @@ class QActionGroup;
 class QComboBox;
 class QToolBar;
 class QPopupMenu;
+class LibraryWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -160,6 +161,8 @@ private:
     QWorkspace* ws;
     Project *project_;
     static const uint DEFAULT_ZOOM_LEVEL;
+
+    LibraryWindow *libraryWindow_;
 
     QPopupMenu *recentProjectsMenu;
 

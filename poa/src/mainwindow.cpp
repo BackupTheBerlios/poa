@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: mainwindow.cpp,v 1.80 2004/01/17 12:47:14 garbeam Exp $
+ * $Id: mainwindow.cpp,v 1.81 2004/01/17 17:59:40 squig Exp $
  *
  *****************************************************************************/
 
@@ -122,8 +122,9 @@ MainWindow::MainWindow(QWidget *parent, const char *name, WFlags fl)
     (void)statusBar();
 
     // initialize library dock window
-    LibraryWindow* lw = new LibraryWindow(QDockWindow::InDock, this);
-    moveDockWindow(lw, Qt::DockLeft);
+    libraryWindow_ = new LibraryWindow(QDockWindow::InDock, this);
+    libraryWindow_->setFixedExtentWidth(s->getNum("LibraryWindow/Width", 100));
+    moveDockWindow(libraryWindow_, Qt::DockLeft);
 
     // initialize mdi workspace
     QVBox* vb = new QVBox(this);
@@ -486,6 +487,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
     s->set("MainWindow/Y", y());
     s->set("MainWindow/Width", width());
     s->set("MainWindow/Height", height());
+
+    s->set("LibraryWindow/Width", libraryWindow_->width());
 
     e->accept();
 }

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.cpp,v 1.41 2004/01/21 10:28:10 kilgus Exp $
+ * $Id: scheduledialog.cpp,v 1.42 2004/01/22 13:11:10 vanto Exp $
  *
  *****************************************************************************/
 
@@ -200,24 +200,24 @@ void ScheduleDialog::initTimingWidget()
 
 void ScheduleDialog::initGraphWidget()
 {
+    // determine canvas size
+    int height =  RULER_HEIGHT + blocks_.count() * (BOX_HEIGHT + BOX_YSPACING);
+
     labelCanvas = new QCanvas();
     labelCanvas->setBackgroundColor(lightGray);
-    labelCanvasView = new QCanvasView(labelCanvas, middleWidget);
+    labelCanvasView = new FitCanvasView(labelCanvas, middleWidget, height);
     labelCanvasView->setVScrollBarMode(QScrollView::AlwaysOff);
     labelCanvasView->setHScrollBarMode(QScrollView::AlwaysOn);
     middleLayout->addWidget(labelCanvasView);
 
     canvas = new QCanvas();
     canvas->setBackgroundColor(QObject::white);
-    canvasView = new QCanvasView(canvas, middleWidget);
+    canvasView = new FitCanvasView(canvas, middleWidget, height);
 
     middleLayout->addWidget(canvasView);
 
     connect(canvasView, SIGNAL(contentsMoving(int, int)),
             labelCanvasView, SLOT(setContentsPos(int, int)));
-
-    // determine canvas size
-    int height =  RULER_HEIGHT + blocks_.count() * (BOX_HEIGHT + BOX_YSPACING);
 
     canvas->resize(CANVAS_WIDTH, height);
     labelCanvas->resize(50, height);
@@ -655,4 +655,20 @@ double ArrowLine::computeAngle(int sx, int sy, int ex, int ey)
                 angle += 360;
         }
     return angle;
+}
+
+FitCanvasView::FitCanvasView(QCanvas *canvas, QWidget *parent, int height)
+    : QCanvasView(canvas, parent), height_(height)
+{
+
+}
+
+void FitCanvasView::resizeEvent(QResizeEvent)
+{
+    int viewareaHeight = height() - horizontalScrollBar()->height();
+    qDebug("--");
+    if (viewareaHeight > height_) {
+        canvas()->resize(canvas()->width(),
+                         viewareaHeight);
+    }
 }

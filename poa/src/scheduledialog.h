@@ -18,21 +18,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: scheduledialog.h,v 1.22 2004/01/20 16:16:09 vanto Exp $
+ * $Id: scheduledialog.h,v 1.23 2004/01/22 13:11:10 vanto Exp $
  *
  *****************************************************************************/
 
 #ifndef POA_SCHEDULEDIALOG_H
 #define POA_SCHEDULEDIALOG_H
 
+#include <qcanvas.h>
 #include <qdialog.h>
+#include <qevent.h>
 #include <qlistview.h>
 #include <qptrlist.h>
-#include <qvariant.h>
-#include <qtable.h>
-#include <qcanvas.h>
-#include <qwmatrix.h>
 #include <qspinbox.h>
+#include <qtable.h>
+#include <qvariant.h>
+#include <qwmatrix.h>
 
 #include "blockgraph.h"
 #include "blockmodel.h"
@@ -251,5 +252,24 @@ class ArrowLine : public QCanvasLine
     double computeAngle(int sx, int sy, int ex, int ey);
 
 };
+
+/**
+ * Provides a customized QCanvasView.
+ * Resizes the Canvas to fit into the view if canvas content is smaller
+ *.
+ */
+class FitCanvasView : public QCanvasView
+{
+
+ public:
+    FitCanvasView(QCanvas *canvas, QWidget *parent, int minHeight);
+    virtual void resizeEvent(QResizeEvent *e);
+
+ private:
+    int height_;
+
+};
+
+
 
 #endif // POA_SCHEDULEDIALOG_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxconfdialog.cpp,v 1.16 2003/09/29 13:54:17 garbeam Exp $
+ * $Id: muxconfdialog.cpp,v 1.17 2003/09/29 14:32:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -352,6 +352,7 @@ void MuxConfDialog::updateModel() {
                 origPin->setAddress(currPin->address());
                 origPin->setBits(currPin->bits());
                 origPin->setType(currPin->type());
+                origPin->setParent(model_);
                 pinModels->append(origPin);
             }
             else {

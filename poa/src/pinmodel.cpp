@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.22 2003/09/26 16:34:43 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.23 2003/09/29 14:32:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -77,6 +77,10 @@ PinModel::~PinModel()
 AbstractModel *PinModel::parent()
 {
     return parent_;
+}
+
+void PinModel::setParent(AbstractModel *parent) {
+    parent_ = parent;
 }
 
 void PinModel::attach(PinModel *connectTo)

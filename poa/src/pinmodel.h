@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.h,v 1.19 2003/09/22 12:36:43 vanto Exp $
+ * $Id: pinmodel.h,v 1.20 2003/09/29 14:32:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -84,6 +84,10 @@ public:
      */
     AbstractModel *parent();
 
+    /**
+     * Sets the parent of this pin.
+     */
+    void setParent(AbstractModel *parent);
 
     /**
      * Attach to another PinModel

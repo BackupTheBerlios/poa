@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: muxmodel.cpp,v 1.19 2003/09/29 13:54:17 garbeam Exp $
+ * $Id: muxmodel.cpp,v 1.20 2003/09/29 14:32:27 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -97,6 +97,7 @@ MuxPin::~MuxPin() {
         mappings_.remove(i);
         delete mapping;
     }
+    delete model_;
 }
 
 QPtrList<MuxMapping> *MuxPin::mappings() {
@@ -124,6 +125,7 @@ QDomElement MuxPin::serialize(QDomDocument *document)
 
 MuxPin *MuxPin::clone() {
     Q_ASSERT(model_ != 0);
+
     MuxPin *clonePin = new MuxPin(model_->clone());
 
     QPtrList<MuxMapping> *mappings = clonePin->mappings();
@@ -185,7 +187,6 @@ void MuxModel::removeMuxPin(MuxPin *pin)
     muxPins_.remove(pin);
     PinModel *model = pin->model();
     delete pin;
-    delete model;
 }
 
 QCanvasItemList MuxModel::createView(QCanvas *canvas)
@@ -228,7 +229,7 @@ void MuxModel::deserialize(QDomElement element)
     while ( !node.isNull() ) {
         if (node.isElement() && node.nodeName() == "pin" ) {
             QDomElement pin = node.toElement();
-            PinModel *pinModel = new PinModel(0, pin);
+            PinModel *pinModel = new PinModel(this, pin);
             if (pin.attribute("type", "") == "input") {
                 pinModel->setType(PinModel::INPUT);
             } else if (pin.attribute("type","") == "output") {

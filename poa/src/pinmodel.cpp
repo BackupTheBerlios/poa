@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinmodel.cpp,v 1.14 2003/09/15 17:38:51 garbeam Exp $
+ * $Id: pinmodel.cpp,v 1.15 2003/09/16 09:54:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -153,6 +153,7 @@ PinView *PinModel::createView(BlockView *block,
                   PinView::DockPosition dockPosition)
 {
     PinView *view = new PinView(this, block, dockPosition);
+    connect(view, SIGNAL(deleted(PinView *)), block, SLOT(deletePinView(PinView *)));
     return view;
 }
 

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: pinview.cpp,v 1.13 2003/09/15 16:29:50 garbeam Exp $
+ * $Id: pinview.cpp,v 1.14 2003/09/16 09:54:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -57,6 +57,7 @@ PinView::PinView(PinModel *model, BlockView *block,
 
 PinView::~PinView()
 {
+    emit(deleted(this));
 }
 
 AbstractModel *PinView::model()

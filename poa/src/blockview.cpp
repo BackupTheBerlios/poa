@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockview.cpp,v 1.29 2003/09/15 18:09:21 garbeam Exp $
+ * $Id: blockview.cpp,v 1.30 2003/09/16 09:54:39 garbeam Exp $
  *
  *****************************************************************************/
 
@@ -34,6 +34,7 @@
 #include "canvasview.h"
 #include "mainwindow.h"
 #include "blockconfdialog.h"
+#include "pinmodel.h"
 #include "pinvector.h"
 #include "pinview.h"
 #include "settings.h"
@@ -303,4 +304,45 @@ void BlockView::deserialize(QDomElement element)
 void BlockView::updateView()
 {
     arrangeVerticalPins();
+}
+
+void BlockView::deletePinView(PinView *view)
+{
+    if (view != 0)
+    {
+        PinModel::PinType type = view->pinModel()->type();
+
+        switch (type)
+        {
+            case PinModel::INPUT:
+                for (unsigned i = 0; i < leftPins_.size(); i++) {
+                    if (view == leftPins_[i])
+                    {
+                        leftPins_.erase(leftPins_.begin() + i);
+                        break;
+                    }
+                }
+                break;
+            case PinModel::OUTPUT:
+                for (unsigned i = 0; i < rightPins_.size(); i++) {
+                    if (view == rightPins_[i])
+                    {
+                        rightPins_.erase(rightPins_.begin() + i);
+                        break;
+                    }
+                }
+                break;
+            case PinModel::EPISODIC:
+                for (unsigned i = 0; i < bottomPins_.size(); i++) {
+                    if (view == bottomPins_[i])
+                    {
+                        bottomPins_.erase(bottomPins_.begin() + i);
+                        break;
+                    }
+                }
+                break;
+        }
+
+    }
+
 }

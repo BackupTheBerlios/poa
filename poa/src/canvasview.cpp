@@ -18,11 +18,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.cpp,v 1.7 2003/08/22 16:50:51 squig Exp $
+ * $Id: canvasview.cpp,v 1.8 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 #include "canvasview.h"
 
+#include "abstractmodel.h"
 #include "cpumodel.h"
 #include "document.h"
 #include "mainwindow.h"
@@ -45,7 +46,8 @@ CanvasView::CanvasView(Document *document, QCanvas *canvas, QWidget *parent,
 {
     setAcceptDrops(TRUE);
 
-    // listen to
+    connect(document, SIGNAL(modelAdded(AbstractModel *, int, int)),
+            this, SLOT(modelAdded(AbstractModel *, int, int)));
 }
 
 /*****************************************************************************
@@ -79,7 +81,7 @@ void CanvasView::contentsMouseMoveEvent(QMouseEvent* e)
         canvas()->update();
     }
 
-    QPoint pos = inverseWorldMatrix().map(viewportToContents(e->pos()));
+    QPoint pos = toCanvas(e->pos());
     ((MainWindow *)qApp->mainWidget())->statusBar()->message
         (QString::number(pos.x()) + ":" + QString::number(pos.y()));
 }
@@ -95,18 +97,22 @@ void CanvasView::dropEvent(QDropEvent *e)
     if (data) {
         QDomDocument doc;
         if (doc.setContent(QString(data))) {
-            ModelFactory::generate(doc, document_);
-
-            // FIX: remove: create dummy items
-            QPoint pos = viewportToContents(e->pos());
-            QCanvasPolygonalItem *i
-                = new QCanvasRectangle(pos.x(), pos.y(), 100, 100, canvas());
-            i->setBrush(QColor(255, 255, 255));
-            i->setPen(QPen(QColor(0, 0, 0), 2));
-            i->show();
-            canvas()->update();
+            QPoint pos = toCanvas(e->pos());
+            ModelFactory::generate(doc, document_, pos.x(), pos.y());
         }
     }
 }
 
-void modelAdded(AbstractModel *item, int x, int y);
+void CanvasView::modelAdded(AbstractModel *item, int x, int y)
+{
+    QCanvasItem *i = item->createView(canvas());
+    i->moveBy(x, y);
+    i->show();
+
+    canvas()->update();
+}
+
+QPoint CanvasView::toCanvas(QPoint pos)
+{
+    return inverseWorldMatrix().map(viewportToContents(pos));
+}

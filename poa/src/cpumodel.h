@@ -18,18 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: cpumodel.h,v 1.6 2003/08/22 15:06:11 squig Exp $
+ * $Id: cpumodel.h,v 1.7 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
-
-
 #ifndef POA_CPUMODEL_H
 #define POA_CPUMODEL_H
 
-
 #include "codemanager.h"
 #include "blockmodel.h"
-
 
 #include <qcstring.h> // includes QByteArray
 #include <qdom.h>

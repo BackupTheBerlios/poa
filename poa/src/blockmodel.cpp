@@ -18,17 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.cpp,v 1.1 2003/08/22 17:21:22 keulsn Exp $
+ * $Id: blockmodel.cpp,v 1.2 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
-
-
 #include "blockmodel.h"
+
+#include "blockview.h"
+
+#include <qcanvas.h>
 
 
 BlockModel::BlockModel()
 {
-    name_ = QString("");
+    name_ = QString("Block");
     episodicPins_ = new PinVector();
     inputPins_ = new PinVector();
     outputPins_ = new PinVector();
@@ -98,7 +100,7 @@ void BlockModel::addEpisodicPin(PinModel *pin, PinModel *successor = 0)
     int size = episodicPins_->size();
     int i = 0;
     while (i < size && episodicPins_->at(i) != successor) {
-	++i;
+    ++i;
     }
 
     episodicPins_->insert(episodicPins_->begin() + i, pin);
@@ -112,11 +114,11 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
     int i = 0;
     bool found = episodicPins_->at(i) == pin;
     while (i < size && !found) {
-	++i;
-	found = episodicPins_->at(i) == pin;
+    ++i;
+    found = episodicPins_->at(i) == pin;
     }
     if (found) {
-	episodicPins_->erase(episodicPins_->begin() + i);
+    episodicPins_->erase(episodicPins_->begin() + i);
     }
     // FIX: update views
 }
@@ -125,4 +127,9 @@ void BlockModel::removeEpisodicPin(PinModel *pin)
 QString BlockModel::getName()
 {
     return name_;
+}
+
+QCanvasItem *BlockModel::createView(QCanvas *canvas)
+{
+    return new BlockView(this, canvas);
 }

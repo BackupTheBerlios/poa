@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: document.h,v 1.1 2003/08/22 16:50:51 squig Exp $
+ * $Id: document.h,v 1.2 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 #ifndef DOCUMENT_H
@@ -33,7 +33,7 @@
  * Used by NetworkCanvas to store its BlockModelView items.
  * @author garbeam
  */
-class Document : QObject
+class Document : public QObject
 {
     Q_OBJECT
 

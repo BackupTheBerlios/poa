@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.h,v 1.1 2003/08/22 16:50:51 squig Exp $
+ * $Id: modelfactory.h,v 1.2 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 #ifndef MODELFACTORY_H
@@ -37,7 +37,8 @@ class QDomNode;
 class ModelFactory
 {
 public:
-    static void generate(const QDomNode &node, Document *document);
+    static void generate(const QDomNode &node, Document *document,
+                         int x, int y);
 };
 
 #endif // MODELFACTORY_H

@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: blockmodel.h,v 1.4 2003/08/22 16:58:42 keulsn Exp $
+ * $Id: blockmodel.h,v 1.5 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -30,7 +30,6 @@
 
 #include "abstractmodel.h"
 #include "pinvector.h"
-
 
 /*****************************************************************************
  * Base class for blocks.
@@ -82,6 +81,7 @@ public:
 
     QString getName ();
 
+    QCanvasItem *createView(QCanvas *canvas);
 
 private:
 

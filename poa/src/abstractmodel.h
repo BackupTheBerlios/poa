@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: abstractmodel.h,v 1.1 2003/08/22 15:07:13 squig Exp $
+ * $Id: abstractmodel.h,v 1.2 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 
@@ -27,8 +27,10 @@
 #define ABSTRACTMODEL_H
 
 #include <qobject.h>
+class QCanvasItem;
 class QDomDocument;
 class QDomElement;
+class QCanvas;
 
 /*****************************************************************************
  * Base class for items in the module library.
@@ -54,6 +56,11 @@ public:
      * Returns an XML representation of this instance.
      */
     virtual QDomElement serialize(QDomDocument *document) = 0;
+
+    /*************************************************************************
+     * Creates the corresponding view object.
+     */
+    virtual QCanvasItem *createView(QCanvas *canvas) = 0;
 
 };
 

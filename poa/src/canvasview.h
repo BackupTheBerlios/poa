@@ -18,12 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: canvasview.h,v 1.6 2003/08/22 16:50:51 squig Exp $
+ * $Id: canvasview.h,v 1.7 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 #ifndef CANVASVIEW_H
 #define CANVASVIEW_H
 
+class AbstractModel;
 class Document;
 
 #include <qvariant.h>
@@ -51,6 +52,10 @@ public:
     void contentsMouseMoveEvent(QMouseEvent *e);
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
+    QPoint toCanvas(QPoint pos);
+
+public slots:
+    void modelAdded(AbstractModel *item, int x, int y);
 
 private:
     Document *document_;

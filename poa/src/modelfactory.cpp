@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
- * $Id: modelfactory.cpp,v 1.1 2003/08/22 16:50:51 squig Exp $
+ * $Id: modelfactory.cpp,v 1.2 2003/08/22 17:39:04 squig Exp $
  *
  *****************************************************************************/
 #include "modelfactory.h"
@@ -33,13 +33,14 @@
  *
  * @author Steffen Pingel
  */
-void ModelFactory::generate(const QDomNode &node, Document *document)
+void ModelFactory::generate(const QDomNode &node, Document *document,
+                            int x, int y)
 {
     QDomNodeList children = node.childNodes();
     for (uint i = 0; i < children.length(); i++) {
         QDomNode item = children.item(i);
         if (item.isElement() && item.nodeName() == "cpu") {
-            document->add(new CpuModel(&item.toElement()), 0, 0);
+            document->add(new CpuModel(&item.toElement()), x, y);
         }
     }
 }

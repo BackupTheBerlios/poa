@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.9 2005/03/13 13:32:59 garbeam Exp $
+% $Id: pir.tex,v 1.10 2005/05/09 10:10:50 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -19,35 +19,68 @@
 \thispagestyle{empty}
 
 \begin{abstract}
-In dieser Studie werden Algorithmen zur Bilderkennung von Personen im
-Raum anhand von Receiver Operator Characteristic Curves
-gegenübergestellt und abschliessend eine Empfehlung ausgesprochen.
+In dieser Fachstudie wird die Bewegungserkennung von Personen auf
+Bilddaten eines Raumes mithilfe verschiedener Algorithmen aus der
+OpenSource Vektor-Grafik Bibliothek OpenCV\cite{opencv} untersucht.
+Die Bilddaten werden durch eine handelsübliche Web-Kamera geliefert.
+Die Ergebnisse der Bewegungserkennung werden in
+Characteristic-Receiver-Operator Curves veranschaulicht. Abschließend
+wird die Eignung der untersuchten Algorithmen bewertet.
 \end{abstract}
 
 %------------------------------------------------------------------------- 
 \section{Einleitung}
-Ziel dieser Fachstudie ist es, verschiedene Bilderkennungs-Algorithmen
-hinsichtlich ihrer Eignung zur Erkennung von Bewegungen zu bewerten. Ein
-Algorithmus, der zuverlässig Bewegungen auf Bild-Sequenzen erkennt,
-kann dabei für Aussagen zur Erkennung von Objekten, wie z.B. Personen,
-in Betracht gezogen werden (Tracking).
-Personen sind in der Regel keine starren Objekte und zeigen Veränderungen
-in Form von Bewegungen zwischen einzelnen Bildern einer Bild-Sequenz auf.
-Die Erkennung solcher Bewegungen kann zur Existenzaussage von Personen im
-Bildausschnitt verwendet werden. Darüber hinaus wird untersucht, in wie
-weit solche Existenzaussagen zur Zählung von Personen herangezogen werden
-können.
-Neben diesen Bewertungen wird auch ein kleiner Vergleich auf vorhandene
-technische Systeme zur Bewegungserkennung gegeben, die auf Bilderkennung
-basieren.
+Im Rahmen des Nexus Forschungsprojektes, das die Realisierung mobiler
+kontext-bezogener Systeme in geeigneten Umgebungsmodellen untersucht,
+stellt sich u.a. die Aufgabenstellung durch Bilderkennung von Objekten
+spezielle kontext-bezogene Reaktionen in solchen Systeme zu realisieren.
+Eine einfache Anwendung wäre beispielsweise die akustische Ausgabe einer
+Meldung durch ein System, wenn die letzte Person bei geöffnetem
+Fenster einen Raum verläßt, das Fenster zu schließen.
+Um eine solche Anwendung realisieren zu können muß zunächst ein
+geeigneter Weg zur Bilderkennung gefunden werden.
 
 
 %------------------------------------------------------------------------- 
-\section{Szenarien}
+\section{Ziel}
+Ziel dieser Fachstudie ist die Evaluierung der Eignung von folgenden
+Bilderkennungs-Algorithmen aus der OpenCV\cite{opencv} Bibliothek:
 
-Untersucht wird die Bilderkennung von einer Person im Raum bei drei
-unterschiedlichen Bidlkontrasteinstellungen der verwendeten
-Kamera, Modell MOBOTIX M1, siehe auch \url{http://www.mobotix.com}.
+\begin{itemize}
+\item CalcOpticalFlowHS
+\item CalcOpticalFlowLK
+\item CalcOpticalFlowBM
+\item CalcOpticalFlowPyrLK
+\item SegmentMotion
+\end{itemize}
+
+Es werden Bilddaten eines Raumes einer handelsüblichen Web-Kamera zur Untersuchung
+verwendet. Ein Algorithmus, der zuverlässig Bewegungen auf
+Bildsequenzen dieser Bilddaten erkennt, kann für Aussagen zur Erkennung
+von Objekten in Betracht gezogen werden.
+Personen sind keine starren Objekte und zeigen Veränderungen in Form von
+Bewegungen zwischen einzelnen Bildern einer Bildsequenz auf.
+Die Erkennung solcher Bewegungen kann zu einer Existenzaussage
+von Personen im Bildausschnitt approximiert werden. Darüber stellt sich
+die Frage, in wie weit sich solche Existenzaussagen zur Zählung von
+Personen eignen und welche Bedingungen sich daran knüpfen.
+
+Neben diesen Bewertungen wird ein kleiner Vergleich auf vorhandene
+technische Systeme zur Bewegungserkennung gegeben, die auf Bilderkennung
+basieren, sowie ein zur untersuchten Vektor-Grafik-Bibliothek
+alternatives Produkt.
+
+% Vgl. OpenCV mit anderen Bibliotheken zB MontiVision Development Kit
+% OpticalFlow Modul
+% evtl. andere Prozesse
+
+%------------------------------------------------------------------------- 
+\section{Bilddaten}
+
+Die verwendeten Bilddaten werden mit einer handelsüblichen WebCam, Modell MOBOTIX M1
+(\url{http://www.mobotix.com}), unter identischen Lichtbedingungen und
+unverändertem Raumausschnitt erzeugt.
+Die Kameraeinstellungen und Bildeigenschaften sind wie folgt festgelegt:
 
 \begin{figure}[h]
     \begin{center}
@@ -57,73 +90,32 @@ Kamera, Modell MOBOTIX M1, siehe auch \url{http://www.mobotix.com}.
         \textbf{Auflösung (Pixel):} & 640x480\\ \hline
         \textbf{Automatischer Lichtfilter:} & aus\\ \hline
         \textbf{Rauschenunterdrückung:} & aus\\ \hline
+        \textbf{Hintergrundlicht (-10..10):} & 0\\
+        \textbf{Sättigung (-10..10):} & 0\\
         \textbf{Bildschärfe (-2..20):} & 0\\
         \end{tabular}
-    {\small \caption{Feste Bildeigenschaften}}
+    {\small \caption{Kameraeinstellungen}}
     \end{center}
 \end{figure}
 
-\subsection{Bildkontrasteinstellungen}
-Die drei im Szenario verwendeten Bildkontrasteinstellungen können grob
-in {\it hoch}, {\it normal} und {\it niedrig} eingestuft werden.
-Motivation für diese Wahl war die Vermutung, dass ein geringes
-Farbspektrum (niedriger Kontrast)
-bessere Erkennungsraten liefert, als ein hohes Farbspektrum.
+Es werden zur Untersuchung jeweils eine Bildsequenz von 200 Bildern pro
+Szenario erstellt.
 
-\begin{figure}[h!]
-    \begin{center}
-        \begin{tabular}{l|l}
-        \textbf{Helligkeit (-10..10):} & 5\\ \hline
-        \textbf{Sättigung (-10..10):} & 5\\
-        \end{tabular}
-    {\small \caption{Hoher Bildkontrast}}
-    \end{center}
-\end{figure}
+%------------------------------------------------------------------------- 
+\section{Szenarien}
+Es werden zwei Szenarien untersucht:
 
-\begin{figure}[h!]
-    \begin{center}
-        \begin{tabular}{l|l}
-        \textbf{Helligkeit (-10..10):} & 0\\ \hline
-        \textbf{Sättigung (-10..10):} & 0\\
-        \end{tabular}
-    {\small \caption{Hoher Bildkontrast}}
-    \end{center}
-\end{figure}
+\begin{itemize}
+\item keine Person im Bild
+\item bewegte Personen im Bild
+\end{itemize}
 
-\begin{figure}[h!]
-    \begin{center}
-        \begin{tabular}{l|l}
-        \textbf{Helligkeit (-10..10):} & -5\\ \hline
-        \textbf{Sättigung (-10..10):} & -5\\
-        \end{tabular}
-    {\small \caption{Hoher Bildkontrast}}
-    \end{center}
-\end{figure}
-
-
-\subsection{Offene Fragen}
-
-Die Bilderkennung von mehreren Personen im Raum sowie von keiner Person
-wurde bis auf einzelne Feldversuche nicht genauer untersucht.
-Anzunehmen ist, dass die Erkennungsrate von mehreren Personen im Raum
-etwas höher liegt, als bei einer einzelnen Person im Raum.
-Die Erkennungsrate von Personen im Raum, obwohl sich keine Person im
-Raum aufhält, wird als sehr gering angenommen.
-
-Die Entwickler von OpenCV bieten keine Beispiele für optische
-Bewegungsflusserkennung an, so dass der Schluss naheliegt, dass die
-vorhandenen Algorithmen entweder ungeeignet sind oder nie getestet
-wurden.
+Im ersten Szenario ist keine Person im Bildausschnitt aller 200
+Bildsequenzen sichtbar. Im anderen Szenario sind teilweise keine Person
+sichtbar, eine Person und mehrere Personen die sich bewegen.
 
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
-
-Mit Ausnahme eines selbst implementierten Algorithmus, sind alle anderen
-Algorithmen in der OpenCV Bibliothek\cite{opencv} von Intel enthalten.
-Zur Erkennung von Personen werden Algorithmen untersucht, die Bewegungen
-zwischen zwei Bildern erkennen können. Signifikante Bewegungen gelten
-als Bewegung von größeren Objekten, darunter sind Bewegungen von
-Menschen inbegriffen.
 
 \subsection{CalcOpticalFlowHS}
 Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
@@ -151,6 +143,12 @@ und vergibt für jede Bewegung in einer Segmentmaske Werte zwischen
 $1..N$, je nach Bewegungsintensität.
 
 \subsection{Eigene Implementierung}
+Neben den genannten Algorithmen aus der Vektor-Grafik-Bibliothek
+OpenCV\cite{opencv} wurde auch ein eigener Algorithmus entworfen und
+untersucht, der unter einer einstellbaren Unschärfeschwelle
+Differenzbilder zwischen zwei Bildern erzeugt. Wenn Differenzen
+existieren, so werden diese als Bewegungsfelder auf dem Differenzbild
+sichtbar.
 
 %------------------------------------------------------------------------- 
 \section{Receiver Operator Characteristic Curves}
@@ -161,8 +159,8 @@ Im Rahmen dieser Fachstudie empfehlen wir die optische Flusserkennung
 nach \cite{KIL05}, die auch im Source Code im Anhang vorliegt.
 
 \begin{thebibliography}{99}
-\bibitem{KIL05} Marcel Kilgus, Optische Flusserkennung mit 15 LOC, 2005.
 \bibitem{opencv} http://opencvlibrary.sf.net
+\bibitem{KIL05} Marcel Kilgus, Optische Flusserkennung mit 15 LOC, 2005.
 \bibitem{Horn81} Berthold K. P. Horn und Brian G. Schunck. Determining
 Optical Flow. Artificial Intelligence, 17, pp. 185-203, 1981.
 \bibitem{Lucas81} Lucas, B. und Kanade, T. An Iterative Image

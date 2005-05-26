@@ -1,7 +1,7 @@
 CC=g++ -c
 LINK=g++
-INCLUDE_PATH=-I/home/garbeam/local/include/opencv -I/usr/include/gtk-2.0
-LIBRARY_PATH=-L/home/garbeam/local/lib
+INCLUDE_PATH=-I/usr/include/opencv -I/usr/include/gtk-2.0
+LIBRARY_PATH=-L/usr/lib
 
 ifeq ($(shell test -e Makefile.local && echo ja || echo nein),ja)
   include Makefile.local
@@ -10,7 +10,7 @@ endif
 all      : test marcel motion manual setfeature pyramid
 
 clean    : 
-	rm -f test.o test marcel.o marcel motion.o motion steffen.o steffen
+	rm -f *.o test marcel motion steffen pyramid setfeature
 
 test.o   : test.c
 	$(CC) test.c $(INCLUDE_PATH)

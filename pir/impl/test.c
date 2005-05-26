@@ -16,6 +16,9 @@
 #include <time.h>
 
 #define CVNW_OPTION CV_WINDOW_AUTOSIZE
+#ifndef PATH_MAX
+#define PATH_MAX 512
+#endif
 
 
 char *DEFAULT_PATH, *PATH = DEFAULT_PATH = ".";

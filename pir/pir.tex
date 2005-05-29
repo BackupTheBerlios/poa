@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.12 2005/05/26 22:24:11 garbeam Exp $
+% $Id: pir.tex,v 1.13 2005/05/29 02:49:18 keulsn Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -55,16 +55,16 @@ Bilderkennungs-Algorithmen aus der OpenCV\cite{opencv} Bibliothek:
 \item SegmentMotion
 \end{itemize}
 
-Es werden Bilddaten eines Raumes einer handelsüblichen Web-Kamera zur Untersuchung
-verwendet. Ein Algorithmus, der zuverlässig Bewegungen auf
-Bildsequenzen dieser Bilddaten erkennt, kann für Aussagen zur Erkennung
-von Objekten in Betracht gezogen werden.
-Personen sind keine starren Objekte und zeigen Veränderungen in Form von
-Bewegungen zwischen einzelnen Bildern einer Bildsequenz auf.
-Die Erkennung solcher Bewegungen kann zu einer Existenzaussage
-von Personen im Bildausschnitt approximiert werden. Darüber stellt sich
-die Frage, in wie weit sich solche Existenzaussagen zur Zählung von
-Personen eignen und welche Bedingungen sich daran knüpfen.
+Es werden Bilddaten eines Raumes einer handelsüblichen Web-Kamera zur
+Untersuchung verwendet. Ein Algorithmus, der zuverlässig Bewegungen
+auf Bildsequenzen dieser Bilddaten erkennt, kann für Aussagen zur
+Erkennung von Objekten in Betracht gezogen werden.  Personen sind
+keine starren Objekte und zeigen Veränderungen in Form von Bewegungen
+zwischen einzelnen Bildern einer Bildsequenz auf.  Die Erkennung
+solcher Bewegungen kann zu einer Existenzaussage von Personen im
+Bildausschnitt approximiert werden. Darüber stellt sich die Frage, in
+wie weit sich solche Existenzaussagen zur Zählung von Personen eignen
+und welche Bedingungen sich daran knüpfen.
 
 Neben diesen Bewertungen wird ein kleiner Vergleich auf vorhandene
 technische Systeme zur Bewegungserkennung gegeben, die auf Bilderkennung
@@ -78,10 +78,10 @@ alternatives Produkt.
 %------------------------------------------------------------------------- 
 \section{Bilddaten}
 
-Die verwendeten Bilddaten werden mit einer handelsüblichen WebCam, Modell MOBOTIX M1
-(\url{http://www.mobotix.com}), unter identischen Lichtbedingungen und
-unverändertem Raumausschnitt erzeugt.
-Die Kameraeinstellungen und Bildeigenschaften sind wie folgt festgelegt:
+Die verwendeten Bilddaten werden mit einer handelsüblichen WebCam,
+Modell MOBOTIX M1 (\url{http://www.mobotix.com}), unter identischen
+Lichtbedingungen und unverändertem Raumausschnitt erzeugt.  Die
+Kameraeinstellungen und Bildeigenschaften sind wie folgt festgelegt:
 
 \begin{figure}[h]
     \begin{center}
@@ -118,30 +118,157 @@ sichtbar, eine Person und mehrere Personen die sich bewegen.
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
 
-\subsection{CalcOpticalFlowHS}
-Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
-zwischen zwei Bildern nach dem Horn \& Schunk \cite{Horn81} Verfahren.
+\subsection{Optischer Fluss}
 
-\subsection{CalcOpticalFlowLK}
-Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
-zwischen zwei Bildern nach dem Lucas \& Kanade \cite{Lucas81} Verfahren.
+OpenCV bietet drei verschiedene Algorithmen zur Berechnung von
+optischem Fluss an.  Diese Algorithmen versuchen die Bewegung von
+einem Bild zum nächsten zu charakterisieren.  Ergebnis einer solchen
+Charakterisierung sind zwei Matrizen, in denen für jeden Pixel aus dem
+ersten Bild die Distanz zu seinem entsprechenden Pixel im zweiten Bild
+angegeben wird.  In der ersten Matrix Bewegung in horizontaler, in der
+zweiten in vertikaler Richtung.
 
-\subsection{CalcOpticalFlowBM}
-Dieser Algorithmus berechnet den optischen Bewegungsfluss für
-Segmente einer frei definierbaren Größe zwischen zwei Bildern.
-Um so gröber die Segmente gewählt werden, desto performanter arbeitet der
-Algorithmus.
+Diese Matrizen allein geben aber noch keine verwertbare Information,
+die auf das Nicht-/Vorhandensein von Personen hindeuten könnte.  Die
+Bilder, die von den eingesetzten Kameras geliefert werden, enthalten
+ein gewisses Maß an Rauschen, d.h. Unterschiede in der Helligkeit
+einzelner Pixel der selben Szene.  Dieses Rauschen führt dazu, dass
+die OpenCV-Flussalgorithmen für den überwiegenden Anteil der Pixel
+eine Bewegung zwischen zwei Bildern feststellen, obwohl die Bilder
+nach Ansicht eines menschlichen Beobachters identisch sind.
+
+Ein weiteres wesentliches Problem ist die Wahl der Parameter der
+Fluss-Algorithmen.  Für jeden Pixel aus dem ersten Bild wird innerhalb
+einer bestimmten Umgebung nach einer Entsprechung im zweiten Bild
+gesucht.  Eine große Umgebung hat zwangsläufig negative Auswirkungen
+auf die Rechenzeit des Algorithmus, eine kleine Umgebung hingegen kann
+nur sehr lokale Bewegungen feststellen.  Eine Person, die sich durch
+den Raum bewegt und von einem Bild zum nächsten eine signifikante
+Bewegung durchgeführt hat, wird von einem solchen Verfahren nicht
+sinnvoll erkannt werden.
+
+Deshalb scheinen reine Flussalgorithmen ohne weiterreichende Analysen
+für die Lösung des Problems ungeeignet.  Die Möglichkeiten von OpenCV
+werden hier nur der Vollständigkeit halber angegeben.
+
+
+\subsubsection{CalcOpticalFlowHS}
+Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
+zwischen zwei Bildern nach dem Horn~\&~Schunk \cite{Horn81} Verfahren.
+
+\subsubsection{CalcOpticalFlowLK}
+Dieser Algorithmus berechnet den optischen Bewegungsfluss für alle Pixel
+zwischen zwei Bildern nach dem Lucas~\&~Kanade \cite{Lucas81} Verfahren.
+
+\subsubsection{CalcOpticalFlowBM}
+Dieser Algorithmus berechnet unterteilt die Eingabebilder in Rechtecke
+einer bestimmten Größe, sogenannte Basic Blocks.  Der optische Fluss
+wird nun statt für einzelne Pixel für diese Basic Blocks berechnet.
+In den Ergebnis-Matrizen steht jeweils ein Eintrag für die Distanz in
+Anzahl Pixels, die der entsprechende Basic Block aus dem ersten Bild
+sich zu seiner Entsprechung im zweiten Bild bewegt hat.
+
+Für die Personen-Erkennung bleibt das Problem, auf welche Weise die
+Größe von Basic Blocks gewählt werden soll, und wie tatsächliche
+Bewegungen identifiziert werden können.
+
 
 \subsection{CalcOpticalFlowPyrLK}
-Dieser Algorithmus \cite{Bouget00} basiert auf einer iterativen Version der optischen
-Fluss-Pyramiden nach Lucas \& Kanade. Er berechnet den optischen
-Bewegungsfluss auf einer Menge von Punkten zwischen zwei Bildern. Es
-werden Bewegungen mit Sub-Pixel Genauigkeit gefunden.
+Dieser Algorithmus \cite{Bouget00} basiert auf einer iterativen
+Version der optischen Fluss-Pyramiden nach Lucas~\&~Kanade.  Hierbei
+werden die beiden Eingabe-Bilder nach einem bestimmten Verfahren
+sukzessive um Faktor 4 verkleinert.  So entstehen zwei Pyramiden von
+Bildern.  Die untersten Ebenen dieser Pyramiden sind die
+Eingabe-Bilder.  Die weiteren Ebenen ihre Verkleinerungen.  Dann wird
+mit dem Verfahren nach Lucas~\&~Kanade der optische Fluss zwischen den
+einander entsprechenden Ebenen dieser Pyramiden berechnet, beginnend
+an der Spitze der Pyramide.  Das Ergebnis einer Ebene wird als
+Vermutung für die Berechnung des Flusses in der nächst größeren Ebene
+verwendet.  Auf diese Weise kann dieser Algorithmus sowohl sehr lokale
+Bewegungen wie auch Bewegungen, die eine Große Strecke des Bildes
+betreffen zuverlässige Erkennen.
+
+Somit liefert dieser Algorithmus einen optischen Fluss, der näher an
+der gewünschten Information liegt.  Trotzdem besteht noch das gleiche
+Problem wie mit den anderen Fluss-Algorithmen, nämlich die Frage, wie
+optischer Fluss überhaupt zur Erkennung von Personen eingesetzt werden
+kann.
+
+Hierzu liefert OpenCV jedoch eine Antwort, da die Funktion
+CalcOpticalFlowPyrLK Funktionalität zum Feature-Tracking mit umfasst.
+Der optische Fluss wird verwendet, um die Bewegung einer Menge von
+Feature-Points im ersten Bild zu den entsprechenden Positionen im
+zweiten Bild zu berechnen.  Feature-Points können durch einen weiteren
+Algorithmus automatisch für ein Bild berechnet werden.
+
+Bei automatischer Berechnung der Feature-Points bleibt allerdings
+unklar, welche Information sich aus dem Verfolgen dieser Punkte
+tatsächlich gewinnen lässt.  Insbesondere ist unklar, wie
+sichergestellt wird, dass evtl. im Raum befindliche Personen
+tatsächlich von diesen Feature-Points erfasst werden.
+
+In praktischen Tests wurde festgestellt, dass der Algorithmus dazu
+neigt, Feature-Points mit der Zeit zu verlieren, dh. im zweiten Bild
+gar nicht wieder zu finden.  Insbesondere wenn Objekte durch andere
+verdeckt werden, tritt dieser Effekt ein.  Deshalb wird von Zeit zu
+Zeit eine Neuberechnung der Feature-Points notwendig.  Durch diese
+Neuberechnung geht natürlich Information über die aktuelle Szene
+verloren.
+
+Für das Personen im Raum-Problem erschien es sinnvoll, eine feste
+Menge von Feature-Points vorzugeben, die an geeigneten Stellen im Bild
+strategisch platziert werden.  Jede Person, die den Raum betritt oder
+verlässt, wird eine Bewegung der Eingangstür verursachen, genau so wie
+Personen, die an einem bestimmten Arbeitsplatz sitzen eben dort
+Bewegungen verursachen.
+
+
 
 \subsection{SegmentMotion}
-Dieser Algorithmus sucht alle bewegten Segmente zwischen zwei Bildern
-und vergibt für jede Bewegung in einer Segmentmaske Werte zwischen
-$1..N$, je nach Bewegungsintensität.
+Mit Hilfe des SegmentMotion-Algorithmus aus OpenCV lassen sich
+Bewegungen die von einem Bild zum nächsten aufgetreten sind, in
+einzelne Teilbewegungen zerlegen.  Gehen also zwei Personen in
+verschiedenen Teilen des Raumes umher, so soll SegmentMotion die
+Bewegungen der beiden Personen in getrennte Bewegungen zweier
+verschiedener Objekte unterteilen können.
+
+Durch die Teilung in einzelne Objekte, wird es möglich abschätzungen
+über die Heftigkeit einer Bewegung oder die Größe des bewegten Objekts
+zu machen.  Beides sind wertvolle Indizien, falls entschieden werden
+soll, ob die Detektierung einer Bewegung im Bild durch eine Person
+oder nur durch eine Veränderung in den Lichtverhältnissen im Bild
+hervorgerufen wurde.
+
+Die OpenCV-Implementierung von SegmentMotion wird angewendet auf eine
+Motion~History.  Motion~History ist eine Matrix in der Größe der
+Eingabebilder, in der in jeder Zelle ein Zeitstempel eingetragen wird.
+Dieser Zeitstempel gibt den letzten Zeitpunkt an, zu dem zuletzte eine
+Bewegung dieses Pixels erkannt wurde.  Durch Verwenden der
+Motion~History wird es somit möglich, das Verschwinden einer Bewegung
+künstlich zu um eine konfigurierbare Zeit zu verzögern.  Dies
+ermöglicht auch sehr kurz andauernde, sich aber häufig auftretende
+Bewegungen sicher zu erkennen.
+
+Die Einträge in eine Motion~History schließlich werden anhand eines
+Differenzbildes erstellt.  Zwei Bilder werden zu Graustufen
+umgewandelt und an jedem Koordinatenpunkt wird die Differenz der
+Helligkeit der entsprechenden Punkte berechnet.  Ist die Differenz
+größer als ein bestimmter Schwellwert, so wird an diesem Punkt eine
+Bewegung vermutet.  Die Punkte mit vermuteten Bewegungen werden in die
+Motion~History aufgenommen.  Mittels SegmentMotion werden Bewegungen
+einzelner Objekte extrahiert und solche Objekte, die extrem klein sind
+werden unmittelbar verworfen, da sie mit großer Wahrscheinlichkeit auf
+Rauschen zurückzuführen sind.
+
+Ein Vorteil dieses Verfahrens gegenüber dem
+CalcOpticalFlowPyrLK-Algorithmus liegt deutlich in der kürzeren
+Ausführungszeit.  Auch fällt die Problematik der Feature-Point
+Berechnung weg.  Der Algorithmus ist problemlos für alle Räume
+anwendbar.  Schwierig ist jedoch die Justierung der Parameter
+(Schwellwert für Bewegungserkennung, minimale Objektgröße, maximale
+History-Dauer).
+
+
 
 \subsection{Eigene Implementierung}
 Neben den genannten Algorithmen aus der Vektor-Grafik-Bibliothek

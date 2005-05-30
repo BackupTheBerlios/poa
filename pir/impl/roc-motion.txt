@@ -1,0 +1,2 @@
+xxiii> ./roc motion-2-d5m001M1.log roc-line-some-probands.log 2>roc-motion-2.log
+xxiii> ./roc motion-1-d5m001M1.log roc-line-no-probands.log 2>roc-motion-1.log

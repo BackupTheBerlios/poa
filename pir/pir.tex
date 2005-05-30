@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.13 2005/05/29 02:49:18 keulsn Exp $
+% $Id: pir.tex,v 1.14 2005/05/30 19:35:43 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -112,8 +112,13 @@ Es werden zwei Szenarien untersucht:
 \end{itemize}
 
 Im ersten Szenario ist keine Person im Bildausschnitt aller 200
-Bildsequenzen sichtbar. Im anderen Szenario sind teilweise keine Person
-sichtbar, eine Person und mehrere Personen die sich bewegen.
+Bildsequenzen sichtbar. Im anderen Szenario variiert die Anzahl der
+Personen, wie in folgenden Diagrammen, deren Werte auf menschlicher
+Wahrnehmung beruhen, veranschaulicht.
+
+\includegraphics[width=7cm,angle=270]{impl/roc-line-no-probands.log.ps}
+
+\includegraphics[width=7cm,angle=270]{impl/roc-line-some-probands.log.ps}
 
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
@@ -280,6 +285,8 @@ sichtbar.
 
 %------------------------------------------------------------------------- 
 \section{Receiver Operator Characteristic Curves}
+
+
 
 
 \includegraphics[width=7cm,angle=270]{impl/motion-1-d1.log.ps}

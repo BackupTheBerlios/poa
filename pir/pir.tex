@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.19 2005/06/09 10:13:30 garbeam Exp $
+% $Id: pir.tex,v 1.20 2005/06/09 22:21:43 keulsn Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -202,8 +202,8 @@ einander entsprechenden Ebenen dieser Pyramiden berechnet, beginnend
 an der Spitze der Pyramide.  Das Ergebnis einer Ebene wird als
 Vermutung für die Berechnung des Flusses in der nächst größeren Ebene
 verwendet.  Auf diese Weise kann dieser Algorithmus sowohl sehr lokale
-Bewegungen wie auch Bewegungen, die eine Große Strecke des Bildes
-betreffen zuverlässige Erkennen.
+Bewegungen wie auch Bewegungen, die einen großen Ausschnitt des Bildes
+betreffen zuverlässig erkennen.
 
 Somit liefert dieser Algorithmus einen optischen Fluss, der näher an
 der gewünschten Information liegt.  Trotzdem besteht noch das gleiche
@@ -250,7 +250,7 @@ verschiedenen Teilen des Raumes umher, so soll SegmentMotion die
 Bewegungen der beiden Personen in getrennte Bewegungen zweier
 verschiedener Objekte unterteilen können.
 
-Durch die Teilung in einzelne Objekte, wird es möglich abschätzungen
+Durch die Teilung in einzelne Objekte, wird es möglich, Abschätzungen
 über die Heftigkeit einer Bewegung oder die Größe des bewegten Objekts
 zu machen.  Beides sind wertvolle Indizien, falls entschieden werden
 soll, ob die Detektierung einer Bewegung im Bild durch eine Person
@@ -274,7 +274,7 @@ Helligkeit der entsprechenden Punkte berechnet.  Ist die Differenz
 größer als ein bestimmter Schwellwert, so wird an diesem Punkt eine
 Bewegung vermutet.  Die Punkte mit vermuteten Bewegungen werden in die
 Motion~History aufgenommen.  Mittels SegmentMotion werden Bewegungen
-einzelner Objekte extrahiert und solche Objekte, die extrem klein sind
+einzelner Objekte extrahiert und solche Objekte, die extrem klein sind,
 werden unmittelbar verworfen, da sie mit großer Wahrscheinlichkeit auf
 Rauschen zurückzuführen sind.
 
@@ -307,13 +307,13 @@ Beispielprogramme angeboten, die Möglichkeiten von der Algorithmen in
 OpenCV erläutern sollen und die intendierte Verwendung von OpenCV
 illustrieren.
 
-Im Rahmen dieser Fachstudie sollte keine neue Technologie werden,
-sondern vorhandene Möglichkeiten der OpenCV Bibliothek evaluiert
-werden.  Deshalb wurden zur Untersuchung die Beispielprogramme von
-OpenCV herangezogen und soweit erweitert, dass verwertbare
-Messergebnisse produziert werden.  Die Semantik der untersuchten
-Verfahren Verfahren wurde nach Überzeugung der Autoren nicht
-verändert.
+Im Rahmen dieser Fachstudie sollte keine neue Technologie entwickelt
+werden, sondern vorhandene Möglichkeiten der OpenCV Bibliothek
+evaluiert werden.  Deshalb wurden zur Untersuchung die
+Beispielprogramme von OpenCV herangezogen und soweit erweitert, dass
+verwertbare Messergebnisse produziert werden.  Die Semantik der
+untersuchten Verfahren wurde nach Überzeugung der Autoren
+nicht verändert.
 
 \subsection{Grundlagen}
 
@@ -356,16 +356,16 @@ Der in Abschnitt \ref{pyrlk_algo} beschriebene Algorithmus wird von
 dem Beispielprogramm lkdemo.c implementiert.  Allerdings verwendet
 dieses Beispiel automatische Suche nach geeigneten Feature-Points.
 Diese musste ersetzt werden durch die beschriebene vordefinierte Liste
-von Feature-Points ersetzt werden.  Das Ergebnis ist das Programm
-pyramid.c es akzeptiert als Parameter die Datei mit Feature-Point
-Koordinaten sowie einen Schwellwert, ab dem eine Bewegung von
-Feature-Points als reale Bewegung im Bild interpretiert wird.
+von Feature-Points.  Das Ergebnis ist das Programm pyramid.c es
+akzeptiert als Parameter die Datei mit Feature-Point Koordinaten sowie
+einen Schwellwert, ab dem eine Bewegung von Feature-Points als reale
+Bewegung im Bild interpretiert wird.
 
 Um mehrere Bewegungen zählen zu können, wird die Menge der
-Feature-Points in einzelne Feature-Point Gruppen unterteilt.  In jedem
-Schritt wird jede Gruppe in der eine Bewegung stattgefunden hat
-gezählt.  Davon erhoffen sich die Autoren eine Personenzählung
-approximieren zu können.
+Feature-Points in einzelne Feature-Point Gruppen unterteilt.  Für
+jedes Bild der untersuchten Sequenz wird jede Gruppe gezählt, in der
+eine Bewegung stattgefunden hat.  Davon erhoffen sich die Autoren eine
+Personenzählung approximieren zu können.
 
 Die Feature-Point Dateien werden mit dem Programm setfeature.c
 erstellt.  Dieses Programm musste als Hilfsmittel für die Durchführung
@@ -376,10 +376,10 @@ von Datenstrukturen unabhängig.
 \subsection{Segment Motion}
 
 Der in Abschnitt \ref{segmentmotion_algo} beschriebene Algorithmus
-wird von dem Beispielprogramm motempl.c implementiert.  Dieses
+wird von dem Beispielprogramm motempl.c implementiert.  Dieser
 Beispielcode wurde als Vorlage für das Testprogramm motion.c
 verwendet.  Als Parameter können die Dauer der Motion~History, die
-Anzahld der gepufferten Bilder und ein Bereich reeller Zahlen
+Anzahl der gepufferten Bilder und ein Bereich reeller Zahlen
 angegeben werden, in dem sich Gradienten der Motion~History befinden
 müssen.  Dieser Algorithmus interpretiert den Namen der Eingabebilder,
 um den Zeitpunkt ihrer Aufnahme festzustellen.

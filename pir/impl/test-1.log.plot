@@ -1,5 +1,5 @@
 set time
-set title "CalcOpticalFlowHS,LK,BM,Eigener Algorithmus, keine Person im Bild"
+set title "Eigener Algorithmus, keine Person im Bild"
 set xrange [0:200]
 set yrange [0:10]
 set xlabel "Bildsequenz"

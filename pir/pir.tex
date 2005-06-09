@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.17 2005/06/09 09:36:52 keulsn Exp $
+% $Id: pir.tex,v 1.18 2005/06/09 10:12:53 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -70,10 +70,6 @@ Neben diesen Bewertungen wird ein kleiner Vergleich auf vorhandene
 technische Systeme zur Bewegungserkennung gegeben, die auf Bilderkennung
 basieren, sowie ein zur untersuchten Vektor-Grafik-Bibliothek
 alternatives Produkt.
-
-% Vgl. OpenCV mit anderen Bibliotheken zB MontiVision Development Kit
-% OpticalFlow Modul
-% evtl. andere Prozesse
 
 %------------------------------------------------------------------------- 
 \section{Bilddaten}
@@ -398,36 +394,36 @@ Bildsequenz von dem jeweiligen Algorithmus die Anzahl der erkannten
 Personen (Bewegungsfelder) ausgegeben, die in den Diagrammen im Anhang
 im Detail angegeben ist.
 
-\subsection{Optischer Fluss}
+\subsection{Eigene Implementierung}
 
-Aufgrund nahezu identischer Resultate der oben angegebenen Algorithmen
-CalcOpticalFlowHS, CalcOpticalFlowLK, CalcOpticalFlowBM und der eigenen
-Implementierung, wurden diese Art von Algorithmen in einem Test
-zusammengefasst. Da sich die genannten Algorithmen nicht parametrisieren
-lassen, wurde nur ein Test pro Szenario durchgeführt. Die genauen
-Resultate sind im Anhang ersichtlich.
-Die Güte und Zuverlässigkeit dieser Algorithmen wurde in Beziehung zu den
+Aufgrund der Uneignung der Algorithmen CalcOpticalFlowHS,
+CalcOpticalFlowLK und CalcOpticalFlowBM, die lediglich Richtungsvektoren
+von bewegten Pixeln berechnen, wurde die eigene Implementierung
+auf beiden Szenarien angewendet und untersucht.
+Die Güte und Zuverlässigkeit des eigenen Algorithmus wurde in Beziehung zu den
 tatsächlichen Personen im Bild in eine absolute Receiver-Operator Charakteristik
 umgerechnet, die wie folgt pro Szenario ausgefallen ist.
 
 \begin{center}
 \begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/roc-optical-flow-1.log.ps}
-\caption{Receiver Operator Charakteristik, erstes Szenario, Optische Fluss Algorithmen}
+\caption{Receiver Operator Charakteristik, erstes Szenario, Eigene
+Implementierung}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/roc-optical-flow-2.log.ps}
-\caption{Receiver Operator Charakteristik, zweites Szenario, Optische Fluss Algorithmen}
+\caption{Receiver Operator Charakteristik, zweites Szenario, Eigene
+Implementierung}
 \end{figure}
 \end{center}
 
-Aus den Charakteristiken ist ersichtlich, dass die Optischen
-Fluss-Algorithmen keine Falsch-Positiv Treffer im ersten Szenario
+Aus den Charakteristiken ist ersichtlich, dass die eigene
+Implementierung keine Falsch-Positiv Treffer im ersten Szenario
 detektiert haben. Die recht gute Kurve im zweiten Szenario deutet allerdings
 auf eine Ungenauigkeit zur Zählung von Personen hin.
-Optische Fluss Algorithmen können also lediglich zur Existenzaussage
-von Bewegungen in Betracht gezogen werden, für diese Aussagen sind sie
+Die eigene Implementierung kann also lediglich zur Existenzaussage
+von Bewegungen in Betracht gezogen werden, für diese Aussagen ist sie
 sehr schnell und sehr zuverlässig.
 
 
@@ -547,7 +543,6 @@ Feature-Points haben auf den vorliegenden Bildsequenzen eher keine positive
 Auswirkung zeigen können, da der Winkel der Kamera zu flach ist, um
 Bewegungen im hinteren Raumbereich von Bewegungen in Kameranähe
 unterscheiden zu können.
-
 Unter den Umständen der gegebenen Daten und Kameraeinstellung lieferte
 der CalcOpticalFlowPyrLK die mit Abstand schlechtesten Resultate, wie
 aus den Diagrammen im Anhang ersichtlich ist. Wenn die Kamera
@@ -582,12 +577,46 @@ Allerdings ist zu berücksichtigen, das CalcOpticalFlowPyrLK
 diese Resultate bei idealeren Bedingungen nicht zutreffen müssen.
 
 %------------------------------------------------------------------------- 
+\subsection{Alternativen}
+
+Neben der in dieser Fachstudie untersuchten OpenCV\cite{opencv}
+Bibliothek existieren viele andere Produkte auf dem IT-Markt, die
+Produkte zum Thema ``Optischer Fluss'' anbieten.
+
+\subsubsection{WebCam}
+Selbst die verwendete Kamera, Modell MOBOTIX M1 (\url{http://www.mobotix.com}),
+bietet von sich aus Tracking-Algorithmen an, die den optischen Fluss der einzelnen
+Bildsequenzen berücksichtigen und bewegte Bereiche verfolgen und
+grafisch hervorheben können. Diese Hervorhebungen können in der
+Kamerasteuerung als Auslöser für Ereignisse verwendet werden.
+Die Kamera enthält neben Algorithmen zur Bilderkennung aber auch
+herkömmliche Bewegungssensoren, die aufgrund von Wärme-Detektion bzw.
+Elektro-Magnetfeld-Analyse Bewegungen registriert, die zur
+Ereignisauslösung herangezogen werden können.
+
+\subsubsection{MontiVision Development Kit}
+Für das Windows Betriebssystem bietet die Firma MontiVision ein
+OpticalFlow Modul\cite{montivision} an, das in ihrem Development Kit zur
+Analyse von optischen Flüssen von Eingabedaten verwendet werden kann.
+Neben einer eigentlichen API bietet dieses Development Kit auch eine
+grafische Oberfläche, die in Form von Daten-Strom-Grafen, ähnlich einer
+Pipe-Filter Architektur, es dem Anwender sehr einfach ermöglicht,
+verschiedene optische Fluss-Filter sequentiell
+hintereinanderzuschalten. Am Anfang solcher Verkettungen wird eine
+Datenquelle angegeben. Wenn so eine Konfiguration gestartet ausgeführt
+wird, kann der Anwender das Resultat der Filter auf den Eingabe-Daten
+grafisch mitverfolgen, z.B. werden bewegte Bereiche grafisch
+hervorgehoben.
+
+%------------------------------------------------------------------------- 
 \section{Fazit}
 Im Rahmen dieser Fachstudie haben wir festgestellt, das die genannten
 Algorithmen sich zur Existenzaussage von Bewegungen in Bildern eignen,
 jedoch zur Zählung von Personen nur bedingt geeignet sind. Die effizienteste
 Ausführung zur Existenzaussage von Bewegungen in einem Bildausschnitt
-liefern die einfachen optischen Fluss-Algorithmen.
+liefert die eigene Implementierung. Qualitativ ähnliche Resultate zur
+eigenen Implementierung liefert der SegmentMotion Algorithmus aus der
+OpenCV Bibliothek.
 
 Eine auf den genannten Ergebnissen aufbauende Implementierung könnte
 beispielsweise noch Gesichtserkennungsalgorithmen und Stereo-Bilder in
@@ -596,7 +625,6 @@ zuverlässiger zu ermöglichen.
 
 \begin{thebibliography}{99}
 \bibitem{opencv} http://opencvlibrary.sf.net
-\bibitem{KIL05} Marcel Kilgus, Optische Flusserkennung mit 15 LOC, 2005.
 \bibitem{Horn81} Berthold K. P. Horn und Brian G. Schunck. Determining
 Optical Flow. Artificial Intelligence, 17, pp. 185-203, 1981.
 \bibitem{Lucas81} Lucas, B. und Kanade, T. An Iterative Image
@@ -605,6 +633,8 @@ Registration Technique with an Application to Stereo Vision, Proc. of
 pp. 674-679.
 \bibitem{Bouget00} Jean-Yves Bouguet. Pyramidal Implementation of the
 Lucas Kanade Feature Tracker.
+\bibitem{montivision} MontiVision Development Kit, OpticalFlow Modul,
+http://www.montivision.com/support/documentation/noframes/source/filter/optical_flow_filter.htm
 \end{thebibliography}
 
 \section*{Anhang}

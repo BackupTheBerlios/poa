@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.16 2005/06/05 23:06:04 garbeam Exp $
+% $Id: pir.tex,v 1.17 2005/06/09 09:36:52 keulsn Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -194,6 +194,7 @@ Bewegungen identifiziert werden können.
 
 
 \subsection{CalcOpticalFlowPyrLK}
+\label{pyrlk_algo}
 Dieser Algorithmus \cite{Bouget00} basiert auf einer iterativen
 Version der optischen Fluss-Pyramiden nach Lucas~\&~Kanade.  Hierbei
 werden die beiden Eingabe-Bilder nach einem bestimmten Verfahren
@@ -245,6 +246,7 @@ Bewegungen verursachen.
 
 
 \subsection{SegmentMotion}
+\label{segmentmotion_algo}
 Mit Hilfe des SegmentMotion-Algorithmus aus OpenCV lassen sich
 Bewegungen die von einem Bild zum nächsten aufgetreten sind, in
 einzelne Teilbewegungen zerlegen.  Gehen also zwei Personen in
@@ -297,6 +299,95 @@ untersucht, der unter einer einstellbaren Unschärfeschwelle
 Differenzbilder zwischen zwei Bildern erzeugt. Wenn Differenzen
 existieren, so werden diese als Bewegungsfelder auf dem Differenzbild
 sichtbar.
+
+
+
+%------------------------------------------------------------------------- 
+\section{Vorgehen}
+
+OpenCV ist eine Bibliothek, die Bausteine (Funktionen) zur
+Bildverarbeitung bereitstellt.  Zusätzlich werden einige
+Beispielprogramme angeboten, die Möglichkeiten von der Algorithmen in
+OpenCV erläutern sollen und die intendierte Verwendung von OpenCV
+illustrieren.
+
+Im Rahmen dieser Fachstudie sollte keine neue Technologie werden,
+sondern vorhandene Möglichkeiten der OpenCV Bibliothek evaluiert
+werden.  Deshalb wurden zur Untersuchung die Beispielprogramme von
+OpenCV herangezogen und soweit erweitert, dass verwertbare
+Messergebnisse produziert werden.  Die Semantik der untersuchten
+Verfahren Verfahren wurde nach Überzeugung der Autoren nicht
+verändert.
+
+\subsection{Grundlagen}
+
+Insgesamt wurden drei Testprogramme untersucht.  In allen
+Testprogrammen können Parameterwerte der Algorithmen über
+Kommandozeilen-Parameter eingestellt werden.  Mit dem Parameter
+\emph{help} kann eine Liste der angebotenen Parameter ausgegeben
+werden.  Falls ein Testprogramm mit dem Parameter \emph{visualize}
+gestartet wird, so zeigt es mit Hilfe der OpenCV-Funktionen dynamisch
+die Ergebnisse grafisch an.
+
+Alle Testprogramme schreiben zusätzlich Ausgabe auf die
+Standard-Ausgabe.  Diese Ausgabe besteht aus einem Datensatz pro
+analysiertem Bild.  Jeder Datensatz hat die Form
+
+\begin{verbatim}
+image_12345.33343.png   2   0.230000
+\end{verbatim}
+
+In der ersten Spalte steht der Name des Bilds, in der zweiten die
+Anzahl der erkannten Bewegungen, in der dritten die Rechenzeit in
+Sekunden.  Diese Ausgabe lässt sich automatisiert mit einer
+Referenzausgabe vergleichen.
+
+
+\subsection{Referenzausgabe}
+
+Um Tests durchführen zu können wurde das Programm manual.c
+implementiert.  Es zeigt dem Benutzer Bild für Bild die untersuchte
+Bildersequenz an und erwartet als Eingabe die Zahl der vom Benutzer
+gesehen Personen auf dem Bild.  Das Programm produziert daraufhin die
+gleiche Ausgabe wie die Testprogramme und schafft somit eine
+Referenzausgabe, mit der die Ausgaben der Testprogramme verglichen
+werden können.
+
+
+\subsection{CalcOpticalFlowPyrLK}
+
+Der in Abschnitt \ref{pyrlk_algo} beschriebene Algorithmus wird von
+dem Beispielprogramm lkdemo.c implementiert.  Allerdings verwendet
+dieses Beispiel automatische Suche nach geeigneten Feature-Points.
+Diese musste ersetzt werden durch die beschriebene vordefinierte Liste
+von Feature-Points ersetzt werden.  Das Ergebnis ist das Programm
+pyramid.c es akzeptiert als Parameter die Datei mit Feature-Point
+Koordinaten sowie einen Schwellwert, ab dem eine Bewegung von
+Feature-Points als reale Bewegung im Bild interpretiert wird.
+
+Um mehrere Bewegungen zählen zu können, wird die Menge der
+Feature-Points in einzelne Feature-Point Gruppen unterteilt.  In jedem
+Schritt wird jede Gruppe in der eine Bewegung stattgefunden hat
+gezählt.  Davon erhoffen sich die Autoren eine Personenzählung
+approximieren zu können.
+
+Die Feature-Point Dateien werden mit dem Programm setfeature.c
+erstellt.  Dieses Programm musste als Hilfsmittel für die Durchführung
+des Tests erstellt werden und ist von OpenCV bis auf die Verwendung
+von Datenstrukturen unabhängig.
+
+
+\subsection{Segment Motion}
+
+Der in Abschnitt \ref{segmentmotion_algo} beschriebene Algorithmus
+wird von dem Beispielprogramm motempl.c implementiert.  Dieses
+Beispielcode wurde als Vorlage für das Testprogramm motion.c
+verwendet.  Als Parameter können die Dauer der Motion~History, die
+Anzahld der gepufferten Bilder und ein Bereich reeller Zahlen
+angegeben werden, in dem sich Gradienten der Motion~History befinden
+müssen.  Dieser Algorithmus interpretiert den Namen der Eingabebilder,
+um den Zeitpunkt ihrer Aufnahme festzustellen.
+
 
 %------------------------------------------------------------------------- 
 \section{Untersuchung}
@@ -520,6 +611,16 @@ Lucas Kanade Feature Tracker.
 
 \subsection*{Feature-Points I}
 Die Feature-Points sind (x y) Paare an absoluten Pixel-Positionen.
+Einzelne Points sind durch Kommata getrennt, Feature-Point Gruppen
+durch Semikolons.
+
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/feature_point_image1.ps}
+\caption{Feature-Points I}
+\end{center}
+\end{figure}
 
 \begin{verbatim}
 (167.000000 367.000000),(188.000000 367.000000),(213.000000
@@ -614,9 +715,20 @@ Die Feature-Points sind (x y) Paare an absoluten Pixel-Positionen.
 54.000000),(581.000000 103.000000),(564.000000 93.000000),(515.000000
 64.000000),(458.000000 106.000000).
 \end{verbatim}
+
 
 \subsection*{Feature-Points II}
 Die Feature-Points sind (x y) Paare an absoluten Pixel-Positionen.
+Einzelne Points sind durch Kommata getrennt, Gruppen von Points durch
+Semikolons.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/feature_point_image2.ps}
+\caption{Feature-Points II}
+\end{center}
+\end{figure}
+
 \begin{verbatim}
 (167.000000 367.000000),(188.000000 367.000000),(213.000000
 371.000000),(247.000000 367.000000),(271.000000 367.000000),(278.000000
@@ -710,6 +822,8 @@ Die Feature-Points sind (x y) Paare an absoluten Pixel-Positionen.
 54.000000),(581.000000 103.000000),(564.000000 93.000000),(515.000000
 64.000000),(458.000000 106.000000).
 \end{verbatim}
+
+
 \begin{center}
 \includegraphics[width=7cm,angle=270]{impl/motion-1-d1.log.ps}
 

@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.20 2005/06/09 22:21:43 keulsn Exp $
+% $Id: pir.tex,v 1.21 2005/06/10 01:10:22 kilgus Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -250,7 +250,7 @@ verschiedenen Teilen des Raumes umher, so soll SegmentMotion die
 Bewegungen der beiden Personen in getrennte Bewegungen zweier
 verschiedener Objekte unterteilen können.
 
-Durch die Teilung in einzelne Objekte, wird es möglich, Abschätzungen
+Durch die Teilung in einzelne Objekte wird es möglich, Abschätzungen
 über die Heftigkeit einer Bewegung oder die Größe des bewegten Objekts
 zu machen.  Beides sind wertvolle Indizien, falls entschieden werden
 soll, ob die Detektierung einer Bewegung im Bild durch eine Person
@@ -260,11 +260,11 @@ hervorgerufen wurde.
 Die OpenCV-Implementierung von SegmentMotion wird angewendet auf eine
 Motion~History.  Motion~History ist eine Matrix in der Größe der
 Eingabebilder, in der in jeder Zelle ein Zeitstempel eingetragen wird.
-Dieser Zeitstempel gibt den letzten Zeitpunkt an, zu dem zuletzte eine
-Bewegung dieses Pixels erkannt wurde.  Durch Verwenden der
+Dieser Zeitstempel gibt den letzten Zeitpunkt an, an dem zuletzt eine
+Bewegung dieses Pixels erkannt wurde.  Durch Verwendung der
 Motion~History wird es somit möglich, das Verschwinden einer Bewegung
-künstlich zu um eine konfigurierbare Zeit zu verzögern.  Dies
-ermöglicht auch sehr kurz andauernde, sich aber häufig auftretende
+künstlich um eine konfigurierbare Zeit zu verzögern.  Dies
+ermöglicht auch sehr kurz andauernde aber häufig auftretende
 Bewegungen sicher zu erkennen.
 
 Die Einträge in eine Motion~History schließlich werden anhand eines
@@ -291,10 +291,11 @@ History-Dauer).
 \subsection{Eigene Implementierung}
 Neben den genannten Algorithmen aus der Vektor-Grafik-Bibliothek
 OpenCV\cite{opencv} wurde auch ein eigener Algorithmus entworfen und
-untersucht, der unter einer einstellbaren Unschärfeschwelle
-Differenzbilder zwischen zwei Bildern erzeugt. Wenn Differenzen
-existieren, so werden diese als Bewegungsfelder auf dem Differenzbild
-sichtbar.
+untersucht, der erst versucht mit Hilfe von Schwellwerten das Bildrauschen
+zu minimieren und danach das Bild in Segmente einteilt, für die jeweils 
+die Zahl geänderten Pixel ermittelt wird. Liegt diese über einer bestimmten
+Schwelle wird eine Bewegung im Segment angenommen und entsprechend 
+visuell im Differenzbild dargstellt.
 
 
 
@@ -333,7 +334,7 @@ analysiertem Bild.  Jeder Datensatz hat die Form
 image_12345.33343.png   2   0.230000
 \end{verbatim}
 
-In der ersten Spalte steht der Name des Bilds, in der zweiten die
+In der ersten Spalte steht der Name des Bildes, in der zweiten die
 Anzahl der erkannten Bewegungen, in der dritten die Rechenzeit in
 Sekunden.  Diese Ausgabe lässt sich automatisiert mit einer
 Referenzausgabe vergleichen.
@@ -496,7 +497,7 @@ Charakteristik der Durchlauf 19 verwendet.
 \end{center}
 
 Wie aus den Receiver Operator Charakteristiken ersichtlich, liefert
-der SegmentMotion Algorithmus keine Falsch-Postiv Treffer im ersten
+der SegmentMotion Algorithmus keine Falsch-Positiv Treffer im ersten
 Szenario. Im zweiten Szenario werden Bewegungen erkannt, diese eignen
 sich aber nicht zur Zählung von Personen. SegmentMotion hat bei
 Bewegungen deutlich mehr Falsch-Positiv Treffer geliefert, d.h. es
@@ -603,7 +604,7 @@ grafische Oberfläche, die in Form von Daten-Strom-Grafen, ähnlich einer
 Pipe-Filter Architektur, es dem Anwender sehr einfach ermöglicht,
 verschiedene optische Fluss-Filter sequentiell
 hintereinanderzuschalten. Am Anfang solcher Verkettungen wird eine
-Datenquelle angegeben. Wenn so eine Konfiguration gestartet ausgeführt
+Datenquelle angegeben. Wenn so eine Konfiguration ausgeführt
 wird, kann der Anwender das Resultat der Filter auf den Eingabe-Daten
 grafisch mitverfolgen, z.B. werden bewegte Bereiche grafisch
 hervorgehoben.

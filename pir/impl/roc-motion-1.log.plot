@@ -1,5 +1,5 @@
 set time
-set title "ROC, SegmentMotion, keine Person"
+set title "Erkennungsrate, SegmentMotion, keine Person"
 set xrange [0:200]
 set yrange [0:200]
 set xlabel "Fehlerrate (absolut)"

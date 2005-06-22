@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.22 2005/06/22 02:55:17 keulsn Exp $
+% $Id: pir.tex,v 1.23 2005/06/22 19:27:56 garbeam Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -25,9 +25,11 @@ Bilddaten eines Raumes mithilfe verschiedener Algorithmen aus der
 OpenSource Vektor-Grafik Bibliothek OpenCV\cite{opencv} untersucht.
 Die Bilddaten werden durch eine handelsübliche Web-Kamera geliefert.
 Die Ergebnisse der Bewegungserkennung werden in
-Characteristic-Receiver-Operator Curves veranschaulicht. Abschließend
+Receiver-Operator-Characteristic Curves veranschaulicht. Abschließend
 wird die Eignung der untersuchten Algorithmen bewertet.
 \end{abstract}
+
+\tableofcontents
 
 %------------------------------------------------------------------------- 
 \section{Einleitung}
@@ -57,7 +59,7 @@ Bilderkennungs-Algorithmen aus der OpenCV\cite{opencv} Bibliothek:
 
 Es werden Bilddaten eines Raumes einer handelsüblichen Web-Kamera zur
 Untersuchung verwendet. Ein Algorithmus, der zuverlässig Bewegungen
-auf Bildsequenzen dieser Bilddaten erkennt, kann für Aussagen zur
+auf Bildern erkennt, kann für Aussagen zur
 Erkennung von Objekten in Betracht gezogen werden.  Personen sind
 keine starren Objekte und zeigen Veränderungen in Form von Bewegungen
 zwischen einzelnen Bildern einer Bildsequenz auf.  Die Erkennung
@@ -107,29 +109,41 @@ Es werden zwei Szenarien untersucht:
 \item bewegte Personen im Bild
 \end{itemize}
 
+\begin{figure}[h!]
 \begin{center}
-\begin{figure}
 \includegraphics[width=7cm]{no-probands.ps}
 \caption{Keine Person im Bild}
+\end{center}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h!]
+\begin{center}
 \includegraphics[width=7cm]{with-probands.ps}
 \caption{Personen im Bild}
-\end{figure}
 \end{center}
+\end{figure}
 
 Wie in den Bildern dargestellt, befindet sich im ersten Szenario keine
-Person im Bildausschnitt aller 200 Bildsequenzen. Im anderen Szenario
+Person im Bildausschnitt aller 200 Bilder. Im anderen Szenario
 variiert die Anzahl der Personen. In den folgenden Diagrammen ist die
-tatsächliche Anzahl der Personen im Bild pro Bildsequenz angegeben, die
+tatsächliche Anzahl der Personen pro Bild angegeben, die
 in der weiteren Untersuchung als Grundlage für die Eignung zur Erkennung
 von Personen dient.
 
+\begin{figure}[h!]
+\begin{center}
 \includegraphics[width=7cm,angle=270]{impl/roc-line-no-probands.log.ps}
+\caption{Personen pro Bild}
+\end{center}
+\end{figure}
 
+\begin{figure}[h!]
+\begin{center}
 \includegraphics[width=7cm,angle=270]{impl/roc-line-some-probands.log.ps}
+\caption{Personen pro Bild}
+\end{center}
+\end{figure}
 
 %------------------------------------------------------------------------- 
 \section{Algorithmen}
@@ -390,8 +404,8 @@ um den Zeitpunkt ihrer Aufnahme festzustellen.
 \section{Untersuchung}
 
 Die drei unterschiedlichen Algorithmen-Arten wurden parametrisiert auf
-die jeweils 200 Bildsequenzen pro Szenario angewendet. Dabei wurde pro
-Bildsequenz von dem jeweiligen Algorithmus die Anzahl der erkannten
+die jeweils 200 Bilder pro Szenario angewendet. Dabei wurde pro
+Bild von dem jeweiligen Algorithmus die Anzahl der erkannten
 Personen (Bewegungsfelder) ausgegeben, die in den Diagrammen im Anhang
 im Detail angegeben ist.
 
@@ -402,24 +416,24 @@ CalcOpticalFlowLK und CalcOpticalFlowBM, die lediglich Richtungsvektoren
 von bewegten Pixeln berechnen, wurde die eigene Implementierung
 auf beiden Szenarien angewendet und untersucht.
 Die Güte und Zuverlässigkeit des eigenen Algorithmus wurde in Beziehung zu den
-tatsächlichen Personen im Bild in eine absolute Receiver-Operator Charakteristik
+tatsächlichen Personen im Bild in eine absolute Erkennungsrate
 umgerechnet, die wie folgt pro Szenario ausgefallen ist.
 
+\begin{figure}[h!]
 \begin{center}
-\begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/roc-optical-flow-1.log.ps}
-\caption{Receiver Operator Charakteristik, erstes Szenario, Eigene
-Implementierung}
-\end{figure}
-
-\begin{figure}
-\includegraphics[width=7cm,angle=270]{impl/roc-optical-flow-2.log.ps}
-\caption{Receiver Operator Charakteristik, zweites Szenario, Eigene
-Implementierung}
-\end{figure}
+\caption{Erkennungsrate, erstes Szenario, Eigene Implementierung}
 \end{center}
+\end{figure}
 
-Aus den Charakteristiken ist ersichtlich, dass die eigene
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/roc-optical-flow-2.log.ps}
+\caption{Erkennungsrate, zweites Szenario, Eigene Implementierung}
+\end{center}
+\end{figure}
+
+Aus den Erkennunsgraten ist ersichtlich, dass die eigene
 Implementierung keine Falsch-Positiv Treffer im ersten Szenario
 detektiert haben. Die recht gute Kurve im zweiten Szenario deutet allerdings
 auf eine Ungenauigkeit zur Zählung von Personen hin.
@@ -435,7 +449,7 @@ verschiedene Schalter zur Parametrisierung an. Getestet wurden folgende
 Parametrisierungen auf jeweils beiden Szenarien, deren Ergebnisse in
 Diagrammen im Anhang ersichtlich sind.
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \begin{center}
         \begin{tabular}{c|c|c|c|c}
         \textbf{Durchlauf} & \textbf{History} & \textbf{Buffer} & \textbf{Min-Time-Delta} & \textbf{Max-Time-Delta}\\ \hline
@@ -444,26 +458,16 @@ Diagrammen im Anhang ersichtlich sind.
         3 & 3s & 2 & 0.05 & 0.5\\ \hline
         4 & 5s & 2 & 0.05 & 0.5\\ \hline
         5 & 10s & 2 & 0.05 & 0.5\\ \hline
-        6 & 1s & 4 & 0.05 & 0.5\\ \hline
-        7 & 2s & 4 & 0.05 & 0.5\\ \hline
-        8 & 3s & 4 & 0.05 & 0.5\\ \hline
-        9 & 5s & 4 & 0.05 & 0.5\\ \hline
-        10& 10s & 4 & 0.05 & 0.5\\ \hline
-        11& 1s & 8 & 0.05 & 0.5\\ \hline
-        12& 2s & 8 & 0.05 & 0.5\\ \hline
-        13& 3s & 8 & 0.05 & 0.5\\ \hline
-        14& 5s & 8 & 0.05 & 0.5\\ \hline
-        15& 10s & 8 & 0.001 & 1.0\\ \hline
-        16& 1s & 2 & 0.001 & 1.0\\ \hline
-        17& 2s & 2 & 0.001 & 1.0\\ \hline
-        18& 3s & 2 & 0.001 & 1.0\\ \hline
-        19& 5s & 2 & 0.001 & 1.0\\ \hline
-        20& 10s & 2 & 0.001 & 1.0\\ \hline
-        16& 1s & 2 & 0.001 & 3.0\\ \hline
-        17& 2s & 2 & 0.001 & 3.0\\ \hline
-        18& 3s & 2 & 0.001 & 3.0\\ \hline
-        19& 5s & 2 & 0.001 & 3.0\\ \hline
-        20& 10s & 2 & 0.001 & 3.0\\ \hline
+        6& 1s & 2 & 0.001 & 1.0\\ \hline
+        7& 2s & 2 & 0.001 & 1.0\\ \hline
+        8& 3s & 2 & 0.001 & 1.0\\ \hline
+        9& 5s & 2 & 0.001 & 1.0\\ \hline
+        10& 10s & 2 & 0.001 & 1.0\\ \hline
+        11& 1s & 2 & 0.001 & 3.0\\ \hline
+        12& 2s & 2 & 0.001 & 3.0\\ \hline
+        13& 3s & 2 & 0.001 & 3.0\\ \hline
+        14& 5s & 2 & 0.001 & 3.0\\ \hline
+        15& 10s & 2 & 0.001 & 3.0\\ \hline
         \end{tabular}
     {\small \caption{Parametrisierung von SegmentMotion}}
     \end{center}
@@ -474,30 +478,43 @@ Unterschiede beim Parameter des History-Puffers gezeigt. Ein Wert von
 $1s$ kann als zu gering, ein Wert von $10s$ wiederum als zu hoch
 angesehen werden. Die Time-Delta Werte haben bei der Ausführung nahezu
 keine Auswirkung gezeigt, da die von der WebCam aufgezeichneten
-Bildsequenzen einen niedrigen Durchsatz pro Sekunde liefern (im Mittel
+Bilddaten einen niedrigen Durchsatz pro Sekunde liefern (im Mittel
 etwa 1.5 Bilder pro Sekunde).
 Der Bildpuffer (Buffer) Parameter hat auch keine signifikante
 Auswirkung bei den verwendeten Bildern geliefert. Ein größerer Puffer
 kann die Ausführungsgeschwindigkeit reduzieren.
 
 Die besten Resultate wurden mit History-Werten von $3s$ bzw. $5s$
-geliefert. Deshalb wurde für die Erstellung einer Receiver Operator
-Charakteristik der Durchlauf 19 verwendet.
+geliefert. Im folgenden ist die Erkennungsrate aus Durchlauf 9
+dargestellt - auf die jeweilige Sequenz angewendet.
 
+\begin{figure}[h!]
 \begin{center}
-\begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/roc-motion-1.log.ps}
-\caption{Receiver Operator Charakteristik, erstes Szenario, SegmentMotion}
-\end{figure}
-
-\begin{figure}
-\includegraphics[width=7cm,angle=270]{impl/roc-motion-2.log.ps}
-\caption{Receiver Operator Charakteristik, zweites Szenario, SegmentMotion}
-\end{figure}
+\caption{Erkennungsrate, erstes Szenario, SegmentMotion}
 \end{center}
+\end{figure}
 
-Wie aus den Receiver Operator Charakteristiken ersichtlich, liefert
-der SegmentMotion Algorithmus keine Falsch-Positiv Treffer im ersten
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/roc-motion-2.log.ps}
+\caption{Erkennungsrate, zweites Szenario, SegmentMotion}
+\end{center}
+\end{figure}
+
+Dar"uber hinaus wurde die Receiver-Operator-Characteristic Curve
+zur Veranschaulichung der G"ute aller Durchl"aufe (beide Szenarien
+zusammengefasst) erstellt.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/roc-motion.ps}
+\caption{ROC, SegmentMotion}
+\end{center}
+\end{figure}
+
+Wie aus den Erkennungsraten (siehe auch Diagramme im Anhang) ersichtlich, liefert
+der SegmentMotion Algorithmus nahezo keine Falsch-Positiv Treffer im ersten
 Szenario. Im zweiten Szenario werden Bewegungen erkannt, diese eignen
 sich aber nicht zur Zählung von Personen. SegmentMotion hat bei
 Bewegungen deutlich mehr Falsch-Positiv Treffer geliefert, d.h. es
@@ -505,26 +522,28 @@ wurden im Mittel deutlich mehr Personen erkannt, als tatsächlich
 vorhanden. Deutlich ist allerdings, das sich SegmentMotion zur
 Existenzaussage von Bewegungen sehr gut eignet.
 
+\begin{figure}[h!]
 \begin{center}
-\begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/motion_1.ps}
 \caption{Zweites Szenario, SegmentMotion, Korrekte Erkennung}
+\end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
+\begin{center}
 \includegraphics[width=7cm,angle=270]{impl/motion_2.ps}
-\caption{Zweites Szenario, SegmentMotion, Steffen im Vordergrund wird
+\caption{Zweites Szenario, SegmentMotion, Proband im Vordergrund wird
   nicht erkannt, da er still sitzt}
+\end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
+\begin{center}
 \includegraphics[width=7cm,angle=270]{impl/motion_3.ps}
 \caption{Zweites Szenario, SegmentMotion, Erkennung zu vieler
   Bewegungen}
-\end{figure}
 \end{center}
-
-
+\end{figure}
 
 \subsection{CalcOpticalFlowPyrLK}
 
@@ -561,7 +580,7 @@ Unschärfewerte auf beide Szenarien angewendet:
 \end{figure}
 
 Die besten Resultate lieferte ein möglichst hoher Unschärfewert. Die
-Feature-Points haben auf den vorliegenden Bildsequenzen eher keine positive
+Feature-Points haben auf den vorliegenden Bildern eher keine positive
 Auswirkung zeigen können, da der Winkel der Kamera zu flach ist, um
 Bewegungen im hinteren Raumbereich von Bewegungen in Kameranähe
 unterscheiden zu können.
@@ -573,20 +592,33 @@ vermutlich sehr gute Resultate liefern, da dann Bewegungen von oben
 bestimmten Raumbereichen im Regelfall eindeutig zugeordnet werden
 könnten.
 
-Die Receiver Operator Charakteristik wurde basierend auf Testdurchlauf 7
-erstellt und ist in folgenden Diagrammen ersichtlich.
+Die beide Szenarien zusammenfassende Receiver-Operator-Characteristic
+Curve zur Veranschaulichung der G"ute von CalcOpticalFlowPyrLK unter den
+untersuchten Bedingungen ist im folgenden Diagramm ersichtlich.
 
+\begin{figure}[h!]
 \begin{center}
-\begin{figure}
-\includegraphics[width=7cm,angle=270]{impl/roc-pyramid-1.log.ps}
-\caption{Receiver Operator Charakteristik, erstes Szenario, CalcOpticalFlowPyrLK}
+\includegraphics[width=7cm,angle=270]{impl/roc-pyramid.ps}
+\caption{ROC, CalcOpticalFlowPyrLK}
+\end{center}
 \end{figure}
 
-\begin{figure}
-\includegraphics[width=7cm,angle=270]{impl/roc-pyramid-2.log.ps}
-\caption{Receiver Operator Charakteristik, zweites Szenario, CalcOpticalFlowPyrLK}
-\end{figure}
+Die Erkennungsraten zum 7. Durchlauf, der die besten Ergebnisse
+lieferte, sind wie folgt veranschaulicht.
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/roc-pyramid-1.log.ps}
+\caption{Erkennungsraten, erstes Szenario, CalcOpticalFlowPyrLK}
 \end{center}
+\end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=7cm,angle=270]{impl/roc-pyramid-2.log.ps}
+\caption{Erkennungsraten, zweites Szenario, CalcOpticalFlowPyrLK}
+\end{center}
+\end{figure}
 
 Im ersten Szenario detektierte CalcOpticalFlowPyrLK Falsch-Positive
 Treffer, die vermutlich auf das Bild-Rauschen zurückzuführen sind. Im
@@ -607,14 +639,12 @@ diese Resultate bei idealeren Bedingungen nicht zutreffen müssen.
 
 \begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/features_1_2.ps}
-\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge
-  1, Günstige Verteilung der Bewegungen im Raum}
+\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge 1, Günstige Verteilung der Bewegungen im Raum}
 \end{figure}
 
 \begin{figure}
 \includegraphics[width=7cm,angle=270]{impl/features_1_3.ps}
-\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge
-  1, Ungenauigkeit des Verfahrens führt zu Fehlerkennungen}
+\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge 1, Ungenauigkeit des Verfahrens führt zu Fehlerkennungen}
 \end{figure}
 \end{center}
 
@@ -630,7 +660,7 @@ Produkte zum Thema ``Optischer Fluss'' anbieten.
 \subsubsection{WebCam}
 Selbst die verwendete Kamera, Modell MOBOTIX M1 (\url{http://www.mobotix.com}),
 bietet von sich aus Tracking-Algorithmen an, die den optischen Fluss der einzelnen
-Bildsequenzen berücksichtigen und bewegte Bereiche verfolgen und
+Bilder berücksichtigen und bewegte Bereiche verfolgen und
 grafisch hervorheben können. Diese Hervorhebungen können in der
 Kamerasteuerung als Auslöser für Ereignisse verwendet werden.
 Die Kamera enthält neben Algorithmen zur Bilderkennung aber auch
@@ -898,7 +928,6 @@ Semikolons.
 \end{verbatim}
 
 
-\begin{center}
 \includegraphics[width=7cm,angle=270]{impl/motion-1-d1.log.ps}
 
 \includegraphics[width=7cm,angle=270]{impl/motion-1-d10.log.ps}
@@ -992,6 +1021,5 @@ Semikolons.
 \includegraphics[width=7cm,angle=270]{impl/test-1.log.ps}
 
 \includegraphics[width=7cm,angle=270]{impl/test-2.log.ps}
-\end{center}
 
 \end{document}

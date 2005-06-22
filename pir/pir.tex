@@ -1,5 +1,5 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.21 2005/06/10 01:10:22 kilgus Exp $
+% $Id: pir.tex,v 1.22 2005/06/22 02:55:17 keulsn Exp $
 
 \documentclass{article}
 \usepackage[german]{babel} 
@@ -505,6 +505,27 @@ wurden im Mittel deutlich mehr Personen erkannt, als tatsächlich
 vorhanden. Deutlich ist allerdings, das sich SegmentMotion zur
 Existenzaussage von Bewegungen sehr gut eignet.
 
+\begin{center}
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/motion_1.ps}
+\caption{Zweites Szenario, SegmentMotion, Korrekte Erkennung}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/motion_2.ps}
+\caption{Zweites Szenario, SegmentMotion, Steffen im Vordergrund wird
+  nicht erkannt, da er still sitzt}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/motion_3.ps}
+\caption{Zweites Szenario, SegmentMotion, Erkennung zu vieler
+  Bewegungen}
+\end{figure}
+\end{center}
+
+
+
 \subsection{CalcOpticalFlowPyrLK}
 
 Der CalcOpticalFlowPyrLK Algorithmus der OpenCV\cite{opencv} Bibliothek
@@ -576,6 +597,28 @@ durch einen Zufallsgenerator durchzuführen.
 
 Allerdings ist zu berücksichtigen, das CalcOpticalFlowPyrLK
 diese Resultate bei idealeren Bedingungen nicht zutreffen müssen.
+
+\begin{center}
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/features_1_1.ps}
+\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge
+  1, unerwünschte Mehrfacherkennung der selben Bewegung}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/features_1_2.ps}
+\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge
+  1, Günstige Verteilung der Bewegungen im Raum}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm,angle=270]{impl/features_1_3.ps}
+\caption{Zweites Szenario, CalcOpticalFlowPyrLK, Feature-Point Menge
+  1, Ungenauigkeit des Verfahrens führt zu Fehlerkennungen}
+\end{figure}
+\end{center}
+
+
 
 %------------------------------------------------------------------------- 
 \subsection{Alternativen}

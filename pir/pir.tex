@@ -1,7 +1,8 @@
 % Fachstudie NEXUS "Personen im Raum"
-% $Id: pir.tex,v 1.23 2005/06/22 19:27:56 garbeam Exp $
+% $Id: pir.tex,v 1.24 2005/06/26 22:28:25 keulsn Exp $
 
 \documentclass{article}
+\usepackage{german,diplomtitel}
 \usepackage[german]{babel} 
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
@@ -10,14 +11,51 @@
 \usepackage[dvips]{graphicx}
 \usepackage{url}
 
+
+\studiengang{swt} % Default ist \studiengang{inf}, also Informatik.
+
+%
+%\sprache{englisch} % Default ist natuerlich deutsch.
+
+% Die folgenden neun Angaben, au"ser \art und \institut, m"ussen immer
+% angegeben werden.  Mehrere Zeilen werden mit \\ getrennt.
+%
+
+\pruefer{Prof.~Dr.~rer.~nat.~habil.~Paul~Levi}
+\betreuer{Dipl.-Inform.~Uwe-Philipp~Käppeler\\Dipl.-Ing.(BA)~Jean~Joswig}
+
+\begonnen{1.~Dezember 2004}
+\beendet{22.~Juni~2005}
+
+\titel{Erkennung des Vorhandenseins von Personen im Raum}
+\autor{Anselm~Garbe}
+\autor{Marcel~Kilgus}  % bei zwei Autoren
+\autor{Steffen~Keul}
+
+\art{Fachstudie}   %% Default ist \art{Diplom}, also eine Diplomarbeit
+\nummer{42}  % Nummer der Studien-/Diplomarbeit
+
+\institut\ipvr %% Default ist \institut\ifi
+          %% Andere Institutsnamen werden direkt mit \institut{ ... }
+          %% angegeben, Zeilen werden mittels \\ getrennt.
+
+%% Mehrere CR-Klassifikationen einfach mit \crk{..} aufzaehlen
+%% (optional).
+%
+\crk{I.4.8}
+
+%\umrandet
+
+
+
 \begin{document}
 
-\title{Fachstudie 'Personen im Raum'}
-\author{Steffen Keul, Marcel Kilgus, Anselm Garbe\\
-\small Universität Stuttgart, Institut für Informatik, Nexus Forschungsprojekt}
+%\title{Fachstudie 'Personen im Raum'}
+%\author{Steffen Keul, Marcel Kilgus, Anselm Garbe\\
+%\small Universität Stuttgart, Institut für Informatik, Nexus Forschungsprojekt}
 
 \maketitle
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
 \begin{abstract}
 In dieser Fachstudie wird die Bewegungserkennung von Personen auf
@@ -1021,5 +1059,7 @@ Semikolons.
 \includegraphics[width=7cm,angle=270]{impl/test-1.log.ps}
 
 \includegraphics[width=7cm,angle=270]{impl/test-2.log.ps}
+
+\Versicherung
 
 \end{document}

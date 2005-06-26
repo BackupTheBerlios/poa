@@ -1,0 +1,463 @@
+% diplomtitel.sty -- Paket fuer LaTeX2e und Style-Option fuer LaTeX 2.09
+%                    erzeugt Titelseite und Versicherung fuer
+%                    Diplom- und Studienarbeiten
+%
+% angepasst fuer Blattgroesse DIN A4 und Einbanddeckel des IfI Stgt.
+% (ein Verwendungsbeispiel findet sich in `diplomtitel-template.tex')
+%
+% (C) 1990-1996 Bernd Raichle
+%
+% Erste Version:      28-Feb-90 (br)
+% Letzte "Anderungen:
+%   12-Jul-90 (br)
+%   29-Jun-93 (br) neue Postleitzahlen
+%   23-Aug-93 (br) Dipl.arbeitsnummer oben
+%   15-Apr-96 (br) als Paket/Styleoption (v2.0)
+%                  benoetigt kein `german.sty' mehr
+%   08-Feb-2001 (Timo Heiber) Bezeichung des Studienganges muss nach
+%                  neuer Richtlinie auf das Titelblatt (v2.1).
+%   12-Dez-2001 (Matthias Papesch, th) Kann jetzt auch Titelblaetter und
+%                  Versicherungen in englischer Sprache erzeugen. (v.2.1e)
+% 
+
+\typeout{Package: diplomtitel 2001/12/12 v2.1e (br).}
+\begingroup\expandafter\expandafter\expandafter\endgroup
+\expandafter\ifx\csname ProvidesPackage\endcsname\relax\else
+  \ProvidesPackage{diplomtitel}[2001/12/12 v2.1e %
+     Package to create a title page (br)]
+\fi
+%
+% Die Schnittstelle zum Benutzer ...
+%
+%
+%  \maketitle
+%  \Titelblatt
+%              erzeugt Titelblatt
+%  \Versicherung
+%              erzeugt Blatt mit Versicherung
+%
+%
+% \author {Name}
+% % \author{Zweiter_Autor}  %% bei zwei Autoren
+% %% default: leer
+%
+\newcommand{\autor}[1]{\ifx\@author\relax
+    \gdef\@author{\protect\@setzeautor{#1}}%
+  \else
+    {\let\protect=\noexpand
+     \xdef\@author{\@author\relax \protect\@setzezweitautor{#1}}}%
+    \def\@versicherung{\zweibearbeiter}%
+  \fi}
+\renewcommand{\author}[1]{\autor{#1}}
+\let\@author\relax
+\newcommand{\@versicherung}{\einbearbeiter}
+
+\newcommand{\@setzeautor}[1]{#1}
+\newcommand{\@setzezweitautor}[1]{\hskip 2em\relax #1}
+
+
+
+%
+% \sprache { sprache: englisch / deutsch }
+% %% default: deutsch
+%
+\def\labelsenglisch{
+        \gdef\@labelpruefer{Examiner}%
+        \gdef\@labelbetreuer{Supervisor}%
+        \gdef\@labelstudiengang{Course of Study}%
+        \gdef\@labelbegin{Commenced}%
+        \gdef\@labelend{Completed}%
+        \gdef\@labelcrk{CR-Classification}%
+        \gdef\@labeluni{University of Stuttgart}%
+        \gdef\@labelfak{Faculty of Computer Science}%
+        \gdef\@labelstudi{Studienarbeit}%
+        \gdef\@labeldiplom{Diplomarbeit}%
+        \gdef\@labelinf{Computer Science}%
+        \gdef\@labelsw{Software Engineering}%
+        \gdef\@labelifi{Institute of Computer Science}
+        \gdef\@labelipvr{Institute of Parallel and \\
+                         Distributed High Performance Systems}%
+        \gdef\@labelerklaerung{Declaration}%
+        \gdef\@labeleinbearbeiter{ All the work contained within this thesis,\\
+                                   except where otherwise acknowledged, was\\%
+                                   solely the effort of the author. At no \\
+                                   stage was any collaboration entered into\\
+                                   with any other party.}%
+        \gdef\@labelzweibearbeiter{All the work contained within this thesis,\\
+                                   except where otherwise acknowledged, was\\%
+                                   solely the effort of the authors. At no \\
+                                   stage was any collaboration entered into\\
+                                   with any other party.}%
+}
+
+\def\labelsdeutsch{
+        \gdef\@labelpruefer{Pr\"ufer}%
+        \gdef\@labelbetreuer{Betreuer}
+        \gdef\@labelstudiengang{Studiengang}%
+        \gdef\@labelbegin{begonnen am}%
+        \gdef\@labelend{beendet am}%
+        \gdef\@labelcrk{CR-Klassifikation}%
+        \gdef\@labeluni{Universit\"at Stuttgart}%
+        \gdef\@labelfak{Fakult\"at Informatik, Elektrotechnik und Informationstechnik}%
+        \gdef\@labelstudi{Studienarbeit}%
+        \gdef\@labeldiplom{Diplomarbeit}%
+        \gdef\@labelinf{Informatik}%
+        \gdef\@labelsw{Softwaretechnik}%
+        \gdef\@labelifi{Institut f\"ur Informatik}
+        \gdef\@labelipvr{Institut f\"ur Parallele und\\%
+                         Verteilte H\"ochstleistungsrechner}%
+        \gdef\@labelerklaerung{Erkl\"arung}%
+        \gdef\@labeleinbearbeiter{Hiermit versichere ich, diese Arbeit
+          selbst\"andig verfasst und nur die angegebenen Quellen benutzt
+          zu haben.}%
+        \gdef\@labelzweibearbeiter{Hiermit versichern wir, diese Arbeit%
+                                   selbst\"andig verfasst und nur die%
+                                   angegebenen Quellen benutzt zu haben.}%
+}       
+
+
+\newcommand{\sprache}[1]{ \def\1{#1}\def\0{deutsch}\ifx\1\0\labelsdeutsch\else
+  \def\0{englisch}\ifx\1\0\labelsenglisch\else
+  \labelsdeutsch\fi\fi}
+
+\labelsdeutsch
+%
+% \title {Titel der Arbeit}
+% %% default: leer
+%
+\newcommand{\titel}[1]{\gdef\@titel{#1}}
+\let\@titel\relax
+
+%
+% \art{Diplom}       %% fuer Diplomarbeiten oder
+% \art{Studien}      %% fuer Studienarbeiten oder
+% \art{freier_Text}  %% fuer Sonderfaelle
+% %%  default: Diplom
+%
+\newcommand{\art}[1]{\begingroup
+  \def\1{#1}\def\0{Diplom}\ifx\1\0\gdef\@art{\@labeldiplom}\else
+  \def\0{Studien}\ifx\1\0\gdef\@art{\@labelstudi}\else
+  \gdef\@art{#1}\fi\fi \endgroup}
+\newcommand{\@art}{\@labeldiplom}
+
+%
+% \nummer{laufende_Nummer_der_Arbeit}
+% %%  default: leer
+%
+\newcommand{\nummer}[1]{\gdef\@nummer{#1}}
+\let\@nummer\relax
+
+%
+% \studiengang{inf}      % Informatik oder
+% \studiengang{swt}      % Softwaretechnik oder
+% \studiengang{Bezeichnung des Studienganges}
+%
+% %% default: Informatik (davon gibt es zur Zeit mehr)
+%
+\newcommand{\studiengang}[1]{\begingroup
+  \def\1{#1}\def\0{inf}\ifx\1\0\gdef\@studiengang{\@labelinf}\else
+  \def\0{swt}\ifx\1\0\gdef\@studiengang{\@labelsw}\else
+  \gdef\@studiengang{#1}\fi\fi \endgroup}
+\newcommand{\@studiengang}{\@labelinf}
+
+%
+% \pruefer{Name des Pruefers, mehrere durch \\ trennen}
+% %% default: leer
+%
+\newcommand{\pruefer}[1]{\gdef\@pruefer{#1}}
+\let\@pruefer\relax
+
+%
+% \betreuer{Name des Betreuers, mehrere durch \\ trennen}
+% %%  default: leer
+%
+\newcommand{\betreuer}[1]{\gdef\@betreuer{#1}}
+\let\@betreuer\relax
+
+%
+% \beginn{Datum der Ausgabe}
+% %%  default: leer
+%
+\newcommand{\begonnen}[1]{\gdef\@begonnen{#1}}
+\newcommand{\beginn}[1]{\begonnen{#1}}
+\let\@begonnen\relax
+
+%
+% \ende{Datum der Abgabe}
+% %%  default: leer
+%
+\newcommand{\beendet}[1]{\gdef\@beendet{#1}}
+\@ifundefined{ende}{}{\@notdefinable}
+\def\ende#1{\beendet{#1}}
+\let\@beendet\relax
+
+%
+% \crk{CR-Klassifikation}
+% % \crk{weitere_CR_Nummer}
+% %%  default: leer
+%
+\newcommand{\crk}[1]{\ifx\@crk\relax \gdef\@crk{#1}\else
+   \xdef\@crk{\@crk\relax,\penalty 10000 \hskip .3em plus10cm
+              \penalty 0 \hskip 0pt plus-10cm\relax #1}\fi}
+\newcommand{\crnummer}[1]{\crk{#1}}
+\let\@crk\relax
+
+%
+% \institut{\ifi}  oder
+% \institut{\ipvr} oder
+% \institut{\fak}  oder
+% \institut{freier Text}
+% %% default: leer
+%
+\newcommand{\institut}[1]{\gdef\@institut{#1}}
+\newcommand{\institution}[1]{\institut{#1}}
+\newcommand{\@institut}{\ifi}
+
+
+%
+% \umrandet  %% zum Testen des Titelausschnittes
+% %% default: nicht umrandet
+%
+\def\umrandet{\global\let\@umrandet=\fbox}
+\let\@umrandet\relax
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Noch ein paar Definitionen, die verwendet und ver"andert
+% werden k"onnen:
+%
+\newcommand{\einbearbeiter}{\@labeleinbearbeiter}%
+\newcommand{\zweibearbeiter}{\@labelzweibearbeiter}%
+
+
+\newcommand{\@instadr}{%
+  \@labeluni\\
+  Universi\"atsstra{\ss}e 38\\
+  D--70569 Stuttgart}
+
+\newcommand{\ifi}{%
+  \@labelifi\\
+  \@instadr}
+
+\newcommand{\ipvr}{%
+  \@labelipvr\\
+  \@instadr}
+
+\newcommand{\fak}{%
+  \@labelfak\\
+  \@instadr}
+
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\if@TBrestonecol
+
+\def\maketitle{\Titelblatt}
+
+\newcommand{\TBlabel}[1]{\bf #1\hfil}
+\newenvironment{TBlist}{%
+  \list{}{\labelwidth 45mm \leftmargin 70mm % alt: 35/60 mm
+          \rightmargin 20mm \let\makelabel\TBlabel}%
+}{\endlist}
+
+\newcommand{\Titelblatt}{%
+  \cleardoublepage
+  %
+  \@TBrestonecolfalse
+  \if@twocolumn \@TBrestonecoltrue \onecolumn \fi
+  %
+  \setcounter{page}{0}%
+\begingroup
+  \pagestyle{empty}%
+  \thispagestyle{empty}%
+  %
+  \@normalsize \@setsize\normalsize{13.6pt}\xipt\@xipt
+  %
+  \frenchspacing    % besser, da viele Abk. (<- da ist schon eine)
+  \parskip=0pt\parindent=0pt\null
+  %
+  % Damit alles richtig funktioniert, mu"s der Ursprung auf die
+  %  tats"achliche linke obere Ecke des Blattes gelegt werden (ohne den
+  %  bekannten 1in Offset also).
+  %  Ausserdem werden die beiden Seitenr"ander auf 28mm + 4.5mm Falz
+  %  gesetzt, die Seitenh"ohe auf DIN A4-H"ohe.
+  %
+  \hsize=154mm       %% DIN A4: 210mm - 2*28mm
+  \columnwidth=\hsize \linewidth=\hsize
+  %
+  \dimen0=0pt
+  \advance\dimen0-\oddsidemargin
+  \advance\dimen0 2.6mm %% 
+  \advance\dimen0 4.5mm %% 
+ \hbox to 0pt{\kern\dimen0\vbox to\topskip{%
+  \dimen0=-1in
+  \advance\dimen0-\topmargin
+  \advance\dimen0-\headheight
+  \advance\dimen0-\headsep
+  \vskip\dimen0\relax
+  %
+
+  \vskip 20mm\relax %%%
+
+  \vbox to 70mm{
+  \begin{center}%
+    \@institut
+  \end{center}
+  \vfill}%
+
+  \vskip -4mm\relax
+  %%%%% ==> 155mm (Titel: 165mm/Autor: 195mm) von oben
+  %%% Die Box kann max. 100mm breit und 60mmm hoch sein,
+  %%% au"serdem wird noch ein Rand von mind. 2.5mm gelassen
+  \centerline{\fboxsep=0pt
+    \@umrandet{\hbox to 100mm{\hfil
+    \vbox to 60mm{\hsize=95mm\parindent=0pt
+      \vskip 10mm plus 30mm minus 7.5mm
+      \begin{center}\@setsize\large{14pt}\xiipt\@xiipt %%\large
+        \@art{} Nr.~\@nummer
+      \end{center}%
+      \vskip 12.5mm plus 12.5mm minus 10mm
+      \begin{center}\@setsize\LARGE{22pt}\xviipt\@xviipt %%\LARGE
+        \bf \@titel
+      \end{center}%
+      \vskip 10mm plus 10mm minus 7.5mm
+      \begin{center}\@setsize\large{14pt}\xiipt\@xiipt %%\large
+        \@author
+      \end{center}%
+      \vskip 17.5mm plus 35mm minus 12.5mm}\hfil}}}%
+  \vskip 20mm %%%%%
+
+  \vbox to 15mm{%
+    \begin{TBlist}%
+      \item[\@labelstudiengang: ]\@studiengang
+    \end{TBlist}%
+    \vfill}%
+  \vbox to 45mm{%
+    \begin{TBlist}%
+      \item[\@labelpruefer:]\@pruefer
+      \item[\@labelbetreuer:]\@betreuer
+    \end{TBlist}%
+    \vfill}%
+  \vbox to 70mm{%%%%% ==> 85 mm von oben
+    \begin{TBlist}%
+      \item[\@labelbegin:]\@begonnen
+      \item[\@labelend:]\@beendet
+      \ifx\@crk\relax \else
+          \vskip 1.5\baselineskip
+          \item[\@labelcrk:]\@crk
+      \fi
+    \end{TBlist}%
+    \vfill}%
+
+ \vss}\hss}%
+  %
+  \thispagestyle{empty}%
+  \cleardoublepage
+  \if@TBrestonecol \twocolumn \fi
+  \pagenumbering{arabic}%
+\endgroup}
+
+\newcommand{\Versicherung}{%
+  \cleardoublepage
+  %
+  \@TBrestonecolfalse
+  \if@twocolumn \@TBrestonecoltrue \onecolumn \fi
+  %
+  \null
+  \vskip 5cm\relax
+  \begin{minipage}[t]{8cm}
+    \hbox{\bf \@labelerklaerung}%
+    \vskip 1cm\relax
+    \begin{flushleft}%
+      \@versicherung
+    \end{flushleft}%
+    \vskip 4cm\relax
+    \hrulefill
+    \vskip .4\baselineskip
+    \hbox{\ (\@author)}
+  \end{minipage}
+%%   \hbox{\kern 2cm\vbox{%
+%%       \@setsize\large{14pt}\xiipt\@xiipt %% \large
+%%       \hbox{\bf \@labelerklaerung}%
+%%       \vskip 1cm\relax
+%%       \hbox to 5cm{
+%%         \begin{flushleft}%
+%%           \@versicherung
+%%         \end{flushleft}%
+%%         \vskip 4cm\relax
+%% %      \hrule width7cm\vskip .4\baselineskip
+%% %      \renewcommand{\@setzezweitautor}[1]{\unskip~/~\ignorespaces ##1}%
+%% %      \hbox{\ (\@author)}}}%
+%%         \hrulefill
+%%         \vskip .4\baselineskip
+%%         \hbox{\ (\@author)}}}}
+  \cleardoublepage
+  \if@TBrestonecol \twocolumn \fi}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Ist dies ein Paket/Styleoption oder ein alter LaTeX 2.09-Style?
+%
+% (==> Kompatibilitaet zum alten `diplomtitel.sty')
+%
+\@ifundefined{textfraction}{}{\endinput}
+\typeout{Package: diplomtitel -- verwendet als LaTeX 2.09-Style!}
+
+
+% Dies ist ein Style und nicht nur eine Option, also sollte man die
+% Standardoptionen `11pt', `12pt', `twoside' und `draft' angeben
+% k"onnen, au"serdem bin ich so freundlich und erlaube auch `10pt'.
+%
+\def\@ptsize{0}
+\@namedef{ds@10pt}{}     % falls jemand `10pt' angeben will
+\@namedef{ds@11pt}{\def\@ptsize{1}}
+\@namedef{ds@12pt}{\def\@ptsize{2}}
+\let\ds@twoside=\relax   % ignoriere "twoside" substyle
+\def\ds@draft{\overfullrule 5pt \umrandet}
+
+% Werte jetzt alle angegebenen Optionen aus
+%
+\@options
+
+% font size Beschreibungen kommen vom `report' style ...
+% ... und noch den deutschen Substyle, falls noch nicht geladen
+\input rep1\@ptsize.sty\relax
+\input german.sty
+
+% LaTeX ben"otigt f"ur das \onecolumn command noch einige counter und
+% Definitionen, also tun wir ihm den Gefallen ...
+%
+\setcounter{topnumber}{2}\def\topfraction{.7}
+\setcounter{bottomnumber}{1}\def\bottomfraction{.3}
+\setcounter{totalnumber}{3}
+\def\textfraction{.2}\def\floatpagefraction{.5}
+\setcounter{dbltopnumber}{2}
+\def\dbltopfraction{.7}\def\dblfloatpagefraction{.5}
+
+% Einige weitere Default-Initialisierungen:
+%
+\pagestyle{empty}
+\pagenumbering{arabic}
+\onecolumn
+\frenchspacing
+\raggedbottom
+
+% MAKETITLE
+%
+%  Dieses command erzeugt die Titelseite und die Seite mit der
+%  Versicherung. Damit dieser Style nicht f"ur andere Zwecke verwendet
+%  wird, kommt das ganze automatisch in eine `document' Umgebung.
+%
+\renewcommand{\maketitle}{%
+  \begin{document}%
+  %%%%%%%%%% die Titelseite:
+  \Titelblatt
+  %%%%%%%%%% noch die Versicherung:
+  \Versicherung
+  %%%%%%%%%% ... und f"uhre den Benutzer nicht in Versuchung ...
+  \end{document}}
+
+\endinput
+

@@ -5,6 +5,7 @@
 #ifndef _EiC
 #include "cv.h"
 #include "highgui.h"
+#include <stdio.h>
 #include <math.h>
 #endif
 
@@ -40,14 +41,14 @@ int main( int argc, char** argv )
 
     size = cvGetSize(source[0]);
 
-    size.height /= 5;
-    size.width /= 5;
+    //size.height /= 5;
+    //size.width /= 5;
 
     velocityX = cvCreateImage(size, IPL_DEPTH_32F, 1);
     velocityY = cvCreateImage(size, IPL_DEPTH_32F, 1);
 
-//  cvCalcOpticalFlowLK(source[0], source[1], cvSize(3, 3), velocityX, velocityY);
-    cvCalcOpticalFlowBM(source[0], source[1], cvSize(5, 5), cvSize(1, 1), cvSize(1, 1), 0, velocityX, velocityY);
+    cvCalcOpticalFlowLK(source[0], source[1], cvSize(3, 3), velocityX, velocityY);
+//    cvCalcOpticalFlowBM(source[0], source[1], cvSize(5, 5), cvSize(1, 1), cvSize(1, 1), 0, velocityX, velocityY);
 
     cvNamedWindow("Horizontal", 0);
     cvShowImage("Horizontal", velocityX);
@@ -55,6 +56,7 @@ int main( int argc, char** argv )
     cvNamedWindow("Vertical", 0);
     cvShowImage("Vertical", velocityY);
 
+    printf("Jetzt warte ich.");
     cvWaitKey(0);
 
     cvDestroyWindow("Pic1");

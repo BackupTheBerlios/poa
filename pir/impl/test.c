@@ -22,7 +22,7 @@
 
 
 char *DEFAULT_PATH, *PATH = DEFAULT_PATH = ".";
-bool DISPLAY=false;
+bool DISPLAY=true;
 
 
 IplImage*  image[3];

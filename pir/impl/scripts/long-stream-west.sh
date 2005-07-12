@@ -6,7 +6,7 @@ if [ "$1" == "--help" ]; then
   exit
 fi
 
-FETCH="`dirname "$0"`/fetch.sh"
+FETCH="`dirname "$(which $0)"`/fetch.sh"
 
 HOST=129.69.210.63
 SIZE=640x480
